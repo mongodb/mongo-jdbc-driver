@@ -22,21 +22,32 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 
 import org.bson.Document;
-import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
 
 public class MongoResultSet implements ResultSet {
-    private FindIterable cursor;
+    private MongoCursor<Document> cursor;
+    private Document current;
 
-    public MongoResultSet(FindIterable cursor) {
+    public MongoResultSet(MongoCursor<Document> cursor) {
         this.cursor = cursor;
     }
 
     public boolean next() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        boolean result;
+        try {
+            result = cursor.hasNext();
+            if (result) {
+                current = cursor.next();
+                System.out.println(current.toJson());
+            }
+        } finally {
+            cursor.close();
+        }
+        return result;
     }
 
     public void close() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        cursor.close();
     }
 
     public boolean wasNull() throws SQLException {
@@ -311,8 +322,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     public int getType() throws SQLException {
-		return ResultSet.TYPE_FORWARD_ONLY;
-	}
+        return ResultSet.TYPE_FORWARD_ONLY;
+    }
 
     public int getConcurrency() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");

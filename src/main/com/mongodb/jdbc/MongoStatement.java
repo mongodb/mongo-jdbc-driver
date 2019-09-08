@@ -8,9 +8,10 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.SQLFeatureNotSupportedException;
 
-
+import org.bson.Document;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 public class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
@@ -23,9 +24,11 @@ public class MongoStatement implements Statement {
         col = client.getDatabase("test").getCollection("test");
     }
 
+    @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
         // TODO: actually use query.
-        return new MongoResultSet(col.find());
+        MongoCursor<Document> cur = col.find().iterator();
+        return new MongoResultSet(cur);
     }
 
     public int executeUpdate(String sql) throws SQLException {
