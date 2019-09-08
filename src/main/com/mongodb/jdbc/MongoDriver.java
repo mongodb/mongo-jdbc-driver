@@ -35,6 +35,9 @@ public class MongoDriver implements Driver {
     }
 
 
+	// It will take us quite a while to achieve full jdbc compliance (full writes, transaction
+	// support, etc), and it actually requires
+	// passing certification.
     public boolean jdbcCompliant() {
         return false;
     }

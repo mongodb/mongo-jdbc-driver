@@ -8,10 +8,24 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.SQLFeatureNotSupportedException;
 
+
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+
 public class MongoStatement implements Statement {
+    // Likely, the actual mongo sql command will not
+    // need a database or collection, since those
+    // must be parsed from the query.
+    private MongoCollection col;
+
+    public MongoStatement(MongoClient client) {
+        // TODO: obviously don't just connect to `test.test`.
+        col = client.getDatabase("test").getCollection("test");
+    }
 
     public ResultSet executeQuery(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        // TODO: actually use query.
+        return new MongoResultSet(col.find());
     }
 
     public int executeUpdate(String sql) throws SQLException {

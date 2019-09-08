@@ -20,10 +20,18 @@ import java.sql.Struct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import com.mongodb.MongoClient;
+
 public class MongoConnection implements Connection {
+    private MongoClient mongoClient;
+
+    public MongoConnection(String uri) {
+        // TODO: actually handle URIs.
+        mongoClient = new MongoClient();
+    }
 
     public Statement createStatement() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return new MongoStatement(mongoClient);
     }
 
     public PreparedStatement prepareStatement(String sql)

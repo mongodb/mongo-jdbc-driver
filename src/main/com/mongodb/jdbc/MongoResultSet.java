@@ -21,7 +21,14 @@ import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
 
+import com.mongodb.client.FindIterable;
+
 public class MongoResultSet implements ResultSet {
+    private FindIterable cursor;
+
+    public MongoResultSet(FindIterable cursor) {
+        this.cursor = cursor;
+    }
 
     public boolean next() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
