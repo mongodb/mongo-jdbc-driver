@@ -286,10 +286,6 @@ public class MongoResultSet implements ResultSet {
     // Properties
     //---------------------------------------------------------------------
 
-    int FETCH_FORWARD = 1000;
-    int FETCH_REVERSE = 1001;
-    int FETCH_UNKNOWN = 1002;
-
     public void setFetchDirection(int direction) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
@@ -306,16 +302,9 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    int TYPE_FORWARD_ONLY = 1003;
-    int TYPE_SCROLL_INSENSITIVE = 1004;
-    int TYPE_SCROLL_SENSITIVE = 1005;
-
     public int getType() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return ResultSet.TYPE_FORWARD_ONLY;
 	}
-
-    int CONCUR_READ_ONLY = 1007;
-    int CONCUR_UPDATABLE = 1008;
 
     public int getConcurrency() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -606,9 +595,6 @@ public class MongoResultSet implements ResultSet {
     }
 
     //-------------------------- JDBC 3.0 ----------------------------------------
-
-    int HOLD_CURSORS_OVER_COMMIT = 1;
-    int CLOSE_CURSORS_AT_COMMIT = 2;
 
     public java.net.URL getURL(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -913,4 +899,3 @@ public class MongoResultSet implements ResultSet {
         return (T) this;
     }
 }
-

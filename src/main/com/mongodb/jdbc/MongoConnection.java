@@ -83,12 +83,6 @@ public class MongoConnection implements Connection {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public int TRANSACTION_NONE             = 0;
-    public int TRANSACTION_READ_UNCOMMITTED = 1;
-    public int TRANSACTION_READ_COMMITTED   = 2;
-    public int TRANSACTION_REPEATABLE_READ  = 4;
-    public int TRANSACTION_SERIALIZABLE     = 8;
-
     public void setTransactionIsolation(int level) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }

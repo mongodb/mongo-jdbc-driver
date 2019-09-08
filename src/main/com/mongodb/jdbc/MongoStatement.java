@@ -132,14 +132,6 @@ public class MongoStatement implements Statement {
 
   //--------------------------JDBC 3.0-----------------------------
 
-    int CLOSE_CURRENT_RESULT = 1;
-    int KEEP_CURRENT_RESULT = 2;
-    int CLOSE_ALL_RESULTS = 3;
-    int SUCCESS_NO_INFO = -2;
-    int EXECUTE_FAILED = -3;
-    int RETURN_GENERATED_KEYS = 1;
-    int NO_GENERATED_KEYS = 2;
-
     public boolean getMoreResults(int current) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
