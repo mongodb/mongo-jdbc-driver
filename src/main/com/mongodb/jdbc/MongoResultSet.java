@@ -34,14 +34,9 @@ public class MongoResultSet implements ResultSet {
 
     public boolean next() throws SQLException {
         boolean result;
-        try {
-            result = cursor.hasNext();
-            if (result) {
-                current = cursor.next();
-                System.out.println(current.toJson());
-            }
-        } finally {
-            cursor.close();
+        result = cursor.hasNext();
+        if (result) {
+            current = cursor.next();
         }
         return result;
     }
