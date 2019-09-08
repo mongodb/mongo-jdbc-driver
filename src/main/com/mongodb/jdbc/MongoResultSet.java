@@ -21,6 +21,7 @@ import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
 
+import org.bson.Document;
 import com.mongodb.client.FindIterable;
 
 public class MongoResultSet implements ResultSet {
