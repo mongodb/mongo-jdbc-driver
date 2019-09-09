@@ -24,6 +24,7 @@ import java.sql.Statement;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.MongoResultSetMetaData;
 
 public class MongoResultSet implements ResultSet {
     private MongoCursor<Document> cursor;
@@ -382,7 +383,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     public ResultSetMetaData getMetaData() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return new MongoResultSetMetaData(current);
     }
 
     public Object getObject(int columnIndex) throws SQLException {
