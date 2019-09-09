@@ -1078,12 +1078,12 @@ public class MongoResultSet implements ResultSet {
     //------------------------- JDBC 4.1 -----------------------------------
 
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return type.cast(current.values().toArray()[columnIndex]);
     }
 
 
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return current.get(columnLabel, type);
     }
 
     //------------------------- JDBC 4.2 -----------------------------------

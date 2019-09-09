@@ -20,6 +20,9 @@ public class Main {
    //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : true }
    //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : "true" }
    //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : null }
+   //   { "_id" : ObjectId("5d76be6ac2889451576bf28a"), "a" : "hello", "b" : ISODate("2019-09-09T21:04:42.568Z") }
+   //   { "_id" : ObjectId("5d76be77c2889451576bf28b"), "a" : "hello", "b" : UUID("3b241101-e2bb-4255-8caf-4136c566a962") }
+   //   { "_id" : ObjectId("5d76be77c2889451576bf28b"), "a" : "hello", "b" : BinData(15, "aGVsbG9w") }
    public static void main(String[] args) {
       try{
          Class.forName(JDBC_DRIVER);
@@ -35,6 +38,10 @@ public class Main {
             String id  = rs.getString("_id");
             String a = rs.getString("a");
             String b = rs.getString("b");
+            var metaData = rs.getMetaData();
+            var btype = metaData.getColumnType(2);
+            var btypeN = metaData.getColumnTypeName(2);
+            System.out.println("b type is: " + btype + " which is named: " + btypeN);
             try {
                 int bi = rs.getInt("b");
                 System.out.println("b was convertable to int: " + bi);
