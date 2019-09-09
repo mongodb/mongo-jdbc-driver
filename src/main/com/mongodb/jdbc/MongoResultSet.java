@@ -62,18 +62,6 @@ public class MongoResultSet implements ResultSet {
         }
     }
 
-    // Methods for accessing results by column index
-
-    public String getString(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        return current.values().toArray()[columnIndex].toString();
-    }
-
-    public boolean getBoolean(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
     public byte getByte(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -133,16 +121,68 @@ public class MongoResultSet implements ResultSet {
     }
 
 
-    // Methods for accessing results by column label
+    // Methods for accessing results
+
+	private String getString(Object o) throws SQLException {
+		if (o == null) {
+			return null;
+		}
+		return o.toString();
+	}
 
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        return current.get(columnLabel).toString();
+        var out = current.get(columnLabel);
+		return getString(out);
+    }
+
+    public String getString(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+		return getString(out);
+    }
+
+    private boolean getBoolean(Object o) throws SQLException {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Boolean) {
+            return (boolean) o;
+        }
+        if (o instanceof Double) {
+            return (double) o != 0.0;
+        }
+        if (o instanceof Integer) {
+            return (int) o != 0;
+        }
+        if (o instanceof Long) {
+            return (long) o != 0;
+        }
+        if (o instanceof Decimal128) {
+            return ((Decimal128) o).longValue() != 0;
+        }
+        // jdbc says the strings "true" and "false" should be converted to booleans.
+        var stringRepl = o.toString();
+        if (stringRepl.equals("true")) {
+            return true;
+        }
+        if (stringRepl.equals("false")) {
+            return false;
+        }
+        long longRepl = Long.parseLong(stringRepl);
+        return longRepl != 0;
     }
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.get(columnLabel);
+		return getBoolean(out);
+    }
+
+    public boolean getBoolean(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+		var out = current.values().toArray();
+		return getBoolean(out);
     }
 
     public byte getByte(String columnLabel) throws SQLException {
@@ -156,13 +196,19 @@ public class MongoResultSet implements ResultSet {
     }
 
     private int getInt(Object o) throws SQLException {
+        if (o == null) {
+            return 0;
+        }
         if (o instanceof Integer) {
             return (int) o;
-        } else if (o instanceof Double) {
+        }
+        if (o instanceof Double) {
             return ((Double)o).intValue();
-        } else if (o instanceof Long) {
+        }
+        if (o instanceof Long) {
             return Math.toIntExact((Long)o);
-        } else if (o instanceof Decimal128) {
+        }
+        if (o instanceof Decimal128) {
             return ((Decimal128)o).intValue();
         }
         return Integer.valueOf(o.toString());
@@ -181,13 +227,19 @@ public class MongoResultSet implements ResultSet {
     }
 
     private long getLong(Object o) throws SQLException {
+        if (o == null) {
+            return 0;
+        }
         if (o instanceof Long) {
             return (long) o;
-        } else if (o instanceof Double) {
+        }
+        if (o instanceof Double) {
             return ((Double)o).longValue();
-        } else if (o instanceof Integer) {
+        }
+        if (o instanceof Integer) {
             return (long) ((Integer)o);
-        } else if (o instanceof Decimal128) {
+        }
+        if (o instanceof Decimal128) {
             return ((Decimal128)o).longValue();
         }
         return Long.valueOf(o.toString());
@@ -195,14 +247,14 @@ public class MongoResultSet implements ResultSet {
 
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-		var out = current.get(columnLabel);
-		return getLong(out);
+        var out = current.get(columnLabel);
+        return getLong(out);
     }
 
     public long getLong(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-		var out = current.values().toArray()[columnIndex];
-		return getLong(out);
+        var out = current.values().toArray()[columnIndex];
+        return getLong(out);
     }
 
     public float getFloat(String columnLabel) throws SQLException {
@@ -211,6 +263,9 @@ public class MongoResultSet implements ResultSet {
     }
 
     private double getDouble(Object o) throws SQLException {
+        if (o == null) {
+            return 0.0;
+        }
         if (o instanceof Double) {
             return (double) o;
         } else if (o instanceof Long) {
@@ -226,13 +281,13 @@ public class MongoResultSet implements ResultSet {
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         var out = current.get(columnLabel);
-		return getDouble(out);
+        return getDouble(out);
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         var out = current.values().toArray()[columnIndex];
-		return getDouble(out);
+        return getDouble(out);
     }
 
     @Deprecated(since="1.2")
@@ -326,12 +381,35 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    private BigDecimal getBigDecimal(Object o) throws SQLException {
+        if (o == null) {
+            return new BigDecimal(0);
+        }
+        if (o instanceof Decimal128) {
+            return ((Decimal128)o).bigDecimalValue();
+        }
+        if (o instanceof Double) {
+            return new BigDecimal((double) o);
+        }
+        if (o instanceof Long) {
+            return new BigDecimal((long) o);
+        }
+        if (o instanceof Integer) {
+            return new BigDecimal((int) o);
+        }
+        return new BigDecimal(o.toString());
+    }
+
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+        return getBigDecimal(out);
     }
 
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkKey(columnLabel);
+        var out = current.get(columnLabel);
+        return getBigDecimal(out);
     }
 
     //---------------------------------------------------------------------

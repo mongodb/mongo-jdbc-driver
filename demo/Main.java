@@ -1,5 +1,7 @@
 import java.sql.*;
 
+import java.math.BigDecimal;
+
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
@@ -15,6 +17,9 @@ public class Main {
    //   { "_id" : ObjectId("5d767cfdf7a2a6ec17925767"), "a" : "hello", "b" : NumberDecimal("3.1415926535") }
    //   { "_id" : ObjectId("5d7680d8b816fa2e7c8acf85"), "a" : "hello", "b" : "1234" }
    //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : NumberLong("500000000000") }
+   //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : true }
+   //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : "true" }
+   //   { "_id" : ObjectId("5d7682cb9c9da86c56289c45"), "a" : "hello", "b" : null }
    public static void main(String[] args) {
       try{
          Class.forName(JDBC_DRIVER);
@@ -49,6 +54,20 @@ public class Main {
                 System.out.println("b was convertable to double: " + bd);
             } catch (Exception e) {
                 System.out.println("b was not an double, b was: " + b);
+            }
+
+            try {
+                BigDecimal bbd = rs.getBigDecimal("b");
+                System.out.println("b was convertable to BigDecimal: " + bbd);
+            } catch (Exception e) {
+                System.out.println("b was not an BigDecimal, b was: " + b);
+            }
+
+            try {
+                boolean bb = rs.getBoolean("b");
+                System.out.println("b was convertable to boolean: " + bb);
+            } catch (Exception e) {
+                System.out.println("b was not an boolean, b was: " + b);
             }
 
             //Display values
