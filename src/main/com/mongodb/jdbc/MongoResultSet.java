@@ -211,6 +211,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Decimal128) {
             return ((Decimal128)o).intValue();
         }
+		if (o instanceof Boolean) {
+			return (boolean)o?1:0;
+		}
         return Integer.valueOf(o.toString());
     }
 
@@ -242,6 +245,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Decimal128) {
             return ((Decimal128)o).longValue();
         }
+		if (o instanceof Boolean) {
+			return (boolean)o?1:0;
+		}
         return Long.valueOf(o.toString());
     }
 
@@ -275,6 +281,9 @@ public class MongoResultSet implements ResultSet {
         } else if (o instanceof Decimal128) {
             return ((Decimal128)o).doubleValue();
         }
+		if (o instanceof Boolean) {
+			return (boolean)o?1.0:0.0;
+		}
         return Long.valueOf(o.toString());
     }
 
@@ -397,6 +406,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Integer) {
             return new BigDecimal((int) o);
         }
+		if (o instanceof Boolean) {
+			return new BigDecimal((boolean)o?1:0);
+		}
         return new BigDecimal(o.toString());
     }
 
