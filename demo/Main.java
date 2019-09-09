@@ -20,12 +20,18 @@ public class Main {
             String id  = rs.getString("_id");
             String a = rs.getString("a");
             String b = rs.getString("b");
+			try {
+			    int bi = rs.getInt("b");
+				System.out.println("b was convertable to int: " + bi);
+			} catch (Exception e) {
+				System.out.println("b was not an int, b was: " + b);
+			}
 
             //Display values
             System.out.print("_id: " + id);
             System.out.print(", a: " + a);
-            System.out.print(", b: " + b);
-            System.out.println();
+            System.out.println(", b: " + b);
+            System.out.println("================");
          }
       } catch (Exception e) {
           throw new RuntimeException(e);

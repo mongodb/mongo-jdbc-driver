@@ -22,6 +22,7 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 
 import org.bson.Document;
+import org.bson.types.Decimal128;
 import com.mongodb.client.MongoCursor;
 
 public class MongoResultSet implements ResultSet {
@@ -81,15 +82,6 @@ public class MongoResultSet implements ResultSet {
     public short getShort(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public int getInt(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
-        if (out instanceof Integer) {
-            return (int) out;
-        }
-        return Integer.valueOf(out.toString());
     }
 
     public long getLong(int columnIndex) throws SQLException {
@@ -177,13 +169,29 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    private int getInt(Object o) throws SQLException {
+        if (o instanceof Integer) {
+            return (int) o;
+		} else if (o instanceof Double) {
+			return ((Double)o).intValue();
+        } else if (o instanceof Long) {
+			return Math.toIntExact((Long)o);
+		} else if (o instanceof Decimal128) {
+			return ((Decimal128)o).intValue();
+		}
+        return Integer.valueOf(o.toString());
+	}
+
     public int getInt(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         var out = current.get(columnLabel);
-        if (out instanceof Integer) {
-            return (int) out;
-        }
-        return Integer.valueOf(out.toString());
+		return getInt(out);
+    }
+
+    public int getInt(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+		return getInt(out);
     }
 
     public long getLong(String columnLabel) throws SQLException {
@@ -268,11 +276,11 @@ public class MongoResultSet implements ResultSet {
     }
 
     public Object getObject(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return current.values().toArray()[columnIndex];
     }
 
     public Object getObject(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return current.get(columnLabel);
     }
 
     //----------------------------------------------------------------
