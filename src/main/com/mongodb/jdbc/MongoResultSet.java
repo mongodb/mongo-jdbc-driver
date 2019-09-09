@@ -84,11 +84,6 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public long getLong(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
     public float getFloat(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -172,31 +167,51 @@ public class MongoResultSet implements ResultSet {
     private int getInt(Object o) throws SQLException {
         if (o instanceof Integer) {
             return (int) o;
-		} else if (o instanceof Double) {
-			return ((Double)o).intValue();
+        } else if (o instanceof Double) {
+            return ((Double)o).intValue();
         } else if (o instanceof Long) {
-			return Math.toIntExact((Long)o);
-		} else if (o instanceof Decimal128) {
-			return ((Decimal128)o).intValue();
-		}
+            return Math.toIntExact((Long)o);
+        } else if (o instanceof Decimal128) {
+            return ((Decimal128)o).intValue();
+        }
         return Integer.valueOf(o.toString());
-	}
+    }
 
     public int getInt(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         var out = current.get(columnLabel);
-		return getInt(out);
+        return getInt(out);
     }
 
     public int getInt(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         var out = current.values().toArray()[columnIndex];
-		return getInt(out);
+        return getInt(out);
+    }
+
+    private long getLong(Object o) throws SQLException {
+        if (o instanceof Long) {
+            return (long) o;
+        } else if (o instanceof Double) {
+            return ((Double)o).longValue();
+        } else if (o instanceof Integer) {
+            return (long) ((Integer)o);
+        } else if (o instanceof Decimal128) {
+            return ((Decimal128)o).longValue();
+        }
+        return Long.valueOf(o.toString());
     }
 
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.get(columnLabel);
+		return getLong(out);
+    }
+
+    public long getLong(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+		var out = current.values().toArray()[columnIndex];
+		return getLong(out);
     }
 
     public float getFloat(String columnLabel) throws SQLException {
@@ -276,7 +291,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     public Object getObject(int columnIndex) throws SQLException {
-		return current.values().toArray()[columnIndex];
+        return current.values().toArray()[columnIndex];
     }
 
     public Object getObject(String columnLabel) throws SQLException {
