@@ -49,108 +49,108 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-	private void checkBounds(int i) throws SQLException {
-		if(i >= current.size()) {
-			throw new SQLException("index out of bounds: '"+i+"'");
-		}
-	}
+    private void checkBounds(int i) throws SQLException {
+        if(i >= current.size()) {
+            throw new SQLException("index out of bounds: '"+i+"'");
+        }
+    }
 
-	private void checkKey(String key) throws SQLException {
-		if(!current.containsKey(key)) {
-		    throw new SQLException("no such column: '"+key+"'");
-		}
-	}
+    private void checkKey(String key) throws SQLException {
+        if(!current.containsKey(key)) {
+            throw new SQLException("no such column: '"+key+"'");
+        }
+    }
 
     // Methods for accessing results by column index
 
     public String getString(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
-		return current.values().toArray()[columnIndex].toString();
+        checkBounds(columnIndex);
+        return current.values().toArray()[columnIndex].toString();
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public byte getByte(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public short getShort(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public int getInt(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
-		var out = current.values().toArray()[columnIndex];
-		if (out instanceof Integer) {
-			return (int) out;
-		}
-		return Integer.valueOf(out.toString());
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+        if (out instanceof Integer) {
+            return (int) out;
+        }
+        return Integer.valueOf(out.toString());
     }
 
     public long getLong(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public float getFloat(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public double getDouble(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
-		var out = current.values().toArray()[columnIndex];
-		if (out instanceof Double) {
-			return (double) out;
-		}
-		return Double.valueOf(out.toString());
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+        if (out instanceof Double) {
+            return (double) out;
+        }
+        return Double.valueOf(out.toString());
     }
 
     @Deprecated(since="1.2")
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public byte[] getBytes(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Date getDate(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Time getTime(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Timestamp getTimestamp(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.io.InputStream getAsciiStream(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     @Deprecated(since="1.2")
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.io.InputStream getBinaryStream(int columnIndex)
         throws SQLException {
-		checkBounds(columnIndex);
+        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -158,93 +158,93 @@ public class MongoResultSet implements ResultSet {
     // Methods for accessing results by column label
 
     public String getString(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
-		return current.get(columnLabel).toString();
+        checkKey(columnLabel);
+        return current.get(columnLabel).toString();
     }
 
     public boolean getBoolean(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public byte getByte(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public short getShort(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public int getInt(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
-		var out = current.get(columnLabel);
-		if (out instanceof Integer) {
-			return (int) out;
-		}
-		return Integer.valueOf(out.toString());
+        checkKey(columnLabel);
+        var out = current.get(columnLabel);
+        if (out instanceof Integer) {
+            return (int) out;
+        }
+        return Integer.valueOf(out.toString());
     }
 
     public long getLong(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public float getFloat(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public double getDouble(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
-		var out = current.get(columnLabel);
-		if (out instanceof Double) {
-			return (double) out;
-		}
-		return Double.valueOf(out.toString());
+        checkKey(columnLabel);
+        var out = current.get(columnLabel);
+        if (out instanceof Double) {
+            return (double) out;
+        }
+        return Double.valueOf(out.toString());
     }
 
     @Deprecated(since="1.2")
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public byte[] getBytes(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Date getDate(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Time getTime(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.sql.Timestamp getTimestamp(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.io.InputStream getAsciiStream(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     @Deprecated(since="1.2")
     public java.io.InputStream getUnicodeStream(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     public java.io.InputStream getBinaryStream(String columnLabel)
         throws SQLException {
-		checkKey(columnLabel);
+        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 

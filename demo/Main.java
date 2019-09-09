@@ -7,7 +7,7 @@ public class Main {
 
    public static void main(String[] args) {
       try{
-		 Class.forName(JDBC_DRIVER);
+         Class.forName(JDBC_DRIVER);
          System.out.println("Connecting to database...");
          var conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
 
@@ -28,7 +28,7 @@ public class Main {
             System.out.println();
          }
       } catch (Exception e) {
-		  throw new RuntimeException(e);
+          throw new RuntimeException(e);
       }
    }
 }
