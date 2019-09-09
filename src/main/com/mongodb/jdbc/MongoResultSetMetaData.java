@@ -133,7 +133,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         // MinKey
         // MaxKey
-		throw new SQLException("unknown mongo type: " + o.getClass().getName());
+        throw new SQLException("unknown mongo type: " + o.getClass().getName());
     }
 
     public String getColumnTypeName(int column)throws SQLException {
@@ -178,7 +178,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         // MinKey
         // MaxKey
-		throw new SQLException("unknown mongo type: " + o.getClass().getName());
+        throw new SQLException("unknown mongo type: " + o.getClass().getName());
     }
 
     public boolean isReadOnly(int column)throws SQLException {
@@ -196,7 +196,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     //--------------------------JDBC 2.0-----------------------------------
 
     public String getColumnClassName(int column)throws SQLException {
-        throw new SQLException("unimplemented");
+        var o = getObject(column);
+        if (o == null) {
+            // I guess?
+            return "java.lang.Object";
+        }
+        return o.getClass().getName();
     }
 
     // java.sql.Wrapper impl

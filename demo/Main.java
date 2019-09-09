@@ -41,7 +41,8 @@ public class Main {
             var metaData = rs.getMetaData();
             var btype = metaData.getColumnType(2);
             var btypeN = metaData.getColumnTypeName(2);
-            System.out.println("b type is: " + btype + " which is named: " + btypeN);
+			var btypeC = metaData.getColumnClassName(2);
+            System.out.println("b type is: " + btype + " which is named: " + btypeN + " and has java class name: " + btypeC);
             try {
                 int bi = rs.getInt("b");
                 System.out.println("b was convertable to int: " + bi);
