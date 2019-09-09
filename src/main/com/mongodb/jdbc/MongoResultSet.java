@@ -65,7 +65,7 @@ public class MongoResultSet implements ResultSet {
 
     public String getString(int columnIndex) throws SQLException {
 		checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return current.values().toArray()[columnIndex].toString();
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
@@ -151,7 +151,7 @@ public class MongoResultSet implements ResultSet {
 
     public String getString(String columnLabel) throws SQLException {
 		checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return current.get(columnLabel).toString();
     }
 
     public boolean getBoolean(String columnLabel) throws SQLException {
