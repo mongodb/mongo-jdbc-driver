@@ -85,7 +85,11 @@ public class MongoResultSet implements ResultSet {
 
     public int getInt(int columnIndex) throws SQLException {
 		checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.values().toArray()[columnIndex];
+		if (out instanceof Integer) {
+			return (int) out;
+		}
+		return Integer.valueOf(out.toString());
     }
 
     public long getLong(int columnIndex) throws SQLException {
@@ -100,7 +104,11 @@ public class MongoResultSet implements ResultSet {
 
     public double getDouble(int columnIndex) throws SQLException {
 		checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.values().toArray()[columnIndex];
+		if (out instanceof Double) {
+			return (double) out;
+		}
+		return Double.valueOf(out.toString());
     }
 
     @Deprecated(since="1.2")
@@ -171,7 +179,11 @@ public class MongoResultSet implements ResultSet {
 
     public int getInt(String columnLabel) throws SQLException {
 		checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.get(columnLabel);
+		if (out instanceof Integer) {
+			return (int) out;
+		}
+		return Integer.valueOf(out.toString());
     }
 
     public long getLong(String columnLabel) throws SQLException {
@@ -186,7 +198,11 @@ public class MongoResultSet implements ResultSet {
 
     public double getDouble(String columnLabel) throws SQLException {
 		checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+		var out = current.get(columnLabel);
+		if (out instanceof Double) {
+			return (double) out;
+		}
+		return Double.valueOf(out.toString());
     }
 
     @Deprecated(since="1.2")
