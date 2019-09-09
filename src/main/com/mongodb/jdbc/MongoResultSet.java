@@ -62,21 +62,6 @@ public class MongoResultSet implements ResultSet {
         }
     }
 
-    public byte getByte(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public short getShort(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public float getFloat(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
     @Deprecated(since="1.2")
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkBounds(columnIndex);
@@ -123,23 +108,23 @@ public class MongoResultSet implements ResultSet {
 
     // Methods for accessing results
 
-	private String getString(Object o) throws SQLException {
-		if (o == null) {
-			return null;
-		}
-		return o.toString();
-	}
+    private String getString(Object o) throws SQLException {
+        if (o == null) {
+            return null;
+        }
+        return o.toString();
+    }
 
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         var out = current.get(columnLabel);
-		return getString(out);
+        return getString(out);
     }
 
     public String getString(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         var out = current.values().toArray()[columnIndex];
-		return getString(out);
+        return getString(out);
     }
 
     private boolean getBoolean(Object o) throws SQLException {
@@ -175,24 +160,50 @@ public class MongoResultSet implements ResultSet {
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-		var out = current.get(columnLabel);
-		return getBoolean(out);
+        var out = current.get(columnLabel);
+        return getBoolean(out);
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-		var out = current.values().toArray();
-		return getBoolean(out);
+        var out = current.values().toArray();
+        return getBoolean(out);
+    }
+
+    private byte getByte(Object o) throws SQLException {
+        // Just be lazy, I doubt this will be called often.
+        // HotSpot should inline these, anyway.
+        return (byte) getInt(o);
     }
 
     public byte getByte(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+        var out = current.get(columnLabel);
+        return getByte(out);
+    }
+
+    public byte getByte(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray();
+        return getByte(out);
+    }
+
+    private short getShort(Object o) throws SQLException {
+        // Just be lazy, I doubt this will be called often.
+        // HotSpot should inline these, anyway.
+        return (short) getInt(o);
     }
 
     public short getShort(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+        var out = current.get(columnLabel);
+        return getShort(out);
+    }
+
+    public short getShort(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray();
+        return getShort(out);
     }
 
     private int getInt(Object o) throws SQLException {
@@ -211,9 +222,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Decimal128) {
             return ((Decimal128)o).intValue();
         }
-		if (o instanceof Boolean) {
-			return (boolean)o?1:0;
-		}
+        if (o instanceof Boolean) {
+            return (boolean)o?1:0;
+        }
         return Integer.valueOf(o.toString());
     }
 
@@ -245,9 +256,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Decimal128) {
             return ((Decimal128)o).longValue();
         }
-		if (o instanceof Boolean) {
-			return (boolean)o?1:0;
-		}
+        if (o instanceof Boolean) {
+            return (boolean)o?1:0;
+        }
         return Long.valueOf(o.toString());
     }
 
@@ -263,9 +274,22 @@ public class MongoResultSet implements ResultSet {
         return getLong(out);
     }
 
+    private float getFloat(Object o) throws SQLException {
+        // Just be lazy, I doubt this will be called often.
+        // HotSpot should inline these, anyway.
+        return (float) getDouble(o);
+    }
+
     public float getFloat(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        throw new SQLFeatureNotSupportedException("not implemented");
+        var out = current.get(columnLabel);
+        return getFloat(out);
+    }
+
+    public float getFloat(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+        return getFloat(out);
     }
 
     private double getDouble(Object o) throws SQLException {
@@ -281,9 +305,9 @@ public class MongoResultSet implements ResultSet {
         } else if (o instanceof Decimal128) {
             return ((Decimal128)o).doubleValue();
         }
-		if (o instanceof Boolean) {
-			return (boolean)o?1.0:0.0;
-		}
+        if (o instanceof Boolean) {
+            return (boolean)o?1.0:0.0;
+        }
         return Long.valueOf(o.toString());
     }
 
@@ -406,9 +430,9 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Integer) {
             return new BigDecimal((int) o);
         }
-		if (o instanceof Boolean) {
-			return new BigDecimal((boolean)o?1:0);
-		}
+        if (o instanceof Boolean) {
+            return new BigDecimal((boolean)o?1:0);
+        }
         return new BigDecimal(o.toString());
     }
 
