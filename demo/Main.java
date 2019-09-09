@@ -1,15 +1,15 @@
 import java.sql.*;
 
-import com.mongodb.jdbc.MongoConnection;
-
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";  
+   static final String URL = "jdbc:mongodb://localhost/test";
 
    public static void main(String[] args) {
       try{
+		 Class.forName(JDBC_DRIVER);
          System.out.println("Connecting to database...");
-         var conn = new MongoConnection("");
+         var conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
 
          System.out.println("Creating statement...");
          var stmt = conn.createStatement();
@@ -28,7 +28,7 @@ public class Main {
             System.out.println();
          }
       } catch (Exception e) {
-       	System.out.println("Got exception :" + e);
+		  throw new RuntimeException(e);
       }
    }
 }

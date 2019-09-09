@@ -2,21 +2,33 @@ package com.mongodb.jdbc;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
+import com.mongodb.jdbc.MongoConnection;
+
 public class MongoDriver implements Driver {
+    final static String MONGODB_URL_PREFIX = "jdbc:mongodb:";
+
+    static {
+        try {
+            DriverManager.registerDriver(new MongoDriver());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Connection connect(String url, java.util.Properties info)
         throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return new MongoConnection(url);
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return url.startsWith(MONGODB_URL_PREFIX);
     }
 
 
@@ -35,9 +47,9 @@ public class MongoDriver implements Driver {
     }
 
 
-	// It will take us quite a while to achieve full jdbc compliance (full writes, transaction
-	// support, etc), and it actually requires
-	// passing certification.
+    // It will take us quite a while to achieve full jdbc compliance (full writes, transaction
+    // support, etc), and it actually requires
+    // passing certification.
     public boolean jdbcCompliant() {
         return false;
     }
