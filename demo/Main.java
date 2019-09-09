@@ -44,6 +44,13 @@ public class Main {
                 System.out.println("b was not an long, b was: " + b);
             }
 
+            try {
+                double bd = rs.getDouble("b");
+                System.out.println("b was convertable to double: " + bd);
+            } catch (Exception e) {
+                System.out.println("b was not an double, b was: " + b);
+            }
+
             //Display values
             System.out.print("_id: " + id);
             System.out.print(", a: " + a);

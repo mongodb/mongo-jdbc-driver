@@ -89,15 +89,6 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public double getDouble(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
-        if (out instanceof Double) {
-            return (double) out;
-        }
-        return Double.valueOf(out.toString());
-    }
-
     @Deprecated(since="1.2")
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkBounds(columnIndex);
@@ -219,13 +210,29 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    private double getDouble(Object o) throws SQLException {
+        if (o instanceof Double) {
+            return (double) o;
+        } else if (o instanceof Long) {
+            return (double) ((Long)o);
+        } else if (o instanceof Integer) {
+            return (double) ((Integer)o);
+        } else if (o instanceof Decimal128) {
+            return ((Decimal128)o).doubleValue();
+        }
+        return Long.valueOf(o.toString());
+    }
+
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         var out = current.get(columnLabel);
-        if (out instanceof Double) {
-            return (double) out;
-        }
-        return Double.valueOf(out.toString());
+		return getDouble(out);
+    }
+
+    public double getDouble(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        var out = current.values().toArray()[columnIndex];
+		return getDouble(out);
     }
 
     @Deprecated(since="1.2")
