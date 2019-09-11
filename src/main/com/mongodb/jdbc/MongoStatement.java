@@ -19,9 +19,9 @@ public class MongoStatement implements Statement {
     // must be parsed from the query.
     private MongoCollection col;
 
-    public MongoStatement(MongoClient client) {
+    public MongoStatement(MongoClient client, String currentDB) {
         // TODO: obviously don't just connect to `test.test`.
-        col = client.getDatabase("test").getCollection("test");
+        col = client.getDatabase(currentDB).getCollection("test");
     }
 
     @SuppressWarnings("unchecked")

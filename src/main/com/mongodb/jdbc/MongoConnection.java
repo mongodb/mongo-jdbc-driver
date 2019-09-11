@@ -24,6 +24,7 @@ import com.mongodb.MongoClient;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
+	private String currentDB = "test"; //test to test by default, TODO: get from connection URL.
 
     public MongoConnection(String uri) {
         // TODO: actually handle URIs.
@@ -31,7 +32,7 @@ public class MongoConnection implements Connection {
     }
 
     public Statement createStatement() throws SQLException {
-        return new MongoStatement(mongoClient);
+        return new MongoStatement(mongoClient, currentDB);
     }
 
     public PreparedStatement prepareStatement(String sql)
@@ -84,7 +85,7 @@ public class MongoConnection implements Connection {
     }
 
     public void setCatalog(String catalog) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		currentDB = catalog;
     }
 
     public String getCatalog() throws SQLException {
