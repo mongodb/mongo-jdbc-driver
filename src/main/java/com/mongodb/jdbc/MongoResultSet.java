@@ -58,7 +58,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     private void checkKey(String key) throws SQLException {
-        if(!current.containsKey(key)) {
+        if(current == null || !current.containsKey(key)) {
             throw new SQLException("no such column: '"+key+"'");
         }
     }
