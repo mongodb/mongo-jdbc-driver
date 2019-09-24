@@ -1,3 +1,5 @@
+package com.mongodb.jdbc.demo;
+
 import java.sql.*;
 
 import java.math.BigDecimal;
