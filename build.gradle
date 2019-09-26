@@ -1,13 +1,17 @@
 plugins {
     id 'java-library'
-    id 'nebula.lint' version '9.3.4'
+    id "com.diffplug.gradle.spotless" version "3.24.3"
+}
+
+spotless {
+    java {
+        googleJavaFormat('1.1').aosp()
+    }
 }
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
-    apply plugin: 'nebula.lint'
-    gradleLint.rules = ['all-dependency'] // add as many rules here as you'd like
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = sourceCompatibility
@@ -17,6 +21,7 @@ allprojects {
     }
 
     dependencies {
+        // MongoDB
         implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
         implementation group: 'org.mongodb', name: 'mongodb-driver', version: mongodbDriverVersion
 
