@@ -436,10 +436,10 @@ public class MongoResultSet implements ResultSet {
             case DB_POINTER:
                 return handleBooleanConversionFailure(DB_POINTER);
             case DECIMAL128:
-                {
-                    Decimal128 v = o.asDecimal128().getValue();
-                    return v != Decimal128.POSITIVE_ZERO && v != Decimal128.NEGATIVE_ZERO;
-                }
+            {
+                Decimal128 v = o.asDecimal128().getValue();
+                return v != Decimal128.POSITIVE_ZERO && v != Decimal128.NEGATIVE_ZERO;
+            }
             case DOCUMENT:
                 return handleBooleanConversionFailure(DOCUMENT);
             case DOUBLE:
