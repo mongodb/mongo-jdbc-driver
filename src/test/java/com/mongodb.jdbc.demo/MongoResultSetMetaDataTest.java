@@ -66,12 +66,12 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
-    void getColumnCountTest() throws SQLException {
+    void testGetColumnCount() throws SQLException {
         assertEquals(11, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
-    void getColumnTypeTest() throws SQLException {
+    void testGetColumnType() throws SQLException {
         assertEquals(Types.NULL, resultSetMetaData.getColumnType(COL_IDX.NULL_COL.ordinal()));
         assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(COL_IDX.DOUBLE_COL.ordinal()));
         assertEquals(
@@ -88,7 +88,7 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
-    void getColumnTypeClassNameTest() throws SQLException {
+    void testGetColumnTypeClassName() throws SQLException {
         assertEquals(
                 "java.lang.Object",
                 resultSetMetaData.getColumnClassName(COL_IDX.NULL_COL.ordinal()));
@@ -125,7 +125,7 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
-    void getColumnTypeNameTest() throws SQLException {
+    void testGetColumnTypeName() throws SQLException {
         assertEquals("null", resultSetMetaData.getColumnTypeName(COL_IDX.NULL_COL.ordinal()));
         assertEquals("double", resultSetMetaData.getColumnTypeName(COL_IDX.DOUBLE_COL.ordinal()));
         assertEquals("string", resultSetMetaData.getColumnTypeName(COL_IDX.STRING_COL.ordinal()));
