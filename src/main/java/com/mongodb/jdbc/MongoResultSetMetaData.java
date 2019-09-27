@@ -3,10 +3,8 @@ package com.mongodb.jdbc;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import java.util.Date;
 import java.util.UUID;
-
 import org.bson.Document;
 import org.bson.types.Binary;
 import org.bson.types.Decimal128;
@@ -19,79 +17,79 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         this.doc = doc;
     }
 
-    public int getColumnCount()throws SQLException {
+    public int getColumnCount() throws SQLException {
         return doc.size();
     }
 
-    public boolean isAutoIncrement(int column)throws SQLException {
+    public boolean isAutoIncrement(int column) throws SQLException {
         return false;
     }
 
-    public boolean isCaseSensitive(int column)throws SQLException {
+    public boolean isCaseSensitive(int column) throws SQLException {
         return true;
     }
 
-    public boolean isSearchable(int column)throws SQLException {
+    public boolean isSearchable(int column) throws SQLException {
         return true;
     }
 
-    public boolean isCurrency(int column)throws SQLException {
+    public boolean isCurrency(int column) throws SQLException {
         return false;
     }
 
-    public int isNullable(int column)throws SQLException {
+    public int isNullable(int column) throws SQLException {
         // TODO?: use java schema validators to possibly
         // return false. Might be dangerous since validators
         // can be subverted.
         return columnNullableUnknown;
     }
 
-    public boolean isSigned(int column)throws SQLException {
+    public boolean isSigned(int column) throws SQLException {
         return true;
     }
 
-    public int getColumnDisplaySize(int column)throws SQLException {
+    public int getColumnDisplaySize(int column) throws SQLException {
         // TODO: Format as string and get length?
         throw new SQLException("unimplemented");
     }
 
     // getColumnLabel is for print out versus simple name, MongoDB makes no distinction.
-    public String getColumnLabel(int column)throws SQLException {
+    public String getColumnLabel(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public String getColumnName(int column)throws SQLException {
+    public String getColumnName(int column) throws SQLException {
         return getColumnLabel(column);
     }
 
-    public String getSchemaName(int column)throws SQLException {
+    public String getSchemaName(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public int getPrecision(int column)throws SQLException {
+    public int getPrecision(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public int getScale(int column)throws SQLException {
+    public int getScale(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public String getTableName(int column)throws SQLException {
+    public String getTableName(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public String getCatalogName(int column)throws SQLException {
+    public String getCatalogName(int column) throws SQLException {
         return getColumnLabel(column);
     }
 
     private Object getObject(int column) throws SQLException {
-        if (column > doc.size()){
-            throw new SQLException("index out of bounds: '"+column+"'");
+        if (column > doc.size()) {
+            throw new SQLException("index out of bounds: '" + column + "'");
         }
         return doc.values().toArray()[column];
     }
 
-    public int getColumnType(int column)throws SQLException {
+    public int getColumnType(int column) throws SQLException {
         var o = getObject(column);
         // TODO: figure out how to handle missing bson types.
         if (o == null) {
@@ -136,7 +134,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown mongo type: " + o.getClass().getName());
     }
 
-    public String getColumnTypeName(int column)throws SQLException {
+    public String getColumnTypeName(int column) throws SQLException {
         var o = getObject(column);
         // TODO: figure out how to handle missing bson types.
         if (o == null) {
@@ -181,21 +179,21 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown mongo type: " + o.getClass().getName());
     }
 
-    public boolean isReadOnly(int column)throws SQLException {
+    public boolean isReadOnly(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public boolean isWritable(int column)throws SQLException {
+    public boolean isWritable(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    public boolean isDefinitelyWritable(int column)throws SQLException {
+    public boolean isDefinitelyWritable(int column) throws SQLException {
         throw new SQLException("unimplemented");
     }
 
-    //--------------------------JDBC 2.0-----------------------------------
+    // --------------------------JDBC 2.0-----------------------------------
 
-    public String getColumnClassName(int column)throws SQLException {
+    public String getColumnClassName(int column) throws SQLException {
         var o = getObject(column);
         if (o == null) {
             // I guess?
@@ -205,7 +203,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     // java.sql.Wrapper impl
-    public boolean isWrapperFor(Class< ? > iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isInstance(this);
     }
 

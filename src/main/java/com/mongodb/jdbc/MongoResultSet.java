@@ -1,14 +1,12 @@
 package com.mongodb.jdbc;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.io.Reader;
+import com.mongodb.client.MongoCursor;
 import java.io.InputStream;
-
+import java.io.Reader;
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.Connection;
 import java.sql.NClob;
 import java.sql.Ref;
 import java.sql.ResultSet;
@@ -20,11 +18,9 @@ import java.sql.SQLType;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
-
+import java.util.Calendar;
 import org.bson.Document;
 import org.bson.types.Decimal128;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.jdbc.MongoResultSetMetaData;
 
 public class MongoResultSet implements ResultSet {
     private MongoCursor<Document> cursor;
@@ -52,18 +48,18 @@ public class MongoResultSet implements ResultSet {
     }
 
     private void checkBounds(int i) throws SQLException {
-        if(i >= current.size()) {
-            throw new SQLException("index out of bounds: '"+i+"'");
+        if (i >= current.size()) {
+            throw new SQLException("index out of bounds: '" + i + "'");
         }
     }
 
     private void checkKey(String key) throws SQLException {
-        if(current == null || !current.containsKey(key)) {
-            throw new SQLException("no such column: '"+key+"'");
+        if (current == null || !current.containsKey(key)) {
+            throw new SQLException("no such column: '" + key + "'");
         }
     }
 
-    @Deprecated(since="1.2")
+    @Deprecated(since = "1.2")
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -94,18 +90,16 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Deprecated(since="1.2")
+    @Deprecated(since = "1.2")
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public java.io.InputStream getBinaryStream(int columnIndex)
-        throws SQLException {
+    public java.io.InputStream getBinaryStream(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
-
 
     // Methods for accessing results
 
@@ -215,16 +209,16 @@ public class MongoResultSet implements ResultSet {
             return (int) o;
         }
         if (o instanceof Double) {
-            return ((Double)o).intValue();
+            return ((Double) o).intValue();
         }
         if (o instanceof Long) {
-            return Math.toIntExact((Long)o);
+            return Math.toIntExact((Long) o);
         }
         if (o instanceof Decimal128) {
-            return ((Decimal128)o).intValue();
+            return ((Decimal128) o).intValue();
         }
         if (o instanceof Boolean) {
-            return (boolean)o?1:0;
+            return (boolean) o ? 1 : 0;
         }
         return Integer.valueOf(o.toString());
     }
@@ -249,16 +243,16 @@ public class MongoResultSet implements ResultSet {
             return (long) o;
         }
         if (o instanceof Double) {
-            return ((Double)o).longValue();
+            return ((Double) o).longValue();
         }
         if (o instanceof Integer) {
-            return (long) ((Integer)o);
+            return (long) ((Integer) o);
         }
         if (o instanceof Decimal128) {
-            return ((Decimal128)o).longValue();
+            return ((Decimal128) o).longValue();
         }
         if (o instanceof Boolean) {
-            return (boolean)o?1:0;
+            return (boolean) o ? 1 : 0;
         }
         return Long.valueOf(o.toString());
     }
@@ -300,14 +294,14 @@ public class MongoResultSet implements ResultSet {
         if (o instanceof Double) {
             return (double) o;
         } else if (o instanceof Long) {
-            return (double) ((Long)o);
+            return (double) ((Long) o);
         } else if (o instanceof Integer) {
-            return (double) ((Integer)o);
+            return (double) ((Integer) o);
         } else if (o instanceof Decimal128) {
-            return ((Decimal128)o).doubleValue();
+            return ((Decimal128) o).doubleValue();
         }
         if (o instanceof Boolean) {
-            return (boolean)o?1.0:0.0;
+            return (boolean) o ? 1.0 : 0.0;
         }
         return Long.valueOf(o.toString());
     }
@@ -324,7 +318,7 @@ public class MongoResultSet implements ResultSet {
         return getDouble(out);
     }
 
-    @Deprecated(since="1.2")
+    @Deprecated(since = "1.2")
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -355,18 +349,16 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Deprecated(since="1.2")
+    @Deprecated(since = "1.2")
     public java.io.InputStream getUnicodeStream(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public java.io.InputStream getBinaryStream(String columnLabel)
-        throws SQLException {
+    public java.io.InputStream getBinaryStream(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
     }
-
 
     // Advanced features:
 
@@ -383,7 +375,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     public ResultSetMetaData getMetaData() throws SQLException {
-		return new MongoResultSetMetaData(current);
+        return new MongoResultSetMetaData(current);
     }
 
     public Object getObject(int columnIndex) throws SQLException {
@@ -394,18 +386,17 @@ public class MongoResultSet implements ResultSet {
         return current.get(columnLabel);
     }
 
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
 
     public int findColumn(String columnLabel) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    // --------------------------JDBC 2.0-----------------------------------
 
-    //--------------------------JDBC 2.0-----------------------------------
-
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     // Getters and Setters
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
 
     public java.io.Reader getCharacterStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -420,7 +411,7 @@ public class MongoResultSet implements ResultSet {
             return new BigDecimal(0);
         }
         if (o instanceof Decimal128) {
-            return ((Decimal128)o).bigDecimalValue();
+            return ((Decimal128) o).bigDecimalValue();
         }
         if (o instanceof Double) {
             return new BigDecimal((double) o);
@@ -432,7 +423,7 @@ public class MongoResultSet implements ResultSet {
             return new BigDecimal((int) o);
         }
         if (o instanceof Boolean) {
-            return new BigDecimal((boolean)o?1:0);
+            return new BigDecimal((boolean) o ? 1 : 0);
         }
         return new BigDecimal(o.toString());
     }
@@ -449,9 +440,9 @@ public class MongoResultSet implements ResultSet {
         return getBigDecimal(out);
     }
 
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     // Traversal/Positioning
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
 
     public boolean isBeforeFirst() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -489,11 +480,11 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public boolean absolute( int row ) throws SQLException {
+    public boolean absolute(int row) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public boolean relative( int rows ) throws SQLException {
+    public boolean relative(int rows) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -501,9 +492,9 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     // Properties
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
 
     public void setFetchDirection(int direction) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -529,9 +520,9 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     // Updates
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
 
     public boolean rowUpdated() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -597,31 +588,26 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateTimestamp(int columnIndex, java.sql.Timestamp x)
-      throws SQLException {
+    public void updateTimestamp(int columnIndex, java.sql.Timestamp x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateAsciiStream(int columnIndex,
-                           java.io.InputStream x,
-                           int length) throws SQLException {
+    public void updateAsciiStream(int columnIndex, java.io.InputStream x, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(int columnIndex,
-                           java.io.InputStream x,
-                           int length) throws SQLException {
+    public void updateBinaryStream(int columnIndex, java.io.InputStream x, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(int columnIndex,
-                            java.io.Reader x,
-                            int length) throws SQLException {
+    public void updateCharacterStream(int columnIndex, java.io.Reader x, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateObject(int columnIndex, Object x, int scaleOrLength)
-      throws SQLException {
+    public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -681,31 +667,26 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateTimestamp(String columnLabel, java.sql.Timestamp x)
-      throws SQLException {
+    public void updateTimestamp(String columnLabel, java.sql.Timestamp x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateAsciiStream(String columnLabel,
-                           java.io.InputStream x,
-                           int length) throws SQLException {
+    public void updateAsciiStream(String columnLabel, java.io.InputStream x, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(String columnLabel,
-                            java.io.InputStream x,
-                            int length) throws SQLException {
+    public void updateBinaryStream(String columnLabel, java.io.InputStream x, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(String columnLabel,
-                            java.io.Reader reader,
-                            int length) throws SQLException {
+    public void updateCharacterStream(String columnLabel, java.io.Reader reader, int length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateObject(String columnLabel, Object x, int scaleOrLength)
-      throws SQLException {
+    public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -745,8 +726,8 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public Object getObject(int columnIndex, java.util.Map<String,Class<?>> map)
-        throws SQLException {
+    public Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -766,8 +747,8 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public Object getObject(String columnLabel, java.util.Map<String,Class<?>> map)
-      throws SQLException {
+    public Object getObject(String columnLabel, java.util.Map<String, Class<?>> map)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -803,17 +784,15 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public java.sql.Timestamp getTimestamp(int columnIndex, Calendar cal)
-      throws SQLException {
+    public java.sql.Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public java.sql.Timestamp getTimestamp(String columnLabel, Calendar cal)
-      throws SQLException {
+    public java.sql.Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //-------------------------- JDBC 3.0 ----------------------------------------
+    // -------------------------- JDBC 3.0 ----------------------------------------
 
     public java.net.URL getURL(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -855,7 +834,7 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //------------------------- JDBC 4.0 -----------------------------------
+    // ------------------------- JDBC 4.0 -----------------------------------
 
     public RowId getRowId(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -925,11 +904,9 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-
     public String getNString(String columnLabel) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
-
 
     public java.io.Reader getNCharacterStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -939,118 +916,108 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNCharacterStream(int columnIndex,
-                            java.io.Reader x,
-                            long length) throws SQLException {
+    public void updateNCharacterStream(int columnIndex, java.io.Reader x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNCharacterStream(String columnLabel,
-                            java.io.Reader reader,
-                            long length) throws SQLException {
+    public void updateNCharacterStream(String columnLabel, java.io.Reader reader, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateAsciiStream(int columnIndex,
-                            java.io.InputStream x,
-                            long length) throws SQLException {
+    public void updateAsciiStream(int columnIndex, java.io.InputStream x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(int columnIndex,
-                            java.io.InputStream x,
-                            long length) throws SQLException {
+    public void updateBinaryStream(int columnIndex, java.io.InputStream x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(int columnIndex,
-                            java.io.Reader x,
-                            long length) throws SQLException {
+    public void updateCharacterStream(int columnIndex, java.io.Reader x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateAsciiStream(String columnLabel,
-                            java.io.InputStream x,
-                            long length) throws SQLException {
+    public void updateAsciiStream(String columnLabel, java.io.InputStream x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(String columnLabel,
-                            java.io.InputStream x,
-                            long length) throws SQLException {
+    public void updateBinaryStream(String columnLabel, java.io.InputStream x, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(String columnLabel,
-                            java.io.Reader reader,
-                            long length) throws SQLException {
+    public void updateCharacterStream(String columnLabel, java.io.Reader reader, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
+    public void updateBlob(int columnIndex, InputStream inputStream, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
+    public void updateBlob(String columnLabel, InputStream inputStream, long length)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateClob(int columnIndex,  Reader reader, long length) throws SQLException {
+    public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateClob(String columnLabel,  Reader reader, long length) throws SQLException {
+    public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNClob(int columnIndex,  Reader reader, long length) throws SQLException {
+    public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNClob(String columnLabel,  Reader reader, long length) throws SQLException {
+    public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //---
+    // ---
 
-    public void updateNCharacterStream(int columnIndex,
-                             java.io.Reader x) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public void updateNCharacterStream(String columnLabel,
-                             java.io.Reader reader) throws SQLException {
+    public void updateNCharacterStream(int columnIndex, java.io.Reader x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateAsciiStream(int columnIndex,
-                           java.io.InputStream x) throws SQLException {
+    public void updateNCharacterStream(String columnLabel, java.io.Reader reader)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(int columnIndex,
-                            java.io.InputStream x) throws SQLException {
+    public void updateAsciiStream(int columnIndex, java.io.InputStream x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(int columnIndex,
-                             java.io.Reader x) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-    public void updateAsciiStream(String columnLabel,
-                           java.io.InputStream x) throws SQLException {
+    public void updateBinaryStream(int columnIndex, java.io.InputStream x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateBinaryStream(String columnLabel,
-                            java.io.InputStream x) throws SQLException {
+    public void updateCharacterStream(int columnIndex, java.io.Reader x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateCharacterStream(String columnLabel,
-                             java.io.Reader reader) throws SQLException {
+    public void updateAsciiStream(String columnLabel, java.io.InputStream x) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
+
+    public void updateBinaryStream(String columnLabel, java.io.InputStream x) throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
+    }
+
+    public void updateCharacterStream(String columnLabel, java.io.Reader reader)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
+    }
+
     public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
@@ -1059,57 +1026,55 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateClob(int columnIndex,  Reader reader) throws SQLException {
+    public void updateClob(int columnIndex, Reader reader) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateClob(String columnLabel,  Reader reader) throws SQLException {
+    public void updateClob(String columnLabel, Reader reader) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNClob(int columnIndex,  Reader reader) throws SQLException {
+    public void updateNClob(int columnIndex, Reader reader) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    public void updateNClob(String columnLabel,  Reader reader) throws SQLException {
+    public void updateNClob(String columnLabel, Reader reader) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    //------------------------- JDBC 4.1 -----------------------------------
+    // ------------------------- JDBC 4.1 -----------------------------------
 
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-		return type.cast(current.values().toArray()[columnIndex]);
+        return type.cast(current.values().toArray()[columnIndex]);
     }
-
 
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-		return current.get(columnLabel, type);
+        return current.get(columnLabel, type);
     }
 
-    //------------------------- JDBC 4.2 -----------------------------------
+    // ------------------------- JDBC 4.2 -----------------------------------
 
-    public void updateObject(int columnIndex, Object x,
-             SQLType targetSqlType, int scaleOrLength)  throws SQLException {
-        throw new SQLFeatureNotSupportedException("updateObject not implemented");
-    }
-
-    public void updateObject(String columnLabel, Object x,
-            SQLType targetSqlType, int scaleOrLength) throws SQLException {
-        throw new SQLFeatureNotSupportedException("updateObject not implemented");
-    }
-
-    public void updateObject(int columnIndex, Object x, SQLType targetSqlType)
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("updateObject not implemented");
     }
 
-    public void updateObject(String columnLabel, Object x,
-            SQLType targetSqlType) throws SQLException {
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("updateObject not implemented");
+    }
+
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+        throw new SQLFeatureNotSupportedException("updateObject not implemented");
+    }
+
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("updateObject not implemented");
     }
 
     // java.sql.Wrapper impl
-    public boolean isWrapperFor(Class< ? > iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isInstance(this);
     }
 
