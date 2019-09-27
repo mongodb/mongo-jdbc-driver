@@ -11,4 +11,4 @@ You can find the generated jar in build/libs/
 ### To run the unit tests
 ./gradlew clean test
 ### To fix lint problem
-./gradlew fixGradleLint
+./gradlew spotlessApply

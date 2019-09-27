@@ -1,12 +1,12 @@
 package com.mongodb.jdbc.demo;
 
-import com.mongodb.client.MongoCursor;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.MongoResultSet;
+import java.sql.SQLException;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.sql.SQLDataException;
-import java.sql.SQLException;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -60,8 +57,10 @@ class MongoResultSetTest {
 
         var hasNext = mongoResultSet.next();
         assertFalse(hasNext);
-        assertThrows(SQLException.class, () -> {
-            mongoResultSet.getString("label");
-        });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString("label");
+                });
     }
 }

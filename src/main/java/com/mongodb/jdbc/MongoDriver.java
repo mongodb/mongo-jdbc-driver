@@ -6,13 +6,10 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-import com.mongodb.jdbc.MongoConnection;
-
 public class MongoDriver implements Driver {
-    final static String MONGODB_URL_PREFIX = "jdbc:mongodb:";
+    static final String MONGODB_URL_PREFIX = "jdbc:mongodb:";
 
     static {
         try {
@@ -22,8 +19,7 @@ public class MongoDriver implements Driver {
         }
     }
 
-    public Connection connect(String url, java.util.Properties info)
-        throws SQLException {
+    public Connection connect(String url, java.util.Properties info) throws SQLException {
         return new MongoConnection(url);
     }
 
@@ -31,12 +27,10 @@ public class MongoDriver implements Driver {
         return url.startsWith(MONGODB_URL_PREFIX);
     }
 
-
     public DriverPropertyInfo[] getPropertyInfo(String url, java.util.Properties info)
-                         throws SQLException {
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
-
 
     public int getMajorVersion() {
         return 0;
@@ -46,7 +40,6 @@ public class MongoDriver implements Driver {
         return 1;
     }
 
-
     // It will take us quite a while to achieve full jdbc compliance (full writes, transaction
     // support, etc), and it actually requires
     // passing certification.
@@ -54,10 +47,9 @@ public class MongoDriver implements Driver {
         return false;
     }
 
-    //------------------------- JDBC 4.1 -----------------------------------
+    // ------------------------- JDBC 4.1 -----------------------------------
 
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 }
-
