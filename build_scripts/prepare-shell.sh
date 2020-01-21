@@ -22,6 +22,7 @@ MDBJDBC_VER="$(cat "$PROJECT_ROOT/gradle.properties" | head -n 1 | sed  s'/versi
 
 # export any environment variables that will be needed by subprocesses
 export MDBJDBC_VER
+export JAVA_HOME
 
 # Each script should run with errexit set and should start in the project root.
 # In general, scripts should reference directories via the provided environment
