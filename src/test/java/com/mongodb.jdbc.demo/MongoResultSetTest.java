@@ -43,7 +43,7 @@ class MongoResultSetTest {
 
         mongoResultSet = new MongoResultSet(cursor);
 
-        var hasNext = mongoResultSet.next();
+        boolean hasNext = mongoResultSet.next();
         assertTrue(hasNext);
         assertEquals(NEXT_DOC, mongoResultSet.getString("label"));
     }
@@ -55,7 +55,7 @@ class MongoResultSetTest {
 
         mongoResultSet = new MongoResultSet(cursor);
 
-        var hasNext = mongoResultSet.next();
+        boolean hasNext = mongoResultSet.next();
         assertFalse(hasNext);
         assertThrows(
                 SQLException.class,

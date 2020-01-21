@@ -39,7 +39,7 @@ class MongoResultSetMetaDataTest {
     }
 
     static {
-        var doc = new Document();
+        Document doc = new Document();
         doc.append("nullCol", null);
         doc.append("doubleCol", 1.1);
         doc.append("stringCol", "string data");

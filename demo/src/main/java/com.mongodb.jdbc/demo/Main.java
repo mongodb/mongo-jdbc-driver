@@ -1,8 +1,9 @@
 package com.mongodb.jdbc.demo;
 
 import java.sql.*;
-
 import java.math.BigDecimal;
+
+import com.mongodb.jdbc.*;
 
 public class Main {
    // JDBC driver name and database URL
@@ -30,11 +31,11 @@ public class Main {
       try{
          Class.forName(JDBC_DRIVER);
          System.out.println("Connecting to database...");
-         var conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
+         Connection conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
 
          System.out.println("Creating statement...");
-         var stmt = conn.createStatement();
-         var rs = stmt.executeQuery("real queries don't work yet");
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("real queries don't work yet");
 		 System.out.println("++++++ Showing contents for test.test ++++++++");
 		 displayResultSet(rs);
 
@@ -54,10 +55,10 @@ public class Main {
           String id  = rs.getString("_id");
           String a = rs.getString("a");
           String b = rs.getString("b");
-          var metaData = rs.getMetaData();
-          var btype = metaData.getColumnType(2);
-          var btypeN = metaData.getColumnTypeName(2);
-	      var btypeC = metaData.getColumnClassName(2);
+          ResultSetMetaData metaData = rs.getMetaData();
+          int btype = metaData.getColumnType(2);
+          String btypeN = metaData.getColumnTypeName(2);
+	      String btypeC = metaData.getColumnClassName(2);
           System.out.println("b type is: " + btype + " which is named: " + btypeN + " and has java class name: " + btypeC);
           try {
               int bi = rs.getInt("b");
