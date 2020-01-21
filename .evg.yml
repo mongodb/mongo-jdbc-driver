@@ -35,6 +35,7 @@ functions:
     command: shell.exec
     type: test
     params:
+      working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
           # this also runs the unit tests.
