@@ -6,7 +6,6 @@ pre:
   - func: "export variables"
 
 post:
-  - func: "upload test results"
   - func: "upload jar file"
 
 buildvariants:
@@ -111,8 +110,7 @@ functions:
         working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_files_include_filter: 
-            - build/libs/mongo-jdbc-*.jar
+        local_file: build/libs/mongo-jdbc-4.2.0.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
         content_type: application/java-archive
         bucket: mciuploads
