@@ -73,6 +73,7 @@ functions:
   "fetch jdbc files":
     - command: s3.get
       params:
+        working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
@@ -92,6 +93,8 @@ functions:
   "upload test results":
     - command: s3.put
       params:
+        working_dir: adl-jdbc-driver
+        aws_key: ${aws_key}
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
@@ -105,9 +108,11 @@ functions:
   "upload jar file":
     - command: s3.put
       params:
+        working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: build/libs/mongo-jdbc-4.2.0.jar
+        local_files_include_filter: 
+            - build/libs/mongo-jdbc-*.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
         content_type: application/java-archive
         bucket: mciuploads
