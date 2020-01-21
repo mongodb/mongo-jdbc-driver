@@ -1,0 +1,114 @@
+stepback: true
+command_type: system
+
+pre:
+  - func: "fetch source"
+  - func: "export variables"
+
+post:
+  - func: "upload test results"
+  - func: "upload jar file"
+
+buildvariants:
+  - name: ubuntu1804-64-jdk-8
+    display_name: Ubuntu 18.04 jdk-8
+    expansions:
+      _platform: ubuntu1804-64-jdk-8
+    run_on: ubuntu1804-build
+    tasks:
+      - name: "build"
+  - name: ubuntu1804-64-jdk-11
+    display_name: Ubuntu 18.04 jdk-11
+    expansions:
+      _platform: ubuntu1804-64-jdk-11
+    run_on: ubuntu1804-build
+    tasks:
+      - name: "build"
+
+tasks:
+  - name: "build"
+    commands:
+      - func: "build jdbc driver"
+
+functions:
+  "build jdbc driver":
+    command: shell.exec
+    type: test
+    params:
+      script: |
+          ${PREPARE_SHELL}
+          # this also runs the unit tests.
+          ./gradlew clean build
+
+  "export variables":
+    - command: shell.exec
+      params:
+        silent: true
+        working_dir: adl-jdbc-driver
+        script: |
+
+          export PLATFORM='${_platform|unset}'
+          . "./build_scripts/prepare-shell.sh"
+
+          export S3_ARTIFACTS_DIR='adl-jdbc-driver/artifacts/${version_id}'
+          export S3_RELEASES_DIR='adl-jdbc-driver/releases/${version_id}'
+
+          # create expansions from values calculated above
+          mkdir -p $ARTIFACTS_DIR
+          cat <<EOT > $ARTIFACTS_DIR/expansions.yml
+          ARTIFACTS_DIR: "$ARTIFACTS_DIR"
+          SCRIPT_DIR: "$SCRIPT_DIR"
+          PLATFORM_NAME: "$PLATFORM_NAME"
+          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          S3_RELEASES_DIR: "$S3_RELEASES_DIR"
+          PREPARE_SHELL: |
+             export PLATFORM="$PLATFORM"
+          EOT
+
+    - command: expansions.update
+      params:
+        file: artifacts/expansions.yml
+
+  "fetch jdbc files":
+    - command: s3.get
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
+        local_file: build/libs/mongo-jdbc-4.2.0.jar
+        bucket: mciuploads
+
+  "fetch source":
+    - command: shell.exec
+      params:
+        silent: true
+        script: |
+          rm -rf adl-jdbc-driver
+    - command: git.get_project
+      params:
+        directory: adl-jdbc-driver
+
+  "upload test results":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - build/reports/tests/test/*
+        remote_file: ${S3_ARTIFACTS_DIR}/
+        content_type: text/plain
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test Results"
+
+  "upload jar file":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: build/libs/mongo-jdbc-4.2.0.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
+        content_type: application/java-archive
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "JDBC Driver (.jar)"
