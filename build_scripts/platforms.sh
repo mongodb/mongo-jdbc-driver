@@ -3,7 +3,7 @@
 echo $0
 
 if [ "$PLATFORM" = "" ]; then
-    PLATFORM=macos
+    PLATFORM=linux
     echo "WARNING: no value provided for \$PLATFORM: using default of '$PLATFORM'"
 fi
 
