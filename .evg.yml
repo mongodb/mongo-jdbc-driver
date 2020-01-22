@@ -101,7 +101,7 @@ functions:
         local_files_include_filter:
             - build/reports/tests/test/*
         remote_file: ${S3_ARTIFACTS_DIR}/
-        content_type: text/plain
+        content_type: text/html
         bucket: mciuploads
         permissions: public-read
         display_name: "Test Results"
