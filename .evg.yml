@@ -53,6 +53,7 @@ functions:
           export S3_ARTIFACTS_DIR='adl-jdbc-driver/artifacts/${version_id}'
           export S3_RELEASES_DIR='adl-jdbc-driver/releases/${version_id}'
 
+          echo "artifacts_dir: $ARTIFACTS_DIR"
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
