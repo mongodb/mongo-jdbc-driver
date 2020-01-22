@@ -2,15 +2,15 @@
 # Copyright (c) 2020-Present MongoDB Inc.
 # This file should be sourced by all scripts
 
-# we start by sourcing platforms.sh. this will set environment variables that
-# differ depending on which platform we are building on
-# shellcheck source=platforms.sh
-. "$(dirname "$0")/platforms.sh"
-
 set -o verbose
 
 # create variables for a number of useful directories
 SCRIPT_DIR=$(cd $(dirname $0) && pwd -P)
+
+# we start by sourcing platforms.sh. this will set environment variables that
+# differ depending on which platform we are building on
+# shellcheck source=platforms.sh
+. "$SCRIPT_DIR/platforms.sh"
 
 PROJECT_ROOT="$SCRIPT_DIR/../"
 
