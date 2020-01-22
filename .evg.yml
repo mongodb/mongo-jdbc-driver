@@ -111,8 +111,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/build/libs/mongo-jdbc-4.2.0.jar
-        #remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
-        remote_file: adl-jdbc-driver/artifacts/1234/mongo-jdbc-4.2.0.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
         content_type: application/java-archive
         bucket: mciuploads
         permissions: public-read
