@@ -50,8 +50,8 @@ functions:
           . "./prepare-shell.sh"
 
           # our keys can currently only ulpad under the sqlproxy directory.
-          export S3_ARTIFACTS_DIR='sqlproxy/artifacts/adl-jdbc-driver/${version_id}/${build_variant}'
-          export S3_RELEASES_DIR='sqlproxy/releases/adl-jdbc-driver/${version_id}/${build_variant}'
+          export S3_ARTIFACTS_DIR='adl-sql-driver/artifacts/${version_id}/${build_variant}'
+          export S3_RELEASES_DIR='adl-sql-driver/releases/${version_id}/${build_variant}'
 
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
