@@ -10,11 +10,11 @@ fi
 case "$PLATFORM" in
 ubuntu1804-64-jdk-8)
     PLATFORM_NAME='linux'
-	JAVA_HOME=/opt/java/jdk8
+    JAVA_HOME=/opt/java/jdk8
     ;;
 ubuntu1804-64-jdk-11)
     PLATFORM_NAME='linux'
-	JAVA_HOME=/opt/java/jdk11
+    JAVA_HOME=/opt/java/jdk11
     ;;
 *)
     echo "ERROR: invalid value for \$PLATFORM: '$PLATFORM'"
