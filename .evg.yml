@@ -67,7 +67,7 @@ functions:
 
     - command: expansions.update
       params:
-        file: artifacts/expansions.yml
+        file: adl-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc files":
     - command: s3.get
