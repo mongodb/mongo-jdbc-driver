@@ -7,6 +7,7 @@ pre:
 
 post:
   - func: "upload jar file"
+  - func: "upload test results"
 
 buildvariants:
   - name: ubuntu1804-64-jdk-8
@@ -61,6 +62,7 @@ functions:
           PLATFORM_NAME: "$PLATFORM_NAME"
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           S3_RELEASES_DIR: "$S3_RELEASES_DIR"
+          MDBJDBC_VER: "$MDBJDBC_VER"
           PREPARE_SHELL: |
              export PLATFORM="$PLATFORM"
           EOT
@@ -110,8 +112,8 @@ functions:
         working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/libs/mongo-jdbc-4.2.0.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
+        local_file: adl-jdbc-driver/build/libs/mongo-jdbc-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-${MDBJDBC_VER}.jar
         content_type: application/java-archive
         bucket: mciuploads
         permissions: public-read
