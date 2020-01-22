@@ -7,7 +7,11 @@ pre:
 
 post:
   - func: "upload jar file"
-  - func: "upload test results"
+  - func: "upload test classes"
+  - func: "upload test packages"
+  - func: "upload test js"
+  - func: "upload test css"
+  - func: "upload test index"
 
 buildvariants:
   - name: ubuntu1804-64-jdk-8
@@ -40,6 +44,7 @@ functions:
           ${PREPARE_SHELL}
           # this also runs the unit tests.
           ./gradlew clean build
+          ls -R build
 
   "export variables":
     - command: shell.exec
@@ -91,25 +96,75 @@ functions:
       params:
         directory: adl-jdbc-driver
 
-  "upload test results":
+  "upload test classes":
     - command: s3.put
       params:
-        working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - build/reports/tests/test/*
-        remote_file: ${S3_ARTIFACTS_DIR}/
+            - adl-jdbc-driver/build/reports/tests/test/classes/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/classes/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test Classes"
+
+  "upload test packages":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/test/packages/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/packages/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test Packages"
+
+  "upload test index":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: adl-jdbc-driver/build/reports/tests/test/index.html
+        remote_file: ${S3_ARTIFACTS_DIR}/index.html
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
         display_name: "Test Results"
 
+  "upload test css":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/test/css/*.css
+        remote_file: ${S3_ARTIFACTS_DIR}/css/
+        content_type: text/css
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test CSS"
+
+  "upload test js":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/test/js/*.js
+        remote_file: ${S3_ARTIFACTS_DIR}/js/
+        content_type: application/javascript
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test JS"
+
   "upload jar file":
     - command: s3.put
       params:
-        working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/build/libs/mongo-jdbc-${MDBJDBC_VER}.jar
