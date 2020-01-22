@@ -39,6 +39,7 @@ functions:
           ${PREPARE_SHELL}
           # this also runs the unit tests.
           ./gradlew clean build
+          ls -R build
 
   "export variables":
     - command: shell.exec
@@ -110,7 +111,7 @@ functions:
         working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: build/libs/mongo-jdbc-4.2.0.jar
+        local_file: adl-jdbc-driver/build/libs/mongo-jdbc-4.2.0.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
         content_type: application/java-archive
         bucket: mciuploads
