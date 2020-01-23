@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = sourceCompatibility
 
     repositories {
