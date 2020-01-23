@@ -81,8 +81,8 @@ functions:
         working_dir: adl-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-4.2.0.jar
-        local_file: build/libs/mongo-jdbc-4.2.0.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-4.2.0.jar
+        local_file: build/libs/mongodb-jdbc-4.2.0.jar
         bucket: mciuploads
 
   "fetch source":
@@ -166,8 +166,8 @@ functions:
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/libs/mongo-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-${MDBJDBC_VER}.jar
+        local_file: adl-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
         content_type: application/java-archive
         bucket: mciuploads
         permissions: public-read
