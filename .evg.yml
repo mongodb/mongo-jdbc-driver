@@ -117,7 +117,6 @@ functions:
     - command: s3.put
       params:
         aws_key: ${aws_key}
-        aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/classes/*.html
@@ -131,7 +130,6 @@ functions:
   "upload test packages":
     - command: s3.put
       params:
-        aws_key: ${aws_key}
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
