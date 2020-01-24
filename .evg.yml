@@ -77,7 +77,7 @@ functions:
           # export any environment variables that will be needed by subprocesses
           export JAVA_HOME
           echo '****************************ENV******************************'
-          env
+          env 
           echo '*************************************************************'
 
           # create expansions from values calculated above
