@@ -12,6 +12,7 @@ post:
   - func: "upload test js"
   - func: "upload test css"
   - func: "upload test index"
+  - func: "upload xunit test results"
 
 buildvariants:
   - name: ubuntu1804-64-jdk-8
@@ -176,6 +177,11 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Test JS"
+
+  "upload xunit test results":
+    - command: attach.xunit_results
+      params:
+        file: adl-jdbc-driver/build/test-results/*/TEST-*.xml
 
   "upload jar file":
     - command: s3.put
