@@ -126,6 +126,7 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Test Classes"
+        visibility: none
 
   "upload test packages":
     - command: s3.put
@@ -140,6 +141,7 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Test Packages"
+        visibility: none
 
   "upload test index":
     - command: s3.put
@@ -165,6 +167,7 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Test CSS"
+        visibility: none
 
   "upload test js":
     - command: s3.put
@@ -178,6 +181,7 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Test JS"
+        visibility: none
 
   "upload xunit test results":
     - command: attach.xunit_results
