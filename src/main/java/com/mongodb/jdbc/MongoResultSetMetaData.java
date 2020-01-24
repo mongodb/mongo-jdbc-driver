@@ -90,7 +90,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     public int getColumnType(int column) throws SQLException {
-        var o = getObject(column);
+        Object o = getObject(column);
         // TODO: figure out how to handle missing bson types.
         if (o == null) {
             return Types.NULL;
@@ -135,7 +135,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     public String getColumnTypeName(int column) throws SQLException {
-        var o = getObject(column);
+        Object o = getObject(column);
         // TODO: figure out how to handle missing bson types.
         if (o == null) {
             return "null";
@@ -194,7 +194,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     // --------------------------JDBC 2.0-----------------------------------
 
     public String getColumnClassName(int column) throws SQLException {
-        var o = getObject(column);
+        Object o = getObject(column);
         if (o == null) {
             // I guess?
             return "java.lang.Object";

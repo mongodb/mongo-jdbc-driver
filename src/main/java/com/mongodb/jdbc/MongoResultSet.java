@@ -59,7 +59,7 @@ public class MongoResultSet implements ResultSet {
         }
     }
 
-    @Deprecated(since = "1.2")
+    @Deprecated
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -90,7 +90,7 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Deprecated(since = "1.2")
+    @Deprecated
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -112,13 +112,13 @@ public class MongoResultSet implements ResultSet {
 
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getString(out);
     }
 
     public String getString(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getString(out);
     }
 
@@ -142,7 +142,7 @@ public class MongoResultSet implements ResultSet {
             return ((Decimal128) o).longValue() != 0;
         }
         // jdbc says the strings "true" and "false" should be converted to booleans.
-        var stringRepl = o.toString();
+        String stringRepl = o.toString();
         if (stringRepl.equals("true")) {
             return true;
         }
@@ -155,13 +155,13 @@ public class MongoResultSet implements ResultSet {
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getBoolean(out);
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray();
+        Object out = current.values().toArray();
         return getBoolean(out);
     }
 
@@ -173,13 +173,13 @@ public class MongoResultSet implements ResultSet {
 
     public byte getByte(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getByte(out);
     }
 
     public byte getByte(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray();
+        Object out = current.values().toArray();
         return getByte(out);
     }
 
@@ -191,13 +191,13 @@ public class MongoResultSet implements ResultSet {
 
     public short getShort(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getShort(out);
     }
 
     public short getShort(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray();
+        Object out = current.values().toArray();
         return getShort(out);
     }
 
@@ -225,13 +225,13 @@ public class MongoResultSet implements ResultSet {
 
     public int getInt(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getInt(out);
     }
 
     public int getInt(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getInt(out);
     }
 
@@ -259,13 +259,13 @@ public class MongoResultSet implements ResultSet {
 
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getLong(out);
     }
 
     public long getLong(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getLong(out);
     }
 
@@ -277,13 +277,13 @@ public class MongoResultSet implements ResultSet {
 
     public float getFloat(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getFloat(out);
     }
 
     public float getFloat(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getFloat(out);
     }
 
@@ -308,17 +308,17 @@ public class MongoResultSet implements ResultSet {
 
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getDouble(out);
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getDouble(out);
     }
 
-    @Deprecated(since = "1.2")
+    @Deprecated
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -349,7 +349,7 @@ public class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Deprecated(since = "1.2")
+    @Deprecated
     public java.io.InputStream getUnicodeStream(String columnLabel) throws SQLException {
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException("not implemented");
@@ -430,13 +430,13 @@ public class MongoResultSet implements ResultSet {
 
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        var out = current.values().toArray()[columnIndex];
+        Object out = current.values().toArray()[columnIndex];
         return getBigDecimal(out);
     }
 
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        var out = current.get(columnLabel);
+        Object out = current.get(columnLabel);
         return getBigDecimal(out);
     }
 
