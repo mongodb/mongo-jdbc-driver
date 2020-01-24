@@ -15,7 +15,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Savepoint;
-import java.sql.ShardingKey;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
@@ -262,25 +261,6 @@ public class MongoConnection implements Connection {
     }
 
     public void endRequest() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public boolean setShardingKeyIfValid(
-            ShardingKey shardingKey, ShardingKey superShardingKey, int timeout)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public boolean setShardingKeyIfValid(ShardingKey shardingKey, int timeout) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public void setShardingKey(ShardingKey shardingKey, ShardingKey superShardingKey)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
-    }
-
-    public void setShardingKey(ShardingKey shardingKey) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
