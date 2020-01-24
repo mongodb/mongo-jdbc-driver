@@ -76,8 +76,9 @@ functions:
 
           # export any environment variables that will be needed by subprocesses
           export JAVA_HOME
+          # dump env, but redact S3_KEY and S3_SECRET.
           echo '****************************ENV******************************'
-          env 
+          env | sed 's/S3_SECRET=.*$/REDACTED/' | sed 's/S3_KEY=.*$/REDACTED/'
           echo '*************************************************************'
 
           # create expansions from values calculated above
