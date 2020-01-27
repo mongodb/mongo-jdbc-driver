@@ -2,6 +2,9 @@ package com.mongodb.jdbc.demo;
 
 import java.sql.*;
 import java.math.BigDecimal;
+import java.util.TimeZone;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import com.mongodb.jdbc.*;
 
@@ -11,24 +14,19 @@ public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
    static final String URL = "jdbc:mongodb://localhost";
+   private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
    // Data used for test, in the test.test and test2.test collections:
-   //   > db.test.insert([
-   //      { "a" : 1, "b" : 42 },
-   //      { "a" : "hello", "b" : "world" },
-   //      { "a" : "hello2", "b" : "world2" },
-   //      { "a" : "hello", "b" : NumberLong(42) },
-   //      { "a" : "hello", "b" : 42 },
-   //      { "a" : "hello", "b" : NumberDecimal("3.1415926535") },
-   //      { "a" : "hello", "b" : "1234" },
-   //      { "a" : "hello", "b" : NumberLong("500000000000") },
-   //      { "a" : "hello", "b" : true },
-   //      { "a" : "hello", "b" : "true" },
-   //      { "a" : "hello", "b" : null },
-   //      { "a" : "hello", "b" : ISODate("2019-09-09T21:04:42.568Z") },
-   //      { "a" : "hello", "b" : UUID("3b241101-e2bb-4255-8caf-4136c566a962") },
-   //      { "a" : "hello", "b" : BinData(15, "aGVsbG9w") }
-   //      ])
+   //
+   //{ "values" : [
+   //    { "database" : "myDB", "table" : "foo", "tableAlias" : "foo", "column" : "a", "columnAlias" : "a", "value" : 1 },
+   //    { "database" : "myDB", "table" : "foo", "tableAlias" : "foo", "column" : "b", "columnAlias" : "b", "value" : "hello" } ]
+   //    }
+   //{ "values" : [
+   //    { "database" : "myDB", "table" : "foo", "tableAlias" : "foo", "column" : "a", "columnAlias" : "a", "value" : 42 },
+   //    { "database" : "myDB", "table" : "foo", "tableAlias" : "foo", "column" : "b", "columnAlias" : "b", "value" : "hello 2" } ]
+   //    }
+   //
    public static void main(String[] args) {
 
       try{
@@ -46,68 +44,32 @@ public class Main {
          ResultSet rs = stmt.executeQuery("real queries don't work yet");
          System.out.println("++++++ Showing contents for test.test ++++++++");
          displayResultSet(rs);
-
-         conn.setCatalog("test2");
-         stmt = conn.createStatement();
-         rs = stmt.executeQuery("real queries still don't work yet");
-         System.out.println("++++++ Showing contents for test2.test ++++++++");
-         displayResultSet(rs);
       } catch (Exception e) {
           throw new RuntimeException(e);
       }
    }
 
    public static void displayResultSet(ResultSet rs) throws java.sql.SQLException {
+	   Calendar c = new GregorianCalendar();
+	   c.setTimeZone(UTC);
        while(rs.next()){
           //Retrieve by column name
-          String id  = rs.getString("_id");
-          String a = rs.getString("a");
+          double a = rs.getDouble("a");
+		  String as = rs.getString("a");
           String b = rs.getString("b");
+		  java.sql.Timestamp bd;
+		  try {
+		  		bd = rs.getTimestamp("b", c);
+				System.out.println("b as a Timestamp is: " + bd);
+		  } catch (SQLException e) {
+				System.out.println(e);
+		  } catch (Exception e) {
+				throw new RuntimeException(e);
+		  }
           ResultSetMetaData metaData = rs.getMetaData();
-          int btype = metaData.getColumnType(2);
-          String btypeN = metaData.getColumnTypeName(2);
-          String btypeC = metaData.getColumnClassName(2);
-          System.out.println("b type is: " + btype + " which is named: " + btypeN + " and has java class name: " + btypeC);
-          try {
-              int bi = rs.getInt("b");
-              System.out.println("b was convertable to int: " + bi);
-          } catch (Exception e) {
-              System.out.println("b was not an int, b was: " + b);
-          }
-
-          try {
-              long bl = rs.getLong("b");
-              System.out.println("b was convertable to long: " + bl);
-          } catch (Exception e) {
-              System.out.println("b was not an long, b was: " + b);
-          }
-
-          try {
-              double bd = rs.getDouble("b");
-              System.out.println("b was convertable to double: " + bd);
-          } catch (Exception e) {
-              System.out.println("b was not an double, b was: " + b);
-          }
-
-          try {
-              BigDecimal bbd = rs.getBigDecimal("b");
-              System.out.println("b was convertable to BigDecimal: " + bbd);
-          } catch (Exception e) {
-              System.out.println("b was not an BigDecimal, b was: " + b);
-          }
-
-          try {
-              boolean bb = rs.getBoolean("b");
-              System.out.println("b was convertable to boolean: " + bb);
-          } catch (Exception e) {
-              System.out.println("b was not an boolean, b was: " + b);
-          }
-
-          //Display values
-          System.out.print("_id: " + id);
-          System.out.print(", a: " + a);
-          System.out.println(", b: " + b);
-          System.out.println("================");
+		  System.out.println("a is: " + a + " as double"
+				  + " b is: " + b + " as string");
+		  System.out.println("a as a string is: " + as);
        }
    }
 }

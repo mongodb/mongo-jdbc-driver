@@ -33,11 +33,13 @@ import java.util.concurrent.TimeoutException;
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
     private String currentDB;
-    private Boolean isClosed;
+    private boolean isClosed;
+    private boolean relaxed;
 
-    public MongoConnection(ConnectionString uri, String database) {
-        currentDB = database;
+    public MongoConnection(ConnectionString uri, String database, String conversionMode) {
+        this.currentDB = database;
         mongoClient = MongoClients.create(uri);
+        relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
     }
 
@@ -51,7 +53,7 @@ public class MongoConnection implements Connection {
     public Statement createStatement() throws SQLException {
         checkConnection();
         try {
-            return new MongoStatement(mongoClient, currentDB);
+            return new MongoStatement(mongoClient, currentDB, relaxed);
         } catch (IllegalArgumentException e) {
             throw new SQLException(e);
         }
