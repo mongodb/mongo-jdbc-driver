@@ -19,14 +19,17 @@ import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
 import java.util.Calendar;
-import org.bson.Document;
+import java.util.HashMap;
+import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
 public class MongoResultSet implements ResultSet {
-    private MongoCursor<Document> cursor;
-    private Document current;
+    private MongoCursor<Row> cursor;
+    private Row current;
+    private HashMap<String, Integer> columnPositionCache;
+    private boolean wasNull;
 
-    public MongoResultSet(MongoCursor<Document> cursor) {
+    public MongoResultSet(MongoCursor<Row> cursor) {
         this.cursor = cursor;
     }
 
@@ -44,19 +47,41 @@ public class MongoResultSet implements ResultSet {
     }
 
     public boolean wasNull() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return wasNull;
     }
 
     private void checkBounds(int i) throws SQLException {
-        if (i >= current.size()) {
+        if (i > current.size()) {
             throw new SQLException("index out of bounds: '" + i + "'");
         }
     }
 
     private void checkKey(String key) throws SQLException {
-        if (current == null || !current.containsKey(key)) {
+        if (columnPositionCache == null) {
+            buildColumnPositionCache();
+        }
+        if (current == null || !columnPositionCache.containsKey(key)) {
             throw new SQLException("no such column: '" + key + "'");
         }
+    }
+
+    private void buildColumnPositionCache() {
+        columnPositionCache = new HashMap<>(current.values.size());
+        int i = 0;
+        for (Column c : current.values) {
+            columnPositionCache.put(c.columnAlias, i++);
+        }
+    }
+
+    // checkNull returns true if the Object o is null. Crucially,
+    // it also sets the value of `wasNull`, since that is part
+    // of the JDBC API.
+    private boolean checkNull(Object o) {
+        if (o == null) {
+            wasNull = true;
+            return true;
+        }
+        return false;
     }
 
     @Deprecated
@@ -103,27 +128,27 @@ public class MongoResultSet implements ResultSet {
 
     // Methods for accessing results
 
-    private String getString(Object o) throws SQLException {
-        if (o == null) {
+    private String getString(BsonValue o) throws SQLException {
+        if (checkNull(o)) {
             return null;
         }
-        return o.toString();
+        return o.asString().toString();
     }
 
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getString(out);
     }
 
     public String getString(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getString(out);
     }
 
     private boolean getBoolean(Object o) throws SQLException {
-        if (o == null) {
+        if (checkNull(o)) {
             return false;
         }
         if (o instanceof Boolean) {
@@ -155,17 +180,17 @@ public class MongoResultSet implements ResultSet {
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBoolean(out);
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray();
+        Object out = current.values.get(columnIndex - 1).value;
         return getBoolean(out);
     }
 
-    private byte getByte(Object o) throws SQLException {
+    private byte getByte(BsonValue o) throws SQLException {
         // Just be lazy, I doubt this will be called often.
         // HotSpot should inline these, anyway.
         return (byte) getInt(o);
@@ -173,17 +198,17 @@ public class MongoResultSet implements ResultSet {
 
     public byte getByte(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getByte(out);
     }
 
     public byte getByte(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray();
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getByte(out);
     }
 
-    private short getShort(Object o) throws SQLException {
+    private short getShort(BsonValue o) throws SQLException {
         // Just be lazy, I doubt this will be called often.
         // HotSpot should inline these, anyway.
         return (short) getInt(o);
@@ -191,52 +216,37 @@ public class MongoResultSet implements ResultSet {
 
     public short getShort(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getShort(out);
     }
 
     public short getShort(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray();
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getShort(out);
     }
 
-    private int getInt(Object o) throws SQLException {
-        if (o == null) {
+    private int getInt(BsonValue o) throws SQLException {
+        if (checkNull(o)) {
             return 0;
         }
-        if (o instanceof Integer) {
-            return (int) o;
-        }
-        if (o instanceof Double) {
-            return ((Double) o).intValue();
-        }
-        if (o instanceof Long) {
-            return Math.toIntExact((Long) o);
-        }
-        if (o instanceof Decimal128) {
-            return ((Decimal128) o).intValue();
-        }
-        if (o instanceof Boolean) {
-            return (boolean) o ? 1 : 0;
-        }
-        return Integer.valueOf(o.toString());
+        return o.asInt32().getValue();
     }
 
     public int getInt(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getInt(out);
     }
 
     public int getInt(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getInt(out);
     }
 
     private long getLong(Object o) throws SQLException {
-        if (o == null) {
+        if (checkNull(o)) {
             return 0;
         }
         if (o instanceof Long) {
@@ -259,13 +269,13 @@ public class MongoResultSet implements ResultSet {
 
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getLong(out);
     }
 
     public long getLong(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        Object out = current.values.get(columnIndex - 1).value;
         return getLong(out);
     }
 
@@ -277,18 +287,18 @@ public class MongoResultSet implements ResultSet {
 
     public float getFloat(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getFloat(out);
     }
 
     public float getFloat(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        Object out = current.values.get(columnIndex - 1).value;
         return getFloat(out);
     }
 
     private double getDouble(Object o) throws SQLException {
-        if (o == null) {
+        if (checkNull(o)) {
             return 0.0;
         }
         if (o instanceof Double) {
@@ -308,13 +318,13 @@ public class MongoResultSet implements ResultSet {
 
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getDouble(out);
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        Object out = current.values.get(columnIndex - 1).value;
         return getDouble(out);
     }
 
@@ -379,11 +389,11 @@ public class MongoResultSet implements ResultSet {
     }
 
     public Object getObject(int columnIndex) throws SQLException {
-        return current.values().toArray()[columnIndex];
+        return current.values.get(columnIndex - 1);
     }
 
     public Object getObject(String columnLabel) throws SQLException {
-        return current.get(columnLabel);
+        return current.values.get(columnPositionCache.get(columnLabel));
     }
 
     // ----------------------------------------------------------------
@@ -407,7 +417,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     private BigDecimal getBigDecimal(Object o) throws SQLException {
-        if (o == null) {
+        if (checkNull(o)) {
             return new BigDecimal(0);
         }
         if (o instanceof Decimal128) {
@@ -430,13 +440,13 @@ public class MongoResultSet implements ResultSet {
 
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values().toArray()[columnIndex];
+        Object out = current.values.get(columnIndex - 1).value;
         return getBigDecimal(out);
     }
 
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.get(columnLabel);
+        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBigDecimal(out);
     }
 
@@ -1045,11 +1055,11 @@ public class MongoResultSet implements ResultSet {
     // ------------------------- JDBC 4.1 -----------------------------------
 
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        return type.cast(current.values().toArray()[columnIndex]);
+        return type.cast(current.values.get(columnIndex - 1));
     }
 
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        return current.get(columnLabel, type);
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // ------------------------- JDBC 4.2 -----------------------------------

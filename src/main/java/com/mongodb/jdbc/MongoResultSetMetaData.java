@@ -5,20 +5,21 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.UUID;
-import org.bson.Document;
+import org.bson.BsonDouble;
+import org.bson.BsonString;
 import org.bson.types.Binary;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
-    private Document doc;
+    private Row row;
 
-    public MongoResultSetMetaData(Document doc) {
-        this.doc = doc;
+    public MongoResultSetMetaData(Row row) {
+        this.row = row;
     }
 
     public int getColumnCount() throws SQLException {
-        return doc.size();
+        return row.size();
     }
 
     public boolean isAutoIncrement(int column) throws SQLException {
@@ -38,9 +39,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     public int isNullable(int column) throws SQLException {
-        // TODO?: use java schema validators to possibly
-        // return false. Might be dangerous since validators
-        // can be subverted.
         return columnNullableUnknown;
     }
 
@@ -83,10 +81,10 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     private Object getObject(int column) throws SQLException {
-        if (column > doc.size()) {
+        if (column > row.size()) {
             throw new SQLException("index out of bounds: '" + column + "'");
         }
-        return doc.values().toArray()[column];
+        return row.values.get(column - 1).value;
     }
 
     public int getColumnType(int column) throws SQLException {
@@ -95,13 +93,13 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         if (o == null) {
             return Types.NULL;
         }
-        if (o instanceof Double) {
+        if (o instanceof BsonDouble) {
             return Types.DOUBLE;
         }
-        if (o instanceof String) {
+        if (o instanceof BsonString) {
             return Types.LONGVARCHAR;
         }
-        // Document
+        // Row
         if (o instanceof Binary) {
             return Types.BLOB;
         }
@@ -146,7 +144,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         if (o instanceof String) {
             return "string";
         }
-        // Document
+        // Embedded Document
         if (o instanceof Binary) {
             return "binData";
         }

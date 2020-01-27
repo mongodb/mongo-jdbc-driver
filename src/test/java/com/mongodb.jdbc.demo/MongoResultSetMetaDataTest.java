@@ -2,13 +2,25 @@ package com.mongodb.jdbc.demo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.jdbc.Column;
 import com.mongodb.jdbc.MongoResultSet;
 import com.mongodb.jdbc.MongoResultSetMetaData;
+import com.mongodb.jdbc.Row;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import org.bson.Document;
+import org.bson.BsonBinary;
+import org.bson.BsonBoolean;
+import org.bson.BsonDateTime;
+import org.bson.BsonDouble;
+import org.bson.BsonInt32;
+import org.bson.BsonInt64;
+import org.bson.BsonNull;
+import org.bson.BsonObjectId;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 import org.bson.types.Binary;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -24,35 +36,69 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MongoResultSetMetaDataTest {
     private static MongoResultSetMetaData resultSetMetaData;
 
-    enum COL_IDX {
-        NULL_COL,
-        DOUBLE_COL,
-        STRING_COL,
-        BINARY_COL,
-        UUID_COL,
-        OBJECTID_COL,
-        BOOLEAN_COL,
-        DATE_COL,
-        INTEGER_COL,
-        LONG_COL,
-        DECIMAL_COL
+    static int NULL_COL = 1;
+    static int DOUBLE_COL = 2;
+    static int STRING_COL = 3;
+    static int BINARY_COL = 4;
+    static int UUID_COL = 5;
+    static int OBJECTID_COL = 6;
+    static int BOOLEAN_COL = 7;
+    static int DATE_COL = 8;
+    static int INTEGER_COL = 9;
+    static int LONG_COL = 10;
+    static int DECIMAL_COL = 11;
+
+    static Column newColumn(
+            String database,
+            String table,
+            String tableAlias,
+            String column,
+            String columnAlias,
+            BsonValue value) {
+        Column c = new Column();
+        c.database = database;
+        c.table = table;
+        c.tableAlias = tableAlias;
+        c.column = column;
+        c.columnAlias = columnAlias;
+        c.value = value;
+        return c;
     }
 
+    //    public String database;
+    //    public String table;
+    //    public String tableAlias;
+    //    public String column;
+    //    public String columnAlias;
+    //    public BsonValue value;
     static {
-        Document doc = new Document();
-        doc.append("nullCol", null);
-        doc.append("doubleCol", 1.1);
-        doc.append("stringCol", "string data");
-        doc.append("binaryCol", new Binary("data".getBytes()));
-        doc.append("uuidCol", UUID.randomUUID());
-        doc.append("objectIdCol", new ObjectId(new Date()));
-        doc.append("booleanCol", true);
-        doc.append("dateCol", new Date());
-        doc.append("integerCol", 100);
-        doc.append("longCol", 100L);
-        doc.append("decimalCol", new Decimal128(100));
+        Row row = new Row();
+        row.values = new ArrayList<>();
 
-        resultSetMetaData = new MongoResultSetMetaData(doc);
+        row.values.add(newColumn("", "", "", "nullCol", "nullCol", new BsonNull()));
+        row.values.add(newColumn("", "", "", "doubleCol", "doubleCol", new BsonDouble(1.1)));
+        row.values.add(
+                newColumn("", "", "", "stringCol", "stringCol", new BsonString("string data")));
+        row.values.add(
+                newColumn("", "", "", "binaryCol", "binaryCol", new BsonBinary("data".getBytes())));
+        row.values.add(
+                newColumn("", "", "", "uuidCol", "uuidCol", new BsonBinary(UUID.randomUUID())));
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "objectIdCol",
+                        "objectIdCol",
+                        new BsonObjectId(new ObjectId(new Date()))));
+        row.values.add(newColumn("", "", "", "booleanCol", "booleanCol", new BsonBoolean(true)));
+        row.values.add(
+                newColumn("", "", "", "dateCol", "dateCol", new BsonDateTime(1580511155627L)));
+        row.values.add(newColumn("", "", "", "integerCol", "integerCol", new BsonInt32(100)));
+        row.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
+        row.values.add(newColumn("", "", "", "decimalCol", "decimalCol", new BsonInt64(100L)));
+
+        resultSetMetaData = new MongoResultSetMetaData(row);
     }
 
     static final String CURR_DOC = "currDoc";
@@ -72,71 +118,46 @@ class MongoResultSetMetaDataTest {
 
     @Test
     void testGetColumnType() throws SQLException {
-        assertEquals(Types.NULL, resultSetMetaData.getColumnType(COL_IDX.NULL_COL.ordinal()));
-        assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(COL_IDX.DOUBLE_COL.ordinal()));
-        assertEquals(
-                Types.LONGVARCHAR, resultSetMetaData.getColumnType(COL_IDX.STRING_COL.ordinal()));
-        assertEquals(Types.BLOB, resultSetMetaData.getColumnType(COL_IDX.BINARY_COL.ordinal()));
-        assertEquals(Types.BLOB, resultSetMetaData.getColumnType(COL_IDX.UUID_COL.ordinal()));
-        assertEquals(
-                Types.LONGVARCHAR, resultSetMetaData.getColumnType(COL_IDX.OBJECTID_COL.ordinal()));
-        assertEquals(Types.BIT, resultSetMetaData.getColumnType(COL_IDX.BOOLEAN_COL.ordinal()));
-        assertEquals(Types.TIMESTAMP, resultSetMetaData.getColumnType(COL_IDX.DATE_COL.ordinal()));
-        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(COL_IDX.INTEGER_COL.ordinal()));
-        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(COL_IDX.LONG_COL.ordinal()));
-        assertEquals(Types.DECIMAL, resultSetMetaData.getColumnType(COL_IDX.DECIMAL_COL.ordinal()));
+        assertEquals(Types.NULL, resultSetMetaData.getColumnType(NULL_COL));
+        assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(DOUBLE_COL));
+        assertEquals(Types.LONGVARCHAR, resultSetMetaData.getColumnType(STRING_COL));
+        assertEquals(Types.BLOB, resultSetMetaData.getColumnType(BINARY_COL));
+        assertEquals(Types.BLOB, resultSetMetaData.getColumnType(UUID_COL));
+        assertEquals(Types.LONGVARCHAR, resultSetMetaData.getColumnType(OBJECTID_COL));
+        assertEquals(Types.BIT, resultSetMetaData.getColumnType(BOOLEAN_COL));
+        assertEquals(Types.TIMESTAMP, resultSetMetaData.getColumnType(DATE_COL));
+        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INTEGER_COL));
+        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(LONG_COL));
+        assertEquals(Types.DECIMAL, resultSetMetaData.getColumnType(DECIMAL_COL));
     }
 
     @Test
     void testGetColumnTypeClassName() throws SQLException {
-        assertEquals(
-                "java.lang.Object",
-                resultSetMetaData.getColumnClassName(COL_IDX.NULL_COL.ordinal()));
-        assertEquals(
-                Double.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.DOUBLE_COL.ordinal()));
-        assertEquals(
-                String.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.STRING_COL.ordinal()));
-        assertEquals(
-                Binary.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.BINARY_COL.ordinal()));
-        assertEquals(
-                UUID.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.UUID_COL.ordinal()));
-        assertEquals(
-                ObjectId.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.OBJECTID_COL.ordinal()));
-        assertEquals(
-                Boolean.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.BOOLEAN_COL.ordinal()));
-        assertEquals(
-                Date.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.DATE_COL.ordinal()));
-        assertEquals(
-                Integer.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.INTEGER_COL.ordinal()));
-        assertEquals(
-                Long.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.LONG_COL.ordinal()));
-        assertEquals(
-                Decimal128.class.getName(),
-                resultSetMetaData.getColumnClassName(COL_IDX.DECIMAL_COL.ordinal()));
+        assertEquals("java.lang.Object", resultSetMetaData.getColumnClassName(NULL_COL));
+        assertEquals(Double.class.getName(), resultSetMetaData.getColumnClassName(DOUBLE_COL));
+        assertEquals(String.class.getName(), resultSetMetaData.getColumnClassName(STRING_COL));
+        assertEquals(Binary.class.getName(), resultSetMetaData.getColumnClassName(BINARY_COL));
+        assertEquals(UUID.class.getName(), resultSetMetaData.getColumnClassName(UUID_COL));
+        assertEquals(ObjectId.class.getName(), resultSetMetaData.getColumnClassName(OBJECTID_COL));
+        assertEquals(Boolean.class.getName(), resultSetMetaData.getColumnClassName(BOOLEAN_COL));
+        assertEquals(Date.class.getName(), resultSetMetaData.getColumnClassName(DATE_COL));
+        assertEquals(Integer.class.getName(), resultSetMetaData.getColumnClassName(INTEGER_COL));
+        assertEquals(Long.class.getName(), resultSetMetaData.getColumnClassName(LONG_COL));
+        assertEquals(Decimal128.class.getName(), resultSetMetaData.getColumnClassName(DECIMAL_COL));
     }
 
     @Test
     void testGetColumnTypeName() throws SQLException {
-        assertEquals("null", resultSetMetaData.getColumnTypeName(COL_IDX.NULL_COL.ordinal()));
-        assertEquals("double", resultSetMetaData.getColumnTypeName(COL_IDX.DOUBLE_COL.ordinal()));
-        assertEquals("string", resultSetMetaData.getColumnTypeName(COL_IDX.STRING_COL.ordinal()));
-        assertEquals("binData", resultSetMetaData.getColumnTypeName(COL_IDX.UUID_COL.ordinal()));
-        assertEquals("binData", resultSetMetaData.getColumnTypeName(COL_IDX.BINARY_COL.ordinal()));
-        assertEquals(
-                "objectId", resultSetMetaData.getColumnTypeName(COL_IDX.OBJECTID_COL.ordinal()));
-        assertEquals("bool", resultSetMetaData.getColumnTypeName(COL_IDX.BOOLEAN_COL.ordinal()));
-        assertEquals("date", resultSetMetaData.getColumnTypeName(COL_IDX.DATE_COL.ordinal()));
-        assertEquals("int", resultSetMetaData.getColumnTypeName(COL_IDX.INTEGER_COL.ordinal()));
-        assertEquals("long", resultSetMetaData.getColumnTypeName(COL_IDX.LONG_COL.ordinal()));
-        assertEquals("decimal", resultSetMetaData.getColumnTypeName(COL_IDX.DECIMAL_COL.ordinal()));
+        assertEquals("null", resultSetMetaData.getColumnTypeName(NULL_COL));
+        assertEquals("double", resultSetMetaData.getColumnTypeName(DOUBLE_COL));
+        assertEquals("string", resultSetMetaData.getColumnTypeName(STRING_COL));
+        assertEquals("binData", resultSetMetaData.getColumnTypeName(UUID_COL));
+        assertEquals("binData", resultSetMetaData.getColumnTypeName(BINARY_COL));
+        assertEquals("objectId", resultSetMetaData.getColumnTypeName(OBJECTID_COL));
+        assertEquals("bool", resultSetMetaData.getColumnTypeName(BOOLEAN_COL));
+        assertEquals("date", resultSetMetaData.getColumnTypeName(DATE_COL));
+        assertEquals("int", resultSetMetaData.getColumnTypeName(INTEGER_COL));
+        assertEquals("long", resultSetMetaData.getColumnTypeName(LONG_COL));
+        assertEquals("decimal", resultSetMetaData.getColumnTypeName(DECIMAL_COL));
     }
 }
