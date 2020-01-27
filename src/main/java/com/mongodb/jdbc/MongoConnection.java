@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
-    private String currentDB = "test"; // test to test by default
+    private String currentDB = "test"; // connect to test database by default
     private Logger logger;
 
     public MongoConnection(String uri, Logger logger, String database) {
