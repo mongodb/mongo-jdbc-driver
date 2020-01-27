@@ -110,8 +110,6 @@ public class MongoDriver implements Driver {
      */
     public DriverPropertyInfo[] getPropertyInfo(String url, java.util.Properties info)
             throws SQLException {
-        // keep track of if the user is set.
-        boolean userSet = false;
         String actualUrl = url.split(JDBC)[1];
         clientURI = new MongoClientURI(actualUrl);
         // grab the user and pwd from the URI.
