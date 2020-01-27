@@ -28,7 +28,7 @@ public class MongoConnection implements Connection {
 
     public MongoConnection(String uri, Logger logger, String database) {
         this.logger = logger;
-        this.currentDB = database;
+        this.currentDB = (database != null) ? database : currentDB;
         // TODO: actually handle URIs.
         mongoClient = new MongoClient();
     }
