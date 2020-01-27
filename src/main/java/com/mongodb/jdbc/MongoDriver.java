@@ -78,7 +78,11 @@ public class MongoDriver implements Driver {
         } else {
             logger = Logger.getLogger("");
         }
-        return new MongoConnection(url, logger, info.getProperty(DATABASE));
+        if (clientURI == null) {
+            String actualURL = url.split(JDBC)[1];
+            clientURI = new MongoClientURI(actualURL);
+        }
+        return new MongoConnection(clientURI, logger, info.getProperty(DATABASE));
     }
 
     /**
