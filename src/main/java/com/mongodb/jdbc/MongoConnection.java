@@ -19,12 +19,16 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
-    private String currentDB = "test"; // test to test by default, TODO: get from connection URL.
+    private String currentDB = "test"; // test to test by default
+    private Logger logger;
 
-    public MongoConnection(String uri) {
+    public MongoConnection(String uri, Logger logger, String database) {
+        this.logger = logger;
+        this.currentDB = database;
         // TODO: actually handle URIs.
         mongoClient = new MongoClient();
     }

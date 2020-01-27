@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 import com.mongodb.jdbc.*;
 
+import java.util.Properties;
+
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
@@ -26,8 +28,9 @@ public class Main {
    //      { "a" : "hello", "b" : ISODate("2019-09-09T21:04:42.568Z") },
    //      { "a" : "hello", "b" : UUID("3b241101-e2bb-4255-8caf-4136c566a962") },
    //      { "a" : "hello", "b" : BinData(15, "aGVsbG9w") }
-   //	  ])
+   //      ])
    public static void main(String[] args) {
+
       try{
          Class.forName(JDBC_DRIVER);
          System.out.println("Connecting to database...");
@@ -36,14 +39,14 @@ public class Main {
          System.out.println("Creating statement...");
          Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery("real queries don't work yet");
-		 System.out.println("++++++ Showing contents for test.test ++++++++");
-		 displayResultSet(rs);
+         System.out.println("++++++ Showing contents for test.test ++++++++");
+         displayResultSet(rs);
 
-		 conn.setCatalog("test2");
-		 stmt = conn.createStatement();
-		 rs = stmt.executeQuery("real queries still don't work yet");
-		 System.out.println("++++++ Showing contents for test2.test ++++++++");
-		 displayResultSet(rs);
+         conn.setCatalog("test2");
+         stmt = conn.createStatement();
+         rs = stmt.executeQuery("real queries still don't work yet");
+         System.out.println("++++++ Showing contents for test2.test ++++++++");
+         displayResultSet(rs);
       } catch (Exception e) {
           throw new RuntimeException(e);
       }
@@ -58,7 +61,7 @@ public class Main {
           ResultSetMetaData metaData = rs.getMetaData();
           int btype = metaData.getColumnType(2);
           String btypeN = metaData.getColumnTypeName(2);
-	      String btypeC = metaData.getColumnClassName(2);
+          String btypeC = metaData.getColumnClassName(2);
           System.out.println("b type is: " + btype + " which is named: " + btypeN + " and has java class name: " + btypeC);
           try {
               int bi = rs.getInt("b");
