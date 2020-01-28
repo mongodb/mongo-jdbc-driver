@@ -18,7 +18,7 @@ public class MongoStatement implements Statement {
     private MongoCollection col;
 
     public MongoStatement(MongoClient client, String currentDB) {
-        // TODO: obviously don't just connect to `test.test`.
+        // TODO: obviously don't just connect to `test` collection.
         col = client.getDatabase(currentDB).getCollection("test");
     }
 

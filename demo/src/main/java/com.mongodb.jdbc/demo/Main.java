@@ -10,7 +10,7 @@ import java.util.Properties;
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
-   static final String URL = "jdbc:mongodb://localhost/test";
+   static final String URL = "jdbc:mongodb://localhost/admin";
 
    // Data used for test, in the test.test and test2.test collections:
    //   > db.test.insert([
@@ -33,8 +33,14 @@ public class Main {
 
       try{
          Class.forName(JDBC_DRIVER);
-         System.out.println("Connecting to database...");
-         Connection conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
+		 MongoDriver d = new MongoDriver();
+		 java.util.Properties p = new java.util.Properties();
+		 // These properties will be added to the URI.
+		 p.setProperty("user", "user");
+		 p.setProperty("password", "pwd");
+		 p.setProperty("database", "test");
+         System.out.println("Connecting to database test...");
+         Connection conn = d.connect(URL, p);
 
          System.out.println("Creating statement...");
          Statement stmt = conn.createStatement();
