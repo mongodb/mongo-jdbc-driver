@@ -115,7 +115,7 @@ public class MongoDriver implements Driver {
     }
 
 
-	interface NullCoalesce<T> {
+	private interface NullCoalesce<T> {
        	T coalesce(T left, T right);
 	}
 	// private helper function to abstract checking consistency between properties and the URI, and
@@ -168,7 +168,7 @@ public class MongoDriver implements Driver {
         }
 		// set the pwd
 		char[] pwd = c.coalesce(uriPWD, propertyPWD);
-		// handle disagreements on database.
+		// handle disagreements on authentication database.
         if (uriDatabase != null && propertyDatabase != null && !uriDatabase.equals(propertyDatabase))  {
                 throw new SQLException(
                     "uri and properties disagree on authentication database: '"
@@ -177,11 +177,12 @@ public class MongoDriver implements Driver {
                             + propertyDatabase
                             + " respectively");
         }
-		// set the database.
-		String database = s.coalesce(uriDatabase, propertyDatabase);
-		return new Triple<>(username, pwd, database);
+		// set the authDatabase.
+		String authDatabase = s.coalesce(uriDatabase, propertyDatabase);
+		return new Triple<>(username, pwd, authDatabase);
 	}
 
+	// This is just a clean abstraction around URLEncode.
 	private String sqlURLEncode(String item) throws SQLException {
 		try {
 			return URLEncoder.encode(item, "utf-8");
@@ -210,10 +211,11 @@ public class MongoDriver implements Driver {
 		if (database != null) {
 			ret += "/" + sqlURLEncode(database);
 		}
+		// OptionsString should already be properly encoded, since we got it straight from the url
+		// string.
 		if (optionsString != null) {
 			ret += "?" + optionsString;
 		}
-		System.out.println("NEW URI: " + ret);
 		return ret;
 	}
 
@@ -240,14 +242,14 @@ public class MongoDriver implements Driver {
 		String username = clientProperties.left();
 		char[] pwd = clientProperties.middle();
 		String database = clientProperties.right();
-		// attempt to get an options string from the url string, itself, so that we do
+		// Attempt to get an options string from the url string, itself, so that we do
 		// not need to format the options returned by the MongoClientURI.
 		String optionString = null;
 		String[] optionSplit = actualURL.split("[?]"); // split takes a regexp and '?' is a metachar.
 		if (optionSplit.length > 1) {
 			optionString = optionSplit[1];
 		}
-        // handle username specified with no password.
+        // Handle username specified with no password.
         if (username == null) {
             if (pwd != null) {
 				// username is null, but password is not, we must prompt for the username.
@@ -260,9 +262,9 @@ public class MongoDriver implements Driver {
 			this.clientURI = new MongoClientURI(buildNewURI(originalClientURI, username, pwd, database, optionString));
             return new DriverPropertyInfo[] {};
         }
-        // handle password specified with no username.
+        // Handle password specified with no username.
         if (pwd == null) {
-			// if pwd is null here, then user name must be non-null,because
+			// If pwd is null here, then user name must be non-null,because
 			// the both null case is handled above. Prompt for the password.
             return new DriverPropertyInfo[] {new DriverPropertyInfo(PASSWORD, null)};
         }
