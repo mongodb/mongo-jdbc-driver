@@ -114,6 +114,13 @@ public class MongoDriver implements Driver {
         return url.startsWith(MONGODB_URL_PREFIX);
     }
 
+    private static String removePrefix(String prefix, String s) {
+        if (s != null && prefix != null && s.startsWith(prefix)) {
+            return s.substring(prefix.length());
+        }
+        return s;
+    }
+
     private interface NullCoalesce<T> {
         T coalesce(T left, T right);
     }
@@ -245,7 +252,7 @@ public class MongoDriver implements Driver {
         if (info == null) {
             info = new Properties();
         }
-        String actualURL = url.split(JDBC)[1];
+        String actualURL = removePrefix(JDBC, url);
         MongoClientURI originalClientURI;
         try {
             originalClientURI = new MongoClientURI(actualURL);
