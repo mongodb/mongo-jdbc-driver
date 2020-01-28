@@ -10,7 +10,7 @@ import java.util.Properties;
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
-   static final String URL = "jdbc:mongodb://localhost/admin";
+   static final String URL = "jdbc:mongodb://localhost";
 
    // Data used for test, in the test.test and test2.test collections:
    //   > db.test.insert([
@@ -36,8 +36,9 @@ public class Main {
 		 MongoDriver d = new MongoDriver();
 		 java.util.Properties p = new java.util.Properties();
 		 // These properties will be added to the URI.
-		 p.setProperty("user", "user");
-		 p.setProperty("password", "pwd");
+		 // Uncomment if you wish to specify user and password.
+		 // p.setProperty("user", "user");
+		 // p.setProperty("password", "foo");
 		 p.setProperty("database", "test");
          System.out.println("Connecting to database test...");
          Connection conn = d.connect(URL, p);
