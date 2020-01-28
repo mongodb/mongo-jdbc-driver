@@ -22,7 +22,7 @@ class MongoDriverTest {
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
-    // Even though ADL does not support replSets, this tests that we handle this URLs properly
+    // Even though ADL does not support replSets, this tests that we handle these URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
 
