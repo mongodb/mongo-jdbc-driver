@@ -114,124 +114,6 @@ public class MongoDriver implements Driver {
         return url.startsWith(MONGODB_URL_PREFIX);
     }
 
-    private static String removePrefix(String prefix, String s) {
-        if (s != null && prefix != null && s.startsWith(prefix)) {
-            return s.substring(prefix.length());
-        }
-        return s;
-    }
-
-    private interface NullCoalesce<T> {
-        T coalesce(T left, T right);
-    }
-    // private helper function to abstract checking consistency between properties and the URI, and
-    // grabbing the relevant data.
-    //
-    // throws SQLException if url and properties disagree on username or password.
-    private Triple<String, char[], String> extractProperties(
-            MongoClientURI clientURI, Properties info) throws SQLException {
-
-        // The coalesce function takse the first non-null argument, returning null only
-        // if both arguments are null. The java type system requires us to write this twice,
-        // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
-        // that.
-        NullCoalesce<String> s =
-                (left, right) -> {
-                    if (left == null) {
-                        return right;
-                    }
-                    return left;
-                };
-
-        NullCoalesce<char[]> c =
-                (left, right) -> {
-                    if (left == null) {
-                        return right;
-                    }
-                    return left;
-                };
-
-        // grab the user and pwd from the URI.
-        String uriUser = clientURI.getUsername();
-        char[] uriPWD = clientURI.getPassword();
-        String uriDatabase = clientURI.getDatabase();
-        String propertyUser = info.getProperty(USER);
-        String propertyPWDStr = info.getProperty(PASSWORD);
-        char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
-        String propertyDatabase = info.getProperty(AUTH_DATABASE);
-        // handle disagreements on username.
-        System.out.println(uriUser + ":" + propertyUser);
-        if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
-            throw new SQLException(
-                    "uri and properties disagree on username: '"
-                            + uriUser
-                            + ", and "
-                            + propertyUser
-                            + " respectively");
-        }
-        // set the username
-        String username = s.coalesce(uriUser, propertyUser);
-        // handle disagreements on password.
-        if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
-            throw new SQLException("uri and properties disagree on password");
-        }
-        // set the pwd
-        char[] pwd = c.coalesce(uriPWD, propertyPWD);
-        // handle disagreements on authentication database.
-        if (uriDatabase != null
-                && propertyDatabase != null
-                && !uriDatabase.equals(propertyDatabase)) {
-            throw new SQLException(
-                    "uri and properties disagree on authentication database: '"
-                            + uriDatabase
-                            + ", and "
-                            + propertyDatabase
-                            + " respectively");
-        }
-        // set the authDatabase.
-        String authDatabase = s.coalesce(uriDatabase, propertyDatabase);
-        return new Triple<>(username, pwd, authDatabase);
-    }
-
-    // This is just a clean abstraction around URLEncode.
-    private String sqlURLEncode(String item) throws SQLException {
-        try {
-            return URLEncoder.encode(item, "utf-8");
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
-    }
-
-    // This function builds a new uri from the original clientURI, adding username, password, options, and
-    // database, if necessary.
-    private String buildNewURI(
-            MongoClientURI originalClientURI,
-            String username,
-            char[] pwd,
-            String database,
-            String optionsString)
-            throws SQLException {
-        // The returned URI should be of the following format:
-        //"mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")
-        String ret = "mongodb://";
-        if (username != null) {
-            // Note: if username is not null, we already know that pwd must also be not null.
-            ret += sqlURLEncode(username) + ":" + sqlURLEncode(String.valueOf(pwd)) + "@";
-        }
-        // Now add hosts.
-        ret += String.join(",", originalClientURI.getHosts());
-        // Now add database, if necessary.
-        if (database != null) {
-            ret += "/" + sqlURLEncode(database);
-        }
-        // OptionsString should already be properly encoded, since we got it straight from the url
-        // string.
-        if (optionsString != null) {
-            ret += "?" + optionsString;
-        }
-        return ret;
-    }
-
     /**
      * Gets information about the possible properties for this driver.
      *
@@ -349,5 +231,124 @@ public class MongoDriver implements Driver {
      */
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return logger;
+    }
+
+    // removePrefix removes a prefix from a String.
+    private static String removePrefix(String prefix, String s) {
+        if (s != null && prefix != null && s.startsWith(prefix)) {
+            return s.substring(prefix.length());
+        }
+        return s;
+    }
+
+    private static interface NullCoalesce<T> {
+        T coalesce(T left, T right);
+    }
+    // private helper function to abstract checking consistency between properties and the URI, and
+    // grabbing the relevant data.
+    //
+    // throws SQLException if url and properties disagree on username or password.
+    private static Triple<String, char[], String> extractProperties(
+            MongoClientURI clientURI, Properties info) throws SQLException {
+
+        // The coalesce function takse the first non-null argument, returning null only
+        // if both arguments are null. The java type system requires us to write this twice,
+        // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
+        // that.
+        NullCoalesce<String> s =
+                (left, right) -> {
+                    if (left == null) {
+                        return right;
+                    }
+                    return left;
+                };
+
+        NullCoalesce<char[]> c =
+                (left, right) -> {
+                    if (left == null) {
+                        return right;
+                    }
+                    return left;
+                };
+
+        // grab the user and pwd from the URI.
+        String uriUser = clientURI.getUsername();
+        char[] uriPWD = clientURI.getPassword();
+        String uriDatabase = clientURI.getDatabase();
+        String propertyUser = info.getProperty(USER);
+        String propertyPWDStr = info.getProperty(PASSWORD);
+        char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
+        String propertyDatabase = info.getProperty(AUTH_DATABASE);
+        // handle disagreements on username.
+        System.out.println(uriUser + ":" + propertyUser);
+        if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
+            throw new SQLException(
+                    "uri and properties disagree on username: '"
+                            + uriUser
+                            + ", and "
+                            + propertyUser
+                            + " respectively");
+        }
+        // set the username
+        String username = s.coalesce(uriUser, propertyUser);
+        // handle disagreements on password.
+        if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
+            throw new SQLException("uri and properties disagree on password");
+        }
+        // set the pwd
+        char[] pwd = c.coalesce(uriPWD, propertyPWD);
+        // handle disagreements on authentication database.
+        if (uriDatabase != null
+                && propertyDatabase != null
+                && !uriDatabase.equals(propertyDatabase)) {
+            throw new SQLException(
+                    "uri and properties disagree on authentication database: '"
+                            + uriDatabase
+                            + ", and "
+                            + propertyDatabase
+                            + " respectively");
+        }
+        // set the authDatabase.
+        String authDatabase = s.coalesce(uriDatabase, propertyDatabase);
+        return new Triple<>(username, pwd, authDatabase);
+    }
+
+    // This is just a clean abstraction around URLEncode.
+    private static String sqlURLEncode(String item) throws SQLException {
+        try {
+            return URLEncoder.encode(item, "utf-8");
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
+    }
+
+    // This function builds a new uri from the original clientURI, adding username, password, options, and
+    // database, if necessary.
+    private static String buildNewURI(
+            MongoClientURI originalClientURI,
+            String username,
+            char[] pwd,
+            String database,
+            String optionsString)
+            throws SQLException {
+        // The returned URI should be of the following format:
+        //"mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")
+        String ret = "mongodb://";
+        if (username != null) {
+            // Note: if username is not null, we already know that pwd must also be not null.
+            ret += sqlURLEncode(username) + ":" + sqlURLEncode(String.valueOf(pwd)) + "@";
+        }
+        // Now add hosts.
+        ret += String.join(",", originalClientURI.getHosts());
+        // Now add database, if necessary.
+        if (database != null) {
+            ret += "/" + sqlURLEncode(database);
+        }
+        // OptionsString should already be properly encoded, since we got it straight from the url
+        // string.
+        if (optionsString != null) {
+            ret += "?" + optionsString;
+        }
+        return ret;
     }
 }
