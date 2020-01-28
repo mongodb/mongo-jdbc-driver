@@ -21,6 +21,7 @@ class MongoDriverTest {
     static final String authDBURL = "jdbc:mongodb://localhost/admin";
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
+    static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
     // Even though ADL does not support replSets, this tests that we handle this URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
@@ -89,6 +90,25 @@ class MongoDriverTest {
                     @Override
                     public void execute() throws Throwable {
                         d.connect(userNoPWDURL, null);
+                    }
+                });
+    }
+
+    @Test
+    void testJDBCURL() throws SQLException {
+        MongoDriver d = new MongoDriver();
+
+        assertNotNull(d.connect(jdbcUserURL, null));
+
+        // changing user name from `jdbc` should throw.
+        Properties p = new Properties();
+        p.setProperty("user", "jdbc2");
+        assertThrows(
+                SQLException.class,
+                new Executable() {
+                    @Override
+                    public void execute() throws Throwable {
+                        d.connect(jdbcUserURL, p);
                     }
                 });
     }
@@ -182,7 +202,7 @@ class MongoDriverTest {
     }
 
     @Test
-    void testGetPropertieInfo() throws SQLException {
+    void testGetPropertyInfo() throws SQLException {
         MongoDriver d = new MongoDriver();
 
         // Should not throw, even with null for Properties.
