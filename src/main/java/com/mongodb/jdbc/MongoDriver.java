@@ -31,6 +31,7 @@ public class MongoDriver implements Driver {
     static final String JDBC = "jdbc:";
 
     static final String MONGODB_URL_PREFIX = JDBC + "mongodb:";
+    static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     static final String LOGGER = "logger";
     static final String USER = "user";
     static final String PASSWORD = "password";
@@ -111,7 +112,7 @@ public class MongoDriver implements Driver {
      * @exception SQLException if a database access error occurs or the url is {@code null}
      */
     public boolean acceptsURL(String url) throws SQLException {
-        return url.startsWith(MONGODB_URL_PREFIX);
+        return url.startsWith(MONGODB_URL_PREFIX) || url.startsWith(MONGODB_SRV_URL_PREFIX);
     }
 
     /**
@@ -154,7 +155,7 @@ public class MongoDriver implements Driver {
         if (optionSplit.length > 1) {
             optionString = optionSplit[1];
         }
-        // Handle username specified with no password.
+        // Handle password specified with no username.
         if (username == null) {
             if (pwd != null) {
                 // username is null, but password is not, we must prompt for the username.
@@ -169,7 +170,7 @@ public class MongoDriver implements Driver {
                             buildNewURI(originalClientURI, username, pwd, database, optionString));
             return new DriverPropertyInfo[] {};
         }
-        // Handle password specified with no username.
+        // Handle username specified with no password.
         if (pwd == null) {
             // If pwd is null here, then user name must be non-null,because
             // the both null case is handled above. Prompt for the password.
@@ -274,13 +275,12 @@ public class MongoDriver implements Driver {
         // grab the user and pwd from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
-        String uriDatabase = clientURI.getDatabase();
+        String uriAuthDatabase = clientURI.getDatabase();
         String propertyUser = info.getProperty(USER);
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
-        String propertyDatabase = info.getProperty(AUTH_DATABASE);
+        String propertyAuthDatabase = info.getProperty(AUTH_DATABASE);
         // handle disagreements on username.
-        System.out.println(uriUser + ":" + propertyUser);
         if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
             throw new SQLException(
                     "uri and properties disagree on username: '"
@@ -298,18 +298,18 @@ public class MongoDriver implements Driver {
         // set the pwd
         char[] pwd = c.coalesce(uriPWD, propertyPWD);
         // handle disagreements on authentication database.
-        if (uriDatabase != null
-                && propertyDatabase != null
-                && !uriDatabase.equals(propertyDatabase)) {
+        if (uriAuthDatabase != null
+                && propertyAuthDatabase != null
+                && !uriAuthDatabase.equals(propertyAuthDatabase)) {
             throw new SQLException(
                     "uri and properties disagree on authentication database: '"
-                            + uriDatabase
+                            + uriAuthDatabase
                             + ", and "
-                            + propertyDatabase
+                            + propertyAuthDatabase
                             + " respectively");
         }
         // set the authDatabase.
-        String authDatabase = s.coalesce(uriDatabase, propertyDatabase);
+        String authDatabase = s.coalesce(uriAuthDatabase, propertyAuthDatabase);
         return new Triple<>(username, pwd, authDatabase);
     }
 
