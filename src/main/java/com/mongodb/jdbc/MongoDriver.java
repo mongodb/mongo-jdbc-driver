@@ -37,8 +37,6 @@ public class MongoDriver implements Driver {
     static final String PASSWORD = "password";
     // database is the database to switch to.
     static final String DATABASE = "database";
-    // authDatabase is the database to authenticate against.
-    static final String AUTH_DATABASE = "authDatabase";
 
     private Logger logger;
     private DriverPropertyInfo[] propertyInfo;
@@ -94,10 +92,10 @@ public class MongoDriver implements Driver {
         // a prompt back. Inspect the return value to format the SQLException.
         if (shouldBeEmpty.length != 0) {
             if (shouldBeEmpty[0].name.equals(USER)) {
-                throw new SQLException("password specified without username");
+                throw new SQLException("password specified without user");
             }
             if (shouldBeEmpty[0].name.equals(PASSWORD)) {
-                throw new SQLException("username specified without password");
+                throw new SQLException("user specified without password");
             }
         }
         return new MongoConnection(this.clientURI, logger, info.getProperty(DATABASE));
@@ -142,11 +140,11 @@ public class MongoDriver implements Driver {
         } catch (Exception e) {
             throw new SQLException(e);
         }
-        Triple<String, char[], String> clientProperties =
+		String authDatabase = originalClientURI.getDatabase();
+        Pair<String, char[]> clientProperties =
                 extractProperties(originalClientURI, info);
-        String username = clientProperties.left();
-        char[] pwd = clientProperties.middle();
-        String database = clientProperties.right();
+        String user = clientProperties.left();
+        char[] password = clientProperties.right();
         // Attempt to get an options string from the url string, itself, so that we do
         // not need to format the options returned by the MongoClientURI.
         String optionString = null;
@@ -155,32 +153,29 @@ public class MongoDriver implements Driver {
         if (optionSplit.length > 1) {
             optionString = optionSplit[1];
         }
-        // Handle password specified with no username.
-        if (username == null) {
-            if (pwd != null) {
-                // username is null, but password is not, we must prompt for the username.
-                // Note: The convention is actually to return DriverPropertyInfo objects
-                // with null values, this is not a bug.
-                return new DriverPropertyInfo[] {new DriverPropertyInfo(USER, null)};
-            }
-            // Here, username and password are both null, which is a valid URI that needs no more
-            // info. Construct the clientURI and prompt for nothing.
-            this.clientURI =
-                    new MongoClientURI(
-                            buildNewURI(originalClientURI, username, pwd, database, optionString));
+
+        if (user == null && password == null) {
+            this.clientURI = new MongoClientURI(
+                            buildNewURI(originalClientURI, user, password, authDatabase, optionString)
+							);
             return new DriverPropertyInfo[] {};
         }
-        // Handle username specified with no password.
-        if (pwd == null) {
-            // If pwd is null here, then user name must be non-null,because
+		if (user == null) {
+            // user is null, but password is not, we must prompt for the user.
+            // Note: The convention is actually to return DriverPropertyInfo objects
+            // with null values, this is not a bug.
+            return new DriverPropertyInfo[] {new DriverPropertyInfo(USER, null)};
+		}
+		if (password == null) {
+            // If password is null here, then user name must be non-null,because
             // the both null case is handled above. Prompt for the password.
             return new DriverPropertyInfo[] {new DriverPropertyInfo(PASSWORD, null)};
         }
-        // If we are here, we must have both a username and password. So we have a valid URI state,
+        // If we are here, we must have both a user and password. So we have a valid URI state,
         // go ahead and construct it and prompt for nothing.
         this.clientURI =
                 new MongoClientURI(
-                        buildNewURI(originalClientURI, username, pwd, database, optionString));
+                        buildNewURI(originalClientURI, user, password, authDatabase, optionString));
         return new DriverPropertyInfo[] {};
     }
 
@@ -248,8 +243,8 @@ public class MongoDriver implements Driver {
     // private helper function to abstract checking consistency between properties and the URI, and
     // grabbing the relevant data.
     //
-    // throws SQLException if url and properties disagree on username or password.
-    private static Triple<String, char[], String> extractProperties(
+    // throws SQLException if url and properties disagree on user or password.
+    private static Pair<String, char[]> extractProperties(
             MongoClientURI clientURI, Properties info) throws SQLException {
 
         // The coalesce function takse the first non-null argument, returning null only
@@ -272,45 +267,32 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
-        // grab the user and pwd from the URI.
+        // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
         String uriAuthDatabase = clientURI.getDatabase();
         String propertyUser = info.getProperty(USER);
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
-        String propertyAuthDatabase = info.getProperty(AUTH_DATABASE);
-        // handle disagreements on username.
+        // handle disagreements on user.
         if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
             throw new SQLException(
-                    "uri and properties disagree on username: '"
+                    "uri and properties disagree on user: '"
                             + uriUser
                             + ", and "
                             + propertyUser
                             + " respectively");
         }
-        // set the username
-        String username = s.coalesce(uriUser, propertyUser);
+        // set the user
+        String user = s.coalesce(uriUser, propertyUser);
         // handle disagreements on password.
         if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
             throw new SQLException("uri and properties disagree on password");
         }
-        // set the pwd
-        char[] pwd = c.coalesce(uriPWD, propertyPWD);
-        // handle disagreements on authentication database.
-        if (uriAuthDatabase != null
-                && propertyAuthDatabase != null
-                && !uriAuthDatabase.equals(propertyAuthDatabase)) {
-            throw new SQLException(
-                    "uri and properties disagree on authentication database: '"
-                            + uriAuthDatabase
-                            + ", and "
-                            + propertyAuthDatabase
-                            + " respectively");
-        }
+        // set the password
+        char[] password = c.coalesce(uriPWD, propertyPWD);
         // set the authDatabase.
-        String authDatabase = s.coalesce(uriAuthDatabase, propertyAuthDatabase);
-        return new Triple<>(username, pwd, authDatabase);
+        return new Pair<>(user, password);
     }
 
     // This is just a clean abstraction around URLEncode.
@@ -322,27 +304,27 @@ public class MongoDriver implements Driver {
         }
     }
 
-    // This function builds a new uri from the original clientURI, adding username, password, options, and
+    // This function builds a new uri from the original clientURI, adding user, password, options, and
     // database, if necessary.
     private static String buildNewURI(
             MongoClientURI originalClientURI,
-            String username,
-            char[] pwd,
-            String database,
+            String user,
+            char[] password,
+            String authDatabase,
             String optionsString)
             throws SQLException {
         // The returned URI should be of the following format:
-        //"mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")
+        //"mongodb://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
         String ret = "mongodb://";
-        if (username != null) {
-            // Note: if username is not null, we already know that pwd must also be not null.
-            ret += sqlURLEncode(username) + ":" + sqlURLEncode(String.valueOf(pwd)) + "@";
+        if (user != null) {
+            // Note: if user is not null, we already know that password must also be not null.
+            ret += sqlURLEncode(user) + ":" + sqlURLEncode(String.valueOf(password)) + "@";
         }
         // Now add hosts.
         ret += String.join(",", originalClientURI.getHosts());
-        // Now add database, if necessary.
-        if (database != null) {
-            ret += "/" + sqlURLEncode(database);
+        // Now add authDatabase, if necessary.
+        if (authDatabase != null) {
+            ret += "/" + sqlURLEncode(authDatabase);
         }
         // OptionsString should already be properly encoded, since we got it straight from the url
         // string.
