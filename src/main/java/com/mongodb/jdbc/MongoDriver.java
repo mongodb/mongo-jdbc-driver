@@ -97,6 +97,12 @@ public class MongoDriver implements Driver {
             if (shouldBeEmpty[0].name.equals(PASSWORD)) {
                 throw new SQLException("user specified without password");
             }
+            String[] propertyNames = new String[shouldBeEmpty.length];
+            for (int i = 0; i < propertyNames.length; ++i) {
+                propertyNames[i] = shouldBeEmpty[i].name;
+            }
+            throw new SQLException(
+                    "unexpected property prompt(s) returned: " + String.join(", ", propertyNames));
         }
         return new MongoConnection(this.clientURI, logger, info.getProperty(DATABASE));
     }
