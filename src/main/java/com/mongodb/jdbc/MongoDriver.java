@@ -140,9 +140,8 @@ public class MongoDriver implements Driver {
         } catch (Exception e) {
             throw new SQLException(e);
         }
-		String authDatabase = originalClientURI.getDatabase();
-        Pair<String, char[]> clientProperties =
-                extractProperties(originalClientURI, info);
+        String authDatabase = originalClientURI.getDatabase();
+        Pair<String, char[]> clientProperties = extractProperties(originalClientURI, info);
         String user = clientProperties.left();
         char[] password = clientProperties.right();
         // Attempt to get an options string from the url string, itself, so that we do
@@ -155,18 +154,19 @@ public class MongoDriver implements Driver {
         }
 
         if (user == null && password == null) {
-            this.clientURI = new MongoClientURI(
-                            buildNewURI(originalClientURI, user, password, authDatabase, optionString)
-							);
+            this.clientURI =
+                    new MongoClientURI(
+                            buildNewURI(
+                                    originalClientURI, user, password, authDatabase, optionString));
             return new DriverPropertyInfo[] {};
         }
-		if (user == null) {
+        if (user == null) {
             // user is null, but password is not, we must prompt for the user.
             // Note: The convention is actually to return DriverPropertyInfo objects
             // with null values, this is not a bug.
             return new DriverPropertyInfo[] {new DriverPropertyInfo(USER, null)};
-		}
-		if (password == null) {
+        }
+        if (password == null) {
             // If password is null here, then user name must be non-null,because
             // the both null case is handled above. Prompt for the password.
             return new DriverPropertyInfo[] {new DriverPropertyInfo(PASSWORD, null)};
@@ -244,8 +244,8 @@ public class MongoDriver implements Driver {
     // grabbing the relevant data.
     //
     // throws SQLException if url and properties disagree on user or password.
-    private static Pair<String, char[]> extractProperties(
-            MongoClientURI clientURI, Properties info) throws SQLException {
+    private static Pair<String, char[]> extractProperties(MongoClientURI clientURI, Properties info)
+            throws SQLException {
 
         // The coalesce function takse the first non-null argument, returning null only
         // if both arguments are null. The java type system requires us to write this twice,

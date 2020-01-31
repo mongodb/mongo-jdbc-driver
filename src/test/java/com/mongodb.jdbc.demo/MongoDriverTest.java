@@ -65,17 +65,11 @@ class MongoDriverTest {
         Properties p = new Properties();
         assertNotNull(d.connect(authDBURL, p));
 
-        p.setProperty("authDatabase", "admin2");
+        p.setProperty("database", "admin2");
 
-        // authDatabase mismatch should throw.
-        assertThrows(
-                SQLException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        d.connect(authDBURL, p);
-                    }
-                });
+        // Database is not the same as the authDatabase in the uri.
+        // So this is safe and should not throw.
+        assertNotNull(d.connect(authDBURL, p));
     }
 
     @Test
@@ -161,20 +155,6 @@ class MongoDriverTest {
 
         Properties p = new Properties();
         assertNotNull(d.connect(replURL, p));
-
-        // This is not a mismatch, because we assume that if a auth database is missing
-        // in the URI, even though default is admin, the user would prefer whatever is in
-        // the passed Properties.
-        p.setProperty("authDatabase", "admin2");
-        // authDatabase mismatch should throw.
-        assertThrows(
-                SQLException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        d.connect(authDBURL, p);
-                    }
-                });
 
         Properties p2 = new Properties();
         p2.setProperty("user", "dfasdfds");
