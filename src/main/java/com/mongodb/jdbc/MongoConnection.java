@@ -1,7 +1,8 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -20,17 +21,14 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
 import java.util.concurrent.Executor;
-import java.util.logging.Logger;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
     private String currentDB = "test"; // connect to test database by default
-    private Logger logger;
 
-    public MongoConnection(MongoClientURI uri, Logger logger, String database) {
-        this.logger = logger;
+    public MongoConnection(ConnectionString uri, String database) {
         this.currentDB = (database != null) ? database : currentDB;
-        mongoClient = new MongoClient(uri);
+        mongoClient = MongoClients.create(uri);
     }
 
     public Statement createStatement() throws SQLException {

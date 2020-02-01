@@ -33,7 +33,6 @@ public class Main {
 
       try{
          Class.forName(JDBC_DRIVER);
-		 MongoDriver d = new MongoDriver();
 		 java.util.Properties p = new java.util.Properties();
 		 // These properties will be added to the URI.
 		 // Uncomment if you wish to specify user and password.
@@ -41,7 +40,7 @@ public class Main {
 		 // p.setProperty("password", "foo");
 		 p.setProperty("database", "test");
          System.out.println("Connecting to database test...");
-         Connection conn = d.connect(URL, p);
+         Connection conn = DriverManager.getConnection(URL, "fake_user", "fake_password");
 
          System.out.println("Creating statement...");
          Statement stmt = conn.createStatement();
