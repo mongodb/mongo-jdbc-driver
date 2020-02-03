@@ -18,7 +18,12 @@ public class MongoStatement implements Statement {
     private MongoCollection col;
 
     public MongoStatement(MongoClient client, String currentDB) {
-        // TODO: obviously don't just connect to `test` collection.
+        // TODO: we will use client.aggregate if currentDB is null
+		// if (currentDB == null) {
+		//     client.aggregate....
+		// } else {
+		//     client.getDatabase(currentDB).aggregate....
+		// }
         col = client.getDatabase(currentDB).getCollection("test");
     }
 
