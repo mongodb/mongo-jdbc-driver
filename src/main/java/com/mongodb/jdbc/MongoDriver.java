@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
@@ -11,6 +27,14 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
 import java.util.Properties;
 
+/**
+ * The MongoDriver implements the java.sql.Driver interface, which allows for opening Connections to
+ * MonogDB databases that have SQL support.
+ *
+ * @see DriverManager
+ * @see Connection
+ * @since 0.1.0
+ */
 public class MongoDriver implements Driver {
     /** All MongoDB SQL URLs must begin with jdbc:mongodb: */
     static final String JDBC = "jdbc:";
@@ -21,7 +45,8 @@ public class MongoDriver implements Driver {
     static final String PASSWORD = "password";
     // database is the database to switch to.
     static final String DATABASE = "database";
-	static {
+
+    static {
         try {
             DriverManager.registerDriver(new MongoDriver());
         } catch (SQLException e) {
@@ -42,20 +67,21 @@ public class MongoDriver implements Driver {
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionString(url, info);
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
-        DriverPropertyInfo[] shouldBeEmpty = p.right();
-        if (shouldBeEmpty.length != 0) {
-            if (shouldBeEmpty[0].name.equals(USER)) {
+        DriverPropertyInfo[] driverPropertyInfo = p.right();
+        if (driverPropertyInfo.length != 0) {
+            if (driverPropertyInfo[0].name.equals(USER)) {
                 throw new SQLException("password specified without user");
             }
-            if (shouldBeEmpty[0].name.equals(PASSWORD)) {
+            if (driverPropertyInfo[0].name.equals(PASSWORD)) {
                 throw new SQLException("user specified without password");
             }
-            String[] propertyNames = new String[shouldBeEmpty.length];
+            String[] propertyNames = new String[driverPropertyInfo.length];
             for (int i = 0; i < propertyNames.length; ++i) {
-                propertyNames[i] = shouldBeEmpty[i].name;
+                propertyNames[i] = driverPropertyInfo[i].name;
             }
             throw new SQLException(
-                    "unexpected property prompt(s) returned: " + String.join(", ", propertyNames));
+                    "unexpected driver property info prompt returned: "
+                            + String.join(", ", propertyNames));
         }
         return new MongoConnection(p.left(), info.getProperty(DATABASE));
     }
@@ -79,7 +105,7 @@ public class MongoDriver implements Driver {
 
     @Override
     public int getMinorVersion() {
-        return 0;
+        return 1;
     }
 
     @Override
