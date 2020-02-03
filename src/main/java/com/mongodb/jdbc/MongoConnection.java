@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
-    private String currentDB = null; // connect to test database by default
+    private String currentDB = null;
 
     public MongoConnection(ConnectionString uri, String database) {
         this.currentDB = database;
