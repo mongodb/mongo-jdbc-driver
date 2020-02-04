@@ -33,7 +33,7 @@ import java.util.Properties;
  *
  * @see DriverManager
  * @see Connection
- * @since 0.1.0
+ * @since 1.0.0
  */
 public class MongoDriver implements Driver {
     /** All MongoDB SQL URLs must begin with jdbc:mongodb: */
@@ -100,12 +100,12 @@ public class MongoDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return 0;
+        return 1;
     }
 
     @Override
     public int getMinorVersion() {
-        return 1;
+        return 0;
     }
 
     @Override

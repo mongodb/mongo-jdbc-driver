@@ -18,7 +18,7 @@ public class MongoStatement implements Statement {
     private MongoCollection col;
 
     public MongoStatement(MongoClient client, String currentDB) {
-        // TODO: we will use client.aggregate if currentDB is null
+        // TODO BI-2467: we will use client.aggregate if currentDB is null
         // if (currentDB == null) {
         //     client.aggregate....
         // } else {
