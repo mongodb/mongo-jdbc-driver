@@ -50,7 +50,7 @@ public class MongoDriver implements Driver {
         try {
             DriverManager.registerDriver(new MongoDriver());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
