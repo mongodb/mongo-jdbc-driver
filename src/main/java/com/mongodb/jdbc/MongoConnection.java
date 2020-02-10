@@ -1,6 +1,8 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -22,11 +24,11 @@ import java.util.concurrent.Executor;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
-    private String currentDB = "test"; // test to test by default, TODO: get from connection URL.
+    private String currentDB = null;
 
-    public MongoConnection(String uri) {
-        // TODO: actually handle URIs.
-        mongoClient = new MongoClient();
+    public MongoConnection(ConnectionString uri, String database) {
+        this.currentDB = database;
+        mongoClient = MongoClients.create(uri);
     }
 
     public Statement createStatement() throws SQLException {
