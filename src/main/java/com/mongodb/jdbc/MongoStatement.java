@@ -1,8 +1,8 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,17 +15,21 @@ public class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
-    private MongoCollection col;
+    private MongoDatabase currentDB;
 
     public MongoStatement(MongoClient client, String currentDB) {
-        // TODO: obviously don't just connect to `test.test`.
-        col = client.getDatabase(currentDB).getCollection("test");
+        this.currentDB = client.getDatabase(currentDB);
     }
 
     @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
-        // TODO: actually use query.
-        MongoCursor<Document> cur = col.find().iterator();
+        // TODO BI-2467: we will use client.aggregate if currentDB is null
+        // if (currentDB == null) {
+        //     client.aggregate....
+        // } else {
+        //     client.getDatabase(currentDB).aggregate....
+        // }
+        MongoCursor<Document> cur = currentDB.getCollection("test").find().iterator();
         return new MongoResultSet(cur);
     }
 
