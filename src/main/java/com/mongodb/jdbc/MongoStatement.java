@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import org.bson.Document;
 
 public class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
@@ -29,7 +28,7 @@ public class MongoStatement implements Statement {
         // } else {
         //     client.getDatabase(currentDB).aggregate....
         // }
-        MongoCursor<Document> cur = currentDB.getCollection("test").find().iterator();
+        MongoCursor<Row> cur = currentDB.getCollection("test", Row.class).find().iterator();
         return new MongoResultSet(cur);
     }
 
