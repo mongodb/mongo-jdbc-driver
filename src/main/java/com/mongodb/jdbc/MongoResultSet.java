@@ -132,7 +132,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return null;
         }
-        return o.asString().toString();
+        return o.asString().getValue();
     }
 
     public String getString(String columnLabel) throws SQLException {
@@ -180,13 +180,13 @@ public class MongoResultSet implements ResultSet {
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBoolean(out);
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values.get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getBoolean(out);
     }
 
@@ -269,17 +269,17 @@ public class MongoResultSet implements ResultSet {
 
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getLong(out);
     }
 
     public long getLong(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values.get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getLong(out);
     }
 
-    private float getFloat(Object o) throws SQLException {
+    private float getFloat(BsonValue o) throws SQLException {
         // Just be lazy, I doubt this will be called often.
         // HotSpot should inline these, anyway.
         return (float) getDouble(o);
@@ -287,44 +287,45 @@ public class MongoResultSet implements ResultSet {
 
     public float getFloat(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getFloat(out);
     }
 
     public float getFloat(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values.get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getFloat(out);
     }
 
-    private double getDouble(Object o) throws SQLException {
+    private double getDouble(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return 0.0;
         }
-        if (o instanceof Double) {
-            return (double) o;
-        } else if (o instanceof Long) {
-            return (double) ((Long) o);
-        } else if (o instanceof Integer) {
-            return (double) ((Integer) o);
-        } else if (o instanceof Decimal128) {
-            return ((Decimal128) o).doubleValue();
-        }
-        if (o instanceof Boolean) {
-            return (boolean) o ? 1.0 : 0.0;
-        }
-        return Long.valueOf(o.toString());
+        if (o.isDouble()) {
+            return o.asDouble().doubleValue();
+        } else if (o.isInt64()) {
+            return (double) o.asInt64().longValue();
+        } else if (o.isInt32()) {
+            return (double) o.asInt32().intValue();
+        } else if (o.isDecimal128()) {
+            return o.asDecimal128().doubleValue();
+        } else if (o.isBoolean()) {
+            return o.asBoolean().getValue() ? 1.0 : 0.0;
+        } else if (o.isString()) {
+        	return Double.valueOf(o.asString().getValue());
+		}
+		throw new SQLException("could not convert " + o + " to double");
     }
 
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getDouble(out);
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values.get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getDouble(out);
     }
 
@@ -440,13 +441,13 @@ public class MongoResultSet implements ResultSet {
 
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        Object out = current.values.get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getBigDecimal(out);
     }
 
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        Object out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBigDecimal(out);
     }
 

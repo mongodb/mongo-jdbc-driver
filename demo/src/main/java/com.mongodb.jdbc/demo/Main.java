@@ -48,11 +48,13 @@ public class Main {
    public static void displayResultSet(ResultSet rs) throws java.sql.SQLException {
        while(rs.next()){
           //Retrieve by column name
-          int a = rs.getInt("a");
+          double a = rs.getDouble("a");
+		  String as = rs.getString("a");
           String b = rs.getString("b");
           ResultSetMetaData metaData = rs.getMetaData();
 		  System.out.println("a is: " + a + " with type " + metaData.getColumnType(1)
-				  + "b is: " + b + "with type " + metaData.getColumnType(2));
+				  + "b is: " + b + " with type " + metaData.getColumnType(2));
+		  System.out.println("a as a string is: " + as);
        }
    }
 }
