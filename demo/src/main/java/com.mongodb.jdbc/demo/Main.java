@@ -51,9 +51,16 @@ public class Main {
           double a = rs.getDouble("a");
 		  String as = rs.getString("a");
           String b = rs.getString("b");
+		  java.sql.Date bd;
+		  try {
+		  		bd = rs.getDate("b");
+				System.out.println("b as a date is: " + bd);
+		  } catch (Exception e) {
+				System.out.println(e);
+		  }
           ResultSetMetaData metaData = rs.getMetaData();
-		  System.out.println("a is: " + a + " with type " + metaData.getColumnType(1)
-				  + "b is: " + b + " with type " + metaData.getColumnType(2));
+		  System.out.println("a is: " + a + " as double"
+				  + " b is: " + b + " as string");
 		  System.out.println("a as a string is: " + as);
        }
    }
