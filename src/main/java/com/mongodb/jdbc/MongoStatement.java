@@ -28,11 +28,12 @@ public class MongoStatement implements Statement {
         // } else {
         //     client.getDatabase(currentDB).aggregate....
         // }
-        MongoCursor<Row> cur = currentDB
-			.withCodecRegistry(MongoDriver.registry)
-			.getCollection("test", Row.class)
-			.find()
-			.iterator();
+        MongoCursor<Row> cur =
+                currentDB
+                        .withCodecRegistry(MongoDriver.registry)
+                        .getCollection("test", Row.class)
+                        .find()
+                        .iterator();
         return new MongoResultSet(cur);
     }
 
