@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.MongoRowId;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -40,6 +41,7 @@ public class MongoResultSet implements ResultSet {
     private final SimpleDateFormat dateFormat =
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private int rowNum = 0;
+	private boolean closed = false;
     private MongoCursor<Row> cursor;
     private Row current;
     private HashMap<String, Integer> columnPositionCache;
@@ -61,6 +63,7 @@ public class MongoResultSet implements ResultSet {
 
     public void close() throws SQLException {
         cursor.close();
+		closed = true;
     }
 
     public boolean wasNull() throws SQLException {
@@ -1298,11 +1301,12 @@ public class MongoResultSet implements ResultSet {
     // ------------------------- JDBC 4.0 -----------------------------------
 
     public RowId getRowId(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return new MongoRowId(columnIndex);
     }
 
     public RowId getRowId(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkKey(columnLabel);
+        return new MongoRowId(columnPositionCache.get(columnLabel));
     }
 
     public void updateRowId(int columnIndex, RowId x) throws SQLException {
@@ -1318,7 +1322,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     public boolean isClosed() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return closed;
     }
 
     public void updateNString(int columnIndex, String nString) throws SQLException {
@@ -1362,19 +1366,19 @@ public class MongoResultSet implements ResultSet {
     }
 
     public String getNString(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return getString(columnIndex);
     }
 
     public String getNString(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return getString(columnLabel);
     }
 
     public java.io.Reader getNCharacterStream(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return new java.io.StringReader(getString(columnIndex));
     }
 
     public java.io.Reader getNCharacterStream(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return new java.io.StringReader(getString(columnLabel));
     }
 
     public void updateNCharacterStream(int columnIndex, java.io.Reader x, long length)
@@ -1510,7 +1514,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkKey(columnLabel);
+		return type.cast(current.values.get(columnPositionCache.get(columnLabel)));
     }
 
     // ------------------------- JDBC 4.2 -----------------------------------

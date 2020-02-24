@@ -1,3 +1,5 @@
+package com.mongodb.jdbc;
+
 import java.sql.RowId;
 
 public class MongoRowId implements RowId {
