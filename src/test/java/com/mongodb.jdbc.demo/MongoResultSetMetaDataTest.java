@@ -61,12 +61,6 @@ class MongoResultSetMetaDataTest {
         return c;
     }
 
-    //    public String database;
-    //    public String table;
-    //    public String tableAlias;
-    //    public String column;
-    //    public String columnAlias;
-    //    public BsonValue value;
     static {
         Row row = new Row();
         row.values = new ArrayList<>();
