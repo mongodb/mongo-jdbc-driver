@@ -208,29 +208,7 @@ class MongoResultSetTest {
         //	LONG_COL 	 100
         //	DECIMAL_COL	 100
 
-        // Binary cannot be gotten through getString, currently.
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getString(BINARY_COL_IDX);
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getString(BINARY_COL_LABEL);
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getString(UUID_COL_IDX);
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getString(UUID_COL_LABEL);
-                });
-
-        // Next test that the IDX and LABELS are working together correctly.
+        // Test that the IDX and LABELS are working together correctly.
         assertEquals(
                 mongoResultSet.getString(NULL_COL_IDX), mongoResultSet.getString(NULL_COL_LABEL));
         assertEquals(
@@ -256,10 +234,72 @@ class MongoResultSetTest {
                 mongoResultSet.getString(DECIMAL_COL_IDX),
                 mongoResultSet.getString(DECIMAL_COL_LABEL));
 
-        // Next test that the IDX and LABELS are working together correctly for the Binary types.
+        // Test that the IDX and LABELS are working together correctly for the Binary types.
         assertEquals(
                 mongoResultSet.getBlob(BINARY_COL_IDX), mongoResultSet.getBlob(BINARY_COL_LABEL));
         assertEquals(mongoResultSet.getBlob(UUID_COL_IDX), mongoResultSet.getBlob(UUID_COL_LABEL));
+
+        // Binary cannot be gotten through anything other than getBlob, currently.
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBoolean(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBoolean(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getLong(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getLong(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getDouble(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getDouble(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBigDecimal(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBigDecimal(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getTimestamp(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getTimestamp(UUID_COL_IDX);
+                });
     }
 
     @Test
