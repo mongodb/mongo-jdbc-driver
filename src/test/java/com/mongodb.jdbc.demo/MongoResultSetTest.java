@@ -351,6 +351,25 @@ class MongoResultSetTest {
         assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
         assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
 
+        // Test Double values are as expected
+        assertEquals(0.0, mongoResultSet.getDouble(NULL_COL_LABEL));
+        assertEquals(1.1, mongoResultSet.getDouble(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    mongoResultSet.getDouble(STRING_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getDouble(OBJECTID_COL_LABEL);
+                });
+        assertEquals(1.0, mongoResultSet.getDouble(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000L, mongoResultSet.getDouble(DATE_COL_LABEL));
+        assertEquals(100.0, mongoResultSet.getDouble(INTEGER_COL_LABEL));
+        assertEquals(100.0, mongoResultSet.getDouble(LONG_COL_LABEL));
+        assertEquals(100.0, mongoResultSet.getDouble(DECIMAL_COL_LABEL));
+
         // Test Long values are as expected
         assertEquals(0L, mongoResultSet.getLong(NULL_COL_LABEL));
         assertEquals(1, mongoResultSet.getLong(DOUBLE_COL_LABEL));
