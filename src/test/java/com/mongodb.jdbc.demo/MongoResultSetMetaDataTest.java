@@ -135,7 +135,6 @@ class MongoResultSetMetaDataTest {
         assertEquals(Types.TIMESTAMP, resultSetMetaData.getColumnType(DATE_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INTEGER_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(LONG_COL));
-        int ct = resultSetMetaData.getColumnType(DECIMAL_COL);
         assertEquals(Types.REAL, resultSetMetaData.getColumnType(DECIMAL_COL));
     }
 
