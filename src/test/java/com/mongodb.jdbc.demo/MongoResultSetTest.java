@@ -351,6 +351,7 @@ class MongoResultSetTest {
         assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
         assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
 
+        // Test Long values are as expected
         assertEquals(0L, mongoResultSet.getLong(NULL_COL_LABEL));
         assertEquals(1, mongoResultSet.getLong(DOUBLE_COL_LABEL));
         assertThrows(
@@ -368,6 +369,25 @@ class MongoResultSetTest {
         assertEquals(100L, mongoResultSet.getLong(INTEGER_COL_LABEL));
         assertEquals(100L, mongoResultSet.getLong(LONG_COL_LABEL));
         assertEquals(100L, mongoResultSet.getLong(DECIMAL_COL_LABEL));
+
+        // Test Int values are as expected
+        assertEquals(0, mongoResultSet.getInt(NULL_COL_LABEL));
+        assertEquals(1, mongoResultSet.getInt(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    mongoResultSet.getInt(STRING_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getInt(OBJECTID_COL_LABEL);
+                });
+        assertEquals(1, mongoResultSet.getInt(BOOLEAN_COL_LABEL));
+        assertEquals(-1527325616, mongoResultSet.getInt(DATE_COL_LABEL));
+        assertEquals(100, mongoResultSet.getInt(INTEGER_COL_LABEL));
+        assertEquals(100, mongoResultSet.getInt(LONG_COL_LABEL));
+        assertEquals(100, mongoResultSet.getInt(DECIMAL_COL_LABEL));
     }
 
     @Test
