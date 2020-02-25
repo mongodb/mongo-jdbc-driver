@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -365,10 +366,30 @@ class MongoResultSetTest {
                     mongoResultSet.getDouble(OBJECTID_COL_LABEL);
                 });
         assertEquals(1.0, mongoResultSet.getDouble(BOOLEAN_COL_LABEL));
-        assertEquals(-44364244526000L, mongoResultSet.getDouble(DATE_COL_LABEL));
+        assertEquals(-44364244526000.0, mongoResultSet.getDouble(DATE_COL_LABEL));
         assertEquals(100.0, mongoResultSet.getDouble(INTEGER_COL_LABEL));
         assertEquals(100.0, mongoResultSet.getDouble(LONG_COL_LABEL));
         assertEquals(100.0, mongoResultSet.getDouble(DECIMAL_COL_LABEL));
+
+        // Test BigDecimal values are as expected
+        assertEquals(new BigDecimal(0.0), mongoResultSet.getBigDecimal(NULL_COL_LABEL));
+        assertEquals(new BigDecimal(1.1), mongoResultSet.getBigDecimal(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    mongoResultSet.getBigDecimal(STRING_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBigDecimal(OBJECTID_COL_LABEL);
+                });
+        assertEquals(new BigDecimal(1.0), mongoResultSet.getBigDecimal(BOOLEAN_COL_LABEL));
+        assertEquals(
+                new BigDecimal(-44364244526000L), mongoResultSet.getBigDecimal(DATE_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(INTEGER_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(LONG_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(DECIMAL_COL_LABEL));
 
         // Test Long values are as expected
         assertEquals(0L, mongoResultSet.getLong(NULL_COL_LABEL));
