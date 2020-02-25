@@ -8,6 +8,7 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -352,6 +353,8 @@ class MongoResultSetTest {
         assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
         assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
 
+        // getClob just wraps getString, we can ignore it
+
         // Test Double values are as expected
         assertEquals(0.0, mongoResultSet.getDouble(NULL_COL_LABEL));
         assertEquals(1.1, mongoResultSet.getDouble(DOUBLE_COL_LABEL));
@@ -429,6 +432,8 @@ class MongoResultSetTest {
         assertEquals(100, mongoResultSet.getInt(LONG_COL_LABEL));
         assertEquals(100, mongoResultSet.getInt(DECIMAL_COL_LABEL));
 
+        // We test Long, Int, and Byte, we can safely skip getShort tests
+
         // Test Byte values are as expected
         assertEquals(0, mongoResultSet.getByte(NULL_COL_LABEL));
         assertEquals(1, mongoResultSet.getByte(DOUBLE_COL_LABEL));
@@ -464,6 +469,29 @@ class MongoResultSetTest {
         assertEquals(true, mongoResultSet.getBoolean(INTEGER_COL_LABEL));
         assertEquals(true, mongoResultSet.getBoolean(LONG_COL_LABEL));
         assertEquals(true, mongoResultSet.getBoolean(DECIMAL_COL_LABEL));
+
+        // Test getTimestamp
+        assertEquals(null, mongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(1), mongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getTimestamp(STRING_COL_LABEL);
+                });
+        assertEquals(
+                new Timestamp(1580402718000L + /* convert from EST to UTC */ 5L * 3600000L),
+                mongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getTimestamp(BOOLEAN_COL_LABEL);
+                });
+        assertEquals(new Timestamp(-44364244526000L), mongoResultSet.getTimestamp(DATE_COL_LABEL));
+        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(INTEGER_COL_LABEL));
+        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(LONG_COL_LABEL));
+        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
+
+        // getTime and getDate just wrap getTimestamp and can be ignored
     }
 
     @Test

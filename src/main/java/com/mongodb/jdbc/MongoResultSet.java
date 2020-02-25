@@ -1375,7 +1375,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     private Timestamp getTimestamp(BsonValue o) throws SQLException {
-        return (o == null) ? null : new Timestamp(getUtilDate(o).getTime());
+        java.util.Date utilDate = getUtilDate(o);
+        return (utilDate == null) ? null : new Timestamp(utilDate.getTime());
     }
 
     @Override
