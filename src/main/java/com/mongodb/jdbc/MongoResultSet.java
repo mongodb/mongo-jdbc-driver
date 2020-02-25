@@ -165,6 +165,17 @@ public class MongoResultSet implements ResultSet {
         throw new SQLException(from + " cannot be converted to string");
     }
 
+    private String zeroPad(int datum, int len) {
+        String datStr = String.valueOf(datum);
+        int padFactor = len - datStr.length();
+        StringBuilder ret = new StringBuilder();
+        for (int i = 0; i < padFactor; ++i) {
+            ret.append("0");
+        }
+        ret.append(datStr);
+        return ret.toString();
+    }
+
     // Everything here follows the conventions of $convert to string in mongodb
     // except for some special handling for binary.
     private String getString(BsonValue o) throws SQLException {
@@ -192,25 +203,32 @@ public class MongoResultSet implements ResultSet {
                 c.setTimeZone(UTC);
                 c.setTime(d);
                 StringBuilder sb = new StringBuilder(24);
-                sb.append(c.get(Calendar.YEAR));
+                int datum = c.get(Calendar.YEAR);
+                sb.append(zeroPad(datum, 4));
                 sb.append("-");
-                sb.append(c.get(Calendar.MONTH) + 1); //sigh
+                datum = c.get(Calendar.MONTH) + 1; //sigh
+                sb.append(zeroPad(datum, 2));
                 sb.append("-");
-                sb.append(c.get(Calendar.DAY_OF_MONTH));
+                datum = c.get(Calendar.DAY_OF_MONTH);
+                sb.append(zeroPad(datum, 2));
                 sb.append("T");
-                sb.append(c.get(Calendar.HOUR_OF_DAY));
+                datum = c.get(Calendar.HOUR_OF_DAY);
+                sb.append(zeroPad(datum, 2));
                 sb.append(":");
-                sb.append(c.get(Calendar.MINUTE));
+                datum = c.get(Calendar.MINUTE);
+                sb.append(zeroPad(datum, 2));
                 sb.append(":");
-                sb.append(c.get(Calendar.SECOND));
+                datum = c.get(Calendar.SECOND);
+                sb.append(zeroPad(datum, 2));
                 sb.append(".");
-                sb.append(c.get(Calendar.MILLISECOND));
+                datum = c.get(Calendar.MILLISECOND);
+                sb.append(zeroPad(datum, 2));
                 sb.append("Z");
                 return sb.toString();
             case DB_POINTER:
                 return throwStringConversionException("db_pointer");
             case DECIMAL128:
-                return o.asDecimal128().toString();
+                return o.asDecimal128().getValue().toString();
             case DOCUMENT:
                 return throwStringConversionException("document");
             case DOUBLE:

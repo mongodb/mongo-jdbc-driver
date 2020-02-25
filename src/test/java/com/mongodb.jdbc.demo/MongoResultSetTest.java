@@ -168,7 +168,7 @@ class MongoResultSetTest {
                         "",
                         DATE_COL_LABEL,
                         DATE_COL_LABEL,
-                        new BsonDateTime(1580511155627L)));
+                        new BsonDateTime(-44364244526000L)));
         row.values.add(
                 newColumn("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, new BsonInt32(100)));
         row.values.add(newColumn("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
@@ -333,14 +333,23 @@ class MongoResultSetTest {
         //	NULL_COL 	 null
         //	DOUBLE_COL	 1.1
         //	STRING_COL	 "string data"
-        //	BINARY_COL	 "data"
-        //	UUID_COL 	 "00000000-0000-0000-0000-000000000000"
         //	OBJECTID_COL "5e334e6e780812e4896dd65e"
         //	BOOLEAN_COL	 true
         //	DATE_COL 	 some date
         //	INTEGER_COL	 100
         //	LONG_COL 	 100
         //	DECIMAL_COL	 100
+        //
+        //	Test String values are as expected
+        assertEquals(null, mongoResultSet.getString(NULL_COL_LABEL));
+        assertEquals("1.1", mongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals("string data", mongoResultSet.getString(STRING_COL_LABEL));
+        assertEquals("5e334e6e780812e4896dd65e", mongoResultSet.getString(OBJECTID_COL_LABEL));
+        assertEquals("true", mongoResultSet.getString(BOOLEAN_COL_LABEL));
+        assertEquals("0564-02-23T22:44:34.00Z", mongoResultSet.getString(DATE_COL_LABEL));
+        assertEquals("100", mongoResultSet.getString(INTEGER_COL_LABEL));
+        assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
+        assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
     }
 
     @Test
