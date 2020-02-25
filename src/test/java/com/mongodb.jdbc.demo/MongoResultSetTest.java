@@ -196,18 +196,6 @@ class MongoResultSetTest {
         boolean hasNext = mongoResultSet.next();
         assertTrue(hasNext);
 
-        //	NULL_COL 	 null
-        //	DOUBLE_COL	 1.1
-        //	STRING_COL	 "string data"
-        //	BINARY_COL	 "data"
-        //	UUID_COL 	 "00000000-0000-0000-0000-000000000000"
-        //	OBJECTID_COL "5e334e6e780812e4896dd65e"
-        //	BOOLEAN_COL	 true
-        //	DATE_COL 	 some date
-        //	INTEGER_COL	 100
-        //	LONG_COL 	 100
-        //	DECIMAL_COL	 100
-
         // Test that the IDX and LABELS are working together correctly.
         assertEquals(
                 mongoResultSet.getString(NULL_COL_IDX), mongoResultSet.getString(NULL_COL_LABEL));
@@ -300,6 +288,59 @@ class MongoResultSetTest {
                 () -> {
                     mongoResultSet.getTimestamp(UUID_COL_IDX);
                 });
+
+        // Only Binary and String and null values can be gotten from getBlob
+        assertNotNull(mongoResultSet.getBlob(STRING_COL_LABEL));
+        assertNotNull(mongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertNotNull(mongoResultSet.getBlob(UUID_COL_LABEL));
+        assertNull(mongoResultSet.getBlob(NULL_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(DOUBLE_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(OBJECTID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(BOOLEAN_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(DATE_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(INTEGER_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(LONG_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(DECIMAL_COL_IDX);
+                });
+
+        //	NULL_COL 	 null
+        //	DOUBLE_COL	 1.1
+        //	STRING_COL	 "string data"
+        //	BINARY_COL	 "data"
+        //	UUID_COL 	 "00000000-0000-0000-0000-000000000000"
+        //	OBJECTID_COL "5e334e6e780812e4896dd65e"
+        //	BOOLEAN_COL	 true
+        //	DATE_COL 	 some date
+        //	INTEGER_COL	 100
+        //	LONG_COL 	 100
+        //	DECIMAL_COL	 100
     }
 
     @Test
