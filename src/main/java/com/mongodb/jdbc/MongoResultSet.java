@@ -1295,7 +1295,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     private Date getDate(BsonValue o) throws SQLException {
-        return (o == null) ? null : new Date(getUtilDate(o).getTime());
+        java.util.Date utilDate = getUtilDate(o);
+        return (utilDate == null) ? null : new Date(utilDate.getTime());
     }
 
     @Override
@@ -1337,7 +1338,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     private Time getTime(BsonValue o) throws SQLException {
-        return (o == null) ? null : new Time(getUtilDate(o).getTime());
+        java.util.Date utilDate = getUtilDate(o);
+        return (utilDate == null) ? null : new Time(utilDate.getTime());
     }
 
     @Override
