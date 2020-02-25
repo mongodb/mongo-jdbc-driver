@@ -1,11 +1,7 @@
-package com.mongodb.jdbc.demo;
+package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mongodb.jdbc.Column;
-import com.mongodb.jdbc.MongoResultSet;
-import com.mongodb.jdbc.MongoResultSetMetaData;
-import com.mongodb.jdbc.Row;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -107,9 +103,6 @@ class MongoResultSetMetaDataTest {
 
         resultSetMetaData = new MongoResultSetMetaData(row);
     }
-
-    static final String CURR_DOC = "currDoc";
-    static final String NEXT_DOC = "nextDoc";
 
     MongoResultSet mongoResultSet;
 

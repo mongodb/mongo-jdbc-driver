@@ -1,4 +1,4 @@
-package com.mongodb.jdbc.demo;
+package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -6,9 +6,6 @@ import static org.mockito.Mockito.when;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.jdbc.Column;
-import com.mongodb.jdbc.MongoResultSet;
-import com.mongodb.jdbc.Row;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,9 +148,6 @@ class MongoResultSetTest {
         mongoResultSet = new MongoResultSet(new MongoTestCursor(rows));
     }
 
-    static final String CURR_DOC = "currDoc";
-    static final String NEXT_DOC = "nextDoc";
-
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -182,6 +176,7 @@ class MongoResultSetTest {
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
+        assertNull(mockResultSet.getCurrent());
         assertThrows(
                 SQLException.class,
                 () -> {

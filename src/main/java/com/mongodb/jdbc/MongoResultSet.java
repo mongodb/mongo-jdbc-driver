@@ -50,7 +50,7 @@ public class MongoResultSet implements ResultSet {
         this.cursor = cursor;
     }
 
-    public Row getCurrent() {
+    Row getCurrent() {
         return current;
     }
 
