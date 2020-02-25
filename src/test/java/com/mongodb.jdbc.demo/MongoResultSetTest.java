@@ -8,7 +8,6 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.bson.BsonBinary;
@@ -38,19 +37,31 @@ class MongoResultSetTest {
     @Mock MongoCursor<Row> cursor;
     @Mock Row nextRow;
     MongoResultSet mockResultSet;
-    private static MongoResultSet mongoResultSet;
+    static MongoResultSet mongoResultSet;
 
-    static int NULL_COL = 1;
-    static int DOUBLE_COL = 2;
-    static int STRING_COL = 3;
-    static int BINARY_COL = 4;
-    static int UUID_COL = 5;
-    static int OBJECTID_COL = 6;
-    static int BOOLEAN_COL = 7;
-    static int DATE_COL = 8;
-    static int INTEGER_COL = 9;
-    static int LONG_COL = 10;
-    static int DECIMAL_COL = 11;
+    static int NULL_COL_IDX = 1;
+    static int DOUBLE_COL_IDX = 2;
+    static int STRING_COL_IDX = 3;
+    static int BINARY_COL_IDX = 4;
+    static int UUID_COL_IDX = 5;
+    static int OBJECTID_COL_IDX = 6;
+    static int BOOLEAN_COL_IDX = 7;
+    static int DATE_COL_IDX = 8;
+    static int INTEGER_COL_IDX = 9;
+    static int LONG_COL_IDX = 10;
+    static int DECIMAL_COL_IDX = 11;
+
+    static String NULL_COL_LABEL = "nullCol";
+    static String DOUBLE_COL_LABEL = "doubleCol";
+    static String STRING_COL_LABEL = "stringCol";
+    static String BINARY_COL_LABEL = "binaryCol";
+    static String UUID_COL_LABEL = "uuidCol";
+    static String OBJECTID_COL_LABEL = "objectIdCol";
+    static String BOOLEAN_COL_LABEL = "booleanCol";
+    static String DATE_COL_LABEL = "dateCol";
+    static String INTEGER_COL_LABEL = "integerCol";
+    static String LONG_COL_LABEL = "longCol";
+    static String DECIMAL_COL_LABEL = "decimalCol";
 
     static Column newColumn(
             String database,
@@ -92,7 +103,7 @@ class MongoResultSetTest {
 
         @Override
         public boolean hasNext() {
-            return rowNum + 1 < rows.size();
+            return rowNum < rows.size();
         }
 
         @Override
@@ -113,34 +124,61 @@ class MongoResultSetTest {
         Row row = new Row();
         row.values = new ArrayList<>();
 
-        row.values.add(newColumn("", "", "", "nullCol", "nullCol", new BsonNull()));
-        row.values.add(newColumn("", "", "", "doubleCol", "doubleCol", new BsonDouble(1.1)));
+        row.values.add(newColumn("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
         row.values.add(
-                newColumn("", "", "", "stringCol", "stringCol", new BsonString("string data")));
-        row.values.add(
-                newColumn("", "", "", "binaryCol", "binaryCol", new BsonBinary("data".getBytes())));
-        row.values.add(
-                newColumn("", "", "", "uuidCol", "uuidCol", new BsonBinary(UUID.randomUUID())));
+                newColumn("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, new BsonDouble(1.1)));
         row.values.add(
                 newColumn(
                         "",
                         "",
                         "",
-                        "objectIdCol",
-                        "objectIdCol",
-                        new BsonObjectId(new ObjectId(new Date()))));
-        row.values.add(newColumn("", "", "", "booleanCol", "booleanCol", new BsonBoolean(true)));
-        row.values.add(
-                newColumn("", "", "", "dateCol", "dateCol", new BsonDateTime(1580511155627L)));
-        row.values.add(newColumn("", "", "", "integerCol", "integerCol", new BsonInt32(100)));
-        row.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
+                        STRING_COL_LABEL,
+                        STRING_COL_LABEL,
+                        new BsonString("string data")));
         row.values.add(
                 newColumn(
                         "",
                         "",
                         "",
-                        "decimalCol",
-                        "decimalCol",
+                        BINARY_COL_LABEL,
+                        BINARY_COL_LABEL,
+                        new BsonBinary("data".getBytes())));
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        UUID_COL_LABEL,
+                        UUID_COL_LABEL,
+                        new BsonBinary(new UUID(0, 0))));
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        OBJECTID_COL_LABEL,
+                        OBJECTID_COL_LABEL,
+                        new BsonObjectId(new ObjectId("5e334e6e780812e4896dd65e"))));
+        row.values.add(
+                newColumn("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, new BsonBoolean(true)));
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        DATE_COL_LABEL,
+                        DATE_COL_LABEL,
+                        new BsonDateTime(1580511155627L)));
+        row.values.add(
+                newColumn("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, new BsonInt32(100)));
+        row.values.add(newColumn("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        DECIMAL_COL_LABEL,
+                        DECIMAL_COL_LABEL,
                         new BsonDecimal128(new Decimal128(100L))));
 
         List<Row> rows = new ArrayList<Row>();
@@ -151,6 +189,94 @@ class MongoResultSetTest {
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    void testGetters() throws Exception {
+        boolean hasNext = mongoResultSet.next();
+        assertTrue(hasNext);
+
+        //	NULL_COL 	 null
+        //	DOUBLE_COL	 1.1
+        //	STRING_COL	 "string data"
+        //	BINARY_COL	 "data"
+        //	UUID_COL 	 "00000000-0000-0000-0000-000000000000"
+        //	OBJECTID_COL "5e334e6e780812e4896dd65e"
+        //	BOOLEAN_COL	 true
+        //	DATE_COL 	 some date
+        //	INTEGER_COL	 100
+        //	LONG_COL 	 100
+        //	DECIMAL_COL	 100
+
+        // Binary cannot be gotten through getString, currently.
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(BINARY_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(BINARY_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(UUID_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getString(UUID_COL_LABEL);
+                });
+
+        // Next test that the IDX and LABELS are working together correctly.
+        assertEquals(
+                mongoResultSet.getString(NULL_COL_IDX), mongoResultSet.getString(NULL_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(DOUBLE_COL_IDX),
+                mongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(STRING_COL_IDX),
+                mongoResultSet.getString(STRING_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(OBJECTID_COL_IDX),
+                mongoResultSet.getString(OBJECTID_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(BOOLEAN_COL_IDX),
+                mongoResultSet.getString(BOOLEAN_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(DATE_COL_IDX), mongoResultSet.getString(DATE_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(INTEGER_COL_IDX),
+                mongoResultSet.getString(INTEGER_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(LONG_COL_IDX), mongoResultSet.getString(LONG_COL_LABEL));
+        assertEquals(
+                mongoResultSet.getString(DECIMAL_COL_IDX),
+                mongoResultSet.getString(DECIMAL_COL_LABEL));
+
+        // Next test that the IDX and LABELS are working together correctly for the Binary types.
+        assertEquals(
+                mongoResultSet.getBlob(BINARY_COL_IDX), mongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertEquals(mongoResultSet.getBlob(UUID_COL_IDX), mongoResultSet.getBlob(UUID_COL_LABEL));
+    }
+
+    @Test
+    void throwExceptionWhenNotAvailable() throws Exception {
+        // Mock the cursor and next Row
+        when(cursor.hasNext()).thenReturn(false);
+
+        mockResultSet = new MongoResultSet(cursor);
+
+        boolean hasNext = mockResultSet.next();
+        assertFalse(hasNext);
+        assertNull(mockResultSet.getCurrent());
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mockResultSet.getString("label");
+                });
     }
 
     // unit test sample
@@ -165,18 +291,7 @@ class MongoResultSetTest {
         boolean hasNext = mockResultSet.next();
         assertTrue(hasNext);
         assertNotNull(mockResultSet.getCurrent());
-    }
-
-    @Test
-    void throwExceptionWhenNotAvailable() throws Exception {
-        // Mock the cursor and next Row
-        when(cursor.hasNext()).thenReturn(false);
-
-        mockResultSet = new MongoResultSet(cursor);
-
-        boolean hasNext = mockResultSet.next();
-        assertFalse(hasNext);
-        assertNull(mockResultSet.getCurrent());
+        // This still throws because "label" is unknown.
         assertThrows(
                 SQLException.class,
                 () -> {

@@ -251,9 +251,8 @@ public class MongoResultSet implements ResultSet {
     @Override
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        return "";
-        //        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
-        //        return getString(out);
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        return getString(out);
     }
 
     @Override
