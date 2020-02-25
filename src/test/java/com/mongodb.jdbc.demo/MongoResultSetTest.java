@@ -479,8 +479,7 @@ class MongoResultSetTest {
                     mongoResultSet.getTimestamp(STRING_COL_LABEL);
                 });
         assertEquals(
-                new Timestamp(1580402718000L + /* convert from EST to UTC */ 5L * 3600000L),
-                mongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+                new Timestamp(1580420718000L), mongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
