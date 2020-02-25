@@ -407,6 +407,42 @@ class MongoResultSetTest {
         assertEquals(100, mongoResultSet.getInt(INTEGER_COL_LABEL));
         assertEquals(100, mongoResultSet.getInt(LONG_COL_LABEL));
         assertEquals(100, mongoResultSet.getInt(DECIMAL_COL_LABEL));
+
+        // Test Byte values are as expected
+        assertEquals(0, mongoResultSet.getByte(NULL_COL_LABEL));
+        assertEquals(1, mongoResultSet.getByte(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    mongoResultSet.getByte(STRING_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getByte(OBJECTID_COL_LABEL);
+                });
+        assertEquals(1, mongoResultSet.getByte(BOOLEAN_COL_LABEL));
+        // This is weird, but I'm not going to go against Java's casting semantics.
+        assertEquals(80, mongoResultSet.getByte(DATE_COL_LABEL));
+        assertEquals(100, mongoResultSet.getByte(INTEGER_COL_LABEL));
+        assertEquals(100, mongoResultSet.getByte(LONG_COL_LABEL));
+        assertEquals(100, mongoResultSet.getByte(DECIMAL_COL_LABEL));
+
+        // Test Boolean values are as expected
+        assertEquals(false, mongoResultSet.getBoolean(NULL_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(DOUBLE_COL_LABEL));
+        // MongoDB converts all strings to true, even ""
+        assertEquals(true, mongoResultSet.getBoolean(STRING_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBoolean(OBJECTID_COL_LABEL);
+                });
+        assertEquals(true, mongoResultSet.getBoolean(BOOLEAN_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(DATE_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(INTEGER_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(LONG_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(DECIMAL_COL_LABEL));
     }
 
     @Test

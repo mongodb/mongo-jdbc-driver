@@ -308,7 +308,7 @@ public class MongoResultSet implements ResultSet {
             case DOCUMENT:
                 return throwBooleanConversionException("document");
             case DOUBLE:
-                return o.asBoolean().getValue();
+                return o.asDouble().getValue() != 0.0;
             case END_OF_DOCUMENT:
                 return throwBooleanConversionException("end_of_document");
             case INT32:
