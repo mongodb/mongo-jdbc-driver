@@ -11,6 +11,7 @@ public class Row {
     }
 
     public int size() {
+        if (values == null) return 0;
         return values.size();
     }
 }

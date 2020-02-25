@@ -60,7 +60,7 @@ public class Main {
 		  java.sql.Timestamp bd;
 		  try {
 		  		bd = rs.getTimestamp("b", c);
-				System.out.println("b as a Timestamp is: " + ((bd == null)? null: bd.toGMTString()));
+				System.out.println("b as a Timestamp is: " + bd);
 		  } catch (SQLException e) {
 				System.out.println(e);
 		  } catch (Exception e) {

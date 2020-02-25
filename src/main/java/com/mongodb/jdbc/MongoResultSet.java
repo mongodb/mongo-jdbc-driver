@@ -50,6 +50,10 @@ public class MongoResultSet implements ResultSet {
         this.cursor = cursor;
     }
 
+    public Row getCurrent() {
+        return current;
+    }
+
     public boolean next() throws SQLException {
         boolean result;
         result = cursor.hasNext();
@@ -85,7 +89,11 @@ public class MongoResultSet implements ResultSet {
     }
 
     private void buildColumnPositionCache() {
-        columnPositionCache = new HashMap<>(current.values.size());
+        if (current == null || current.size() == 0) {
+            columnPositionCache = new HashMap<>();
+            return;
+        }
+        columnPositionCache = new HashMap<>(current.size());
         int i = 0;
         for (Column c : current.values) {
             columnPositionCache.put(c.columnAlias, i++);
@@ -161,8 +169,8 @@ public class MongoResultSet implements ResultSet {
                 //BsonBinary b = o.asBinary();
                 //switch (b.getType()) {
                 // case 0x3: Should we support this line?
-                //	case 0x4:
-                //		return b.asUuid().toString();
+                //    case 0x4:
+                //    	return b.asUuid().toString();
                 //}
                 // return bytesToHex(b.getData())
                 return throwStringConversionException("binary");
@@ -232,8 +240,9 @@ public class MongoResultSet implements ResultSet {
 
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
-        return getString(out);
+        return "";
+        //        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
+        //        return getString(out);
     }
 
     public String getString(int columnIndex) throws SQLException {
