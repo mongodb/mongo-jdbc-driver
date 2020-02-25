@@ -350,6 +350,24 @@ class MongoResultSetTest {
         assertEquals("100", mongoResultSet.getString(INTEGER_COL_LABEL));
         assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
         assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
+
+        assertEquals(0L, mongoResultSet.getLong(NULL_COL_LABEL));
+        assertEquals(1, mongoResultSet.getLong(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    mongoResultSet.getLong(STRING_COL_LABEL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getLong(OBJECTID_COL_LABEL);
+                });
+        assertEquals(1L, mongoResultSet.getLong(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000L, mongoResultSet.getLong(DATE_COL_LABEL));
+        assertEquals(100L, mongoResultSet.getLong(INTEGER_COL_LABEL));
+        assertEquals(100L, mongoResultSet.getLong(LONG_COL_LABEL));
+        assertEquals(100L, mongoResultSet.getLong(DECIMAL_COL_LABEL));
     }
 
     @Test
