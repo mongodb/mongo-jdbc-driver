@@ -1159,7 +1159,7 @@ public class MongoResultSet implements ResultSet {
             case NULL:
                 return null;
             case OBJECT_ID:
-                return throwBlobConversionException("objectId");
+                return new SerialBlob(o.asObjectId().getValue().toString().getBytes());
             case REGULAR_EXPRESSION:
                 return throwBlobConversionException("regex");
             case STRING:

@@ -302,11 +302,7 @@ class MongoResultSetTest {
                 () -> {
                     mongoResultSet.getBlob(DOUBLE_COL_IDX);
                 });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getBlob(OBJECTID_COL_IDX);
-                });
+        assertNotNull(mongoResultSet.getBlob(OBJECTID_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
