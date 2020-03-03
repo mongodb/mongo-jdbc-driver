@@ -50,6 +50,7 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     static final String USER = "user";
     static final String PASSWORD = "password";
+    static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
 
@@ -97,7 +98,8 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return new MongoConnection(p.left(), info.getProperty(DATABASE));
+        return new MongoConnection(
+                p.left(), info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
     }
 
     @Override

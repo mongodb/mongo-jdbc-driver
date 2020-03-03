@@ -25,14 +25,16 @@ import java.util.concurrent.Executor;
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
     private String currentDB = null;
+    private boolean relaxed = true;
 
-    public MongoConnection(ConnectionString uri, String database) {
+    public MongoConnection(ConnectionString uri, String database, String conversionMode) {
         this.currentDB = database;
         mongoClient = MongoClients.create(uri);
+        relaxed = conversionMode != null && !conversionMode.equals("strict");
     }
 
     public Statement createStatement() throws SQLException {
-        return new MongoStatement(mongoClient, currentDB);
+        return new MongoStatement(mongoClient, currentDB, relaxed);
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {

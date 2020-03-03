@@ -15,9 +15,11 @@ public class MongoStatement implements Statement {
     // need a database or collection, since those
     // must be parsed from the query.
     private MongoDatabase currentDB;
+    private boolean strict = false;
 
-    public MongoStatement(MongoClient client, String currentDB) {
+    public MongoStatement(MongoClient client, String currentDB, boolean strict) {
         this.currentDB = client.getDatabase(currentDB);
+        this.strict = strict;
     }
 
     @SuppressWarnings("unchecked")
@@ -34,7 +36,7 @@ public class MongoStatement implements Statement {
                         .getCollection("test", Row.class)
                         .find()
                         .iterator();
-        return new MongoResultSet(cur);
+        return new MongoResultSet(cur, strict);
     }
 
     public int executeUpdate(String sql) throws SQLException {

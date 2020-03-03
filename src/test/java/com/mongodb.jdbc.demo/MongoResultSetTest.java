@@ -40,7 +40,8 @@ class MongoResultSetTest {
     @Mock MongoCursor<Row> cursor;
     @Mock Row nextRow;
     MongoResultSet mockResultSet;
-    static MongoResultSet mongoResultSet;
+    static MongoResultSet relaxedMongoResultSet;
+    static MongoResultSet strictMongoResultSet;
 
     static int NULL_COL_IDX = 1;
     static int DOUBLE_COL_IDX = 2;
@@ -186,7 +187,8 @@ class MongoResultSetTest {
 
         List<Row> rows = new ArrayList<Row>();
         rows.add(row);
-        mongoResultSet = new MongoResultSet(new MongoTestCursor(rows));
+        strictMongoResultSet = new MongoResultSet(new MongoTestCursor(rows), false);
+        relaxedMongoResultSet = new MongoResultSet(new MongoTestCursor(rows), true);
     }
 
     @BeforeAll
@@ -196,137 +198,143 @@ class MongoResultSetTest {
 
     @Test
     void testGetters() throws Exception {
-        boolean hasNext = mongoResultSet.next();
+        boolean hasNext = strictMongoResultSet.next();
         assertTrue(hasNext);
 
         // Test that the IDX and LABELS are working together correctly.
         assertEquals(
-                mongoResultSet.getString(NULL_COL_IDX), mongoResultSet.getString(NULL_COL_LABEL));
+                strictMongoResultSet.getString(NULL_COL_IDX),
+                strictMongoResultSet.getString(NULL_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(DOUBLE_COL_IDX),
-                mongoResultSet.getString(DOUBLE_COL_LABEL));
+                strictMongoResultSet.getString(DOUBLE_COL_IDX),
+                strictMongoResultSet.getString(DOUBLE_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(STRING_COL_IDX),
-                mongoResultSet.getString(STRING_COL_LABEL));
+                strictMongoResultSet.getString(STRING_COL_IDX),
+                strictMongoResultSet.getString(STRING_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(OBJECTID_COL_IDX),
-                mongoResultSet.getString(OBJECTID_COL_LABEL));
+                strictMongoResultSet.getString(OBJECTID_COL_IDX),
+                strictMongoResultSet.getString(OBJECTID_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(BOOLEAN_COL_IDX),
-                mongoResultSet.getString(BOOLEAN_COL_LABEL));
+                strictMongoResultSet.getString(BOOLEAN_COL_IDX),
+                strictMongoResultSet.getString(BOOLEAN_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(DATE_COL_IDX), mongoResultSet.getString(DATE_COL_LABEL));
+                strictMongoResultSet.getString(DATE_COL_IDX),
+                strictMongoResultSet.getString(DATE_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(INTEGER_COL_IDX),
-                mongoResultSet.getString(INTEGER_COL_LABEL));
+                strictMongoResultSet.getString(INTEGER_COL_IDX),
+                strictMongoResultSet.getString(INTEGER_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(LONG_COL_IDX), mongoResultSet.getString(LONG_COL_LABEL));
+                strictMongoResultSet.getString(LONG_COL_IDX),
+                strictMongoResultSet.getString(LONG_COL_LABEL));
         assertEquals(
-                mongoResultSet.getString(DECIMAL_COL_IDX),
-                mongoResultSet.getString(DECIMAL_COL_LABEL));
+                strictMongoResultSet.getString(DECIMAL_COL_IDX),
+                strictMongoResultSet.getString(DECIMAL_COL_LABEL));
 
         // Test that the IDX and LABELS are working together correctly for the Binary types.
         assertEquals(
-                mongoResultSet.getBlob(BINARY_COL_IDX), mongoResultSet.getBlob(BINARY_COL_LABEL));
-        assertEquals(mongoResultSet.getBlob(UUID_COL_IDX), mongoResultSet.getBlob(UUID_COL_LABEL));
+                strictMongoResultSet.getBlob(BINARY_COL_IDX),
+                strictMongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getBlob(UUID_COL_IDX),
+                strictMongoResultSet.getBlob(UUID_COL_LABEL));
 
         // Binary cannot be gotten through anything other than getBlob, currently.
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getString(BINARY_COL_IDX);
+                    strictMongoResultSet.getString(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getString(UUID_COL_IDX);
+                    strictMongoResultSet.getString(UUID_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBoolean(BINARY_COL_IDX);
+                    strictMongoResultSet.getBoolean(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBoolean(UUID_COL_IDX);
+                    strictMongoResultSet.getBoolean(UUID_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getLong(BINARY_COL_IDX);
+                    strictMongoResultSet.getLong(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getLong(UUID_COL_IDX);
+                    strictMongoResultSet.getLong(UUID_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getDouble(BINARY_COL_IDX);
+                    strictMongoResultSet.getDouble(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getDouble(UUID_COL_IDX);
+                    strictMongoResultSet.getDouble(UUID_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBigDecimal(BINARY_COL_IDX);
+                    strictMongoResultSet.getBigDecimal(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBigDecimal(UUID_COL_IDX);
+                    strictMongoResultSet.getBigDecimal(UUID_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getTimestamp(BINARY_COL_IDX);
+                    strictMongoResultSet.getTimestamp(BINARY_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getTimestamp(UUID_COL_IDX);
+                    strictMongoResultSet.getTimestamp(UUID_COL_IDX);
                 });
 
         // Only Binary and String and null values can be gotten from getBlob
-        assertNotNull(mongoResultSet.getBlob(STRING_COL_LABEL));
-        assertNotNull(mongoResultSet.getBlob(BINARY_COL_LABEL));
-        assertNotNull(mongoResultSet.getBlob(UUID_COL_LABEL));
-        assertNull(mongoResultSet.getBlob(NULL_COL_LABEL));
+        assertNotNull(strictMongoResultSet.getBlob(STRING_COL_LABEL));
+        assertNotNull(strictMongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertNotNull(strictMongoResultSet.getBlob(UUID_COL_LABEL));
+        assertNull(strictMongoResultSet.getBlob(NULL_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBlob(DOUBLE_COL_IDX);
+                    strictMongoResultSet.getBlob(DOUBLE_COL_IDX);
                 });
-        assertNotNull(mongoResultSet.getBlob(OBJECTID_COL_LABEL));
+        assertNotNull(strictMongoResultSet.getBlob(OBJECTID_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBlob(BOOLEAN_COL_IDX);
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getBlob(DATE_COL_IDX);
+                    strictMongoResultSet.getBlob(BOOLEAN_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBlob(INTEGER_COL_IDX);
+                    strictMongoResultSet.getBlob(DATE_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBlob(LONG_COL_IDX);
+                    strictMongoResultSet.getBlob(INTEGER_COL_IDX);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBlob(DECIMAL_COL_IDX);
+                    strictMongoResultSet.getBlob(LONG_COL_IDX);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    strictMongoResultSet.getBlob(DECIMAL_COL_IDX);
                 });
 
         //	NULL_COL 	 null
@@ -340,189 +348,195 @@ class MongoResultSetTest {
         //	DECIMAL_COL	 100
         //
         //	Test String values are as expected
-        assertEquals(null, mongoResultSet.getString(NULL_COL_LABEL));
-        assertEquals("1.1", mongoResultSet.getString(DOUBLE_COL_LABEL));
-        assertEquals("string data", mongoResultSet.getString(STRING_COL_LABEL));
-        assertEquals("5e334e6e780812e4896dd65e", mongoResultSet.getString(OBJECTID_COL_LABEL));
-        assertEquals("true", mongoResultSet.getString(BOOLEAN_COL_LABEL));
-        assertEquals("0564-02-23T22:44:34.00Z", mongoResultSet.getString(DATE_COL_LABEL));
-        assertEquals("100", mongoResultSet.getString(INTEGER_COL_LABEL));
-        assertEquals("100", mongoResultSet.getString(LONG_COL_LABEL));
-        assertEquals("100", mongoResultSet.getString(DECIMAL_COL_LABEL));
+        assertEquals(null, strictMongoResultSet.getString(NULL_COL_LABEL));
+        assertEquals("1.1", strictMongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals("string data", strictMongoResultSet.getString(STRING_COL_LABEL));
+        assertEquals(
+                "5e334e6e780812e4896dd65e", strictMongoResultSet.getString(OBJECTID_COL_LABEL));
+        assertEquals("true", strictMongoResultSet.getString(BOOLEAN_COL_LABEL));
+        assertEquals("0564-02-23T22:44:34.00Z", strictMongoResultSet.getString(DATE_COL_LABEL));
+        assertEquals("100", strictMongoResultSet.getString(INTEGER_COL_LABEL));
+        assertEquals("100", strictMongoResultSet.getString(LONG_COL_LABEL));
+        assertEquals("100", strictMongoResultSet.getString(DECIMAL_COL_LABEL));
 
         // getClob just wraps getString, we can ignore it
 
         // Test Double values are as expected
-        assertEquals(0.0, mongoResultSet.getDouble(NULL_COL_LABEL));
-        assertEquals(1.1, mongoResultSet.getDouble(DOUBLE_COL_LABEL));
+        assertEquals(0.0, strictMongoResultSet.getDouble(NULL_COL_LABEL));
+        assertEquals(1.1, strictMongoResultSet.getDouble(DOUBLE_COL_LABEL));
         assertThrows(
                 NumberFormatException.class,
                 () -> {
-                    mongoResultSet.getDouble(STRING_COL_LABEL);
+                    strictMongoResultSet.getDouble(STRING_COL_LABEL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getDouble(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getDouble(OBJECTID_COL_LABEL);
                 });
-        assertEquals(1.0, mongoResultSet.getDouble(BOOLEAN_COL_LABEL));
-        assertEquals(-44364244526000.0, mongoResultSet.getDouble(DATE_COL_LABEL));
-        assertEquals(100.0, mongoResultSet.getDouble(INTEGER_COL_LABEL));
-        assertEquals(100.0, mongoResultSet.getDouble(LONG_COL_LABEL));
-        assertEquals(100.0, mongoResultSet.getDouble(DECIMAL_COL_LABEL));
+        assertEquals(1.0, strictMongoResultSet.getDouble(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000.0, strictMongoResultSet.getDouble(DATE_COL_LABEL));
+        assertEquals(100.0, strictMongoResultSet.getDouble(INTEGER_COL_LABEL));
+        assertEquals(100.0, strictMongoResultSet.getDouble(LONG_COL_LABEL));
+        assertEquals(100.0, strictMongoResultSet.getDouble(DECIMAL_COL_LABEL));
 
         // Test BigDecimal values are as expected
-        assertEquals(new BigDecimal(0.0), mongoResultSet.getBigDecimal(NULL_COL_LABEL));
-        assertEquals(new BigDecimal(1.1), mongoResultSet.getBigDecimal(DOUBLE_COL_LABEL));
+        assertEquals(new BigDecimal(0.0), strictMongoResultSet.getBigDecimal(NULL_COL_LABEL));
+        assertEquals(new BigDecimal(1.1), strictMongoResultSet.getBigDecimal(DOUBLE_COL_LABEL));
         assertThrows(
                 NumberFormatException.class,
                 () -> {
-                    mongoResultSet.getBigDecimal(STRING_COL_LABEL);
+                    strictMongoResultSet.getBigDecimal(STRING_COL_LABEL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBigDecimal(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getBigDecimal(OBJECTID_COL_LABEL);
                 });
-        assertEquals(new BigDecimal(1.0), mongoResultSet.getBigDecimal(BOOLEAN_COL_LABEL));
+        assertEquals(new BigDecimal(1.0), strictMongoResultSet.getBigDecimal(BOOLEAN_COL_LABEL));
         assertEquals(
-                new BigDecimal(-44364244526000L), mongoResultSet.getBigDecimal(DATE_COL_LABEL));
-        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(INTEGER_COL_LABEL));
-        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(LONG_COL_LABEL));
-        assertEquals(new BigDecimal(100.0), mongoResultSet.getBigDecimal(DECIMAL_COL_LABEL));
+                new BigDecimal(-44364244526000L),
+                strictMongoResultSet.getBigDecimal(DATE_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), strictMongoResultSet.getBigDecimal(INTEGER_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), strictMongoResultSet.getBigDecimal(LONG_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), strictMongoResultSet.getBigDecimal(DECIMAL_COL_LABEL));
 
         // Test Long values are as expected
-        assertEquals(0L, mongoResultSet.getLong(NULL_COL_LABEL));
-        assertEquals(1, mongoResultSet.getLong(DOUBLE_COL_LABEL));
+        assertEquals(0L, strictMongoResultSet.getLong(NULL_COL_LABEL));
+        assertEquals(1, strictMongoResultSet.getLong(DOUBLE_COL_LABEL));
         assertThrows(
                 NumberFormatException.class,
                 () -> {
-                    mongoResultSet.getLong(STRING_COL_LABEL);
+                    strictMongoResultSet.getLong(STRING_COL_LABEL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getLong(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getLong(OBJECTID_COL_LABEL);
                 });
-        assertEquals(1L, mongoResultSet.getLong(BOOLEAN_COL_LABEL));
-        assertEquals(-44364244526000L, mongoResultSet.getLong(DATE_COL_LABEL));
-        assertEquals(100L, mongoResultSet.getLong(INTEGER_COL_LABEL));
-        assertEquals(100L, mongoResultSet.getLong(LONG_COL_LABEL));
-        assertEquals(100L, mongoResultSet.getLong(DECIMAL_COL_LABEL));
+        assertEquals(1L, strictMongoResultSet.getLong(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000L, strictMongoResultSet.getLong(DATE_COL_LABEL));
+        assertEquals(100L, strictMongoResultSet.getLong(INTEGER_COL_LABEL));
+        assertEquals(100L, strictMongoResultSet.getLong(LONG_COL_LABEL));
+        assertEquals(100L, strictMongoResultSet.getLong(DECIMAL_COL_LABEL));
 
         // Test Int values are as expected
-        assertEquals(0, mongoResultSet.getInt(NULL_COL_LABEL));
-        assertEquals(1, mongoResultSet.getInt(DOUBLE_COL_LABEL));
+        assertEquals(0, strictMongoResultSet.getInt(NULL_COL_LABEL));
+        assertEquals(1, strictMongoResultSet.getInt(DOUBLE_COL_LABEL));
         assertThrows(
                 NumberFormatException.class,
                 () -> {
-                    mongoResultSet.getInt(STRING_COL_LABEL);
+                    strictMongoResultSet.getInt(STRING_COL_LABEL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getInt(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getInt(OBJECTID_COL_LABEL);
                 });
-        assertEquals(1, mongoResultSet.getInt(BOOLEAN_COL_LABEL));
-        assertEquals(-1527325616, mongoResultSet.getInt(DATE_COL_LABEL));
-        assertEquals(100, mongoResultSet.getInt(INTEGER_COL_LABEL));
-        assertEquals(100, mongoResultSet.getInt(LONG_COL_LABEL));
-        assertEquals(100, mongoResultSet.getInt(DECIMAL_COL_LABEL));
+        assertEquals(1, strictMongoResultSet.getInt(BOOLEAN_COL_LABEL));
+        assertEquals(-1527325616, strictMongoResultSet.getInt(DATE_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getInt(INTEGER_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getInt(LONG_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getInt(DECIMAL_COL_LABEL));
 
         // We test Long, Int, and Byte, we can safely skip getShort tests
 
         // Test Byte values are as expected
-        assertEquals(0, mongoResultSet.getByte(NULL_COL_LABEL));
-        assertEquals(1, mongoResultSet.getByte(DOUBLE_COL_LABEL));
+        assertEquals(0, strictMongoResultSet.getByte(NULL_COL_LABEL));
+        assertEquals(1, strictMongoResultSet.getByte(DOUBLE_COL_LABEL));
         assertThrows(
                 NumberFormatException.class,
                 () -> {
-                    mongoResultSet.getByte(STRING_COL_LABEL);
+                    strictMongoResultSet.getByte(STRING_COL_LABEL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getByte(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getByte(OBJECTID_COL_LABEL);
                 });
-        assertEquals(1, mongoResultSet.getByte(BOOLEAN_COL_LABEL));
+        assertEquals(1, strictMongoResultSet.getByte(BOOLEAN_COL_LABEL));
         // This is weird, but I'm not going to go against Java's casting semantics.
-        assertEquals(80, mongoResultSet.getByte(DATE_COL_LABEL));
-        assertEquals(100, mongoResultSet.getByte(INTEGER_COL_LABEL));
-        assertEquals(100, mongoResultSet.getByte(LONG_COL_LABEL));
-        assertEquals(100, mongoResultSet.getByte(DECIMAL_COL_LABEL));
+        assertEquals(80, strictMongoResultSet.getByte(DATE_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getByte(INTEGER_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getByte(LONG_COL_LABEL));
+        assertEquals(100, strictMongoResultSet.getByte(DECIMAL_COL_LABEL));
 
         // Test Boolean values are as expected
-        assertEquals(false, mongoResultSet.getBoolean(NULL_COL_LABEL));
-        assertEquals(true, mongoResultSet.getBoolean(DOUBLE_COL_LABEL));
+        assertEquals(false, strictMongoResultSet.getBoolean(NULL_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(DOUBLE_COL_LABEL));
         // MongoDB converts all strings to true, even ""
-        assertEquals(true, mongoResultSet.getBoolean(STRING_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(STRING_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getBoolean(OBJECTID_COL_LABEL);
+                    strictMongoResultSet.getBoolean(OBJECTID_COL_LABEL);
                 });
-        assertEquals(true, mongoResultSet.getBoolean(BOOLEAN_COL_LABEL));
-        assertEquals(true, mongoResultSet.getBoolean(DATE_COL_LABEL));
-        assertEquals(true, mongoResultSet.getBoolean(INTEGER_COL_LABEL));
-        assertEquals(true, mongoResultSet.getBoolean(LONG_COL_LABEL));
-        assertEquals(true, mongoResultSet.getBoolean(DECIMAL_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(BOOLEAN_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(DATE_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(INTEGER_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(LONG_COL_LABEL));
+        assertEquals(true, strictMongoResultSet.getBoolean(DECIMAL_COL_LABEL));
 
         // Test getTimestamp
-        assertEquals(null, mongoResultSet.getTimestamp(NULL_COL_LABEL));
-        assertEquals(new Timestamp(1), mongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertEquals(null, strictMongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(1), strictMongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getTimestamp(STRING_COL_LABEL);
+                    strictMongoResultSet.getTimestamp(STRING_COL_LABEL);
                 });
         assertEquals(
-                new Timestamp(1580420718000L), mongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+                new Timestamp(1580420718000L),
+                strictMongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getTimestamp(BOOLEAN_COL_LABEL);
-                });
-        assertEquals(new Timestamp(-44364244526000L), mongoResultSet.getTimestamp(DATE_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(INTEGER_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(LONG_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
-
-        assertEquals(null, mongoResultSet.getTime(NULL_COL_LABEL));
-        assertEquals(new Time(1), mongoResultSet.getTime(DOUBLE_COL_LABEL));
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getTime(STRING_COL_LABEL);
-                });
-        assertEquals(new Time(1580420718000L), mongoResultSet.getTime(OBJECTID_COL_LABEL));
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getTime(BOOLEAN_COL_LABEL);
-                });
-        assertEquals(new Time(-44364244526000L), mongoResultSet.getTime(DATE_COL_LABEL));
-        assertEquals(new Time(100L), mongoResultSet.getTime(INTEGER_COL_LABEL));
-        assertEquals(new Time(100L), mongoResultSet.getTime(LONG_COL_LABEL));
-        assertEquals(new Time(100L), mongoResultSet.getTime(DECIMAL_COL_LABEL));
-
-        assertEquals(null, mongoResultSet.getTimestamp(NULL_COL_LABEL));
-        assertEquals(new Timestamp(1), mongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoResultSet.getTimestamp(STRING_COL_LABEL);
+                    strictMongoResultSet.getTimestamp(BOOLEAN_COL_LABEL);
                 });
         assertEquals(
-                new Timestamp(1580420718000L), mongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+                new Timestamp(-44364244526000L), strictMongoResultSet.getTimestamp(DATE_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(INTEGER_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(LONG_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
+
+        assertEquals(null, strictMongoResultSet.getTime(NULL_COL_LABEL));
+        assertEquals(new Time(1), strictMongoResultSet.getTime(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoResultSet.getTimestamp(BOOLEAN_COL_LABEL);
+                    strictMongoResultSet.getTime(STRING_COL_LABEL);
                 });
-        assertEquals(new Timestamp(-44364244526000L), mongoResultSet.getTimestamp(DATE_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(INTEGER_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(LONG_COL_LABEL));
-        assertEquals(new Timestamp(100L), mongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
+        assertEquals(new Time(1580420718000L), strictMongoResultSet.getTime(OBJECTID_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    strictMongoResultSet.getTime(BOOLEAN_COL_LABEL);
+                });
+        assertEquals(new Time(-44364244526000L), strictMongoResultSet.getTime(DATE_COL_LABEL));
+        assertEquals(new Time(100L), strictMongoResultSet.getTime(INTEGER_COL_LABEL));
+        assertEquals(new Time(100L), strictMongoResultSet.getTime(LONG_COL_LABEL));
+        assertEquals(new Time(100L), strictMongoResultSet.getTime(DECIMAL_COL_LABEL));
+
+        assertEquals(null, strictMongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(1), strictMongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    strictMongoResultSet.getTimestamp(STRING_COL_LABEL);
+                });
+        assertEquals(
+                new Timestamp(1580420718000L),
+                strictMongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    strictMongoResultSet.getTimestamp(BOOLEAN_COL_LABEL);
+                });
+        assertEquals(
+                new Timestamp(-44364244526000L), strictMongoResultSet.getTimestamp(DATE_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(INTEGER_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(LONG_COL_LABEL));
+        assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
     }
 
     @Test
@@ -530,7 +544,7 @@ class MongoResultSetTest {
         // Mock the cursor and next Row
         when(cursor.hasNext()).thenReturn(false);
 
-        mockResultSet = new MongoResultSet(cursor);
+        mockResultSet = new MongoResultSet(cursor, false);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -549,7 +563,7 @@ class MongoResultSetTest {
         when(cursor.hasNext()).thenReturn(true);
         when(cursor.next()).thenReturn(nextRow);
 
-        mockResultSet = new MongoResultSet(cursor);
+        mockResultSet = new MongoResultSet(cursor, false);
 
         boolean hasNext = mockResultSet.next();
         assertTrue(hasNext);
