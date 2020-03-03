@@ -197,7 +197,7 @@ class MongoResultSetTest {
     }
 
     @Test
-    void testGetters() throws Exception {
+    void testStrictGetters() throws Exception {
         boolean hasNext = strictMongoResultSet.next();
         assertTrue(hasNext);
 
@@ -537,6 +537,244 @@ class MongoResultSetTest {
         assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(INTEGER_COL_LABEL));
         assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(LONG_COL_LABEL));
         assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
+    }
+
+    @Test
+    void testRelaxedGetters() throws Exception {
+        boolean hasNext = relaxedMongoResultSet.next();
+        assertTrue(hasNext);
+
+        // Test that the IDX and LABELS are working together correctly.
+        assertEquals(
+                relaxedMongoResultSet.getString(NULL_COL_IDX),
+                relaxedMongoResultSet.getString(NULL_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(DOUBLE_COL_IDX),
+                relaxedMongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(STRING_COL_IDX),
+                relaxedMongoResultSet.getString(STRING_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(OBJECTID_COL_IDX),
+                relaxedMongoResultSet.getString(OBJECTID_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(BOOLEAN_COL_IDX),
+                relaxedMongoResultSet.getString(BOOLEAN_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(DATE_COL_IDX),
+                relaxedMongoResultSet.getString(DATE_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(INTEGER_COL_IDX),
+                relaxedMongoResultSet.getString(INTEGER_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(LONG_COL_IDX),
+                relaxedMongoResultSet.getString(LONG_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getString(DECIMAL_COL_IDX),
+                relaxedMongoResultSet.getString(DECIMAL_COL_LABEL));
+
+        // Test that the IDX and LABELS are working together correctly for the Binary types.
+        assertEquals(
+                relaxedMongoResultSet.getBlob(BINARY_COL_IDX),
+                relaxedMongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertEquals(
+                relaxedMongoResultSet.getBlob(UUID_COL_IDX),
+                relaxedMongoResultSet.getBlob(UUID_COL_LABEL));
+
+        // Binary cannot be gotten through anything other than getBlob, currently, all of these
+        // should be null/0/false.
+        assertNull(relaxedMongoResultSet.getString(BINARY_COL_IDX));
+        assertNull(relaxedMongoResultSet.getString(UUID_COL_IDX));
+        assertFalse(relaxedMongoResultSet.getBoolean(BINARY_COL_IDX));
+        assertFalse(relaxedMongoResultSet.getBoolean(UUID_COL_IDX));
+        assertEquals(0L, relaxedMongoResultSet.getLong(BINARY_COL_IDX));
+        assertEquals(0L, relaxedMongoResultSet.getLong(UUID_COL_IDX));
+        assertEquals(0.0, relaxedMongoResultSet.getDouble(BINARY_COL_IDX));
+        assertEquals(0.0, relaxedMongoResultSet.getDouble(UUID_COL_IDX));
+        assertEquals(new BigDecimal(0L), relaxedMongoResultSet.getBigDecimal(BINARY_COL_IDX));
+        assertEquals(new BigDecimal(0L), relaxedMongoResultSet.getBigDecimal(UUID_COL_IDX));
+        assertNull(relaxedMongoResultSet.getTimestamp(BINARY_COL_IDX));
+        assertNull(relaxedMongoResultSet.getTimestamp(UUID_COL_IDX));
+
+        // Only Binary and String and null values can be gotten from getBlob
+        assertNotNull(relaxedMongoResultSet.getBlob(STRING_COL_LABEL));
+        assertNotNull(relaxedMongoResultSet.getBlob(BINARY_COL_LABEL));
+        assertNotNull(relaxedMongoResultSet.getBlob(UUID_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getBlob(NULL_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getBlob(DOUBLE_COL_IDX));
+        assertNotNull(relaxedMongoResultSet.getBlob(OBJECTID_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getBlob(BOOLEAN_COL_IDX));
+        assertNull(relaxedMongoResultSet.getBlob(DATE_COL_IDX));
+        assertNull(relaxedMongoResultSet.getBlob(INTEGER_COL_IDX));
+        assertNull(relaxedMongoResultSet.getBlob(LONG_COL_IDX));
+        assertNull(relaxedMongoResultSet.getBlob(DECIMAL_COL_IDX));
+
+        //	NULL_COL 	 null
+        //	DOUBLE_COL	 1.1
+        //	STRING_COL	 "string data"
+        //	OBJECTID_COL "5e334e6e780812e4896dd65e"
+        //	BOOLEAN_COL	 true
+        //	DATE_COL 	 some date
+        //	INTEGER_COL	 100
+        //	LONG_COL 	 100
+        //	DECIMAL_COL	 100
+        //
+        //	Test String values are as expected
+        assertEquals(null, relaxedMongoResultSet.getString(NULL_COL_LABEL));
+        assertEquals("1.1", relaxedMongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals("string data", relaxedMongoResultSet.getString(STRING_COL_LABEL));
+        assertEquals(
+                "5e334e6e780812e4896dd65e", relaxedMongoResultSet.getString(OBJECTID_COL_LABEL));
+        assertEquals("true", relaxedMongoResultSet.getString(BOOLEAN_COL_LABEL));
+        assertEquals("0564-02-23T22:44:34.00Z", relaxedMongoResultSet.getString(DATE_COL_LABEL));
+        assertEquals("100", relaxedMongoResultSet.getString(INTEGER_COL_LABEL));
+        assertEquals("100", relaxedMongoResultSet.getString(LONG_COL_LABEL));
+        assertEquals("100", relaxedMongoResultSet.getString(DECIMAL_COL_LABEL));
+
+        // getClob just wraps getString, we can ignore it
+
+        // Test Double values are as expected
+        assertEquals(0.0, relaxedMongoResultSet.getDouble(NULL_COL_LABEL));
+        assertEquals(1.1, relaxedMongoResultSet.getDouble(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    relaxedMongoResultSet.getDouble(STRING_COL_LABEL);
+                });
+        assertEquals(0.0, relaxedMongoResultSet.getDouble(OBJECTID_COL_LABEL));
+        assertEquals(1.0, relaxedMongoResultSet.getDouble(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000.0, relaxedMongoResultSet.getDouble(DATE_COL_LABEL));
+        assertEquals(100.0, relaxedMongoResultSet.getDouble(INTEGER_COL_LABEL));
+        assertEquals(100.0, relaxedMongoResultSet.getDouble(LONG_COL_LABEL));
+        assertEquals(100.0, relaxedMongoResultSet.getDouble(DECIMAL_COL_LABEL));
+
+        // Test BigDecimal values are as expected
+        assertEquals(new BigDecimal(0.0), relaxedMongoResultSet.getBigDecimal(NULL_COL_LABEL));
+        assertEquals(new BigDecimal(1.1), relaxedMongoResultSet.getBigDecimal(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    relaxedMongoResultSet.getBigDecimal(STRING_COL_LABEL);
+                });
+        assertEquals(new BigDecimal(0L), relaxedMongoResultSet.getBigDecimal(OBJECTID_COL_LABEL));
+        assertEquals(new BigDecimal(1.0), relaxedMongoResultSet.getBigDecimal(BOOLEAN_COL_LABEL));
+        assertEquals(
+                new BigDecimal(-44364244526000L),
+                relaxedMongoResultSet.getBigDecimal(DATE_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), relaxedMongoResultSet.getBigDecimal(INTEGER_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), relaxedMongoResultSet.getBigDecimal(LONG_COL_LABEL));
+        assertEquals(new BigDecimal(100.0), relaxedMongoResultSet.getBigDecimal(DECIMAL_COL_LABEL));
+
+        // Test Long values are as expected
+        assertEquals(0L, relaxedMongoResultSet.getLong(NULL_COL_LABEL));
+        assertEquals(1, relaxedMongoResultSet.getLong(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    relaxedMongoResultSet.getLong(STRING_COL_LABEL);
+                });
+        assertEquals(0L, relaxedMongoResultSet.getLong(OBJECTID_COL_LABEL));
+        assertEquals(1L, relaxedMongoResultSet.getLong(BOOLEAN_COL_LABEL));
+        assertEquals(-44364244526000L, relaxedMongoResultSet.getLong(DATE_COL_LABEL));
+        assertEquals(100L, relaxedMongoResultSet.getLong(INTEGER_COL_LABEL));
+        assertEquals(100L, relaxedMongoResultSet.getLong(LONG_COL_LABEL));
+        assertEquals(100L, relaxedMongoResultSet.getLong(DECIMAL_COL_LABEL));
+
+        // Test Int values are as expected
+        assertEquals(0, relaxedMongoResultSet.getInt(NULL_COL_LABEL));
+        assertEquals(1, relaxedMongoResultSet.getInt(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    relaxedMongoResultSet.getInt(STRING_COL_LABEL);
+                });
+        assertEquals(0, relaxedMongoResultSet.getInt(OBJECTID_COL_LABEL));
+        assertEquals(1, relaxedMongoResultSet.getInt(BOOLEAN_COL_LABEL));
+        assertEquals(-1527325616, relaxedMongoResultSet.getInt(DATE_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getInt(INTEGER_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getInt(LONG_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getInt(DECIMAL_COL_LABEL));
+
+        // We test Long, Int, and Byte, we can safely skip getShort tests
+
+        // Test Byte values are as expected
+        assertEquals(0, relaxedMongoResultSet.getByte(NULL_COL_LABEL));
+        assertEquals(1, relaxedMongoResultSet.getByte(DOUBLE_COL_LABEL));
+        assertThrows(
+                NumberFormatException.class,
+                () -> {
+                    relaxedMongoResultSet.getByte(STRING_COL_LABEL);
+                });
+        assertEquals(0, relaxedMongoResultSet.getByte(OBJECTID_COL_LABEL));
+        assertEquals(1, relaxedMongoResultSet.getByte(BOOLEAN_COL_LABEL));
+        // This is weird, but I'm not going to go against Java's casting semantics.
+        assertEquals(80, relaxedMongoResultSet.getByte(DATE_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getByte(INTEGER_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getByte(LONG_COL_LABEL));
+        assertEquals(100, relaxedMongoResultSet.getByte(DECIMAL_COL_LABEL));
+
+        // Test Boolean values are as expected
+        assertEquals(false, relaxedMongoResultSet.getBoolean(NULL_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(DOUBLE_COL_LABEL));
+        // MongoDB converts all strings to true, even ""
+        assertEquals(true, relaxedMongoResultSet.getBoolean(STRING_COL_LABEL));
+        assertEquals(false, relaxedMongoResultSet.getBoolean(OBJECTID_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(BOOLEAN_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(DATE_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(INTEGER_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(LONG_COL_LABEL));
+        assertEquals(true, relaxedMongoResultSet.getBoolean(DECIMAL_COL_LABEL));
+
+        // Test getTimestamp
+        assertEquals(null, relaxedMongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(1), relaxedMongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    relaxedMongoResultSet.getTimestamp(STRING_COL_LABEL);
+                });
+        assertEquals(
+                new Timestamp(1580420718000L),
+                relaxedMongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getTimestamp(BOOLEAN_COL_LABEL));
+        assertEquals(
+                new Timestamp(-44364244526000L),
+                relaxedMongoResultSet.getTimestamp(DATE_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(INTEGER_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(LONG_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
+
+        assertEquals(null, relaxedMongoResultSet.getTime(NULL_COL_LABEL));
+        assertEquals(new Time(1), relaxedMongoResultSet.getTime(DOUBLE_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    relaxedMongoResultSet.getTime(STRING_COL_LABEL);
+                });
+        assertEquals(new Time(1580420718000L), relaxedMongoResultSet.getTime(OBJECTID_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getTime(BOOLEAN_COL_LABEL));
+        assertEquals(new Time(-44364244526000L), relaxedMongoResultSet.getTime(DATE_COL_LABEL));
+        assertEquals(new Time(100L), relaxedMongoResultSet.getTime(INTEGER_COL_LABEL));
+        assertEquals(new Time(100L), relaxedMongoResultSet.getTime(LONG_COL_LABEL));
+        assertEquals(new Time(100L), relaxedMongoResultSet.getTime(DECIMAL_COL_LABEL));
+
+        assertEquals(null, relaxedMongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(1), relaxedMongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    relaxedMongoResultSet.getTimestamp(STRING_COL_LABEL);
+                });
+        assertEquals(
+                new Timestamp(1580420718000L),
+                relaxedMongoResultSet.getTimestamp(OBJECTID_COL_LABEL));
+        assertNull(relaxedMongoResultSet.getTimestamp(BOOLEAN_COL_LABEL));
+        assertEquals(
+                new Timestamp(-44364244526000L),
+                relaxedMongoResultSet.getTimestamp(DATE_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(INTEGER_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(LONG_COL_LABEL));
+        assertEquals(new Timestamp(100L), relaxedMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
     }
 
     @Test
