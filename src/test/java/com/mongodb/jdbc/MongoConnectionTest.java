@@ -45,7 +45,7 @@ class MongoConnectionTest {
     }
 
     // Since MongoConnection cannot be created with its constructor, we have to use InjectionMocks Annotation and
-    // create it during initiation. In order to reuse the same object for each tests, we need to reset it before each test cases.
+    // create it during initiation. In order to reuse the same object for each test, we need to reset it before each test case.
     @BeforeEach
     void setupTest() throws NoSuchFieldException {
         FieldSetter.setField(
