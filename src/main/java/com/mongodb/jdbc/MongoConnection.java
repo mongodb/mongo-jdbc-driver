@@ -278,7 +278,7 @@ public class MongoConnection implements Connection {
     @Override
     public boolean isValid(int timeout) throws SQLException {
         if (timeout < 0) {
-            throw new SQLException("input is invalid");
+            throw new SQLException("Input is invalid");
         }
 
         if (isClosed()) {
