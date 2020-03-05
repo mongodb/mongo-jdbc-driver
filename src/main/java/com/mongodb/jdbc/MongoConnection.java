@@ -20,238 +20,350 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.Executor;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
-    private String currentDB = null;
+    private String currentDB;
+    private Boolean isClosed;
 
     public MongoConnection(ConnectionString uri, String database) {
-        this.currentDB = database;
+        currentDB = database;
         mongoClient = MongoClients.create(uri);
+        isClosed = false;
     }
 
+    private void checkConnection() throws SQLException {
+        if (isClosed()) {
+            throw new SQLException("Connection is already closed");
+        }
+    }
+
+    @Override
     public Statement createStatement() throws SQLException {
-        return new MongoStatement(mongoClient, currentDB);
+        checkConnection();
+        try {
+            return new MongoStatement(mongoClient, currentDB);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
     }
 
+    @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public String nativeSQL(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
+    @Override
     public boolean getAutoCommit() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void commit() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
+    @Override
     public void rollback() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
-    public void close() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+    @Override
+    public void close() {
+        if (isClosed()) {
+            return;
+        }
+        mongoClient.close();
+        isClosed = true;
     }
 
-    public boolean isClosed() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+    @Override
+    public boolean isClosed() {
+        return isClosed;
     }
 
+    @Override
     public DatabaseMetaData getMetaData() throws SQLException {
+        // TODO: complete when MongoDatabaseMetaData is created
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
+    @Override
     public boolean isReadOnly() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
+        return true;
     }
 
+    @Override
     public void setCatalog(String catalog) throws SQLException {
+        checkConnection();
         currentDB = catalog;
     }
 
+    @Override
     public String getCatalog() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
+        return currentDB;
     }
 
+    @Override
     public void setTransactionIsolation(int level) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
+    @Override
     public int getTransactionIsolation() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
+        return Connection.TRANSACTION_NONE;
     }
 
+    @Override
     public SQLWarning getWarnings() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
+        return null;
     }
 
+    @Override
     public void clearWarnings() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
     // --------------------------JDBC 2.0-----------------------------
 
-    public Statement createStatement(int resultSetType, int resultSetConcurrency)
-            throws SQLException {
+    @Override
+    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public PreparedStatement prepareStatement(
             String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public java.util.Map<String, Class<?>> getTypeMap() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void setTypeMap(java.util.Map<String, Class<?>> map) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 3.0-----------------------------
 
+    @Override
     public void setHoldability(int holdability) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public int getHoldability() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Savepoint setSavepoint() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Savepoint setSavepoint(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        checkConnection();
     }
 
+    @Override
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Statement createStatement(
             int resultSetType, int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public PreparedStatement prepareStatement(
             String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public CallableStatement prepareCall(
             String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public PreparedStatement prepareStatement(String sql, String columnNames[])
             throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Clob createClob() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Blob createBlob() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public NClob createNClob() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public SQLXML createSQLXML() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public boolean isValid(int timeout) throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+        if (timeout < 0) {
+            throw new SQLException("input is invalid");
+        }
+
+        if (isClosed()) {
+            return false;
+        }
+        // We use createStatement to test the connection. Since we are not allowed
+        // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Future future = executor.submit(() -> createStatement());
+        try {
+            if (timeout > 0) {
+                future.get(timeout, TimeUnit.SECONDS);
+            }
+            else {
+                future.get();
+            }
+        } catch (TimeoutException ex) {
+            // handle the timeout
+            return false;
+        } catch (InterruptedException e) {
+            // handle the interrupt
+            return false;
+        } catch (ExecutionException e) {
+            // handle connection error
+            return false;
+        }
+        finally
+        {
+            future.cancel(true);
+        }
+        return true;
     }
 
+    @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
         throw new SQLClientInfoException(null);
     }
 
+    @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
         throw new SQLClientInfoException(null);
     }
 
+    @Override
     public String getClientInfo(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Properties getClientInfo() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 4.1 -----------------------------
 
+    @Override
     public void setSchema(String schema) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public String getSchema() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void abort(Executor executor) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
+    @Override
     public int getNetworkTimeout() throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
@@ -267,6 +379,7 @@ public class MongoConnection implements Connection {
     }
 
     // java.sql.Wrapper impl
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isInstance(this);
     }
