@@ -20,13 +20,13 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.Executor;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
@@ -158,7 +158,8 @@ public class MongoConnection implements Connection {
     // --------------------------JDBC 2.0-----------------------------
 
     @Override
-    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+    public Statement createStatement(int resultSetType, int resultSetConcurrency)
+            throws SQLException {
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -290,8 +291,7 @@ public class MongoConnection implements Connection {
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);
-            }
-            else {
+            } else {
                 future.get();
             }
         } catch (TimeoutException ex) {
@@ -303,9 +303,7 @@ public class MongoConnection implements Connection {
         } catch (ExecutionException e) {
             // handle connection error
             return false;
-        }
-        finally
-        {
+        } finally {
             future.cancel(true);
         }
         return true;

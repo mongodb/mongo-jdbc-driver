@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.mongodb.client.MongoCursor;
-import com.mongodb.jdbc.MongoResultSet;
 import java.sql.SQLException;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeAll;
