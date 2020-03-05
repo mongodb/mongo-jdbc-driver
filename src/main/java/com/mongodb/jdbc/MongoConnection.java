@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.NClob;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -160,7 +161,12 @@ public class MongoConnection implements Connection {
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
+                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
+            return createStatement();
+        } else {
+            throw new SQLFeatureNotSupportedException("Not implemented.");
+        }
     }
 
     @Override
@@ -221,7 +227,12 @@ public class MongoConnection implements Connection {
     public Statement createStatement(
             int resultSetType, int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
+                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
+            return createStatement();
+        } else {
+            throw new SQLFeatureNotSupportedException("Not implemented.");
+        }
     }
 
     @Override
@@ -305,6 +316,7 @@ public class MongoConnection implements Connection {
             return false;
         } finally {
             future.cancel(true);
+            executor.shutdown();
         }
         return true;
     }
@@ -343,7 +355,7 @@ public class MongoConnection implements Connection {
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        checkConnection();
     }
 
     @Override
