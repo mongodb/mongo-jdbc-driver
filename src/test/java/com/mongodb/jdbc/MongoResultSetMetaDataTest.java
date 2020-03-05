@@ -1,9 +1,7 @@
-package com.mongodb.jdbc.demo;
+package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mongodb.jdbc.MongoResultSet;
-import com.mongodb.jdbc.MongoResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
