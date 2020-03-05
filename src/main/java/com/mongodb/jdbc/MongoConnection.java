@@ -42,7 +42,7 @@ public class MongoConnection implements Connection {
 
     private void checkConnection() throws SQLException {
         if (isClosed()) {
-            throw new SQLException("Connection is already closed");
+            throw new SQLException("Connection is closed");
         }
     }
 
