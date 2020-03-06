@@ -17,7 +17,7 @@ public class MongoStatement implements Statement {
     // must be parsed from the query.
     private MongoDatabase currentDB;
 
-    public MongoStatement(MongoClient client, String currentDB) {
+    public MongoStatement(MongoClient client, String currentDB) throws IllegalArgumentException {
         this.currentDB = client.getDatabase(currentDB);
     }
 
