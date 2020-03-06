@@ -18,8 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.stubbing.answers.AnswersWithDelay;
-import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -37,6 +35,7 @@ class MongoConnectionTest {
 
     @Mock private static MongoClient mongoClient;
     @Mock private static MongoDatabase mongoDatabase;
+    @Mock private static MongoStatement mongoStatement;
 
     @BeforeAll
     void initMocks() {
@@ -131,7 +130,7 @@ class MongoConnectionTest {
     }
 
     @Test
-    void testIsReadOnly() throws SQLException {
+    void testIsReadOnly() {
         testNoop(() -> mongoConnection.isReadOnly());
     }
 
@@ -146,8 +145,11 @@ class MongoConnectionTest {
     }
 
     @Test
-    void tesSetTransactionIsolation() throws SQLException {
-        testNoop(() -> mongoConnection.setTransactionIsolation(1));
+    void tesSetTransactionIsolation() {
+        testNoop(
+                () ->
+                        mongoConnection.setTransactionIsolation(
+                                Connection.TRANSACTION_READ_UNCOMMITTED));
     }
 
     @Test
@@ -171,25 +173,5 @@ class MongoConnectionTest {
     void testRollbackJ3() {
         Savepoint sp = mock(Savepoint.class);
         testNoop(() -> mongoConnection.rollback(sp));
-    }
-
-    @Test
-    void testIsValid() throws SQLException {
-        assertTrue(mongoConnection.isValid(0));
-
-        assertThrows(SQLException.class, () -> mongoConnection.isValid(-1));
-
-        // DB operation timeout, return false
-        doAnswer(new AnswersWithDelay(6000, new Returns(mongoDatabase)))
-                .when(mongoClient)
-                .getDatabase(anyString());
-        assertFalse(mongoConnection.isValid(5));
-
-        // When connection is interrupted
-        doThrow(IllegalArgumentException.class).when(mongoClient).getDatabase(anyString());
-        assertFalse(mongoConnection.isValid(5));
-
-        mongoConnection.close();
-        assertFalse(mongoConnection.isValid(0));
     }
 }

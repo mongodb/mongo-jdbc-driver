@@ -21,6 +21,7 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -42,7 +43,7 @@ public class MongoConnection implements Connection {
 
     private void checkConnection() throws SQLException {
         if (isClosed()) {
-            throw new SQLException("Connection is closed");
+            throw new SQLException("Connection is closed.");
         }
     }
 
@@ -286,10 +287,32 @@ public class MongoConnection implements Connection {
         throw new SQLFeatureNotSupportedException("Not implemented.");
     }
 
+    private void validateConn() throws SQLException {
+        Statement statement = createStatement();
+        boolean resultExists = statement.execute("SELECT 1 from DUAL");
+        if (!resultExists) {
+            // no resultSet returned
+            throw new SQLException("Connection error");
+        }
+    }
+
+    class ConnValidation implements Callable {
+        @Override
+        public Object call() throws SQLException {
+            Statement statement = createStatement();
+            boolean resultExists = statement.execute("SELECT 1 from DUAL");
+            if (!resultExists) {
+                // no resultSet returned
+                throw new SQLException("Connection error");
+            }
+            return null;
+        }
+    }
+
     @Override
     public boolean isValid(int timeout) throws SQLException {
         if (timeout < 0) {
-            throw new SQLException("Input is invalid");
+            throw new SQLException("Input is invalid.");
         }
 
         if (isClosed()) {
@@ -298,7 +321,8 @@ public class MongoConnection implements Connection {
         // We use createStatement to test the connection. Since we are not allowed
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
-        Future future = executor.submit(() -> createStatement());
+
+        Future future = executor.submit(ConnValidation::new);
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);
