@@ -17,7 +17,8 @@ public class MongoStatement implements Statement {
     private MongoDatabase currentDB;
     private boolean strict = false;
 
-    public MongoStatement(MongoClient client, String currentDB, boolean strict) throws IllegalArgumentException {
+    public MongoStatement(MongoClient client, String currentDB, boolean strict)
+            throws IllegalArgumentException {
         this.currentDB = client.getDatabase(currentDB);
         this.strict = strict;
     }
