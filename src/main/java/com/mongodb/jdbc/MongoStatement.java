@@ -9,16 +9,18 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import org.bson.Document;
 
 public class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
     private MongoDatabase currentDB;
+    private boolean strict = false;
 
-    public MongoStatement(MongoClient client, String currentDB) throws IllegalArgumentException {
+    public MongoStatement(MongoClient client, String currentDB, boolean strict)
+            throws IllegalArgumentException {
         this.currentDB = client.getDatabase(currentDB);
+        this.strict = strict;
     }
 
     @SuppressWarnings("unchecked")
@@ -29,8 +31,13 @@ public class MongoStatement implements Statement {
         // } else {
         //     client.getDatabase(currentDB).aggregate....
         // }
-        MongoCursor<Document> cur = currentDB.getCollection("test").find().iterator();
-        return new MongoResultSet(cur);
+        MongoCursor<Row> cur =
+                currentDB
+                        .withCodecRegistry(MongoDriver.registry)
+                        .getCollection("test", Row.class)
+                        .find()
+                        .iterator();
+        return new MongoResultSet(this, cur, strict);
     }
 
     public int executeUpdate(String sql) throws SQLException {

@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc;
 
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+
 import com.mongodb.ConnectionString;
 import java.net.URLEncoder;
 import java.sql.Connection;
@@ -26,6 +28,11 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
 import java.util.Properties;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
+import org.bson.codecs.ValueCodecProvider;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
 /**
  * The MongoDriver implements the java.sql.Driver interface, which allows for opening Connections to
@@ -43,8 +50,15 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     static final String USER = "user";
     static final String PASSWORD = "password";
+    static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
+
+    static CodecRegistry registry =
+            fromProviders(
+                    new BsonValueCodecProvider(),
+                    new ValueCodecProvider(),
+                    PojoCodecProvider.builder().automatic(true).build());
 
     static {
         try {
@@ -52,6 +66,7 @@ public class MongoDriver implements Driver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        Codec rowCodec = registry.get(Row.class);
     }
 
     @Override
@@ -83,7 +98,8 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return new MongoConnection(p.left(), info.getProperty(DATABASE));
+        return new MongoConnection(
+                p.left(), info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
     }
 
     @Override

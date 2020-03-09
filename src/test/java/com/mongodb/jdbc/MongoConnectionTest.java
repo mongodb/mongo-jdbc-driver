@@ -31,7 +31,7 @@ class MongoConnectionTest {
     private static String database = "test";
 
     @InjectMocks
-    private static MongoConnection mongoConnection = new MongoConnection(uri, database);
+    private static MongoConnection mongoConnection = new MongoConnection(uri, database, null);
 
     @Mock private static MongoClient mongoClient;
     @Mock private static MongoDatabase mongoDatabase;
