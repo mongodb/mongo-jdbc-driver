@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
@@ -95,7 +96,15 @@ class MongoResultSetMetaDataTest {
                         "decimalCol",
                         new BsonDecimal128(new Decimal128(100L))));
 
-        resultSetMetaData = new MongoResultSetMetaData(null, row);
+        List<Row> rows = new ArrayList<Row>();
+        rows.add(row);
+        MongoResultSet rs = new MongoResultSet(null, new MongoTestCursor(rows), false);
+        try {
+            rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        resultSetMetaData = new MongoResultSetMetaData(rs, row);
     }
 
     MongoResultSet mongoResultSet;
@@ -111,6 +120,36 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
+    void testGetPrecision() throws SQLException {
+        assertEquals(0, resultSetMetaData.getPrecision(NULL_COL));
+        assertEquals(308, resultSetMetaData.getPrecision(DOUBLE_COL));
+        assertEquals(11, resultSetMetaData.getPrecision(STRING_COL));
+        assertEquals(4, resultSetMetaData.getPrecision(BINARY_COL));
+        assertEquals(16, resultSetMetaData.getPrecision(UUID_COL));
+        assertEquals(24, resultSetMetaData.getPrecision(OBJECTID_COL));
+        assertEquals(1, resultSetMetaData.getPrecision(BOOLEAN_COL));
+        assertEquals(24, resultSetMetaData.getPrecision(DATE_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(INTEGER_COL));
+        assertEquals(19, resultSetMetaData.getPrecision(LONG_COL));
+        assertEquals(6145, resultSetMetaData.getPrecision(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetScale() throws SQLException {
+        assertEquals(0, resultSetMetaData.getScale(NULL_COL));
+        assertEquals(15, resultSetMetaData.getScale(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getScale(STRING_COL));
+        assertEquals(0, resultSetMetaData.getScale(BINARY_COL));
+        assertEquals(0, resultSetMetaData.getScale(UUID_COL));
+        assertEquals(0, resultSetMetaData.getScale(OBJECTID_COL));
+        assertEquals(0, resultSetMetaData.getScale(BOOLEAN_COL));
+        assertEquals(0, resultSetMetaData.getScale(DATE_COL));
+        assertEquals(0, resultSetMetaData.getScale(INTEGER_COL));
+        assertEquals(0, resultSetMetaData.getScale(LONG_COL));
+        assertEquals(34, resultSetMetaData.getScale(DECIMAL_COL));
+    }
+
+    @Test
     void testGetColumnType() throws SQLException {
         assertEquals(Types.NULL, resultSetMetaData.getColumnType(NULL_COL));
         assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(DOUBLE_COL));
@@ -122,7 +161,7 @@ class MongoResultSetMetaDataTest {
         assertEquals(Types.TIMESTAMP, resultSetMetaData.getColumnType(DATE_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INTEGER_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(LONG_COL));
-        assertEquals(Types.REAL, resultSetMetaData.getColumnType(DECIMAL_COL));
+        assertEquals(Types.DECIMAL, resultSetMetaData.getColumnType(DECIMAL_COL));
     }
 
     @Test

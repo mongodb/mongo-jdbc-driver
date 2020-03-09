@@ -79,31 +79,30 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                // This should be impossible. Perhaps throw an exception?
                 return 0;
             case BINARY:
                 return o.asBinary().getData().length;
             case BOOLEAN:
                 return 1;
             case DATE_TIME:
-                return 64;
+                //24 characters to display.
+                return 24;
             case DB_POINTER:
-                return 1;
+                return 0;
             case DECIMAL128:
-                // I don't know what to do with this. Previously, we used DECIMAL here,
-                // but DECIMAL is technically a fixed width type. I think we should switch
-                // to REAL here.
-                return 128;
+                // max value ~10^6145.
+                return 6145;
             case DOCUMENT:
                 return 0;
             case DOUBLE:
-                return 64;
+                // max value ~10^308.
+                return 308;
             case END_OF_DOCUMENT:
                 return 0;
             case INT32:
-                return 32;
+                return 10;
             case INT64:
-                return 64;
+                return 19;
             case JAVASCRIPT:
                 return 0;
             case JAVASCRIPT_WITH_SCOPE:
@@ -132,7 +131,38 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getScale(int column) throws SQLException {
-        return 0;
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DOCUMENT:
+            case END_OF_DOCUMENT:
+            case INT32:
+            case INT64:
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+            case TIMESTAMP:
+            case UNDEFINED:
+                return 0;
+            case DECIMAL128:
+                return 34;
+            case DOUBLE:
+                return 15;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
     @Override
@@ -147,10 +177,10 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     private BsonValue getObject(int column) throws SQLException {
         if (row == null) {
-            throw new SQLException("no current row in ResultSet, did you call next()?");
+            throw new SQLException("No current row in the result set. Make sure to call next().");
         }
         if (column > row.size()) {
-            throw new SQLException("index out of bounds: '" + column + "'");
+            throw new SQLException("Index out of bounds: '" + column + "'.");
         }
         return row.values.get(column - 1).value;
     }
@@ -163,7 +193,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                // This should be impossible. Perhaps throw an exception?
                 return Types.ARRAY;
             case BINARY:
                 return Types.BLOB;
@@ -174,10 +203,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return Types.NULL;
             case DECIMAL128:
-                // I don't know what to do with this. Previously, we used DECIMAL here,
-                // but DECIMAL is technically a fixed width type. I think we should switch
-                // to REAL here.
-                return Types.REAL;
+                return Types.DECIMAL;
             case DOCUMENT:
                 return Types.NULL;
             case DOUBLE:
@@ -223,7 +249,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         switch (o.getBsonType()) {
                 // we will return the same names as the mongodb $type function:
             case ARRAY:
-                // This should be impossible. Perhaps throw an exception?
                 return "array";
             case BINARY:
                 return "binData";
@@ -234,9 +259,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return "null";
             case DECIMAL128:
-                // I don't know what to do with this. Previously, we used DECIMAL here,
-                // but DECIMAL is technically a fixed width type. I think we should switch
-                // to REAL here.
                 return "decimal";
             case DOCUMENT:
                 return "null";
