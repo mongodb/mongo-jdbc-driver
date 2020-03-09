@@ -762,7 +762,7 @@ public class MongoResultSet implements ResultSet {
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         checkClosed();
-        return new MongoResultSetMetaData(current);
+        return new MongoResultSetMetaData(this, current);
     }
 
     @Override

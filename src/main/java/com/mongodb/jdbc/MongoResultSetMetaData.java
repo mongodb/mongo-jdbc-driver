@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -7,80 +8,154 @@ import org.bson.BsonValue;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
     private Row row;
+    private ResultSet parent;
 
-    public MongoResultSetMetaData(Row row) {
+    public MongoResultSetMetaData(MongoResultSet parent, Row row) {
+        this.parent = parent;
         this.row = row;
     }
 
+    @Override
     public int getColumnCount() throws SQLException {
         return row.size();
     }
 
+    @Override
     public boolean isAutoIncrement(int column) throws SQLException {
         return false;
     }
 
+    @Override
     public boolean isCaseSensitive(int column) throws SQLException {
         return true;
     }
 
+    @Override
     public boolean isSearchable(int column) throws SQLException {
         return true;
     }
 
+    @Override
     public boolean isCurrency(int column) throws SQLException {
         return false;
     }
 
+    @Override
     public int isNullable(int column) throws SQLException {
         return columnNullableUnknown;
     }
 
+    @Override
     public boolean isSigned(int column) throws SQLException {
         return true;
     }
 
+    @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        // TODO: Format as string and get length?
-        throw new SQLException("unimplemented");
+        String value = parent.getString(column);
+        return value.length();
     }
 
-    // getColumnLabel is for print out versus simple name, MongoDB makes no distinction.
+    @Override
     public String getColumnLabel(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return getColumnLabel(column);
     }
 
+    @Override
     public String getColumnName(int column) throws SQLException {
         return getColumnLabel(column);
     }
 
+    @Override
     public String getSchemaName(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return row.values.get(column).database;
     }
 
+    @Override
     public int getPrecision(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+                // This should be impossible. Perhaps throw an exception?
+                return 0;
+            case BINARY:
+                return o.asBinary().getData().length;
+            case BOOLEAN:
+                return 1;
+            case DATE_TIME:
+                return 64;
+            case DB_POINTER:
+                return 1;
+            case DECIMAL128:
+                // I don't know what to do with this. Previously, we used DECIMAL here,
+                // but DECIMAL is technically a fixed width type. I think we should switch
+                // to REAL here.
+                return 128;
+            case DOCUMENT:
+                return 0;
+            case DOUBLE:
+                return 64;
+            case END_OF_DOCUMENT:
+                return 0;
+            case INT32:
+                return 32;
+            case INT64:
+                return 64;
+            case JAVASCRIPT:
+                return 0;
+            case JAVASCRIPT_WITH_SCOPE:
+                return 0;
+            case MAX_KEY:
+                return 0;
+            case MIN_KEY:
+                return 0;
+            case NULL:
+                return 0;
+            case OBJECT_ID:
+                return parent.getString(column).length();
+            case REGULAR_EXPRESSION:
+                return 0;
+            case STRING:
+                return parent.getString(column).length();
+            case SYMBOL:
+                return 0;
+            case TIMESTAMP:
+                return 0;
+            case UNDEFINED:
+                return 0;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public int getScale(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return 0;
     }
 
+    @Override
     public String getTableName(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return row.values.get(column).tableAlias;
     }
 
+    @Override
     public String getCatalogName(int column) throws SQLException {
-        return getColumnLabel(column);
+        return getSchemaName(column);
     }
 
     private BsonValue getObject(int column) throws SQLException {
+        if (row == null) {
+            throw new SQLException("no current row in ResultSet, did you call next()?");
+        }
         if (column > row.size()) {
             throw new SQLException("index out of bounds: '" + column + "'");
         }
         return row.values.get(column - 1).value;
     }
 
+    @Override
     public int getColumnType(int column) throws SQLException {
         BsonValue o = getObject(column);
         if (o == null) {
@@ -88,6 +163,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         switch (o.getBsonType()) {
             case ARRAY:
+                // This should be impossible. Perhaps throw an exception?
                 return Types.ARRAY;
             case BINARY:
                 return Types.BLOB;
@@ -98,6 +174,9 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return Types.NULL;
             case DECIMAL128:
+                // I don't know what to do with this. Previously, we used DECIMAL here,
+                // but DECIMAL is technically a fixed width type. I think we should switch
+                // to REAL here.
                 return Types.REAL;
             case DOCUMENT:
                 return Types.NULL;
@@ -135,6 +214,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public String getColumnTypeName(int column) throws SQLException {
         BsonValue o = getObject(column);
         if (o == null) {
@@ -194,31 +274,37 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public boolean isReadOnly(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return true;
     }
 
+    @Override
     public boolean isWritable(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return false;
     }
 
+    @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        return false;
     }
 
     // --------------------------JDBC 2.0-----------------------------------
 
+    @Override
     public String getColumnClassName(int column) throws SQLException {
         Object o = getObject(column);
         return o.getClass().getName();
     }
 
     // java.sql.Wrapper impl
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isInstance(this);
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return (T) this;
     }

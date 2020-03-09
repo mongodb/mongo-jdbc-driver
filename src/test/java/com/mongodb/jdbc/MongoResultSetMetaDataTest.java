@@ -95,7 +95,7 @@ class MongoResultSetMetaDataTest {
                         "decimalCol",
                         new BsonDecimal128(new Decimal128(100L))));
 
-        resultSetMetaData = new MongoResultSetMetaData(row);
+        resultSetMetaData = new MongoResultSetMetaData(null, row);
     }
 
     MongoResultSet mongoResultSet;
