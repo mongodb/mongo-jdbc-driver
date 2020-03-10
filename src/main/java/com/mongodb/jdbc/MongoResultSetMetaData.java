@@ -27,7 +27,37 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        return true;
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return false;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DECIMAL128:
+            case DOCUMENT:
+            case DOUBLE:
+            case END_OF_DOCUMENT:
+            case INT32:
+            case INT64:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case TIMESTAMP:
+            case UNDEFINED:
+				return false;
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+                return true;
+		}
+		return false;
     }
 
     @Override
@@ -47,7 +77,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSigned(int column) throws SQLException {
-        return true;
     }
 
     @Override
@@ -58,12 +87,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        return getColumnLabel(column);
+        return row.values.get(column -1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        return getColumnLabel(column);
+        return row.values.get(column - 1).column;
     }
 
     @Override
@@ -90,13 +119,11 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return 0;
             case DECIMAL128:
-                // max value ~10^6145.
-                return 6145;
+                return 34;
             case DOCUMENT:
                 return 0;
             case DOUBLE:
-                // max value ~10^308.
-                return 308;
+                return 15;
             case END_OF_DOCUMENT:
                 return 0;
             case INT32:
@@ -114,7 +141,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case NULL:
                 return 0;
             case OBJECT_ID:
-                return parent.getString(column).length();
+                return 24;
             case REGULAR_EXPRESSION:
                 return 0;
             case STRING:
