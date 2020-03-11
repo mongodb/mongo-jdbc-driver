@@ -24,20 +24,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         return false;
     }
 
-    private void checkBounds(int i) throws SQLException {
-        if (row == null) {
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        if (i > row.values.size()) {
-            throw new SQLException("Index out of bounds: '" + i + "'.");
-        }
-    }
-
-    private BsonValue getObject(int column) throws SQLException {
-		checkBounds(column);
-        return row.values.get(column - 1).value;
-    }
-
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
         BsonValue o = getObject(column);
@@ -75,19 +61,16 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSearchable(int column) throws SQLException {
-		checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isCurrency(int column) throws SQLException {
-		checkBounds(column);
         return false;
     }
 
     @Override
     public int isNullable(int column) throws SQLException {
-		checkBounds(column);
         return columnNullableUnknown;
     }
 
@@ -184,19 +167,16 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-		checkBounds(column);
         return row.values.get(column - 1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
-		checkBounds(column);
         return row.values.get(column - 1).column;
     }
 
     @Override
     public String getSchemaName(int column) throws SQLException {
-		checkBounds(column);
         return row.values.get(column).database;
     }
 
@@ -214,7 +194,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case BOOLEAN:
                 return 1;
             case DATE_TIME:
-                //24 characters to display.
                 return 24;
             case DB_POINTER:
                 return 0;
@@ -294,14 +273,22 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getTableName(int column) throws SQLException {
-		checkBounds(column);
         return row.values.get(column).tableAlias;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
-		checkBounds(column);
         return getSchemaName(column);
+    }
+
+    private BsonValue getObject(int column) throws SQLException {
+        if (row == null) {
+            throw new SQLException("No current row in the result set. Make sure to call next().");
+        }
+        if (column > row.size()) {
+            throw new SQLException("Index out of bounds: '" + column + "'.");
+        }
+        return row.values.get(column - 1).value;
     }
 
     @Override
@@ -417,19 +404,16 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {
-		checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isWritable(int column) throws SQLException {
-		checkBounds(column);
         return false;
     }
 
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
-		checkBounds(column);
         return false;
     }
 
