@@ -1,6 +1,5 @@
 package com.mongodb.jdbc;
 
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -8,10 +7,10 @@ import org.bson.BsonValue;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
     private Row row;
-    private ResultSet parent;
 
-    public MongoResultSetMetaData(MongoResultSet parent, Row row) {
-        this.parent = parent;
+    private final int unknownLength = 0;
+
+    public MongoResultSetMetaData(Row row) {
         this.row = row;
     }
 
@@ -49,15 +48,15 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case OBJECT_ID:
             case TIMESTAMP:
             case UNDEFINED:
-				return false;
+                return false;
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case REGULAR_EXPRESSION:
             case STRING:
             case SYMBOL:
                 return true;
-		}
-		return false;
+        }
+        return false;
     }
 
     @Override
@@ -77,17 +76,98 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSigned(int column) throws SQLException {
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return false;
+        }
+        switch (o.getBsonType()) {
+            case DOUBLE:
+            case DECIMAL128:
+            case INT32:
+            case INT64:
+                return true;
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DOCUMENT:
+            case END_OF_DOCUMENT:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case TIMESTAMP:
+            case UNDEFINED:
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+                return false;
+        }
+        return false;
     }
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        String value = parent.getString(column);
-        return value.length();
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+                return unknownLength;
+            case BINARY:
+                return unknownLength;
+            case BOOLEAN:
+                return 1;
+            case DATE_TIME:
+                //24 characters to display.
+                return 24;
+            case DB_POINTER:
+                return 0;
+            case DECIMAL128:
+                return 34;
+            case DOCUMENT:
+                return unknownLength;
+            case DOUBLE:
+                return 15;
+            case END_OF_DOCUMENT:
+                return 0;
+            case INT32:
+                return 10;
+            case INT64:
+                return 19;
+            case JAVASCRIPT:
+                return unknownLength;
+            case JAVASCRIPT_WITH_SCOPE:
+                return unknownLength;
+            case MAX_KEY:
+                return 0;
+            case MIN_KEY:
+                return 0;
+            case NULL:
+                return 0;
+            case OBJECT_ID:
+                return 24;
+            case REGULAR_EXPRESSION:
+                return unknownLength;
+            case STRING:
+                return unknownLength;
+            case SYMBOL:
+                return unknownLength;
+            case TIMESTAMP:
+                return unknownLength;
+            case UNDEFINED:
+                return 0;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        return row.values.get(column -1).columnAlias;
+        return row.values.get(column - 1).columnAlias;
     }
 
     @Override
@@ -108,9 +188,9 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                return 0;
+                return unknownLength;
             case BINARY:
-                return o.asBinary().getData().length;
+                return unknownLength;
             case BOOLEAN:
                 return 1;
             case DATE_TIME:
@@ -121,7 +201,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DECIMAL128:
                 return 34;
             case DOCUMENT:
-                return 0;
+                return unknownLength;
             case DOUBLE:
                 return 15;
             case END_OF_DOCUMENT:
@@ -131,9 +211,9 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case INT64:
                 return 19;
             case JAVASCRIPT:
-                return 0;
+                return unknownLength;
             case JAVASCRIPT_WITH_SCOPE:
-                return 0;
+                return unknownLength;
             case MAX_KEY:
                 return 0;
             case MIN_KEY:
@@ -143,11 +223,11 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case OBJECT_ID:
                 return 24;
             case REGULAR_EXPRESSION:
-                return 0;
+                return unknownLength;
             case STRING:
-                return parent.getString(column).length();
+                return unknownLength;
             case SYMBOL:
-                return 0;
+                return unknownLength;
             case TIMESTAMP:
                 return 0;
             case UNDEFINED:

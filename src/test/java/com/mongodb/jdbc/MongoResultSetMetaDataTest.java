@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoResultSetMetaDataTest {
-    private static MongoResultSetMetaData resultSetMetaData;
+    private static ResultSetMetaData resultSetMetaData;
 
     static int NULL_COL = 1;
     static int DOUBLE_COL = 2;
@@ -101,10 +102,10 @@ class MongoResultSetMetaDataTest {
         MongoResultSet rs = new MongoResultSet(null, new MongoTestCursor(rows), false);
         try {
             rs.next();
+            resultSetMetaData = rs.getMetaData();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        resultSetMetaData = new MongoResultSetMetaData(rs, row);
     }
 
     MongoResultSet mongoResultSet;
@@ -120,18 +121,48 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
+    void testIsCaseSensitive() throws SQLException {
+        assertEquals(false, resultSetMetaData.isCaseSensitive(NULL_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DOUBLE_COL));
+        assertEquals(true, resultSetMetaData.isCaseSensitive(STRING_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(BINARY_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(UUID_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(OBJECTID_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(BOOLEAN_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DATE_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(INTEGER_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(LONG_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DECIMAL_COL));
+    }
+
+    @Test
+    void testIsSigned() throws SQLException {
+        assertEquals(false, resultSetMetaData.isSigned(NULL_COL));
+        assertEquals(true, resultSetMetaData.isSigned(DOUBLE_COL));
+        assertEquals(false, resultSetMetaData.isSigned(STRING_COL));
+        assertEquals(false, resultSetMetaData.isSigned(BINARY_COL));
+        assertEquals(false, resultSetMetaData.isSigned(UUID_COL));
+        assertEquals(false, resultSetMetaData.isSigned(OBJECTID_COL));
+        assertEquals(false, resultSetMetaData.isSigned(BOOLEAN_COL));
+        assertEquals(false, resultSetMetaData.isSigned(DATE_COL));
+        assertEquals(true, resultSetMetaData.isSigned(INTEGER_COL));
+        assertEquals(true, resultSetMetaData.isSigned(LONG_COL));
+        assertEquals(true, resultSetMetaData.isSigned(DECIMAL_COL));
+    }
+
+    @Test
     void testGetPrecision() throws SQLException {
         assertEquals(0, resultSetMetaData.getPrecision(NULL_COL));
-        assertEquals(308, resultSetMetaData.getPrecision(DOUBLE_COL));
-        assertEquals(11, resultSetMetaData.getPrecision(STRING_COL));
-        assertEquals(4, resultSetMetaData.getPrecision(BINARY_COL));
-        assertEquals(16, resultSetMetaData.getPrecision(UUID_COL));
+        assertEquals(15, resultSetMetaData.getPrecision(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(STRING_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(BINARY_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(UUID_COL));
         assertEquals(24, resultSetMetaData.getPrecision(OBJECTID_COL));
         assertEquals(1, resultSetMetaData.getPrecision(BOOLEAN_COL));
         assertEquals(24, resultSetMetaData.getPrecision(DATE_COL));
         assertEquals(10, resultSetMetaData.getPrecision(INTEGER_COL));
         assertEquals(19, resultSetMetaData.getPrecision(LONG_COL));
-        assertEquals(6145, resultSetMetaData.getPrecision(DECIMAL_COL));
+        assertEquals(34, resultSetMetaData.getPrecision(DECIMAL_COL));
     }
 
     @Test
