@@ -2,10 +2,12 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
@@ -30,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoResultSetMetaDataTest {
-    private static MongoResultSetMetaData resultSetMetaData;
+    private static ResultSetMetaData resultSetMetaData;
 
     static int NULL_COL = 1;
     static int DOUBLE_COL = 2;
@@ -81,21 +83,30 @@ class MongoResultSetMetaDataTest {
                         "objectIdCol",
                         "objectIdCol",
                         new BsonObjectId(new ObjectId(new Date()))));
-        row.values.add(newColumn("", "", "", "booleanCol", "booleanCol", new BsonBoolean(true)));
+        row.values.add(
+                newColumn("", "", "", "booleanCol", "booleanColAlias", new BsonBoolean(true)));
         row.values.add(
                 newColumn("", "", "", "dateCol", "dateCol", new BsonDateTime(1580511155627L)));
         row.values.add(newColumn("", "", "", "integerCol", "integerCol", new BsonInt32(100)));
         row.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
         row.values.add(
                 newColumn(
-                        "",
+                        "foo",
                         "",
                         "",
                         "decimalCol",
                         "decimalCol",
                         new BsonDecimal128(new Decimal128(100L))));
 
-        resultSetMetaData = new MongoResultSetMetaData(row);
+        List<Row> rows = new ArrayList<Row>();
+        rows.add(row);
+        MongoResultSet rs = new MongoResultSet(null, new MongoTestCursor(rows), false);
+        try {
+            rs.next();
+            resultSetMetaData = rs.getMetaData();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     MongoResultSet mongoResultSet;
@@ -111,6 +122,117 @@ class MongoResultSetMetaDataTest {
     }
 
     @Test
+    void testGetCatalogAndSchemaName() throws SQLException {
+        assertEquals("foo", resultSetMetaData.getCatalogName(DECIMAL_COL));
+        assertEquals("", resultSetMetaData.getSchemaName(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetColumnName() throws SQLException {
+        assertEquals("nullCol", resultSetMetaData.getColumnName(NULL_COL));
+        assertEquals("doubleCol", resultSetMetaData.getColumnName(DOUBLE_COL));
+        assertEquals("stringCol", resultSetMetaData.getColumnName(STRING_COL));
+        assertEquals("binaryCol", resultSetMetaData.getColumnName(BINARY_COL));
+        assertEquals("uuidCol", resultSetMetaData.getColumnName(UUID_COL));
+        assertEquals("objectIdCol", resultSetMetaData.getColumnName(OBJECTID_COL));
+        assertEquals("booleanCol", resultSetMetaData.getColumnName(BOOLEAN_COL));
+        assertEquals("dateCol", resultSetMetaData.getColumnName(DATE_COL));
+        assertEquals("integerCol", resultSetMetaData.getColumnName(INTEGER_COL));
+        assertEquals("longCol", resultSetMetaData.getColumnName(LONG_COL));
+        assertEquals("decimalCol", resultSetMetaData.getColumnName(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetColumnLabel() throws SQLException {
+        assertEquals("nullCol", resultSetMetaData.getColumnLabel(NULL_COL));
+        assertEquals("doubleCol", resultSetMetaData.getColumnLabel(DOUBLE_COL));
+        assertEquals("stringCol", resultSetMetaData.getColumnLabel(STRING_COL));
+        assertEquals("binaryCol", resultSetMetaData.getColumnLabel(BINARY_COL));
+        assertEquals("uuidCol", resultSetMetaData.getColumnLabel(UUID_COL));
+        assertEquals("objectIdCol", resultSetMetaData.getColumnLabel(OBJECTID_COL));
+        assertEquals("booleanColAlias", resultSetMetaData.getColumnLabel(BOOLEAN_COL));
+        assertEquals("dateCol", resultSetMetaData.getColumnLabel(DATE_COL));
+        assertEquals("integerCol", resultSetMetaData.getColumnLabel(INTEGER_COL));
+        assertEquals("longCol", resultSetMetaData.getColumnLabel(LONG_COL));
+        assertEquals("decimalCol", resultSetMetaData.getColumnLabel(DECIMAL_COL));
+    }
+
+    @Test
+    void testIsCaseSensitive() throws SQLException {
+        assertEquals(false, resultSetMetaData.isCaseSensitive(NULL_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DOUBLE_COL));
+        assertEquals(true, resultSetMetaData.isCaseSensitive(STRING_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(BINARY_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(UUID_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(OBJECTID_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(BOOLEAN_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DATE_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(INTEGER_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(LONG_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(DECIMAL_COL));
+    }
+
+    @Test
+    void testIsSigned() throws SQLException {
+        assertEquals(false, resultSetMetaData.isSigned(NULL_COL));
+        assertEquals(true, resultSetMetaData.isSigned(DOUBLE_COL));
+        assertEquals(false, resultSetMetaData.isSigned(STRING_COL));
+        assertEquals(false, resultSetMetaData.isSigned(BINARY_COL));
+        assertEquals(false, resultSetMetaData.isSigned(UUID_COL));
+        assertEquals(false, resultSetMetaData.isSigned(OBJECTID_COL));
+        assertEquals(false, resultSetMetaData.isSigned(BOOLEAN_COL));
+        assertEquals(false, resultSetMetaData.isSigned(DATE_COL));
+        assertEquals(true, resultSetMetaData.isSigned(INTEGER_COL));
+        assertEquals(true, resultSetMetaData.isSigned(LONG_COL));
+        assertEquals(true, resultSetMetaData.isSigned(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetColumnDisplaySize() throws SQLException {
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(NULL_COL));
+        assertEquals(15, resultSetMetaData.getColumnDisplaySize(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(STRING_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(BINARY_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(UUID_COL));
+        assertEquals(24, resultSetMetaData.getColumnDisplaySize(OBJECTID_COL));
+        assertEquals(1, resultSetMetaData.getColumnDisplaySize(BOOLEAN_COL));
+        assertEquals(24, resultSetMetaData.getColumnDisplaySize(DATE_COL));
+        assertEquals(10, resultSetMetaData.getColumnDisplaySize(INTEGER_COL));
+        assertEquals(19, resultSetMetaData.getColumnDisplaySize(LONG_COL));
+        assertEquals(34, resultSetMetaData.getColumnDisplaySize(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetPrecision() throws SQLException {
+        assertEquals(0, resultSetMetaData.getPrecision(NULL_COL));
+        assertEquals(15, resultSetMetaData.getPrecision(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(STRING_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(BINARY_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(UUID_COL));
+        assertEquals(24, resultSetMetaData.getPrecision(OBJECTID_COL));
+        assertEquals(1, resultSetMetaData.getPrecision(BOOLEAN_COL));
+        assertEquals(24, resultSetMetaData.getPrecision(DATE_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(INTEGER_COL));
+        assertEquals(19, resultSetMetaData.getPrecision(LONG_COL));
+        assertEquals(34, resultSetMetaData.getPrecision(DECIMAL_COL));
+    }
+
+    @Test
+    void testGetScale() throws SQLException {
+        assertEquals(0, resultSetMetaData.getScale(NULL_COL));
+        assertEquals(15, resultSetMetaData.getScale(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getScale(STRING_COL));
+        assertEquals(0, resultSetMetaData.getScale(BINARY_COL));
+        assertEquals(0, resultSetMetaData.getScale(UUID_COL));
+        assertEquals(0, resultSetMetaData.getScale(OBJECTID_COL));
+        assertEquals(0, resultSetMetaData.getScale(BOOLEAN_COL));
+        assertEquals(0, resultSetMetaData.getScale(DATE_COL));
+        assertEquals(0, resultSetMetaData.getScale(INTEGER_COL));
+        assertEquals(0, resultSetMetaData.getScale(LONG_COL));
+        assertEquals(34, resultSetMetaData.getScale(DECIMAL_COL));
+    }
+
+    @Test
     void testGetColumnType() throws SQLException {
         assertEquals(Types.NULL, resultSetMetaData.getColumnType(NULL_COL));
         assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(DOUBLE_COL));
@@ -122,7 +244,7 @@ class MongoResultSetMetaDataTest {
         assertEquals(Types.TIMESTAMP, resultSetMetaData.getColumnType(DATE_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INTEGER_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(LONG_COL));
-        assertEquals(Types.REAL, resultSetMetaData.getColumnType(DECIMAL_COL));
+        assertEquals(Types.DECIMAL, resultSetMetaData.getColumnType(DECIMAL_COL));
     }
 
     @Test
