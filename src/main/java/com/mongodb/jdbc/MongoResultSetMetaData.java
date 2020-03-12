@@ -8,79 +8,300 @@ import org.bson.BsonValue;
 public class MongoResultSetMetaData implements ResultSetMetaData {
     private Row row;
 
+    private final int unknownLength = 0;
+
     public MongoResultSetMetaData(Row row) {
         this.row = row;
     }
 
+    private void checkBounds(int i) throws SQLException {
+        if (i > row.size()) {
+            throw new SQLException("Index out of bounds: '" + i + "'.");
+        }
+    }
+
+    @Override
     public int getColumnCount() throws SQLException {
         return row.size();
     }
 
+    @Override
     public boolean isAutoIncrement(int column) throws SQLException {
+        checkBounds(column);
         return false;
     }
 
+    @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        return true;
-    }
-
-    public boolean isSearchable(int column) throws SQLException {
-        return true;
-    }
-
-    public boolean isCurrency(int column) throws SQLException {
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return false;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DECIMAL128:
+            case DOCUMENT:
+            case DOUBLE:
+            case END_OF_DOCUMENT:
+            case INT32:
+            case INT64:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case TIMESTAMP:
+            case UNDEFINED:
+                return false;
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+                return true;
+        }
         return false;
     }
 
+    @Override
+    public boolean isSearchable(int column) throws SQLException {
+        checkBounds(column);
+        return true;
+    }
+
+    @Override
+    public boolean isCurrency(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
     public int isNullable(int column) throws SQLException {
+        checkBounds(column);
         return columnNullableUnknown;
     }
 
+    @Override
     public boolean isSigned(int column) throws SQLException {
-        return true;
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return false;
+        }
+        switch (o.getBsonType()) {
+            case DOUBLE:
+            case DECIMAL128:
+            case INT32:
+            case INT64:
+                return true;
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DOCUMENT:
+            case END_OF_DOCUMENT:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case TIMESTAMP:
+            case UNDEFINED:
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+                return false;
+        }
+        return false;
     }
 
+    @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        // TODO: Format as string and get length?
-        throw new SQLException("unimplemented");
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+                return unknownLength;
+            case BINARY:
+                return unknownLength;
+            case BOOLEAN:
+                return 1;
+            case DATE_TIME:
+                //24 characters to display.
+                return 24;
+            case DB_POINTER:
+                return 0;
+            case DECIMAL128:
+                return 34;
+            case DOCUMENT:
+                return unknownLength;
+            case DOUBLE:
+                return 15;
+            case END_OF_DOCUMENT:
+                return 0;
+            case INT32:
+                return 10;
+            case INT64:
+                return 19;
+            case JAVASCRIPT:
+                return unknownLength;
+            case JAVASCRIPT_WITH_SCOPE:
+                return unknownLength;
+            case MAX_KEY:
+                return 0;
+            case MIN_KEY:
+                return 0;
+            case NULL:
+                return 0;
+            case OBJECT_ID:
+                return 24;
+            case REGULAR_EXPRESSION:
+                return unknownLength;
+            case STRING:
+                return unknownLength;
+            case SYMBOL:
+                return unknownLength;
+            case TIMESTAMP:
+                return unknownLength;
+            case UNDEFINED:
+                return 0;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
-    // getColumnLabel is for print out versus simple name, MongoDB makes no distinction.
+    @Override
     public String getColumnLabel(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return row.values.get(column - 1).columnAlias;
     }
 
+    @Override
     public String getColumnName(int column) throws SQLException {
-        return getColumnLabel(column);
+        checkBounds(column);
+        return row.values.get(column - 1).column;
     }
 
+    @Override
     public String getSchemaName(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return "";
     }
 
+    @Override
     public int getPrecision(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+                return unknownLength;
+            case BINARY:
+                return unknownLength;
+            case BOOLEAN:
+                return 1;
+            case DATE_TIME:
+                return 24;
+            case DB_POINTER:
+                return 0;
+            case DECIMAL128:
+                return 34;
+            case DOCUMENT:
+                return unknownLength;
+            case DOUBLE:
+                return 15;
+            case END_OF_DOCUMENT:
+                return 0;
+            case INT32:
+                return 10;
+            case INT64:
+                return 19;
+            case JAVASCRIPT:
+                return unknownLength;
+            case JAVASCRIPT_WITH_SCOPE:
+                return unknownLength;
+            case MAX_KEY:
+                return 0;
+            case MIN_KEY:
+                return 0;
+            case NULL:
+                return 0;
+            case OBJECT_ID:
+                return 24;
+            case REGULAR_EXPRESSION:
+                return unknownLength;
+            case STRING:
+                return unknownLength;
+            case SYMBOL:
+                return unknownLength;
+            case TIMESTAMP:
+                return 0;
+            case UNDEFINED:
+                return 0;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public int getScale(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        BsonValue o = getObject(column);
+        if (o == null) {
+            return 0;
+        }
+        switch (o.getBsonType()) {
+            case ARRAY:
+            case BINARY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DB_POINTER:
+            case DOCUMENT:
+            case END_OF_DOCUMENT:
+            case INT32:
+            case INT64:
+            case JAVASCRIPT:
+            case JAVASCRIPT_WITH_SCOPE:
+            case MAX_KEY:
+            case MIN_KEY:
+            case NULL:
+            case OBJECT_ID:
+            case REGULAR_EXPRESSION:
+            case STRING:
+            case SYMBOL:
+            case TIMESTAMP:
+            case UNDEFINED:
+                return 0;
+            case DECIMAL128:
+                return 34;
+            case DOUBLE:
+                return 15;
+        }
+        throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public String getTableName(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return row.values.get(column).tableAlias;
     }
 
+    @Override
     public String getCatalogName(int column) throws SQLException {
-        return getColumnLabel(column);
+        checkBounds(column);
+        return row.values.get(column - 1).database;
     }
 
     private BsonValue getObject(int column) throws SQLException {
-        if (column > row.size()) {
-            throw new SQLException("index out of bounds: '" + column + "'");
-        }
+        checkBounds(column);
         return row.values.get(column - 1).value;
     }
 
+    @Override
     public int getColumnType(int column) throws SQLException {
         BsonValue o = getObject(column);
         if (o == null) {
@@ -98,7 +319,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return Types.NULL;
             case DECIMAL128:
-                return Types.REAL;
+                return Types.DECIMAL;
             case DOCUMENT:
                 return Types.NULL;
             case DOUBLE:
@@ -135,6 +356,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public String getColumnTypeName(int column) throws SQLException {
         BsonValue o = getObject(column);
         if (o == null) {
@@ -143,7 +365,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         switch (o.getBsonType()) {
                 // we will return the same names as the mongodb $type function:
             case ARRAY:
-                // This should be impossible. Perhaps throw an exception?
                 return "array";
             case BINARY:
                 return "binData";
@@ -154,9 +375,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DB_POINTER:
                 return "null";
             case DECIMAL128:
-                // I don't know what to do with this. Previously, we used DECIMAL here,
-                // but DECIMAL is technically a fixed width type. I think we should switch
-                // to REAL here.
                 return "decimal";
             case DOCUMENT:
                 return "null";
@@ -194,31 +412,40 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type with value: " + o);
     }
 
+    @Override
     public boolean isReadOnly(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return true;
     }
 
+    @Override
     public boolean isWritable(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return false;
     }
 
+    @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
-        throw new SQLException("unimplemented");
+        checkBounds(column);
+        return false;
     }
 
     // --------------------------JDBC 2.0-----------------------------------
 
+    @Override
     public String getColumnClassName(int column) throws SQLException {
         Object o = getObject(column);
         return o.getClass().getName();
     }
 
     // java.sql.Wrapper impl
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isInstance(this);
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return (T) this;
     }
