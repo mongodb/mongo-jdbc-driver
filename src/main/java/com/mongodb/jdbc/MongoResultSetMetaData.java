@@ -14,6 +14,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         this.row = row;
     }
 
+    private void checkBounds(int i) throws SQLException {
+        if (i > row.size()) {
+            throw new SQLException("Index out of bounds: '" + i + "'.");
+        }
+    }
+
     @Override
     public int getColumnCount() throws SQLException {
         return row.size();
@@ -21,6 +27,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isAutoIncrement(int column) throws SQLException {
+        checkBounds(column);
         return false;
     }
 
@@ -61,16 +68,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSearchable(int column) throws SQLException {
+        checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isCurrency(int column) throws SQLException {
+        checkBounds(column);
         return false;
     }
 
     @Override
     public int isNullable(int column) throws SQLException {
+        checkBounds(column);
         return columnNullableUnknown;
     }
 
@@ -167,16 +177,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
+        checkBounds(column);
         return row.values.get(column - 1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
+        checkBounds(column);
         return row.values.get(column - 1).column;
     }
 
     @Override
     public String getSchemaName(int column) throws SQLException {
+        checkBounds(column);
         return row.values.get(column).database;
     }
 
@@ -273,21 +286,18 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getTableName(int column) throws SQLException {
+        checkBounds(column);
         return row.values.get(column).tableAlias;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
+        checkBounds(column);
         return getSchemaName(column);
     }
 
     private BsonValue getObject(int column) throws SQLException {
-        if (row == null) {
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        if (column > row.size()) {
-            throw new SQLException("Index out of bounds: '" + column + "'.");
-        }
+        checkBounds(column);
         return row.values.get(column - 1).value;
     }
 
@@ -404,16 +414,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {
+        checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isWritable(int column) throws SQLException {
+        checkBounds(column);
         return false;
     }
 
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
+        checkBounds(column);
         return false;
     }
 
