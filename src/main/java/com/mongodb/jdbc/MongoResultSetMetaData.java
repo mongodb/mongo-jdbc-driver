@@ -190,7 +190,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getSchemaName(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column).database;
+        return "";
     }
 
     @Override
@@ -293,7 +293,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getCatalogName(int column) throws SQLException {
         checkBounds(column);
-        return getSchemaName(column);
+        return row.values.get(column - 1).database;
     }
 
     private BsonValue getObject(int column) throws SQLException {

@@ -91,7 +91,7 @@ class MongoResultSetMetaDataTest {
         row.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
         row.values.add(
                 newColumn(
-                        "",
+                        "foo",
                         "",
                         "",
                         "decimalCol",
@@ -119,6 +119,12 @@ class MongoResultSetMetaDataTest {
     @Test
     void testGetColumnCount() throws SQLException {
         assertEquals(11, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+    }
+
+    @Test
+    void testGetCatalogAndSchemaName() throws SQLException {
+        assertEquals("foo", resultSetMetaData.getCatalogName(DECIMAL_COL));
+        assertEquals("", resultSetMetaData.getSchemaName(DECIMAL_COL));
     }
 
     @Test
