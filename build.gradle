@@ -1,0 +1,62 @@
+plugins {
+    id 'java-library'
+    id 'nebula.lint' version '9.3.4'
+}
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'nebula.lint'
+    gradleLint.rules = ['all-dependency'] // add as many rules here as you'd like
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = sourceCompatibility
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
+        implementation group: 'org.mongodb', name: 'mongodb-driver', version: mongodbDriverVersion
+
+        // Test
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+        testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+        testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+        testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+    }
+
+    test {
+        useJUnitPlatform()
+        failFast = true
+    }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier "sources"
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.allJava
+        classifier "test"
+    }
+
+    artifacts {
+        sourceJar
+        testJar
+    }
+
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
+}
+
+dependencies {
+    api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
+    api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
+}
