@@ -6,11 +6,11 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.util.List;
 
-public class MongoSimpleCursor implements MongoCursor<Row> {
+public class MongoExplicitCursor implements MongoCursor<Row> {
     private List<Row> rows;
     private int rowNum = 0;
 
-    public MongoSimpleCursor(List<Row> rows) {
+    public MongoExplicitCursor(List<Row> rows) {
         this.rows = rows;
     }
 

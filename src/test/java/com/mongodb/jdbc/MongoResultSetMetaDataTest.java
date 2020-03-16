@@ -100,7 +100,7 @@ class MongoResultSetMetaDataTest {
 
         List<Row> rows = new ArrayList<Row>();
         rows.add(row);
-        MongoResultSet rs = new MongoResultSet(null, new MongoSimpleCursor(rows), false);
+        MongoResultSet rs = new MongoResultSet(null, new MongoExplicitCursor(rows), false);
         try {
             rs.next();
             resultSetMetaData = rs.getMetaData();

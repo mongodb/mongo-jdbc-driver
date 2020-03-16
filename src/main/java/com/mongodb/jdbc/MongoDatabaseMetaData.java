@@ -1,13 +1,33 @@
 package com.mongodb.jdbc;
 
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 
 public class MongoDatabaseMetaData implements DatabaseMetaData {
+
+    static Column newColumn(
+            String database,
+            String table,
+            String tableAlias,
+            String column,
+            String columnAlias,
+            BsonValue value) {
+        Column c = new Column();
+        c.database = database;
+        c.table = table;
+        c.tableAlias = tableAlias;
+        c.column = column;
+        c.columnAlias = columnAlias;
+        c.value = value;
+        return c;
+	}
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
     // since this value is used to set limits on literals and field names.
@@ -977,7 +997,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-		return new MongoResultSet(null, new MongoCursor<Row>(), true);
+		// No procedures so we always return an empty result set.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -987,29 +1009,39 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// No procedures so we always return an empty result set.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: Make this work with ADL, need information schema.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We will never support schemata.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: Make this work with ADL, need information schema.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: update to Huan's code with the DocumentResult.
+        Row row = new Row();
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1023,7 +1055,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getColumnPrivileges(
             String catalog, String schema, String table, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: Make this work with ADL, need information schema.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
