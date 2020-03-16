@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Types;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 
@@ -1039,16 +1042,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTableTypes() throws SQLException {
 		// TODO: update to Huan's code with the DocumentResult.
         Row row = new Row();
-        row.values = new ArrayList<>();
+		ArrayList<Row> rows = new ArrayList<>(1);
         row.values.add(newColumn("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+		rows.add(row);
+		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: Make this work with ADL, need information schema.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1062,38 +1067,67 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: Make this work with ADL, need information schema.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: update to Huan's code with the DocumentResult.
+        Row row = new Row();
+		ArrayList<Row> rows = new ArrayList<>(1);
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "SCOPE", "SCOPE", new BsonString("bestRowSeassion")));
+        row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
+        row.values.add(newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(Types.LONGVARCHAR)));
+        row.values.add(newColumn("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString("string")));
+        row.values.add(newColumn("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", new BsonNull()));
+        row.values.add(newColumn("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", new BsonInt32(bestRowNotPseudo)));
+		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have updates, so this will always be empty.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// TODO: update to Huan's code with the DocumentResult.
+        Row row = new Row();
+		ArrayList<Row> rows = new ArrayList<>(1);
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString(catalog)));
+        row.values.add(newColumn("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
+        row.values.add(newColumn("", "", "", "TABLE_NAME", "TABLE_NAME", new BsonString(table)));
+        row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
+        row.values.add(newColumn("", "", "", "KEY_SEQ", "KEY_SEQ", new BsonInt32(1)));
+        row.values.add(newColumn("", "", "", "PK_NAME", "PK_NAME", new BsonNull()));
+		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have foreign keys, so this will always be empty.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have foreign keys, so this will always be empty.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1105,11 +1139,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String foreignSchema,
             String foreignTable)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented");
+		// We do not have foreign keys, so this will always be empty.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
+		// TODO!
         throw new SQLFeatureNotSupportedException("Not implemented");
     }
 
@@ -1117,7 +1154,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented");
+		// We do not have indexes.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     //--------------------------JDBC 2.0-----------------------------
