@@ -24,7 +24,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
         // TODO: permissions stuff here?
-        throw new SQLFeatureNotSupportedException("not implemented");
+        return true;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        // TODO: return the version.
+        // TODO: return the version. Need to discuss.
         throw new SQLFeatureNotSupportedException("not implemented");
     }
 
@@ -155,33 +155,348 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        // TODO: audit this.
-        return "";
+        return "ADDDATE,"
+                + "AUTO_INCREMENT,"
+                + "BINLOG,"
+                + "BOOL,"
+                + "BTREE,"
+                + "CHANGE,"
+                + "CHANNEL,"
+                + "CHARSET,"
+                + "CODE,"
+                + "COLUMNS,"
+                + "COMMENT,"
+                + "COMMITTED,"
+                + "DATABASE,"
+                + "DATABASES,"
+                + "DATETIME,"
+                + "DATE_ADD,"
+                + "DATE_SUB,"
+                + "DAY_HOUR,"
+                + "DAY_MICROSECOND,"
+                + "DAY_MINUTE,"
+                + "DAY_SECOND,"
+                + "DBS,"
+                + "DISABLE,"
+                + "DIV,"
+                + "DUAL,"
+                + "ENABLE,"
+                + "ENGINE,"
+                + "ENGINES,"
+                + "ENUM,"
+                + "ERRORS,"
+                + "EVENT,"
+                + "EVENTS,"
+                + "EXPLAIN,"
+                + "EXTENDED,"
+                + "FIELDS,"
+                + "FLUSH,"
+                + "FN,"
+                + "FORCE,"
+                + "FORMAT,"
+                + "FULLTEXT,"
+                + "GRANTS,"
+                + "GROUP_CONCAT,"
+                + "HASH,"
+                + "HOSTS,"
+                + "HOUR_MICROSECOND,"
+                + "HOUR_MINUTE,"
+                + "HOUR_SECOND,"
+                + "IGNORE,"
+                + "INDEX,"
+                + "INDEXES,"
+                + "JSON,"
+                + "KEYS,"
+                + "KILL,"
+                + "LIMIT,"
+                + "LOCK,"
+                + "LOGS,"
+                + "LONGTEXT,"
+                + "LOW_PRIORITY,"
+                + "MASTER,"
+                + "MEDIUMBLOB,"
+                + "MEDIUMTEXT,"
+                + "MICROSECOND,"
+                + "MINUS,"
+                + "MINUTE_MICROSECOND,"
+                + "MINUTE_SECOND,"
+                + "MOD,"
+                + "MODIFY,"
+                + "MUTEX,"
+                + "OBJECTID,"
+                + "OFF,"
+                + "OFFSET,"
+                + "OJ,"
+                + "PARTITIONS,"
+                + "PLUGINS,"
+                + "PROCESSLIST,"
+                + "PROFILE,"
+                + "PROFILES,"
+                + "PROXY,"
+                + "QUARTER,"
+                + "QUERY,"
+                + "REGEXP,"
+                + "RELAYLOG,"
+                + "RENAME,"
+                + "REPEATABLE,"
+                + "RLIKE,"
+                + "SAMPLE,"
+                + "SCHEMAS,"
+                + "SECOND_MICROSECOND,"
+                + "SEPARATOR,"
+                + "SERIAL,"
+                + "SERIALIZABLE,"
+                + "SHOW,"
+                + "SIGNED,"
+                + "SLAVE,"
+                + "SQL_BIGINT,"
+                + "SQL_DATE,"
+                + "SQL_DOUBLE,"
+                + "SQL_TIMESTAMP,"
+                + "SQL_TSI_DAY,"
+                + "SQL_TSI_HOUR,"
+                + "SQL_TSI_MINUTE,"
+                + "SQL_TSI_MONTH,"
+                + "SQL_TSI_QUARTER,"
+                + "SQL_TSI_SECOND,"
+                + "SQL_TSI_WEEK,"
+                + "SQL_TSI_YEAR,"
+                + "SQL_VARCHAR,"
+                + "STATUS,"
+                + "STORAGE,"
+                + "STRAIGHT_JOIN,"
+                + "SUBDATE,"
+                + "SUBSTR,"
+                + "TABLES,"
+                + "TEXT,"
+                + "TIMESTAMPADD,"
+                + "TIMESTAMPDIFF,"
+                + "TINYINT,"
+                + "TINYTEXT,"
+                + "TRADITIONAL,"
+                + "TRIGGERS,"
+                + "UNCOMMITTED,"
+                + "UNLOCK,"
+                + "UNSIGNED,"
+                + "USE,"
+                + "UTC_DATE,"
+                + "UTC_TIMESTAMP,"
+                + "VARIABLES,"
+                + "WARNINGS,"
+                + "WEEK,"
+                + "XOR,"
+                + "YEAR_MONTH";
     }
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        // TODO: audit this.
-        return "DIV,ABS,ACOS,ASIN,ATAN,ATAN2,CEIL,CEILING,CONV,COS,COT,CRC32,DEGREES,EXP,FLOOR,GREATEST,LEAST,LN,LOG,"
-                + "LOG10,LOG2,MOD,OCT,PI,POW,POWER,RADIANS,RAND,ROUND,SIGN,SIN,SQRT,TAN,TRUNCATE";
+        return "ACOS,"
+                + "ASIN,"
+                + "ATAN,"
+                + "ATAN2,"
+                + "CEIL,"
+                + "COS,"
+                + "COT,"
+                + "DEGREES,"
+                + "EXP,"
+                + "FLOOR,"
+                + "LN,"
+                + "LOG,"
+                + "LOG10,"
+                + "LOG2,"
+                + "MOD,"
+                + "PI,"
+                + "POW,"
+                + "ROUND,"
+                + "SIGN,"
+                + "SIN,"
+                + "SQRT,"
+                + "TAN,"
+                + "TRUNCATE";
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        // TODO: audit this.
-        return "";
+        return "ASCII,"
+                + "CHAR,"
+                + "CHARACTERLENGTH,"
+                + "CONCAT,"
+                + "CONCATWS,"
+                + "ELT,"
+                + "INSERT,"
+                + "INSTR,"
+                + "INTERVAL,"
+                + "LEFT,"
+                + "LENGTH,"
+                + "LOCATE,"
+                + "LPAD,"
+                + "LTRIM,"
+                + "MD5,"
+                + "MID,"
+                + "REPEAT,"
+                + "REPLACE,"
+                + "REVERSE,"
+                + "RIGHT,"
+                + "RPAD,"
+                + "RTRIM,"
+                + "SPACE,"
+                + "SUBSTRING,"
+                + "SUBSTRINGINDEX,"
+                + "TRIM,"
+                + "UCASE";
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        // TODO: audit this.
-        return "";
+        return "ACOS,"
+                + "ASCII,"
+                + "ASIN,"
+                + "ATAN,"
+                + "ATAN2,"
+                + "CEIL,"
+                + "CHAR,"
+                + "CHARACTERLENGTH,"
+                + "COALESCE,"
+                + "CONCAT,"
+                + "CONCATWS,"
+                + "CONNECTIONID,"
+                + "CONV,"
+                + "CONVERT,"
+                + "COS,"
+                + "COT,"
+                + "CURRENTDATE,"
+                + "CURRENTTIMESTAMP,"
+                + "CURTIME,"
+                + "DATABASE,"
+                + "DATE,"
+                + "DATEADD,"
+                + "DATEDIFF,"
+                + "DATEFORMAT,"
+                + "DATESUB,"
+                + "DAYNAME,"
+                + "DAYOFMONTH,"
+                + "DAYOFWEEK,"
+                + "DAYOFYEAR,"
+                + "DEGREES,"
+                + "ELT,"
+                + "EXP,"
+                + "EXTRACT,"
+                + "FIELD,"
+                + "FLOOR,"
+                + "FROMDAYS,"
+                + "FROMUNIXTIME,"
+                + "GREATEST,"
+                + "HOUR,"
+                + "IF,"
+                + "IFNULL,"
+                + "INSERT,"
+                + "INSTR,"
+                + "INTERVAL,"
+                + "LASTDAY,"
+                + "LCASE,"
+                + "LEAST,"
+                + "LEFT,"
+                + "LENGTH,"
+                + "LN,"
+                + "LOCATE,"
+                + "LOG,"
+                + "LOG10,"
+                + "LOG2,"
+                + "LPAD,"
+                + "LTRIM,"
+                + "MAKEDATE,"
+                + "MD5,"
+                + "MICROSECOND,"
+                + "MID,"
+                + "MINUTE,"
+                + "MOD,"
+                + "MONTH,"
+                + "MONTHNAME,"
+                + "NOPUSHDOWN,"
+                + "NULLIF,"
+                + "PI,"
+                + "POW,"
+                + "QUARTER,"
+                + "RADIANS,"
+                + "RAND,"
+                + "REPEAT,"
+                + "REPLACE,"
+                + "REVERSE,"
+                + "RIGHT,"
+                + "ROUND,"
+                + "RPAD,"
+                + "RTRIM,"
+                + "SECOND,"
+                + "SIGN,"
+                + "SIN,"
+                + "SLEEP,"
+                + "SPACE,"
+                + "SQRT,"
+                + "STRTODATE,"
+                + "SUBSTRING,"
+                + "SUBSTRINGINDEX,"
+                + "TAN,"
+                + "TIMEDIFF,"
+                + "TIMETOSEC,"
+                + "TIMESTAMP,"
+                + "TIMESTAMPADD,"
+                + "TIMESTAMPDIFF,"
+                + "TODAYS,"
+                + "TOSECONDS,"
+                + "TRIM,"
+                + "TRUNCATE,"
+                + "UCASE,"
+                + "UNIXTIMESTAMP,"
+                + "USER,"
+                + "UTCDATE,"
+                + "UTCTIMESTAMP,"
+                + "VERSION,"
+                + "WEEK,"
+                + "WEEKDAY,"
+                + "YEAR,"
+                + "YEARWEEK";
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        // TODO: audit this.
-        return "";
+        return "CURRENTDATE,"
+                + "CURRENTTIMESTAMP,"
+                + "CURTIME,"
+                + "DATE,"
+                + "DATEADD,"
+                + "DATEDIFF,"
+                + "DATEFORMAT,"
+                + "DATESUB,"
+                + "DAYNAME,"
+                + "DAYOFMONTH,"
+                + "DAYOFWEEK,"
+                + "DAYOFYEAR,"
+                + "EXTRACT,"
+                + "FROMDAYS,"
+                + "FROMUNIXTIME,"
+                + "LASTDAY,"
+                + "MAKEDATE,"
+                + "MICROSECOND,"
+                + "MINUTE,"
+                + "MONTH,"
+                + "MONTHNAME,"
+                + "QUARTER,"
+                + "SECOND,"
+                + "STRTODATE,"
+                + "TIMEDIFF,"
+                + "TIMETOSEC,"
+                + "TIMESTAMP,"
+                + "TIMESTAMPADD,"
+                + "TIMESTAMPDIFF,"
+                + "TODAYS,"
+                + "TOSECONDS,"
+                + "UNIXTIMESTAMP,"
+                + "UTCDATE,"
+                + "UTCTIMESTAMP,"
+                + "WEEK,"
+                + "WEEKDAY,"
+                + "YEAR,"
+                + "YEARWEEK";
     }
 
     @Override
@@ -191,8 +506,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-        // TODO: audit this.
-        return "";
+		// Retrieves all the "extra" characters that can be used in unquoted identifier names (those beyond a-z, A-Z, 0-9 and _).
+        return ".";
     }
 
     //--------------------------------------------------------------------
@@ -341,12 +656,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSchemaTerm() throws SQLException {
+		// We do not support schemata.
         return "";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
-        return "procedure";
+		// We do not support procedures.
+        return "";
     }
 
     @Override
@@ -366,32 +683,38 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
+		// We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
+		// We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
+		// We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
+		// We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
+		// We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
@@ -465,33 +788,36 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsUnion() throws SQLException {
-        // For now.
-        return false;
+        return true;
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
         // For now.
-        return false;
+        return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
+		// Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
+		// Though we don't support rollback.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
+		// Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
+		// Though we don't support rollback.
         return true;
     }
 
@@ -517,73 +843,66 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
-        // TODO: check.
+		// No specific max size, though it would be limited by max document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
-        // TODO: check.
+        // MongoDB has no limit in 4.2+. Datalake doesn't support indexes, yet,
+		// but returning 0 is fine.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
-        // TODO: check.
+		// The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
-        // TODO: check.
+		// The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInTable() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxConnections() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxCursorNameLength() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxIndexLength() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxSchemaNameLength() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxProcedureNameLength() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
     @Override
     public int getMaxRowSize() throws SQLException {
-        // TODO: check.
         return APPROXIMATE_DOC_SIZE;
     }
 
@@ -594,13 +913,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxStatementLength() throws SQLException {
-        // TODO: check.
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxStatements() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
@@ -611,7 +928,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxTablesInSelect() throws SQLException {
-        // TODO: check.
         return 0;
     }
 
@@ -639,28 +955,29 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return false;
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return new MongoResultSet(null, new MongoCursor<Row>(), true);
     }
 
     @Override

@@ -163,9 +163,9 @@ class MongoResultSetTest {
 
         List<Row> rows = new ArrayList<Row>();
         rows.add(row);
-        strictMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), false);
-        relaxedMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), true);
-        closedMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), true);
+        strictMongoResultSet = new MongoResultSet(null, new MongoSimpleCursor(rows), false);
+        relaxedMongoResultSet = new MongoResultSet(null, new MongoSimpleCursor(rows), true);
+        closedMongoResultSet = new MongoResultSet(null, new MongoSimpleCursor(rows), true);
     }
 
     @BeforeAll
