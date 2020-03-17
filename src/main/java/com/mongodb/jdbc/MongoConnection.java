@@ -110,7 +110,7 @@ public class MongoConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-		return new MongoDatabaseMetaData(this);
+        return new MongoDatabaseMetaData(this);
     }
 
     @Override

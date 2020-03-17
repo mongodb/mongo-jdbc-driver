@@ -1,6 +1,5 @@
 package com.mongodb.jdbc;
 
-import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -8,6 +7,7 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
+import java.util.ArrayList;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
@@ -30,13 +30,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         c.columnAlias = columnAlias;
         c.value = value;
         return c;
-	}
+    }
 
-	MongoConnection conn;
+    MongoConnection conn;
 
-	public MongoDatabaseMetaData(MongoConnection conn) {
-		this.conn = conn;
-	}
+    public MongoDatabaseMetaData(MongoConnection conn) {
+        this.conn = conn;
+    }
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
     // since this value is used to set limits on literals and field names.
@@ -535,7 +535,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-		// Retrieves all the "extra" characters that can be used in unquoted identifier names (those beyond a-z, A-Z, 0-9 and _).
+        // Retrieves all the "extra" characters that can be used in unquoted identifier names (those beyond a-z, A-Z, 0-9 and _).
         return ".";
     }
 
@@ -685,13 +685,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSchemaTerm() throws SQLException {
-		// We do not support schemata.
+        // We do not support schemata.
         return "";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
-		// We do not support procedures.
+        // We do not support procedures.
         return "";
     }
 
@@ -712,31 +712,31 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-		// We don't support schemata.
+        // We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-		// We don't support schemata.
+        // We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-		// We don't support schemata.
+        // We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-		// We don't support schemata.
+        // We don't support schemata.
         return false;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-		// We don't support schemata.
+        // We don't support schemata.
         return false;
     }
 
@@ -828,25 +828,25 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-		// Though we don't support commit.
+        // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-		// Though we don't support rollback.
+        // Though we don't support rollback.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-		// Though we don't support commit.
+        // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-		// Though we don't support rollback.
+        // Though we don't support rollback.
         return true;
     }
 
@@ -872,26 +872,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
-		// No specific max size, though it would be limited by max document size.
+        // No specific max size, though it would be limited by max document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
         // MongoDB has no limit in 4.2+. Datalake doesn't support indexes, yet,
-		// but returning 0 is fine.
+        // but returning 0 is fine.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
-		// The only limit would be based on document size.
+        // The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
-		// The only limit would be based on document size.
+        // The only limit would be based on document size.
         return 0;
     }
 
@@ -995,20 +995,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-		return false;
+        return false;
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-		return false;
+        return false;
     }
 
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-		// No procedures so we always return an empty result set.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // No procedures so we always return an empty result set.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1018,98 +1018,106 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
-		// No procedures so we always return an empty result set.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // No procedures so we always return an empty result set.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
-		// TODO: Make this work with ADL, need information schema.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // TODO: Make this work with ADL, need information schema.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-		// We will never support schemata.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We will never support schemata.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-		// TODO: Make this work with ADL, need information schema.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // TODO: Make this work with ADL, need information schema.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-		// TODO: update to Huan's code with the DocumentResult.
+        // TODO: update to Huan's code with the DocumentResult.
         Row row = new Row();
-		ArrayList<Row> rows = new ArrayList<>(1);
+        ArrayList<Row> rows = new ArrayList<>(1);
         row.values.add(newColumn("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
-		rows.add(row);
-		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        rows.add(row);
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-		// TODO: Make this work with ADL, need information schema.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // TODO: Make this work with ADL, need information schema.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getColumnPrivileges(
             String catalog, String schema, String table, String columnNamePattern)
             throws SQLException {
-		// TODO: Make this work with ADL, need information schema.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // TODO: Make this work with ADL, need information schema.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-		// TODO: Make this work with ADL, need information schema.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // TODO: Make this work with ADL, need information schema.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-		// TODO: update to Huan's code with the DocumentResult.
+        // TODO: update to Huan's code with the DocumentResult.
         Row row = new Row();
-		ArrayList<Row> rows = new ArrayList<>(1);
+        ArrayList<Row> rows = new ArrayList<>(1);
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "SCOPE", "SCOPE", new BsonString("bestRowSeassion")));
         row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
-        row.values.add(newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(Types.LONGVARCHAR)));
+        row.values.add(
+                newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(Types.LONGVARCHAR)));
         row.values.add(newColumn("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString("string")));
         row.values.add(newColumn("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", new BsonNull()));
-        row.values.add(newColumn("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", new BsonInt32(bestRowNotPseudo)));
-		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "PSEUDO_COLUMN",
+                        "PSEUDO_COLUMN",
+                        new BsonInt32(bestRowNotPseudo)));
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
-		// We do not have updates, so this will always be empty.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have updates, so this will always be empty.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-		// TODO: update to Huan's code with the DocumentResult.
+        // TODO: update to Huan's code with the DocumentResult.
         Row row = new Row();
-		ArrayList<Row> rows = new ArrayList<>(1);
+        ArrayList<Row> rows = new ArrayList<>(1);
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString(catalog)));
         row.values.add(newColumn("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
@@ -1117,23 +1125,23 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
         row.values.add(newColumn("", "", "", "KEY_SEQ", "KEY_SEQ", new BsonInt32(1)));
         row.values.add(newColumn("", "", "", "PK_NAME", "PK_NAME", new BsonNull()));
-		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
-		// We do not have foreign keys, so this will always be empty.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have foreign keys, so this will always be empty.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
-		// We do not have foreign keys, so this will always be empty.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have foreign keys, so this will always be empty.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1145,14 +1153,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String foreignSchema,
             String foreignTable)
             throws SQLException {
-		// We do not have foreign keys, so this will always be empty.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have foreign keys, so this will always be empty.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-		// TODO!
+        // TODO!
         throw new SQLFeatureNotSupportedException("Not implemented");
     }
 
@@ -1160,134 +1168,134 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-		// We do not have indexes.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have indexes.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
-		return type == ResultSet.TYPE_FORWARD_ONLY;
+        return type == ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
-		return type == ResultSet.TYPE_FORWARD_ONLY && concurrency == ResultSet.CONCUR_READ_ONLY;
+        return type == ResultSet.TYPE_FORWARD_ONLY && concurrency == ResultSet.CONCUR_READ_ONLY;
     }
 
     @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
-		// We do not have updates.
-		return false;
+        // We do not have updates.
+        return false;
     }
 
     @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
-		// We do not have deletes.
-		return false;
+        // We do not have deletes.
+        return false;
     }
 
     @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
-		// We do not have inserts.
-		return false;
+        // We do not have inserts.
+        return false;
     }
 
     @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
-		// We do not have updates.
-		return false;
+        // We do not have updates.
+        return false;
     }
 
     @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
-		// We do not have deletes.
-		return false;
+        // We do not have deletes.
+        return false;
     }
 
     @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
-		// We do not have inserts.
-		return false;
+        // We do not have inserts.
+        return false;
     }
 
     @Override
     public boolean updatesAreDetected(int type) throws SQLException {
-		// We do not have updates.
-		return false;
+        // We do not have updates.
+        return false;
     }
 
     @Override
     public boolean deletesAreDetected(int type) throws SQLException {
-		// We do not have deletes.
-		return false;
+        // We do not have deletes.
+        return false;
     }
 
     @Override
     public boolean insertsAreDetected(int type) throws SQLException {
-		// We do not have inserts.
-		return false;
+        // We do not have inserts.
+        return false;
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-		// We do not have updates.
-		return false;
+        // We do not have updates.
+        return false;
     }
 
     @Override
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
-		// We do not have UDTs.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have UDTs.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-		return conn;
+        return conn;
     }
 
     // ------------------- JDBC 3.0 -------------------------
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-		return false;
+        return false;
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-		return false;
+        return false;
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-		return false;
+        return false;
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-		// This is related to keys generated automatically on inserts,
-		// and we do not support inserts.
-		return false;
+        // This is related to keys generated automatically on inserts,
+        // and we do not support inserts.
+        return false;
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-		// We do not have UDTs.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have UDTs.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
-		// We do not have SuperTables.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have SuperTables.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1297,9 +1305,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-		// We do not have UDTs.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not have UDTs.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1314,40 +1322,40 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-		return MongoDriver.MAJOR_VERSION;
+        return MongoDriver.MAJOR_VERSION;
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-		return MongoDriver.MINOR_VERSION;
+        return MongoDriver.MINOR_VERSION;
     }
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-		return 4;
+        return 4;
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-		return 2;
+        return 2;
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
-		// This is what postgres returns.
-		return sqlStateSQL;
+        // This is what postgres returns.
+        return sqlStateSQL;
     }
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-    	// It does not matter what return here. But we don't have locators
-		// or allow them to be updated.
-		return false;
+        // It does not matter what return here. But we don't have locators
+        // or allow them to be updated.
+        return false;
     }
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-		return false;
+        return false;
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -1359,69 +1367,97 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-		// We will never support schemata.
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We will never support schemata.
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-		// This is related to using stored procedure escape syntax, which we do not support.
-		return false;
+        // This is related to using stored procedure escape syntax, which we do not support.
+        return false;
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-		// No writes.
-		return false;
+        // No writes.
+        return false;
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-		ArrayList<Row> rows = new ArrayList<>(4);
+        ArrayList<Row> rows = new ArrayList<>(4);
 
         Row row = new Row();
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("user")));
         row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
-        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("database user for the connection")));
-		rows.add(row);
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "DESCRIPTION",
+                        "DESCRIPTION",
+                        new BsonString("database user for the connection")));
+        rows.add(row);
 
         row = new Row();
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("password")));
         row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
-        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("user password for the connection")));
-		rows.add(row);
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "DESCRIPTION",
+                        "DESCRIPTION",
+                        new BsonString("user password for the connection")));
+        rows.add(row);
 
         row = new Row();
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("conversionMode")));
         row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
-        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION",
-					new BsonString("conversionMode can be strict or relaxed. When strict, "
-						+ "failing conversions result in Exceptions. When relaxed, "
-						+ "failing conversions result in NULL values.")));
-		rows.add(row);
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "DESCRIPTION",
+                        "DESCRIPTION",
+                        new BsonString(
+                                "conversionMode can be strict or relaxed. When strict, "
+                                        + "failing conversions result in Exceptions. When relaxed, "
+                                        + "failing conversions result in NULL values.")));
+        rows.add(row);
 
         row = new Row();
         row.values = new ArrayList<>();
         row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("database")));
         row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
-        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("database to connect to")));
-		rows.add(row);
+        row.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "DESCRIPTION",
+                        "DESCRIPTION",
+                        new BsonString("database to connect to")));
+        rows.add(row);
 
-		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
-			// TODO: Finish (need to figure out what patterns should look like)"
+        // TODO: Finish (need to figure out what patterns should look like)"
         throw new SQLFeatureNotSupportedException("Not implemented.");
     }
 
@@ -1432,7 +1468,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-			// TODO: Finish.
+        // TODO: Finish.
         throw new SQLFeatureNotSupportedException("Not implemented.");
     }
 
@@ -1441,15 +1477,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-		// We do not support pseudoColumns (hidden columns).
-		// TODO: update to Huan's code with the DocumentResult.
-		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
+        // We do not support pseudoColumns (hidden columns).
+        // TODO: update to Huan's code with the DocumentResult.
+        return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-		// We do not have generated keys.
-		return false;
+        // We do not have generated keys.
+        return false;
     }
 
     // java.sql.Wrapper impl
