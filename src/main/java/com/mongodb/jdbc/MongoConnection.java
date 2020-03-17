@@ -110,8 +110,7 @@ public class MongoConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        // TODO: complete when MongoDatabaseMetaData is created
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return new MongoDatabaseMetaData(this);
     }
 
     @Override

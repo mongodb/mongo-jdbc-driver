@@ -32,6 +32,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return c;
 	}
 
+	MongoConnection conn;
+
+	public MongoDatabaseMetaData(MongoConnection conn) {
+		this.conn = conn;
+	}
+
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
     // since this value is used to set limits on literals and field names.
     // This is arbitrary and conservative.
@@ -1162,108 +1168,126 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented");
+		return type == ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented");
+		return type == ResultSet.TYPE_FORWARD_ONLY && concurrency == ResultSet.CONCUR_READ_ONLY;
     }
 
     @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have updates.
+		return false;
     }
 
     @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have deletes.
+		return false;
     }
 
     @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have inserts.
+		return false;
     }
 
     @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have updates.
+		return false;
     }
 
     @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have deletes.
+		return false;
     }
 
     @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have inserts.
+		return false;
     }
 
     @Override
     public boolean updatesAreDetected(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have updates.
+		return false;
     }
 
     @Override
     public boolean deletesAreDetected(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have deletes.
+		return false;
     }
 
     @Override
     public boolean insertsAreDetected(int type) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have inserts.
+		return false;
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have updates.
+		return false;
     }
 
     @Override
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have UDTs.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return conn;
     }
 
     // ------------------- JDBC 3.0 -------------------------
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// This is related to keys generated automatically on inserts,
+		// and we do not support inserts.
+		return false;
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have UDTs.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have SuperTables.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1273,7 +1297,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have UDTs.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
@@ -1288,37 +1314,40 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return MongoDriver.MAJOR_VERSION;
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return MongoDriver.MINOR_VERSION;
     }
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return 4;
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return 2;
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// This is what postgres returns.
+		return sqlStateSQL;
     }
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+    	// It does not matter what return here. But we don't have locators
+		// or allow them to be updated.
+		return false;
     }
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		return false;
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -1330,27 +1359,69 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We will never support schemata.
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// This is related to using stored procedure escape syntax, which we do not support.
+		return false;
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// No writes.
+		return false;
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		ArrayList<Row> rows = new ArrayList<>(4);
+
+        Row row = new Row();
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("user")));
+        row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("database user for the connection")));
+		rows.add(row);
+
+        row = new Row();
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("password")));
+        row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("user password for the connection")));
+		rows.add(row);
+
+        row = new Row();
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("conversionMode")));
+        row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION",
+					new BsonString("conversionMode can be strict or relaxed. When strict, "
+						+ "failing conversions result in Exceptions. When relaxed, "
+						+ "failing conversions result in NULL values.")));
+		rows.add(row);
+
+        row = new Row();
+        row.values = new ArrayList<>();
+        row.values.add(newColumn("", "", "", "NAME", "NAME", new BsonString("database")));
+        row.values.add(newColumn("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
+        row.values.add(newColumn("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+        row.values.add(newColumn("", "", "", "DESCRIPTION", "DESCRIPTION", new BsonString("database to connect to")));
+		rows.add(row);
+
+		return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
+			// TODO: Finish (need to figure out what patterns should look like)"
         throw new SQLFeatureNotSupportedException("Not implemented.");
     }
 
@@ -1361,6 +1432,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
+			// TODO: Finish.
         throw new SQLFeatureNotSupportedException("Not implemented.");
     }
 
@@ -1369,12 +1441,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not support pseudoColumns (hidden columns).
+		// TODO: update to Huan's code with the DocumentResult.
+		return new MongoResultSet(null, new MongoExplicitCursor(new ArrayList<Row>()), true);
     }
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+		// We do not have generated keys.
+		return false;
     }
 
     // java.sql.Wrapper impl
