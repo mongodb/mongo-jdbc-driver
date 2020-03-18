@@ -3,6 +3,10 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.24.3"
 }
 
+ext {
+    gitVersion = getGitVersion()
+}
+
 spotless {
     java {
         googleJavaFormat('1.1').aosp()
@@ -68,3 +72,15 @@ dependencies {
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
 }
+
+def getGitVersion() {
+    def describeStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags', '--always', '--dirty'
+        standardOutput = describeStdOut
+    }
+    describeStdOut.toString().substring(1).trim()
+}
+
+apply from: 'gradle/publish.gradle'
+apply from: 'gradle/deploy.gradle'

@@ -1,0 +1,28 @@
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "$nexusUrl/repository/maven-release/"
+            def snapshotsRepoUrl = "$nexusUrl/repository/maven-snapshots/"
+            url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            credentials(PasswordCredentials) {
+                username project.hasProperty('nexusUsername') ? project.getProperty('nexusUsername') : nexusUsername
+                password project.hasProperty('nexusPassword') ? project.getProperty('nexusPassword') : nexusPassword
+            }
+        }
+    }
+}
+
+assemble {
+    dependsOn publishToMavenLocal
+}

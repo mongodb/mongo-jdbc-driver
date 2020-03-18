@@ -12,3 +12,6 @@ You can find the generated jar in build/libs/
 ./gradlew clean test
 ### To fix lint problem
 ./gradlew spotlessApply
+### Release process
+- `./gradlew publishArchives` - publishes to Maven
+

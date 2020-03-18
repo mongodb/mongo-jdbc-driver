@@ -29,11 +29,33 @@ buildvariants:
     run_on: ubuntu1804-build
     tasks:
       - name: "build"
+  - name: publish-maven
+    display_name: "Publish to Maven"
+    run_on: ubuntu1804-build
+    tasks:
+      - name: "publish-snapshot"
+      - name: "publish-archive"
 
 tasks:
   - name: "build"
     commands:
       - func: "build jdbc driver"
+
+  - name: "publish-snapshot"
+    depends_on:
+    - name: "build"
+      variant: "ubuntu1804-64-jdk-8"
+    commands:
+      # this is a noop for non-snapshot versions
+      - func: "publish snapshot"
+
+  - name: "publish-archive"
+    depends_on:
+    - name: "build"
+      variant: "ubuntu1804-64-jdk-8"
+    commands:
+      # this is a noop for non-tagged versions
+      - func: "publish archive"
 
 functions:
   "build jdbc driver":
@@ -197,3 +219,19 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "JDBC Driver (.jar)"
+
+  "publish snapshot":
+    - command: shell.exec
+      type: test
+      params:
+        silent: true
+        script: |
+          NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} .gradlew publishSnapshot
+
+  "publish archive":
+    - command: shell.exec
+      type: test
+      params:
+        silent: true
+        script: |
+          NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} .gradlew publishArchieve
