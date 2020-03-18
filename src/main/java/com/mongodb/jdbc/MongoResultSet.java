@@ -1,6 +1,5 @@
 package com.mongodb.jdbc;
 
-import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -61,24 +60,16 @@ public class MongoResultSet implements ResultSet {
     private final String SYMBOL = "symbol";
     private final String TIMESTAMP = "timestamp";
 
-    // Row count for the current cursor, always 0 for empty result set
     private int rowNum = 0;
     private boolean closed = false;
     private Statement statement;
-    private MongoCursor<MongoResultDoc> cursor;
-    // This contains the current row info. If next() is not yet called or it's an empty result set, the value remains null
-    private MongoResultDoc current;
+    private MongoCursor<Row> cursor;
+    private Row current;
     private HashMap<String, Integer> columnPositionCache;
     private boolean wasNull;
     private boolean relaxed = true;
-    // This contains the first doc returned from mongoCursor, it could contain an empty result set or a valid row
-    private MongoResultDoc firstDoc;
-    private ResultSetMetaData rsMetaData;
 
-    public MongoResultSet(
-            Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
-        Preconditions.checkNotNull(statement);
-        Preconditions.checkNotNull(cursor);
+    public MongoResultSet(Statement statement, MongoCursor<Row> cursor, boolean relaxed) {
         this.statement = statement;
         this.cursor = cursor;
         this.relaxed = relaxed;
@@ -89,7 +80,7 @@ public class MongoResultSet implements ResultSet {
 
     // This is only used for testing, and that is why it has package level access, and the
     // tests have been moved into this package.
-    MongoResultDoc getCurrent() {
+    Row getCurrent() {
         return current;
     }
 
@@ -97,33 +88,9 @@ public class MongoResultSet implements ResultSet {
         if (closed) throw new SQLException("MongoResultSet is closed.");
     }
 
-    private void checkAndCacheFirstDocAndMetaData() {
-        if (firstDoc != null) {
-            return;
-        }
-        // The next() is guaranteed to return a doc for the first call, either for empty ResultSet or not
-        firstDoc = cursor.next();
-        rsMetaData = new MongoResultSetMetaData(firstDoc);
-    }
-
     @Override
     public boolean next() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-
-        if (rowNum == 0) {
-            // This is an empty result set or
-            // next() is called first time for non-empty result set
-            if (!firstDoc.isEmpty()) {
-                // Non-empty result set
-                ++rowNum;
-                current = firstDoc;
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         boolean result;
         result = cursor.hasNext();
         if (result) {
@@ -135,14 +102,8 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void close() throws SQLException {
-        if (closed) {
-            return;
-        }
         cursor.close();
         closed = true;
-        if (statement.isCloseOnCompletion()) {
-            statement.close();
-        }
     }
 
     @Override
@@ -156,7 +117,7 @@ public class MongoResultSet implements ResultSet {
         if (current == null) {
             throw new SQLException("No current row in the result set. Make sure to call next().");
         }
-        if (i > current.columnCount()) {
+        if (i > current.size()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
     }
@@ -173,17 +134,16 @@ public class MongoResultSet implements ResultSet {
 
     private void buildColumnPositionCache() throws SQLException {
         if (current == null) {
-            // Either result is empty or next() is not yet called
             throw new SQLException("No current row in the result set. Make sure to call next().");
         }
         // MongoDB does actually allow for a 0 size document!
-        if (current.values.size() == 0) {
+        if (current.size() == 0) {
             columnPositionCache = new HashMap<>();
             return;
         }
-        columnPositionCache = new HashMap<>(current.columnCount());
+        columnPositionCache = new HashMap<>(current.size());
         int i = 0;
-        for (Column c : current.getValues()) {
+        for (Column c : current.values) {
             columnPositionCache.put(c.columnAlias, i++);
         }
     }
@@ -302,14 +262,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getBytes(out);
     }
 
     @Override
     public byte[] getBytes(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBytes(out);
     }
 
@@ -444,14 +404,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public String getString(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getString(out);
     }
 
     @Override
     public String getString(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getString(out);
     }
 
@@ -524,14 +484,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public boolean getBoolean(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBoolean(out);
     }
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getBoolean(out);
     }
 
@@ -544,14 +504,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public byte getByte(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getByte(out);
     }
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getByte(out);
     }
 
@@ -564,14 +524,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public short getShort(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getShort(out);
     }
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getShort(out);
     }
 
@@ -585,14 +545,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public int getInt(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getInt(out);
     }
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getInt(out);
     }
 
@@ -665,14 +625,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public long getLong(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getLong(out);
     }
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getLong(out);
     }
 
@@ -683,14 +643,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public float getFloat(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getFloat(out);
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getFloat(out);
     }
 
@@ -763,14 +723,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public double getDouble(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getDouble(out);
     }
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getDouble(out);
     }
 
@@ -802,8 +762,7 @@ public class MongoResultSet implements ResultSet {
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-        return rsMetaData;
+        return new MongoResultSetMetaData(current);
     }
 
     @Override
@@ -909,14 +868,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getBigDecimal(out);
     }
 
     @Override
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getBigDecimal(out);
     }
 
@@ -943,19 +902,7 @@ public class MongoResultSet implements ResultSet {
     @Override
     public boolean isLast() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-        if (rowNum == 0) {
-            // Two cases fell in this condition
-            // 1. It's an empty result set. isLast = true
-            // 2. next() is not yet called on non-empty result set. isLast = false
-            if (firstDoc.isEmpty()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return !cursor.hasNext();
-        }
+        return !cursor.hasNext();
     }
 
     @Override
@@ -1317,14 +1264,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public Blob getBlob(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getNewBlob(getBytes(out));
     }
 
     @Override
     public Blob getBlob(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getNewBlob(getBytes(out));
     }
 
@@ -1335,14 +1282,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public Clob getClob(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getClob(out);
     }
 
     @Override
     public Clob getClob(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getClob(out);
     }
 
@@ -1439,14 +1386,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public Date getDate(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getDate(out);
     }
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getDate(out);
     }
 
@@ -1478,14 +1425,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public Time getTime(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getTime(out);
     }
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getTime(out);
     }
 
@@ -1517,14 +1464,14 @@ public class MongoResultSet implements ResultSet {
     @Override
     public Timestamp getTimestamp(String columnLabel) throws SQLException {
         checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = current.values.get(columnPositionCache.get(columnLabel)).value;
         return getTimestamp(out);
     }
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = current.values.get(columnIndex - 1).value;
         return getTimestamp(out);
     }
 

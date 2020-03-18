@@ -29,6 +29,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
 import java.util.Properties;
 import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -65,6 +66,7 @@ public class MongoDriver implements Driver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        Codec rowCodec = registry.get(Row.class);
     }
 
     @Override

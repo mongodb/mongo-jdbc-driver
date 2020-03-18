@@ -5,12 +5,12 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.util.List;
 
-public class MongoTestCursor implements MongoCursor<MongoResultDoc> {
-    private List<MongoResultDoc> mongoResultDocs;
+public class MongoTestCursor implements MongoCursor<Row> {
+    private List<Row> rows;
     private int rowNum = 0;
 
-    public MongoTestCursor(List<MongoResultDoc> mongoResultDocs) {
-        this.mongoResultDocs = mongoResultDocs;
+    public MongoTestCursor(List<Row> rows) {
+        this.rows = rows;
     }
 
     @Override
@@ -28,16 +28,16 @@ public class MongoTestCursor implements MongoCursor<MongoResultDoc> {
 
     @Override
     public boolean hasNext() {
-        return rowNum < mongoResultDocs.size();
+        return rowNum < rows.size();
     }
 
     @Override
-    public MongoResultDoc next() {
-        return mongoResultDocs.get(rowNum++);
+    public Row next() {
+        return rows.get(rowNum++);
     }
 
     @Override
-    public MongoResultDoc tryNext() {
+    public Row tryNext() {
         if (hasNext()) {
             return next();
         }

@@ -1,10 +1,8 @@
 package com.mongodb.jdbc;
 
-import com.google.common.base.Preconditions;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -39,7 +37,6 @@ public class MongoConnection implements Connection {
     private boolean relaxed;
 
     public MongoConnection(ConnectionString uri, String database, String conversionMode) {
-        Preconditions.checkNotNull(uri);
         this.currentDB = database;
         mongoClient = MongoClients.create(uri);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
@@ -56,14 +53,10 @@ public class MongoConnection implements Connection {
     public Statement createStatement() throws SQLException {
         checkConnection();
         try {
-            return new MongoStatement(this, currentDB, relaxed);
+            return new MongoStatement(mongoClient, currentDB, relaxed);
         } catch (IllegalArgumentException e) {
             throw new SQLException(e);
         }
-    }
-
-    protected MongoDatabase getDatabase(String DBName) {
-        return mongoClient.getDatabase(DBName);
     }
 
     @Override

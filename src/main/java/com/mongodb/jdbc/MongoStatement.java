@@ -1,390 +1,269 @@
 package com.mongodb.jdbc;
 
-import com.google.common.base.Preconditions;
-import com.mongodb.MongoExecutionTimeoutException;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import java.sql.*;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 
 public class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
     private MongoDatabase currentDB;
-    private MongoResultSet resultSet;
-    private MongoConnection conn;
-    private boolean relaxed;
-    private boolean isClosed = false;
-    private boolean closeOnCompletion = false;
-    private int fetchSize = 10;
-    private int maxQuerySec = 0;
-    private String currentDBName;
-    private final BsonInt32 formatVersion = new BsonInt32(1);
+    private boolean strict = false;
 
-    public MongoStatement(MongoConnection conn, String databaseName, boolean relaxed)
-            throws SQLException {
-        Preconditions.checkNotNull(conn);
-        Preconditions.checkNotNull(databaseName);
-        this.conn = conn;
-        currentDBName = databaseName;
-        this.relaxed = relaxed;
-
-        try {
-            currentDB = conn.getDatabase(databaseName);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException("Database name %s is invalid", databaseName);
-        }
-    }
-
-    private void checkClosed() throws SQLException {
-        if (isClosed()) {
-            throw new SQLException("Connection is closed.");
-        }
+    public MongoStatement(MongoClient client, String currentDB, boolean strict)
+            throws IllegalArgumentException {
+        this.currentDB = client.getDatabase(currentDB);
+        this.strict = strict;
     }
 
     @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
-        checkClosed();
-        closeExistingResultSet();
-
-        BsonDocument stage = new BsonDocument();
-        BsonDocument sqlDoc = new BsonDocument();
-        sqlDoc.put("statement", new BsonString(sql));
-        sqlDoc.put("formatVersion", formatVersion);
-        sqlDoc.put("format", new BsonString("jdbc"));
-        stage.put("$sql", sqlDoc);
-        try {
-            MongoCursor<MongoResultDoc> cursor =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), MongoResultDoc.class)
-                            .batchSize(fetchSize)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS)
-                            .cursor();
-            resultSet = new MongoResultSet(this, cursor, relaxed);
-            return resultSet;
-        } catch (MongoExecutionTimeoutException e) {
-            throw new SQLTimeoutException(e);
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
+        // TODO BI-2467: we will use client.aggregate if currentDB is null
+        // if (currentDB == null) {
+        //     client.aggregate....
+        // } else {
+        //     client.getDatabase(currentDB).aggregate....
+        // }
+        MongoCursor<Row> cur =
+                currentDB
+                        .withCodecRegistry(MongoDriver.registry)
+                        .getCollection("test", Row.class)
+                        .find()
+                        .iterator();
+        return new MongoResultSet(this, cur, strict);
     }
 
-    @Override
     public int executeUpdate(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
-    public void close() {
-        // closing an already closed Statement is a no-op.
-        if (isClosed) {
-            return;
-        }
-        isClosed = true;
-        closeExistingResultSet();
+    public void close() throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // ----------------------------------------------------------------------
 
-    @Override
     public int getMaxFieldSize() throws SQLException {
-        checkClosed();
-        return 0;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setMaxFieldSize(int max) throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getMaxRows() throws SQLException {
-        checkClosed();
-        return 0;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setMaxRows(int max) throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setEscapeProcessing(boolean enable) throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getQueryTimeout() throws SQLException {
-        checkClosed();
-        return maxQuerySec;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setQueryTimeout(int seconds) throws SQLException {
-        checkClosed();
-        maxQuerySec = seconds;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    // Close any existing resultsets associated with this statement.
-    private void closeExistingResultSet() {
-        try {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-        } catch (SQLException ignored) {
-            // The cursor might have already been closed by the server. Ignore exceptiong
-        } finally {
-            resultSet = null;
-        }
+    public void cancel() throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public SQLWarning getWarnings() throws SQLException {
-        checkClosed();
-        return null;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void clearWarnings() throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setCursorName(String name) throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // ----------------------- Multiple Results --------------------------
 
-    @Override
     public boolean execute(String sql) throws SQLException {
-        executeQuery(sql);
-        return resultSet != null;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public ResultSet getResultSet() throws SQLException {
-        checkClosed();
-        return resultSet;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getUpdateCount() throws SQLException {
-        checkClosed();
-        return -1;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean getMoreResults() throws SQLException {
-        checkClosed();
-        // We only support one SQL query every time and no stored procedure support
-        return false;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 2.0-----------------------------
 
-    @Override
     public void setFetchDirection(int direction) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getFetchDirection() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setFetchSize(int rows) throws SQLException {
-        checkClosed();
-        fetchSize = rows;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getFetchSize() throws SQLException {
-        checkClosed();
-        return fetchSize;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getResultSetConcurrency() throws SQLException {
-        checkClosed();
-        return ResultSet.CONCUR_READ_ONLY;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getResultSetType() throws SQLException {
-        checkClosed();
-        return ResultSet.TYPE_FORWARD_ONLY;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void addBatch(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void clearBatch() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int[] executeBatch() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
-    public void cancel() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
-    }
-
-    @Override
     public Connection getConnection() throws SQLException {
-        checkClosed();
-        return conn;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 3.0-----------------------------
 
-    @Override
     public boolean getMoreResults(int current) throws SQLException {
-        checkClosed();
-        if (current != CLOSE_CURRENT_RESULT
-                && current != KEEP_CURRENT_RESULT
-                && current != CLOSE_ALL_RESULTS) {
-            throw new SQLException("Invalid input.");
-        }
-        if (current == KEEP_CURRENT_RESULT || current == CLOSE_ALL_RESULTS) {
-            throw new SQLFeatureNotSupportedException("Not implemented.");
-        }
-
-        if (current == CLOSE_CURRENT_RESULT) {
-            closeExistingResultSet();
-        }
-
-        return false;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int executeUpdate(String sql, int columnIndexes[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int executeUpdate(String sql, String columnNames[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
-        checkClosed();
-        if (autoGeneratedKeys == NO_GENERATED_KEYS) {
-            return execute(sql);
-        }
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean execute(String sql, int columnIndexes[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean execute(String sql, String columnNames[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public int getResultSetHoldability() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
-    public boolean isClosed() {
-        return isClosed;
+    public boolean isClosed() throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public void setPoolable(boolean poolable) throws SQLException {
-        checkClosed();
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean isPoolable() throws SQLException {
-        checkClosed();
-        return false;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 4.1 -----------------------------
 
-    @Override
     public void closeOnCompletion() throws SQLException {
-        checkClosed();
-        closeOnCompletion = true;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
-    @Override
     public boolean isCloseOnCompletion() throws SQLException {
-        checkClosed();
-        return closeOnCompletion;
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // --------------------------JDBC 4.2 -----------------------------
 
-    @Override
     public long getLargeUpdateCount() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("getLargeUpdateCount not implemented");
     }
 
-    @Override
     public void setLargeMaxRows(long max) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("setLargeMaxRows not implemented");
     }
 
-    @Override
     public long getLargeMaxRows() throws SQLException {
-        checkClosed();
         return 0;
     }
 
-    @Override
     public long[] executeLargeBatch() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("executeLargeBatch not implemented");
     }
 
-    @Override
     public long executeLargeUpdate(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("executeLargeUpdate not implemented");
     }
 
-    @Override
     public long executeLargeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("executeLargeUpdate not implemented");
     }
 
-    @Override
     public long executeLargeUpdate(String sql, int columnIndexes[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("executeLargeUpdate not implemented");
     }
 
-    @Override
     public long executeLargeUpdate(String sql, String columnNames[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        throw new SQLFeatureNotSupportedException("executeLargeUpdate not implemented");
+    }
+
+    // JDBC 4.3
+
+    public String enquoteLiteral(String val) throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
+    }
+
+    public String enquoteIdentifier(String identifier, boolean alwaysQuote) throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
+    }
+
+    public boolean isSimpleIdentifier(String identifier) throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
+    }
+
+    public String enquoteNCharLiteral(String val) throws SQLException {
+        throw new SQLFeatureNotSupportedException("not implemented");
     }
 
     // java.sql.Wrapper impl

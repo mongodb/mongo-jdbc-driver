@@ -3,6 +3,9 @@ package com.mongodb.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -12,7 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -20,17 +26,37 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MongoConnectionTest extends MongoMock {
+class MongoConnectionTest {
+    private static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");;
+    private static String database = "test";
+
+    @InjectMocks
+    private static MongoConnection mongoConnection = new MongoConnection(uri, database, null);
+
+    @Mock private static MongoClient mongoClient;
+    @Mock private static MongoDatabase mongoDatabase;
+    @Mock private static MongoStatement mongoStatement;
+
     @BeforeAll
-    protected void initMocks() {
+    void initMocks() {
         MockitoAnnotations.initMocks(this);
+        doNothing().when(mongoClient).close();
     }
 
     // Since MongoConnection cannot be created with its constructor, we have to use InjectionMocks Annotation and
     // create it during initiation. In order to reuse the same object for each test, we need to reset it before each test case.
     @BeforeEach
     void setupTest() throws NoSuchFieldException {
-        resetMockObjs();
+        FieldSetter.setField(
+                mongoConnection,
+                mongoConnection.getClass().getDeclaredField("mongoClient"),
+                mongoClient);
+        FieldSetter.setField(
+                mongoConnection, mongoConnection.getClass().getDeclaredField("isClosed"), false);
+        FieldSetter.setField(
+                mongoConnection,
+                mongoConnection.getClass().getDeclaredField("currentDB"),
+                database);
     }
 
     // to replace lambda as input in the testExceptionAfterConnectionClosed
@@ -50,7 +76,7 @@ class MongoConnectionTest extends MongoMock {
     }
 
     @Test
-    void testCheckConnection() {
+    void testCheckConnection() throws SQLException {
         // When initiated
         assertFalse(mongoConnection.isClosed());
 
