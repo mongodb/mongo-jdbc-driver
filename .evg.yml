@@ -50,7 +50,8 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          # this also runs the unit tests.
+          export JAVA_HOME=${JAVA_HOME}
+          echo "~~~~$JAVA_HOME"
           ./gradlew clean build
 
   "export variables":
@@ -75,17 +76,15 @@ functions:
                JAVA_HOME=/opt/java/jdk11
           ;;
           win32-64-jdk-11)
-               JAVA_HOME=/cygdrive/C/java/jdk11
+               JAVA_HOME=/cygdrive/c/java/jdk11
           ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11'"
+               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11', win32-64-jdk-11"
                exit 1
           ;;
           esac
 
-          # export any environment variables that will be needed by subprocesses
-          export JAVA_HOME
           # dump env, but redact S3_KEY and S3_SECRET.
           echo '****************************ENV******************************'
           env | sed 's/S3_SECRET=.*$/REDACTED/' | sed 's/S3_KEY=.*$/REDACTED/'
@@ -97,6 +96,7 @@ functions:
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           S3_RELEASES_DIR: "$S3_RELEASES_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
+          JAVA_HOME: "$JAVA_HOME"
           EOT
 
     - command: expansions.update
