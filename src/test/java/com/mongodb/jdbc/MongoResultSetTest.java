@@ -3,8 +3,6 @@ package com.mongodb.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.mongodb.ServerAddress;
-import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -13,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
 import org.bson.BsonDateTime;
@@ -29,19 +28,24 @@ import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoResultSetTest {
-    @Mock MongoCursor<Row> cursor;
-    @Mock Row nextRow;
+@MockitoSettings(strictness = Strictness.WARN)
+class MongoResultSetTest extends MongoMock {
+    @Mock MongoCursor<MongoResultDoc> cursor;
+    @Mock MongoResultDoc nextMongoResultDoc;
     MongoResultSet mockResultSet;
+    static MongoStatement mongoStatement;
     static MongoResultSet relaxedMongoResultSet;
     static MongoResultSet strictMongoResultSet;
     static MongoResultSet closedMongoResultSet;
@@ -91,128 +95,150 @@ class MongoResultSetTest {
         return c;
     }
 
-    private static class MongoTestCursor implements MongoCursor<Row> {
-        private List<Row> rows;
-        private int rowNum = 0;
-
-        public MongoTestCursor(List<Row> rows) {
-            this.rows = rows;
-        }
-
-        @Override
-        public void close() {}
-
-        @Override
-        public ServerAddress getServerAddress() {
-            return new ServerAddress("127.0.0.1");
-        }
-
-        @Override
-        public ServerCursor getServerCursor() {
-            return null;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return rowNum < rows.size();
-        }
-
-        @Override
-        public Row next() {
-            return rows.get(rowNum++);
-        }
-
-        @Override
-        public Row tryNext() {
-            if (hasNext()) {
-                return next();
-            }
-            return null;
-        }
-    }
-
     static {
-        Row row = new Row();
-        row.values = new ArrayList<>();
+        MongoResultDoc mongoResultDoc = new MongoResultDoc(new ArrayList<>(), false);
 
-        row.values.add(newColumn("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
-        row.values.add(
-                newColumn("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, new BsonDouble(1.1)));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        STRING_COL_LABEL,
-                        STRING_COL_LABEL,
-                        new BsonString("string data")));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        BINARY_COL_LABEL,
-                        BINARY_COL_LABEL,
-                        new BsonBinary("data".getBytes())));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        UUID_COL_LABEL,
-                        UUID_COL_LABEL,
-                        new BsonBinary(new UUID(0, 0))));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        OBJECTID_COL_LABEL,
-                        OBJECTID_COL_LABEL,
-                        new BsonObjectId(new ObjectId("5e334e6e780812e4896dd65e"))));
-        row.values.add(
-                newColumn("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, new BsonBoolean(true)));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        DATE_COL_LABEL,
-                        DATE_COL_LABEL,
-                        new BsonDateTime(-44364244526000L)));
-        row.values.add(
-                newColumn("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, new BsonInt32(100)));
-        row.values.add(newColumn("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        DECIMAL_COL_LABEL,
-                        DECIMAL_COL_LABEL,
-                        new BsonDecimal128(new Decimal128(100L))));
-        row.values.add(
-                newColumn(
-                        "", "", "", UNDEFINED_COL_LABEL, UNDEFINED_COL_LABEL, new BsonUndefined()));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        DBPOINTER_COL_LABEL,
-                        DBPOINTER_COL_LABEL,
-                        new BsonDbPointer("foo", new ObjectId("5e334e6e780812e4896dd65e"))));
+        mongoResultDoc
+                .getValues()
+                .add(newColumn("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                DOUBLE_COL_LABEL,
+                                DOUBLE_COL_LABEL,
+                                new BsonDouble(1.1)));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                STRING_COL_LABEL,
+                                STRING_COL_LABEL,
+                                new BsonString("string data")));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                BINARY_COL_LABEL,
+                                BINARY_COL_LABEL,
+                                new BsonBinary("data".getBytes())));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                UUID_COL_LABEL,
+                                UUID_COL_LABEL,
+                                new BsonBinary(new UUID(0, 0))));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                OBJECTID_COL_LABEL,
+                                OBJECTID_COL_LABEL,
+                                new BsonObjectId(new ObjectId("5e334e6e780812e4896dd65e"))));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                BOOLEAN_COL_LABEL,
+                                BOOLEAN_COL_LABEL,
+                                new BsonBoolean(true)));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                DATE_COL_LABEL,
+                                DATE_COL_LABEL,
+                                new BsonDateTime(-44364244526000L)));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                INTEGER_COL_LABEL,
+                                INTEGER_COL_LABEL,
+                                new BsonInt32(100)));
+        mongoResultDoc
+                .getValues()
+                .add(newColumn("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                DECIMAL_COL_LABEL,
+                                DECIMAL_COL_LABEL,
+                                new BsonDecimal128(new Decimal128(100L))));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                UNDEFINED_COL_LABEL,
+                                UNDEFINED_COL_LABEL,
+                                new BsonUndefined()));
+        mongoResultDoc
+                .getValues()
+                .add(
+                        newColumn(
+                                "",
+                                "",
+                                "",
+                                DBPOINTER_COL_LABEL,
+                                DBPOINTER_COL_LABEL,
+                                new BsonDbPointer(
+                                        "foo", new ObjectId("5e334e6e780812e4896dd65e"))));
 
-        List<Row> rows = new ArrayList<Row>();
-        rows.add(row);
-        strictMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), false);
-        relaxedMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), true);
-        closedMongoResultSet = new MongoResultSet(null, new MongoTestCursor(rows), true);
+        List<MongoResultDoc> mongoResultDocs = new ArrayList<MongoResultDoc>();
+        mongoResultDocs.add(mongoResultDoc);
+        try {
+            mongoStatement = new MongoStatement(mongoConnection, "test", true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        strictMongoResultSet =
+                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), false);
+        relaxedMongoResultSet =
+                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
+        closedMongoResultSet =
+                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
     }
 
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @BeforeEach
+    void setup() throws NoSuchFieldException {
+        super.resetMockObjs();
     }
 
     @Test
@@ -1342,9 +1368,10 @@ class MongoResultSetTest {
     @Test
     void throwExceptionWhenNotAvailable() throws Exception {
         // Mock the cursor and next Row
-        when(cursor.hasNext()).thenReturn(false);
+        when(cursor.hasNext()).thenReturn(true);
+        when(cursor.next()).thenReturn(generateRow(true));
 
-        mockResultSet = new MongoResultSet(null, cursor, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, false);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1361,9 +1388,14 @@ class MongoResultSetTest {
     void returnNextRowWhenAvailable() throws Exception {
         // Mock the cursor and next Row
         when(cursor.hasNext()).thenReturn(true);
-        when(cursor.next()).thenReturn(nextRow);
+        when(cursor.next()).thenReturn(nextMongoResultDoc);
 
-        mockResultSet = new MongoResultSet(null, cursor, false);
+        nextMongoResultDoc.values = new ArrayList<>();
+
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, false);
+
+        assertFalse(mockResultSet.isFirst());
+        assertFalse(mockResultSet.isLast());
 
         boolean hasNext = mockResultSet.next();
         assertTrue(hasNext);
@@ -1373,6 +1405,80 @@ class MongoResultSetTest {
                 SQLException.class,
                 () -> {
                     mockResultSet.getString("label");
+                });
+        assertTrue(mockResultSet.isFirst());
+        assertFalse(mockResultSet.isLast());
+    }
+
+    @Test
+    void testEmptyResultSet() throws SQLException {
+        AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
+        List<Column> cols = new ArrayList<>();
+        String colName = "a";
+        cols.add(generateCol("myDB", "foo", colName, null));
+        MongoResultDoc emptyResultDoc = new MongoResultDoc(cols, true);
+
+        when(cursor.hasNext()).thenAnswer(invocation -> !nextCalledOnCursor.get());
+        when(cursor.next())
+                .thenAnswer(
+                        invocation -> {
+                            if (nextCalledOnCursor.get()) {
+                                return false;
+                            }
+                            nextCalledOnCursor.set(true);
+                            return emptyResultDoc;
+                        });
+
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, false);
+
+        assertFalse(mockResultSet.isFirst());
+        // For empty result set, isLast should always be true
+        assertTrue(mockResultSet.isLast());
+        assertFalse(mockResultSet.next());
+        // For empty result set, isFirst should always be false
+        assertFalse(mockResultSet.isFirst());
+        assertTrue(mockResultSet.isLast());
+        assertEquals(1, mockResultSet.getMetaData().getColumnCount());
+        assertFalse(mockResultSet.next());
+        // query value for existing column in empty result should result to exception
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mockResultSet.getString(colName);
+                });
+    }
+
+    @Test
+    void testEmptyResultSetWhenGetMetadataCalledFirst() throws SQLException {
+        AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
+        List<Column> cols = new ArrayList<>();
+        String colName = "a";
+        cols.add(generateCol("myDB", "foo", colName, null));
+        MongoResultDoc emptyResultDoc = new MongoResultDoc(cols, true);
+
+        when(cursor.hasNext()).thenAnswer(invocation -> !nextCalledOnCursor.get());
+        when(cursor.next())
+                .thenAnswer(
+                        invocation -> {
+                            nextCalledOnCursor.set(true);
+                            return emptyResultDoc;
+                        });
+
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, false);
+
+        assertEquals(1, mockResultSet.getMetaData().getColumnCount());
+        assertFalse(mockResultSet.isFirst());
+        assertTrue(mockResultSet.isLast());
+        assertFalse(mockResultSet.next());
+        // For empty resultset, isFirst should always be false
+        assertFalse(mockResultSet.isFirst());
+        assertTrue(mockResultSet.isLast());
+        assertFalse(mockResultSet.next());
+        // query value for existing column in empty result should result to exception
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mockResultSet.getString(colName);
                 });
     }
 }
