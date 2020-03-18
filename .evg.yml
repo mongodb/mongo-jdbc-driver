@@ -29,6 +29,13 @@ buildvariants:
     run_on: ubuntu1804-build
     tasks:
       - name: "build"
+  - name: win32-64-jdk-11
+    display_name: Windows jdk-11
+    expansions:
+      _platform: win32-64-jdk-11
+    run_on: windows-64-vs2017-compile
+    tasks:
+      - name: "build"
 
 tasks:
   - name: "build"
@@ -66,6 +73,9 @@ functions:
           ;;
           ubuntu1804-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
+          ;;
+          win32-64-jdk-11)
+               JAVA_HOME=/cygdrive/C/java/jdk11
           ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
