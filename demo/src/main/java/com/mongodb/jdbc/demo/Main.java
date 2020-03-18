@@ -13,7 +13,7 @@ import java.util.Properties;
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
-   static final String URL = "jdbc:mongodb://localhost";
+   static final String URL = "jdbc:mongodb://mhuser:pencil@localhost:27017/admin";
    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
    // Data used for test, in the test.test and test2.test collections:
@@ -41,8 +41,8 @@ public class Main {
 
          System.out.println("Creating statement...");
          Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("real queries don't work yet");
-         System.out.println("++++++ Showing contents for test.test ++++++++");
+         ResultSet rs = stmt.executeQuery("select * from foo");
+         System.out.println("++++++ Showing contents for test.foo ++++++++");
          displayResultSet(rs);
       } catch (Exception e) {
           throw new RuntimeException(e);

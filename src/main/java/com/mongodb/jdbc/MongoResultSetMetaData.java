@@ -6,23 +6,23 @@ import java.sql.Types;
 import org.bson.BsonValue;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
-    private Row row;
+    private MongoResultDoc mongoResultDoc;
 
     private final int unknownLength = 0;
 
-    public MongoResultSetMetaData(Row row) {
-        this.row = row;
+    public MongoResultSetMetaData(MongoResultDoc mongoResultDoc) {
+        this.mongoResultDoc = mongoResultDoc;
     }
 
     private void checkBounds(int i) throws SQLException {
-        if (i > row.size()) {
+        if (i > mongoResultDoc.columnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
     }
 
     @Override
     public int getColumnCount() throws SQLException {
-        return row.size();
+        return mongoResultDoc.columnCount();
     }
 
     @Override
@@ -178,13 +178,13 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getColumnLabel(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column - 1).columnAlias;
+        return mongoResultDoc.values.get(column - 1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column - 1).column;
+        return mongoResultDoc.values.get(column - 1).column;
     }
 
     @Override
@@ -287,18 +287,18 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getTableName(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column).tableAlias;
+        return mongoResultDoc.values.get(column).tableAlias;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column - 1).database;
+        return mongoResultDoc.values.get(column - 1).database;
     }
 
     private BsonValue getObject(int column) throws SQLException {
         checkBounds(column);
-        return row.values.get(column - 1).value;
+        return mongoResultDoc.values.get(column - 1).value;
     }
 
     @Override

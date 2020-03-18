@@ -31,8 +31,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoResultSetMetaDataTest {
+class MongoResultSetMetaDataTest extends MongoMock {
     private static ResultSetMetaData resultSetMetaData;
+    private static MongoStatement mongoStatement;
 
     static int NULL_COL = 1;
     static int DOUBLE_COL = 2;
@@ -64,18 +65,19 @@ class MongoResultSetMetaDataTest {
     }
 
     static {
-        Row row = new Row();
-        row.values = new ArrayList<>();
+        MongoResultDoc mongoResultDoc = new MongoResultDoc();
+        mongoResultDoc.values = new ArrayList<>();
 
-        row.values.add(newColumn("", "", "", "nullCol", "nullCol", new BsonNull()));
-        row.values.add(newColumn("", "", "", "doubleCol", "doubleCol", new BsonDouble(1.1)));
-        row.values.add(
+        mongoResultDoc.values.add(newColumn("", "", "", "nullCol", "nullCol", new BsonNull()));
+        mongoResultDoc.values.add(
+                newColumn("", "", "", "doubleCol", "doubleCol", new BsonDouble(1.1)));
+        mongoResultDoc.values.add(
                 newColumn("", "", "", "stringCol", "stringCol", new BsonString("string data")));
-        row.values.add(
+        mongoResultDoc.values.add(
                 newColumn("", "", "", "binaryCol", "binaryCol", new BsonBinary("data".getBytes())));
-        row.values.add(
+        mongoResultDoc.values.add(
                 newColumn("", "", "", "uuidCol", "uuidCol", new BsonBinary(UUID.randomUUID())));
-        row.values.add(
+        mongoResultDoc.values.add(
                 newColumn(
                         "",
                         "",
@@ -83,13 +85,14 @@ class MongoResultSetMetaDataTest {
                         "objectIdCol",
                         "objectIdCol",
                         new BsonObjectId(new ObjectId(new Date()))));
-        row.values.add(
+        mongoResultDoc.values.add(
                 newColumn("", "", "", "booleanCol", "booleanColAlias", new BsonBoolean(true)));
-        row.values.add(
+        mongoResultDoc.values.add(
                 newColumn("", "", "", "dateCol", "dateCol", new BsonDateTime(1580511155627L)));
-        row.values.add(newColumn("", "", "", "integerCol", "integerCol", new BsonInt32(100)));
-        row.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
-        row.values.add(
+        mongoResultDoc.values.add(
+                newColumn("", "", "", "integerCol", "integerCol", new BsonInt32(100)));
+        mongoResultDoc.values.add(newColumn("", "", "", "longCol", "longCol", new BsonInt64(100L)));
+        mongoResultDoc.values.add(
                 newColumn(
                         "foo",
                         "",
@@ -98,9 +101,15 @@ class MongoResultSetMetaDataTest {
                         "decimalCol",
                         new BsonDecimal128(new Decimal128(100L))));
 
-        List<Row> rows = new ArrayList<Row>();
-        rows.add(row);
-        MongoResultSet rs = new MongoResultSet(null, new MongoTestCursor(rows), false);
+        List<MongoResultDoc> mongoResultDocs = new ArrayList<MongoResultDoc>();
+        mongoResultDocs.add(mongoResultDoc);
+        try {
+            mongoStatement = new MongoStatement(mongoConnection, "test", true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        MongoResultSet rs =
+                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), false);
         try {
             rs.next();
             resultSetMetaData = rs.getMetaData();
