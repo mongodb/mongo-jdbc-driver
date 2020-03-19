@@ -50,26 +50,26 @@ public class Main {
    }
 
    public static void displayResultSet(ResultSet rs) throws java.sql.SQLException {
-	   Calendar c = new GregorianCalendar();
-	   c.setTimeZone(UTC);
+       Calendar c = new GregorianCalendar();
+       c.setTimeZone(UTC);
        while(rs.next()){
           //Retrieve by column name
           double a = rs.getDouble("a");
-		  String as = rs.getString("a");
+          String as = rs.getString("a");
           String b = rs.getString("b");
-		  java.sql.Timestamp bd;
-		  try {
-		  		bd = rs.getTimestamp("b", c);
-				System.out.println("b as a Timestamp is: " + bd);
-		  } catch (SQLException e) {
-				System.out.println(e);
-		  } catch (Exception e) {
-				throw new RuntimeException(e);
-		  }
+          java.sql.Timestamp bd;
+          try {
+                bd = rs.getTimestamp("b", c);
+                System.out.println("b as a Timestamp is: " + bd);
+          } catch (SQLException e) {
+                System.out.println(e);
+          } catch (Exception e) {
+                throw new RuntimeException(e);
+          }
           ResultSetMetaData metaData = rs.getMetaData();
-		  System.out.println("a is: " + a + " as double"
-				  + " b is: " + b + " as string");
-		  System.out.println("a as a string is: " + as);
+          System.out.println("a is: " + a + " as double"
+                  + " b is: " + b + " as string");
+          System.out.println("a as a string is: " + as);
        }
    }
 }

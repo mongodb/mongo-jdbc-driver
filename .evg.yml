@@ -51,8 +51,7 @@ functions:
       script: |
           ${PREPARE_SHELL}
           export JAVA_HOME=${JAVA_HOME}
-          echo "~~~~$JAVA_HOME"
-          ./gradlew clean build
+          ./gradlew clean spotlessApply build
 
   "export variables":
     - command: shell.exec
