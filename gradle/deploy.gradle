@@ -1,0 +1,33 @@
+allprojects {
+
+    task publishSnapshot {
+        group = 'publishing'
+        description = 'Publishes snapshots to Sonatype'
+        if (version.endsWith('-SNAPSHOT')) {
+            dependsOn tasks.withType(PublishToMavenRepository)
+        }
+    }
+
+    task publishArchive {
+        group = 'publishing'
+        description = 'Publishes a release and uploads to Sonatype / Maven Central'
+        doFirst {
+            if (project.gitVersion != version) {
+                def cause = """
+                | Version mismatch:
+                | =================
+                |
+                | $version != $gitVersion 
+                |
+                | The project version does not match the git tag.
+                |""".stripMargin()
+                throw new GradleException(cause)
+            } else {
+                println("Publishing: ${project.name} : ${project.gitVersion}")
+            }
+        }
+        if (project.gitVersion == version) {
+            dependsOn tasks.withType(PublishToMavenRepository)
+        }
+    }
+}
