@@ -5,10 +5,9 @@ import static org.mockito.Mockito.when;
 
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -1480,5 +1479,47 @@ class MongoResultSetTest extends MongoMock {
                 () -> {
                     mockResultSet.getString(colName);
                 });
+    }
+
+    @Test
+    void differentMetaDataOnDifferentRows() throws SQLException {
+        AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
+        List<Column> cols1 = new ArrayList<>();
+        String colName = "a";
+        cols1.add(generateCol("myDB", "foo", colName, new BsonInt32(1)));
+        MongoResultDoc row1 = new MongoResultDoc(cols1, false);
+        List<Column> cols2 = new ArrayList<>();
+        cols2.add(generateCol("myDB", "foo", colName, new BsonString("test")));
+        MongoResultDoc row2 = new MongoResultDoc(cols2, false);
+
+        List<MongoResultDoc> rows = new ArrayList<>();
+        rows.add(row1);
+        rows.add(row2);
+        Iterator<MongoResultDoc> iter = rows.iterator();
+        when(cursor.hasNext()).thenAnswer(invocation -> iter.hasNext());
+        when(cursor.next())
+                .thenAnswer(
+                        invocation -> {
+                            MongoResultDoc doc = iter.next();
+                            return doc;
+                        });
+
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, false);
+
+        ResultSetMetaData metaData = mockResultSet.getMetaData();
+        assertEquals(1, metaData.getColumnCount());
+        assertEquals(Types.INTEGER, metaData.getColumnType(1));
+
+        mockResultSet.next();
+        // This is still the first row
+        metaData = mockResultSet.getMetaData();
+        assertEquals(1, metaData.getColumnCount());
+        assertEquals(Types.INTEGER, metaData.getColumnType(1));
+
+        mockResultSet.next();
+        // Second row
+        metaData = mockResultSet.getMetaData();
+        assertEquals(1, metaData.getColumnCount());
+        assertEquals(Types.LONGVARCHAR, metaData.getColumnType(1));
     }
 }
