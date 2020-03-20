@@ -803,6 +803,9 @@ public class MongoResultSet implements ResultSet {
     public ResultSetMetaData getMetaData() throws SQLException {
         checkClosed();
         checkAndCacheFirstDocAndMetaData();
+        if (current != null) {
+            rsMetaData = new MongoResultSetMetaData(current);
+        }
         return rsMetaData;
     }
 
