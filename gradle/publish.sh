@@ -3,6 +3,8 @@
 # DO NOT ECHO COMMANDS AS THEY CONTAIN SECRETS!
 
 set -o errexit  # Exit the script with error if any of the commands fail
+set +o verbose # Command echoing off.
+set +o xtrace # Disable command traces before executing them.
 
 ############################################
 #            Main Program                  #
@@ -23,4 +25,4 @@ echo "Publishing snapshot with jdk9"
 export JAVA_HOME="/opt/java/jdk9"
 
 ./gradlew -version
-./gradlew publishMaven
+./gradlew publishMaven --info
