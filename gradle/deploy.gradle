@@ -1,17 +1,13 @@
 allprojects {
 
-    task publishSnapshot {
+    task publishMaven {
         group = 'publishing'
-        description = 'Publishes snapshots to Sonatype'
         if (version.endsWith('-SNAPSHOT')) {
-            dependsOn tasks.withType(PublishToMavenRepository)
+            description = 'Publishes snapshots to Sonatype'
+            dependsOn ':publishToSonatype'
         }
-    }
-
-    task publishArchive {
-        group = 'publishing'
-        description = 'Publishes a release and uploads to Sonatype / Maven Central'
-        doFirst {
+        else {
+            description = 'Publishes a release and uploads to Sonatype / Maven Central'
             if (project.gitVersion != version) {
                 def cause = """
                 | Version mismatch:
@@ -22,12 +18,28 @@ allprojects {
                 | The project version does not match the git tag.
                 |""".stripMargin()
                 throw new GradleException(cause)
+            } else if (project.gitLastComment != "BUMP v" + version) {
+                def cause = """
+                | git comment for version bump is not valid
+                | =================
+                |
+                | Invalid comment: ${project.gitLastComment}
+                | should be: BUMP v$version
+                |""".stripMargin()
+                throw new GradleException(cause)
             } else {
                 println("Publishing: ${project.name} : ${project.gitVersion}")
             }
-        }
-        if (project.gitVersion == version) {
-            dependsOn tasks.withType(PublishToMavenRepository)
+            if (project.gitVersion == version && project.name == rootProject.name) {
+                dependsOn ':closeAndReleaseRepository'
+                dependsOn ':publishToSonatype'
+                // Make sure we publish to staging first
+                project.tasks.getByName('publishToSonatype').finalizedBy(
+                        project.tasks.getByName('closeAndReleaseRepository'),
+                )
+            }
         }
     }
 }
+
+

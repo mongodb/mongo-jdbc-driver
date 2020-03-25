@@ -1,14 +1,9 @@
 package com.mongodb.jdbc.demo;
 
 import java.sql.*;
-import java.math.BigDecimal;
 import java.util.TimeZone;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import com.mongodb.jdbc.*;
-
-import java.util.Properties;
 
 public class Main {
    // JDBC driver name and database URL

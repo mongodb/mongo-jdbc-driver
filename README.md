@@ -13,5 +13,14 @@ You can find the generated jar in build/libs/
 ### To fix lint problem
 ./gradlew spotlessApply
 ### Release process
-- `./gradlew publishArchives` - publishes to Maven
+Make sure the following environment variables set:
+- NEXUS_USERNAME
+- NEXUS_PASSWORD
+- NEXUS_PROFILE_ID
+- NEXUS_URL
+- SIGNING_KEY_ID
+- SIGNING_PASSWORD
+- RING_FILE_GPG_BASE64
+
+./gradle/publish.sh 
 

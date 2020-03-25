@@ -31,31 +31,20 @@ buildvariants:
       - name: "build"
   - name: publish-maven
     display_name: "Publish to Maven"
+    expansions:
+      _platform: ubuntu1804-64-jdk-9
     run_on: ubuntu1804-build
     tasks:
-      - name: "publish-snapshot"
-      - name: "publish-archive"
+      - name: "publish-maven"
 
 tasks:
   - name: "build"
     commands:
       - func: "build jdbc driver"
 
-  - name: "publish-snapshot"
-    depends_on:
-    - name: "build"
-      variant: "ubuntu1804-64-jdk-8"
+  - name: "publish-maven"
     commands:
-      # this is a noop for non-snapshot versions
-      - func: "publish snapshot"
-
-  - name: "publish-archive"
-    depends_on:
-    - name: "build"
-      variant: "ubuntu1804-64-jdk-8"
-    commands:
-      # this is a noop for non-tagged versions
-      - func: "publish archive"
+      - func: "publish maven"
 
 functions:
   "build jdbc driver":
@@ -89,15 +78,19 @@ functions:
           ubuntu1804-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
           ;;
+          ubuntu1804-64-jdk-9)
+               JAVA_HOME=/opt/java/jdk9
+          ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11'"
+               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11', 'ubuntu1604-64-jdk-9'"
                exit 1
           ;;
           esac
 
           # export any environment variables that will be needed by subprocesses
           export JAVA_HOME
+          export PROJECT_DIRECTORY="$(pwd)"
           # dump env, but redact S3_KEY and S3_SECRET.
           echo '****************************ENV******************************'
           env | sed 's/S3_SECRET=.*$/REDACTED/' | sed 's/S3_KEY=.*$/REDACTED/'
@@ -138,6 +131,7 @@ functions:
   "upload test classes":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
@@ -152,6 +146,7 @@ functions:
   "upload test packages":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
@@ -166,6 +161,7 @@ functions:
   "upload test index":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/build/reports/tests/test/index.html
@@ -178,6 +174,7 @@ functions:
   "upload test css":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
@@ -192,6 +189,7 @@ functions:
   "upload test js":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
@@ -206,11 +204,13 @@ functions:
   "upload xunit test results":
     - command: attach.xunit_results
       params:
+        silent: true
         file: adl-jdbc-driver/build/test-results/*/TEST-*.xml
 
   "upload jar file":
     - command: s3.put
       params:
+        silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
@@ -220,18 +220,10 @@ functions:
         permissions: public-read
         display_name: "JDBC Driver (.jar)"
 
-  "publish snapshot":
+  "publish maven":
     - command: shell.exec
       type: test
       params:
-        silent: true
+        working_dir: adl-jdbc-driver
         script: |
-          NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} .gradlew publishSnapshot
-
-  "publish archive":
-    - command: shell.exec
-      type: test
-      params:
-        silent: true
-        script: |
-          NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} .gradlew publishArchieve
+          NEXUS_USERNAME=${NEXUS_USERNAME} NEXUS_PASSWORD=${NEXUS_PASSWORD} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh

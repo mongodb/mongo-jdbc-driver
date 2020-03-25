@@ -1,10 +1,13 @@
 plugins {
     id 'java-library'
     id "com.diffplug.gradle.spotless" version "3.24.3"
+    id 'io.codearte.nexus-staging' version '0.21.2'
+    id "de.marcphilipp.nexus-publish" version "0.3.0"
 }
 
 ext {
     gitVersion = getGitVersion()
+    gitLastComment = getGitLastComment()
 }
 
 spotless {
@@ -54,11 +57,16 @@ allprojects {
         classifier "test"
     }
 
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier 'javadoc'
+    }
+
     artifacts {
         sourceJar
         testJar
+        javadocJar
     }
-
 }
 
 jar {
@@ -82,5 +90,15 @@ def getGitVersion() {
     describeStdOut.toString().substring(1).trim()
 }
 
+def getGitLastComment() {
+    def describeStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '-1', '--pretty=%B'
+        standardOutput = describeStdOut
+    }
+    describeStdOut.toString().trim()
+}
+
 apply from: 'gradle/publish.gradle'
 apply from: 'gradle/deploy.gradle'
+
