@@ -29,8 +29,8 @@ buildvariants:
     run_on: ubuntu1804-build
     tasks:
       - name: "build"
-  - name: publish-maven
-    display_name: "Publish to Maven"
+  - name: release
+    display_name: "Release"
     expansions:
       _platform: ubuntu1804-64-jdk-9
     run_on: ubuntu1804-build
