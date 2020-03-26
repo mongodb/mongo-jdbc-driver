@@ -21,8 +21,7 @@ export ORG_GRADLE_PROJECT_signing_secretKeyRingFile=${PROJECT_DIRECTORY}/secring
 export ORG_GRADLE_PROJECT_nexus_url=${NEXUS_URL}
 export ORG_GRADLE_PROJECT_nexus_profile_id=${NEXUS_PROFILE_ID}
 
-echo "Publishing snapshot with jdk9"
-export JAVA_HOME="/opt/java/jdk9"
+echo "Publishing snapshot"
 
 ./gradlew -version
 ./gradlew publishMaven --info

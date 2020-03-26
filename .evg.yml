@@ -32,7 +32,7 @@ buildvariants:
   - name: release
     display_name: "Release"
     expansions:
-      _platform: ubuntu1804-64-jdk-9
+      _platform: ubuntu1804-64-jdk-8
     run_on: ubuntu1804-build
     tasks:
       - name: "publish-maven"
@@ -78,12 +78,9 @@ functions:
           ubuntu1804-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
           ;;
-          ubuntu1804-64-jdk-9)
-               JAVA_HOME=/opt/java/jdk9
-          ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11', 'ubuntu1604-64-jdk-9'"
+               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11'"
                exit 1
           ;;
           esac
