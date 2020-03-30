@@ -1,0 +1,89 @@
+apply plugin: 'signing'
+apply plugin: 'io.codearte.nexus-staging'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier 'sources'
+            }
+            artifact javadocJar
+            pom {
+                name = 'JDBC Driver'
+                description = 'JDBC Driver for Atlas Data Lake'
+                url = 'https://github.com/10gen/adl-jdbc-driver'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        organization = 'MongoDB, Inc.'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/10gen/adl-jdbc-driver'
+                    connection = 'scm:git@github.com:10gen/adl-jdbc-driver.git'
+                    developerConnection = 'scm:git@github.com:10gen/adl-jdbc-driver.git'
+                }
+            }
+        }
+    }
+}
+
+nexusStaging {
+    def nexusUrl = project.hasProperty('nexus_url') ? project.getProperty('nexus_url') : nexusDomain
+    serverUrl "$nexusUrl/service/local/"
+    username project.hasProperty('nexus_username') ? project.getProperty('nexus_username') : ""
+    password project.hasProperty('nexus_password') ? project.getProperty('nexus_password') : ""
+    packageGroup project.getGroup()
+    stagingProfileId project.hasProperty('nexus_profile_id') ? project.getProperty('nexus_profile_id') : ''
+    numberOfRetries 40
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            def domain = project.hasProperty('nexus_url') ? project.getProperty('nexus_url') : nexusDomain
+            nexusUrl = uri(nexusStaging.serverUrl)
+            snapshotRepositoryUrl = uri("$domain/content/repositories/snapshots/")
+        }
+    }
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+afterEvaluate {
+    signing {
+        if (project.hasProperty('signing_key_id') && project.hasProperty('signing_password') && project.hasProperty('signing_secretKeyRingFile')) {
+            sign publishing.publications.mavenJava
+        }
+    }
+}
+
+/*
+For security we allow the signing-related project properties to be passed in as environment variables, which
+Gradle enables if they are prefixed with "ORG_GRADLE_PROJECT_".  But since environment variables can not contain
+the '.' character and the signing-related properties contain '.', here we map signing-related project properties with '_'
+to ones with '.' that are expected by the signing plugin.
+*/
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof Sign }) {
+        if (project.hasProperty("signing_key_id")) {
+            allprojects { ext."signing.keyId" = project.property("signing_key_id") }
+        }
+        if (project.hasProperty("signing_secretKeyRingFile")) {
+            allprojects { ext."signing.secretKeyRingFile" = project.property("signing_secretKeyRingFile") }
+        }
+        if (project.hasProperty("signing_password")) {
+            allprojects { ext."signing.password" = project.property("signing_password") }
+        }
+    }
+}
