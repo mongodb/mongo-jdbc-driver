@@ -329,8 +329,7 @@ public class MongoDriver implements Driver {
         // Now add authDatabase, if necessary.
         if (authDatabase != null) {
             ret += "/" + sqlURLEncode(authDatabase);
-        }
-        else {
+        } else {
             ret += "/";
         }
         // OptionsString should already be properly encoded, since we got it straight from the url

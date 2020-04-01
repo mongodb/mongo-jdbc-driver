@@ -3,7 +3,6 @@ package com.mongodb.jdbc.integration;
 import static org.junit.Assert.*;
 
 import java.sql.*;
-import java.util.TimeZone;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
