@@ -20,7 +20,7 @@ public class IntegrationTest {
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("ssl", "true");
         Connection conn = DriverManager.getConnection(URL, p);
-        assertTrue(conn.isValid(5));
+        assertTrue(conn.isValid(15));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class IntegrationTest {
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("ssl", "true");
         Connection conn = DriverManager.getConnection(URL, p);
-        assertFalse(conn.isValid(5));
+        assertFalse(conn.isValid(15));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class IntegrationTest {
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("ssl", "true");
         Connection conn = DriverManager.getConnection(URL, p);
-        assertFalse(conn.isValid(5));
+        assertFalse(conn.isValid(15));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class IntegrationTest {
         p.setProperty("authSource", "badDB");
         p.setProperty("ssl", "true");
         Connection conn = DriverManager.getConnection(URL, p);
-        assertFalse(conn.isValid(5));
+        assertFalse(conn.isValid(15));
     }
 
     @Test
@@ -67,6 +67,6 @@ public class IntegrationTest {
         p.setProperty("database", "looker");
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         Connection conn = DriverManager.getConnection(URL, p);
-        assertFalse(conn.isValid(5));
+        assertFalse(conn.isValid(15));
     }
 }
