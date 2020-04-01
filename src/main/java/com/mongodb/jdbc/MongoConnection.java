@@ -331,7 +331,7 @@ public class MongoConnection implements Connection {
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future future = executor.submit(ConnValidation::new);
+        Future future = executor.submit(new ConnValidation());
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);

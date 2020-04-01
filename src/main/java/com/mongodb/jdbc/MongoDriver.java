@@ -19,6 +19,7 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -142,8 +143,7 @@ public class MongoDriver implements Driver {
         return s;
     }
 
-    private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionString(
-            String url, java.util.Properties info) throws SQLException {
+    private Pair getConnectionString(String url, Properties info) throws SQLException {
         if (info == null) {
             info = new Properties();
         }
@@ -167,6 +167,8 @@ public class MongoDriver implements Driver {
             optionString = optionSplit[1];
         }
 
+        Properties normalizedOptions = normalizeOptions(info, optionString);
+
         if (user == null && password == null) {
             ConnectionString c =
                     new ConnectionString(
@@ -175,8 +177,9 @@ public class MongoDriver implements Driver {
                                     user,
                                     password,
                                     authDatabase,
-                                    optionString));
-            return new Pair<>(c, new DriverPropertyInfo[] {});
+                                    normalizedOptions));
+            Pair pair = new Pair(c, new DriverPropertyInfo[] {});
+            return pair;
         }
         if (user == null) {
             // user is null, but password is not, we must prompt for the user.
@@ -199,7 +202,7 @@ public class MongoDriver implements Driver {
                                 user,
                                 password,
                                 authDatabase,
-                                optionString));
+                                normalizedOptions));
         return new Pair<>(c, new DriverPropertyInfo[] {});
     }
 
@@ -260,6 +263,42 @@ public class MongoDriver implements Driver {
         return new Pair<>(user, password);
     }
 
+    // private helper function to filter out unnecessary or invalid options before building URI
+    // throws SQLException if optionString is invalid
+    private static Properties normalizeOptions(Properties info, String optionString)
+            throws SQLException {
+        Properties options = new Properties();
+        if (optionString != null) {
+            String[] optionStrs = optionString.split("&");
+            for (String optionStr : optionStrs) {
+                String[] kv = optionStr.split("=");
+                if (kv.length != 2) {
+                    throw new SQLException("Option String is not valid");
+                }
+                if (kv[0].toLowerCase().equals(USER) || kv[0].toLowerCase().equals(PASSWORD)) {
+                    continue;
+                }
+                options.put(kv[0].toLowerCase(), kv[1]);
+            }
+        }
+
+        for (String key : info.stringPropertyNames()) {
+            String normalizedKey = key.toLowerCase();
+            if (normalizedKey.toLowerCase().equals(USER) || normalizedKey.equals(PASSWORD)) {
+                continue;
+            }
+            String val = info.getProperty(key);
+            if (options.containsKey(normalizedKey)) {
+                if (!options.getProperty(normalizedKey).equals(val)) {
+                    throw new SQLException("uri and properties disagree on %s", key);
+                }
+            } else {
+                options.setProperty(normalizedKey, val);
+            }
+        }
+        return options;
+    }
+
     // This is just a clean abstraction around URLEncode.
     private static String sqlURLEncode(String item) throws SQLException {
         try {
@@ -276,7 +315,7 @@ public class MongoDriver implements Driver {
             String user,
             char[] password,
             String authDatabase,
-            String optionsString)
+            Properties options)
             throws SQLException {
         // The returned URI should be of the following format:
         //"mongodb://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
@@ -293,8 +332,28 @@ public class MongoDriver implements Driver {
         }
         // OptionsString should already be properly encoded, since we got it straight from the url
         // string.
-        if (optionsString != null) {
-            ret += "?" + optionsString;
+        StringBuilder buff = new StringBuilder();
+        if (options != null) {
+            for (String key : options.stringPropertyNames()) {
+                if (!key.equals(USER)
+                        && !key.equals(PASSWORD)
+                        && !key.equals(CONVERSION_MODE)
+                        && !key.equals(DATABASE)) {
+                    if (buff.length() > 0) {
+                        buff.append("&");
+                    }
+                    try {
+                        buff.append(key)
+                                .append("=")
+                                .append(URLEncoder.encode(options.getProperty(key), "utf-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        throw new SQLException(e);
+                    }
+                }
+            }
+        }
+        if (buff.length() > 0) {
+            ret += "?" + buff.toString();
         }
         return ret;
     }

@@ -16,6 +16,17 @@ spotless {
     }
 }
 
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
@@ -33,6 +44,8 @@ allprojects {
         implementation group: 'org.mongodb', name: 'mongodb-driver', version: mongodbDriverVersion
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+
 
 
         // Test
@@ -69,6 +82,22 @@ allprojects {
     }
 }
 
+configurations {
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+check.dependsOn integrationTest
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -79,6 +108,7 @@ jar {
 dependencies {
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
+    integrationTestImplementation "junit:junit:$junitVersion"
 }
 
 def getGitVersion() {
