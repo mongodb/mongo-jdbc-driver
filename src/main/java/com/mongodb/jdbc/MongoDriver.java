@@ -284,7 +284,7 @@ public class MongoDriver implements Driver {
 
         for (String key : info.stringPropertyNames()) {
             String normalizedKey = key.toLowerCase();
-            if (normalizedKey.toLowerCase().equals(USER) || normalizedKey.equals(PASSWORD)) {
+            if (normalizedKey.equals(USER) || normalizedKey.equals(PASSWORD)) {
                 continue;
             }
             String val = info.getProperty(key);
@@ -332,8 +332,7 @@ public class MongoDriver implements Driver {
         } else {
             ret += "/";
         }
-        // OptionsString should already be properly encoded, since we got it straight from the url
-        // string.
+
         StringBuilder buff = new StringBuilder();
         if (options != null) {
             for (String key : options.stringPropertyNames()) {
