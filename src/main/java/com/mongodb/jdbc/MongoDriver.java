@@ -28,6 +28,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -143,7 +144,10 @@ public class MongoDriver implements Driver {
         return s;
     }
 
-    private Pair getConnectionString(String url, Properties info) throws SQLException {
+    // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
+    // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
+    private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionString(
+            String url, Properties info) throws SQLException {
         if (info == null) {
             info = new Properties();
         }
@@ -155,7 +159,7 @@ public class MongoDriver implements Driver {
             throw new SQLException(e);
         }
         String authDatabase = originalConnectionString.getDatabase();
-        Pair<String, char[]> clientProperties = extractProperties(originalConnectionString, info);
+        Pair<String, char[]> clientProperties = extractUserPassword(originalConnectionString, info);
         String user = clientProperties.left();
         char[] password = clientProperties.right();
         // Attempt to get an options string from the url string, itself, so that we do
@@ -173,9 +177,9 @@ public class MongoDriver implements Driver {
             ConnectionString c =
                     new ConnectionString(
                             buildNewURI(
-                                    originalConnectionString,
-                                    user,
-                                    password,
+                                    originalConnectionString.getHosts(),
+                                    null,
+                                    null,
                                     authDatabase,
                                     normalizedOptions));
             Pair pair = new Pair(c, new DriverPropertyInfo[] {});
@@ -198,7 +202,7 @@ public class MongoDriver implements Driver {
         ConnectionString c =
                 new ConnectionString(
                         buildNewURI(
-                                originalConnectionString,
+                                originalConnectionString.getHosts(),
                                 user,
                                 password,
                                 authDatabase,
@@ -213,7 +217,7 @@ public class MongoDriver implements Driver {
     // grabbing the relevant data.
     //
     // throws SQLException if url and properties disagree on user or password.
-    private static Pair<String, char[]> extractProperties(
+    private static Pair<String, char[]> extractUserPassword(
             ConnectionString clientURI, Properties info) throws SQLException {
 
         // The coalesce function takse the first non-null argument, returning null only
@@ -239,7 +243,6 @@ public class MongoDriver implements Driver {
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
-        String uriAuthDatabase = clientURI.getDatabase();
         String propertyUser = info.getProperty(USER);
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
@@ -263,8 +266,10 @@ public class MongoDriver implements Driver {
         return new Pair<>(user, password);
     }
 
-    // private helper function to filter out unnecessary or invalid options before building URI
-    // throws SQLException if optionString is invalid
+    // private helper function constructs the connection options for mongodb connection string.
+    // It consolidates duplicated values specified in url string and properties, filters out
+    // properties which doesn't belong to connection options such as "user" and "password" fields.
+    // It throws SQLException if there is conflict value between properties and url string.
     private static Properties normalizeOptions(Properties info, String optionString)
             throws SQLException {
         Properties options = new Properties();
@@ -310,8 +315,19 @@ public class MongoDriver implements Driver {
 
     // This function builds a new uri from the original clientURI, adding user, password, options, and
     // database, if necessary.
+    /**
+     * This function builds a new uri from the original clientURI, adding user, password, options,
+     * and database, if necessary.
+     *
+     * @param hosts the list of MongoDB host names
+     * @param user the auth username
+     * @param password the auth password
+     * @param authDatabase the authentication database to use if authSource option is not specified
+     * @param options the consolidated tag/value pairs from the url query string and connection
+     *     arguments user provided,
+     */
     private static String buildNewURI(
-            ConnectionString originalConnectionString,
+            List<String> hosts,
             String user,
             char[] password,
             String authDatabase,
@@ -325,7 +341,7 @@ public class MongoDriver implements Driver {
             ret += sqlURLEncode(user) + ":" + sqlURLEncode(String.valueOf(password)) + "@";
         }
         // Now add hosts.
-        ret += String.join(",", originalConnectionString.getHosts());
+        ret += String.join(",", hosts);
         // Now add authDatabase, if necessary.
         if (authDatabase != null) {
             ret += "/" + sqlURLEncode(authDatabase);
