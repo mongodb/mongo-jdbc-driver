@@ -313,8 +313,6 @@ public class MongoDriver implements Driver {
         }
     }
 
-    // This function builds a new uri from the original clientURI, adding user, password, options, and
-    // database, if necessary.
     /**
      * This function builds a new uri from the original clientURI, adding user, password, options,
      * and database, if necessary.
