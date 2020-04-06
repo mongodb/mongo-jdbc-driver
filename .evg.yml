@@ -100,10 +100,10 @@ functions:
           S3_RELEASES_DIR: "$S3_RELEASES_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
           PREPARE_SHELL: |
-            export ADL_TEST_USER="$adl_test_user"
-            export ADL_TEST_PWD="$adl_test_pwd"
-            export ADL_TEST_HOST="$adl_test_host"
-            export ADL_TEST_AUTH_DB="$adl_test_auth_db"
+            export ADL_TEST_USER=${adl_test_user}
+            export ADL_TEST_PWD=${adl_test_pwd}
+            export ADL_TEST_HOST=${adl_test_host}
+            export ADL_TEST_AUTH_DB=${adl_test_auth_db}
           EOT
 
     - command: expansions.update
