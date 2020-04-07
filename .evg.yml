@@ -36,11 +36,17 @@ buildvariants:
     run_on: windows-64-vs2017-compile
     tasks:
       - name: "build"
+      - name: "tdvt"
 
 tasks:
   - name: "build"
     commands:
       - func: "build jdbc driver"
+  - name: "tdvt"
+    commands:
+      - func: "fetch tableau"
+      - func: "fetch jdbc files"
+      - func: "run tdvt"
 
 functions:
   "build jdbc driver":
@@ -111,6 +117,16 @@ functions:
         local_file: adl-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
         bucket: mciuploads
+  
+  "fetch tableau":
+    - command: s3.get
+      params:
+        working_dir: adl-jdbc-driver
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: adl-jdbc-driver/tableau.zip
+        remote_file: adl-jdbc-driver/tableau.zip
+        bucket: mciuploads
 
   "fetch source":
     - command: shell.exec
@@ -121,6 +137,14 @@ functions:
     - command: git.get_project
       params:
         directory: adl-jdbc-driver
+
+
+  "run tdvt":
+    - command: shell.exec
+      params:
+        silent: false
+        scipt: |
+          ls -R .
 
   "upload test classes":
     - command: s3.put
