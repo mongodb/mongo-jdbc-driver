@@ -127,7 +127,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/tableau.zip
-        remote_file: adl-jdbc-driver/tableau.zip
+        remote_file: adl-sql-driver/tableau.zip
         bucket: mciuploads
 
   "fetch source":
