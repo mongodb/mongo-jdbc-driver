@@ -19,6 +19,7 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -27,6 +28,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -142,8 +144,22 @@ public class MongoDriver implements Driver {
         return s;
     }
 
+    private static class ParseResult {
+        String user;
+        char[] password;
+        Properties normalizedOptions;
+
+        ParseResult(String u, char[] p, Properties options) {
+            user = u;
+            password = p;
+            normalizedOptions = options;
+        }
+    }
+
+    // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
+    // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
     private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionString(
-            String url, java.util.Properties info) throws SQLException {
+            String url, Properties info) throws SQLException {
         if (info == null) {
             info = new Properties();
         }
@@ -154,29 +170,24 @@ public class MongoDriver implements Driver {
         } catch (Exception e) {
             throw new SQLException(e);
         }
+
         String authDatabase = originalConnectionString.getDatabase();
-        Pair<String, char[]> clientProperties = extractProperties(originalConnectionString, info);
-        String user = clientProperties.left();
-        char[] password = clientProperties.right();
-        // Attempt to get an options string from the url string, itself, so that we do
-        // not need to format the options returned by the ConnectionString.
-        String optionString = null;
-        String[] optionSplit =
-                actualURL.split("[?]"); // split takes a regexp and '?' is a metachar.
-        if (optionSplit.length > 1) {
-            optionString = optionSplit[1];
-        }
+
+        ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
+        String user = result.user;
+        char[] password = result.password;
 
         if (user == null && password == null) {
             ConnectionString c =
                     new ConnectionString(
                             buildNewURI(
-                                    originalConnectionString,
-                                    user,
-                                    password,
+                                    originalConnectionString.getHosts(),
+                                    null,
+                                    null,
                                     authDatabase,
-                                    optionString));
-            return new Pair<>(c, new DriverPropertyInfo[] {});
+                                    result.normalizedOptions));
+            Pair pair = new Pair(c, new DriverPropertyInfo[] {});
+            return pair;
         }
         if (user == null) {
             // user is null, but password is not, we must prompt for the user.
@@ -195,22 +206,23 @@ public class MongoDriver implements Driver {
         ConnectionString c =
                 new ConnectionString(
                         buildNewURI(
-                                originalConnectionString,
+                                originalConnectionString.getHosts(),
                                 user,
                                 password,
                                 authDatabase,
-                                optionString));
+                                result.normalizedOptions));
         return new Pair<>(c, new DriverPropertyInfo[] {});
     }
 
     private static interface NullCoalesce<T> {
         T coalesce(T left, T right);
     }
+
     // private helper function to abstract checking consistency between properties and the URI, and
-    // grabbing the relevant data.
+    // grabbing the username, password and the consolidated connection arguments
     //
-    // throws SQLException if url and properties disagree on user or password.
-    private static Pair<String, char[]> extractProperties(
+    // throws SQLException if url and options properties disagree on the value
+    private static ParseResult normalizeConnectionOptions(
             ConnectionString clientURI, Properties info) throws SQLException {
 
         // The coalesce function takse the first non-null argument, returning null only
@@ -236,7 +248,6 @@ public class MongoDriver implements Driver {
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
-        String uriAuthDatabase = clientURI.getDatabase();
         String propertyUser = info.getProperty(USER);
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
@@ -257,7 +268,48 @@ public class MongoDriver implements Driver {
         }
         // set the password
         char[] password = c.coalesce(uriPWD, propertyPWD);
-        return new Pair<>(user, password);
+
+        String optionString = null;
+        String[] optionSplit =
+                clientURI
+                        .getConnectionString()
+                        .split("[?]"); // split takes a regexp and '?' is a metachar.
+        if (optionSplit.length > 1) {
+            optionString = optionSplit[1];
+        }
+
+        Properties options = new Properties();
+        if (optionString != null) {
+            String[] optionStrs = optionString.split("&");
+            for (String optionStr : optionStrs) {
+                String[] kv = optionStr.split("=");
+                if (kv.length != 2) {
+                    throw new SQLException("Option String is not valid");
+                }
+                String normalizedKey = kv[0].toLowerCase();
+                if (normalizedKey.equals(USER) || normalizedKey.equals(PASSWORD)) {
+                    continue;
+                }
+                options.put(normalizedKey, kv[1]);
+            }
+        }
+
+        for (String key : info.stringPropertyNames()) {
+            String normalizedKey = key.toLowerCase();
+            if (normalizedKey.equals(USER) || normalizedKey.equals(PASSWORD)) {
+                continue;
+            }
+            String val = info.getProperty(key);
+            if (options.containsKey(normalizedKey)) {
+                if (!options.getProperty(normalizedKey).equals(val)) {
+                    throw new SQLException("uri and properties disagree on %s", key);
+                }
+            } else {
+                options.setProperty(normalizedKey, val);
+            }
+        }
+
+        return new ParseResult(user, password, options);
     }
 
     // This is just a clean abstraction around URLEncode.
@@ -269,14 +321,23 @@ public class MongoDriver implements Driver {
         }
     }
 
-    // This function builds a new uri from the original clientURI, adding user, password, options, and
-    // database, if necessary.
+    /**
+     * This function builds a new uri from the original clientURI, adding user, password, options,
+     * and database, if necessary.
+     *
+     * @param hosts the list of MongoDB host names
+     * @param user the auth username
+     * @param password the auth password
+     * @param authDatabase the authentication database to use if authSource option is not specified
+     * @param options the consolidated tag/value pairs from the url query string and connection
+     *     arguments user provided,
+     */
     private static String buildNewURI(
-            ConnectionString originalConnectionString,
+            List<String> hosts,
             String user,
             char[] password,
             String authDatabase,
-            String optionsString)
+            Properties options)
             throws SQLException {
         // The returned URI should be of the following format:
         //"mongodb://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
@@ -286,15 +347,36 @@ public class MongoDriver implements Driver {
             ret += sqlURLEncode(user) + ":" + sqlURLEncode(String.valueOf(password)) + "@";
         }
         // Now add hosts.
-        ret += String.join(",", originalConnectionString.getHosts());
+        ret += String.join(",", hosts);
         // Now add authDatabase, if necessary.
         if (authDatabase != null) {
             ret += "/" + sqlURLEncode(authDatabase);
+        } else {
+            ret += "/";
         }
-        // OptionsString should already be properly encoded, since we got it straight from the url
-        // string.
-        if (optionsString != null) {
-            ret += "?" + optionsString;
+
+        StringBuilder buff = new StringBuilder();
+        if (options != null) {
+            for (String key : options.stringPropertyNames()) {
+                if (!key.equals(USER)
+                        && !key.equals(PASSWORD)
+                        && !key.equals(CONVERSION_MODE)
+                        && !key.equals(DATABASE)) {
+                    if (buff.length() > 0) {
+                        buff.append("&");
+                    }
+                    try {
+                        buff.append(key)
+                                .append("=")
+                                .append(URLEncoder.encode(options.getProperty(key), "utf-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        throw new SQLException(e);
+                    }
+                }
+            }
+        }
+        if (buff.length() > 0) {
+            ret += "?" + buff.toString();
         }
         return ret;
     }
