@@ -4,7 +4,7 @@
   <connection class='federated'>
     <named-connections>
       <named-connection caption='mongodb' name='leaf'>
-        <connection tdvtconnection='mongodb_jdbc' class='mongodb_jdbc' dbname='TestV1' port='5432' server='localhost' username='test'/>
+        <connection tdvtconnection='mongodb_jdbc' class='mongodb_jdbc' dbname='tdvt' port='5432' server='localhost' username='test'/>
       </named-connection>
     </named-connections>
     <relation connection='leaf' name='Calcs' table='[public].[Calcs]' type='table' />
