@@ -42,4 +42,4 @@ The tag command MUST:
 * Push that too  
 ```git push```
 * Create a PR and get it merged.
-* Create Github release and upload artifact from maven central at https://oss.sonatype.org: mongodb-jdbc-\<version\>.jar. 
+* Create Github release and upload artifact from maven central at https://oss.sonatype.org: mongodb-jdbc-\<version\>.jar, following instructions here https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository 
