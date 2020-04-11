@@ -26,6 +26,11 @@ For the Release version, follow the steps below:
 ```git commit -m "BUMP v<revision>"```
 * Once the “BUMP” commit has been created, push and create a PR for this change
 * Once the PR has been approved and merged, checkout the upstream master branch locally
+```
+git remote add upstream git@github.com:10gen/adl-jdbc-driver.git
+git fetch upstream
+git checkout -b up-masterupstream/master
+```
 * Tag it for release as follows:  
 ```git tag -a -m "<new version>" v<new version> <githash>```   
 The tag command MUST:  
