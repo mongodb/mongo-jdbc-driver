@@ -19,7 +19,7 @@ The current version is specified inside `gradle.properties` file.
 ## Release procedures
 The release is handled in evergreen `Release` task.  
 
-For the SNAPSHOT version, every successful evergreen PR build will release the artifacts to Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
+For the SNAPSHOT version, every successful evergreen PR build will release the artifacts to the Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
 
 For the Release version, follow the steps below:
 * Create a release branch in your local fork
