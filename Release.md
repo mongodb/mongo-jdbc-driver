@@ -1,5 +1,6 @@
 ## Version Policy
-we support two types of versions:  
+We support two types of versions:  "Release" and "Snapshot".
+
 #### Release
 * MajorVersion: 1.2.1
 * Qualifier: 1.2-beta-2  
