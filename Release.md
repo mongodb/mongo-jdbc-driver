@@ -1,7 +1,7 @@
 ## Version Policy
 We support two types of versions:  "Release" and "Snapshot".
 
-#### Release
+### Release
 * MajorVersion: 1.2.1
 * Qualifier: 1.2-beta-2  
 Only release versions can be uploaded to the Central Repository, which means files that won't change and that only depend on other files already released and available in the repository.
