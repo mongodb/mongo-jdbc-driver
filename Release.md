@@ -1,3 +1,5 @@
+# Release Process
+
 ## Version Policy
 We support two types of versions:  "Release" and "Snapshot".
 
