@@ -6,7 +6,7 @@ We support two types of versions:  "Release" and "Snapshot".
 * Qualifier: 1.2-beta-2  
 Only release versions can be uploaded to the Central Repository, which means files that won't change and that only depend on other files already released and available in the repository.
 
-#### Snapshot
+### Snapshot
 * 1.2-SNAPSHOT.  
 Continuous development is typically performed with snapshot versions supported by the Snapshot version policy. These version values have to end with -SNAPSHOT. This allows repeated uploads where the actual number used is composed of a date/timestamp and an enumerator and the downstream development can still use the -SNAPSHOT version string. 
 
