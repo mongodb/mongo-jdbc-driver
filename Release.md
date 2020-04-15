@@ -1,19 +1,9 @@
 ## Version Policy
-we support two types of versions:  
-#### Release
-* MajorVersion: 1.2.1
-* Qualifier: 1.2-beta-2  
-Only release versions can be uploaded to the Central Repository, which means files that won't change and that only depend on other files already released and available in the repository.
+Version number policy could be referred from here: https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855
 
-#### Snapshot
-* 1.2-SNAPSHOT.  
-Continuous development is typically performed with snapshot versions supported by the Snapshot version policy. These version values have to end with -SNAPSHOT. This allows repeated uploads where the actual number used is composed of a date/timestamp and an enumerator and the downstream development can still use the -SNAPSHOT version string. 
+Among all the version standards Maven supports, we will use MajorVersion, IncrementalVersion and Qualifier inside this project.
 
-If you want to publish a special snapshot version to be tested by others or continuously integrated, you can release a snapshot version with version number and current timestamp such as "_1.2-yyyyMMddHHmm-SNAPSHOT_". The client will be able to retrieve it by the version number or the latest snapshot.
-
-Detailed descriptions for version policies can be viewed here: [[https://help.sonatype.com/repomanager3/formats/maven-repositories#MavenRepositories-MavenRepositoryFormat]]
-
-The current version is specified inside `gradle.properties` file. 
+The current version number is specified inside `gradle.properties` file. 
 
 ## Release procedures
 The release is handled in evergreen `Release` task.  
