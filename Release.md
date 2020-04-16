@@ -10,7 +10,10 @@ The release is handled in evergreen `Release` variant.
 
 For the SNAPSHOT version, every successful evergreen PR build will release the artifacts to the Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
 
-For the Release version, follow the steps below:
+## Release Versions
+
+Follow these instructions for creating a Release Version.
+
 * Create a release branch in your local fork
 * Update version in _gradle.properties_, and update the _README.md_ file to reflect the new version. Commit these changes:  
 ```git commit -m "BUMP v<version>"```
