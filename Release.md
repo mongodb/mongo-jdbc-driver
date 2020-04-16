@@ -13,7 +13,7 @@ For the SNAPSHOT version, every successful evergreen PR build will release the a
 For the Release version, follow the steps below:
 * Create a release branch in your local fork
 * Update version in _gradle.properties_, and update the _README.md_ file to reflect the new version. Commit these changes:  
-```git commit -m "BUMP v<revision>"```
+```git commit -m "BUMP v<version>"```
 * Once the “BUMP” commit has been created, push and create a PR for this change
 * Once the PR has been approved and merged, checkout the upstream master branch locally
 ```
