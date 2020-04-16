@@ -8,7 +8,9 @@ The current version number is specified inside `gradle.properties` file.
 # Release procedures
 The release is handled in evergreen `Release` variant.  
 
-For the SNAPSHOT version, every successful evergreen PR build will release the artifacts to the Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
+## Snapshot Versions
+
+Every successful untagged build in evergreen will release the artifacts to the Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
 
 ## Release Versions
 
