@@ -1,4 +1,4 @@
-## Version Policy
+# Versioning
 Version number policy could be referred from here: https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855
 
 Among all the version standards Maven supports, we will use MajorVersion, IncrementalVersion and Qualifier inside this project.
