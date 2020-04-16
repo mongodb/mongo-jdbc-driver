@@ -32,7 +32,6 @@ The tag command MUST:
   * have a tagname that is exactly the name as the semantic version, prefixed with "v"  
 * Once tagged, push the newly created tag to master
 ```git push origin v<revision> ```
-* Check the evergreen build for the previous PR. You don't need to do anything if the `Release` task is not yet run. If the release task was run before the tag has been pushed, the task will fail and you just need to restart it.
 * This task will run through all the tests, check the release comment and tag name. If all passed, it will automatically push the release artifacts to Maven-Central. Check the released version in https://oss.sonatype.org 
 * Create a new branch in your forked repo and update version back to a SNAPSHOT for the next version in _gradle.properties_ and commit  
 ```git commit -am "BUMP <next revision>-SNAPSHOT"```
