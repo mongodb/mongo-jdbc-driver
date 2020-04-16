@@ -16,7 +16,6 @@ Every successful untagged build in evergreen will release the artifacts to the S
 
 Follow these instructions for creating a Release Version.
 
-* Create a release branch in your local fork
 * Update version in `gradle.properties`, and update the `README.md` file to reflect the new version. Commit these changes:  
 ```git commit -m "BUMP v<version>"```
 * Once the “BUMP” commit has been created, push and create a PR for this change
