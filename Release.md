@@ -32,7 +32,7 @@ The tag command MUST:
   * have a tagname that is exactly the name as the semantic version, prefixed with "v"  
 * Once tagged, push the newly created tag to master
 ```git push origin v<revision> ```
-* This task will run through all the tests, check the release comment and tag name. If all passed, it will automatically push the release artifacts to Maven-Central. Check the released version in https://oss.sonatype.org 
+* The release task will run through all the tests, check the release comment and tag name. If all passed, it will automatically push the release artifacts to Maven-Central. Check the released version in https://oss.sonatype.org 
 * Update version back to a SNAPSHOT for the next version in _gradle.properties_ and commit  
 ```git commit -am "BUMP <next revision>-SNAPSHOT"```
 * Push that too  
