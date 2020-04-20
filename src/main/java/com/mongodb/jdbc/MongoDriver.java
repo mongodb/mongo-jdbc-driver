@@ -54,6 +54,9 @@ public class MongoDriver implements Driver {
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
+    static final String VERSION = "1.0.0-SNAPSHOT";
+    static final int MAJOR_VERSION = 1;
+    static final int MINOR_VERSION = 0;
 
     static CodecRegistry registry =
             fromProviders(
@@ -99,7 +102,10 @@ public class MongoDriver implements Driver {
                             + String.join(", ", propertyNames));
         }
         return new MongoConnection(
-                p.left(), info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
+                p.left(),
+                info.getProperty(USER),
+                info.getProperty(DATABASE),
+                info.getProperty(CONVERSION_MODE));
     }
 
     @Override
@@ -262,6 +268,7 @@ public class MongoDriver implements Driver {
         }
         // set the user
         String user = s.coalesce(uriUser, propertyUser);
+        info.setProperty(USER, user);
         // handle disagreements on password.
         if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
             throw new SQLException("uri and properties disagree on password");

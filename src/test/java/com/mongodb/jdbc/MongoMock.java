@@ -27,7 +27,7 @@ public abstract class MongoMock {
     @Mock protected static MongoCursor mongoCursor;
 
     @InjectMocks
-    protected static MongoConnection mongoConnection = new MongoConnection(uri, database, null);
+    protected static MongoConnection mongoConnection = new MongoConnection(uri, "", database, null);
 
     // reset the mock objects before every test case
     protected static void resetMockObjs() throws NoSuchFieldException {

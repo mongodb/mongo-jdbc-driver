@@ -35,11 +35,15 @@ import java.util.concurrent.TimeoutException;
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
     private String currentDB;
+    private String url;
+    private String user;
     private boolean isClosed;
     private boolean relaxed;
 
-    public MongoConnection(ConnectionString uri, String database, String conversionMode) {
+    public MongoConnection(
+            ConnectionString uri, String user, String database, String conversionMode) {
         Preconditions.checkNotNull(uri);
+        url = uri.toString();
         this.currentDB = database;
         mongoClient = MongoClients.create(uri);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
@@ -50,6 +54,14 @@ public class MongoConnection implements Connection {
         if (isClosed()) {
             throw new SQLException("Connection is closed.");
         }
+    }
+
+    String getURL() {
+        return url;
+    }
+
+    String getUser() {
+        return user;
     }
 
     @Override
@@ -117,8 +129,7 @@ public class MongoConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        // TODO: complete when MongoDatabaseMetaData is created
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return new MongoDatabaseMetaData(this);
     }
 
     @Override
