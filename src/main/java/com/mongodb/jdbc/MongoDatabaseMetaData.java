@@ -10,6 +10,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
@@ -1093,60 +1094,89 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "select "
-                                + "    TABLE_CATALOG as TABLE_CAT,"
-                                + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                                + "    TABLE_NAME,"
-                                + "    COLUMN_NAME,"
-                                + dataTypeCase
-                                + " as DATA_TYPE,"
-                                + "    DATA_TYPE as TYPE_NAME ,"
-                                + "    CHARACTER_MAXIMUM_LENGTH as COLUMN_SIZE,"
-                                + "    0 as BUFFER_LENGTH,"
-                                + "    NUMERIC_SCALE as DECIMAL_DIGITS,"
-                                + "    NUMERIC_PRECISION as NUM_PREC_RADIX,"
-                                + nullableCase
-                                + " as NULLABLE,"
-                                + "    COLUMN_COMMENT as REMARKS,"
-                                + "    NULL as COLUMN_DEF,"
-                                + "    0 as SQL_DATA_TYPE,"
-                                + "    0 as SQL_DATETIME_SUB,"
-                                + "    CHARACTER_MAXIMUM_LENGTH as CHAR_OCTET_LENGTH,"
-                                + "    ORDINAL_POSITION,"
-                                + "    IS_NULLABLE,"
-                                + "    NULL as SCOPE_CATALOG,"
-                                + "    NULL as SCOPE_SCHEMA,"
-                                + "    NULL as SCOPE_TABLE,"
-                                + "    0 as SOURCE_DATA_TYPE,"
-                                + "    0 as IS_AUTOINCREMENT,"
-                                + "    0 as IS_GENERATEDCOLUMN,"
-                                + "from COLUMNS"
-                                + "where "
-                                + "    TABLE_SCHEMA like "
-                                + schemaPattern
-                                + "    AND COLUMN_NAME like "
-                                + columnNamePattern);
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        return stmt.executeQuery(
+                "select "
+                        + "    TABLE_CATALOG as TABLE_CAT,"
+                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
+                        + "    TABLE_NAME,"
+                        + "    COLUMN_NAME,"
+                        + dataTypeCase
+                        + " as DATA_TYPE,"
+                        + "    DATA_TYPE as TYPE_NAME ,"
+                        + "    CHARACTER_MAXIMUM_LENGTH as COLUMN_SIZE,"
+                        + "    0 as BUFFER_LENGTH,"
+                        + "    NUMERIC_SCALE as DECIMAL_DIGITS,"
+                        + "    NUMERIC_PRECISION as NUM_PREC_RADIX,"
+                        + nullableCase
+                        + " as NULLABLE,"
+                        + "    COLUMN_COMMENT as REMARKS,"
+                        + "    NULL as COLUMN_DEF,"
+                        + "    0 as SQL_DATA_TYPE,"
+                        + "    0 as SQL_DATETIME_SUB,"
+                        + "    CHARACTER_MAXIMUM_LENGTH as CHAR_OCTET_LENGTH,"
+                        + "    ORDINAL_POSITION,"
+                        + "    IS_NULLABLE,"
+                        + "    NULL as SCOPE_CATALOG,"
+                        + "    NULL as SCOPE_SCHEMA,"
+                        + "    NULL as SCOPE_TABLE,"
+                        + "    0 as SOURCE_DATA_TYPE,"
+                        + "    0 as IS_AUTOINCREMENT,"
+                        + "    0 as IS_GENERATEDCOLUMN,"
+                        + "from COLUMNS"
+                        + "where "
+                        + "    TABLE_SCHEMA like "
+                        + schemaPattern
+                        + "    AND TABLE_NAME like "
+                        + tableNamePattern
+                        + "    AND COLUMN_NAME like "
+                        + columnNamePattern);
     }
 
     @Override
     public ResultSet getColumnPrivileges(
-            String catalog, String schema, String table, String columnNamePattern)
+            String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        // TODO: Make this work with ADL, need information schema.
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "    TABLE_CATALOG as TABLE_CAT, "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
+                        + "    TABLE_NAME,"
+                        + "    COLUMN_NAME,"
+                        + "    NULL as GRANTOR,"
+                        + "    NULL as GRANTEE,"
+                        + "    'SELECT' as PRIVILEGE,"
+                        + "    'NO' as IS_GRANTABLE,"
+                        + "from COLUMNS"
+                        + "where "
+                        + "    TABLE_SCHEMA like "
+                        + schemaPattern
+                        + "    AND TABLE_NAME like "
+                        + tableNamePattern
+                        + "    AND COLUMN_NAME like "
+                        + columnNamePattern);
     }
 
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        // TODO: Make this work with ADL, need information schema.
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "    TABLE_CATALOG as TABLE_CAT, "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
+                        + "    TABLE_NAME,"
+                        + "    NULL as GRANTOR,"
+                        + "    NULL as GRANTEE,"
+                        + "    'SELECT' as PRIVILEGE,"
+                        + "    'NO' as IS_GRANTABLE,"
+                        + "from TABLES"
+                        + "where "
+                        + "    TABLE_SCHEMA like "
+                        + schemaPattern
+                        + "    AND TABLE_NAME like "
+                        + tableNamePattern);
     }
 
     @Override
@@ -1193,16 +1223,16 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        MongoResultDoc row = new MongoResultDoc();
-        ArrayList<MongoResultDoc> rows = new ArrayList<>(1);
-        row.values = new ArrayList<>();
-        row.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString(catalog)));
-        row.values.add(newColumn("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
-        row.values.add(newColumn("", "", "", "TABLE_NAME", "TABLE_NAME", new BsonString(table)));
-        row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
-        row.values.add(newColumn("", "", "", "KEY_SEQ", "KEY_SEQ", new BsonInt32(1)));
-        row.values.add(newColumn("", "", "", "PK_NAME", "PK_NAME", new BsonNull()));
-        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        MongoResultDoc doc = new MongoResultDoc();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
+        doc.values = new ArrayList<>();
+        doc.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString(catalog)));
+        doc.values.add(newColumn("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
+        doc.values.add(newColumn("", "", "", "TABLE_NAME", "TABLE_NAME", new BsonString(table)));
+        doc.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
+        doc.values.add(newColumn("", "", "", "KEY_SEQ", "KEY_SEQ", new BsonInt32(1)));
+        doc.values.add(newColumn("", "", "", "PK_NAME", "PK_NAME", new BsonNull()));
+        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1235,17 +1265,271 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
     }
 
+    //+ "case DATA_TYPE "
+    //+ "    when 'array'    then "
+    //+ Types.NULL
+    //+ "    when 'binData'  then "
+    //+ Types.NULL
+    //+ "    when 'bool'     then "
+    //+ Types.BIT
+    //+ "    when 'date'     then "
+    //+ Types.TIMESTAMP
+    //+ "    when 'null'     then "
+    //+ Types.NULL
+    //+ "    when 'decimal'  then "
+    //+ Types.DECIMAL
+    //+ "    when 'document' then "
+    //+ Types.NULL
+    //+ "    when 'double'   then "
+    //+ Types.DOUBLE
+    //+ "    when 'int'      then "
+    //+ Types.INTEGER
+    //+ "    when 'long'     then "
+    //+ Types.INTEGER
+    //+ "    when 'string'   then "
+    //+ Types.LONGVARCHAR
+    //+ "end";
+    //
+
+    private MongoResultDoc getTypeInfoDoc(
+            String typeName,
+            int dataType,
+            int precision,
+            String literalPrefix,
+            String literalSuffix,
+            int nullable,
+            boolean caseSensitive,
+            int searchable,
+            boolean unsigned,
+            boolean fixedPrecScale,
+            int minScale,
+            int maxScale,
+            int numPrecRadix) {
+        BsonValue n = new BsonNull();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(newColumn("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString(typeName)));
+        doc.values.add(newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(dataType)));
+        doc.values.add(newColumn("", "", "", "PRECISION", "PRECISION", new BsonInt32(precision)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "LITERAL_PREFIX",
+                        "LITERAL_PREFIX",
+                        literalPrefix != null ? new BsonString(literalPrefix) : n));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "LITERAL_SUFFIX",
+                        "LITERAL_SUFFIX",
+                        literalSuffix != null ? new BsonString(literalSuffix) : n));
+        doc.values.add(newColumn("", "", "", "CREATE_PARAMS", "CREATE_PARAMS", n));
+        doc.values.add(newColumn("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(nullable)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "CASE_SENSITIVE",
+                        "CASE_SENSITIVE",
+                        new BsonBoolean(caseSensitive)));
+        doc.values.add(
+                newColumn("", "", "", "SEARCHABLE", "SEARCHABLE", new BsonInt32(searchable)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "UNSIGNED_ATTRIBUTE",
+                        "UNSIGNED_ATTRIBUTE",
+                        new BsonBoolean(unsigned)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "FIXED_PREC_SCALE",
+                        "FIXED_PREC_SCALE",
+                        new BsonBoolean(fixedPrecScale)));
+        doc.values.add(
+                newColumn("", "", "", "AUTO_INCREMENT", "AUTO_INCREMENT", new BsonBoolean(false)));
+        doc.values.add(newColumn("", "", "", "LOCAL_TYPE_NAME", "LOCAL_TYPE_NAME", n));
+        doc.values.add(
+                newColumn("", "", "", "MINIMUM_SCALE", "MINIMUM_SCALE", new BsonInt32(minScale)));
+        doc.values.add(
+                newColumn("", "", "", "MAXIMUM_SCALE", "MAXIMUM_SCALE", new BsonInt32(maxScale)));
+        doc.values.add(newColumn("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", new BsonInt32(0)));
+        doc.values.add(
+                newColumn("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", new BsonInt32(0)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "NUM_PREC_RADIX",
+                        "NUM_PREC_RADIX",
+                        new BsonInt32(numPrecRadix)));
+        return doc;
+    }
+
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        // TODO!
-        throw new SQLFeatureNotSupportedException("Not implemented");
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(11);
+
+        //            String typeName,
+        //            int dataType,
+        //            int precision,
+        //            String literalPrefix,
+        //            String literalSuffix,
+        //            int nullable,
+        //            boolean caseSensitive,
+        //            int searchable,
+        //            boolean unsigned,
+        //            boolean fixedPrecScale,
+        //            int minScale,
+        //            int maxScale,
+        //            int numPrecRadix) {
+
+        docs.add(
+                getTypeInfoDoc(
+                        "binData", //typeName
+                        Types.NULL, //dataType
+                        0, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typePredNone, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "bool", //typeName
+                        Types.BIT, //dataType
+                        1, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        true, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "date", //typeName
+                        Types.TIMESTAMP, //dataType
+                        24, //precision
+                        "'", //literalPrefix
+                        "'", //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "decimal", //typeName
+                        Types.TIMESTAMP, //dataType
+                        34, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        34, //minScale
+                        34, //maxScale
+                        10)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "double", //typeName
+                        Types.TIMESTAMP, //dataType
+                        15, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        15, //minScale
+                        15, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "int", //typeName
+                        Types.INTEGER, //dataType
+                        10, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        true, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "long", //typeName
+                        Types.INTEGER, //dataType
+                        19, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        true, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoDoc(
+                        "string", //typeName
+                        Types.LONGVARCHAR, //dataType
+                        0, //precision
+                        "'", //literalPrefix
+                        "'", //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        true, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        // We do not have indexes.
+        // We do not have indexes for now.
         return new MongoResultSet(
                 null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
     }
