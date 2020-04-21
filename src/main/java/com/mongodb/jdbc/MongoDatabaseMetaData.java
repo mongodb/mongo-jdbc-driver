@@ -376,115 +376,120 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 + "UCASE";
     }
 
+    private final String[] systemFunctions =
+            new String[] {
+                "ACOS",
+                "ASCII",
+                "ASIN",
+                "ATAN",
+                "ATAN2",
+                "CEIL",
+                "CHAR",
+                "CHARACTERLENGTH",
+                "COALESCE",
+                "CONCAT",
+                "CONCATWS",
+                "CONNECTIONID",
+                "CONV",
+                "CONVERT",
+                "COS",
+                "COT",
+                "CURRENTDATE",
+                "CURRENTTIMESTAMP",
+                "CURTIME",
+                "DATABASE",
+                "DATE",
+                "DATEADD",
+                "DATEDIFF",
+                "DATEFORMAT",
+                "DATESUB",
+                "DAYNAME",
+                "DAYOFMONTH",
+                "DAYOFWEEK",
+                "DAYOFYEAR",
+                "DEGREES",
+                "ELT",
+                "EXP",
+                "EXTRACT",
+                "FIELD",
+                "FLOOR",
+                "FROMDAYS",
+                "FROMUNIXTIME",
+                "GREATEST",
+                "HOUR",
+                "IF",
+                "IFNULL",
+                "INSERT",
+                "INSTR",
+                "INTERVAL",
+                "LASTDAY",
+                "LCASE",
+                "LEAST",
+                "LEFT",
+                "LENGTH",
+                "LN",
+                "LOCATE",
+                "LOG",
+                "LOG10",
+                "LOG2",
+                "LPAD",
+                "LTRIM",
+                "MAKEDATE",
+                "MD5",
+                "MICROSECOND",
+                "MID",
+                "MINUTE",
+                "MOD",
+                "MONTH",
+                "MONTHNAME",
+                "NOPUSHDOWN",
+                "NULLIF",
+                "PI",
+                "POW",
+                "QUARTER",
+                "RADIANS",
+                "RAND",
+                "REPEAT",
+                "REPLACE",
+                "REVERSE",
+                "RIGHT",
+                "ROUND",
+                "RPAD",
+                "RTRIM",
+                "SECOND",
+                "SIGN",
+                "SIN",
+                "SLEEP",
+                "SPACE",
+                "SQRT",
+                "STRTODATE",
+                "SUBSTRING",
+                "SUBSTRINGINDEX",
+                "TAN",
+                "TIMEDIFF",
+                "TIMETOSEC",
+                "TIMESTAMP",
+                "TIMESTAMPADD",
+                "TIMESTAMPDIFF",
+                "TODAYS",
+                "TOSECONDS",
+                "TRIM",
+                "TRUNCATE",
+                "UCASE",
+                "UNIXTIMESTAMP",
+                "USER",
+                "UTCDATE",
+                "UTCTIMESTAMP",
+                "VERSION",
+                "WEEK",
+                "WEEKDAY",
+                "YEAR",
+                "YEARWEEK"
+            };
+
     @Override
     public String getSystemFunctions() throws SQLException {
-        return "ACOS,"
-                + "ASCII,"
-                + "ASIN,"
-                + "ATAN,"
-                + "ATAN2,"
-                + "CEIL,"
-                + "CHAR,"
-                + "CHARACTERLENGTH,"
-                + "COALESCE,"
-                + "CONCAT,"
-                + "CONCATWS,"
-                + "CONNECTIONID,"
-                + "CONV,"
-                + "CONVERT,"
-                + "COS,"
-                + "COT,"
-                + "CURRENTDATE,"
-                + "CURRENTTIMESTAMP,"
-                + "CURTIME,"
-                + "DATABASE,"
-                + "DATE,"
-                + "DATEADD,"
-                + "DATEDIFF,"
-                + "DATEFORMAT,"
-                + "DATESUB,"
-                + "DAYNAME,"
-                + "DAYOFMONTH,"
-                + "DAYOFWEEK,"
-                + "DAYOFYEAR,"
-                + "DEGREES,"
-                + "ELT,"
-                + "EXP,"
-                + "EXTRACT,"
-                + "FIELD,"
-                + "FLOOR,"
-                + "FROMDAYS,"
-                + "FROMUNIXTIME,"
-                + "GREATEST,"
-                + "HOUR,"
-                + "IF,"
-                + "IFNULL,"
-                + "INSERT,"
-                + "INSTR,"
-                + "INTERVAL,"
-                + "LASTDAY,"
-                + "LCASE,"
-                + "LEAST,"
-                + "LEFT,"
-                + "LENGTH,"
-                + "LN,"
-                + "LOCATE,"
-                + "LOG,"
-                + "LOG10,"
-                + "LOG2,"
-                + "LPAD,"
-                + "LTRIM,"
-                + "MAKEDATE,"
-                + "MD5,"
-                + "MICROSECOND,"
-                + "MID,"
-                + "MINUTE,"
-                + "MOD,"
-                + "MONTH,"
-                + "MONTHNAME,"
-                + "NOPUSHDOWN,"
-                + "NULLIF,"
-                + "PI,"
-                + "POW,"
-                + "QUARTER,"
-                + "RADIANS,"
-                + "RAND,"
-                + "REPEAT,"
-                + "REPLACE,"
-                + "REVERSE,"
-                + "RIGHT,"
-                + "ROUND,"
-                + "RPAD,"
-                + "RTRIM,"
-                + "SECOND,"
-                + "SIGN,"
-                + "SIN,"
-                + "SLEEP,"
-                + "SPACE,"
-                + "SQRT,"
-                + "STRTODATE,"
-                + "SUBSTRING,"
-                + "SUBSTRINGINDEX,"
-                + "TAN,"
-                + "TIMEDIFF,"
-                + "TIMETOSEC,"
-                + "TIMESTAMP,"
-                + "TIMESTAMPADD,"
-                + "TIMESTAMPDIFF,"
-                + "TODAYS,"
-                + "TOSECONDS,"
-                + "TRIM,"
-                + "TRUNCATE,"
-                + "UCASE,"
-                + "UNIXTIMESTAMP,"
-                + "USER,"
-                + "UTCDATE,"
-                + "UTCTIMESTAMP,"
-                + "VERSION,"
-                + "WEEK,"
-                + "WEEKDAY,"
-                + "YEAR,"
-                + "YEARWEEK";
+        return String.join(",", systemFunctions);
     }
 
     @Override
@@ -1716,12 +1721,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsResultSetHoldability(int holdability) throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return false;
     }
 
     @Override
     public int getResultSetHoldability() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return ResultSet.HOLD_CURSORS_OVER_COMMIT;
     }
 
     @Override
@@ -1766,7 +1771,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return RowIdLifetime.ROWID_UNSUPPORTED;
     }
 
     @Override
@@ -1861,8 +1866,52 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
-        // TODO: Finish (need to figure out what patterns should look like)"
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+
+        ArrayList<MongoResultDoc> rows = new ArrayList<>(systemFunctions.length);
+
+        for (String functionName : systemFunctions) {
+            MongoResultDoc row = new MongoResultDoc();
+            row.values = new ArrayList<>();
+            row.values.add(newColumn("", "", "", "FUNCTION_CAT", "NAME", new BsonNull()));
+            row.values.add(
+                    newColumn("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
+            row.values.add(
+                    newColumn(
+                            "",
+                            "",
+                            "",
+                            "FUNCTION_NAME",
+                            "FUNCTION_NAME",
+                            new BsonString(functionName)));
+            row.values.add(
+                    newColumn(
+                            "",
+                            "",
+                            "",
+                            "REMARKS",
+                            "REMARKS",
+                            // perhaps at some point add comments explaining the function.
+                            new BsonString("")));
+            row.values.add(
+                    newColumn(
+                            "",
+                            "",
+                            "",
+                            "FUNCTION_TYPE",
+                            "DEFAULT_VALUE",
+                            new BsonInt32(functionNoTable)));
+            row.values.add(
+                    newColumn(
+                            "",
+                            "",
+                            "",
+                            "SPECIFIC_NAME",
+                            "SPECIFIC_NAME",
+                            new BsonString(functionName)));
+            rows.add(row);
+        }
+
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
