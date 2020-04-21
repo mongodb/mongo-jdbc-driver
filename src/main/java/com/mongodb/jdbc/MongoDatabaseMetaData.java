@@ -1027,21 +1027,47 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "    TABLE_CATALOG as TABLE_CAT, "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
+                        + "    TABLE_NAME,"
+                        + "    TABLE_TYPE,"
+                        + "    NULL as REMARKS,"
+                        + "    NULL as TYPE_CAT,"
+                        + "    NULL as TYPE_SCHEM,"
+                        + "    NULL as TYPE_NAME,"
+                        + "    NULL as SELF_REFERENCING_COL_NAME,"
+                        + "    NULL as REF_GENERATION"
+                        + "from INFORMATION_SCHEMA.TABLES"
+                        + "where "
+                        + "    TABLE_SCHEMA like "
+                        + schemaPattern
+                        + "    AND TABLE_NAME like "
+                        + tableNamePattern
+                        + "'"
+                        + "order by TABLE_TYPE, TABLE_CAT, TABLE_SCHEMA, TABLE_NAME");
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        // We will never support schemata.
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
+                        + "    TABLE_CATALOG as TABLE_CAT, "
+                        + "from INFORMATION_SCHEMA.SCHEMAS"
+                        + "order by TABLE_CAT, TABLE_SCHEMA");
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        MongoResultDoc row = new MongoResultDoc();
+        ArrayList<MongoResultDoc> rows = new ArrayList<>(1);
+        row.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString("def")));
+        rows.add(row);
+        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
     @Override
@@ -1053,46 +1079,68 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
-    private final String dataTypeCase =
-            ""
-                    + "case DATA_TYPE "
-                    + "    when 'array'    then "
-                    + Types.NULL
-                    + "    when 'binData'  then "
-                    + Types.NULL
-                    + "    when 'bool'     then "
-                    + Types.BIT
-                    + "    when 'date'     then "
-                    + Types.TIMESTAMP
-                    + "    when 'null'     then "
-                    + Types.NULL
-                    + "    when 'decimal'  then "
-                    + Types.DECIMAL
-                    + "    when 'document' then "
-                    + Types.NULL
-                    + "    when 'double'   then "
-                    + Types.DOUBLE
-                    + "    when 'int'      then "
-                    + Types.INTEGER
-                    + "    when 'long'     then "
-                    + Types.INTEGER
-                    + "    when 'string'   then "
-                    + Types.LONGVARCHAR
-                    + "end";
+    private String getDataTypeNumCase(String col) {
+        return "case "
+                + col
+                + "    when 'array'    then "
+                + Types.NULL
+                + "    when 'binData'  then "
+                + Types.NULL
+                + "    when 'bool'     then "
+                + Types.BIT
+                + "    when 'date'     then "
+                + Types.TIMESTAMP
+                + "    when 'null'     then "
+                + Types.NULL
+                + "    when 'decimal'  then "
+                + Types.DECIMAL
+                + "    when 'document' then "
+                + Types.NULL
+                + "    when 'double'   then "
+                + Types.DOUBLE
+                + "    when 'int'      then "
+                + Types.INTEGER
+                + "    when 'long'     then "
+                + Types.INTEGER
+                + "    when 'string'   then "
+                + Types.LONGVARCHAR
+                + "end";
+    }
 
-    private final String nullableCase =
-            ""
-                    + "case IS_NULLABLE "
-                    + "     when 'YES'     then "
-                    + ResultSetMetaData.columnNullable
-                    + "     when 'NO'      then "
-                    + ResultSetMetaData.columnNoNulls
-                    + "end";
+    private String getDataTypePrecCase(String col) {
+        return "case "
+                + col
+                + "    when 'decimal' then 34"
+                + "    when 'double'  then 15"
+                + "    when 'int'     then 10"
+                + "    when 'long'    then 19"
+                + "    else 0"
+                + "end";
+    }
+
+    private String getDataTypeScaleCase(String col) {
+        return "case "
+                + col
+                + "    when 'decimal' then 34"
+                + "    when 'double'  then 15"
+                + "    else 0"
+                + "end";
+    }
 
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
+
+        final String nullableCase =
+                ""
+                        + "case IS_NULLABLE "
+                        + "     when 'YES'     then "
+                        + ResultSetMetaData.columnNullable
+                        + "     when 'NO'      then "
+                        + ResultSetMetaData.columnNoNulls
+                        + "end";
+
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -1100,7 +1148,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    TABLE_SCHEMA as TABLE_SCHEM,"
                         + "    TABLE_NAME,"
                         + "    COLUMN_NAME,"
-                        + dataTypeCase
+                        + getDataTypeNumCase("DATA_TYPE")
                         + " as DATA_TYPE,"
                         + "    DATA_TYPE as TYPE_NAME ,"
                         + "    CHARACTER_MAXIMUM_LENGTH as COLUMN_SIZE,"
@@ -1122,21 +1170,21 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    0 as SOURCE_DATA_TYPE,"
                         + "    0 as IS_AUTOINCREMENT,"
                         + "    0 as IS_GENERATEDCOLUMN,"
-                        + "from COLUMNS"
+                        + "from INFORMATION_SCHEMA.COLUMNS"
                         + "where "
-                        + "    TABLE_SCHEMA like "
+                        + "    TABLE_SCHEMA like '"
                         + schemaPattern
-                        + "    AND TABLE_NAME like "
+                        + "'    AND TABLE_NAME like '"
                         + tableNamePattern
-                        + "    AND COLUMN_NAME like "
-                        + columnNamePattern);
+                        + "'    AND COLUMN_NAME like '"
+                        + columnNamePattern
+                        + "'");
     }
 
     @Override
     public ResultSet getColumnPrivileges(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -1144,11 +1192,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    TABLE_SCHEMA as TABLE_SCHEM,"
                         + "    TABLE_NAME,"
                         + "    COLUMN_NAME,"
-                        + "    NULL as GRANTOR,"
-                        + "    NULL as GRANTEE,"
-                        + "    'SELECT' as PRIVILEGE,"
-                        + "    'NO' as IS_GRANTABLE,"
-                        + "from COLUMNS"
+                        + "    GRANTOR,"
+                        + "    GRANTEE,"
+                        + "    PRIVILEGE_TYPE as PRIVILEGE,"
+                        + "    IS_GRANTABLE,"
+                        + "from INFORMATION_SCHEMA.COLUMN_PRIVILEGS"
                         + "where "
                         + "    TABLE_SCHEMA like "
                         + schemaPattern
@@ -1167,49 +1215,49 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    TABLE_CATALOG as TABLE_CAT, "
                         + "    TABLE_SCHEMA as TABLE_SCHEM,"
                         + "    TABLE_NAME,"
-                        + "    NULL as GRANTOR,"
-                        + "    NULL as GRANTEE,"
-                        + "    'SELECT' as PRIVILEGE,"
-                        + "    'NO' as IS_GRANTABLE,"
-                        + "from TABLES"
+                        + "    GRANTOR,"
+                        + "    GRANTEE,"
+                        + "    PRIVILEGE_TYPE as PRIVILEGE,"
+                        + "    IS_GRANTABLE,"
+                        + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES"
                         + "where "
-                        + "    TABLE_SCHEMA like "
+                        + "    TABLE_SCHEMA like '"
                         + schemaPattern
-                        + "    AND TABLE_NAME like "
-                        + tableNamePattern);
+                        + "'    AND TABLE_NAME like '"
+                        + tableNamePattern
+                        + "'");
     }
 
     @Override
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-        MongoResultDoc row = new MongoResultDoc();
-        ArrayList<MongoResultDoc> rows = new ArrayList<>(1);
-        row.values = new ArrayList<>();
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        "SCOPE",
-                        "SCOPE",
-                        new BsonString("bestMongoResultDocSeassion")));
-        row.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
-        row.values.add(
-                newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(Types.LONGVARCHAR)));
-        row.values.add(newColumn("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString("string")));
-        row.values.add(newColumn("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", new BsonInt32(0)));
-        row.values.add(newColumn("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", new BsonInt32(0)));
-        row.values.add(newColumn("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", new BsonNull()));
-        row.values.add(
-                newColumn(
-                        "",
-                        "",
-                        "",
-                        "PSEUDO_COLUMN",
-                        "PSEUDO_COLUMN",
-                        new BsonInt32(bestRowNotPseudo)));
-        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "NULL as SCOPE, "
+                        + "c.COLUMN_NAME AS COLUMN_NAME, "
+                        + getDataTypeNumCase("c.DATA_TYPE")
+                        + " as DATA_TYPE, "
+                        + "c.DATE_TYPE as TYPE_NAME, "
+                        + getDataTypePrecCase("c.DATA_TYPE")
+                        + " as COLUMN_SIZE, "
+                        + "NULL as BUFFER_LENGTH, "
+                        + getDataTypeScaleCase("c.DATA_TYPE")
+                        + " as DECIMAL_DIGITS, "
+                        + bestRowNotPseudo
+                        + " as PSEUDO_COLUMN"
+                        + "from INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu inner join INFORMATION_SCHEMA.COLUMNS as c "
+                        + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
+                        + "and kcu.TABLE_NAME = c.TABLE_NAME "
+                        + "and kcu.COLUMN_NAME = c.COLUMN_NAME "
+                        + "where kcu.TABLE_SCHEMA = '"
+                        + schema
+                        + "'"
+                        + "  and kcu.TABLE_NAME = '"
+                        + table
+                        + "'"
+                        + "  and kcu.CONSTRAINT_TYPE = 'PRIMARY KEY'");
     }
 
     @Override
@@ -1223,16 +1271,23 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        MongoResultDoc doc = new MongoResultDoc();
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
-        doc.values = new ArrayList<>();
-        doc.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString(catalog)));
-        doc.values.add(newColumn("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
-        doc.values.add(newColumn("", "", "", "TABLE_NAME", "TABLE_NAME", new BsonString(table)));
-        doc.values.add(newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("_id")));
-        doc.values.add(newColumn("", "", "", "KEY_SEQ", "KEY_SEQ", new BsonInt32(1)));
-        doc.values.add(newColumn("", "", "", "PK_NAME", "PK_NAME", new BsonNull()));
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "TABLE_CATALOG as TABLE_CAT, "
+                        + "TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "TABLE_NAME as TABLE_NAME, "
+                        + "COLUMN_NAME AS COLUMN_NAME, "
+                        + "ORDINAL_POSITION as KEY_SEQ, "
+                        + "CONSTRAINT_NAME as PK_NAME, "
+                        + "from INFORMATION_SCHEMA.KEY_COLUMN_USAGE "
+                        + "where TABLE_SCHEM = '"
+                        + schema
+                        + "'"
+                        + "  and TABLE_NAME = '"
+                        + table
+                        + "'"
+                        + "  and CONSTRAINT_TYPE = 'PRIMARY KEY'");
     }
 
     @Override
@@ -1264,32 +1319,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(
                 null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
     }
-
-    //+ "case DATA_TYPE "
-    //+ "    when 'array'    then "
-    //+ Types.NULL
-    //+ "    when 'binData'  then "
-    //+ Types.NULL
-    //+ "    when 'bool'     then "
-    //+ Types.BIT
-    //+ "    when 'date'     then "
-    //+ Types.TIMESTAMP
-    //+ "    when 'null'     then "
-    //+ Types.NULL
-    //+ "    when 'decimal'  then "
-    //+ Types.DECIMAL
-    //+ "    when 'document' then "
-    //+ Types.NULL
-    //+ "    when 'double'   then "
-    //+ Types.DOUBLE
-    //+ "    when 'int'      then "
-    //+ Types.INTEGER
-    //+ "    when 'long'     then "
-    //+ Types.INTEGER
-    //+ "    when 'string'   then "
-    //+ Types.LONGVARCHAR
-    //+ "end";
-    //
 
     private MongoResultDoc getTypeInfoDoc(
             String typeName,
@@ -1379,20 +1408,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getTypeInfo() throws SQLException {
         ArrayList<MongoResultDoc> docs = new ArrayList<>(11);
-
-        //            String typeName,
-        //            int dataType,
-        //            int precision,
-        //            String literalPrefix,
-        //            String literalSuffix,
-        //            int nullable,
-        //            boolean caseSensitive,
-        //            int searchable,
-        //            boolean unsigned,
-        //            boolean fixedPrecScale,
-        //            int minScale,
-        //            int maxScale,
-        //            int numPrecRadix) {
 
         docs.add(
                 getTypeInfoDoc(
@@ -1529,9 +1544,37 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        // We do not have indexes for now.
-        return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "tc.TABLE_CATALOG as TABLE_CAT, "
+                        + "tc.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "tc.TABLE_NAME as TABLE_NAME, "
+                        + "tc.CONSTRAINT_TYPE not in  ('PRIMARY KEY', 'UNIQUE') as NON_UNIQUE, "
+                        + "tc.CONSTRAINT_CATALOG as INDEX_QUALIFIER, "
+                        + "tc.CONSTRAINT_NAME as INDEX_NAME, "
+                        + "tc.CONSTRAINT_TYPE as TYPE, "
+                        + "kcu.ORDINAL_POSITION as ORDINAL_POSITION, "
+                        + "kcu.COLUMN_NAME AS COLUMN_NAME, "
+                        + "'A' as ASC_OR_DESC, "
+                        + "NULL as CARDINALITY, "
+                        + "NULL as PAGES, "
+                        + "NULL as FILTER_CONDITION "
+                        + "from INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc inner join "
+                        + "     INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu "
+                        + "  on  tc.CONSTRAINT_SCHEMA = kcu.CONSTRAINT_SCHEMA "
+                        + "  and tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME "
+                        + "  and tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA "
+                        + "  and tc.TABLE_NAME = kcu.TABLE_NAME "
+                        + "  and tc.TABLE_SCHEMA = '"
+                        + schema
+                        + "'"
+                        + "  and tc.TABLE_NAME = '"
+                        + table
+                        + "'"
+                        + ((unique)
+                                ? "where tc.CONSTRAINT_TYPE in ('PRIMARY KEY', 'UNIQUE')"
+                                : ""));
     }
 
     //--------------------------JDBC 2.0-----------------------------
