@@ -21,10 +21,11 @@ for fun in functions:
     args = []
     for arg in invocation['arguments']:
         args.append(tyName(arg['eval_type']))
-    functions_info.append((fun['_id'], tyName(invocation['return_type']), fun['description'], "new String[]{%s}"%(",".join(args))))
+    functions_info.append(('"' + fun['_id'] + '"', tyName(invocation['return_type']),
+        '"' + fun['description'] + '"', "new String[]{%s}"%(",".join(args))))
 functions_decls = []
 for info in functions_info:
-    functions_decls.append('new MongoSystemFunction("%s", "%s", "%s", %s)'%(info[0].upper(), info[1], info[2], info[3]))
+    functions_decls.append('new MongoSystemFunction(%s, %s, %s, %s)'%(info[0].upper(), info[1], info[2], info[3]))
 
 
 print("public class MongoSystemFunction {")
