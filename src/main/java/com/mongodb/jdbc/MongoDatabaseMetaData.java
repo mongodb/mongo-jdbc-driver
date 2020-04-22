@@ -185,6 +185,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSQLKeywords() throws SQLException {
+        // These come directly from the mongosqld keywords file.
         return "ADDDATE,"
                 + "AUTO_INCREMENT,"
                 + "BINLOG,"
@@ -318,220 +319,64 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 + "YEAR_MONTH";
     }
 
+    private static final String[] systemFunctionNames;
+    private static final String systemFunctionNamesString;
+    private static final String numericFunctionsString;
+    private static final String stringFunctionsString;
+    private static final String dateFunctionsString;
+
+    static {
+        systemFunctionNames = new String[MongoSystemFunction.systemFunctions.length];
+        for (int i = 0; i < systemFunctionNames.length; ++i) {
+            systemFunctionNames[i] = MongoSystemFunction.systemFunctions[i].name;
+        }
+        systemFunctionNamesString = String.join(",", systemFunctionNames);
+        ArrayList<String> numericFunctions = new ArrayList<>(systemFunctionNames.length);
+        ArrayList<String> stringFunctions = new ArrayList<>(systemFunctionNames.length);
+        ArrayList<String> dateFunctions = new ArrayList<>(systemFunctionNames.length);
+        for (int i = 0; i < MongoSystemFunction.systemFunctions.length; ++i) {
+            for (String argType : MongoSystemFunction.systemFunctions[i].argTypes) {
+				String name = MongoSystemFunction.systemFunctions[i].name;
+				switch (argType) {
+					case "string":
+						stringFunctions.add(name);
+						break;
+					case "numeric":
+					case "long":
+					case "int":
+					case "double":
+					case "decimal":
+						numericFunctions.add(name);
+						break;
+				    case "date":
+						dateFunctions.add(name);
+						break;
+				}
+			}
+        }
+		numericFunctionsString = String.join(",", numericFunctions);
+		stringFunctionsString = String.join(",", stringFunctions);
+		dateFunctionsString = String.join(",", dateFunctions);
+    }
+
     @Override
     public String getNumericFunctions() throws SQLException {
-        return "ACOS,"
-                + "ASIN,"
-                + "ATAN,"
-                + "ATAN2,"
-                + "CEIL,"
-                + "COS,"
-                + "COT,"
-                + "DEGREES,"
-                + "EXP,"
-                + "FLOOR,"
-                + "LN,"
-                + "LOG,"
-                + "LOG10,"
-                + "LOG2,"
-                + "MOD,"
-                + "PI,"
-                + "POW,"
-                + "ROUND,"
-                + "SIGN,"
-                + "SIN,"
-                + "SQRT,"
-                + "TAN,"
-                + "TRUNCATE";
+		return numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return "ASCII,"
-                + "CHAR,"
-                + "CHARACTERLENGTH,"
-                + "CONCAT,"
-                + "CONCATWS,"
-                + "ELT,"
-                + "INSERT,"
-                + "INSTR,"
-                + "INTERVAL,"
-                + "LEFT,"
-                + "LENGTH,"
-                + "LOCATE,"
-                + "LPAD,"
-                + "LTRIM,"
-                + "MD5,"
-                + "MID,"
-                + "REPEAT,"
-                + "REPLACE,"
-                + "REVERSE,"
-                + "RIGHT,"
-                + "RPAD,"
-                + "RTRIM,"
-                + "SPACE,"
-                + "SUBSTRING,"
-                + "SUBSTRINGINDEX,"
-                + "TRIM,"
-                + "UCASE";
+		return stringFunctionsString;
     }
-
-    private final String[] systemFunctions =
-            new String[] {
-                "ACOS",
-                "ASCII",
-                "ASIN",
-                "ATAN",
-                "ATAN2",
-                "CEIL",
-                "CHAR",
-                "CHARACTERLENGTH",
-                "COALESCE",
-                "CONCAT",
-                "CONCATWS",
-                "CONNECTIONID",
-                "CONV",
-                "CONVERT",
-                "COS",
-                "COT",
-                "CURRENTDATE",
-                "CURRENTTIMESTAMP",
-                "CURTIME",
-                "DATABASE",
-                "DATE",
-                "DATEADD",
-                "DATEDIFF",
-                "DATEFORMAT",
-                "DATESUB",
-                "DAYNAME",
-                "DAYOFMONTH",
-                "DAYOFWEEK",
-                "DAYOFYEAR",
-                "DEGREES",
-                "ELT",
-                "EXP",
-                "EXTRACT",
-                "FIELD",
-                "FLOOR",
-                "FROMDAYS",
-                "FROMUNIXTIME",
-                "GREATEST",
-                "HOUR",
-                "IF",
-                "IFNULL",
-                "INSERT",
-                "INSTR",
-                "INTERVAL",
-                "LASTDAY",
-                "LCASE",
-                "LEAST",
-                "LEFT",
-                "LENGTH",
-                "LN",
-                "LOCATE",
-                "LOG",
-                "LOG10",
-                "LOG2",
-                "LPAD",
-                "LTRIM",
-                "MAKEDATE",
-                "MD5",
-                "MICROSECOND",
-                "MID",
-                "MINUTE",
-                "MOD",
-                "MONTH",
-                "MONTHNAME",
-                "NOPUSHDOWN",
-                "NULLIF",
-                "PI",
-                "POW",
-                "QUARTER",
-                "RADIANS",
-                "RAND",
-                "REPEAT",
-                "REPLACE",
-                "REVERSE",
-                "RIGHT",
-                "ROUND",
-                "RPAD",
-                "RTRIM",
-                "SECOND",
-                "SIGN",
-                "SIN",
-                "SLEEP",
-                "SPACE",
-                "SQRT",
-                "STRTODATE",
-                "SUBSTRING",
-                "SUBSTRINGINDEX",
-                "TAN",
-                "TIMEDIFF",
-                "TIMETOSEC",
-                "TIMESTAMP",
-                "TIMESTAMPADD",
-                "TIMESTAMPDIFF",
-                "TODAYS",
-                "TOSECONDS",
-                "TRIM",
-                "TRUNCATE",
-                "UCASE",
-                "UNIXTIMESTAMP",
-                "USER",
-                "UTCDATE",
-                "UTCTIMESTAMP",
-                "VERSION",
-                "WEEK",
-                "WEEKDAY",
-                "YEAR",
-                "YEARWEEK"
-            };
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return String.join(",", systemFunctions);
+		return systemFunctionNamesString;
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return "CURRENTDATE,"
-                + "CURRENTTIMESTAMP,"
-                + "CURTIME,"
-                + "DATE,"
-                + "DATEADD,"
-                + "DATEDIFF,"
-                + "DATEFORMAT,"
-                + "DATESUB,"
-                + "DAYNAME,"
-                + "DAYOFMONTH,"
-                + "DAYOFWEEK,"
-                + "DAYOFYEAR,"
-                + "EXTRACT,"
-                + "FROMDAYS,"
-                + "FROMUNIXTIME,"
-                + "LASTDAY,"
-                + "MAKEDATE,"
-                + "MICROSECOND,"
-                + "MINUTE,"
-                + "MONTH,"
-                + "MONTHNAME,"
-                + "QUARTER,"
-                + "SECOND,"
-                + "STRTODATE,"
-                + "TIMEDIFF,"
-                + "TIMETOSEC,"
-                + "TIMESTAMP,"
-                + "TIMESTAMPADD,"
-                + "TIMESTAMPDIFF,"
-                + "TODAYS,"
-                + "TOSECONDS,"
-                + "UNIXTIMESTAMP,"
-                + "UTCDATE,"
-                + "UTCTIMESTAMP,"
-                + "WEEK,"
-                + "WEEKDAY,"
-                + "YEAR,"
-                + "YEARWEEK";
+		return dateFunctionsString;
     }
 
     @Override
@@ -1937,9 +1782,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MongoResultDoc> rows = new ArrayList<>(systemFunctions.length);
+        ArrayList<MongoResultDoc> rows = new ArrayList<>(systemFunctionNames.length);
 
-        for (String functionName : systemFunctions) {
+        for (String functionName : systemFunctionNames) {
             MongoResultDoc row = new MongoResultDoc();
             row.values = new ArrayList<>();
             row.values.add(newColumn("", "", "", "FUNCTION_CAT", "NAME", new BsonNull()));

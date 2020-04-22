@@ -28,6 +28,7 @@ for info in functions_info:
     functions_decls.append('new MongoSystemFunction(%s, %s, %s, %s)'%(info[0].upper(), info[1], info[2], info[3]))
 
 
+print("package com.mongodb.jdbc;\n")
 print("public class MongoSystemFunction {")
 print("    public String name;")
 print("    public String returnType;")
