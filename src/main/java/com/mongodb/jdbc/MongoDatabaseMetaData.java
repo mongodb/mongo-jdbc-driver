@@ -1191,15 +1191,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     private String getDataTypeNumCase(String col) {
-		return getTypeCase(col, typeNums);
+        return getTypeCase(col, typeNums);
     }
 
     private String getDataTypePrecCase(String col) {
-		return getTypeCase(col, typePrecs);
+        return getTypeCase(col, typePrecs);
     }
 
     private String getDataTypeScaleCase(String col) {
-		return getTypeCase(col, typeScales);
+        return getTypeCase(col, typeScales);
     }
 
     @Override
