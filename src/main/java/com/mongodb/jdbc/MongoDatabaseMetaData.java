@@ -10,6 +10,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
@@ -55,7 +56,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
-        // TODO: permissions stuff here?
         return true;
     }
 
@@ -1084,52 +1084,122 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
+    public static String[] typeNames =
+            new String[] {
+                "null",
+                "document",
+                "binData",
+                "numeric",
+                "string",
+                "long",
+                "int",
+                "date",
+                "date",
+                "double",
+                "decimal",
+            };
+
+    public static HashMap<String, Integer> typeNums;
+    public static HashMap<String, Integer> typePrecs;
+    public static HashMap<String, Integer> typeScales;
+
+    static {
+        for (String name : typeNames) {
+            typeNums.put(name, typeNum(name));
+            typePrecs.put(name, typePrec(name));
+            typeScales.put(name, typeScale(name));
+        }
+    }
+
+    public static int typeNum(String typeName) {
+        if (typeName == null) {
+            return Types.NULL;
+        }
+        switch (typeName) {
+            case "null":
+                return Types.NULL;
+            case "document":
+                return Types.NULL;
+            case "binData":
+                return Types.BINARY;
+            case "numeric":
+                return Types.NUMERIC;
+            case "string":
+                return Types.LONGVARCHAR;
+            case "long":
+                return Types.INTEGER;
+            case "int":
+                return Types.INTEGER;
+            case "date":
+                return Types.TIMESTAMP;
+            case "double":
+                return Types.DOUBLE;
+            case "decimal":
+                return Types.DECIMAL;
+        }
+        return 0;
+    }
+
+    public static int typePrec(String typeName) {
+        if (typeName == null) {
+            return 0;
+        }
+        switch (typeName) {
+            case "numeric":
+                return 34;
+            case "double":
+                return 15;
+            case "long":
+                return 19;
+            case "int":
+                return 10;
+            case "decimal":
+                return 34;
+        }
+        return 0;
+    }
+
+    public static int typeScale(String typeName) {
+        if (typeName == null) {
+            return 0;
+        }
+        switch (typeName) {
+            case "numeric":
+                return 34;
+            case "double":
+                return 15;
+            case "decimal":
+                return 34;
+        }
+        return 0;
+    }
+
+    private String getTypeCase(String col, HashMap<String, Integer> outs) {
+        StringBuilder ret = new StringBuilder("case ");
+        ret.append(col);
+        ret.append("\n");
+        for (String name : typeNames) {
+            ret.append("when ");
+            ret.append("'");
+            ret.append(name);
+            ret.append("' then ");
+            ret.append(outs.get(name).toString());
+            ret.append("\n");
+        }
+        ret.append("end");
+        return ret.toString();
+    }
+
     private String getDataTypeNumCase(String col) {
-        return "case "
-                + col
-                + "    when 'array'    then "
-                + Types.NULL
-                + "    when 'binData'  then "
-                + Types.NULL
-                + "    when 'bool'     then "
-                + Types.BIT
-                + "    when 'date'     then "
-                + Types.TIMESTAMP
-                + "    when 'null'     then "
-                + Types.NULL
-                + "    when 'decimal'  then "
-                + Types.DECIMAL
-                + "    when 'document' then "
-                + Types.NULL
-                + "    when 'double'   then "
-                + Types.DOUBLE
-                + "    when 'int'      then "
-                + Types.INTEGER
-                + "    when 'long'     then "
-                + Types.INTEGER
-                + "    when 'string'   then "
-                + Types.LONGVARCHAR
-                + "end";
+		return getTypeCase(col, typeNums);
     }
 
     private String getDataTypePrecCase(String col) {
-        return "case "
-                + col
-                + "    when 'decimal' then 34"
-                + "    when 'double'  then 15"
-                + "    when 'int'     then 10"
-                + "    when 'long'    then 19"
-                + "    else 0"
-                + "end";
+		return getTypeCase(col, typePrecs);
     }
 
     private String getDataTypeScaleCase(String col) {
-        return "case "
-                + col
-                + "    when 'decimal' then 34"
-                + "    when 'double'  then 15"
-                + "    else 0"
-                + "end";
+		return getTypeCase(col, typeScales);
     }
 
     @Override
