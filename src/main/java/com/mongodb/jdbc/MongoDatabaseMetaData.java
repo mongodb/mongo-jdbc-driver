@@ -1062,7 +1062,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "select "
                         + "    TABLE_SCHEMA as TABLE_SCHEM,"
                         + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "from INFORMATION_SCHEMA.SCHEMAS"
+                        + "from INFORMATION_SCHEMA.SCHEMATA"
                         + "order by TABLE_CAT, TABLE_SCHEMA");
     }
 

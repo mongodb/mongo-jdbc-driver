@@ -231,6 +231,9 @@ public class MongoDriver implements Driver {
     private static ParseResult normalizeConnectionOptions(
             ConnectionString clientURI, Properties info) throws SQLException {
 
+        if (info == null) {
+            info = new Properties();
+        }
         // The coalesce function takse the first non-null argument, returning null only
         // if both arguments are null. The java type system requires us to write this twice,
         // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
@@ -268,7 +271,6 @@ public class MongoDriver implements Driver {
         }
         // set the user
         String user = s.coalesce(uriUser, propertyUser);
-        info.setProperty(USER, user);
         // handle disagreements on password.
         if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
             throw new SQLException("uri and properties disagree on password");

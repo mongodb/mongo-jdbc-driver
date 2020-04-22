@@ -336,6 +336,7 @@ public class MongoConnection implements Connection {
         }
 
         if (isClosed()) {
+            System.out.println("closed");
             return false;
         }
         // We use createStatement to test the connection. Since we are not allowed
