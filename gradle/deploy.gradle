@@ -5,32 +5,10 @@ allprojects {
         if (version.endsWith('-SNAPSHOT')) {
             description = 'Publishes snapshots to Sonatype'
             dependsOn ':publishToSonatype'
-        }
-        else {
+        } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
-            if (project.gitVersion != version) {
-                def cause = """
-                | Version mismatch:
-                | =================
-                |
-                | $version != $gitVersion 
-                |
-                | The project version does not match the git tag.
-                |""".stripMargin()
-                throw new GradleException(cause)
-            } else if (project.gitLastComment != "BUMP v" + version) {
-                def cause = """
-                | git comment for version bump is not valid
-                | =================
-                |
-                | Invalid comment: ${project.gitLastComment}
-                | should be: BUMP v$version
-                |""".stripMargin()
-                throw new GradleException(cause)
-            } else {
-                println("Publishing: ${project.name} : ${project.gitVersion}")
-            }
-            if (project.gitVersion == version && project.name == rootProject.name) {
+            def (boolean passed, String err) = checkReleaseConditions()
+            if (passed && project.name == rootProject.name) {
                 dependsOn ':closeAndReleaseRepository'
                 dependsOn ':publishToSonatype'
                 // Make sure we publish to staging first
@@ -40,6 +18,39 @@ allprojects {
             }
         }
     }
+
+    publishMaven.doFirst {
+        def (boolean passed, String err) = checkReleaseConditions()
+        if (!passed) {
+            throw new GradleException(err)
+        } else {
+            println("Publishing: ${project.name} : ${project.gitVersion}")
+        }
+    }
 }
 
-
+def checkReleaseConditions() {
+    if (!version.endsWith('-SNAPSHOT')) {
+        if (project.gitVersion != version) {
+            def cause = """
+                | Version mismatch:
+                | =================
+                |
+                | $version != $gitVersion
+                |
+                | The project version does not match the git tag.
+                |""".stripMargin()
+            return [false, cause]
+        } else if (!project.gitLastComment.equals("BUMP v" + version)) {
+            def cause = """
+                | git comment for version bump is not valid
+                | =================
+                |
+                | Invalid comment: ${project.gitLastComment}
+                | should be: BUMP v$version
+                |""".stripMargin()
+            return [false, cause]
+        }
+    }
+    return [true, null]
+}
