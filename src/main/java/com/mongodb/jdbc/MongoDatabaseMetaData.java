@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -50,7 +51,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             }
         }
         String escaped = value.replace("'", "''");
-        return "'" + escaped.replace("\\", "\\\\") + "'";
+        return escaped.replace("\\", "\\\\");
     }
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
     // since this value is used to set limits on literals and field names.
@@ -344,22 +345,41 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<String> numericFunctions = new ArrayList<>(systemFunctionNames.length);
         ArrayList<String> stringFunctions = new ArrayList<>(systemFunctionNames.length);
         ArrayList<String> dateFunctions = new ArrayList<>(systemFunctionNames.length);
+
+        HashSet<String> numericFunctionSet = new HashSet<>(systemFunctionNames.length);
+        HashSet<String> stringFunctionSet = new HashSet<>(systemFunctionNames.length);
+        HashSet<String> dateFunctionSet = new HashSet<>(systemFunctionNames.length);
         for (int i = 0; i < MongoSystemFunction.systemFunctions.length; ++i) {
             for (String argType : MongoSystemFunction.systemFunctions[i].argTypes) {
                 String name = MongoSystemFunction.systemFunctions[i].name;
+                if (argType == null) {
+                    continue;
+                }
                 switch (argType) {
                     case "string":
+                        if (stringFunctionSet.contains(name)) {
+                            break;
+                        }
                         stringFunctions.add(name);
+                        stringFunctionSet.add(name);
                         break;
                     case "numeric":
                     case "long":
                     case "int":
                     case "double":
                     case "decimal":
+                        if (numericFunctionSet.contains(name)) {
+                            break;
+                        }
                         numericFunctions.add(name);
+                        numericFunctionSet.add(name);
                         break;
                     case "date":
+                        if (dateFunctionSet.contains(name)) {
+                            break;
+                        }
                         dateFunctions.add(name);
+                        dateFunctionSet.add(name);
                         break;
                 }
             }
@@ -885,9 +905,16 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     private String patternCond(String colName, String pattern) {
         if (pattern == null) {
-            return "1"; //just return a true condition.
+            return " 1 "; //just return a true condition.
         }
-        return colName + " like " + escapeString(pattern);
+        return " " + colName + " like '" + escapeString(pattern) + "' ";
+    }
+
+    private String equalsCond(String colName, String literal) {
+        if (literal == null) {
+            return " 1 "; //just return a true condition.
+        }
+        return " " + colName + " = '" + escapeString(literal) + "' ";
     }
 
     @Override
@@ -895,24 +922,25 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
         Statement stmt = conn.createStatement();
+        // We ignore types because we only have one kind of table type.
         return stmt.executeQuery(
                 "select "
                         + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_NAME,"
-                        + "    TABLE_TYPE,"
-                        + "    NULL as REMARKS,"
-                        + "    NULL as TYPE_CAT,"
-                        + "    NULL as TYPE_SCHEM,"
-                        + "    NULL as TYPE_NAME,"
-                        + "    NULL as SELF_REFERENCING_COL_NAME,"
-                        + "    NULL as REF_GENERATION"
-                        + "from INFORMATION_SCHEMA.TABLES"
-                        + "where "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_NAME, "
+                        + "    TABLE_TYPE, "
+                        + "    NULL as REMARKS, "
+                        + "    NULL as TYPE_CAT, "
+                        + "    NULL as TYPE_SCHEM, "
+                        + "    NULL as TYPE_NAME, "
+                        + "    NULL as SELF_REFERENCING_COL_NAME, "
+                        + "    NULL as REF_GENERATION "
+                        + "from INFORMATION_SCHEMA.TABLES "
+                        + "where"
                         + patternCond("TABLE_SCHEMA", schemaPattern)
                         + "    and"
                         + patternCond("TABLE_NAME", tableNamePattern)
-                        + "order by TABLE_TYPE, TABLE_CAT, TABLE_SCHEMA, TABLE_NAME");
+                        + " order by TABLE_TYPE, TABLE_CAT, TABLE_SCHEMA, TABLE_NAME");
     }
 
     @Override
@@ -920,28 +948,30 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "from INFORMATION_SCHEMA.SCHEMATA"
-                        + "order by TABLE_CAT, TABLE_SCHEMA");
+                        + "    SCHEMA_NAME as TABLE_SCHEM, "
+                        + "    CATALOG_NAME as TABLE_CAT "
+                        + "from INFORMATION_SCHEMA.SCHEMATA "
+                        + "order by TABLE_CAT, TABLE_SCHEM");
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        MongoResultDoc row = new MongoResultDoc();
-        ArrayList<MongoResultDoc> rows = new ArrayList<>(1);
-        row.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString("def")));
-        rows.add(row);
-        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        MongoResultDoc doc = new MongoResultDoc();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
+        doc.values = new ArrayList<>(1);
+        doc.values.add(newColumn("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString("def")));
+        docs.add(doc);
+        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        MongoResultDoc row = new MongoResultDoc();
-        ArrayList<MongoResultDoc> rows = new ArrayList<>(1);
-        row.values.add(newColumn("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
-        rows.add(row);
-        return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
+        MongoResultDoc doc = new MongoResultDoc();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
+        doc.values = new ArrayList<>(1);
+        doc.values.add(newColumn("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
+        docs.add(doc);
+        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     public static String[] typeNames =
@@ -951,23 +981,27 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "binData",
                 "numeric",
                 "string",
+                "varchar",
                 "long",
                 "int",
+                "bigint",
                 "date",
                 "date",
                 "double",
                 "decimal",
             };
 
-    public static HashMap<String, Integer> typeNums;
-    public static HashMap<String, Integer> typePrecs;
-    public static HashMap<String, Integer> typeScales;
+    public static final HashMap<String, Integer> typeNums = new HashMap<>();
+    public static final HashMap<String, Integer> typePrecs = new HashMap<>();
+    public static final HashMap<String, Integer> typeScales = new HashMap<>();
+    public static final HashMap<String, Integer> typeBytes = new HashMap<>();
 
     static {
         for (String name : typeNames) {
             typeNums.put(name, typeNum(name));
             typePrecs.put(name, typePrec(name));
             typeScales.put(name, typeScale(name));
+            typeBytes.put(name, typeBytes(name));
         }
     }
 
@@ -987,9 +1021,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "numeric":
                 return Types.NUMERIC;
             case "string":
+            case "varchar":
                 return Types.LONGVARCHAR;
             case "long":
-                return Types.INTEGER;
+            case "bigint":
             case "int":
                 return Types.INTEGER;
             case "date":
@@ -1011,6 +1046,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 34;
             case "double":
                 return 15;
+            case "bigint":
             case "long":
                 return 19;
             case "int":
@@ -1045,6 +1081,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 16;
             case "double":
                 return 8;
+            case "bigint":
             case "long":
                 return 8;
             case "int":
@@ -1068,6 +1105,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 2;
             case "long":
                 return 2;
+            case "bigint":
             case "int":
                 return 2;
             case "decimal":
@@ -1086,7 +1124,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             ret.append(name);
             ret.append("' then ");
             ret.append(outs.get(name).toString());
-            ret.append("\n");
+            ret.append(" \n");
         }
         ret.append("end");
         return ret.toString();
@@ -1104,6 +1142,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return getTypeCase(col, typeScales);
     }
 
+    private String getDataTypeBytesCase(String col) {
+        return getTypeCase(col, typeBytes);
+    }
+
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
@@ -1116,43 +1158,46 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + ResultSetMetaData.columnNullable
                         + "     when 'NO'      then "
                         + ResultSetMetaData.columnNoNulls
-                        + "end";
+                        + " end";
 
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT,"
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_NAME,"
-                        + "    COLUMN_NAME,"
+                        + "    TABLE_CATALOG as TABLE_CAT, "
+                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_NAME, "
+                        + "    COLUMN_NAME, "
                         + getDataTypeNumCase("DATA_TYPE")
-                        + " as DATA_TYPE,"
-                        + "    DATA_TYPE as TYPE_NAME ,"
-                        + "    CHARACTER_MAXIMUM_LENGTH as COLUMN_SIZE,"
-                        + "    0 as BUFFER_LENGTH,"
-                        + "    NUMERIC_SCALE as DECIMAL_DIGITS,"
-                        + "    NUMERIC_PRECISION as NUM_PREC_RADIX,"
+                        + " as DATA_TYPE, "
+                        + "    DATA_TYPE as TYPE_NAME, "
+                        + "    CHARACTER_MAXIMUM_LENGTH as COLUMN_SIZE, "
+                        + "    0 as BUFFER_LENGTH, "
+                        + getDataTypeScaleCase("DATA_TYPE")
+                        + " as DECIMAL_DIGITS, "
+                        + getDataTypePrecCase("DATA_TYPE")
+                        + "    as NUM_PREC_RADIX, "
                         + nullableCase
-                        + " as NULLABLE,"
-                        + "    COLUMN_COMMENT as REMARKS,"
-                        + "    NULL as COLUMN_DEF,"
-                        + "    0 as SQL_DATA_TYPE,"
-                        + "    0 as SQL_DATETIME_SUB,"
-                        + "    CHARACTER_MAXIMUM_LENGTH as CHAR_OCTET_LENGTH,"
-                        + "    ORDINAL_POSITION,"
-                        + "    IS_NULLABLE,"
-                        + "    NULL as SCOPE_CATALOG,"
-                        + "    NULL as SCOPE_SCHEMA,"
-                        + "    NULL as SCOPE_TABLE,"
-                        + "    0 as SOURCE_DATA_TYPE,"
-                        + "    0 as IS_AUTOINCREMENT,"
-                        + "    0 as IS_GENERATEDCOLUMN,"
-                        + "from INFORMATION_SCHEMA.COLUMNS"
+                        + " as NULLABLE, "
+                        + "    '' as REMARKS, "
+                        + "    NULL as COLUMN_DEF, "
+                        + "    0 as SQL_DATA_TYPE, "
+                        + "    0 as SQL_DATETIME_SUB, "
+                        + getDataTypeBytesCase("DATA_TYPE")
+                        + "    as CHAR_OCTET_LENGTH, "
+                        + "    ORDINAL_POSITION, "
+                        + "    IS_NULLABLE, "
+                        + "    NULL as SCOPE_CATALOG, "
+                        + "    NULL as SCOPE_SCHEMA, "
+                        + "    NULL as SCOPE_TABLE, "
+                        + "    0 as SOURCE_DATA_TYPE, "
+                        + "    0 as IS_AUTOINCREMENT, "
+                        + "    0 as IS_GENERATEDCOLUMN "
+                        + "from INFORMATION_SCHEMA.COLUMNS "
                         + "where "
                         + patternCond("TABLE_SCHEMA", schemaPattern)
-                        + "    and"
+                        + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
-                        + "    and"
+                        + "    and "
                         + patternCond("COLUMN_NAME", columnNamePattern));
     }
 
@@ -1164,19 +1209,19 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return stmt.executeQuery(
                 "select "
                         + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_NAME,"
-                        + "    COLUMN_NAME,"
-                        + "    GRANTOR,"
-                        + "    GRANTEE,"
-                        + "    PRIVILEGE_TYPE as PRIVILEGE,"
-                        + "    IS_GRANTABLE,"
-                        + "from INFORMATION_SCHEMA.COLUMN_PRIVILEGS"
+                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_NAME, "
+                        + "    COLUMN_NAME, "
+                        + "    GRANTOR, "
+                        + "    GRANTEE, "
+                        + "    PRIVILEGE_TYPE as PRIVILEGE, "
+                        + "    IS_GRANTABLE "
+                        + "from INFORMATION_SCHEMA.COLUMN_PRIVILEGES "
                         + "where "
                         + patternCond("TABLE_SCHEMA", schemaPattern)
-                        + "    AND"
+                        + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
-                        + "    AND"
+                        + "    and "
                         + patternCond("COLUMN_NAME", columnNamePattern));
     }
 
@@ -1187,16 +1232,16 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return stmt.executeQuery(
                 "select "
                         + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_NAME,"
-                        + "    GRANTOR,"
-                        + "    GRANTEE,"
-                        + "    PRIVILEGE_TYPE as PRIVILEGE,"
-                        + "    IS_GRANTABLE,"
-                        + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES"
+                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_NAME, "
+                        + "    GRANTOR, "
+                        + "    GRANTEE, "
+                        + "    PRIVILEGE_TYPE as PRIVILEGE, "
+                        + "    IS_GRANTABLE "
+                        + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES "
                         + "where "
                         + patternCond("TABLE_SCHEMA", schemaPattern)
-                        + "    AND"
+                        + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern));
     }
 
@@ -1211,7 +1256,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "c.COLUMN_NAME AS COLUMN_NAME, "
                         + getDataTypeNumCase("c.DATA_TYPE")
                         + " as DATA_TYPE, "
-                        + "c.DATE_TYPE as TYPE_NAME, "
+                        + "c.DATA_TYPE as TYPE_NAME, "
                         + getDataTypePrecCase("c.DATA_TYPE")
                         + " as COLUMN_SIZE, "
                         + "NULL as BUFFER_LENGTH, "
@@ -1219,17 +1264,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + " as DECIMAL_DIGITS, "
                         + bestRowNotPseudo
                         + " as PSEUDO_COLUMN"
-                        + "from INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu inner join INFORMATION_SCHEMA.COLUMNS as c "
+                        + " from INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu inner join INFORMATION_SCHEMA.COLUMNS as c "
                         + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
                         + "and kcu.TABLE_NAME = c.TABLE_NAME "
                         + "and kcu.COLUMN_NAME = c.COLUMN_NAME "
-                        + "where kcu.TABLE_SCHEMA = '"
-                        + schema
-                        + "'"
-                        + "  and kcu.TABLE_NAME = '"
-                        + table
-                        + "'"
-                        + "  and kcu.CONSTRAINT_TYPE = 'PRIMARY KEY'");
+                        + " inner join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc "
+                        + "on c.TABLE_SCHEMA = tc.TABLE_SCHEMA "
+                        + "and c.TABLE_NAME = tc.TABLE_NAME "
+                        + "where "
+                        + equalsCond("kcu.TABLE_SCHEMA", schema)
+                        + " and "
+                        + equalsCond("kcu.TABLE_NAME", table)
+                        + "  and tc.CONSTRAINT_TYPE = 'PRIMARY KEY'");
     }
 
     @Override
@@ -1246,20 +1292,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "TABLE_CATALOG as TABLE_CAT, "
-                        + "TABLE_SCHEMA as TABLE_SCHEM, "
-                        + "TABLE_NAME as TABLE_NAME, "
-                        + "COLUMN_NAME AS COLUMN_NAME, "
-                        + "ORDINAL_POSITION as KEY_SEQ, "
-                        + "CONSTRAINT_NAME as PK_NAME, "
-                        + "from INFORMATION_SCHEMA.KEY_COLUMN_USAGE "
-                        + "where TABLE_SCHEM = '"
-                        + schema
-                        + "'"
-                        + "  and TABLE_NAME = '"
-                        + table
-                        + "'"
-                        + "  and CONSTRAINT_TYPE = 'PRIMARY KEY'");
+                        + "kcu.TABLE_CATALOG as TABLE_CAT, "
+                        + "kcu.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "kcu.TABLE_NAME as TABLE_NAME, "
+                        + "kcu.COLUMN_NAME AS COLUMN_NAME, "
+                        + "kcu.ORDINAL_POSITION as KEY_SEQ, "
+                        + "kcu.CONSTRAINT_NAME as PK_NAME "
+                        + "from INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu inner join INFORMATION_SCHEMA.TABLE_CONSTRAINTS as c "
+                        + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
+                        + "and kcu.TABLE_NAME = c.TABLE_NAME "
+                        + "where "
+                        + equalsCond("kcu.TABLE_SCHEM", schema)
+                        + "  and "
+                        + equalsCond("kcu.TABLE_NAME", table)
+                        + "  and c.CONSTRAINT_TYPE = 'PRIMARY KEY'");
     }
 
     @Override
@@ -1538,12 +1584,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "  and tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME "
                         + "  and tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA "
                         + "  and tc.TABLE_NAME = kcu.TABLE_NAME "
-                        + "  and tc.TABLE_SCHEMA = '"
-                        + schema
-                        + "'"
-                        + "  and tc.TABLE_NAME = '"
-                        + table
-                        + "'"
+                        + "  and "
+                        + equalsCond("tc.TABLE_SCHEMA", schema)
+                        + "  and "
+                        + equalsCond("tc.TABLE_NAME", table)
                         + ((unique)
                                 ? "where tc.CONSTRAINT_TYPE in ('PRIMARY KEY', 'UNIQUE')"
                                 : ""));
@@ -1746,12 +1790,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM,"
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "from INFORMATION_SCHEMA.SCHEMATA"
+                        + "    SCHEMA_NAME as TABLE_SCHEM, "
+                        + "    CATALOG_NAME as TABLE_CAT "
+                        + "from INFORMATION_SCHEMA.SCHEMATA "
                         + "where "
-                        + patternCond("TABLE_SCHEM", schemaPattern)
-                        + "order by TABLE_CAT, TABLE_SCHEMA");
+                        + patternCond("SCHEMA_NAME", schemaPattern)
+                        + " order by TABLE_CAT, SCHEMA_NAME");
     }
 
     @Override
@@ -1841,7 +1885,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             throws SQLException {
 
         ArrayList<MongoResultDoc> docs = new ArrayList<>(systemFunctionNames.length);
-        Pattern functionPatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+        Pattern functionPatternRE = null;
+        if (functionNamePattern != null) {
+            functionPatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+        }
         for (MongoSystemFunction systemFunc : MongoSystemFunction.systemFunctions) {
             String functionName = systemFunc.name;
             String remarks = systemFunc.comment;
@@ -1894,13 +1941,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     private MongoResultDoc getFunctionColumnDoc(
-            MongoSystemFunction systemFunc, int i, String argType, boolean isReturnColumn) {
+            MongoSystemFunction systemFunc,
+            int i,
+            String argName,
+            String argType,
+            boolean isReturnColumn) {
+        BsonValue n = new BsonNull();
         String functionName = systemFunc.name;
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>(17);
         doc.values.add(
                 newColumn("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
-        doc.values.add(newColumn("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
+        doc.values.add(newColumn("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", n));
         doc.values.add(
                 newColumn(
                         "",
@@ -1909,15 +1961,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "FUNCTION_NAME",
                         "FUNCTION_NAME",
                         new BsonString(functionName)));
-        // We don't have better names for our arguments, for the most part.
         doc.values.add(
-                newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString("arg" + i)));
+                newColumn("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString(argName)));
         doc.values.add(
                 newColumn(
-                        "", "", "", "COLUMN_TYPE", "COLUMN_TYPE", new BsonInt32(typeNum(argType))));
+                        "",
+                        "",
+                        "",
+                        "COLUMN_TYPE",
+                        "COLUMN_TYPE",
+                        new BsonInt32(isReturnColumn ? functionColumnOut : functionColumnIn)));
         doc.values.add(
                 newColumn("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(typeNum(argType))));
-        doc.values.add(newColumn("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString(argType)));
+        doc.values.add(
+                newColumn(
+                        "",
+                        "",
+                        "",
+                        "TYPE_NAME",
+                        "TYPE_NAME",
+                        argType == null ? n : new BsonString(argType)));
         doc.values.add(
                 newColumn("", "", "", "PRECISION", "PRECISION", new BsonInt32(typePrec(argType))));
         doc.values.add(
@@ -1953,19 +2016,40 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String columnNamePattern)
             throws SQLException {
         ArrayList<MongoResultDoc> docs = new ArrayList<>(systemFunctionNames.length);
-        Pattern functionPatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+        Pattern functionNamePatternRE = null;
+        Pattern columnNamePatternRE = null;
+        if (functionNamePattern != null) {
+            functionNamePatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+        }
+        if (columnNamePattern != null) {
+            columnNamePatternRE = Pattern.compile(columnNamePattern.replaceAll("%", ".*"));
+        }
         for (MongoSystemFunction systemFunc : MongoSystemFunction.systemFunctions) {
             String functionName = systemFunc.name;
-            if (!functionPatternRE.matcher(functionName).matches()) {
+            if (functionNamePatternRE != null
+                    && !functionNamePatternRE.matcher(functionName).matches()) {
                 continue;
             }
             int i = 0;
             for (String argType : systemFunc.argTypes) {
-                MongoResultDoc doc = getFunctionColumnDoc(systemFunc, i++, argType, false);
+                // We don't have better names for our arguments, for the most part.
+                ++i;
+                String columnName = "arg" + i;
+                if (columnNamePatternRE != null
+                        && !columnNamePatternRE.matcher(columnName).matches()) {
+                    continue;
+                }
+                MongoResultDoc doc =
+                        getFunctionColumnDoc(systemFunc, i, columnName, argType, false);
                 docs.add(doc);
             }
-            MongoResultDoc doc = getFunctionColumnDoc(systemFunc, i++, systemFunc.returnType, true);
-            docs.add(doc);
+            String columnName = "argReturn";
+            if (columnNamePatternRE == null || columnNamePatternRE.matcher(columnName).matches()) {
+                MongoResultDoc doc =
+                        getFunctionColumnDoc(
+                                systemFunc, i, "argReturn", systemFunc.returnType, true);
+                docs.add(doc);
+            }
         }
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }

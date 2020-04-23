@@ -77,7 +77,6 @@ public class MongoResultSet implements ResultSet {
 
     public MongoResultSet(
             Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
-        Preconditions.checkNotNull(statement);
         Preconditions.checkNotNull(cursor);
         this.statement = statement;
         this.cursor = cursor;
@@ -140,7 +139,7 @@ public class MongoResultSet implements ResultSet {
         }
         cursor.close();
         closed = true;
-        if (statement.isCloseOnCompletion()) {
+        if (statement.isCloseOnCompletion() && statement != null) {
             statement.close();
         }
     }
