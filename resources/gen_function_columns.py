@@ -1,7 +1,7 @@
 import yaml
 
-def tyName(x):
-    return {'EvalNumber': '"numeric"',
+tyName = {
+     'EvalNumber': '"numeric"',
      'EvalString': '"string"',
      'EvalUint64': '"long"',
      'EvalInt64': '"long"',
@@ -11,17 +11,19 @@ def tyName(x):
      'EvalDate': '"date"',
      'EvalDouble': '"double"',
      'EvalDecimal128': '"decimal"',
-    }[x]
+}
 
 y = yaml.load(open('scalar_functions.yml'), Loader=yaml.FullLoader)
 functions = y['functions']
 functions_info = []
 for fun in functions:
+    # There is no good way for the functions_columns tables to handle multiple invocations for each
+    # function, so we'll just base off the first invocation, for now.
     invocation = fun['invocations'][0]
     args = []
     for arg in invocation['arguments']:
-        args.append(tyName(arg['eval_type']))
-    functions_info.append(('"' + fun['_id'] + '"', tyName(invocation['return_type']),
+        args.append(tyName[arg['eval_type']])
+    functions_info.append(('"' + fun['_id'] + '"', tyName[invocation['return_type']],
         '"' + fun['description'] + '"', "new String[]{%s}"%(",".join(args))))
 functions_decls = []
 for info in functions_info:
