@@ -288,6 +288,9 @@ public class MongoDriver implements Driver {
         }
         // set the user
         String user = s.coalesce(uriUser, propertyUser);
+        if (user != null) {
+            info.setProperty(USER, user);
+        }
         // handle disagreements on password.
         if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
             throw new SQLException("uri and properties disagree on password");

@@ -43,7 +43,8 @@ public class MongoConnection implements Connection {
     public MongoConnection(
             ConnectionString uri, String user, String database, String conversionMode) {
         Preconditions.checkNotNull(uri);
-        url = uri.toString();
+        this.url = uri.toString();
+        this.user = user;
         this.currentDB = database;
         mongoClient = MongoClients.create(uri);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
