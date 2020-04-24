@@ -31,6 +31,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.Document;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
@@ -63,6 +66,19 @@ public class MongoConnection implements Connection {
 
     String getUser() {
         return user;
+    }
+
+    String getServerVersion() throws SQLException {
+        checkConnection();
+
+        BsonDocument command = new BsonDocument();
+        command.put("buildInfo", new BsonInt32(1));
+        try {
+            Document result = mongoClient.getDatabase("admin").runCommand(command);
+            return (String) result.get("version");
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
     }
 
     @Override

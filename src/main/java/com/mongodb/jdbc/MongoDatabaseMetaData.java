@@ -90,8 +90,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        // This is what ADL currently returns.
-        return "3.6.0";
+        return conn.getServerVersion();
     }
 
     @Override
