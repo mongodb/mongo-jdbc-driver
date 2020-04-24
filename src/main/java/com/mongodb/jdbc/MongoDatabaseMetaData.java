@@ -1449,7 +1449,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         docs.add(
                 getTypeInfoDoc(
                         "decimal", //typeName
-                        Types.TIMESTAMP, //dataType
+                        Types.DECIMAL, //dataType
                         34, //precision
                         null, //literalPrefix
                         null, //literalSuffix
