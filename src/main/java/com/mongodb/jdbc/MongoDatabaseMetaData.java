@@ -1465,7 +1465,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         docs.add(
                 getTypeInfoDoc(
                         "double", //typeName
-                        Types.TIMESTAMP, //dataType
+                        Types.DOUBLE, //dataType
                         15, //precision
                         null, //literalPrefix
                         null, //literalSuffix
