@@ -1009,7 +1009,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typePrec(String typeName) {
+    public static Integer typePrec(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -1028,7 +1028,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typeScale(String typeName) {
+    public static Integer typeScale(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -1040,10 +1040,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "decimal":
                 return 34;
         }
-        return 0;
+        return null;
     }
 
-    public static int typeBytes(String typeName) {
+    public static Integer typeBytes(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -1061,10 +1061,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "bool":
                 return 1;
         }
-        return 0;
+        return null;
     }
 
-    public static int typeRadix(String typeName) {
+    public static Integer typeRadix(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -1088,11 +1088,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ret.append(col);
         ret.append("\n");
         for (String name : typeNames) {
+            Integer out = outs.get(name);
+            String range = out == null ? "NULL" : out.toString();
             ret.append("when ");
             ret.append("'");
             ret.append(name);
             ret.append("' then ");
-            ret.append(outs.get(name).toString());
+            ret.append(range);
             ret.append(" \n");
         }
         ret.append("end");
@@ -1913,6 +1915,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
+    private BsonValue bsonInt32(Integer i) {
+        if (i == null) {
+            return new BsonNull();
+        }
+        return new BsonInt32(i);
+    }
+
     private MongoResultDoc getFunctionColumnDoc(
             MongoSystemFunction systemFunc,
             int i,
@@ -1955,11 +1964,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "TYPE_NAME",
                         argType == null ? n : new BsonString(argType)));
         doc.values.add(
-                new Column("", "", "", "PRECISION", "PRECISION", new BsonInt32(typePrec(argType))));
-        doc.values.add(
-                new Column("", "", "", "LENGTH", "LENGTH", new BsonInt32(typeBytes(argType))));
-        doc.values.add(new Column("", "", "", "SCALE", "SCALE", new BsonInt32(typeBytes(argType))));
-        doc.values.add(new Column("", "", "", "RADIX", "RADIX", new BsonInt32(typeRadix(argType))));
+                new Column("", "", "", "PRECISION", "PRECISION", bsonInt32(typePrec(argType))));
+        doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", bsonInt32(typeBytes(argType))));
+        doc.values.add(new Column("", "", "", "SCALE", "SCALE", bsonInt32(typeBytes(argType))));
+        doc.values.add(new Column("", "", "", "RADIX", "RADIX", bsonInt32(typeRadix(argType))));
         doc.values.add(
                 new Column("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(functionNullable)));
         doc.values.add(
@@ -1971,7 +1979,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "CHAR_OCTET_LENGTH",
                         "CHAR_OCTET_LENGTH",
-                        new BsonInt32(typeBytes(argType))));
+                        bsonInt32(typeBytes(argType))));
         doc.values.add(
                 new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", new BsonInt32(i)));
         doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", new BsonString("YES")));
