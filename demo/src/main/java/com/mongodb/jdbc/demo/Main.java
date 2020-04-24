@@ -1,11 +1,6 @@
 package com.mongodb.jdbc.demo;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.TimeZone;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -39,11 +34,15 @@ public class Main {
          System.out.println("Connecting to database test...");
          Connection conn = DriverManager.getConnection(URL, p);
 
-         System.out.println("Creating statement...");
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("select * from foo");
-         System.out.println("++++++ Showing contents for test.foo ++++++++");
-         displayResultSet(rs);
+        DatabaseMetaData dbmd = conn.getMetaData();
+        System.out.println(dbmd.getDriverVersion());
+        System.out.println(dbmd.getDriverMajorVersion());
+        System.out.println(dbmd.getDriverMinorVersion());
+//         System.out.println("Creating statement...");
+//         Statement stmt = conn.createStatement();
+//         ResultSet rs = stmt.executeQuery("select * from foo");
+//         System.out.println("++++++ Showing contents for test.foo ++++++++");
+//         displayResultSet(rs);
       } catch (Exception e) {
           throw new RuntimeException(e);
       }

@@ -54,9 +54,9 @@ public class MongoDriver implements Driver {
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
-    static final String VERSION = "1.0.0-SNAPSHOT";
-    static final int MAJOR_VERSION = 1;
-    static final int MINOR_VERSION = 0;
+    static final String VERSION;
+    static final int MAJOR_VERSION;
+    static final int MINOR_VERSION;
 
     static CodecRegistry registry =
             fromProviders(
@@ -65,10 +65,26 @@ public class MongoDriver implements Driver {
                     PojoCodecProvider.builder().automatic(true).build());
 
     static {
+        MongoDriver unit = new MongoDriver();
         try {
-            DriverManager.registerDriver(new MongoDriver());
+            DriverManager.registerDriver(unit);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        VERSION = unit.getClass().getPackage().getImplementationVersion();
+        if (VERSION != null) {
+            String[] verSp = VERSION.split("[.]");
+            if (verSp.length < 2) {
+                throw new RuntimeException(
+                        new SQLException(
+                                "version was not specified correctly, must contain at least major and minor parts"));
+            }
+            MAJOR_VERSION = Integer.parseInt(verSp[0]);
+            MINOR_VERSION = Integer.parseInt(verSp[1]);
+        } else {
+            // final requires this.
+            MAJOR_VERSION = 0;
+            MINOR_VERSION = 0;
         }
     }
 
@@ -192,7 +208,8 @@ public class MongoDriver implements Driver {
                                     null,
                                     authDatabase,
                                     result.normalizedOptions));
-            Pair pair = new Pair(c, new DriverPropertyInfo[] {});
+            Pair<ConnectionString, DriverPropertyInfo[]> pair =
+                    new Pair<>(c, new DriverPropertyInfo[] {});
             return pair;
         }
         if (user == null) {
