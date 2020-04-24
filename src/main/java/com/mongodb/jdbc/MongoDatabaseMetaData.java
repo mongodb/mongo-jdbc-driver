@@ -28,11 +28,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     public static String escapeString(String value) {
-        if (!value.contains("'")) {
-            if (!value.contains("\\")) {
-                return value;
-            }
-        }
         String escaped = value.replace("'", "''");
         return escaped.replace("\\", "\\\\");
     }
