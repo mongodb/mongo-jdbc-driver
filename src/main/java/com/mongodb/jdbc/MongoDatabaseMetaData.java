@@ -679,7 +679,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
-        // For now.
         return true;
     }
 
@@ -958,10 +957,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "binData",
                 "numeric",
                 "string",
-                "varchar",
                 "long",
                 "int",
-                "bigint",
                 "date",
                 "date",
                 "double",
@@ -998,10 +995,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "numeric":
                 return Types.NUMERIC;
             case "string":
-            case "varchar":
                 return Types.LONGVARCHAR;
             case "long":
-            case "bigint":
             case "int":
                 return Types.INTEGER;
             case "date":
@@ -1023,7 +1018,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 34;
             case "double":
                 return 15;
-            case "bigint":
             case "long":
                 return 19;
             case "int":
@@ -1058,7 +1052,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 16;
             case "double":
                 return 8;
-            case "bigint":
             case "long":
                 return 8;
             case "int":
@@ -1082,7 +1075,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 2;
             case "long":
                 return 2;
-            case "bigint":
             case "int":
                 return 2;
             case "decimal":
