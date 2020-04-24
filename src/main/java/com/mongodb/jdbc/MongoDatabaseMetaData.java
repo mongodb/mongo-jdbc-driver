@@ -1766,7 +1766,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "from INFORMATION_SCHEMA.SCHEMATA "
                         + "where "
                         + patternCond("SCHEMA_NAME", schemaPattern)
-                        + " order by TABLE_CAT, SCHEMA_NAME");
+                        + " order by TABLE_CATALOG, TABLE_SCHEM");
     }
 
     @Override
