@@ -532,6 +532,56 @@ public class MongoSystemFunction {
                         "YEARWEEK",
                         "long",
                         "returns the year and week for a date.",
-                        new String[] {"date"})
+                        new String[] {"date"}),
+                new MongoSystemFunction(
+                        "AVG",
+                        "numeric",
+                        "returns the average of elements in a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "COUNT",
+                        "numeric",
+                        "returns the count of elements in a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "SUM",
+                        "numeric",
+                        "returns the sum of elements in a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "MIN",
+                        "numeric",
+                        "returns the minimum element of elements in a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "MAX",
+                        "numeric",
+                        "returns the maximum element of elements in a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "GROUP_CONCAT",
+                        "string",
+                        "returns the concatenation of strings from a group into a single string with various options.",
+                        new String[] {"string"}),
+                new MongoSystemFunction(
+                        "STD",
+                        "numeric",
+                        "returns population standard deviation of a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "STDDEV_POP",
+                        "numeric",
+                        "returns population standard deviation of a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "STDDEV",
+                        "numeric",
+                        "returns population standard deviation of a group.",
+                        new String[] {"numeric"}),
+                new MongoSystemFunction(
+                        "STDDEV_SAMP",
+                        "numeric",
+                        "returns cumulative sample standard deviation of a group.",
+                        new String[] {"numeric"})
             };
 }

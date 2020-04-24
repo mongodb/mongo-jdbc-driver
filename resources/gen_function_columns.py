@@ -13,21 +13,23 @@ tyName = {
      'EvalDecimal128': '"decimal"',
 }
 
-y = yaml.load(open('scalar_functions.yml'), Loader=yaml.FullLoader)
-functions = y['functions']
-functions_info = []
-for fun in functions:
-    # There is no good way for the functions_columns tables to handle multiple invocations for each
-    # function, so we'll just base off the first invocation, for now.
-    invocation = fun['invocations'][0]
-    args = []
-    for arg in invocation['arguments']:
-        args.append(tyName[arg['eval_type']])
-    functions_info.append(('"' + fun['_id'] + '"', tyName[invocation['return_type']],
-        '"' + fun['description'] + '"', "new String[]{%s}"%(",".join(args))))
-functions_decls = []
-for info in functions_info:
-    functions_decls.append('new MongoSystemFunction(%s, %s, %s, %s)'%(info[0].upper(), info[1], info[2], info[3]))
+def getFunctionInfo(fName):
+    y = yaml.load(open(fName), Loader=yaml.FullLoader)
+    functions = y['functions']
+    functions_info = []
+    for fun in functions:
+        # There is no good way for the functions_columns tables to handle multiple invocations for each
+        # function, so we'll just base off the first invocation, for now.
+        invocation = fun['invocations'][0]
+        args = []
+        for arg in invocation['arguments']:
+            args.append(tyName[arg['eval_type']])
+        functions_info.append(('"' + fun['_id'] + '"', tyName[invocation['return_type']],
+            '"' + fun['description'] + '"', "new String[]{%s}"%(",".join(args))))
+    functions_decls = []
+    for info in functions_info:
+        functions_decls.append('new MongoSystemFunction(%s, %s, %s, %s)'%(info[0].upper(), info[1], info[2], info[3]))
+    return functions_decls
 
 
 print("// This is generated code. To regenerate go to the resources directory:")
@@ -47,6 +49,7 @@ print("        this.comment = comment;")
 print("        this.argTypes = argTypes;")
 print("    }\n")
 print("    public static final MongoSystemFunction[] systemFunctions = new MongoSystemFunction[] {")
-print("        " + ",\n        ".join(functions_decls))
+print("        " + ",\n        ".join(getFunctionInfo("scalar_functions.yml")) +",\n        ")
+print("        " + ",\n        ".join(getFunctionInfo("aggregation_functions.yml")))
 print("    };")
 print("}")

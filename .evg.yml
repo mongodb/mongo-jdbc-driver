@@ -148,7 +148,7 @@ functions:
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Classes"
+        display_name: "Unit Test Classes"
         visibility: none
 
   "upload integration test classes":
@@ -163,7 +163,7 @@ functions:
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Classes"
+        display_name: "Integration Test Classes"
         visibility: none
 
   "upload unit test packages":

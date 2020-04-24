@@ -1952,7 +1952,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "COLUMN_TYPE",
                         "COLUMN_TYPE",
-                        new BsonInt32(isReturnColumn ? functionColumnOut : functionColumnIn)));
+                        new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn)));
         doc.values.add(
                 new Column("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(typeNum(argType))));
         doc.values.add(
