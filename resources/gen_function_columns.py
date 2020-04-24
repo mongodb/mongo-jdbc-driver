@@ -30,6 +30,10 @@ for info in functions_info:
     functions_decls.append('new MongoSystemFunction(%s, %s, %s, %s)'%(info[0].upper(), info[1], info[2], info[3]))
 
 
+print("// This is generated code. To regenerate go to the resources directory:")
+print("//     $ cd adl-jdbc-driver/resources")
+print("// and run:")
+print("//     $ make")
 print("package com.mongodb.jdbc;\n")
 print("public class MongoSystemFunction {")
 print("    public String name;")
