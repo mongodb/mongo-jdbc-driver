@@ -1762,7 +1762,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return stmt.executeQuery(
                 "select "
                         + "    SCHEMA_NAME as TABLE_SCHEM, "
-                        + "    CATALOG_NAME as TABLE_CAT "
+                        + "    CATALOG_NAME as TABLE_CATALOG "
                         + "from INFORMATION_SCHEMA.SCHEMATA "
                         + "where "
                         + patternCond("SCHEMA_NAME", schemaPattern)
