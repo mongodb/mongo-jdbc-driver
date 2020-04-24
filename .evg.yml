@@ -7,7 +7,8 @@ pre:
 
 post:
   - func: "upload jar file"
-  - func: "upload test classes"
+  - func: "upload unit test classes"
+  - func: "upload integration test classes"
   - func: "upload unit test packages"
   - func: "upload integration test packages"
   - func: "upload test js"
@@ -135,7 +136,7 @@ functions:
       params:
         directory: adl-jdbc-driver
 
-  "upload test classes":
+  "upload unit test classes":
     - command: s3.put
       params:
         silent: true
@@ -143,7 +144,22 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/classes/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/classes/
+        remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Test Classes"
+        visibility: none
+
+  "upload integration test classes":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
