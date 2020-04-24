@@ -289,8 +289,8 @@ public class MongoDriver implements Driver {
         // set the user
         String user = s.coalesce(uriUser, propertyUser);
         if (user != null) {
-			// Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
-			// know this.
+            // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
+            // know this.
             info.setProperty(USER, user);
         }
         // handle disagreements on password.

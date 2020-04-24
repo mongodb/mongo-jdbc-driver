@@ -41,6 +41,7 @@ public class IntegrationTest {
     //            System.out.println("-------------------------------");
     //        }
     //    }
+    //
 
     @Test
     public void testConnection() throws SQLException {
@@ -52,6 +53,13 @@ public class IntegrationTest {
         p.setProperty("ssl", "true");
         Connection conn = DriverManager.getConnection(URL, p);
         assertTrue(conn.isValid(15));
+    }
+
+    @Test
+    public void nullInfo() throws SQLException {
+        // Make sure we don't get an NPE with null properties.
+        Connection conn = DriverManager.getConnection(URL, null);
+        assertFalse(conn.isValid(15));
     }
 
     @Test
