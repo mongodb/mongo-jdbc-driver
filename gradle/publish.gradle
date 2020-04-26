@@ -41,7 +41,7 @@ nexusStaging {
     password project.hasProperty('nexus_password') ? project.getProperty('nexus_password') : ""
     packageGroup project.getGroup()
     stagingProfileId project.hasProperty('nexus_profile_id') ? project.getProperty('nexus_profile_id') : ''
-    numberOfRetries 40
+    numberOfRetries 100
 }
 
 nexusPublishing {
