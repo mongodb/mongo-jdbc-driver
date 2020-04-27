@@ -178,7 +178,7 @@ functions:
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Packages"
+        display_name: "Unit Test Packages"
         visibility: none
 
   "upload integration test packages":
@@ -193,7 +193,7 @@ functions:
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Packages"
+        display_name: "Integration Test Packages"
         visibility: none
 
   "upload unit test index":

@@ -22,6 +22,7 @@ import org.bson.BsonValue;
 public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     MongoConnection conn;
+    private String serverVersion;
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
@@ -90,7 +91,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        return conn.getServerVersion();
+        if (serverVersion != null) {
+            return serverVersion;
+        }
+        serverVersion = conn.getServerVersion();
+        return serverVersion;
     }
 
     @Override
