@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -324,13 +324,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             systemFunctionNames[i] = MongoSystemFunction.systemFunctions[i].name;
         }
         systemFunctionNamesString = String.join(",", systemFunctionNames);
-        ArrayList<String> numericFunctions = new ArrayList<>(systemFunctionNames.length);
-        ArrayList<String> stringFunctions = new ArrayList<>(systemFunctionNames.length);
-        ArrayList<String> dateFunctions = new ArrayList<>(systemFunctionNames.length);
 
-        HashSet<String> numericFunctionSet = new HashSet<>(systemFunctionNames.length);
-        HashSet<String> stringFunctionSet = new HashSet<>(systemFunctionNames.length);
-        HashSet<String> dateFunctionSet = new HashSet<>(systemFunctionNames.length);
+        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
+        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
+        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
         for (int i = 0; i < MongoSystemFunction.systemFunctions.length; ++i) {
             for (String argType : MongoSystemFunction.systemFunctions[i].argTypes) {
                 String name = MongoSystemFunction.systemFunctions[i].name;
@@ -342,7 +339,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         if (stringFunctionSet.contains(name)) {
                             break;
                         }
-                        stringFunctions.add(name);
                         stringFunctionSet.add(name);
                         break;
                     case "numeric":
@@ -353,22 +349,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         if (numericFunctionSet.contains(name)) {
                             break;
                         }
-                        numericFunctions.add(name);
                         numericFunctionSet.add(name);
                         break;
                     case "date":
                         if (dateFunctionSet.contains(name)) {
                             break;
                         }
-                        dateFunctions.add(name);
                         dateFunctionSet.add(name);
                         break;
                 }
             }
         }
-        numericFunctionsString = String.join(",", numericFunctions);
-        stringFunctionsString = String.join(",", stringFunctions);
-        dateFunctionsString = String.join(",", dateFunctions);
+        numericFunctionsString = String.join(",", numericFunctionSet);
+        stringFunctionsString = String.join(",", stringFunctionSet);
+        dateFunctionsString = String.join(",", dateFunctionSet);
     }
 
     @Override
@@ -1904,7 +1898,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                             "",
                             "",
                             "FUNCTION_TYPE",
-                            "DEFAULT_VALUE",
+                            "FUNCTION_TYPE",
                             new BsonInt32(functionNoTable)));
             doc.values.add(
                     new Column(
