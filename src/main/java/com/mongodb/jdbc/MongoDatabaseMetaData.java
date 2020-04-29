@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // First, a variety of minor information about the target database.
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-		return true;
+        return true;
     }
 
     @Override
@@ -862,8 +861,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
         // No procedures so we always return an empty result set.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_TYPE", "PROCEDURE_TYPE", n));
+        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -874,8 +885,34 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String columnNamePattern)
             throws SQLException {
         // No procedures so we always return an empty result set.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "PRECISION", "PRECISION", n));
+        doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", n));
+        doc.values.add(new Column("", "", "", "SCALE", "SCALE", n));
+        doc.values.add(new Column("", "", "", "RADIX", "RADIX", n));
+        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
+        doc.values.add(new Column("", "", "", "COLUMN_DEF", "COLUMN_DEF", n));
+        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
+        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
+        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     private String patternCond(String colName, String pattern) {
@@ -1252,8 +1289,22 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
         // We do not have updates, so this will always be empty.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "SCOPE", "SCOPE", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", n));
+        doc.values.add(new Column("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
+        doc.values.add(new Column("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1282,16 +1333,56 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
         // We do not have foreign keys, so this will always be empty.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
         // We do not have foreign keys, so this will always be empty.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1304,8 +1395,28 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String foreignTable)
             throws SQLException {
         // We do not have foreign keys, so this will always be empty.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     private MongoResultDoc getTypeInfoDoc(
@@ -1639,8 +1750,21 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
         // We do not have UDTs.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "CLASS_NAME", "CLASS_NAME", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
+        doc.values.add(new Column("", "", "", "BASE_TYPE", "BASE_TYPE", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1676,16 +1800,38 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
         // We do not have UDTs.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_CAT", "SUPERTYPE_CAT", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_SCHEM", "SUPERTYPE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
         // We do not have SuperTables.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1695,9 +1841,36 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-        // We do not have UDTs.
+		// We do not have UDTs.
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "ATTR_NAME", "ATTR_NAME", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "ATTR_TYPE_NAME", "ATTR_TYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "ATTR_SIZE", "ATTR_SIZE", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
+        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", n));
+        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
+        doc.values.add(new Column("", "", "", "ATTR_DEF", "ATTR_DEF", n));
+        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
+        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
+        doc.values.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", n));
+        doc.values.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", n));
+        doc.values.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", n));
+        doc.values.add(new Column("", "", "", "SCOPE_DATA_TYPE", "SCOPE_DATA_TYPE", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -2040,8 +2213,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
         // We do not support pseudoColumns (hidden columns).
+		BsonValue n = new BsonNull();
+		ArrayList<MongoResultDoc> docs = new ArrayList<>();
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", n));
+        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", n));
+        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
+        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", n));
+        doc.values.add(new Column("", "", "", "COLUMN_USAGE", "COLUMN_USAGE", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
+		doc.emptyResultSet = true;
+		docs.add(doc);
         return new MongoResultSet(
-                null, new MongoExplicitCursor(new ArrayList<MongoResultDoc>()), true);
+                null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
