@@ -41,7 +41,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // First, a variety of minor information about the target database.
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-        throw new SQLFeatureNotSupportedException("not implemented");
+		return true;
     }
 
     @Override
