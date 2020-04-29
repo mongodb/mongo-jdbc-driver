@@ -109,7 +109,7 @@ class MongoResultSetMetaDataTest extends MongoMock {
             e.printStackTrace();
         }
         MongoResultSet rs =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), false);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
         try {
             rs.next();
             resultSetMetaData = rs.getMetaData();

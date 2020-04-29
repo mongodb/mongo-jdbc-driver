@@ -223,11 +223,11 @@ class MongoResultSetTest extends MongoMock {
             e.printStackTrace();
         }
         strictMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), false);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
         relaxedMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
         closedMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
     }
 
     @BeforeAll
