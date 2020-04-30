@@ -507,7 +507,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        return "database";
+        return "";
     }
 
     @Override
@@ -522,32 +522,32 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        // We don't support schemata.
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        // We don't support schemata.
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        // We don't support schemata.
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        // We don't support schemata.
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        // We don't support schemata.
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
@@ -558,26 +558,22 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        // at least when we support procedure calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        // at least when we support table definitions. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        // at least when we support index definitions. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        // at least when we support privilege definitions. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
