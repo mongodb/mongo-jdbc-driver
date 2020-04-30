@@ -2083,7 +2083,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", new BsonString("YES")));
         doc.values.add(
                 new Column(
-                        "", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", new BsonString(functionName)));
+                        "",
+                        "",
+                        "",
+                        "SPECIFIC_NAME",
+                        "SPECIFIC_NAME",
+                        new BsonString(functionName)));
         return doc;
     }
 
