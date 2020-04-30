@@ -317,7 +317,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSystemFunctions() throws SQLException {
-		return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
+        return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
     }
 
     @Override

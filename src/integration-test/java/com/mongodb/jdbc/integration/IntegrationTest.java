@@ -21,12 +21,12 @@ public class IntegrationTest {
     //    @Test
     //    public void testFoo() throws SQLException {
     //        java.util.Properties p = new java.util.Properties();
-    //        //p.setProperty("user", System.getenv("ADL_TEST_USER"));
-    //        //p.setProperty("password", System.getenv("ADL_TEST_PWD"));
+    //        p.setProperty("user", System.getenv("ADL_TEST_USER"));
+    //        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
     //        p.setProperty("database", "looker");
     //        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
     //        p.setProperty("ssl", "true");
-    //        Connection conn = DriverManager.getConnection(URL_WITH_USER_AND_PW, p);
+    //        Connection conn = DriverManager.getConnection(URL, p);
     //        DatabaseMetaData dbmd = conn.getMetaData();
     //        System.out.println(dbmd.getStringFunctions());
     //        System.out.println(dbmd.getNumericFunctions());

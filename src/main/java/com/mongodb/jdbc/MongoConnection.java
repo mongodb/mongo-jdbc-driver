@@ -43,13 +43,12 @@ public class MongoConnection implements Connection {
     private boolean isClosed;
     private boolean relaxed;
 
-    public MongoConnection(
-            ConnectionString uri, String user, String database, String conversionMode) {
-        Preconditions.checkNotNull(uri);
-        this.url = uri.toString();
-        this.user = user;
+    public MongoConnection(ConnectionString cs, String database, String conversionMode) {
+        Preconditions.checkNotNull(cs);
+        this.url = cs.getConnectionString();
+        this.user = cs.getUsername();
         this.currentDB = database;
-        mongoClient = MongoClients.create(uri);
+        mongoClient = MongoClients.create(cs);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
     }
@@ -333,7 +332,7 @@ public class MongoConnection implements Connection {
         }
     }
 
-    class ConnValidation implements Callable {
+    class ConnValidation implements Callable<Object> {
         @Override
         public Object call() throws SQLException {
             Statement statement = createStatement();
@@ -359,7 +358,7 @@ public class MongoConnection implements Connection {
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future future = executor.submit(new ConnValidation());
+        Future<Object> future = executor.submit(new ConnValidation());
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);
