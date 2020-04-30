@@ -1,3 +1,5 @@
+# This does not need to be kept in sync with sqlproxy, as it does not currently
+# generate aggregation functions.
 #
 # This yml file has one top-level key, `functions`, whose value is a list of
 # scalar function specs. Each scalar function spec can be configured with a

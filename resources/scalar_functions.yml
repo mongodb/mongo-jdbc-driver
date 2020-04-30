@@ -1,3 +1,5 @@
+# This file should always be the same as the one in sqlproxy/evaluation. Please
+# backport to keep consistent.
 #
 # This yml file has one top-level key, `functions`, whose value is a list of
 # scalar function specs. Each scalar function spec can be configured with a
