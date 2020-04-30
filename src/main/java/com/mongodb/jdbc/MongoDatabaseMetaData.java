@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -306,77 +305,24 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 + "YEAR_MONTH";
     }
 
-    private static final String[] systemFunctionNames;
-    private static final String systemFunctionNamesString;
-    private static final String numericFunctionsString;
-    private static final String stringFunctionsString;
-    private static final String dateFunctionsString;
-
-    static {
-        systemFunctionNames = new String[MongoSystemFunction.systemFunctions.length];
-        for (int i = 0; i < systemFunctionNames.length; ++i) {
-            systemFunctionNames[i] = MongoSystemFunction.systemFunctions[i].name;
-        }
-        systemFunctionNamesString = String.join(",", systemFunctionNames);
-
-        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
-        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
-        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(systemFunctionNames.length);
-        for (int i = 0; i < MongoSystemFunction.systemFunctions.length; ++i) {
-            for (String argType : MongoSystemFunction.systemFunctions[i].argTypes) {
-                String name = MongoSystemFunction.systemFunctions[i].name;
-                if (argType == null) {
-                    continue;
-                }
-                switch (argType) {
-                    case "string":
-                        if (stringFunctionSet.contains(name)) {
-                            break;
-                        }
-                        stringFunctionSet.add(name);
-                        break;
-                    case "numeric":
-                    case "long":
-                    case "int":
-                    case "double":
-                    case "decimal":
-                        if (numericFunctionSet.contains(name)) {
-                            break;
-                        }
-                        numericFunctionSet.add(name);
-                        break;
-                    case "date":
-                        if (dateFunctionSet.contains(name)) {
-                            break;
-                        }
-                        dateFunctionSet.add(name);
-                        break;
-                }
-            }
-        }
-        numericFunctionsString = String.join(",", numericFunctionSet);
-        stringFunctionsString = String.join(",", stringFunctionSet);
-        dateFunctionsString = String.join(",", dateFunctionSet);
-    }
-
     @Override
     public String getNumericFunctions() throws SQLException {
-        return numericFunctionsString;
+        return MongoFunction.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return stringFunctionsString;
+        return MongoFunction.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return systemFunctionNamesString;
+		return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return dateFunctionsString;
+        return MongoFunction.dateFunctionsString;
     }
 
     @Override
@@ -2016,14 +1962,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(systemFunctionNames.length);
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.functionNames.length);
         Pattern functionPatternRE = null;
         if (functionNamePattern != null) {
             functionPatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
         }
-        for (MongoSystemFunction systemFunc : MongoSystemFunction.systemFunctions) {
-            String functionName = systemFunc.name;
-            String remarks = systemFunc.comment;
+        for (MongoFunction func : MongoFunction.functions) {
+            String functionName = func.name;
+            String remarks = func.comment;
             if (!functionPatternRE.matcher(functionName).matches()) {
                 continue;
             }
@@ -2080,13 +2026,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     private MongoResultDoc getFunctionColumnDoc(
-            MongoSystemFunction systemFunc,
-            int i,
-            String argName,
-            String argType,
-            boolean isReturnColumn) {
+            MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
         BsonValue n = new BsonNull();
-        String functionName = systemFunc.name;
+        String functionName = func.name;
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>(17);
         doc.values.add(
@@ -2127,8 +2069,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "RADIX", "RADIX", bsonInt32(typeRadix(argType))));
         doc.values.add(
                 new Column("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(functionNullable)));
-        doc.values.add(
-                new Column("", "", "", "REMARKS", "REMARKS", new BsonString(systemFunc.comment)));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", new BsonString(func.comment)));
         doc.values.add(
                 new Column(
                         "",
@@ -2153,7 +2094,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(systemFunctionNames.length);
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.functionNames.length);
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
         if (functionNamePattern != null) {
@@ -2162,14 +2103,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         if (columnNamePattern != null) {
             columnNamePatternRE = Pattern.compile(columnNamePattern.replaceAll("%", ".*"));
         }
-        for (MongoSystemFunction systemFunc : MongoSystemFunction.systemFunctions) {
-            String functionName = systemFunc.name;
+        for (MongoFunction func : MongoFunction.functions) {
+            String functionName = func.name;
             if (functionNamePatternRE != null
                     && !functionNamePatternRE.matcher(functionName).matches()) {
                 continue;
             }
             int i = 0;
-            for (String argType : systemFunc.argTypes) {
+            for (String argType : func.argTypes) {
                 // We don't have better names for our arguments, for the most part.
                 ++i;
                 String columnName = "arg" + i;
@@ -2177,15 +2118,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         && !columnNamePatternRE.matcher(columnName).matches()) {
                     continue;
                 }
-                MongoResultDoc doc =
-                        getFunctionColumnDoc(systemFunc, i, columnName, argType, false);
+                MongoResultDoc doc = getFunctionColumnDoc(func, i, columnName, argType, false);
                 docs.add(doc);
             }
             String columnName = "argReturn";
             if (columnNamePatternRE == null || columnNamePatternRE.matcher(columnName).matches()) {
                 MongoResultDoc doc =
-                        getFunctionColumnDoc(
-                                systemFunc, i, "argReturn", systemFunc.returnType, true);
+                        getFunctionColumnDoc(func, i, "argReturn", func.returnType, true);
                 docs.add(doc);
             }
         }
