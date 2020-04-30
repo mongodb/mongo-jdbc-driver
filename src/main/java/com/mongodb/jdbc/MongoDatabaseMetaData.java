@@ -2065,7 +2065,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(
                 new Column("", "", "", "PRECISION", "PRECISION", bsonInt32(typePrec(argType))));
         doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", bsonInt32(typeBytes(argType))));
-        doc.values.add(new Column("", "", "", "SCALE", "SCALE", bsonInt32(typeBytes(argType))));
+        doc.values.add(new Column("", "", "", "SCALE", "SCALE", bsonInt32(typeScale(argType))));
         doc.values.add(new Column("", "", "", "RADIX", "RADIX", bsonInt32(typeRadix(argType))));
         doc.values.add(
                 new Column("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(functionNullable)));
@@ -2083,7 +2083,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", new BsonString("YES")));
         doc.values.add(
                 new Column(
-                        "", "", "", "SPECIFIC_NAME", "IS_NULLABLE", new BsonString(functionName)));
+                        "", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", new BsonString(functionName)));
         return doc;
     }
 
