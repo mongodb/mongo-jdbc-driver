@@ -366,21 +366,21 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsConvert(int fromType, int toType) throws SQLException {
-		switch(toType) {
-                case Types.ARRAY:
-					return false;
-                case Types.BLOB:
-                case Types.BINARY:
-                case Types.BIT:
-                case Types.TIMESTAMP:
-                case Types.DECIMAL:
-                case Types.DOUBLE:
-                case Types.INTEGER:
-                case Types.LONGVARCHAR:
-                case Types.NULL:
-					return true;
-		}
-		return false;
+        switch (toType) {
+            case Types.ARRAY:
+                return false;
+            case Types.BLOB:
+            case Types.BINARY:
+            case Types.BIT:
+            case Types.TIMESTAMP:
+            case Types.DECIMAL:
+            case Types.DOUBLE:
+            case Types.INTEGER:
+            case Types.LONGVARCHAR:
+            case Types.NULL:
+                return true;
+        }
+        return false;
     }
 
     @Override
