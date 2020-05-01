@@ -910,9 +910,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return stmt.executeQuery(
                 "select "
                         + "    SCHEMA_NAME as TABLE_SCHEM, "
-                        + "    CATALOG_NAME as TABLE_CAT "
+                        + "    CATALOG_NAME as TABLE_CATALOG "
                         + "from INFORMATION_SCHEMA.SCHEMATA "
-                        + "order by TABLE_CAT, TABLE_SCHEM");
+                        + "order by TABLE_CATALOG, TABLE_SCHEM");
     }
 
     @Override
@@ -1271,7 +1271,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
                         + "and kcu.TABLE_NAME = c.TABLE_NAME "
                         + "where "
-                        + equalsCond("kcu.TABLE_SCHEM", schema)
+                        + equalsCond("kcu.TABLE_SCHEMA", schema)
                         + "  and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and c.CONSTRAINT_TYPE = 'PRIMARY KEY'");
@@ -1288,12 +1288,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1315,12 +1315,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1348,12 +1348,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1808,7 +1808,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", n));
         doc.values.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", n));
         doc.values.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", n));
-        doc.values.add(new Column("", "", "", "SCOPE_DATA_TYPE", "SCOPE_DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1968,6 +1968,48 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
+    private MongoResultDoc getFunctionDoc(String functionName, String remarks) {
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>(5);
+        doc.values.add(
+                new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
+        doc.values.add(new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_NAME",
+                        "FUNCTION_NAME",
+                        new BsonString(functionName)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "REMARKS",
+                        "REMARKS",
+                        // perhaps at some point add comments explaining the function.
+                        new BsonString(remarks)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_TYPE",
+                        "FUNCTION_TYPE",
+                        new BsonInt32(functionNoTable)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "SPECIFIC_NAME",
+                        "SPECIFIC_NAME",
+                        new BsonString(functionName)));
+        return doc;
+    }
+
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
@@ -1980,51 +2022,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         for (MongoFunction func : MongoFunction.functions) {
             String functionName = func.name;
             String remarks = func.comment;
-            if (!functionPatternRE.matcher(functionName).matches()) {
+            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
                 continue;
             }
-            MongoResultDoc doc = new MongoResultDoc();
-            doc.values = new ArrayList<>(5);
-            doc.values.add(
-                    new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
-            doc.values.add(
-                    new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "FUNCTION_NAME",
-                            "FUNCTION_NAME",
-                            new BsonString(functionName)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "REMARKS",
-                            "REMARKS",
-                            // perhaps at some point add comments explaining the function.
-                            new BsonString(remarks)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "FUNCTION_TYPE",
-                            "FUNCTION_TYPE",
-                            new BsonInt32(functionNoTable)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "SPECIFIC_NAME",
-                            "SPECIFIC_NAME",
-                            new BsonString(functionName)));
+            MongoResultDoc doc = getFunctionDoc(func.name, func.comment);
             docs.add(doc);
         }
-
+        // If there are no docs, we need to construct the emptyResultSet.
+        if (docs.size() == 0) {
+            MongoResultDoc doc = getFunctionDoc("", "");
+            doc.emptyResultSet = true;
+            docs.add(doc);
+        }
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
@@ -2142,6 +2151,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         getFunctionColumnDoc(func, i, "argReturn", func.returnType, true);
                 docs.add(doc);
             }
+        }
+        // If there are no docs, we need to construct the emptyResultSet.
+        if (docs.size() == 0) {
+            // The values we pass here don't matter, since this is the emptyResultSet.
+            MongoResultDoc doc = getFunctionColumnDoc(MongoFunction.functions[0], 0, "", "", false);
+            doc.emptyResultSet = true;
+            docs.add(doc);
         }
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
