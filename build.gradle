@@ -109,6 +109,7 @@ dependencies {
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
     integrationTestImplementation "junit:junit:$junitVersion"
+    integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
 def getGitVersion() {

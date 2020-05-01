@@ -5,12 +5,16 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import java.util.List;
 
-public class MongoTestCursor implements MongoCursor<MongoResultDoc> {
-    private List<MongoResultDoc> mongoResultDocs;
+/**
+ * MongoExplicitCursor allows for creating an instance of MongoCursor from an explicit list of
+ * result docs. Useful for testing or for any place static results are necessary.
+ */
+public class MongoExplicitCursor implements MongoCursor<MongoResultDoc> {
+    private List<MongoResultDoc> docs;
     private int rowNum = 0;
 
-    public MongoTestCursor(List<MongoResultDoc> mongoResultDocs) {
-        this.mongoResultDocs = mongoResultDocs;
+    public MongoExplicitCursor(List<MongoResultDoc> docs) {
+        this.docs = docs;
     }
 
     @Override
@@ -28,12 +32,12 @@ public class MongoTestCursor implements MongoCursor<MongoResultDoc> {
 
     @Override
     public boolean hasNext() {
-        return rowNum < mongoResultDocs.size();
+        return rowNum < docs.size();
     }
 
     @Override
     public MongoResultDoc next() {
-        return mongoResultDocs.get(rowNum++);
+        return docs.get(rowNum++);
     }
 
     @Override

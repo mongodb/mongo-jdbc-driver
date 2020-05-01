@@ -31,17 +31,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.Document;
 
 public class MongoConnection implements Connection {
     private MongoClient mongoClient;
     private String currentDB;
+    private String url;
+    private String user;
     private boolean isClosed;
     private boolean relaxed;
 
-    public MongoConnection(ConnectionString uri, String database, String conversionMode) {
-        Preconditions.checkNotNull(uri);
+    public MongoConnection(ConnectionString cs, String database, String conversionMode) {
+        Preconditions.checkNotNull(cs);
+        this.url = cs.getConnectionString();
+        this.user = cs.getUsername();
         this.currentDB = database;
-        mongoClient = MongoClients.create(uri);
+        mongoClient = MongoClients.create(cs);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
     }
@@ -49,6 +56,27 @@ public class MongoConnection implements Connection {
     private void checkConnection() throws SQLException {
         if (isClosed()) {
             throw new SQLException("Connection is closed.");
+        }
+    }
+
+    String getURL() {
+        return url;
+    }
+
+    String getUser() {
+        return user;
+    }
+
+    String getServerVersion() throws SQLException {
+        checkConnection();
+
+        BsonDocument command = new BsonDocument();
+        command.put("buildInfo", new BsonInt32(1));
+        try {
+            Document result = mongoClient.getDatabase("admin").runCommand(command);
+            return (String) result.get("version");
+        } catch (Exception e) {
+            throw new SQLException(e);
         }
     }
 
@@ -117,8 +145,7 @@ public class MongoConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        // TODO: complete when MongoDatabaseMetaData is created
-        throw new SQLFeatureNotSupportedException("Not implemented.");
+        return new MongoDatabaseMetaData(this);
     }
 
     @Override
@@ -305,7 +332,7 @@ public class MongoConnection implements Connection {
         }
     }
 
-    class ConnValidation implements Callable {
+    class ConnValidation implements Callable<Object> {
         @Override
         public Object call() throws SQLException {
             Statement statement = createStatement();
@@ -331,7 +358,7 @@ public class MongoConnection implements Connection {
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future future = executor.submit(new ConnValidation());
+        Future<Object> future = executor.submit(new ConnValidation());
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);

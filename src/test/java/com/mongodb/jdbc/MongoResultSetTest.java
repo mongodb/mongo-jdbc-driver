@@ -23,7 +23,6 @@ import org.bson.BsonNull;
 import org.bson.BsonObjectId;
 import org.bson.BsonString;
 import org.bson.BsonUndefined;
-import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
@@ -77,33 +76,16 @@ class MongoResultSetTest extends MongoMock {
     static String UNDEFINED_COL_LABEL = "undefined";
     static String DBPOINTER_COL_LABEL = "db_pointer";
 
-    static Column newColumn(
-            String database,
-            String table,
-            String tableAlias,
-            String column,
-            String columnAlias,
-            BsonValue value) {
-        Column c = new Column();
-        c.database = database;
-        c.table = table;
-        c.tableAlias = tableAlias;
-        c.column = column;
-        c.columnAlias = columnAlias;
-        c.value = value;
-        return c;
-    }
-
     static {
         MongoResultDoc mongoResultDoc = new MongoResultDoc(new ArrayList<>(), false);
 
         mongoResultDoc
                 .getValues()
-                .add(newColumn("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
+                .add(new Column("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -113,7 +95,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -123,7 +105,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -133,7 +115,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -143,7 +125,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -153,7 +135,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -163,7 +145,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -173,7 +155,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -182,11 +164,11 @@ class MongoResultSetTest extends MongoMock {
                                 new BsonInt32(100)));
         mongoResultDoc
                 .getValues()
-                .add(newColumn("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
+                .add(new Column("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -196,7 +178,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -206,7 +188,7 @@ class MongoResultSetTest extends MongoMock {
         mongoResultDoc
                 .getValues()
                 .add(
-                        newColumn(
+                        new Column(
                                 "",
                                 "",
                                 "",
@@ -223,11 +205,11 @@ class MongoResultSetTest extends MongoMock {
             e.printStackTrace();
         }
         strictMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), false);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
         relaxedMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
         closedMongoResultSet =
-                new MongoResultSet(mongoStatement, new MongoTestCursor(mongoResultDocs), true);
+                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
     }
 
     @BeforeAll

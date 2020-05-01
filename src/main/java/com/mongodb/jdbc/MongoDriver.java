@@ -54,6 +54,9 @@ public class MongoDriver implements Driver {
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
+    static final String VERSION;
+    static final int MAJOR_VERSION;
+    static final int MINOR_VERSION;
 
     static CodecRegistry registry =
             fromProviders(
@@ -62,10 +65,26 @@ public class MongoDriver implements Driver {
                     PojoCodecProvider.builder().automatic(true).build());
 
     static {
+        MongoDriver unit = new MongoDriver();
         try {
-            DriverManager.registerDriver(new MongoDriver());
+            DriverManager.registerDriver(unit);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        VERSION = unit.getClass().getPackage().getImplementationVersion();
+        if (VERSION != null) {
+            String[] verSp = VERSION.split("[.]");
+            if (verSp.length < 2) {
+                throw new RuntimeException(
+                        new SQLException(
+                                "version was not specified correctly, must contain at least major and minor parts"));
+            }
+            MAJOR_VERSION = Integer.parseInt(verSp[0]);
+            MINOR_VERSION = Integer.parseInt(verSp[1]);
+        } else {
+            // final requires this.
+            MAJOR_VERSION = 0;
+            MINOR_VERSION = 0;
         }
     }
 
@@ -186,7 +205,8 @@ public class MongoDriver implements Driver {
                                     null,
                                     authDatabase,
                                     result.normalizedOptions));
-            Pair pair = new Pair(c, new DriverPropertyInfo[] {});
+            Pair<ConnectionString, DriverPropertyInfo[]> pair =
+                    new Pair<>(c, new DriverPropertyInfo[] {});
             return pair;
         }
         if (user == null) {
@@ -225,6 +245,9 @@ public class MongoDriver implements Driver {
     private static ParseResult normalizeConnectionOptions(
             ConnectionString clientURI, Properties info) throws SQLException {
 
+        if (info == null) {
+            info = new Properties();
+        }
         // The coalesce function takse the first non-null argument, returning null only
         // if both arguments are null. The java type system requires us to write this twice,
         // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
@@ -262,6 +285,11 @@ public class MongoDriver implements Driver {
         }
         // set the user
         String user = s.coalesce(uriUser, propertyUser);
+        if (user != null) {
+            // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
+            // know this.
+            info.setProperty(USER, user);
+        }
         // handle disagreements on password.
         if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
             throw new SQLException("uri and properties disagree on password");

@@ -7,11 +7,15 @@ pre:
 
 post:
   - func: "upload jar file"
-  - func: "upload test classes"
-  - func: "upload test packages"
+  - func: "upload unit test classes"
+  - func: "upload integration test classes"
+  - func: "upload unit test packages"
+  - func: "upload integration test packages"
   - func: "upload test js"
-  - func: "upload test css"
-  - func: "upload test index"
+  - func: "upload unit test css "
+  - func: "upload integration test css "
+  - func: "upload unit test index"
+  - func: "upload integration test index"
   - func: "upload xunit test results"
 
 buildvariants:
@@ -132,7 +136,7 @@ functions:
       params:
         directory: adl-jdbc-driver
 
-  "upload test classes":
+  "upload unit test classes":
     - command: s3.put
       params:
         silent: true
@@ -140,14 +144,29 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/classes/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/classes/
+        remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Classes"
+        display_name: "Unit Test Classes"
         visibility: none
 
-  "upload test packages":
+  "upload integration test classes":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Integration Test Classes"
+        visibility: none
+
+  "upload unit test packages":
     - command: s3.put
       params:
         silent: true
@@ -155,27 +174,55 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/packages/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/packages/
+        remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Packages"
+        display_name: "Unit Test Packages"
         visibility: none
 
-  "upload test index":
+  "upload integration test packages":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Integration Test Packages"
+        visibility: none
+
+  "upload unit test index":
     - command: s3.put
       params:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: adl-jdbc-driver/build/reports/tests/test/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/index.html
+        remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test Results"
+        display_name: "Unit Test Results"
 
-  "upload test css":
+  "upload integration test index":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: adl-jdbc-driver/build/reports/tests/test/index.html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Integration Test Results"
+
+  "upload unit test css ":
     - command: s3.put
       params:
         silent: true
@@ -183,11 +230,26 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/css/*.css
-        remote_file: ${S3_ARTIFACTS_DIR}/css/
+        remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test CSS"
+        display_name: "Unit Test CSS"
+        visibility: none
+
+  "upload integration test css ":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/integrationTest/css/*.css
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
+        content_type: text/css
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Integration Test CSS"
         visibility: none
 
   "upload test js":
@@ -210,6 +272,7 @@ functions:
       params:
         silent: true
         file: adl-jdbc-driver/build/test-results/*/TEST-*.xml
+
 
   "upload jar file":
     - command: s3.put

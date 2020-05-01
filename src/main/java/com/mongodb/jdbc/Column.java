@@ -10,6 +10,23 @@ public class Column {
     public String columnAlias;
     public BsonValue value;
 
+    public Column() {}
+
+    public Column(
+            String database,
+            String table,
+            String tableAlias,
+            String column,
+            String columnAlias,
+            BsonValue value) {
+        this.database = database;
+        this.table = table;
+        this.tableAlias = tableAlias;
+        this.column = column;
+        this.columnAlias = columnAlias;
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "Column{"

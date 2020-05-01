@@ -24,7 +24,7 @@ public abstract class MongoMock {
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
     @Mock protected static AggregateIterable<MongoResultDoc> aggregateIterable;
-    @Mock protected static MongoCursor mongoCursor;
+    @Mock protected static MongoCursor<MongoResultDoc> mongoCursor;
 
     @InjectMocks
     protected static MongoConnection mongoConnection = new MongoConnection(uri, database, null);
@@ -98,7 +98,7 @@ public abstract class MongoMock {
         Column col1 = generateCol("myDB", "foo", "a", new BsonInt32(1));
         Column col2 = generateCol("myDB", "foo", "b", new BsonString("test"));
 
-        ArrayList cols = new ArrayList();
+        ArrayList<Column> cols = new ArrayList<>();
         cols.add(col1);
         cols.add(col2);
         return new MongoResultDoc(cols, isEmpty);
