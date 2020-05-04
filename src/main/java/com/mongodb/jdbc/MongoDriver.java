@@ -19,8 +19,12 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import java.io.BufferedWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -58,6 +62,9 @@ public class MongoDriver implements Driver {
     static final int MAJOR_VERSION;
     static final int MINOR_VERSION;
 
+    public static Path path = Paths.get("mongodb_adl_jdbc_driver_log.txt");
+    public static BufferedWriter b;
+
     static CodecRegistry registry =
             fromProviders(
                     new BsonValueCodecProvider(),
@@ -65,6 +72,11 @@ public class MongoDriver implements Driver {
                     PojoCodecProvider.builder().automatic(true).build());
 
     static {
+        try {
+            b = Files.newBufferedWriter(path);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         MongoDriver unit = new MongoDriver();
         try {
             DriverManager.registerDriver(unit);

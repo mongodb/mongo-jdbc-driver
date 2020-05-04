@@ -81,21 +81,6 @@ class MongoDatabaseMetaDataTest extends MongoMock {
     }
 
     @Test
-    void testGetCatalogs() throws SQLException {
-        ResultSet rs = databaseMetaData.getCatalogs();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "TABLE_CAT",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 1);
-    }
-
-    @Test
     void testGetTableTypes() throws SQLException {
         ResultSet rs = databaseMetaData.getTableTypes();
         ResultSetMetaData rsmd = rs.getMetaData();
