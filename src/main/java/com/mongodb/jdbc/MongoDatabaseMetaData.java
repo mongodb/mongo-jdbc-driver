@@ -495,13 +495,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public String getSchemaTerm() throws SQLException {
         // We do not support schemata.
-        return "database";
+        return "schema";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
         // We do not support procedures.
-        return "";
+        return "procedure";
     }
 
     @Override

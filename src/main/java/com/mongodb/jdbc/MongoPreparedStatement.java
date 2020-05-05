@@ -62,14 +62,8 @@ public class MongoPreparedStatement extends MongoStatement implements PreparedSt
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         // This is not an efficient way to do this... at all.
-        try {
-            ResultSet rs = executeQuery(sql + " limit 1");
-            return rs.getMetaData();
-        } catch (SQLException e) {
-            // If this excepted, it probably means it already had a limit in it, try without the limit.
-            ResultSet rs = executeQuery(sql);
-            return rs.getMetaData();
-        }
+        ResultSet rs = executeQuery("select * from (" + sql + ") orig_query limit 1");
+        return rs.getMetaData();
     }
 
     // Supporting any of these set methods will require adding that functionality to ADL or

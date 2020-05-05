@@ -450,12 +450,14 @@ public class MongoConnection implements Connection {
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        checkConnection();
+        // JDBC standard says this function is ignored if schemas are not supported.
+        // So we do not want to check the connection.
     }
 
     @Override
     public String getSchema() throws SQLException {
-        checkConnection();
+        // JDBC standard says this function is ignored if schemas are not supported.
+        // So we do not want to check the connection.
         return null;
     }
 
