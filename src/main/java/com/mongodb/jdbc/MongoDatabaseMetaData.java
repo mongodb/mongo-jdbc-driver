@@ -916,7 +916,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return stmt.executeQuery(
                 "select "
                         + "    '' as TABLE_SCHEM, "
-                        + "    '' as TABLE_CAT "
+                        + "    '' as TABLE_CATALOG "
                         + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES ");
     }
 
