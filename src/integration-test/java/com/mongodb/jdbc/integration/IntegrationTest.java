@@ -3,6 +3,7 @@ package com.mongodb.jdbc.integration;
 import static org.junit.Assert.*;
 
 import java.sql.*;
+import java.util.HashSet;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -37,6 +38,15 @@ public class IntegrationTest {
         Connection conn = DriverManager.getConnection(URL, p);
         DatabaseMetaData dbmd = conn.getMetaData();
         assertEquals(System.getenv("ADL_TEST_USER"), dbmd.getUserName());
+        // It appears that the url arguments are, in some cases, put in
+        // different order, so we check them for set equality instead
+        // of linear equality.
+        HashSet<String> args = new HashSet<>();
+        args.add("authsource=admin");
+        args.add("ssl=true");
+        String[] urlSp = dbmd.getURL().split("[?]");
+        String baseUrl = urlSp[0];
+        String urlArgs = urlSp[1];
         assertEquals(
                 "mongodb://"
                         + System.getenv("ADL_TEST_USER")
@@ -44,8 +54,12 @@ public class IntegrationTest {
                         + System.getenv("ADL_TEST_PWD")
                         + "@"
                         + System.getenv("ADL_TEST_HOST")
-                        + "/test?authsource=admin&ssl=true",
-                dbmd.getURL());
+                        + "/test",
+                baseUrl);
+        // Check the url args for set equality, now:
+        for (String arg : urlArgs.split("&")) {
+            assertTrue(args.contains(arg));
+        }
         System.out.println(dbmd.getURL());
     }
 
