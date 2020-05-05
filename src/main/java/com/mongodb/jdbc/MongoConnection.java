@@ -96,8 +96,12 @@ public class MongoConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+        checkConnection();
+        try {
+            return new MongoPreparedStatement(sql, this, currentDB, relaxed);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
     }
 
     @Override
