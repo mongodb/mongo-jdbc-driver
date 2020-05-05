@@ -11,13 +11,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     private final int unknownLength = 0;
 
     public MongoResultSetMetaData(MongoResultDoc mongoResultDoc) {
-
-        try {
-            MongoDriver.b.write("new rs metadata \n");
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         this.mongoResultDoc = mongoResultDoc;
     }
 
@@ -34,24 +27,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isAutoIncrement(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return false;
     }
 
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return false;
@@ -87,48 +68,24 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSearchable(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isCurrency(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return false;
     }
 
     @Override
     public int isNullable(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return columnNullableUnknown;
     }
 
     @Override
     public boolean isSigned(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return false;
@@ -164,12 +121,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return 0;
@@ -226,48 +177,24 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return mongoResultDoc.values.get(column - 1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return mongoResultDoc.values.get(column - 1).column;
     }
 
     @Override
     public String getSchemaName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return "";
     }
 
     @Override
     public int getPrecision(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return 0;
@@ -323,12 +250,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getScale(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return 0;
@@ -365,24 +286,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getTableName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return mongoResultDoc.values.get(column).tableAlias;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return mongoResultDoc.values.get(column - 1).database;
     }
@@ -394,22 +303,9 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return Types.NULL;
-        }
-        try {
-            MongoDriver.b.write("\nget column type: ");
-            MongoDriver.b.write(String.valueOf(column));
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
         switch (o.getBsonType()) {
             case ARRAY:
@@ -431,20 +327,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case END_OF_DOCUMENT:
                 return Types.NULL;
             case INT32:
-                try {
-                    MongoDriver.b.write("int32\n");
-                    MongoDriver.b.flush();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
                 return Types.INTEGER;
             case INT64:
-                try {
-                    MongoDriver.b.write("int64\n");
-                    MongoDriver.b.flush();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
                 return Types.INTEGER;
             case JAVASCRIPT:
                 return Types.NULL;
@@ -455,24 +339,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case MIN_KEY:
                 return Types.NULL;
             case NULL:
-                try {
-                    MongoDriver.b.write("null\n");
-                    MongoDriver.b.flush();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
                 return Types.NULL;
             case OBJECT_ID:
                 return Types.LONGVARCHAR;
             case REGULAR_EXPRESSION:
                 return Types.NULL;
             case STRING:
-                try {
-                    MongoDriver.b.write("string\n");
-                    MongoDriver.b.flush();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
                 return Types.LONGVARCHAR;
             case SYMBOL:
                 return Types.NULL;
@@ -486,12 +358,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue o = getObject(column);
         if (o == null) {
             return "null";
@@ -548,36 +414,18 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return true;
     }
 
     @Override
     public boolean isWritable(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return false;
     }
 
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(column);
         return false;
     }
@@ -586,12 +434,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Object o = getObject(column);
         return o.getClass().getName();
     }

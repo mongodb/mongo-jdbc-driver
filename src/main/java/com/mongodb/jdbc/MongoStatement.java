@@ -49,13 +49,6 @@ public class MongoStatement implements Statement {
 
     @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
-        try {
-            MongoDriver.b.write(
-                    "currentDB:\n " + currentDB.getName() + "\nexecuting: \n  " + sql + "\n");
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         closeExistingResultSet();
 

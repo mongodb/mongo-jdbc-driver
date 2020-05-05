@@ -22,22 +22,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private String serverVersion;
 
     public MongoDatabaseMetaData(MongoConnection conn) {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         this.conn = conn;
     }
 
     public static String escapeString(String value) {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         String escaped = value.replace("'", "''");
         return escaped.replace("\\", "\\\\");
     }
@@ -50,122 +38,56 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // First, a variety of minor information about the target database.
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public String getURL() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return conn.getURL();
     }
 
     @Override
     public String getUserName() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return conn.getUser();
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true; // we are only read-only for now.
     }
 
     @Override
     public boolean nullsAreSortedHigh() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedLow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false; // missing and NULL < all other values
     }
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "MongoDB Atlas Data Lake";
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         if (serverVersion != null) {
             return serverVersion;
         }
@@ -175,179 +97,83 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDriverName() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "MongoDB Atlas Data Lake JDBC Driver";
     }
 
     @Override
     public String getDriverVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoDriver.VERSION;
     }
 
     @Override
     public int getDriverMajorVersion() {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoDriver.MAJOR_VERSION;
     }
 
     @Override
     public int getDriverMinorVersion() {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoDriver.MINOR_VERSION;
     }
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No files are local on Atlas Data Lake
         return false;
     }
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No files are local on Atlas Data Lake
         return false;
     }
 
     @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return supportsMixedCaseIdentifiers();
     }
 
     @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "`";
     }
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // These come directly from the mongosqld keywords file, minus the keywords from SQL2003.
         // See resources/keywords.py
         return "ADDDATE,"
@@ -480,67 +306,31 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoFunction.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoFunction.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoFunction.dateFunctionsString;
     }
 
     @Override
     public String getSearchStringEscape() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "\\";
     }
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // Retrieves all the "extra" characters that can be used in unquoted identifier names (those beyond a-z, A-Z, 0-9 and _).
         return "";
     }
@@ -550,67 +340,31 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsConvert(int fromType, int toType) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         switch (toType) {
             case Types.ARRAY:
                 return false;
@@ -630,577 +384,271 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We don't support transactions for now.
         return false;
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // If this isn't true, it's a bug.
         return true;
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // If this isn't true, it's a bug.
         return true;
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // If it does not, this is a bug.
         return true;
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // If it does not, this is a bug.
         return true;
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public String getSchemaTerm() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not support schemata.
         return "database";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not support procedures.
         return "";
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return "database";
     }
 
     @Override
     public boolean isCatalogAtStart() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public String getCatalogSeparator() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return ".";
     }
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsPositionedDelete() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsPositionedUpdate() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSelectForUpdate() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsStoredProcedures() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsUnion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // Though we don't support rollback.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // Though we don't support rollback.
         return true;
     }
@@ -1212,57 +660,27 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // limit, or the limit is not known.
     @Override
     public int getMaxBinaryLiteralLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxCharLiteralLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxColumnNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No specific max size, though it would be limited by max document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // MongoDB has no limit in 4.2+. Datalake doesn't support indexes, yet,
         // but returning 0 is fine.
         return 0;
@@ -1270,179 +688,83 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInTable() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxConnections() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxCursorNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxIndexLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxSchemaNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxProcedureNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 255;
     }
 
     @Override
     public int getMaxRowSize() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return true;
     }
 
     @Override
     public int getMaxStatementLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxStatements() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxTableNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxTablesInSelect() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 0;
     }
 
     @Override
     public int getMaxUserNameLength() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return APPROXIMATE_DOC_SIZE;
     }
 
@@ -1450,79 +772,37 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDefaultTransactionIsolation() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return java.sql.Connection.TRANSACTION_NONE;
     }
 
     @Override
     public boolean supportsTransactions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return level == java.sql.Connection.TRANSACTION_NONE;
     }
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
@@ -1530,12 +810,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
 
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No procedures so we always return an empty result set.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -1560,12 +834,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String columnNamePattern)
             throws SQLException {
 
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No procedures so we always return an empty result set.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -1615,12 +883,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
 
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         // Catalog is the schema here. It's annoying, but it's what works the best with Tableau.
         // So even though we call it SCHEMA in the INFORMATION_SCHEMA, we will use the catlog
@@ -1648,12 +910,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         // This is a hack for now. We need an empty resultset. Better would be to
         // select from DUAL where 1=0, but that does not work, it creates a batch errror.
@@ -1666,12 +922,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -1682,12 +932,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         MongoResultDoc doc = new MongoResultDoc();
         ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
         doc.values = new ArrayList<>(1);
@@ -1876,12 +1120,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         final String nullableCase =
                 ""
@@ -1937,12 +1175,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getColumnPrivileges(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -1966,12 +1198,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -1993,12 +1219,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -2031,12 +1251,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have updates, so this will always be empty.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2058,12 +1272,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -2086,12 +1294,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have foreign keys, so this will always be empty.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2119,12 +1321,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have foreign keys, so this will always be empty.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2158,12 +1354,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String foreignSchema,
             String foreignTable)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have foreign keys, so this will always be empty.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2202,12 +1392,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             int minScale,
             int maxScale,
             int numPrecRadix) {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         BsonValue n = new BsonNull();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
@@ -2281,12 +1465,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         ArrayList<MongoResultDoc> docs = new ArrayList<>(11);
 
         docs.add(
@@ -2424,12 +1602,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
@@ -2464,142 +1636,70 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return type == ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return type == ResultSet.TYPE_FORWARD_ONLY && concurrency == ResultSet.CONCUR_READ_ONLY;
     }
 
     @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean updatesAreDetected(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean deletesAreDetected(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean insertsAreDetected(int type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have updates.
         return false;
     }
@@ -2627,12 +1727,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public Connection getConnection() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return conn;
     }
 
@@ -2640,45 +1734,21 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // This is related to keys generated automatically on inserts,
         // and we do not support inserts.
         return false;
@@ -2687,12 +1757,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have UDTs.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2712,12 +1776,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have SuperTables.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2739,12 +1797,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have UDTs.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -2778,90 +1830,42 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsResultSetHoldability(int holdability) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
     @Override
     public int getResultSetHoldability() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return ResultSet.HOLD_CURSORS_OVER_COMMIT;
     }
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoDriver.MAJOR_VERSION;
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return MongoDriver.MINOR_VERSION;
     }
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 4;
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return 2;
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // This is what postgres returns.
         return sqlStateSQL;
     }
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // It does not matter what return here. But we don't have locators
         // or allow them to be updated.
         return false;
@@ -2869,12 +1873,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return false;
     }
 
@@ -2882,58 +1880,28 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return RowIdLifetime.ROWID_UNSUPPORTED;
     }
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return getSchemas();
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // This is related to using stored procedure escape syntax, which we do not support.
         return false;
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // No writes.
         return false;
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         ArrayList<MongoResultDoc> rows = new ArrayList<>(4);
 
         MongoResultDoc row = new MongoResultDoc();
@@ -3051,12 +2019,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.functionNames.length);
         Pattern functionPatternRE = null;
@@ -3162,12 +2124,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.functionNames.length);
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
@@ -3217,12 +2173,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not support pseudoColumns (hidden columns).
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -3247,12 +2197,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         // We do not have generated keys.
         return false;
     }
@@ -3260,24 +2204,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // java.sql.Wrapper impl
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return iface.isInstance(this);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return (T) this;
     }
 }

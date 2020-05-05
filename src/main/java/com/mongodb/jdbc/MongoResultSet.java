@@ -107,12 +107,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean next() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         checkAndCacheFirstDocAndMetaData();
 
@@ -140,12 +134,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void close() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         if (closed) {
             return;
         }
@@ -158,12 +146,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean wasNull() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return wasNull;
     }
@@ -250,12 +232,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
@@ -325,12 +301,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getBytes(out);
@@ -338,12 +308,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte[] getBytes(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getBytes(out);
@@ -358,12 +322,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getAsciiStream(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         final String encoding = "ASCII";
         try {
@@ -375,12 +333,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getAsciiStream(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         final String encoding = "ASCII";
         try {
@@ -393,12 +345,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         final String encoding = "UTF-8";
         try {
@@ -411,12 +357,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         final String encoding = "UTF-8";
         try {
@@ -428,24 +368,12 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getBinaryStream(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         return getNewByteArrayInputStream(getBytes(columnIndex));
     }
 
     @Override
     public java.io.InputStream getBinaryStream(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         return getNewByteArrayInputStream(getBytes(columnLabel));
     }
@@ -515,12 +443,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public String getString(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getString(out);
@@ -530,15 +452,7 @@ public class MongoResultSet implements ResultSet {
     public String getString(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
-        String x = getString(out);
-        try {
-            String o = current.getValues().get(columnIndex - 1).columnAlias;
-            MongoDriver.b.write("\n" + o + " : " + x + "\n");
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return x;
+        return getString(out);
     }
 
     private boolean handleBooleanConversionFailure(String from) throws SQLException {
@@ -609,12 +523,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean getBoolean(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getBoolean(out);
@@ -622,12 +530,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getBoolean(out);
@@ -641,12 +543,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte getByte(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getByte(out);
@@ -654,12 +550,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getByte(out);
@@ -673,12 +563,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public short getShort(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getShort(out);
@@ -686,12 +570,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getShort(out);
@@ -706,12 +584,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public int getInt(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getInt(out);
@@ -721,15 +593,7 @@ public class MongoResultSet implements ResultSet {
     public int getInt(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
-        int x = getInt(out);
-        try {
-            String o = current.getValues().get(columnIndex - 1).columnAlias;
-            MongoDriver.b.write("\n" + o + " : " + x + "\n");
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return x;
+        return getInt(out);
     }
 
     private long handleLongConversionFailure(String from) throws SQLException {
@@ -800,12 +664,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public long getLong(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getLong(out);
@@ -813,12 +671,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getLong(out);
@@ -830,12 +682,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public float getFloat(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getFloat(out);
@@ -843,12 +689,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getFloat(out);
@@ -922,12 +762,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public double getDouble(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getDouble(out);
@@ -935,12 +769,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getDouble(out);
@@ -949,12 +777,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
@@ -964,47 +786,23 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return null;
     }
 
     @Override
     public void clearWarnings() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
     }
 
     @Override
     public String getCursorName() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         checkAndCacheFirstDocAndMetaData();
         if (current != null) {
@@ -1015,24 +813,12 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -1041,12 +827,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         return columnPositionCache.get(columnLabel) + 1;
     }
@@ -1059,24 +839,12 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.Reader getCharacterStream(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public java.io.Reader getCharacterStream(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -1149,12 +917,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getBigDecimal(out);
@@ -1162,12 +924,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getBigDecimal(out);
@@ -1179,48 +935,24 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean isAfterLast() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean isFirst() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return rowNum == 1;
     }
 
     @Override
     public boolean isLast() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         checkAndCacheFirstDocAndMetaData();
         if (rowNum == 0) {
@@ -1239,96 +971,48 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void beforeFirst() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void afterLast() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean first() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean last() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public int getRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return rowNum;
     }
 
     @Override
     public boolean absolute(int row) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean relative(int rows) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean previous() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -1339,72 +1023,36 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void setFetchDirection(int direction) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return ResultSet.FETCH_FORWARD;
     }
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public int getFetchSize() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public int getType() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public int getConcurrency() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return ResultSet.CONCUR_READ_ONLY;
     }
@@ -1415,204 +1063,102 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean rowUpdated() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean rowInserted() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean rowDeleted() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNull(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBoolean(int columnIndex, boolean x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateByte(int columnIndex, byte x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateShort(int columnIndex, short x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateInt(int columnIndex, int x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateLong(int columnIndex, long x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateFloat(int columnIndex, float x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateDouble(int columnIndex, double x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateString(int columnIndex, String x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBytes(int columnIndex, byte x[]) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateDate(int columnIndex, Date x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateTime(int columnIndex, Time x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -1640,192 +1186,96 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateObject(int columnIndex, Object x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNull(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBoolean(String columnLabel, boolean x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateByte(String columnLabel, byte x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateShort(String columnLabel, short x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateInt(String columnLabel, int x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateLong(String columnLabel, long x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateFloat(String columnLabel, float x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateDouble(String columnLabel, double x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateString(String columnLabel, String x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBytes(String columnLabel, byte x[]) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateDate(String columnLabel, Date x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateTime(String columnLabel, Time x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -1853,120 +1303,60 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateObject(String columnLabel, Object x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void insertRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void deleteRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void refreshRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void cancelRowUpdates() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void moveToInsertRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void moveToCurrentRow() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public Statement getStatement() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkClosed();
         return statement;
     }
@@ -1980,12 +1370,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Ref getRef(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2003,12 +1387,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Blob getBlob(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getNewBlob(getBytes(out));
@@ -2016,12 +1394,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Blob getBlob(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getNewBlob(getBytes(out));
@@ -2033,12 +1405,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Clob getClob(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getClob(out);
@@ -2046,12 +1412,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Clob getClob(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getClob(out);
@@ -2059,12 +1419,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Array getArray(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2078,24 +1432,12 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Ref getRef(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public Array getArray(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2171,12 +1513,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Date getDate(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getDate(out);
@@ -2184,12 +1520,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getDate(out);
@@ -2197,12 +1527,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Date d = getDate(columnIndex);
         if (d == null) {
             return null;
@@ -2213,12 +1537,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Date d = getDate(columnLabel);
         if (d == null) {
             return null;
@@ -2234,12 +1552,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Time getTime(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getTime(out);
@@ -2247,12 +1559,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getTime(out);
@@ -2260,12 +1566,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Time d = getTime(columnIndex);
         if (d == null) {
             return null;
@@ -2276,12 +1576,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Time d = getTime(columnLabel);
         if (d == null) {
             return null;
@@ -2297,12 +1591,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Timestamp getTimestamp(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkKey(columnLabel);
         BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
         return getTimestamp(out);
@@ -2310,12 +1598,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         checkBounds(columnIndex);
         BsonValue out = current.getValues().get(columnIndex - 1).value;
         return getTimestamp(out);
@@ -2323,12 +1605,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Timestamp d = getTimestamp(columnIndex);
         if (d == null) {
             return null;
@@ -2339,12 +1615,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Timestamp d = getTimestamp(columnLabel);
         if (d == null) {
             return null;
@@ -2357,120 +1627,60 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.net.URL getURL(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public java.net.URL getURL(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateRef(int columnIndex, java.sql.Ref x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateRef(String columnLabel, java.sql.Ref x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBlob(int columnIndex, java.sql.Blob x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBlob(String columnLabel, java.sql.Blob x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateClob(int columnIndex, java.sql.Clob x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateClob(String columnLabel, java.sql.Clob x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateArray(int columnIndex, java.sql.Array x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateArray(String columnLabel, java.sql.Array x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2479,236 +1689,116 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public RowId getRowId(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public RowId getRowId(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateRowId(int columnIndex, RowId x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateRowId(String columnLabel, RowId x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public int getHoldability() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return closed;
     }
 
     @Override
     public void updateNString(int columnIndex, String nString) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNString(String columnLabel, String nString) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public NClob getNClob(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public NClob getNClob(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public SQLXML getSQLXML(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public SQLXML getSQLXML(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public String getNString(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return getString(columnIndex);
     }
 
     @Override
     public String getNString(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return getString(columnLabel);
     }
 
     @Override
     public java.io.Reader getNCharacterStream(int columnIndex) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return new java.io.StringReader(getString(columnIndex));
     }
 
     @Override
     public java.io.Reader getNCharacterStream(String columnLabel) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return new java.io.StringReader(getString(columnLabel));
     }
 
@@ -2784,48 +1874,24 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2834,12 +1900,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateNCharacterStream(int columnIndex, java.io.Reader x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2853,60 +1913,30 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateAsciiStream(int columnIndex, java.io.InputStream x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBinaryStream(int columnIndex, java.io.InputStream x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateCharacterStream(int columnIndex, java.io.Reader x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateAsciiStream(String columnLabel, java.io.InputStream x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBinaryStream(String columnLabel, java.io.InputStream x) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2920,72 +1950,36 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateClob(int columnIndex, Reader reader) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateClob(String columnLabel, Reader reader) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(int columnIndex, Reader reader) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -2994,24 +1988,12 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
     @Override
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -3034,12 +2016,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -3054,24 +2030,12 @@ public class MongoResultSet implements ResultSet {
     // java.sql.Wrapper impl
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return iface.isInstance(this);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        try {
-            MongoDriver.b.write(Thread.currentThread().getStackTrace()[1].toString());
-            MongoDriver.b.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return (T) this;
     }
 }
