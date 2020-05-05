@@ -873,7 +873,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             throw new RuntimeException(e);
         }
         // We do not support schemata.
-        return "";
+        return "database";
     }
 
     @Override
@@ -1628,8 +1628,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         // We ignore types because we only have one kind of table type.
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    TABLE_TYPE, "
                         + "    NULL as REMARKS, "
@@ -1654,14 +1654,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        MongoResultDoc doc = new MongoResultDoc();
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
-        doc.values = new ArrayList<>(2);
-        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", new BsonNull()));
-        doc.values.add(new Column("", "", "", "TABLE_CATALOG", "TABLE_CATALOG", new BsonNull()));
-        doc.emptyResultSet = true;
-        docs.add(doc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        Statement stmt = conn.createStatement();
+        // This is a hack for now. We need an empty resultset. Better would be to
+        // select from DUAL where 1=0, but that does not work, it creates a batch errror.
+        return stmt.executeQuery(
+                "select "
+                        + "    '' as TABLE_SCHEM, "
+                        + "    '' as TABLE_CAT "
+                        + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES ");
     }
 
     @Override
@@ -1703,7 +1703,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "binData",
                 "numeric",
                 "string",
+                // Keep this for now or Tableau cannot figure out the types properly.
+                "varchar",
                 "long",
+                // Keep this for now or Tableau cannot figure out the types properly.
+                "bigint",
                 "int",
                 "date",
                 "date",
@@ -1741,9 +1745,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "numeric":
                 return Types.NUMERIC;
             case "string":
+            case "varchar":
                 return Types.LONGVARCHAR;
             case "long":
             case "int":
+            case "bigint":
                 return Types.INTEGER;
             case "date":
                 return Types.TIMESTAMP;
@@ -1765,6 +1771,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 15;
             case "long":
+            case "big":
                 return 19;
             case "int":
                 return 10;
@@ -1799,6 +1806,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 8;
             case "long":
+            case "bigint":
                 return 8;
             case "int":
                 return 4;
@@ -1820,6 +1828,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 2;
             case "long":
+            case "bigint":
                 return 2;
             case "int":
                 return 2;
@@ -1886,8 +1895,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    COLUMN_NAME, "
                         + getDataTypeNumCase("DATA_TYPE")
@@ -1917,7 +1926,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    0 as IS_GENERATEDCOLUMN "
                         + "from INFORMATION_SCHEMA.COLUMNS "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
                         + "    and "
@@ -1937,8 +1946,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    COLUMN_NAME, "
                         + "    GRANTOR, "
@@ -1947,7 +1956,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    IS_GRANTABLE "
                         + "from INFORMATION_SCHEMA.COLUMN_PRIVILEGES "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
                         + "    and "
@@ -1966,8 +1975,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    GRANTOR, "
                         + "    GRANTEE, "
@@ -1975,7 +1984,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    IS_GRANTABLE "
                         + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern));
     }
@@ -2013,7 +2022,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "on c.TABLE_SCHEMA = tc.TABLE_SCHEMA "
                         + "and c.TABLE_NAME = tc.TABLE_NAME "
                         + "where "
-                        + equalsCond("kcu.TABLE_SCHEMA", schema)
+                        + equalsCond("kcu.TABLE_SCHEMA", catalog)
                         + " and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and tc.CONSTRAINT_TYPE = 'PRIMARY KEY'");
@@ -2058,8 +2067,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "kcu.TABLE_CATALOG as TABLE_CAT, "
-                        + "kcu.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "kcu.TABLE_SCHEMA as TABLE_CAT, "
+                        + "'' as TABLE_SCHEM, "
                         + "kcu.TABLE_NAME as TABLE_NAME, "
                         + "kcu.COLUMN_NAME AS COLUMN_NAME, "
                         + "kcu.ORDINAL_POSITION as KEY_SEQ, "
@@ -2068,7 +2077,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
                         + "and kcu.TABLE_NAME = c.TABLE_NAME "
                         + "where "
-                        + equalsCond("kcu.TABLE_SCHEMA", schema)
+                        + equalsCond("kcu.TABLE_SCHEMA", catalog)
                         + "  and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and c.CONSTRAINT_TYPE = 'PRIMARY KEY'");
@@ -2424,8 +2433,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "tc.TABLE_CATALOG as TABLE_CAT, "
-                        + "tc.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "tc.TABLE_SCHEMA as TABLE_CAT, "
+                        + "'' as TABLE_SCHEM, "
                         + "tc.TABLE_NAME as TABLE_NAME, "
                         + "tc.CONSTRAINT_TYPE not in  ('PRIMARY KEY', 'UNIQUE') as NON_UNIQUE, "
                         + "tc.CONSTRAINT_CATALOG as INDEX_QUALIFIER, "
@@ -2444,7 +2453,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "  and tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA "
                         + "  and tc.TABLE_NAME = kcu.TABLE_NAME "
                         + "  and "
-                        + equalsCond("tc.TABLE_SCHEMA", schema)
+                        + equalsCond("tc.TABLE_SCHEMA", catalog)
                         + "  and "
                         + equalsCond("tc.TABLE_NAME", table)
                         + ((unique)

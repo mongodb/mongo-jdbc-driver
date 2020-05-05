@@ -110,12 +110,12 @@ class MongoConnectionTest extends MongoMock {
 
     @Test
     void testSetGetCatalog() throws SQLException {
-        assertEquals(database, mongoConnection.getSchema());
-        mongoConnection.setSchema("test1");
-        assertEquals("test1", mongoConnection.getSchema());
+        assertEquals(database, mongoConnection.getCatalog());
+        mongoConnection.setCatalog("test1");
+        assertEquals("test1", mongoConnection.getCatalog());
 
-        testExceptionAfterConnectionClosed(() -> mongoConnection.setSchema("test"));
-        testExceptionAfterConnectionClosed(() -> mongoConnection.getSchema());
+        testExceptionAfterConnectionClosed(() -> mongoConnection.setCatalog("test"));
+        testExceptionAfterConnectionClosed(() -> mongoConnection.getCatalog());
     }
 
     @Test
