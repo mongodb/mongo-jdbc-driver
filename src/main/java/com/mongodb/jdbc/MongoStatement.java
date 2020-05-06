@@ -57,6 +57,7 @@ public class MongoStatement implements Statement {
         sqlDoc.put("statement", new BsonString(sql));
         sqlDoc.put("formatVersion", formatVersion);
         sqlDoc.put("format", new BsonString("jdbc"));
+        sqlDoc.put("dialect", new BsonString("mysql"));
         stage.put("$sql", sqlDoc);
         try {
             MongoCursor<MongoResultDoc> cursor =
