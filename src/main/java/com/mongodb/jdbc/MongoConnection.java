@@ -363,9 +363,6 @@ public class MongoConnection implements Connection {
     class ConnValidation implements Callable<Object> {
         @Override
         public Object call() throws SQLException {
-            try {
-            } catch (Exception e) {
-            }
             Statement statement = createStatement();
             boolean resultExists = statement.execute("SELECT 1 from DUAL");
             if (!resultExists) {

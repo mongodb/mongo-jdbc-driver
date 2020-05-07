@@ -884,10 +884,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             throws SQLException {
 
         Statement stmt = conn.createStatement();
-        // Catalog is the schema here. It's annoying, but it's what works the best with Tableau.
-        // So even though we call it SCHEMA in the INFORMATION_SCHEMA, we will use the catlog
-        // pattern to filter here.
-        // We ignore types because we only have one kind of table type.
+		// What JDBC calls catalog is the SCHEMA column in the TABLES table. It's annoying, but it's
+		// what works the best with Tableau, and what the MySQL/MariaDB JDBC drivers do.  So even
+		// though we call it SCHEMA in the INFORMATION_SCHEMA, we will use the catalog argument to
+		// filter here.  We ignore types because we only have one kind of table type (e.g., no
+		// views).
         return stmt.executeQuery(
                 "select "
                         + "    TABLE_SCHEMA as TABLE_CAT, "
