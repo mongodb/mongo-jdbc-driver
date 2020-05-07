@@ -27,15 +27,19 @@ public class IntegrationTest {
         }
     }
 
-    @Test
-    public void basicDatabaseMetaDataTest() throws SQLException {
+    static Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
         p.setProperty("user", System.getenv("ADL_TEST_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_PWD"));
         p.setProperty("database", "looker");
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        return DriverManager.getConnection(URL, p);
+    }
+
+    @Test
+    public void basicDatabaseMetaDataTest() throws SQLException {
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         assertEquals(System.getenv("ADL_TEST_USER"), dbmd.getUserName());
         // It appears that the url arguments are, in some cases, put in
@@ -70,13 +74,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTables(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -103,13 +101,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetCatalogsTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getCatalogs();
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -126,13 +118,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetColumnsTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumns(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -177,13 +163,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetColumnsPrivilegesTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumnPrivileges(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -212,13 +192,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetTablePrivilegesTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTablePrivileges(catalogPattern, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -245,13 +219,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetBestRowIdentifierTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getBestRowIdentifier(null, schema, table, 0, true);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -274,13 +242,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetPrimaryKeysTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getPrimaryKeys(null, schema, table);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -296,13 +258,7 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetIndexInfoTest() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        Connection conn = DriverManager.getConnection(URL, p);
+        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getIndexInfo(null, schema, table, false, false);
         ResultSetMetaData rsmd = rs.getMetaData();
