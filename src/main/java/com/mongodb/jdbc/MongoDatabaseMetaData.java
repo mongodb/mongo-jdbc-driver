@@ -953,8 +953,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "long",
                 // Keep this for now or Tableau cannot figure out the types properly.
                 "bigint",
+                "tinyint",
                 "int",
-                "date",
+                "datetime",
                 "date",
                 "double",
                 "decimal",
@@ -995,8 +996,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "long":
             case "int":
             case "bigint":
+            case "tinyint":
                 return Types.INTEGER;
             case "date":
+            case "datetime":
                 return Types.TIMESTAMP;
             case "double":
                 return Types.DOUBLE;
@@ -1016,7 +1019,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 15;
             case "long":
-            case "big":
+            case "bigint":
                 return 19;
             case "int":
                 return 10;
@@ -1052,11 +1055,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 8;
             case "long":
             case "bigint":
+            case "date":
+            case "datatime":
                 return 8;
             case "int":
                 return 4;
             case "decimal":
                 return 16;
+            case "tinyint":
             case "bool":
                 return 1;
         }
