@@ -3,6 +3,7 @@ package com.mongodb.jdbc.integration;
 import static org.junit.Assert.*;
 
 import java.sql.*;
+import java.util.HashSet;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -18,31 +19,270 @@ public class IntegrationTest {
                     + System.getenv("ADL_TEST_HOST")
                     + "/test";
 
-    //    @Test
-    //    public void testFoo() throws SQLException {
-    //        java.util.Properties p = new java.util.Properties();
-    //        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-    //        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-    //        p.setProperty("database", "looker");
-    //        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-    //        p.setProperty("ssl", "true");
-    //        Connection conn = DriverManager.getConnection(URL, p);
-    //        DatabaseMetaData dbmd = conn.getMetaData();
-    //        System.out.println(dbmd.getStringFunctions());
-    //        System.out.println(dbmd.getNumericFunctions());
-    //        System.out.println(dbmd.getTimeDateFunctions());
-    //        System.out.println("___" + dbmd.getUserName());
-    //
-    //        System.out.println(dbmd.getDatabaseProductVersion());
-    //        ResultSet rs = dbmd.getFunctionColumns(null, null, null, null);
-    //        while (rs.next()) {
-    //            ResultSetMetaData rsmd = rs.getMetaData();
-    //            for (int i = 1; i <= rsmd.getColumnCount(); ++i) {
-    //                System.out.println(rsmd.getColumnLabel(i) + ": " + rs.getString(i));
-    //            }
-    //            System.out.println("-------------------------------");
-    //        }
-    //    }
+    private int countRows(ResultSet rs) throws SQLException {
+        for (int i = 0; ; ++i) {
+            if (!rs.next()) {
+                return i;
+            }
+        }
+    }
+
+    static Connection getBasicConnection() throws SQLException {
+        java.util.Properties p = new java.util.Properties();
+        p.setProperty("user", System.getenv("ADL_TEST_USER"));
+        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
+        p.setProperty("database", "looker");
+        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
+        p.setProperty("ssl", "true");
+        return DriverManager.getConnection(URL, p);
+    }
+
+    @Test
+    public void basicDatabaseMetaDataTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        assertEquals(System.getenv("ADL_TEST_USER"), dbmd.getUserName());
+        // It appears that the url arguments are, in some cases, put in
+        // different order, so we check them for set equality instead
+        // of linear equality.
+        HashSet<String> args = new HashSet<>();
+        args.add("authsource=admin");
+        args.add("ssl=true");
+        String[] urlSp = dbmd.getURL().split("[?]");
+        String baseUrl = urlSp[0];
+        String urlArgs = urlSp[1];
+        assertEquals(
+                "mongodb://"
+                        + System.getenv("ADL_TEST_USER")
+                        + ":"
+                        + System.getenv("ADL_TEST_PWD")
+                        + "@"
+                        + System.getenv("ADL_TEST_HOST")
+                        + "/test",
+                baseUrl);
+        // Check the url args for set equality, now:
+        for (String arg : urlArgs.split("&")) {
+            assertTrue(args.contains(arg));
+        }
+        System.out.println(dbmd.getURL());
+    }
+
+    static final String catalogPattern = "%FORMATION_S%";
+    static final String tableNamePattern = "%COL%";
+    static final String columnNamePattern = "%_MAXI%";
+    static final String columnNamePattern2 = "%_FOO%";
+
+    @Test
+    public void databaseMetaDataGetTablesTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getTables(catalogPattern, null, null, null);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                    "TABLE_SCHEM",
+                    "TABLE_NAME",
+                    "TABLE_TYPE",
+                    "REMARKS",
+                    "TYPE_CAT",
+                    "TYPE_SCHEM",
+                    "TYPE_NAME",
+                    "SELF_REFERENCING_COL_NAME",
+                    "REF_GENERATION",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(23, countRows(rs));
+        rs = dbmd.getTables(catalogPattern, null, tableNamePattern, null);
+        assertEquals(7, countRows(rs));
+    }
+
+    @Test
+    public void databaseMetaDataGetCatalogsTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getCatalogs();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        // We should have at least INFORMATION_SCHEMA.
+        assertTrue(countRows(rs) > 1);
+    }
+
+    @Test
+    public void databaseMetaDataGetColumnsTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getColumns(catalogPattern, null, null, null);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                    "TABLE_SCHEM",
+                    "TABLE_NAME",
+                    "COLUMN_NAME",
+                    "DATA_TYPE",
+                    "TYPE_NAME",
+                    "COLUMN_SIZE",
+                    "BUFFER_LENGTH",
+                    "DECIMAL_DIGITS",
+                    "NUM_PREC_RADIX",
+                    "NULLABLE",
+                    "REMARKS",
+                    "COLUMN_DEF",
+                    "SQL_DATA_TYPE",
+                    "SQL_DATETIME_SUB",
+                    "CHAR_OCTET_LENGTH",
+                    "ORDINAL_POSITION",
+                    "IS_NULLABLE",
+                    "SCOPE_CATALOG",
+                    "SCOPE_SCHEMA",
+                    "SCOPE_TABLE",
+                    "SOURCE_DATA_TYPE",
+                    "IS_AUTOINCREMENT",
+                    "IS_GENERATEDCOLUMN",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(186, countRows(rs));
+        rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, null);
+        assertEquals(67, countRows(rs));
+        rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern);
+        assertEquals(1, countRows(rs));
+        rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern2);
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseMetaDataGetColumnsPrivilegesTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getColumnPrivileges(catalogPattern, null, null, null);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                    "TABLE_SCHEM",
+                    "TABLE_NAME",
+                    "COLUMN_NAME",
+                    "GRANTOR",
+                    "GRANTEE",
+                    "PRIVILEGE",
+                    "IS_GRANTABLE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+        rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, null);
+        assertEquals(0, countRows(rs));
+        rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern);
+        assertEquals(0, countRows(rs));
+        rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern2);
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseMetaDataGetTablePrivilegesTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getTablePrivileges(catalogPattern, null, null);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                    "TABLE_SCHEM",
+                    "TABLE_NAME",
+                    "GRANTOR",
+                    "GRANTEE",
+                    "PRIVILEGE",
+                    "IS_GRANTABLE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+        rs = dbmd.getTablePrivileges(catalogPattern, null, tableNamePattern);
+        assertEquals(0, countRows(rs));
+    }
+
+    String schema = "INFORMATION_SCHEMA";
+    String table = "COLUMNS";
+
+    @Test
+    public void databaseMetaDataGetBestRowIdentifierTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getBestRowIdentifier(null, schema, table, 0, true);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "SCOPE",
+                    "COLUMN_NAME",
+                    "DATA_TYPE",
+                    "TYPE_NAME",
+                    "COLUMN_SIZE",
+                    "BUFFER_LENGTH",
+                    "DECIMAL_DIGITS",
+                    "PSEUDO_COLUMN",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseMetaDataGetPrimaryKeysTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getPrimaryKeys(null, schema, table);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "COLUMN_NAME", "KEY_SEQ", "PK_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseMetaDataGetIndexInfoTest() throws SQLException {
+        Connection conn = getBasicConnection();
+        DatabaseMetaData dbmd = conn.getMetaData();
+        ResultSet rs = dbmd.getIndexInfo(null, schema, table, false, false);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CAT",
+                    "TABLE_SCHEM",
+                    "TABLE_NAME",
+                    "NON_UNIQUE",
+                    "INDEX_QUALIFIER",
+                    "INDEX_NAME",
+                    "TYPE",
+                    "ORDINAL_POSITION",
+                    "COLUMN_NAME",
+                    "ASC_OR_DESC",
+                    "CARDINALITY",
+                    "PAGES",
+                    "FILTER_CONDITION",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
 
     @Test
     public void testConnection() throws SQLException {

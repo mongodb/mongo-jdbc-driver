@@ -215,7 +215,7 @@ functions:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/reports/tests/test/index.html
+        local_file: adl-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
         bucket: mciuploads

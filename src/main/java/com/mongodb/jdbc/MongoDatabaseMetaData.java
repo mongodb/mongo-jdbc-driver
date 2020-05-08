@@ -18,7 +18,6 @@ import org.bson.BsonString;
 import org.bson.BsonValue;
 
 public class MongoDatabaseMetaData implements DatabaseMetaData {
-
     MongoConnection conn;
     private String serverVersion;
 
@@ -496,18 +495,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public String getSchemaTerm() throws SQLException {
         // We do not support schemata.
-        return "";
+        return "schema";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
         // We do not support procedures.
-        return "";
+        return "procedure";
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        return "";
+        return "database";
     }
 
     @Override
@@ -522,32 +521,27 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        // at least when we support data manipulation calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        // at least when we support data manipulation calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        // at least when we support data manipulation calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        // at least when we support data manipulation calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        // at least when we support data manipulation calls. Also A => B and !A ==> true.
-        return true;
+        return false;
     }
 
     @Override
@@ -558,22 +552,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        return false;
+        // at least when we support data manipulation calls. Also A => B and !A ==> true.
+        return true;
     }
 
     @Override
@@ -732,7 +730,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
-        return 0;
+        return 255;
     }
 
     @Override
@@ -811,6 +809,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+
         // No procedures so we always return an empty result set.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -834,6 +833,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
+
         // No procedures so we always return an empty result set.
         BsonValue n = new BsonNull();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -882,12 +882,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
+
         Statement stmt = conn.createStatement();
-        // We ignore types because we only have one kind of table type.
+        // What JDBC calls catalog is the SCHEMA column in the TABLES table. It's annoying, but it's
+        // what works the best with Tableau, and what the MySQL/MariaDB JDBC drivers do.  So even
+        // though we call it SCHEMA in the INFORMATION_SCHEMA, we will use the catalog argument to
+        // filter here.  We ignore types because we only have one kind of table type (e.g., no
+        // views).
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    TABLE_TYPE, "
                         + "    NULL as REMARKS, "
@@ -898,7 +903,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    NULL as REF_GENERATION "
                         + "from INFORMATION_SCHEMA.TABLES "
                         + "where"
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and"
                         + patternCond("TABLE_NAME", tableNamePattern)
                         + " order by TABLE_TYPE, TABLE_CAT, TABLE_SCHEMA, TABLE_NAME");
@@ -907,22 +912,23 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSchemas() throws SQLException {
         Statement stmt = conn.createStatement();
+        // This is a hack for now. We need an empty resultset. Better would be to
+        // select from DUAL where 1=0, but that does not work, it creates a batch errror.
         return stmt.executeQuery(
                 "select "
-                        + "    SCHEMA_NAME as TABLE_SCHEM, "
-                        + "    CATALOG_NAME as TABLE_CAT "
-                        + "from INFORMATION_SCHEMA.SCHEMATA "
-                        + "order by TABLE_CAT, TABLE_SCHEM");
+                        + "    '' as TABLE_SCHEM, "
+                        + "    '' as TABLE_CATALOG "
+                        + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES ");
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        MongoResultDoc doc = new MongoResultDoc();
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
-        doc.values = new ArrayList<>(1);
-        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", new BsonString("def")));
-        docs.add(doc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(
+                "select "
+                        + "    SCHEMA_NAME as TABLE_CAT "
+                        + "from INFORMATION_SCHEMA.SCHEMATA "
+                        + " order by TABLE_CAT");
     }
 
     @Override
@@ -942,9 +948,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 "binData",
                 "numeric",
                 "string",
+                // Keep this for now or Tableau cannot figure out the types properly.
+                "varchar",
                 "long",
+                // Keep this for now or Tableau cannot figure out the types properly.
+                "bigint",
+                "tinyint",
                 "int",
-                "date",
+                "datetime",
                 "date",
                 "double",
                 "decimal",
@@ -980,11 +991,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "numeric":
                 return Types.NUMERIC;
             case "string":
+            case "varchar":
                 return Types.LONGVARCHAR;
             case "long":
             case "int":
+            case "bigint":
+            case "tinyint":
                 return Types.INTEGER;
             case "date":
+            case "datetime":
                 return Types.TIMESTAMP;
             case "double":
                 return Types.DOUBLE;
@@ -1004,6 +1019,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 15;
             case "long":
+            case "bigint":
                 return 19;
             case "int":
                 return 10;
@@ -1038,11 +1054,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 8;
             case "long":
+            case "bigint":
+            case "date":
+            case "datatime":
                 return 8;
             case "int":
                 return 4;
             case "decimal":
                 return 16;
+            case "tinyint":
             case "bool":
                 return 1;
         }
@@ -1059,6 +1079,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             case "double":
                 return 2;
             case "long":
+            case "bigint":
                 return 2;
             case "int":
                 return 2;
@@ -1119,8 +1140,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    COLUMN_NAME, "
                         + getDataTypeNumCase("DATA_TYPE")
@@ -1150,7 +1171,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    0 as IS_GENERATEDCOLUMN "
                         + "from INFORMATION_SCHEMA.COLUMNS "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
                         + "    and "
@@ -1164,8 +1185,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    COLUMN_NAME, "
                         + "    GRANTOR, "
@@ -1174,7 +1195,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    IS_GRANTABLE "
                         + "from INFORMATION_SCHEMA.COLUMN_PRIVILEGES "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern)
                         + "    and "
@@ -1187,8 +1208,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "    TABLE_CATALOG as TABLE_CAT, "
-                        + "    TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "    TABLE_SCHEMA as TABLE_CAT, "
+                        + "    '' as TABLE_SCHEM, "
                         + "    TABLE_NAME, "
                         + "    GRANTOR, "
                         + "    GRANTEE, "
@@ -1196,7 +1217,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "    IS_GRANTABLE "
                         + "from INFORMATION_SCHEMA.TABLE_PRIVILEGES "
                         + "where "
-                        + patternCond("TABLE_SCHEMA", schemaPattern)
+                        + patternCond("TABLE_SCHEMA", catalog)
                         + "    and "
                         + patternCond("TABLE_NAME", tableNamePattern));
     }
@@ -1228,7 +1249,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "on c.TABLE_SCHEMA = tc.TABLE_SCHEMA "
                         + "and c.TABLE_NAME = tc.TABLE_NAME "
                         + "where "
-                        + equalsCond("kcu.TABLE_SCHEMA", schema)
+                        + equalsCond("kcu.TABLE_SCHEMA", catalog)
                         + " and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and tc.CONSTRAINT_TYPE = 'PRIMARY KEY'");
@@ -1261,8 +1282,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "kcu.TABLE_CATALOG as TABLE_CAT, "
-                        + "kcu.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "kcu.TABLE_SCHEMA as TABLE_CAT, "
+                        + "'' as TABLE_SCHEM, "
                         + "kcu.TABLE_NAME as TABLE_NAME, "
                         + "kcu.COLUMN_NAME AS COLUMN_NAME, "
                         + "kcu.ORDINAL_POSITION as KEY_SEQ, "
@@ -1271,7 +1292,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "on kcu.TABLE_SCHEMA = c.TABLE_SCHEMA "
                         + "and kcu.TABLE_NAME = c.TABLE_NAME "
                         + "where "
-                        + equalsCond("kcu.TABLE_SCHEM", schema)
+                        + equalsCond("kcu.TABLE_SCHEMA", catalog)
                         + "  and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and c.CONSTRAINT_TYPE = 'PRIMARY KEY'");
@@ -1288,12 +1309,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1315,12 +1336,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1348,12 +1369,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
         doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
         doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
         doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
         doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SQ", "KEY_SQ", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
         doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
         doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
         doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
@@ -1591,8 +1612,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(
                 "select "
-                        + "tc.TABLE_CATALOG as TABLE_CAT, "
-                        + "tc.TABLE_SCHEMA as TABLE_SCHEM, "
+                        + "tc.TABLE_SCHEMA as TABLE_CAT, "
+                        + "'' as TABLE_SCHEM, "
                         + "tc.TABLE_NAME as TABLE_NAME, "
                         + "tc.CONSTRAINT_TYPE not in  ('PRIMARY KEY', 'UNIQUE') as NON_UNIQUE, "
                         + "tc.CONSTRAINT_CATALOG as INDEX_QUALIFIER, "
@@ -1611,7 +1632,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         + "  and tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA "
                         + "  and tc.TABLE_NAME = kcu.TABLE_NAME "
                         + "  and "
-                        + equalsCond("tc.TABLE_SCHEMA", schema)
+                        + equalsCond("tc.TABLE_SCHEMA", catalog)
                         + "  and "
                         + equalsCond("tc.TABLE_NAME", table)
                         + ((unique)
@@ -1808,7 +1829,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", n));
         doc.values.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", n));
         doc.values.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", n));
-        doc.values.add(new Column("", "", "", "SCOPE_DATA_TYPE", "SCOPE_DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1871,15 +1892,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        Statement stmt = conn.createStatement();
-        return stmt.executeQuery(
-                "select "
-                        + "    SCHEMA_NAME as TABLE_SCHEM, "
-                        + "    CATALOG_NAME as TABLE_CATALOG "
-                        + "from INFORMATION_SCHEMA.SCHEMATA "
-                        + "where "
-                        + patternCond("SCHEMA_NAME", schemaPattern)
-                        + " order by TABLE_CATALOG, TABLE_SCHEM");
+        return getSchemas();
     }
 
     @Override
@@ -1968,6 +1981,48 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(null, new MongoExplicitCursor(rows), true);
     }
 
+    private MongoResultDoc getFunctionDoc(String functionName, String remarks) {
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>(5);
+        doc.values.add(
+                new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
+        doc.values.add(new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_NAME",
+                        "FUNCTION_NAME",
+                        new BsonString(functionName)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "REMARKS",
+                        "REMARKS",
+                        // perhaps at some point add comments explaining the function.
+                        new BsonString(remarks)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_TYPE",
+                        "FUNCTION_TYPE",
+                        new BsonInt32(functionNoTable)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "SPECIFIC_NAME",
+                        "SPECIFIC_NAME",
+                        new BsonString(functionName)));
+        return doc;
+    }
+
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
@@ -1980,51 +2035,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         for (MongoFunction func : MongoFunction.functions) {
             String functionName = func.name;
             String remarks = func.comment;
-            if (!functionPatternRE.matcher(functionName).matches()) {
+            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
                 continue;
             }
-            MongoResultDoc doc = new MongoResultDoc();
-            doc.values = new ArrayList<>(5);
-            doc.values.add(
-                    new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
-            doc.values.add(
-                    new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "FUNCTION_NAME",
-                            "FUNCTION_NAME",
-                            new BsonString(functionName)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "REMARKS",
-                            "REMARKS",
-                            // perhaps at some point add comments explaining the function.
-                            new BsonString(remarks)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "FUNCTION_TYPE",
-                            "FUNCTION_TYPE",
-                            new BsonInt32(functionNoTable)));
-            doc.values.add(
-                    new Column(
-                            "",
-                            "",
-                            "",
-                            "SPECIFIC_NAME",
-                            "SPECIFIC_NAME",
-                            new BsonString(functionName)));
+            MongoResultDoc doc = getFunctionDoc(func.name, func.comment);
             docs.add(doc);
         }
-
+        // If there are no docs, we need to construct the emptyResultSet.
+        if (docs.size() == 0) {
+            MongoResultDoc doc = getFunctionDoc("", "");
+            doc.emptyResultSet = true;
+            docs.add(doc);
+        }
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
@@ -2142,6 +2164,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         getFunctionColumnDoc(func, i, "argReturn", func.returnType, true);
                 docs.add(doc);
             }
+        }
+        // If there are no docs, we need to construct the emptyResultSet.
+        if (docs.size() == 0) {
+            // The values we pass here don't matter, since this is the emptyResultSet.
+            MongoResultDoc doc = getFunctionColumnDoc(MongoFunction.functions[0], 0, "", "", false);
+            doc.emptyResultSet = true;
+            docs.add(doc);
         }
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
