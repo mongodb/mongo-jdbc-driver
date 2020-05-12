@@ -46,17 +46,6 @@ public class TDVTTest {
 
 print(test_text)
 
-"""
-  - expected_results:
-      - [~, ~, ~]
-      - [10.85, 10, 0.8499999999999996]
-      - [-13.47, -14, 0.5299999999999994]
-    expected_names: [num4, floor, diff]
-    expected_types: [float, float, float]
-    id: 'BI-821-bug'
-    sql: 'select num4, floor(calcs.num4) as floor, calcs.num4-floor(calcs.num4) as diff from calcs limit 3'
-"""
-
 types = {
         'varchar': 'string',
         'string': 'string',
