@@ -10,21 +10,13 @@ import org.junit.experimental.categories.Category;
 
 @Category(TDVTTest.class)
 public class TDVTTest {
-    static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
-    static final String URL_WITH_USER_AND_PW =
-            "jdbc:mongodb://"
-                    + System.getenv("ADL_TEST_USER")
-                    + ":"
-                    + System.getenv("ADL_TEST_PWD")
-                    + "@"
-                    + System.getenv("ADL_TEST_HOST")
-                    + "/test";
+    static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/tdvt";
 
     static Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
         p.setProperty("user", System.getenv("ADL_TEST_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
+        p.setProperty("database", "tdvt");
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("ssl", "true");
         return DriverManager.getConnection(URL, p);
@@ -36,11 +28,11 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "select num4, floor(calcs.num4) as floor, calcs.num4-floor(calcs.num4) as diff from calcs limit 3");
+                        "select num4, floor(Calcs.num4) as floor, Calcs.num4-floor(Calcs.num4) as diff from Calcs limit 3");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("num4");
-        rsmd.getColumnLabel(1).equals("floor");
-        rsmd.getColumnLabel(2).equals("diff");
+        assertEquals("num4", rsmd.getColumnLabel(1));
+        assertEquals("floor", rsmd.getColumnLabel(2));
+        assertEquals("diff", rsmd.getColumnLabel(3));
     }
 
     @Test
@@ -49,9 +41,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2074921570)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(from_days(floor(null) + 693961)) as `temp(test)(2074921570)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2074921570)(0)");
+        assertEquals("temp(test)(2074921570)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -60,9 +52,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2348327946)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2348327946)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2348327946)(0)");
+        assertEquals("temp(test)(2348327946)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -71,9 +63,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3062347157)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(from_days(floor(null) + 693961)) as `temp(test)(3062347157)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3062347157)(0)");
+        assertEquals("temp(test)(3062347157)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -82,9 +74,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1236088422)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1236088422)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1236088422)(0)");
+        assertEquals("temp(test)(1236088422)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -93,9 +85,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1709161123)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select month(from_days(floor(null) + 693961)) as `temp(test)(1709161123)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1709161123)(0)");
+        assertEquals("temp(test)(1709161123)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -104,9 +96,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(941741456)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(941741456)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(941741456)(0)");
+        assertEquals("temp(test)(941741456)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -115,9 +107,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - 1 + DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4070818381)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((7 + dayofyear(from_days(floor(null) + 693961)) - 1 + dayofweek(date_format(from_days(floor(null) + 693961), '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(4070818381)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4070818381)(0)");
+        assertEquals("temp(test)(4070818381)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -126,9 +118,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1209329404)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((7 + dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1 + dayofweek(date_format(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(1209329404)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1209329404)(0)");
+        assertEquals("temp(test)(1209329404)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -137,9 +129,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2284623665)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofweek(from_days(floor(null) + 693961)) as `temp(test)(2284623665)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2284623665)(0)");
+        assertEquals("temp(test)(2284623665)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -148,9 +140,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3556637072)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3556637072)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3556637072)(0)");
+        assertEquals("temp(test)(3556637072)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -159,9 +151,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(20465857)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(from_days(floor(null) + 693961)) as `temp(test)(20465857)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(20465857)(0)");
+        assertEquals("temp(test)(20465857)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -170,9 +162,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3365622206)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3365622206)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3365622206)(0)");
+        assertEquals("temp(test)(3365622206)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -181,9 +173,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1193407708)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(from_days(floor(null) + 693961)) as `temp(test)(1193407708)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1193407708)(0)");
+        assertEquals("temp(test)(1193407708)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -192,9 +184,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3498421513)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3498421513)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3498421513)(0)");
+        assertEquals("temp(test)(3498421513)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -203,9 +195,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1756144708)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select hour(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1756144708)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1756144708)(0)");
+        assertEquals("temp(test)(1756144708)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -214,9 +206,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2635020195)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select minute(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2635020195)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2635020195)(0)");
+        assertEquals("temp(test)(2635020195)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -225,9 +217,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2744314424)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select second(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2744314424)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2744314424)(0)");
+        assertEquals("temp(test)(2744314424)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -236,9 +228,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(232803726)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(232803726)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(232803726)(0)");
+        assertEquals("temp(test)(232803726)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -247,9 +239,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(2176505489)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(2176505489)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2176505489)(0)");
+        assertEquals("temp(test)(2176505489)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -258,9 +250,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 MINUTE) AS `TEMP(Test)(2741755004)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 minute) as `temp(test)(2741755004)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2741755004)(0)");
+        assertEquals("temp(test)(2741755004)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -269,9 +261,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2526477208)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2526477208)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2526477208)(0)");
+        assertEquals("temp(test)(2526477208)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -280,9 +272,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2007354609)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2007354609)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2007354609)(0)");
+        assertEquals("temp(test)(2007354609)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -291,9 +283,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3928745396)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3928745396)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3928745396)(0)");
+        assertEquals("temp(test)(3928745396)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -302,9 +294,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(746880020)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(746880020)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(746880020)(0)");
+        assertEquals("temp(test)(746880020)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -313,9 +305,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2699142763)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2699142763)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2699142763)(0)");
+        assertEquals("temp(test)(2699142763)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -324,9 +316,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1634134069)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(from_days(floor(null) + 693961)) as `temp(test)(1634134069)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1634134069)(0)");
+        assertEquals("temp(test)(1634134069)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -335,9 +327,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1949844743)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1949844743)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1949844743)(0)");
+        assertEquals("temp(test)(1949844743)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -346,9 +338,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3376136658)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(from_days(floor(null) + 693961)) as `temp(test)(3376136658)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3376136658)(0)");
+        assertEquals("temp(test)(3376136658)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -357,9 +349,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3672267408)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select monthname(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3672267408)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3672267408)(0)");
+        assertEquals("temp(test)(3672267408)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -368,9 +360,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2406708804)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select monthname(from_days(floor(null) + 693961)) as `temp(test)(2406708804)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2406708804)(0)");
+        assertEquals("temp(test)(2406708804)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -379,9 +371,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(1073594909)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select concat(floor((7 + dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1 + dayofweek(date_format(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(1073594909)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1073594909)(0)");
+        assertEquals("temp(test)(1073594909)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -390,9 +382,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - 1 + DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(4016689999)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select concat(floor((7 + dayofyear(from_days(floor(null) + 693961)) - 1 + dayofweek(date_format(from_days(floor(null) + 693961), '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(4016689999)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4016689999)(0)");
+        assertEquals("temp(test)(4016689999)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -401,9 +393,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3405047399)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayname(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3405047399)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3405047399)(0)");
+        assertEquals("temp(test)(3405047399)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -412,9 +404,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(55506858)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayname(from_days(floor(null) + 693961)) as `temp(test)(55506858)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(55506858)(0)");
+        assertEquals("temp(test)(55506858)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -423,9 +415,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3460070750)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3460070750)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3460070750)(0)");
+        assertEquals("temp(test)(3460070750)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -434,9 +426,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1494289478)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(from_days(floor(null) + 693961)) as `temp(test)(1494289478)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1494289478)(0)");
+        assertEquals("temp(test)(1494289478)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -445,9 +437,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3227046355)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3227046355)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3227046355)(0)");
+        assertEquals("temp(test)(3227046355)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -456,9 +448,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1233941598)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(from_days(floor(null) + 693961)) as `temp(test)(1233941598)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1233941598)(0)");
+        assertEquals("temp(test)(1233941598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -467,9 +459,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3874232094)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select hour(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3874232094)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3874232094)(0)");
+        assertEquals("temp(test)(3874232094)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -478,9 +470,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1546814749)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select minute(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1546814749)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1546814749)(0)");
+        assertEquals("temp(test)(1546814749)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -489,9 +481,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3692431276)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select second(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3692431276)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3692431276)(0)");
+        assertEquals("temp(test)(3692431276)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -500,9 +492,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(`Calcs`.`int0`) AS `TEMP(Test)(3910975586)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(`Calcs`.`int0`) as `temp(test)(3910975586)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3910975586)(0)");
+        assertEquals("temp(test)(3910975586)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -511,9 +503,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT((`Calcs`.`bool0_` <> 0)) AS `TEMP(Test)(1133866179)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count((`Calcs`.`bool0_` <> 0)) as `temp(test)(1133866179)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1133866179)(0)");
+        assertEquals("temp(test)(1133866179)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -522,9 +514,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(`Calcs`.`date3`) AS `TEMP(Test)(3590771088)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(`Calcs`.`date3`) as `temp(test)(3590771088)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3590771088)(0)");
+        assertEquals("temp(test)(3590771088)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -533,9 +525,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(`Calcs`.`num4`) AS `TEMP(Test)(1804085677)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(`Calcs`.`num4`) as `temp(test)(1804085677)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1804085677)(0)");
+        assertEquals("temp(test)(1804085677)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -544,9 +536,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(`Calcs`.`str2`) AS `TEMP(Test)(2760211945)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(`Calcs`.`str2`) as `temp(test)(2760211945)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2760211945)(0)");
+        assertEquals("temp(test)(2760211945)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -555,9 +547,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(3386714330)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(3386714330)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3386714330)(0)");
+        assertEquals("temp(test)(3386714330)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -566,9 +558,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(1554877814)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(1554877814)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1554877814)(0)");
+        assertEquals("temp(test)(1554877814)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -577,9 +569,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(680392169)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(680392169)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(680392169)(0)");
+        assertEquals("temp(test)(680392169)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -588,9 +580,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(792760981)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(792760981)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(792760981)(0)");
+        assertEquals("temp(test)(792760981)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -599,9 +591,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:%s' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4192719501)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:%s' ), interval 0 second ) as `temp(test)(4192719501)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4192719501)(0)");
+        assertEquals("temp(test)(4192719501)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -610,9 +602,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:%s' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2927274352)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:%s' ), interval 0 second ) as `temp(test)(2927274352)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2927274352)(0)");
+        assertEquals("temp(test)(2927274352)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -621,9 +613,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN 2 >= 0 THEN LEFT(`Calcs`.`str1`,2) ELSE NULL END) AS `TEMP(Test)(2443162804)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when 2 >= 0 then left(`Calcs`.`str1`,2) else null end) as `temp(test)(2443162804)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2443162804)(0)");
+        assertEquals("temp(test)(2443162804)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -632,9 +624,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN 3 >= 0 THEN LEFT(`Calcs`.`str2`,3) ELSE NULL END) AS `TEMP(Test)(1954670685)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when 3 >= 0 then left(`Calcs`.`str2`,3) else null end) as `temp(test)(1954670685)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1954670685)(0)");
+        assertEquals("temp(test)(1954670685)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -643,9 +635,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN `Calcs`.`int0` >= 0 THEN LEFT(`Calcs`.`str2`,`Calcs`.`int0`) ELSE NULL END) AS `TEMP(Test)(3664185027)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when `Calcs`.`int0` >= 0 then left(`Calcs`.`str2`,`Calcs`.`int0`) else null end) as `temp(test)(3664185027)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3664185027)(0)");
+        assertEquals("temp(test)(3664185027)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -654,9 +646,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:%s' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3300724379)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:%s' ), interval 0 second ) as `temp(test)(3300724379)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3300724379)(0)");
+        assertEquals("temp(test)(3300724379)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -665,9 +657,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`date2`) AS `TEMP(Test)(4107590482)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`date2`) as `temp(test)(4107590482)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4107590482)(0)");
+        assertEquals("temp(test)(4107590482)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -676,9 +668,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(766794695)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`datetime0`) as `temp(test)(766794695)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(766794695)(0)");
+        assertEquals("temp(test)(766794695)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -687,9 +679,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 1 AS `TEMP(Test)(3095770696)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 1 as `temp(test)(3095770696)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3095770696)(0)");
+        assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -698,9 +690,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 0 AS `TEMP(Test)(334867691)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 0 as `temp(test)(334867691)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(334867691)(0)");
+        assertEquals("temp(test)(334867691)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -709,9 +701,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1224905293)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:00' ), interval 0 second ) as `temp(test)(1224905293)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1224905293)(0)");
+        assertEquals("temp(test)(1224905293)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -720,9 +712,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(3044284514)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(3044284514)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3044284514)(0)");
+        assertEquals("temp(test)(3044284514)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -731,9 +723,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(2383411022)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(2383411022)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2383411022)(0)");
+        assertEquals("temp(test)(2383411022)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -742,9 +734,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(3392256124)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(3392256124)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3392256124)(0)");
+        assertEquals("temp(test)(3392256124)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -753,9 +745,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(1426463696)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(1426463696)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1426463696)(0)");
+        assertEquals("temp(test)(1426463696)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -764,9 +756,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(1770279206)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(timestamp(`Calcs`.`datetime0`)) as `temp(test)(1770279206)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1770279206)(0)");
+        assertEquals("temp(test)(1770279206)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -775,9 +767,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(4279914489)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(timestamp(`Calcs`.`datetime0`)) as `temp(test)(4279914489)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4279914489)(0)");
+        assertEquals("temp(test)(4279914489)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -786,9 +778,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'DATA' AS `TEMP(Test)(2967749075)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'data' as `temp(test)(2967749075)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2967749075)(0)");
+        assertEquals("temp(test)(2967749075)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -797,9 +789,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT UPPER(`Calcs`.`str2`) AS `TEMP(Test)(3516395767)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select upper(`Calcs`.`str2`) as `temp(test)(3516395767)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3516395767)(0)");
+        assertEquals("temp(test)(3516395767)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -808,9 +800,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`bool0_` <> 0) AS `TEMP(Test)(3428507074)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`bool0_` <> 0) as `temp(test)(3428507074)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3428507074)(0)");
+        assertEquals("temp(test)(3428507074)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -819,9 +811,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`bool1_` <> 0) AS `TEMP(Test)(1935567978)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`bool1_` <> 0) as `temp(test)(1935567978)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1935567978)(0)");
+        assertEquals("temp(test)(1935567978)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -830,9 +822,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`bool2_` <> 0) AS `TEMP(Test)(3179501244)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`bool2_` <> 0) as `temp(test)(3179501244)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3179501244)(0)");
+        assertEquals("temp(test)(3179501244)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -841,9 +833,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`bool3_` <> 0) AS `TEMP(Test)(1288552116)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`bool3_` <> 0) as `temp(test)(1288552116)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1288552116)(0)");
+        assertEquals("temp(test)(1288552116)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -852,9 +844,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`date0` AS `TEMP(Test)(1090544928)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`date0` as `temp(test)(1090544928)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1090544928)(0)");
+        assertEquals("temp(test)(1090544928)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -863,9 +855,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`date1` AS `TEMP(Test)(1295100109)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`date1` as `temp(test)(1295100109)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1295100109)(0)");
+        assertEquals("temp(test)(1295100109)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -874,9 +866,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`date2` AS `TEMP(Test)(2028340584)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`date2` as `temp(test)(2028340584)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2028340584)(0)");
+        assertEquals("temp(test)(2028340584)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -885,9 +877,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`date3` AS `TEMP(Test)(550459061)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`date3` as `temp(test)(550459061)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(550459061)(0)");
+        assertEquals("temp(test)(550459061)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -896,9 +888,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`datetime0` AS `TEMP(Test)(3848052829)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`datetime0` as `temp(test)(3848052829)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3848052829)(0)");
+        assertEquals("temp(test)(3848052829)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -907,9 +899,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`datetime1` AS `TEMP(Test)(1108086785)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`datetime1` as `temp(test)(1108086785)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1108086785)(0)");
+        assertEquals("temp(test)(1108086785)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -918,9 +910,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`key` AS `TEMP(Test)(3382465274)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`key` as `temp(test)(3382465274)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3382465274)(0)");
+        assertEquals("temp(test)(3382465274)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -929,9 +921,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`str0` AS `TEMP(Test)(55415805)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`str0` as `temp(test)(55415805)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(55415805)(0)");
+        assertEquals("temp(test)(55415805)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -940,9 +932,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`str1` AS `TEMP(Test)(2285743265)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`str1` as `temp(test)(2285743265)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2285743265)(0)");
+        assertEquals("temp(test)(2285743265)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -951,9 +943,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`str2` AS `TEMP(Test)(3228347817)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`str2` as `temp(test)(3228347817)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3228347817)(0)");
+        assertEquals("temp(test)(3228347817)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -962,9 +954,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`str3` AS `TEMP(Test)(286811776)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`str3` as `temp(test)(286811776)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(286811776)(0)");
+        assertEquals("temp(test)(286811776)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -973,9 +965,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`time0` AS `TEMP(Test)(4245842207)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`time0` as `temp(test)(4245842207)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4245842207)(0)");
+        assertEquals("temp(test)(4245842207)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -984,9 +976,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`time1` AS `TEMP(Test)(665897456)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`time1` as `temp(test)(665897456)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(665897456)(0)");
+        assertEquals("temp(test)(665897456)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -995,9 +987,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`zzz` AS `TEMP(Test)(1729594319)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`zzz` as `temp(test)(1729594319)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1729594319)(0)");
+        assertEquals("temp(test)(1729594319)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1006,9 +998,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`int0` AS `TEMP(Test)(3174765981)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`int0` as `temp(test)(3174765981)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3174765981)(0)");
+        assertEquals("temp(test)(3174765981)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1017,9 +1009,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`int1` AS `TEMP(Test)(2829869592)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`int1` as `temp(test)(2829869592)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2829869592)(0)");
+        assertEquals("temp(test)(2829869592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1028,9 +1020,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`int2` AS `TEMP(Test)(551775594)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`int2` as `temp(test)(551775594)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(551775594)(0)");
+        assertEquals("temp(test)(551775594)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1039,9 +1031,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`int3` AS `TEMP(Test)(524492059)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`int3` as `temp(test)(524492059)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(524492059)(0)");
+        assertEquals("temp(test)(524492059)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1050,9 +1042,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num0` AS `TEMP(Test)(3934956185)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num0` as `temp(test)(3934956185)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3934956185)(0)");
+        assertEquals("temp(test)(3934956185)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1061,9 +1053,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num1` AS `TEMP(Test)(129981160)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num1` as `temp(test)(129981160)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(129981160)(0)");
+        assertEquals("temp(test)(129981160)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1072,9 +1064,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num2` AS `TEMP(Test)(1053269056)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num2` as `temp(test)(1053269056)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1053269056)(0)");
+        assertEquals("temp(test)(1053269056)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1083,9 +1075,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num3` AS `TEMP(Test)(3320504981)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num3` as `temp(test)(3320504981)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3320504981)(0)");
+        assertEquals("temp(test)(3320504981)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1094,9 +1086,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num4` AS `TEMP(Test)(3786834202)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num4` as `temp(test)(3786834202)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3786834202)(0)");
+        assertEquals("temp(test)(3786834202)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1105,9 +1097,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL 1 DAY) AS `TEMP(Test)(670684053)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval 1 day) as `temp(test)(670684053)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(670684053)(0)");
+        assertEquals("temp(test)(670684053)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1116,9 +1108,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(2728495522)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 day) as `temp(test)(2728495522)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2728495522)(0)");
+        assertEquals("temp(test)(2728495522)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1127,9 +1119,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`date2`) THEN NULL	WHEN ISNULL(`Calcs`.`date3`) THEN NULL	ELSE LEAST(`Calcs`.`date2`, `Calcs`.`date3`) END) AS `TEMP(Test)(3951339438)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`date2`) then null	when isnull(`Calcs`.`date3`) then null	else least(`Calcs`.`date2`, `Calcs`.`date3`) end) as `temp(test)(3951339438)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3951339438)(0)");
+        assertEquals("temp(test)(3951339438)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1138,9 +1130,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`date2`) AS `TEMP(Test)(1465246653)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`date2`) as `temp(test)(1465246653)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1465246653)(0)");
+        assertEquals("temp(test)(1465246653)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1149,9 +1141,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`datetime0`) AS `TEMP(Test)(2572329321)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`datetime0`) as `temp(test)(2572329321)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2572329321)(0)");
+        assertEquals("temp(test)(2572329321)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1160,9 +1152,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*4 + (QUARTER(`Calcs`.`date2`) - QUARTER(`Calcs`.`date3`))) AS `TEMP(Test)(4144088821)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*4 + (quarter(`Calcs`.`date2`) - quarter(`Calcs`.`date3`))) as `temp(test)(4144088821)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4144088821)(0)");
+        assertEquals("temp(test)(4144088821)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1171,9 +1163,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*4 + (QUARTER(`Calcs`.`datetime0`) - QUARTER(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(2035564840)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*4 + (quarter(`Calcs`.`datetime0`) - quarter(timestamp(`Calcs`.`date2`)))) as `temp(test)(2035564840)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2035564840)(0)");
+        assertEquals("temp(test)(2035564840)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1182,9 +1174,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`date2`) AS `TEMP(Test)(477986140)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`date2`) as `temp(test)(477986140)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(477986140)(0)");
+        assertEquals("temp(test)(477986140)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1193,9 +1185,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(2224240773)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`datetime0`) as `temp(test)(2224240773)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2224240773)(0)");
+        assertEquals("temp(test)(2224240773)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1204,9 +1196,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'Data' AS `TEMP(Test)(535453017)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'data' as `temp(test)(535453017)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(535453017)(0)");
+        assertEquals("temp(test)(535453017)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1215,9 +1207,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`str1`) THEN NULL	WHEN ISNULL(`Calcs`.`str2`) THEN NULL	ELSE LEAST(`Calcs`.`str1`, `Calcs`.`str2`) END) AS `TEMP(Test)(497224717)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`str1`) then null	when isnull(`Calcs`.`str2`) then null	else least(`Calcs`.`str1`, `Calcs`.`str2`) end) as `temp(test)(497224717)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(497224717)(0)");
+        assertEquals("temp(test)(497224717)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1226,9 +1218,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`str2`) THEN NULL	WHEN ISNULL(`Calcs`.`str3`) THEN NULL	ELSE LEAST(`Calcs`.`str2`, `Calcs`.`str3`) END) AS `TEMP(Test)(1239505702)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`str2`) then null	when isnull(`Calcs`.`str3`) then null	else least(`Calcs`.`str2`, `Calcs`.`str3`) end) as `temp(test)(1239505702)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1239505702)(0)");
+        assertEquals("temp(test)(1239505702)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1237,9 +1229,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(1298877827)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(1298877827)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1298877827)(0)");
+        assertEquals("temp(test)(1298877827)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1248,9 +1240,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(1695139533)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(1695139533)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1695139533)(0)");
+        assertEquals("temp(test)(1695139533)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1259,9 +1251,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(1003104432)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(1003104432)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1003104432)(0)");
+        assertEquals("temp(test)(1003104432)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1270,9 +1262,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*12 + (MONTH(`Calcs`.`date2`) - MONTH(`Calcs`.`date3`))) AS `TEMP(Test)(381839689)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*12 + (month(`Calcs`.`date2`) - month(`Calcs`.`date3`))) as `temp(test)(381839689)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(381839689)(0)");
+        assertEquals("temp(test)(381839689)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1281,9 +1273,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*12 + (MONTH(`Calcs`.`datetime0`) - MONTH(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(2416406882)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*12 + (month(`Calcs`.`datetime0`) - month(timestamp(`Calcs`.`date2`)))) as `temp(test)(2416406882)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2416406882)(0)");
+        assertEquals("temp(test)(2416406882)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1292,9 +1284,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(3489013143)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`date2`) - year(`Calcs`.`date3`)) as `temp(test)(3489013143)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3489013143)(0)");
+        assertEquals("temp(test)(3489013143)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1303,9 +1295,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(3834106318)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`))) as `temp(test)(3834106318)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3834106318)(0)");
+        assertEquals("temp(test)(3834106318)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1322,9 +1314,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'bat' AS `TEMP(Test)(3161246105)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'bat' as `temp(test)(3161246105)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3161246105)(0)");
+        assertEquals("temp(test)(3161246105)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1333,9 +1325,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT REPLACE(`Calcs`.`str2`,'e','o') AS `TEMP(Test)(2953834147)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select replace(`Calcs`.`str2`,'e','o') as `temp(test)(2953834147)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2953834147)(0)");
+        assertEquals("temp(test)(2953834147)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1344,9 +1336,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRUNCATE(`Calcs`.`int1`,0) AS `TEMP(Test)(551720338)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select truncate(`Calcs`.`int1`,0) as `temp(test)(551720338)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(551720338)(0)");
+        assertEquals("temp(test)(551720338)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1355,9 +1347,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN (`Calcs`.`bool0_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool0_` <> 0) THEN 0	ELSE NULL END) AS `TEMP(Test)(2695057561)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when (`Calcs`.`bool0_` <> 0) then 1	when not (`Calcs`.`bool0_` <> 0) then 0	else null end) as `temp(test)(2695057561)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2695057561)(0)");
+        assertEquals("temp(test)(2695057561)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1366,9 +1358,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date0`) - 693961) AS `TEMP(Test)(2234960540)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date0`) - 693961) as `temp(test)(2234960540)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2234960540)(0)");
+        assertEquals("temp(test)(2234960540)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1377,9 +1369,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRUNCATE(`Calcs`.`num2`,0) AS `TEMP(Test)(1665700248)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select truncate(`Calcs`.`num2`,0) as `temp(test)(1665700248)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1665700248)(0)");
+        assertEquals("temp(test)(1665700248)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1388,9 +1380,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRUNCATE(`Calcs`.`str2`,0) AS `TEMP(Test)(2779514991)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select truncate(`Calcs`.`str2`,0) as `temp(test)(2779514991)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2779514991)(0)");
+        assertEquals("temp(test)(2779514991)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1399,9 +1391,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (RIGHT(RTRIM(`Calcs`.`str1`), LENGTH('s')) = 's') AS `TEMP(Test)(1759936097)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (right(rtrim(`Calcs`.`str1`), length('s')) = 's') as `temp(test)(1759936097)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1759936097)(0)");
+        assertEquals("temp(test)(1759936097)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1410,9 +1402,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (RIGHT(RTRIM(`Calcs`.`str2`), LENGTH('een')) = 'een') AS `TEMP(Test)(3179156403)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (right(rtrim(`Calcs`.`str2`), length('een')) = 'een') as `temp(test)(3179156403)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3179156403)(0)");
+        assertEquals("temp(test)(3179156403)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1421,9 +1413,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SIN(`Calcs`.`int2`) AS `TEMP(Test)(527156183)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sin(`Calcs`.`int2`) as `temp(test)(527156183)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(527156183)(0)");
+        assertEquals("temp(test)(527156183)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1432,9 +1424,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SIN(`Calcs`.`num0`) AS `TEMP(Test)(1184030290)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sin(`Calcs`.`num0`) as `temp(test)(1184030290)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1184030290)(0)");
+        assertEquals("temp(test)(1184030290)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1443,9 +1435,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(554447598)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(554447598)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(554447598)(0)");
+        assertEquals("temp(test)(554447598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1454,9 +1446,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(2130687817)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(2130687817)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2130687817)(0)");
+        assertEquals("temp(test)(2130687817)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1465,9 +1457,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(903794974)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(903794974)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(903794974)(0)");
+        assertEquals("temp(test)(903794974)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1476,9 +1468,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(3917828147)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(3917828147)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3917828147)(0)");
+        assertEquals("temp(test)(3917828147)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1487,9 +1479,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(3641022413)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(3641022413)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3641022413)(0)");
+        assertEquals("temp(test)(3641022413)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1498,9 +1490,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(1193998601)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(1193998601)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1193998601)(0)");
+        assertEquals("temp(test)(1193998601)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1509,9 +1501,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(3641022413)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(3641022413)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3641022413)(1)");
+        assertEquals("temp(test)(3641022413)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1520,9 +1512,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(1193998601)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(1193998601)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1193998601)(1)");
+        assertEquals("temp(test)(1193998601)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1531,9 +1523,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(3800988289)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(3800988289)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3800988289)(0)");
+        assertEquals("temp(test)(3800988289)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1542,9 +1534,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(779479971)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(779479971)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(779479971)(0)");
+        assertEquals("temp(test)(779479971)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1553,9 +1545,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(3800988289)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(3800988289)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3800988289)(1)");
+        assertEquals("temp(test)(3800988289)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1564,9 +1556,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(779479971)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(779479971)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(779479971)(1)");
+        assertEquals("temp(test)(779479971)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1575,9 +1567,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2793013592)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:00:00' ), interval 0 second ) as `temp(test)(2793013592)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2793013592)(0)");
+        assertEquals("temp(test)(2793013592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1586,9 +1578,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2980130610)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:00:00' ), interval 0 second ) as `temp(test)(2980130610)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2980130610)(0)");
+        assertEquals("temp(test)(2980130610)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1597,9 +1589,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT EXP((0.10000000000000001 * `Calcs`.`num0`)) AS `TEMP(Test)(526466750)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select exp((0.10000000000000001 * `Calcs`.`num0`)) as `temp(test)(526466750)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(526466750)(0)");
+        assertEquals("temp(test)(526466750)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1608,9 +1600,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT EXP(`Calcs`.`int2`) AS `TEMP(Test)(2988208579)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select exp(`Calcs`.`int2`) as `temp(test)(2988208579)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2988208579)(0)");
+        assertEquals("temp(test)(2988208579)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1619,9 +1611,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(2016952657)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(2016952657)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2016952657)(0)");
+        assertEquals("temp(test)(2016952657)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1630,9 +1622,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(1256216982)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(1256216982)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1256216982)(0)");
+        assertEquals("temp(test)(1256216982)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1641,9 +1633,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 97 AS `TEMP(Test)(415603459)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 97 as `temp(test)(415603459)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(415603459)(0)");
+        assertEquals("temp(test)(415603459)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1652,9 +1644,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ASCII(`Calcs`.`str2`) AS `TEMP(Test)(526259814)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ascii(`Calcs`.`str2`) as `temp(test)(526259814)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(526259814)(0)");
+        assertEquals("temp(test)(526259814)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1663,9 +1655,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ASCII(`Calcs`.`str1`) AS `TEMP(Test)(4258651616)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ascii(`Calcs`.`str1`) as `temp(test)(4258651616)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4258651616)(0)");
+        assertEquals("temp(test)(4258651616)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1674,9 +1666,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3415515666)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(3415515666)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3415515666)(0)");
+        assertEquals("temp(test)(3415515666)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1685,9 +1677,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2048935536)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(2048935536)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2048935536)(0)");
+        assertEquals("temp(test)(2048935536)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1696,9 +1688,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2714077903)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(2714077903)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2714077903)(0)");
+        assertEquals("temp(test)(2714077903)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1707,9 +1699,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1800100416)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(1800100416)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1800100416)(0)");
+        assertEquals("temp(test)(1800100416)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1718,9 +1710,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`date0` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`date1` ELSE NULL END) AS `TEMP(Test)(3513628645)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`date0` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`date1` else null end) as `temp(test)(3513628645)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3513628645)(0)");
+        assertEquals("temp(test)(3513628645)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1729,9 +1721,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`str3` ELSE `Calcs`.`str0` END) AS `TEMP(Test)(1007528555)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`str2` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`str3` else `Calcs`.`str0` end) as `temp(test)(1007528555)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1007528555)(0)");
+        assertEquals("temp(test)(1007528555)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1740,9 +1732,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`num0` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`num1` ELSE `Calcs`.`num2` END) AS `TEMP(Test)(3428504110)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`num0` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`num1` else `Calcs`.`num2` end) as `temp(test)(3428504110)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3428504110)(0)");
+        assertEquals("temp(test)(3428504110)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1751,9 +1743,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`date0` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`date1` ELSE `Calcs`.`date2` END) AS `TEMP(Test)(1581504649)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`date0` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`date1` else `Calcs`.`date2` end) as `temp(test)(1581504649)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1581504649)(0)");
+        assertEquals("temp(test)(1581504649)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1762,9 +1754,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`num0` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`num1` ELSE NULL END) AS `TEMP(Test)(750655768)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`num0` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`num1` else null end) as `temp(test)(750655768)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(750655768)(0)");
+        assertEquals("temp(test)(750655768)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1773,9 +1765,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) OR ((NOT (`Calcs`.`bool0_` <> 0)) AND (`Calcs`.`bool2_` <> 0))) AS `TEMP(Test)(1656302737)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (((`Calcs`.`bool0_` <> 0) and (`Calcs`.`bool1_` <> 0)) or ((not (`Calcs`.`bool0_` <> 0)) and (`Calcs`.`bool2_` <> 0))) as `temp(test)(1656302737)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1656302737)(0)");
+        assertEquals("temp(test)(1656302737)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1784,9 +1776,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ISNULL((`Calcs`.`bool0_` <> 0)) AS `TEMP(Test)(4006206882)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select isnull((`Calcs`.`bool0_` <> 0)) as `temp(test)(4006206882)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4006206882)(0)");
+        assertEquals("temp(test)(4006206882)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1795,9 +1787,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`str3` ELSE NULL END) AS `TEMP(Test)(4173709053)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`str2` when not (`Calcs`.`bool0_` <> 0) then `Calcs`.`str3` else null end) as `temp(test)(4173709053)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4173709053)(0)");
+        assertEquals("temp(test)(4173709053)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1806,9 +1798,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((CASE WHEN (`Calcs`.`bool0_` <> 0) THEN (CASE	WHEN (`Calcs`.`bool1_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool1_` <> 0) THEN 0	ELSE NULL END) ELSE (CASE	WHEN (`Calcs`.`bool2_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool2_` <> 0) THEN 0	ELSE NULL END) END) = 1) AS `TEMP(Test)(1285160207)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((case when (`Calcs`.`bool0_` <> 0) then (case	when (`Calcs`.`bool1_` <> 0) then 1	when not (`Calcs`.`bool1_` <> 0) then 0	else null end) else (case	when (`Calcs`.`bool2_` <> 0) then 1	when not (`Calcs`.`bool2_` <> 0) then 0	else null end) end) = 1) as `temp(test)(1285160207)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1285160207)(0)");
+        assertEquals("temp(test)(1285160207)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1817,9 +1809,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`num0` ELSE `Calcs`.`num1` END) AS `TEMP(Test)(898375479)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`num0` else `Calcs`.`num1` end) as `temp(test)(898375479)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(898375479)(0)");
+        assertEquals("temp(test)(898375479)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1828,9 +1820,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`date0` ELSE `Calcs`.`date1` END) AS `TEMP(Test)(3012038505)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`date0` else `Calcs`.`date1` end) as `temp(test)(3012038505)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3012038505)(0)");
+        assertEquals("temp(test)(3012038505)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1839,9 +1831,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`bool0_` <> 0) THEN `Calcs`.`str2` ELSE `Calcs`.`str3` END) AS `TEMP(Test)(490796425)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`bool0_` <> 0) then `Calcs`.`str2` else `Calcs`.`str3` end) as `temp(test)(490796425)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(490796425)(0)");
+        assertEquals("temp(test)(490796425)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1850,9 +1842,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 60) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 60)) AS `TEMP(Test)(2300448284)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 60) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 60)) as `temp(test)(2300448284)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2300448284)(0)");
+        assertEquals("temp(test)(2300448284)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1861,9 +1853,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 60) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 60)) AS `TEMP(Test)(2077207759)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 60) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 60)) as `temp(test)(2077207759)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2077207759)(0)");
+        assertEquals("temp(test)(2077207759)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1872,9 +1864,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT RADIANS(`Calcs`.`int2`) AS `TEMP(Test)(1973795369)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select radians(`Calcs`.`int2`) as `temp(test)(1973795369)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1973795369)(0)");
+        assertEquals("temp(test)(1973795369)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1883,9 +1875,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT RADIANS(`Calcs`.`num0`) AS `TEMP(Test)(2823743498)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select radians(`Calcs`.`num0`) as `temp(test)(2823743498)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2823743498)(0)");
+        assertEquals("temp(test)(2823743498)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1894,9 +1886,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOG(`Calcs`.`int2`) AS `TEMP(Test)(2832324438)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select log(`Calcs`.`int2`) as `temp(test)(2832324438)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2832324438)(0)");
+        assertEquals("temp(test)(2832324438)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1905,9 +1897,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOG(`Calcs`.`num0`) AS `TEMP(Test)(1125921255)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select log(`Calcs`.`num0`) as `temp(test)(1125921255)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1125921255)(0)");
+        assertEquals("temp(test)(1125921255)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1916,9 +1908,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 3600) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 3600)) AS `TEMP(Test)(289918985)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 3600) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 3600)) as `temp(test)(289918985)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(289918985)(0)");
+        assertEquals("temp(test)(289918985)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1927,9 +1919,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3370976929)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`date2`) - 1 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(3370976929)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3370976929)(0)");
+        assertEquals("temp(test)(3370976929)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1938,9 +1930,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(DATE(`Calcs`.`date3`)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE(`Calcs`.`date3`), '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(2942029924)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(date(`Calcs`.`date3`)) - 1 + dayofweek(date_format(date(`Calcs`.`date3`), '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(2942029924)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2942029924)(0)");
+        assertEquals("temp(test)(2942029924)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1949,9 +1941,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3904538922)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(3904538922)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3904538922)(0)");
+        assertEquals("temp(test)(3904538922)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1960,9 +1952,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3904538922)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(3904538922)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3904538922)(1)");
+        assertEquals("temp(test)(3904538922)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1971,9 +1963,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1590117682)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(1590117682)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1590117682)(0)");
+        assertEquals("temp(test)(1590117682)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1982,9 +1974,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(4199707040)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(4199707040)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4199707040)(0)");
+        assertEquals("temp(test)(4199707040)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -1993,9 +1985,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(2589771434)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(2589771434)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2589771434)(0)");
+        assertEquals("temp(test)(2589771434)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2004,9 +1996,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(1875124737)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(1875124737)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1875124737)(0)");
+        assertEquals("temp(test)(1875124737)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2015,9 +2007,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRUNCATE(`Calcs`.`num4`,0) AS `TEMP(Test)(663412696)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select truncate(`Calcs`.`num4`,0) as `temp(test)(663412696)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(663412696)(0)");
+        assertEquals("temp(test)(663412696)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2026,9 +2018,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRUNCATE(CONCAT(CONCAT(`Calcs`.`num4`), CONCAT(`Calcs`.`int0`)),0) AS `TEMP(Test)(1616170242)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select truncate(concat(concat(`Calcs`.`num4`), concat(`Calcs`.`int0`)),0) as `temp(test)(1616170242)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1616170242)(0)");
+        assertEquals("temp(test)(1616170242)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2037,9 +2029,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(3854194266)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(3854194266)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3854194266)(0)");
+        assertEquals("temp(test)(3854194266)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2048,9 +2040,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`date2`) AS `TEMP(Test)(3854194266)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`date2`) as `temp(test)(3854194266)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3854194266)(1)");
+        assertEquals("temp(test)(3854194266)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2059,9 +2051,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(621889678)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(621889678)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(621889678)(0)");
+        assertEquals("temp(test)(621889678)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2070,9 +2062,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(`Calcs`.`datetime0`) AS `TEMP(Test)(621889678)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofweek(`Calcs`.`datetime0`) as `temp(test)(621889678)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(621889678)(1)");
+        assertEquals("temp(test)(621889678)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2081,9 +2073,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(302607578)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(302607578)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(302607578)(0)");
+        assertEquals("temp(test)(302607578)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2092,9 +2084,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(2001673842)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(2001673842)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2001673842)(0)");
+        assertEquals("temp(test)(2001673842)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2103,9 +2095,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60*60 + (TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)))) AS `TEMP(Test)(3772571288)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60*60 + (time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) - time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)))) as `temp(test)(3772571288)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3772571288)(0)");
+        assertEquals("temp(test)(3772571288)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2114,9 +2106,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60*60 + (TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)))) AS `TEMP(Test)(3405329770)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60*60 + (time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) - time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)))) as `temp(test)(3405329770)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3405329770)(0)");
+        assertEquals("temp(test)(3405329770)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2125,9 +2117,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(885008067)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(885008067)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(885008067)(0)");
+        assertEquals("temp(test)(885008067)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2136,9 +2128,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(3554344781)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(3554344781)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3554344781)(0)");
+        assertEquals("temp(test)(3554344781)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2147,9 +2139,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(DATE(`Calcs`.`date2`)) AS `TEMP(Test)(2085924889)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(date(`Calcs`.`date2`)) as `temp(test)(2085924889)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2085924889)(0)");
+        assertEquals("temp(test)(2085924889)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2158,9 +2150,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(574618496)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(timestamp(`Calcs`.`datetime0`)) as `temp(test)(574618496)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(574618496)(0)");
+        assertEquals("temp(test)(574618496)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2169,9 +2161,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 1 AS `TEMP(Test)(3095770696)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 1 as `temp(test)(3095770696)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3095770696)(0)");
+        assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2180,9 +2172,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(DATE(`Calcs`.`date2`)) AS `TEMP(Test)(1165289219)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(date(`Calcs`.`date2`)) as `temp(test)(1165289219)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1165289219)(0)");
+        assertEquals("temp(test)(1165289219)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2191,9 +2183,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(3278952934)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(timestamp(`Calcs`.`datetime0`)) as `temp(test)(3278952934)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3278952934)(0)");
+        assertEquals("temp(test)(3278952934)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2202,9 +2194,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(DATE(`Calcs`.`date2`)) AS `TEMP(Test)(3434755864)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(date(`Calcs`.`date2`)) as `temp(test)(3434755864)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3434755864)(0)");
+        assertEquals("temp(test)(3434755864)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2213,9 +2205,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(1819497289)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(timestamp(`Calcs`.`datetime0`)) as `temp(test)(1819497289)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1819497289)(0)");
+        assertEquals("temp(test)(1819497289)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2224,7 +2216,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COT(`Calcs`.`int2`) AS `TEMP(Test)(2415226193)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select cot(`Calcs`.`int2`) as `temp(test)(2415226193)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
     }
 
@@ -2234,7 +2226,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COT(`Calcs`.`num0`) AS `TEMP(Test)(2834009176)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select cot(`Calcs`.`num0`) as `temp(test)(2834009176)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
     }
 
@@ -2244,9 +2236,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(COUNT(DISTINCT `Calcs`.`num2`), 0) AS `TEMP(Test)(957319405)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ifnull(count(distinct `Calcs`.`num2`), 0) as `temp(test)(957319405)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(957319405)(0)");
+        assertEquals("temp(test)(957319405)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2255,9 +2247,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(`Calcs`.`datetime0`) AS `TEMP(Test)(3191651815)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(`Calcs`.`datetime0`) as `temp(test)(3191651815)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3191651815)(0)");
+        assertEquals("temp(test)(3191651815)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2274,9 +2266,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1126788499)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`date2`, '%y-' ), (3*(quarter(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(1126788499)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1126788499)(0)");
+        assertEquals("temp(test)(1126788499)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2285,9 +2277,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ), (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3855281255)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`datetime0`, '%y-' ), (3*(quarter(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(3855281255)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3855281255)(0)");
+        assertEquals("temp(test)(3855281255)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2296,9 +2288,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SUM(`Calcs`.`int0`) AS `TEMP(Test)(645427419)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select sum(`Calcs`.`int0`) as `temp(test)(645427419)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(645427419)(0)");
+        assertEquals("temp(test)(645427419)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2307,9 +2299,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SUM(`Calcs`.`num4`) AS `TEMP(Test)(1450575838)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select sum(`Calcs`.`num4`) as `temp(test)(1450575838)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1450575838)(0)");
+        assertEquals("temp(test)(1450575838)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2318,9 +2310,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2456153780)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:00:00' ), interval 0 second ) as `temp(test)(2456153780)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2456153780)(0)");
+        assertEquals("temp(test)(2456153780)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2329,9 +2321,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(2524080111)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`date2`) - 1 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(2524080111)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2524080111)(0)");
+        assertEquals("temp(test)(2524080111)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2340,9 +2332,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(1568799041)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(1568799041)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1568799041)(0)");
+        assertEquals("temp(test)(1568799041)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2351,9 +2343,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - ((7 + DAYOFWEEK(`Calcs`.`date2`) - 2) % 7) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1744581337)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`date2`) - ((7 + dayofweek(`Calcs`.`date2`) - 2) % 7) ), interval 0 second ) as `temp(test)(1744581337)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1744581337)(0)");
+        assertEquals("temp(test)(1744581337)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2362,9 +2354,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1635756518)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`date2`) - (dayofweek(`Calcs`.`date2`) - 1) ), interval 0 second ) as `temp(test)(1635756518)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1635756518)(0)");
+        assertEquals("temp(test)(1635756518)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2373,9 +2365,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - ((7 + DAYOFWEEK(`Calcs`.`datetime0`) - 2) % 7) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1985269479)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`datetime0`) - ((7 + dayofweek(`Calcs`.`datetime0`) - 2) % 7) ), interval 0 second ) as `temp(test)(1985269479)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1985269479)(0)");
+        assertEquals("temp(test)(1985269479)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2384,9 +2376,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3887385220)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`datetime0`) - (dayofweek(`Calcs`.`datetime0`) - 1) ), interval 0 second ) as `temp(test)(3887385220)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3887385220)(0)");
+        assertEquals("temp(test)(3887385220)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2395,9 +2387,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'ta' AS `TEMP(Test)(2843244905)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'ta' as `temp(test)(2843244905)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2843244905)(0)");
+        assertEquals("temp(test)(2843244905)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2406,9 +2398,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN 3 >= 0 THEN RIGHT(`Calcs`.`str2`,3) ELSE NULL END) AS `TEMP(Test)(868342576)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when 3 >= 0 then right(`Calcs`.`str2`,3) else null end) as `temp(test)(868342576)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(868342576)(0)");
+        assertEquals("temp(test)(868342576)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2417,9 +2409,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN `Calcs`.`int0` >= 0 THEN RIGHT(`Calcs`.`str2`,`Calcs`.`int0`) ELSE NULL END) AS `TEMP(Test)(427841631)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when `Calcs`.`int0` >= 0 then right(`Calcs`.`str2`,`Calcs`.`int0`) else null end) as `temp(test)(427841631)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(427841631)(0)");
+        assertEquals("temp(test)(427841631)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2428,9 +2420,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 60) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 60)) AS `TEMP(Test)(2180476504)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 60) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 60)) as `temp(test)(2180476504)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2180476504)(0)");
+        assertEquals("temp(test)(2180476504)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2439,9 +2431,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(3361088979)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(3361088979)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3361088979)(0)");
+        assertEquals("temp(test)(3361088979)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2450,9 +2442,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(299717125)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(299717125)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(299717125)(0)");
+        assertEquals("temp(test)(299717125)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2461,9 +2453,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(3076245501)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(3076245501)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3076245501)(0)");
+        assertEquals("temp(test)(3076245501)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2472,9 +2464,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(148436784)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(148436784)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(148436784)(0)");
+        assertEquals("temp(test)(148436784)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2483,9 +2475,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LOCATE('e',`Calcs`.`str2`) > 0) AS `TEMP(Test)(1364536471)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (locate('e',`Calcs`.`str2`) > 0) as `temp(test)(1364536471)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1364536471)(0)");
+        assertEquals("temp(test)(1364536471)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2494,9 +2486,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LOCATE('IND',`Calcs`.`str1`) > 0) AS `TEMP(Test)(1380546255)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (locate('ind',`Calcs`.`str1`) > 0) as `temp(test)(1380546255)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1380546255)(0)");
+        assertEquals("temp(test)(1380546255)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2505,9 +2497,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL 1 DAY) AS `TEMP(Test)(1743407296)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval 1 day) as `temp(test)(1743407296)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1743407296)(0)");
+        assertEquals("temp(test)(1743407296)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2516,9 +2508,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(2988076353)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 day) as `temp(test)(2988076353)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2988076353)(0)");
+        assertEquals("temp(test)(2988076353)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2527,9 +2519,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SIGN(`Calcs`.`int2`) AS `TEMP(Test)(3509671532)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sign(`Calcs`.`int2`) as `temp(test)(3509671532)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3509671532)(0)");
+        assertEquals("temp(test)(3509671532)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2538,9 +2530,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SIGN(`Calcs`.`num0`) AS `TEMP(Test)(4247289834)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sign(`Calcs`.`num0`) as `temp(test)(4247289834)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4247289834)(0)");
+        assertEquals("temp(test)(4247289834)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2549,9 +2541,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(`Calcs`.`int2`,2) AS `TEMP(Test)(3037854782)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select power(`Calcs`.`int2`,2) as `temp(test)(3037854782)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3037854782)(0)");
+        assertEquals("temp(test)(3037854782)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2560,9 +2552,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(CONCAT('      ', `Calcs`.`str2`), '      ') AS `TEMP(Test)(2313738384)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(concat('      ', `Calcs`.`str2`), '      ') as `temp(test)(2313738384)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2313738384)(0)");
+        assertEquals("temp(test)(2313738384)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2571,9 +2563,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'CONST' AS `TEMP(Test)(3972932107)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'const' as `temp(test)(3972932107)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3972932107)(0)");
+        assertEquals("temp(test)(3972932107)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2582,9 +2574,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ACOS((`Calcs`.`num0` / 20)) AS `TEMP(Test)(4196263986)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select acos((`Calcs`.`num0` / 20)) as `temp(test)(4196263986)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4196263986)(0)");
+        assertEquals("temp(test)(4196263986)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2593,9 +2585,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1773778045)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(1773778045)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1773778045)(0)");
+        assertEquals("temp(test)(1773778045)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2604,9 +2596,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(382789366)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(382789366)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(382789366)(0)");
+        assertEquals("temp(test)(382789366)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2615,9 +2607,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(444902156)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(444902156)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(444902156)(0)");
+        assertEquals("temp(test)(444902156)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2626,9 +2618,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(581676997)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(581676997)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(581676997)(0)");
+        assertEquals("temp(test)(581676997)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2637,9 +2629,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-' ), (3*(QUARTER(FROM_DAYS(FLOOR(NULL) + 693961))-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1831450015)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( concat( date_format( from_days(floor(null) + 693961), '%y-' ), (3*(quarter(from_days(floor(null) + 693961))-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(1831450015)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1831450015)(0)");
+        assertEquals("temp(test)(1831450015)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2648,9 +2640,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-' ), (3*(QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(360201683)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( concat( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-' ), (3*(quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(360201683)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(360201683)(0)");
+        assertEquals("temp(test)(360201683)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2659,9 +2651,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(872678106)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate(from_days( to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1) ), interval 0 second ) as `temp(test)(872678106)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(872678106)(0)");
+        assertEquals("temp(test)(872678106)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2670,9 +2662,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3905701997)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate(from_days( to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1) ), interval 0 second ) as `temp(test)(3905701997)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3905701997)(0)");
+        assertEquals("temp(test)(3905701997)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2681,9 +2673,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3359079369)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3359079369)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3359079369)(0)");
+        assertEquals("temp(test)(3359079369)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2692,9 +2684,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1326289938)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(1326289938)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1326289938)(0)");
+        assertEquals("temp(test)(1326289938)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2703,9 +2695,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2763829899)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2763829899)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2763829899)(0)");
+        assertEquals("temp(test)(2763829899)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2714,9 +2706,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(717997108)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(717997108)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(717997108)(0)");
+        assertEquals("temp(test)(717997108)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2725,9 +2717,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2963633898)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2963633898)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2963633898)(0)");
+        assertEquals("temp(test)(2963633898)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2736,9 +2728,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3202209617)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3202209617)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3202209617)(0)");
+        assertEquals("temp(test)(3202209617)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2747,9 +2739,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4266496460)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:00:00' ), interval 0 second ) as `temp(test)(4266496460)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4266496460)(0)");
+        assertEquals("temp(test)(4266496460)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2758,9 +2750,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:%s' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4131996060)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:%i:%s' ), interval 0 second ) as `temp(test)(4131996060)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4131996060)(0)");
+        assertEquals("temp(test)(4131996060)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2769,9 +2761,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2935754523)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:%i:00' ), interval 0 second ) as `temp(test)(2935754523)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2935754523)(0)");
+        assertEquals("temp(test)(2935754523)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2780,9 +2772,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`str1`) THEN NULL	WHEN ISNULL(`Calcs`.`str2`) THEN NULL	ELSE GREATEST(`Calcs`.`str1`, `Calcs`.`str2`) END) AS `TEMP(Test)(3052188625)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`str1`) then null	when isnull(`Calcs`.`str2`) then null	else greatest(`Calcs`.`str1`, `Calcs`.`str2`) end) as `temp(test)(3052188625)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3052188625)(0)");
+        assertEquals("temp(test)(3052188625)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2791,9 +2783,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`str3`) THEN NULL	WHEN ISNULL(`Calcs`.`str2`) THEN NULL	ELSE GREATEST(`Calcs`.`str3`, `Calcs`.`str2`) END) AS `TEMP(Test)(2280873463)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`str3`) then null	when isnull(`Calcs`.`str2`) then null	else greatest(`Calcs`.`str3`, `Calcs`.`str2`) end) as `temp(test)(2280873463)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2280873463)(0)");
+        assertEquals("temp(test)(2280873463)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2802,9 +2794,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(2643375604)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(2643375604)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2643375604)(0)");
+        assertEquals("temp(test)(2643375604)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2813,9 +2805,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(2986242609)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(2986242609)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2986242609)(0)");
+        assertEquals("temp(test)(2986242609)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2824,9 +2816,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(1608337423)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(1608337423)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1608337423)(0)");
+        assertEquals("temp(test)(1608337423)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2835,9 +2827,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(925465559)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(925465559)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(925465559)(0)");
+        assertEquals("temp(test)(925465559)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2846,7 +2838,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN `Calcs`.`num4` >= 0 THEN RIGHT(`Calcs`.`str0`,`Calcs`.`num4`) ELSE NULL END) AS `TEMP(Test)(3619367444)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when `Calcs`.`num4` >= 0 then right(`Calcs`.`str0`,`Calcs`.`num4`) else null end) as `temp(test)(3619367444)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
     }
 
@@ -2856,9 +2848,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(893348878)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval (3 * 1) month) as `temp(test)(893348878)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(893348878)(0)");
+        assertEquals("temp(test)(893348878)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2867,9 +2859,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(454013980)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval (3 * 1) month) as `temp(test)(454013980)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(454013980)(0)");
+        assertEquals("temp(test)(454013980)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2878,9 +2870,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7)) AS `TEMP(Test)(499182808)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`date2`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7)) as `temp(test)(499182808)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(499182808)(0)");
+        assertEquals("temp(test)(499182808)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2889,9 +2881,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(2644944117)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`date2`) - 1 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(2644944117)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2644944117)(0)");
+        assertEquals("temp(test)(2644944117)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2900,9 +2892,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7)) AS `TEMP(Test)(3094931040)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7)) as `temp(test)(3094931040)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3094931040)(0)");
+        assertEquals("temp(test)(3094931040)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2911,9 +2903,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(2831690081)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(2831690081)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2831690081)(0)");
+        assertEquals("temp(test)(2831690081)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2922,9 +2914,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IF(ISNULL(6), NULL, SUBSTRING(`Calcs`.`str1`,GREATEST(1,FLOOR(6)))) AS `TEMP(Test)(98307893)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select if(isnull(6), null, substring(`Calcs`.`str1`,greatest(1,floor(6)))) as `temp(test)(98307893)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(98307893)(0)");
+        assertEquals("temp(test)(98307893)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2933,9 +2925,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IF(ISNULL(2), NULL, SUBSTRING(`Calcs`.`str1`,GREATEST(1,FLOOR(2)),FLOOR(4))) AS `TEMP(Test)(3472698691)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select if(isnull(2), null, substring(`Calcs`.`str1`,greatest(1,floor(2)),floor(4))) as `temp(test)(3472698691)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3472698691)(0)");
+        assertEquals("temp(test)(3472698691)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2944,7 +2936,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN `Calcs`.`num4` >= 0 THEN LEFT(`Calcs`.`str0`,`Calcs`.`num4`) ELSE NULL END) AS `TEMP(Test)(1907571572)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when `Calcs`.`num4` >= 0 then left(`Calcs`.`str0`,`Calcs`.`num4`) else null end) as `temp(test)(1907571572)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
     }
 
@@ -2954,9 +2946,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(1667583030)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(1667583030)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1667583030)(0)");
+        assertEquals("temp(test)(1667583030)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2965,9 +2957,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(2537119552)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(2537119552)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2537119552)(0)");
+        assertEquals("temp(test)(2537119552)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2976,9 +2968,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int1` + 0.0) AS `TEMP(Test)(1533389080)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int1` + 0.0) as `temp(test)(1533389080)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1533389080)(0)");
+        assertEquals("temp(test)(1533389080)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2987,9 +2979,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE        WHEN (`Calcs`.`bool0_` <> 0) THEN 1.0        WHEN NOT (`Calcs`.`bool0_` <> 0) THEN 0.0        ELSE NULL END) AS `TEMP(Test)(2538631291)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case        when (`Calcs`.`bool0_` <> 0) then 1.0        when not (`Calcs`.`bool0_` <> 0) then 0.0        else null end) as `temp(test)(2538631291)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2538631291)(0)");
+        assertEquals("temp(test)(2538631291)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -2998,9 +2990,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date0`) - 693961.0 + TIME_TO_SEC(ADDDATE(`Calcs`.`date0`, INTERVAL 0 SECOND)) / (24.0 * 60.0 * 60.0) ) AS `TEMP(Test)(64617177)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date0`) - 693961.0 + time_to_sec(adddate(`Calcs`.`date0`, interval 0 second)) / (24.0 * 60.0 * 60.0) ) as `temp(test)(64617177)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(64617177)(0)");
+        assertEquals("temp(test)(64617177)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3009,9 +3001,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num2` + 0.0) AS `TEMP(Test)(2707307071)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num2` + 0.0) as `temp(test)(2707307071)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2707307071)(0)");
+        assertEquals("temp(test)(2707307071)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3020,9 +3012,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (0.0 + `Calcs`.`str2`) AS `TEMP(Test)(1394352864)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (0.0 + `Calcs`.`str2`) as `temp(test)(1394352864)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1394352864)(0)");
+        assertEquals("temp(test)(1394352864)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3031,9 +3023,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(IFNULL(TIMESTAMP('2010-10-10 10:10:10.4'),STR_TO_DATE('2010-10-10 10:10:10.4','%b %e %Y %l:%i%p'))) AS `TEMP(Test)(2143701310)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select second(ifnull(timestamp('2010-10-10 10:10:10.4'),str_to_date('2010-10-10 10:10:10.4','%b %e %y %l:%i%p'))) as `temp(test)(2143701310)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2143701310)(0)");
+        assertEquals("temp(test)(2143701310)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3042,9 +3034,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOWER(`Calcs`.`str2`) AS `TEMP(Test)(1011144549)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select lower(`Calcs`.`str2`) as `temp(test)(1011144549)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1011144549)(0)");
+        assertEquals("temp(test)(1011144549)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3053,9 +3045,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOWER(`Calcs`.`str1`) AS `TEMP(Test)(2419238545)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select lower(`Calcs`.`str1`) as `temp(test)(2419238545)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2419238545)(0)");
+        assertEquals("temp(test)(2419238545)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3064,9 +3056,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(2997515538)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(2997515538)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2997515538)(0)");
+        assertEquals("temp(test)(2997515538)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3075,9 +3067,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(4264664103)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(4264664103)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4264664103)(0)");
+        assertEquals("temp(test)(4264664103)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3086,9 +3078,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 3.1415926535897931 AS `TEMP(Test)(356598120)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 3.1415926535897931 as `temp(test)(356598120)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(356598120)(0)");
+        assertEquals("temp(test)(356598120)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3097,9 +3089,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (3.1415926535897931 * `Calcs`.`num0`) AS `TEMP(Test)(1299212312)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (3.1415926535897931 * `Calcs`.`num0`) as `temp(test)(1299212312)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1299212312)(0)");
+        assertEquals("temp(test)(1299212312)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3108,9 +3100,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3400925592)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`date2`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7) as `temp(test)(3400925592)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3400925592)(0)");
+        assertEquals("temp(test)(3400925592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3119,9 +3111,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1636919423)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`date2`) - 1 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(1636919423)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1636919423)(0)");
+        assertEquals("temp(test)(1636919423)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3130,9 +3122,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3400925592)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`date2`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7) as `temp(test)(3400925592)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3400925592)(1)");
+        assertEquals("temp(test)(3400925592)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3141,9 +3133,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1636919423)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`date2`) - 1 + dayofweek(date_format(`Calcs`.`date2`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(1636919423)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1636919423)(1)");
+        assertEquals("temp(test)(1636919423)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3152,9 +3144,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3595934100)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7) as `temp(test)(3595934100)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3595934100)(0)");
+        assertEquals("temp(test)(3595934100)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3163,9 +3155,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4171408365)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(4171408365)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4171408365)(0)");
+        assertEquals("temp(test)(4171408365)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3174,9 +3166,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3595934100)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + ((7 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 2) % 7) ) / 7) as `temp(test)(3595934100)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3595934100)(1)");
+        assertEquals("temp(test)(3595934100)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3185,9 +3177,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`, '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4171408365)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((7 + dayofyear(`Calcs`.`datetime0`) - 1 + dayofweek(date_format(`Calcs`.`datetime0`, '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(4171408365)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4171408365)(1)");
+        assertEquals("temp(test)(4171408365)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3196,9 +3188,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`date2`) AS `TEMP(Test)(1706489238)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`date2`) as `temp(test)(1706489238)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1706489238)(0)");
+        assertEquals("temp(test)(1706489238)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3207,9 +3199,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`date2`) AS `TEMP(Test)(3326454598)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`date2`) as `temp(test)(3326454598)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3326454598)(0)");
+        assertEquals("temp(test)(3326454598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3218,9 +3210,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(1346443059)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`datetime0`) as `temp(test)(1346443059)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1346443059)(0)");
+        assertEquals("temp(test)(1346443059)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3229,9 +3221,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(2366796649)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayname(`Calcs`.`datetime0`) as `temp(test)(2366796649)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2366796649)(0)");
+        assertEquals("temp(test)(2366796649)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3240,9 +3232,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TAN(`Calcs`.`int2`) AS `TEMP(Test)(1227693937)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select tan(`Calcs`.`int2`) as `temp(test)(1227693937)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1227693937)(0)");
+        assertEquals("temp(test)(1227693937)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3251,9 +3243,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DEGREES(`Calcs`.`int2`) AS `TEMP(Test)(2688244734)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select degrees(`Calcs`.`int2`) as `temp(test)(2688244734)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2688244734)(0)");
+        assertEquals("temp(test)(2688244734)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3262,9 +3254,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DEGREES(`Calcs`.`num0`) AS `TEMP(Test)(583539797)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select degrees(`Calcs`.`num0`) as `temp(test)(583539797)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(583539797)(0)");
+        assertEquals("temp(test)(583539797)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3273,9 +3265,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(1438827077)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(1438827077)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1438827077)(0)");
+        assertEquals("temp(test)(1438827077)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3284,9 +3276,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(331799714)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(331799714)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(331799714)(0)");
+        assertEquals("temp(test)(331799714)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3295,9 +3287,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(3561169943)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(3561169943)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3561169943)(0)");
+        assertEquals("temp(test)(3561169943)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3306,9 +3298,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(2283476857)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(2283476857)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2283476857)(0)");
+        assertEquals("temp(test)(2283476857)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3317,9 +3309,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(523796786)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961))) as `temp(test)(523796786)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(523796786)(0)");
+        assertEquals("temp(test)(523796786)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3328,9 +3320,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(1757347367)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(1757347367)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1757347367)(0)");
+        assertEquals("temp(test)(1757347367)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3339,9 +3331,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961)))*4 + (QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) - QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)))) AS `TEMP(Test)(2892653053)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961)))*4 + (quarter(from_days(floor(null) + 693961)) - quarter(from_days(floor(null) + 693961)))) as `temp(test)(2892653053)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2892653053)(0)");
+        assertEquals("temp(test)(2892653053)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3350,9 +3342,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*4 + (QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))) AS `TEMP(Test)(208306356)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*4 + (quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))) as `temp(test)(208306356)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(208306356)(0)");
+        assertEquals("temp(test)(208306356)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3361,9 +3353,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*12 + (MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))) AS `TEMP(Test)(3602652935)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*12 + (month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))) as `temp(test)(3602652935)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3602652935)(0)");
+        assertEquals("temp(test)(3602652935)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3372,9 +3364,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961)))*12 + (MONTH(FROM_DAYS(FLOOR(NULL) + 693961)) - MONTH(FROM_DAYS(FLOOR(NULL) + 693961)))) AS `TEMP(Test)(2736821)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961)))*12 + (month(from_days(floor(null) + 693961)) - month(from_days(floor(null) + 693961)))) as `temp(test)(2736821)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2736821)(0)");
+        assertEquals("temp(test)(2736821)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3383,9 +3375,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1)) - (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ) )/7) AS `TEMP(Test)(4175150207)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((( to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1)) - (to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1) ) )/7) as `temp(test)(4175150207)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4175150207)(0)");
+        assertEquals("temp(test)(4175150207)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3394,9 +3386,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1)) - (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1) ) )/7) AS `TEMP(Test)(573134401)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((( to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1)) - (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1) ) )/7) as `temp(test)(573134401)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(573134401)(0)");
+        assertEquals("temp(test)(573134401)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3405,9 +3397,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(4284829593)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(4284829593)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4284829593)(0)");
+        assertEquals("temp(test)(4284829593)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3416,9 +3408,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(2962792486)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(2962792486)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2962792486)(0)");
+        assertEquals("temp(test)(2962792486)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3427,9 +3419,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(2631483492)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(2631483492)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2631483492)(0)");
+        assertEquals("temp(test)(2631483492)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3438,9 +3430,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(1607049625)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(1607049625)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1607049625)(0)");
+        assertEquals("temp(test)(1607049625)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3449,9 +3441,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(1299959868)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(1299959868)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1299959868)(0)");
+        assertEquals("temp(test)(1299959868)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3460,9 +3452,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(1641185958)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(1641185958)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1641185958)(0)");
+        assertEquals("temp(test)(1641185958)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3471,9 +3463,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24 + FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 3600) - FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 3600)) AS `TEMP(Test)(1258940435)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24 + floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 3600) - floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 3600)) as `temp(test)(1258940435)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1258940435)(0)");
+        assertEquals("temp(test)(1258940435)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3482,9 +3474,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24*60 + FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 60) - FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 60)) AS `TEMP(Test)(401058515)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24*60 + floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 60) - floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 60)) as `temp(test)(401058515)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(401058515)(0)");
+        assertEquals("temp(test)(401058515)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3493,9 +3485,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24*60*60 + (TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)))) AS `TEMP(Test)(2833809390)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24*60*60 + (time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) - time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)))) as `temp(test)(2833809390)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2833809390)(0)");
+        assertEquals("temp(test)(2833809390)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3504,9 +3496,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(367110610)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(367110610)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(367110610)(0)");
+        assertEquals("temp(test)(367110610)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3515,9 +3507,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(1785761163)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(1785761163)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1785761163)(0)");
+        assertEquals("temp(test)(1785761163)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3526,9 +3518,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT '>  <' AS `TEMP(Test)(3167158121)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select '>  <' as `temp(test)(3167158121)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3167158121)(0)");
+        assertEquals("temp(test)(3167158121)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3537,9 +3529,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4146692480)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`date2`, '%y-' ), (3*(quarter(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(4146692480)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4146692480)(0)");
+        assertEquals("temp(test)(4146692480)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3548,9 +3540,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(560528826)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`date2`, '%y-' ), (3*(quarter(`Calcs`.`date2`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(560528826)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(560528826)(0)");
+        assertEquals("temp(test)(560528826)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3559,9 +3551,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ), (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(105511240)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`datetime0`, '%y-' ), (3*(quarter(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(105511240)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(105511240)(0)");
+        assertEquals("temp(test)(105511240)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3570,9 +3562,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ), (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(755301458)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( concat( date_format( `Calcs`.`datetime0`, '%y-' ), (3*(quarter(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(755301458)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(755301458)(0)");
+        assertEquals("temp(test)(755301458)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3581,9 +3573,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(1699663235)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(1699663235)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1699663235)(0)");
+        assertEquals("temp(test)(1699663235)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3592,9 +3584,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(1554256126)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(1554256126)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1554256126)(0)");
+        assertEquals("temp(test)(1554256126)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3603,9 +3595,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(2171721785)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(2171721785)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2171721785)(0)");
+        assertEquals("temp(test)(2171721785)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3614,9 +3606,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(3941430330)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(3941430330)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3941430330)(0)");
+        assertEquals("temp(test)(3941430330)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3625,9 +3617,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (STD(`Calcs`.`num4`) * SQRT(count(`Calcs`.`num4`) / (count(`Calcs`.`num4`) - 1))) AS `TEMP(Test)(2430775290)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (std(`Calcs`.`num4`) * sqrt(count(`Calcs`.`num4`) / (count(`Calcs`.`num4`) - 1))) as `temp(test)(2430775290)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2430775290)(0)");
+        assertEquals("temp(test)(2430775290)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3636,9 +3628,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT STD(`Calcs`.`num4`) AS `TEMP(Test)(3542464170)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select std(`Calcs`.`num4`) as `temp(test)(3542464170)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3542464170)(0)");
+        assertEquals("temp(test)(3542464170)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3647,9 +3639,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`date2`) AS `TEMP(Test)(3471130809)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`date2`) as `temp(test)(3471130809)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3471130809)(0)");
+        assertEquals("temp(test)(3471130809)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3658,9 +3650,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(482138814)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofmonth(`Calcs`.`datetime0`) as `temp(test)(482138814)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(482138814)(0)");
+        assertEquals("temp(test)(482138814)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3669,9 +3661,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRIM(CONCAT(CONCAT(' ', `Calcs`.`str2`), ' ')) AS `TEMP(Test)(1903992131)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select trim(concat(concat(' ', `Calcs`.`str2`), ' ')) as `temp(test)(1903992131)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1903992131)(0)");
+        assertEquals("temp(test)(1903992131)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3680,9 +3672,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER((STD(`Calcs`.`num4`) * SQRT(count(`Calcs`.`num4`) / (count(`Calcs`.`num4`) - 1))), 2) AS `TEMP(Test)(1358865)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select power((std(`Calcs`.`num4`) * sqrt(count(`Calcs`.`num4`) / (count(`Calcs`.`num4`) - 1))), 2) as `temp(test)(1358865)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1358865)(0)");
+        assertEquals("temp(test)(1358865)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3691,9 +3683,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(STD(`Calcs`.`num4`),2) AS `TEMP(Test)(2532468070)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select power(std(`Calcs`.`num4`),2) as `temp(test)(2532468070)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2532468070)(0)");
+        assertEquals("temp(test)(2532468070)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3702,9 +3694,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(4265410721)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(4265410721)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4265410721)(0)");
+        assertEquals("temp(test)(4265410721)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3713,9 +3705,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1278698096)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(1278698096)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1278698096)(0)");
+        assertEquals("temp(test)(1278698096)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3724,9 +3716,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(3729248905)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(3729248905)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3729248905)(0)");
+        assertEquals("temp(test)(3729248905)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3735,9 +3727,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(965356852)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(965356852)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(965356852)(0)");
+        assertEquals("temp(test)(965356852)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3746,9 +3738,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 4 AS `TEMP(Test)(5037157)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 4 as `temp(test)(5037157)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(5037157)(0)");
+        assertEquals("temp(test)(5037157)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3757,9 +3749,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LENGTH(`Calcs`.`str2`) AS `TEMP(Test)(382448263)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select length(`Calcs`.`str2`) as `temp(test)(382448263)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(382448263)(0)");
+        assertEquals("temp(test)(382448263)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3768,9 +3760,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`date2`) AS `TEMP(Test)(653088523)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`date2`) as `temp(test)(653088523)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(653088523)(0)");
+        assertEquals("temp(test)(653088523)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3779,9 +3771,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(`Calcs`.`datetime0`) AS `TEMP(Test)(3134852500)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select quarter(`Calcs`.`datetime0`) as `temp(test)(3134852500)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3134852500)(0)");
+        assertEquals("temp(test)(3134852500)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3790,9 +3782,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(`Calcs`.`int1`, 0) AS `TEMP(Test)(3976315675)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ifnull(`Calcs`.`int1`, 0) as `temp(test)(3976315675)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3976315675)(0)");
+        assertEquals("temp(test)(3976315675)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3801,9 +3793,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(591126205)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(591126205)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(591126205)(0)");
+        assertEquals("temp(test)(591126205)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3812,9 +3804,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3034828475)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3034828475)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3034828475)(0)");
+        assertEquals("temp(test)(3034828475)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3831,9 +3823,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE `Calcs`.`int0` WHEN 1 THEN 'test1' WHEN 3 THEN 'test3' ELSE 'testelse' END) AS `TEMP(Test)(4155671032)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case `Calcs`.`int0` when 1 then 'test1' when 3 then 'test3' else 'testelse' end) as `temp(test)(4155671032)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4155671032)(0)");
+        assertEquals("temp(test)(4155671032)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3842,9 +3834,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`int0` = 1) THEN 'yes' ELSE 'no' END) AS `TEMP(Test)(344883989)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`int0` = 1) then 'yes' else 'no' end) as `temp(test)(344883989)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(344883989)(0)");
+        assertEquals("temp(test)(344883989)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3853,9 +3845,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`int0` = 1) THEN 'yes' WHEN (`Calcs`.`int0` = 3) THEN 'yes3' ELSE 'no' END) AS `TEMP(Test)(1470681487)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`int0` = 1) then 'yes' when (`Calcs`.`int0` = 3) then 'yes3' else 'no' end) as `temp(test)(1470681487)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1470681487)(0)");
+        assertEquals("temp(test)(1470681487)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3864,9 +3856,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(`Calcs`.`int0`, 0) AS `TEMP(Test)(404394451)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ifnull(`Calcs`.`int0`, 0) as `temp(test)(404394451)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(404394451)(0)");
+        assertEquals("temp(test)(404394451)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3875,9 +3867,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`int0` > 3) THEN 'yes' WHEN NOT (`Calcs`.`int0` > 3) THEN 'no' ELSE NULL END) AS `TEMP(Test)(2582407534)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`int0` > 3) then 'yes' when not (`Calcs`.`int0` > 3) then 'no' else null end) as `temp(test)(2582407534)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2582407534)(0)");
+        assertEquals("temp(test)(2582407534)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3886,9 +3878,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`int0` > 3) THEN 'yes' WHEN NOT (`Calcs`.`int0` > 3) THEN 'no' ELSE 'I dont know' END) AS `TEMP(Test)(485230187)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`int0` > 3) then 'yes' when not (`Calcs`.`int0` > 3) then 'no' else 'i dont know' end) as `temp(test)(485230187)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(485230187)(0)");
+        assertEquals("temp(test)(485230187)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3897,9 +3889,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ISNULL(`Calcs`.`int0`) AS `TEMP(Test)(3944872634)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select isnull(`Calcs`.`int0`) as `temp(test)(3944872634)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3944872634)(0)");
+        assertEquals("temp(test)(3944872634)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3908,9 +3900,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'yes' AS `TEMP(Test)(1030668643)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'yes' as `temp(test)(1030668643)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1030668643)(0)");
+        assertEquals("temp(test)(1030668643)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3919,9 +3911,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`int0` <> 1) THEN 'yes' ELSE 'no' END) AS `TEMP(Test)(1548476355)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`int0` <> 1) then 'yes' else 'no' end) as `temp(test)(1548476355)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1548476355)(0)");
+        assertEquals("temp(test)(1548476355)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3930,9 +3922,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`num0` WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`num1` ELSE NULL END) AS `TEMP(Test)(2733626226)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`num0` when not (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`num1` else null end) as `temp(test)(2733626226)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2733626226)(0)");
+        assertEquals("temp(test)(2733626226)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3941,9 +3933,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ISNULL(`Calcs`.`num4`) AS `TEMP(Test)(746449830)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select isnull(`Calcs`.`num4`) as `temp(test)(746449830)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(746449830)(0)");
+        assertEquals("temp(test)(746449830)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3952,9 +3944,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ISNULL(`Calcs`.`str2`) AS `TEMP(Test)(4153117630)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select isnull(`Calcs`.`str2`) as `temp(test)(4153117630)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4153117630)(0)");
+        assertEquals("temp(test)(4153117630)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3963,9 +3955,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`str0` > `Calcs`.`str1`) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`str0` > `Calcs`.`str1`) THEN `Calcs`.`str3` ELSE NULL END) AS `TEMP(Test)(661341884)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`str0` > `Calcs`.`str1`) then `Calcs`.`str2` when not (`Calcs`.`str0` > `Calcs`.`str1`) then `Calcs`.`str3` else null end) as `temp(test)(661341884)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(661341884)(0)");
+        assertEquals("temp(test)(661341884)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3974,9 +3966,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`date0`) THEN NULL	WHEN ISNULL(`Calcs`.`date1`) THEN NULL	ELSE LEAST(`Calcs`.`date0`, `Calcs`.`date1`) END) AS `TEMP(Test)(1970381992)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`date0`) then null	when isnull(`Calcs`.`date1`) then null	else least(`Calcs`.`date0`, `Calcs`.`date1`) end) as `temp(test)(1970381992)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1970381992)(0)");
+        assertEquals("temp(test)(1970381992)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3985,9 +3977,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`date0` WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`date1` ELSE `Calcs`.`date2` END) AS `TEMP(Test)(2049518482)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`date0` when not (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`date1` else `Calcs`.`date2` end) as `temp(test)(2049518482)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2049518482)(0)");
+        assertEquals("temp(test)(2049518482)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -3996,9 +3988,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOWER(`Calcs`.`str0`) AS `TEMP(Test)(157987442)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select lower(`Calcs`.`str0`) as `temp(test)(157987442)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(157987442)(0)");
+        assertEquals("temp(test)(157987442)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4007,9 +3999,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`str3` ELSE `Calcs`.`str0` END) AS `TEMP(Test)(3250337019)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`str2` when not (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`str3` else `Calcs`.`str0` end) as `temp(test)(3250337019)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3250337019)(0)");
+        assertEquals("temp(test)(3250337019)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4018,9 +4010,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`date0` WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`date1` ELSE NULL END) AS `TEMP(Test)(1454773621)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`date0` when not (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`date1` else null end) as `temp(test)(1454773621)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1454773621)(0)");
+        assertEquals("temp(test)(1454773621)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4029,9 +4021,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`num0` WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`num1` ELSE `Calcs`.`num2` END) AS `TEMP(Test)(1162317302)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`num0` when not (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`num1` else `Calcs`.`num2` end) as `temp(test)(1162317302)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1162317302)(0)");
+        assertEquals("temp(test)(1162317302)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4040,9 +4032,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(LOWER(`Calcs`.`str0`)) THEN NULL	WHEN ISNULL(`Calcs`.`str2`) THEN NULL	ELSE LEAST(LOWER(`Calcs`.`str0`), `Calcs`.`str2`) END) AS `TEMP(Test)(1389344980)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(lower(`Calcs`.`str0`)) then null	when isnull(`Calcs`.`str2`) then null	else least(lower(`Calcs`.`str0`), `Calcs`.`str2`) end) as `temp(test)(1389344980)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1389344980)(0)");
+        assertEquals("temp(test)(1389344980)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4051,9 +4043,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(`Calcs`.`date0`, DATE('2010-04-12')) AS `TEMP(Test)(1229425804)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ifnull(`Calcs`.`date0`, date('2010-04-12')) as `temp(test)(1229425804)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1229425804)(0)");
+        assertEquals("temp(test)(1229425804)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4062,9 +4054,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(`Calcs`.`num4`, -1) AS `TEMP(Test)(4224438892)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ifnull(`Calcs`.`num4`, -1) as `temp(test)(4224438892)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4224438892)(0)");
+        assertEquals("temp(test)(4224438892)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4073,9 +4065,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IFNULL(`Calcs`.`str2`, 'i''m null') AS `TEMP(Test)(3314993157)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ifnull(`Calcs`.`str2`, 'i''m null') as `temp(test)(3314993157)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3314993157)(0)");
+        assertEquals("temp(test)(3314993157)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4084,9 +4076,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ISNULL(`Calcs`.`date0`) AS `TEMP(Test)(2842042984)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select isnull(`Calcs`.`date0`) as `temp(test)(2842042984)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2842042984)(0)");
+        assertEquals("temp(test)(2842042984)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4095,9 +4087,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN (CASE	WHEN (`Calcs`.`bool1_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool1_` <> 0) THEN 0	ELSE NULL END) ELSE (CASE	WHEN (`Calcs`.`bool2_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool2_` <> 0) THEN 0	ELSE NULL END) END) = 1) AS `TEMP(Test)(4227881224)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((case when (`Calcs`.`num0` > `Calcs`.`num1`) then (case	when (`Calcs`.`bool1_` <> 0) then 1	when not (`Calcs`.`bool1_` <> 0) then 0	else null end) else (case	when (`Calcs`.`bool2_` <> 0) then 1	when not (`Calcs`.`bool2_` <> 0) then 0	else null end) end) = 1) as `temp(test)(4227881224)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4227881224)(0)");
+        assertEquals("temp(test)(4227881224)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4106,9 +4098,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`num0` ELSE `Calcs`.`num1` END) AS `TEMP(Test)(709594122)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`num0` else `Calcs`.`num1` end) as `temp(test)(709594122)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(709594122)(0)");
+        assertEquals("temp(test)(709594122)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4117,9 +4109,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN `Calcs`.`date0` ELSE `Calcs`.`date1` END) AS `TEMP(Test)(467266194)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`num0` > `Calcs`.`num1`) then `Calcs`.`date0` else `Calcs`.`date1` end) as `temp(test)(467266194)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(467266194)(0)");
+        assertEquals("temp(test)(467266194)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4128,9 +4120,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`str0` > `Calcs`.`str1`) THEN `Calcs`.`str2` ELSE `Calcs`.`str3` END) AS `TEMP(Test)(2963734906)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`str0` > `Calcs`.`str1`) then `Calcs`.`str2` else `Calcs`.`str3` end) as `temp(test)(2963734906)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2963734906)(0)");
+        assertEquals("temp(test)(2963734906)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4139,9 +4131,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN 1	WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`num0` WHEN 0 THEN `Calcs`.`num1` ELSE `Calcs`.`num2` END) AS `TEMP(Test)(4143049742)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`num0` > `Calcs`.`num1`) then 1	when not (`Calcs`.`num0` > `Calcs`.`num1`) then 0	else null end) when 1 then `Calcs`.`num0` when 0 then `Calcs`.`num1` else `Calcs`.`num2` end) as `temp(test)(4143049742)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4143049742)(0)");
+        assertEquals("temp(test)(4143049742)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4150,9 +4142,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN 1	WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`date0` WHEN 0 THEN `Calcs`.`date1` ELSE `Calcs`.`date2` END) AS `TEMP(Test)(1171954805)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`num0` > `Calcs`.`num1`) then 1	when not (`Calcs`.`num0` > `Calcs`.`num1`) then 0	else null end) when 1 then `Calcs`.`date0` when 0 then `Calcs`.`date1` else `Calcs`.`date2` end) as `temp(test)(1171954805)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1171954805)(0)");
+        assertEquals("temp(test)(1171954805)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4161,9 +4153,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN 1	WHEN NOT (`Calcs`.`num0` > `Calcs`.`num1`) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`str2` WHEN 0 THEN `Calcs`.`str3` ELSE `Calcs`.`str0` END) AS `TEMP(Test)(2451799140)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`num0` > `Calcs`.`num1`) then 1	when not (`Calcs`.`num0` > `Calcs`.`num1`) then 0	else null end) when 1 then `Calcs`.`str2` when 0 then `Calcs`.`str3` else `Calcs`.`str0` end) as `temp(test)(2451799140)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2451799140)(0)");
+        assertEquals("temp(test)(2451799140)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4172,9 +4164,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`bool0_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool0_` <> 0) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`num0` WHEN 0 THEN `Calcs`.`num1` ELSE `Calcs`.`num2` END) AS `TEMP(Test)(1574830296)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`bool0_` <> 0) then 1	when not (`Calcs`.`bool0_` <> 0) then 0	else null end) when 1 then `Calcs`.`num0` when 0 then `Calcs`.`num1` else `Calcs`.`num2` end) as `temp(test)(1574830296)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1574830296)(0)");
+        assertEquals("temp(test)(1574830296)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4183,9 +4175,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`bool0_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool0_` <> 0) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`date0` WHEN 0 THEN `Calcs`.`date1` ELSE `Calcs`.`date2` END) AS `TEMP(Test)(49931887)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`bool0_` <> 0) then 1	when not (`Calcs`.`bool0_` <> 0) then 0	else null end) when 1 then `Calcs`.`date0` when 0 then `Calcs`.`date1` else `Calcs`.`date2` end) as `temp(test)(49931887)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(49931887)(0)");
+        assertEquals("temp(test)(49931887)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4194,9 +4186,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (DAYOFWEEK(`Calcs`.`date1`) IN (1, 7)) THEN NULL ELSE `Calcs`.`date1` END) AS `TEMP(Test)(1471931871)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (dayofweek(`Calcs`.`date1`) in (1, 7)) then null else `Calcs`.`date1` end) as `temp(test)(1471931871)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1471931871)(0)");
+        assertEquals("temp(test)(1471931871)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4205,9 +4197,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE (CASE	WHEN (`Calcs`.`bool0_` <> 0) THEN 1	WHEN NOT (`Calcs`.`bool0_` <> 0) THEN 0	ELSE NULL END) WHEN 1 THEN `Calcs`.`str2` WHEN 0 THEN `Calcs`.`str3` ELSE `Calcs`.`str0` END) AS `TEMP(Test)(166894492)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case (case	when (`Calcs`.`bool0_` <> 0) then 1	when not (`Calcs`.`bool0_` <> 0) then 0	else null end) when 1 then `Calcs`.`str2` when 0 then `Calcs`.`str3` else `Calcs`.`str0` end) as `temp(test)(166894492)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(166894492)(0)");
+        assertEquals("temp(test)(166894492)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4216,9 +4208,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE WHEN (`Calcs`.`str1` = 'CLOCKS') THEN '*Anonymous*' WHEN (`Calcs`.`str1` = 'DVD') THEN '*Public*' ELSE `Calcs`.`str1` END) AS `TEMP(Test)(899461877)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case when (`Calcs`.`str1` = 'clocks') then '*anonymous*' when (`Calcs`.`str1` = 'dvd') then '*public*' else `Calcs`.`str1` end) as `temp(test)(899461877)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(899461877)(0)");
+        assertEquals("temp(test)(899461877)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4227,9 +4219,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1630131013)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`date2`) - (dayofweek(`Calcs`.`date2`) - 1) ), interval 0 second ) as `temp(test)(1630131013)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1630131013)(0)");
+        assertEquals("temp(test)(1630131013)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4238,9 +4230,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3937478358)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate(from_days( to_days(`Calcs`.`datetime0`) - (dayofweek(`Calcs`.`datetime0`) - 1) ), interval 0 second ) as `temp(test)(3937478358)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3937478358)(0)");
+        assertEquals("temp(test)(3937478358)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4249,9 +4241,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(`Calcs`.`datetime0`) AS `TEMP(Test)(1235924899)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(`Calcs`.`datetime0`) as `temp(test)(1235924899)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1235924899)(0)");
+        assertEquals("temp(test)(1235924899)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4260,9 +4252,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 SECOND) AS `TEMP(Test)(621896091)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 second) as `temp(test)(621896091)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(621896091)(0)");
+        assertEquals("temp(test)(621896091)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4271,9 +4263,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24*60*60 + (TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)))) AS `TEMP(Test)(3711433751)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24*60*60 + (time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) - time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)))) as `temp(test)(3711433751)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3711433751)(0)");
+        assertEquals("temp(test)(3711433751)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4282,9 +4274,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(427588088)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`date2`) - year(`Calcs`.`date3`)) as `temp(test)(427588088)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(427588088)(0)");
+        assertEquals("temp(test)(427588088)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4293,9 +4285,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(2526313076)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`date2`) - year(`Calcs`.`date3`)) as `temp(test)(2526313076)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2526313076)(0)");
+        assertEquals("temp(test)(2526313076)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4304,9 +4296,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(1540391660)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`))) as `temp(test)(1540391660)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1540391660)(0)");
+        assertEquals("temp(test)(1540391660)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4315,9 +4307,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(3579576882)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`))) as `temp(test)(3579576882)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3579576882)(0)");
+        assertEquals("temp(test)(3579576882)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4326,9 +4318,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(`Calcs`.`datetime0`) AS `TEMP(Test)(2740605400)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(`Calcs`.`datetime0`) as `temp(test)(2740605400)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2740605400)(0)");
+        assertEquals("temp(test)(2740605400)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4337,9 +4329,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(`Calcs`.`datetime0`) AS `TEMP(Test)(356589430)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select second(`Calcs`.`datetime0`) as `temp(test)(356589430)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(356589430)(0)");
+        assertEquals("temp(test)(356589430)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4348,9 +4340,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 3600) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 3600)) AS `TEMP(Test)(1898404202)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 3600) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 3600)) as `temp(test)(1898404202)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1898404202)(0)");
+        assertEquals("temp(test)(1898404202)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4359,9 +4351,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))*24 + FLOOR(TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / 3600) - FLOOR(TIME_TO_SEC(ADDDATE(TIMESTAMP(`Calcs`.`date2`), INTERVAL 0 SECOND)) / 3600)) AS `TEMP(Test)(4263325709)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`)))*24 + floor(time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / 3600) - floor(time_to_sec(adddate(timestamp(`Calcs`.`date2`), interval 0 second)) / 3600)) as `temp(test)(4263325709)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4263325709)(0)");
+        assertEquals("temp(test)(4263325709)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4370,9 +4362,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ABS(`Calcs`.`num0`) AS `TEMP(Test)(3816473022)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select abs(`Calcs`.`num0`) as `temp(test)(3816473022)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3816473022)(0)");
+        assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4381,9 +4373,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num0` AS `TEMP(Test)(965512284)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num0` as `temp(test)(965512284)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(965512284)(0)");
+        assertEquals("temp(test)(965512284)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4392,9 +4384,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT `Calcs`.`num1` AS `TEMP(Test)(1826927073)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select `Calcs`.`num1` as `temp(test)(1826927073)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1826927073)(0)");
+        assertEquals("temp(test)(1826927073)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4403,9 +4395,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(3618731173)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((`Calcs`.`bool0_` <> 0) and (`Calcs`.`bool1_` <> 0)) as `temp(test)(3618731173)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3618731173)(0)");
+        assertEquals("temp(test)(3618731173)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4414,9 +4406,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0) OR NOT (`Calcs`.`bool0_` <> 0) AND NOT (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(830571724)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((`Calcs`.`bool0_` <> 0) and (`Calcs`.`bool1_` <> 0) or not (`Calcs`.`bool0_` <> 0) and not (`Calcs`.`bool1_` <> 0)) as `temp(test)(830571724)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(830571724)(0)");
+        assertEquals("temp(test)(830571724)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4425,9 +4417,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((`Calcs`.`bool0_` <> 0) AND NOT (`Calcs`.`bool1_` <> 0) OR NOT (`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(3090944671)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((`Calcs`.`bool0_` <> 0) and not (`Calcs`.`bool1_` <> 0) or not (`Calcs`.`bool0_` <> 0) and (`Calcs`.`bool1_` <> 0)) as `temp(test)(3090944671)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3090944671)(0)");
+        assertEquals("temp(test)(3090944671)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4436,9 +4428,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((`Calcs`.`bool0_` <> 0) OR (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(4182992858)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((`Calcs`.`bool0_` <> 0) or (`Calcs`.`bool1_` <> 0)) as `temp(test)(4182992858)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4182992858)(0)");
+        assertEquals("temp(test)(4182992858)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4447,9 +4439,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` = DATE('1972-07-04')) AS `TEMP(Test)(397499995)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` = date('1972-07-04')) as `temp(test)(397499995)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(397499995)(0)");
+        assertEquals("temp(test)(397499995)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4458,9 +4450,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` >= DATE('1975-11-12')) AS `TEMP(Test)(1366787273)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` >= date('1975-11-12')) as `temp(test)(1366787273)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1366787273)(0)");
+        assertEquals("temp(test)(1366787273)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4469,9 +4461,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` > DATE('1975-11-12')) AS `TEMP(Test)(3193322782)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` > date('1975-11-12')) as `temp(test)(3193322782)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3193322782)(0)");
+        assertEquals("temp(test)(3193322782)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4480,9 +4472,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` <= DATE('1975-11-12')) AS `TEMP(Test)(822657216)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` <= date('1975-11-12')) as `temp(test)(822657216)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(822657216)(0)");
+        assertEquals("temp(test)(822657216)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4491,9 +4483,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` < DATE('1975-11-12')) AS `TEMP(Test)(3764753091)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` < date('1975-11-12')) as `temp(test)(3764753091)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3764753091)(0)");
+        assertEquals("temp(test)(3764753091)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4502,9 +4494,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`date0`) - TO_DAYS(`Calcs`.`datetime0`)) + (TIME_TO_SEC(ADDDATE(`Calcs`.`date0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) AS `TEMP(Test)(937166222)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`date0`) - to_days(`Calcs`.`datetime0`)) + (time_to_sec(adddate(`Calcs`.`date0`, interval 0 second)) - time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second))) / (60 * 60 * 24)) as `temp(test)(937166222)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(937166222)(0)");
+        assertEquals("temp(test)(937166222)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4513,9 +4505,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(DATE('2004-01-01'))) + (TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(DATE('2004-01-01'), INTERVAL 0 SECOND))) / (60 * 60 * 24)) AS `TEMP(Test)(100938644)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(date('2004-01-01'))) + (time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) - time_to_sec(adddate(date('2004-01-01'), interval 0 second))) / (60 * 60 * 24)) as `temp(test)(100938644)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(100938644)(0)");
+        assertEquals("temp(test)(100938644)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4524,9 +4516,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "SELECT DATE_SUB(DATE_SUB(`Calcs`.`date0`, INTERVAL FLOOR(`Calcs`.`num4`) DAY), INTERVAL 60 * 60 * 24 * (`Calcs`.`num4` - FLOOR(`Calcs`.`num4`)) SECOND) AS `TEMP(Test)(2923065813)(0)` FROM `Calcs` GROUP BY 1 order by 1");
+                        "select date_sub(date_sub(`Calcs`.`date0`, interval floor(`Calcs`.`num4`) day), interval 60 * 60 * 24 * (`Calcs`.`num4` - floor(`Calcs`.`num4`)) second) as `temp(test)(2923065813)(0)` from `Calcs` group by 1 order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2923065813)(0)");
+        assertEquals("temp(test)(2923065813)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4535,9 +4527,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date0` <> DATE('1975-11-12')) AS `TEMP(Test)(798936259)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date0` <> date('1975-11-12')) as `temp(test)(798936259)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(798936259)(0)");
+        assertEquals("temp(test)(798936259)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4546,9 +4538,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(`Calcs`.`date0`, INTERVAL FLOOR(`Calcs`.`num4`) DAY), INTERVAL 60 * 60 * 24 * (`Calcs`.`num4` - FLOOR(`Calcs`.`num4`)) SECOND) AS `TEMP(Test)(2067341949)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(date_add(`Calcs`.`date0`, interval floor(`Calcs`.`num4`) day), interval 60 * 60 * 24 * (`Calcs`.`num4` - floor(`Calcs`.`num4`)) second) as `temp(test)(2067341949)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2067341949)(0)");
+        assertEquals("temp(test)(2067341949)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4557,9 +4549,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 0 AS `TEMP(Test)(1303362598)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 0 as `temp(test)(1303362598)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1303362598)(0)");
+        assertEquals("temp(test)(1303362598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4568,9 +4560,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int0` % `Calcs`.`int1`) AS `TEMP(Test)(1307456344)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int0` % `Calcs`.`int1`) as `temp(test)(1307456344)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1307456344)(0)");
+        assertEquals("temp(test)(1307456344)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4579,9 +4571,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int0` / `Calcs`.`int1`) AS `TEMP(Test)(2402101080)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int0` / `Calcs`.`int1`) as `temp(test)(2402101080)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2402101080)(0)");
+        assertEquals("temp(test)(2402101080)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4590,9 +4582,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int3` / `Calcs`.`int2`) AS `TEMP(Test)(3559262472)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int3` / `Calcs`.`int2`) as `temp(test)(3559262472)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3559262472)(0)");
+        assertEquals("temp(test)(3559262472)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4601,9 +4593,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(`Calcs`.`int0`,`Calcs`.`num1`) AS `TEMP(Test)(4265403921)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select power(`Calcs`.`int0`,`Calcs`.`num1`) as `temp(test)(4265403921)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4265403921)(0)");
+        assertEquals("temp(test)(4265403921)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4612,9 +4604,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (-`Calcs`.`num0`) AS `TEMP(Test)(4188722171)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (-`Calcs`.`num0`) as `temp(test)(4188722171)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4188722171)(0)");
+        assertEquals("temp(test)(4188722171)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4623,9 +4615,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`bool0_` = 0) AS `TEMP(Test)(1413132553)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`bool0_` = 0) as `temp(test)(1413132553)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1413132553)(0)");
+        assertEquals("temp(test)(1413132553)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4634,9 +4626,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT NULL AS `TEMP(Test)(496893948)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select null as `temp(test)(496893948)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(496893948)(0)");
+        assertEquals("temp(test)(496893948)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4645,9 +4637,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` / `Calcs`.`num1`) AS `TEMP(Test)(272703322)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` / `Calcs`.`num1`) as `temp(test)(272703322)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(272703322)(0)");
+        assertEquals("temp(test)(272703322)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4656,9 +4648,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` = ABS(`Calcs`.`num0`)) AS `TEMP(Test)(3360366790)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` = abs(`Calcs`.`num0`)) as `temp(test)(3360366790)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3360366790)(0)");
+        assertEquals("temp(test)(3360366790)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4667,9 +4659,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` = ABS(`Calcs`.`num0`)) AS `TEMP(Test)(2564078271)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` = abs(`Calcs`.`num0`)) as `temp(test)(2564078271)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2564078271)(0)");
+        assertEquals("temp(test)(2564078271)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4678,9 +4670,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` >= `Calcs`.`num1`) AS `TEMP(Test)(1366300770)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` >= `Calcs`.`num1`) as `temp(test)(1366300770)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1366300770)(0)");
+        assertEquals("temp(test)(1366300770)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4689,9 +4681,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` > `Calcs`.`num1`) AS `TEMP(Test)(4123004830)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` > `Calcs`.`num1`) as `temp(test)(4123004830)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4123004830)(0)");
+        assertEquals("temp(test)(4123004830)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4700,9 +4692,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` <= `Calcs`.`num1`) AS `TEMP(Test)(1224631717)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` <= `Calcs`.`num1`) as `temp(test)(1224631717)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1224631717)(0)");
+        assertEquals("temp(test)(1224631717)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4711,9 +4703,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` < `Calcs`.`num1`) AS `TEMP(Test)(1731699042)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` < `Calcs`.`num1`) as `temp(test)(1731699042)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1731699042)(0)");
+        assertEquals("temp(test)(1731699042)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4722,9 +4714,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` - `Calcs`.`num1`) AS `TEMP(Test)(3781247900)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` - `Calcs`.`num1`) as `temp(test)(3781247900)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3781247900)(0)");
+        assertEquals("temp(test)(3781247900)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4733,9 +4725,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` <> ABS(`Calcs`.`num0`)) AS `TEMP(Test)(4047276454)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` <> abs(`Calcs`.`num0`)) as `temp(test)(4047276454)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4047276454)(0)");
+        assertEquals("temp(test)(4047276454)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4744,9 +4736,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` <> ABS(`Calcs`.`num0`)) AS `TEMP(Test)(3492695719)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` <> abs(`Calcs`.`num0`)) as `temp(test)(3492695719)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3492695719)(0)");
+        assertEquals("temp(test)(3492695719)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4763,9 +4755,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` + `Calcs`.`num1`) AS `TEMP(Test)(977554451)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` + `Calcs`.`num1`) as `temp(test)(977554451)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(977554451)(0)");
+        assertEquals("temp(test)(977554451)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4774,7 +4766,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(`Calcs`.`num0`,`Calcs`.`num1`) AS `TEMP(Test)(637953353)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select power(`Calcs`.`num0`,`Calcs`.`num1`) as `temp(test)(637953353)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
     }
 
@@ -4784,9 +4776,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`num0` * `Calcs`.`num1`) AS `TEMP(Test)(1861245368)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`num0` * `Calcs`.`num1`) as `temp(test)(1861245368)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1861245368)(0)");
+        assertEquals("temp(test)(1861245368)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4795,9 +4787,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` = (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(1635792874)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` = (case when (`Calcs`.`num3` > 0) then `Calcs`.`str2` when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(1635792874)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1635792874)(0)");
+        assertEquals("temp(test)(1635792874)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4806,9 +4798,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` >= (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`) WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(1555382477)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` >= (case when (`Calcs`.`num3` > 0) then lower(`Calcs`.`str0`) when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(1555382477)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1555382477)(0)");
+        assertEquals("temp(test)(1555382477)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4817,9 +4809,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` > (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str0` WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(3821822049)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` > (case when (`Calcs`.`num3` > 0) then `Calcs`.`str0` when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(3821822049)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3821822049)(0)");
+        assertEquals("temp(test)(3821822049)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4828,9 +4820,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` <= (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`) WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(2776534421)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` <= (case when (`Calcs`.`num3` > 0) then lower(`Calcs`.`str0`) when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(2776534421)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2776534421)(0)");
+        assertEquals("temp(test)(2776534421)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4839,9 +4831,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` < (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`) WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(398649381)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` < (case when (`Calcs`.`num3` > 0) then lower(`Calcs`.`str0`) when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(398649381)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(398649381)(0)");
+        assertEquals("temp(test)(398649381)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4850,9 +4842,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`str2` <> (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str2` WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(119026413)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`str2` <> (case when (`Calcs`.`num3` > 0) then `Calcs`.`str2` when not (`Calcs`.`num3` > 0) then `Calcs`.`str3` else null end)) as `temp(test)(119026413)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(119026413)(0)");
+        assertEquals("temp(test)(119026413)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4861,9 +4853,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(`Calcs`.`str2`, `Calcs`.`str3`) AS `TEMP(Test)(724155660)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(`Calcs`.`str2`, `Calcs`.`str3`) as `temp(test)(724155660)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(724155660)(0)");
+        assertEquals("temp(test)(724155660)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4872,9 +4864,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 'Pat O''Hanrahan & <Matthew Eldridge]''' AS `TEMP(Test)(627207302)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 'pat o''hanrahan & <matthew eldridge]''' as `temp(test)(627207302)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(627207302)(0)");
+        assertEquals("temp(test)(627207302)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4883,9 +4875,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 1 AS `TEMP(Test)(1507734681)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 1 as `temp(test)(1507734681)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1507734681)(0)");
+        assertEquals("temp(test)(1507734681)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4894,9 +4886,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ' tail trimmed     ' AS `TEMP(Test)(1321171487)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ' tail trimmed     ' as `temp(test)(1321171487)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1321171487)(0)");
+        assertEquals("temp(test)(1321171487)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4905,9 +4897,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*12 + (MONTH(`Calcs`.`date2`) - MONTH(`Calcs`.`date3`))) AS `TEMP(Test)(2958462977)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*12 + (month(`Calcs`.`date2`) - month(`Calcs`.`date3`))) as `temp(test)(2958462977)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2958462977)(0)");
+        assertEquals("temp(test)(2958462977)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4916,9 +4908,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*12 + (MONTH(`Calcs`.`date2`) - MONTH(`Calcs`.`date3`))) AS `TEMP(Test)(667124691)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*12 + (month(`Calcs`.`date2`) - month(`Calcs`.`date3`))) as `temp(test)(667124691)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(667124691)(0)");
+        assertEquals("temp(test)(667124691)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4927,9 +4919,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*12 + (MONTH(`Calcs`.`datetime0`) - MONTH(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(2463700949)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*12 + (month(`Calcs`.`datetime0`) - month(timestamp(`Calcs`.`date2`)))) as `temp(test)(2463700949)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2463700949)(0)");
+        assertEquals("temp(test)(2463700949)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4938,9 +4930,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*12 + (MONTH(`Calcs`.`datetime0`) - MONTH(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(3778274693)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*12 + (month(`Calcs`.`datetime0`) - month(timestamp(`Calcs`.`date2`)))) as `temp(test)(3778274693)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3778274693)(0)");
+        assertEquals("temp(test)(3778274693)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4949,9 +4941,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ATAN(`Calcs`.`int2`) AS `TEMP(Test)(3655856496)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select atan(`Calcs`.`int2`) as `temp(test)(3655856496)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3655856496)(0)");
+        assertEquals("temp(test)(3655856496)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4960,9 +4952,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ATAN(`Calcs`.`num0`) AS `TEMP(Test)(4053915117)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select atan(`Calcs`.`num0`) as `temp(test)(4053915117)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4053915117)(0)");
+        assertEquals("temp(test)(4053915117)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4971,9 +4963,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ATAN2(`Calcs`.`int2`,1) AS `TEMP(Test)(2745915023)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select atan2(`Calcs`.`int2`,1) as `temp(test)(2745915023)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2745915023)(0)");
+        assertEquals("temp(test)(2745915023)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4982,9 +4974,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ATAN2(`Calcs`.`num0`,`Calcs`.`num1`) AS `TEMP(Test)(3341395046)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select atan2(`Calcs`.`num0`,`Calcs`.`num1`) as `temp(test)(3341395046)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3341395046)(0)");
+        assertEquals("temp(test)(3341395046)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -4993,9 +4985,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(TRUNCATE(`Calcs`.`num4`,0)) AS `TEMP(Test)(1425036653)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(truncate(`Calcs`.`num4`,0)) as `temp(test)(1425036653)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1425036653)(0)");
+        assertEquals("temp(test)(1425036653)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5004,9 +4996,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TIMESTAMP(`Calcs`.`date2`) AS `TEMP(Test)(1486024523)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select timestamp(`Calcs`.`date2`) as `temp(test)(1486024523)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1486024523)(0)");
+        assertEquals("temp(test)(1486024523)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5015,9 +5007,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - 693961.0 + TIME_TO_SEC(ADDDATE(`Calcs`.`date2`, INTERVAL 0 SECOND)) / (24.0 * 60.0 * 60.0) ) AS `TEMP(Test)(2671902822)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - 693961.0 + time_to_sec(adddate(`Calcs`.`date2`, interval 0 second)) / (24.0 * 60.0 * 60.0) ) as `temp(test)(2671902822)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2671902822)(0)");
+        assertEquals("temp(test)(2671902822)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5026,9 +5018,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRIM(DATE_FORMAT(`Calcs`.`date2`, '%b %e %Y %l:%i%p')) AS `TEMP(Test)(3929621149)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select trim(date_format(`Calcs`.`date2`, '%b %e %y %l:%i%p')) as `temp(test)(3929621149)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3929621149)(0)");
+        assertEquals("temp(test)(3929621149)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5037,9 +5029,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND((TO_DAYS(`Calcs`.`datetime0`) - 693961.0 + TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) / (24.0 * 60.0 * 60.0) ),2) AS `TEMP(Test)(102700322)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round((to_days(`Calcs`.`datetime0`) - 693961.0 + time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) / (24.0 * 60.0 * 60.0) ),2) as `temp(test)(102700322)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(102700322)(0)");
+        assertEquals("temp(test)(102700322)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5048,9 +5040,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TRIM(DATE_FORMAT(`Calcs`.`datetime0`, '%b %e %Y %l:%i%p')) AS `TEMP(Test)(1103404331)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select trim(date_format(`Calcs`.`datetime0`, '%b %e %y %l:%i%p')) as `temp(test)(1103404331)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1103404331)(0)");
+        assertEquals("temp(test)(1103404331)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5059,9 +5051,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(296025979)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(296025979)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(296025979)(0)");
+        assertEquals("temp(test)(296025979)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5070,9 +5062,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(595744937)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(595744937)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(595744937)(0)");
+        assertEquals("temp(test)(595744937)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5081,9 +5073,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3907469988)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(3907469988)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3907469988)(0)");
+        assertEquals("temp(test)(3907469988)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5092,9 +5084,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1153873435)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(1153873435)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1153873435)(0)");
+        assertEquals("temp(test)(1153873435)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5103,9 +5095,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL 1 YEAR) AS `TEMP(Test)(858668231)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval 1 year) as `temp(test)(858668231)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(858668231)(0)");
+        assertEquals("temp(test)(858668231)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5114,9 +5106,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 YEAR) AS `TEMP(Test)(1314023193)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 year) as `temp(test)(1314023193)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1314023193)(0)");
+        assertEquals("temp(test)(1314023193)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5125,9 +5117,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(3529528921)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(3529528921)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3529528921)(0)");
+        assertEquals("temp(test)(3529528921)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5136,9 +5128,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(1066073186)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(1066073186)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1066073186)(0)");
+        assertEquals("temp(test)(1066073186)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5147,9 +5139,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(1128710711)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961))) as `temp(test)(1128710711)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1128710711)(0)");
+        assertEquals("temp(test)(1128710711)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5158,9 +5150,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(3816818712)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(3816818712)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3816818712)(0)");
+        assertEquals("temp(test)(3816818712)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5169,9 +5161,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961)))*4 + (QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) - QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)))) AS `TEMP(Test)(1220694026)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961)))*4 + (quarter(from_days(floor(null) + 693961)) - quarter(from_days(floor(null) + 693961)))) as `temp(test)(1220694026)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1220694026)(0)");
+        assertEquals("temp(test)(1220694026)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5180,9 +5172,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*4 + (QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))) AS `TEMP(Test)(1878304808)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*4 + (quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))) as `temp(test)(1878304808)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1878304808)(0)");
+        assertEquals("temp(test)(1878304808)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5191,9 +5183,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - YEAR(FROM_DAYS(FLOOR(NULL) + 693961)))*12 + (MONTH(FROM_DAYS(FLOOR(NULL) + 693961)) - MONTH(FROM_DAYS(FLOOR(NULL) + 693961)))) AS `TEMP(Test)(3201398499)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(from_days(floor(null) + 693961)) - year(from_days(floor(null) + 693961)))*12 + (month(from_days(floor(null) + 693961)) - month(from_days(floor(null) + 693961)))) as `temp(test)(3201398499)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3201398499)(0)");
+        assertEquals("temp(test)(3201398499)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5202,9 +5194,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*12 + (MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))) AS `TEMP(Test)(2380792894)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*12 + (month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))) as `temp(test)(2380792894)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2380792894)(0)");
+        assertEquals("temp(test)(2380792894)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5213,9 +5205,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1)) - (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ) )/7) AS `TEMP(Test)(1799303116)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((( to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1)) - (to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1) ) )/7) as `temp(test)(1799303116)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1799303116)(0)");
+        assertEquals("temp(test)(1799303116)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5224,9 +5216,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1)) - (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1) ) )/7) AS `TEMP(Test)(3424623419)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((( to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1)) - (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1) ) )/7) as `temp(test)(3424623419)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3424623419)(0)");
+        assertEquals("temp(test)(3424623419)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5235,9 +5227,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(496128354)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(496128354)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(496128354)(0)");
+        assertEquals("temp(test)(496128354)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5246,9 +5238,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(260207547)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(260207547)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(260207547)(0)");
+        assertEquals("temp(test)(260207547)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5257,9 +5249,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(4282303505)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(4282303505)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4282303505)(0)");
+        assertEquals("temp(test)(4282303505)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5268,9 +5260,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(2339877044)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(2339877044)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2339877044)(0)");
+        assertEquals("temp(test)(2339877044)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5279,9 +5271,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))) AS `TEMP(Test)(3465754358)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(from_days(floor(null) + 693961)) - to_days(from_days(floor(null) + 693961))) as `temp(test)(3465754358)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3465754358)(0)");
+        assertEquals("temp(test)(3465754358)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5290,9 +5282,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))) AS `TEMP(Test)(2205674587)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))) as `temp(test)(2205674587)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2205674587)(0)");
+        assertEquals("temp(test)(2205674587)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5301,9 +5293,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24 + FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 3600) - FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 3600)) AS `TEMP(Test)(4062119106)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24 + floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 3600) - floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 3600)) as `temp(test)(4062119106)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4062119106)(0)");
+        assertEquals("temp(test)(4062119106)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5312,9 +5304,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24*60 + FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 60) - FLOOR(TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) / 60)) AS `TEMP(Test)(2509274079)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24*60 + floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 60) - floor(time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) / 60)) as `temp(test)(2509274079)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2509274079)(0)");
+        assertEquals("temp(test)(2509274079)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5323,9 +5315,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)))*24*60*60 + (TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 0 SECOND)))) AS `TEMP(Test)(508245917)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select ((to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)))*24*60*60 + (time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)) - time_to_sec(adddate(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 0 second)))) as `temp(test)(508245917)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(508245917)(0)");
+        assertEquals("temp(test)(508245917)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5334,9 +5326,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 YEAR) AS `TEMP(Test)(1053114602)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval 1 year) as `temp(test)(1053114602)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1053114602)(0)");
+        assertEquals("temp(test)(1053114602)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5345,9 +5337,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 YEAR) AS `TEMP(Test)(955333125)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 year) as `temp(test)(955333125)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(955333125)(0)");
+        assertEquals("temp(test)(955333125)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5356,9 +5348,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(2396988690)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval (3 * 1) month) as `temp(test)(2396988690)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2396988690)(0)");
+        assertEquals("temp(test)(2396988690)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5367,9 +5359,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(2232502461)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval (3 * 1) month) as `temp(test)(2232502461)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2232502461)(0)");
+        assertEquals("temp(test)(2232502461)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5378,9 +5370,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 MONTH) AS `TEMP(Test)(109946472)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval 1 month) as `temp(test)(109946472)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(109946472)(0)");
+        assertEquals("temp(test)(109946472)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5389,9 +5381,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 MONTH) AS `TEMP(Test)(2095510626)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 month) as `temp(test)(2095510626)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2095510626)(0)");
+        assertEquals("temp(test)(2095510626)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5400,9 +5392,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL (7 * 1) DAY) AS `TEMP(Test)(359186020)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval (7 * 1) day) as `temp(test)(359186020)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(359186020)(0)");
+        assertEquals("temp(test)(359186020)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5411,9 +5403,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL (7 * 1) DAY) AS `TEMP(Test)(3060670302)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval (7 * 1) day) as `temp(test)(3060670302)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3060670302)(0)");
+        assertEquals("temp(test)(3060670302)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5422,9 +5414,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS `TEMP(Test)(592740370)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval 1 day) as `temp(test)(592740370)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(592740370)(0)");
+        assertEquals("temp(test)(592740370)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5433,9 +5425,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(4169571243)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 day) as `temp(test)(4169571243)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4169571243)(0)");
+        assertEquals("temp(test)(4169571243)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5444,9 +5436,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS `TEMP(Test)(2477057371)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval 1 day) as `temp(test)(2477057371)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2477057371)(0)");
+        assertEquals("temp(test)(2477057371)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5455,9 +5447,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(3817976182)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 day) as `temp(test)(3817976182)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3817976182)(0)");
+        assertEquals("temp(test)(3817976182)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5466,9 +5458,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS `TEMP(Test)(2329360898)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(from_days(floor(null) + 693961), interval 1 day) as `temp(test)(2329360898)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2329360898)(0)");
+        assertEquals("temp(test)(2329360898)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5477,9 +5469,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(1469842605)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 day) as `temp(test)(1469842605)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1469842605)(0)");
+        assertEquals("temp(test)(1469842605)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5488,9 +5480,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 HOUR) AS `TEMP(Test)(4189387493)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 hour) as `temp(test)(4189387493)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4189387493)(0)");
+        assertEquals("temp(test)(4189387493)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5499,9 +5491,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 MINUTE) AS `TEMP(Test)(3720439076)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 minute) as `temp(test)(3720439076)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3720439076)(0)");
+        assertEquals("temp(test)(3720439076)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5510,9 +5502,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 SECOND) AS `TEMP(Test)(2985757783)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select date_add(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), interval 1 second) as `temp(test)(2985757783)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2985757783)(0)");
+        assertEquals("temp(test)(2985757783)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5521,9 +5513,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT RTRIM(CONCAT(CONCAT(' ', `Calcs`.`str2`), ' ')) AS `TEMP(Test)(2277366246)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select rtrim(concat(concat(' ', `Calcs`.`str2`), ' ')) as `temp(test)(2277366246)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2277366246)(0)");
+        assertEquals("temp(test)(2277366246)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5532,9 +5524,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(NOW()) - TO_DAYS(NOW())) AS `TEMP(Test)(3926981592)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(now()) - to_days(now())) as `temp(test)(3926981592)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3926981592)(0)");
+        assertEquals("temp(test)(3926981592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5543,9 +5535,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(CURDATE()) - TO_DAYS(CURDATE())) AS `TEMP(Test)(1915846221)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select (to_days(curdate()) - to_days(curdate())) as `temp(test)(1915846221)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1915846221)(0)");
+        assertEquals("temp(test)(1915846221)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5554,9 +5546,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date2`)) + (TIME_TO_SEC(ADDDATE(`Calcs`.`date2`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Calcs`.`date2`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) AS `TEMP(Test)(1152843842)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date2`)) + (time_to_sec(adddate(`Calcs`.`date2`, interval 0 second)) - time_to_sec(adddate(`Calcs`.`date2`, interval 0 second))) / (60 * 60 * 24)) as `temp(test)(1152843842)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1152843842)(0)");
+        assertEquals("temp(test)(1152843842)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5565,9 +5557,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(`Calcs`.`date2`, INTERVAL FLOOR(1) DAY), INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(715809068)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(date_add(`Calcs`.`date2`, interval floor(1) day), interval 60 * 60 * 24 * (1 - floor(1)) second) as `temp(test)(715809068)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(715809068)(0)");
+        assertEquals("temp(test)(715809068)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5576,9 +5568,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(`Calcs`.`date2`, INTERVAL FLOOR(1.5) DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(299505631)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(date_add(`Calcs`.`date2`, interval floor(1.5) day), interval 60 * 60 * 24 * (1.5 - floor(1.5)) second) as `temp(test)(299505631)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(299505631)(0)");
+        assertEquals("temp(test)(299505631)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5587,9 +5579,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_SUB(DATE_SUB(`Calcs`.`date2`, INTERVAL FLOOR(1) DAY), INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(709470143)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_sub(date_sub(`Calcs`.`date2`, interval floor(1) day), interval 60 * 60 * 24 * (1 - floor(1)) second) as `temp(test)(709470143)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(709470143)(0)");
+        assertEquals("temp(test)(709470143)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5598,9 +5590,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_SUB(DATE_SUB(`Calcs`.`date2`, INTERVAL FLOOR(1.5) DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(1620718980)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_sub(date_sub(`Calcs`.`date2`, interval floor(1.5) day), interval 60 * 60 * 24 * (1.5 - floor(1.5)) second) as `temp(test)(1620718980)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1620718980)(0)");
+        assertEquals("temp(test)(1620718980)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5609,9 +5601,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(`Calcs`.`datetime0`)) + (TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Calcs`.`datetime0`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) AS `TEMP(Test)(2141740056)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((to_days(`Calcs`.`datetime0`) - to_days(`Calcs`.`datetime0`)) + (time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second)) - time_to_sec(adddate(`Calcs`.`datetime0`, interval 0 second))) / (60 * 60 * 24)) as `temp(test)(2141740056)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2141740056)(0)");
+        assertEquals("temp(test)(2141740056)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5620,9 +5612,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_SUB(DATE_SUB(`Calcs`.`datetime0`, INTERVAL FLOOR(1) DAY), INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(1797652325)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_sub(date_sub(`Calcs`.`datetime0`, interval floor(1) day), interval 60 * 60 * 24 * (1 - floor(1)) second) as `temp(test)(1797652325)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1797652325)(0)");
+        assertEquals("temp(test)(1797652325)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5631,9 +5623,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(`Calcs`.`datetime0`, INTERVAL FLOOR(1) DAY), INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(2686481578)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(date_add(`Calcs`.`datetime0`, interval floor(1) day), interval 60 * 60 * 24 * (1 - floor(1)) second) as `temp(test)(2686481578)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2686481578)(0)");
+        assertEquals("temp(test)(2686481578)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5642,9 +5634,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_SUB(DATE_SUB(`Calcs`.`datetime0`, INTERVAL FLOOR(1.5) DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(2341796372)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_sub(date_sub(`Calcs`.`datetime0`, interval floor(1.5) day), interval 60 * 60 * 24 * (1.5 - floor(1.5)) second) as `temp(test)(2341796372)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2341796372)(0)");
+        assertEquals("temp(test)(2341796372)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5653,9 +5645,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(DATE_ADD(`Calcs`.`datetime0`, INTERVAL FLOOR(1.5) DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(4017290474)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(date_add(`Calcs`.`datetime0`, interval floor(1.5) day), interval 60 * 60 * 24 * (1.5 - floor(1.5)) second) as `temp(test)(4017290474)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4017290474)(0)");
+        assertEquals("temp(test)(4017290474)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5664,9 +5656,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` = `Calcs`.`datetime0`) AS `TEMP(Test)(3033382267)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` = `Calcs`.`datetime0`) as `temp(test)(3033382267)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3033382267)(0)");
+        assertEquals("temp(test)(3033382267)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5675,9 +5667,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` > `Calcs`.`datetime0`) AS `TEMP(Test)(4196472080)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` > `Calcs`.`datetime0`) as `temp(test)(4196472080)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4196472080)(0)");
+        assertEquals("temp(test)(4196472080)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5686,9 +5678,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` >= `Calcs`.`datetime0`) AS `TEMP(Test)(1829388090)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` >= `Calcs`.`datetime0`) as `temp(test)(1829388090)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1829388090)(0)");
+        assertEquals("temp(test)(1829388090)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5697,9 +5689,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` < `Calcs`.`datetime0`) AS `TEMP(Test)(2087345109)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` < `Calcs`.`datetime0`) as `temp(test)(2087345109)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2087345109)(0)");
+        assertEquals("temp(test)(2087345109)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5708,9 +5700,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` <= `Calcs`.`datetime0`) AS `TEMP(Test)(3187080314)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` <= `Calcs`.`datetime0`) as `temp(test)(3187080314)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3187080314)(0)");
+        assertEquals("temp(test)(3187080314)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5719,9 +5711,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`datetime0` <> `Calcs`.`datetime0`) AS `TEMP(Test)(436529008)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`datetime0` <> `Calcs`.`datetime0`) as `temp(test)(436529008)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(436529008)(0)");
+        assertEquals("temp(test)(436529008)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5730,9 +5722,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` = `Calcs`.`datetime0`) AS `TEMP(Test)(1122166960)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` = `Calcs`.`datetime0`) as `temp(test)(1122166960)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1122166960)(0)");
+        assertEquals("temp(test)(1122166960)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5741,9 +5733,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` > `Calcs`.`datetime0`) AS `TEMP(Test)(2476649334)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` > `Calcs`.`datetime0`) as `temp(test)(2476649334)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2476649334)(0)");
+        assertEquals("temp(test)(2476649334)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5752,9 +5744,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` >= `Calcs`.`datetime0`) AS `TEMP(Test)(1267352367)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` >= `Calcs`.`datetime0`) as `temp(test)(1267352367)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1267352367)(0)");
+        assertEquals("temp(test)(1267352367)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5763,9 +5755,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` < `Calcs`.`datetime0`) AS `TEMP(Test)(668774393)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` < `Calcs`.`datetime0`) as `temp(test)(668774393)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(668774393)(0)");
+        assertEquals("temp(test)(668774393)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5774,9 +5766,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` <= `Calcs`.`datetime0`) AS `TEMP(Test)(2801366337)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` <= `Calcs`.`datetime0`) as `temp(test)(2801366337)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2801366337)(0)");
+        assertEquals("temp(test)(2801366337)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5785,9 +5777,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` <> `Calcs`.`datetime0`) AS `TEMP(Test)(6065346)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` <> `Calcs`.`datetime0`) as `temp(test)(6065346)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(6065346)(0)");
+        assertEquals("temp(test)(6065346)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5796,9 +5788,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` = `Calcs`.`date2`) AS `TEMP(Test)(4213376628)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` = `Calcs`.`date2`) as `temp(test)(4213376628)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4213376628)(0)");
+        assertEquals("temp(test)(4213376628)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5807,9 +5799,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` > `Calcs`.`date2`) AS `TEMP(Test)(284925583)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` > `Calcs`.`date2`) as `temp(test)(284925583)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(284925583)(0)");
+        assertEquals("temp(test)(284925583)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5818,9 +5810,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` >= `Calcs`.`date2`) AS `TEMP(Test)(1365124261)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` >= `Calcs`.`date2`) as `temp(test)(1365124261)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1365124261)(0)");
+        assertEquals("temp(test)(1365124261)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5829,9 +5821,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` < `Calcs`.`date2`) AS `TEMP(Test)(4277161941)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` < `Calcs`.`date2`) as `temp(test)(4277161941)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4277161941)(0)");
+        assertEquals("temp(test)(4277161941)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5840,9 +5832,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` <= `Calcs`.`date2`) AS `TEMP(Test)(932571096)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` <= `Calcs`.`date2`) as `temp(test)(932571096)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(932571096)(0)");
+        assertEquals("temp(test)(932571096)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5851,9 +5843,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`date2` <> `Calcs`.`date2`) AS `TEMP(Test)(3666462064)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`date2` <> `Calcs`.`date2`) as `temp(test)(3666462064)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3666462064)(0)");
+        assertEquals("temp(test)(3666462064)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5862,9 +5854,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(402015915)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(402015915)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(402015915)(0)");
+        assertEquals("temp(test)(402015915)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5873,9 +5865,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3033426574)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3033426574)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3033426574)(0)");
+        assertEquals("temp(test)(3033426574)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5884,9 +5876,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`int0`) AS `TEMP(Test)(4016644369)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`int0`) as `temp(test)(4016644369)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4016644369)(0)");
+        assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5895,9 +5887,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`int1`) THEN NULL	WHEN ISNULL(`Calcs`.`int2`) THEN NULL	ELSE LEAST(`Calcs`.`int1`, `Calcs`.`int2`) END) AS `TEMP(Test)(1701645592)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`int1`) then null	when isnull(`Calcs`.`int2`) then null	else least(`Calcs`.`int1`, `Calcs`.`int2`) end) as `temp(test)(1701645592)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1701645592)(0)");
+        assertEquals("temp(test)(1701645592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5906,9 +5898,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(433583207)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(433583207)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(433583207)(0)");
+        assertEquals("temp(test)(433583207)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5917,9 +5909,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1289371916)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(1289371916)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1289371916)(0)");
+        assertEquals("temp(test)(1289371916)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5928,9 +5920,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3917841362)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(3917841362)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3917841362)(0)");
+        assertEquals("temp(test)(3917841362)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5939,9 +5931,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1921815362)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(1921815362)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1921815362)(0)");
+        assertEquals("temp(test)(1921815362)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5950,9 +5942,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LTRIM(CONCAT(CONCAT(' ', `Calcs`.`str2`), ' ')) AS `TEMP(Test)(1106979036)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ltrim(concat(concat(' ', `Calcs`.`str2`), ' ')) as `temp(test)(1106979036)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1106979036)(0)");
+        assertEquals("temp(test)(1106979036)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5961,9 +5953,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COS(`Calcs`.`int2`) AS `TEMP(Test)(344207442)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select cos(`Calcs`.`int2`) as `temp(test)(344207442)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(344207442)(0)");
+        assertEquals("temp(test)(344207442)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5972,9 +5964,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COS(`Calcs`.`num0`) AS `TEMP(Test)(1355320598)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select cos(`Calcs`.`num0`) as `temp(test)(1355320598)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1355320598)(0)");
+        assertEquals("temp(test)(1355320598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5983,9 +5975,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(513464674)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(from_days(floor(null) + 693961)) as `temp(test)(513464674)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(513464674)(0)");
+        assertEquals("temp(test)(513464674)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -5994,9 +5986,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3512378422)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3512378422)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3512378422)(0)");
+        assertEquals("temp(test)(3512378422)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6005,9 +5997,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3084524178)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3084524178)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3084524178)(0)");
+        assertEquals("temp(test)(3084524178)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6016,9 +6008,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(4202902840)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(from_days(floor(null) + 693961)) as `temp(test)(4202902840)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4202902840)(0)");
+        assertEquals("temp(test)(4202902840)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6027,9 +6019,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2836269094)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select month(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2836269094)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2836269094)(0)");
+        assertEquals("temp(test)(2836269094)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6038,9 +6030,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3924648662)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select month(from_days(floor(null) + 693961)) as `temp(test)(3924648662)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3924648662)(0)");
+        assertEquals("temp(test)(3924648662)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6049,9 +6041,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - 1 + DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1538264184)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((7 + dayofyear(from_days(floor(null) + 693961)) - 1 + dayofweek(date_format(from_days(floor(null) + 693961), '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(1538264184)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1538264184)(0)");
+        assertEquals("temp(test)(1538264184)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6060,9 +6052,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4042104093)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select floor((7 + dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1 + dayofweek(date_format(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00')) - 1) / 7) as `temp(test)(4042104093)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4042104093)(0)");
+        assertEquals("temp(test)(4042104093)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6071,9 +6063,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(4271712345)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofweek(from_days(floor(null) + 693961)) as `temp(test)(4271712345)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4271712345)(0)");
+        assertEquals("temp(test)(4271712345)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6082,9 +6074,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(963247111)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(963247111)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(963247111)(0)");
+        assertEquals("temp(test)(963247111)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6093,9 +6085,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(738426766)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(738426766)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(738426766)(0)");
+        assertEquals("temp(test)(738426766)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6104,9 +6096,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1202522493)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(from_days(floor(null) + 693961)) as `temp(test)(1202522493)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1202522493)(0)");
+        assertEquals("temp(test)(1202522493)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6115,9 +6107,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1255819744)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1255819744)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1255819744)(0)");
+        assertEquals("temp(test)(1255819744)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6126,9 +6118,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(1639804515)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(from_days(floor(null) + 693961)) as `temp(test)(1639804515)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1639804515)(0)");
+        assertEquals("temp(test)(1639804515)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6137,9 +6129,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(299943486)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select hour(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(299943486)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(299943486)(0)");
+        assertEquals("temp(test)(299943486)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6148,9 +6140,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(4177149407)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select minute(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(4177149407)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4177149407)(0)");
+        assertEquals("temp(test)(4177149407)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6159,9 +6151,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1457324017)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select second(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1457324017)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1457324017)(0)");
+        assertEquals("temp(test)(1457324017)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6170,9 +6162,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ASIN((`Calcs`.`num0` / 20)) AS `TEMP(Test)(1317198372)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select asin((`Calcs`.`num0` / 20)) as `temp(test)(1317198372)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1317198372)(0)");
+        assertEquals("temp(test)(1317198372)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6181,9 +6173,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(DISTINCT `Calcs`.`int0`) AS `TEMP(Test)(1467453495)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(distinct `Calcs`.`int0`) as `temp(test)(1467453495)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1467453495)(0)");
+        assertEquals("temp(test)(1467453495)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6192,9 +6184,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(DISTINCT (`Calcs`.`bool0_` <> 0)) AS `TEMP(Test)(1408008556)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(distinct (`Calcs`.`bool0_` <> 0)) as `temp(test)(1408008556)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1408008556)(0)");
+        assertEquals("temp(test)(1408008556)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6203,9 +6195,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(DISTINCT `Calcs`.`date3`) AS `TEMP(Test)(175600811)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(distinct `Calcs`.`date3`) as `temp(test)(175600811)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(175600811)(0)");
+        assertEquals("temp(test)(175600811)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6214,9 +6206,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(DISTINCT `Calcs`.`num4`) AS `TEMP(Test)(41874160)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(distinct `Calcs`.`num4`) as `temp(test)(41874160)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(41874160)(0)");
+        assertEquals("temp(test)(41874160)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6225,9 +6217,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT COUNT(DISTINCT `Calcs`.`str2`) AS `TEMP(Test)(2954817995)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select count(distinct `Calcs`.`str2`) as `temp(test)(2954817995)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2954817995)(0)");
+        assertEquals("temp(test)(2954817995)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6236,9 +6228,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3715775174)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3715775174)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3715775174)(0)");
+        assertEquals("temp(test)(3715775174)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6247,9 +6239,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2815480624)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2815480624)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2815480624)(0)");
+        assertEquals("temp(test)(2815480624)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6258,9 +6250,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3738830082)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3738830082)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3738830082)(0)");
+        assertEquals("temp(test)(3738830082)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6269,9 +6261,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(151653785)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(151653785)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(151653785)(0)");
+        assertEquals("temp(test)(151653785)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6280,9 +6272,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1373895161)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(1373895161)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1373895161)(0)");
+        assertEquals("temp(test)(1373895161)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6291,9 +6283,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(543203842)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(543203842)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(543203842)(0)");
+        assertEquals("temp(test)(543203842)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6302,9 +6294,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(3325657342)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(3325657342)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3325657342)(0)");
+        assertEquals("temp(test)(3325657342)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6313,9 +6305,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(`Calcs`.`int1`) AS `TEMP(Test)(2617331766)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(`Calcs`.`int1`) as `temp(test)(2617331766)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2617331766)(0)");
+        assertEquals("temp(test)(2617331766)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6324,9 +6316,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN (`Calcs`.`bool0_` <> 0) THEN '1'	WHEN NOT (`Calcs`.`bool0_` <> 0) THEN '0'	ELSE NULL END) AS `TEMP(Test)(3200082645)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when (`Calcs`.`bool0_` <> 0) then '1'	when not (`Calcs`.`bool0_` <> 0) then '0'	else null end) as `temp(test)(3200082645)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3200082645)(0)");
+        assertEquals("temp(test)(3200082645)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6335,9 +6327,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(`Calcs`.`num2`) AS `TEMP(Test)(3049448927)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select concat(`Calcs`.`num2`) as `temp(test)(3049448927)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3049448927)(0)");
+        assertEquals("temp(test)(3049448927)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6346,9 +6338,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SUBSTRING(`Calcs`.`str2`, 1, 1024) AS `TEMP(Test)(3494867617)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select substring(`Calcs`.`str2`, 1, 1024) as `temp(test)(3494867617)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3494867617)(0)");
+        assertEquals("temp(test)(3494867617)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6357,9 +6349,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`date2`) AS `TEMP(Test)(1660803953)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`date2`) as `temp(test)(1660803953)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1660803953)(0)");
+        assertEquals("temp(test)(1660803953)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6368,9 +6360,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`date2`) AS `TEMP(Test)(872696424)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`date2`) as `temp(test)(872696424)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(872696424)(0)");
+        assertEquals("temp(test)(872696424)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6379,9 +6371,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(732183378)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`datetime0`) as `temp(test)(732183378)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(732183378)(0)");
+        assertEquals("temp(test)(732183378)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6390,9 +6382,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(3816689092)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select monthname(`Calcs`.`datetime0`) as `temp(test)(3816689092)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3816689092)(0)");
+        assertEquals("temp(test)(3816689092)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6401,9 +6393,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`date2`) AS `TEMP(Test)(2634030884)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`date2`) as `temp(test)(2634030884)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2634030884)(0)");
+        assertEquals("temp(test)(2634030884)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6412,9 +6404,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(4000895377)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`datetime0`) as `temp(test)(4000895377)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4000895377)(0)");
+        assertEquals("temp(test)(4000895377)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6423,9 +6415,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL 1 MONTH) AS `TEMP(Test)(2799254343)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval 1 month) as `temp(test)(2799254343)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2799254343)(0)");
+        assertEquals("temp(test)(2799254343)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6434,9 +6426,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 MONTH) AS `TEMP(Test)(1378354598)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 month) as `temp(test)(1378354598)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1378354598)(0)");
+        assertEquals("temp(test)(1378354598)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6445,9 +6437,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3057229987)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(from_days(floor(null) + 693961)) as `temp(test)(3057229987)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3057229987)(0)");
+        assertEquals("temp(test)(3057229987)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6456,9 +6448,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(4063654893)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select year(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(4063654893)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4063654893)(0)");
+        assertEquals("temp(test)(4063654893)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6467,9 +6459,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2102858309)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(from_days(floor(null) + 693961)) as `temp(test)(2102858309)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2102858309)(0)");
+        assertEquals("temp(test)(2102858309)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6478,9 +6470,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3270121971)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3270121971)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3270121971)(0)");
+        assertEquals("temp(test)(3270121971)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6489,9 +6481,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2692233594)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select monthname(from_days(floor(null) + 693961)) as `temp(test)(2692233594)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2692233594)(0)");
+        assertEquals("temp(test)(2692233594)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6500,9 +6492,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTHNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(1772891037)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select monthname(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(1772891037)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1772891037)(0)");
+        assertEquals("temp(test)(1772891037)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6511,9 +6503,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - 1 + DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(3926284460)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select concat(floor((7 + dayofyear(from_days(floor(null) + 693961)) - 1 + dayofweek(date_format(from_days(floor(null) + 693961), '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(3926284460)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3926284460)(0)");
+        assertEquals("temp(test)(3926284460)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6522,9 +6514,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00')) - 1) / 7)) AS `TEMP(Test)(1415178918)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select concat(floor((7 + dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1 + dayofweek(date_format(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00')) - 1) / 7)) as `temp(test)(1415178918)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1415178918)(0)");
+        assertEquals("temp(test)(1415178918)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6533,9 +6525,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3608467423)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayname(from_days(floor(null) + 693961)) as `temp(test)(3608467423)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3608467423)(0)");
+        assertEquals("temp(test)(3608467423)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6544,9 +6536,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2920782836)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayname(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2920782836)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2920782836)(0)");
+        assertEquals("temp(test)(2920782836)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6555,9 +6547,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3132873078)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(from_days(floor(null) + 693961)) as `temp(test)(3132873078)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3132873078)(0)");
+        assertEquals("temp(test)(3132873078)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6566,9 +6558,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFMONTH(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2450943592)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofmonth(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2450943592)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2450943592)(0)");
+        assertEquals("temp(test)(2450943592)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6577,9 +6569,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3530921297)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(from_days(floor(null) + 693961)) as `temp(test)(3530921297)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3530921297)(0)");
+        assertEquals("temp(test)(3530921297)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6588,9 +6580,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(304383277)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select dayofyear(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(304383277)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(304383277)(0)");
+        assertEquals("temp(test)(304383277)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6599,9 +6591,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3871589708)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select hour(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3871589708)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3871589708)(0)");
+        assertEquals("temp(test)(3871589708)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6610,9 +6602,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(2462406212)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select minute(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(2462406212)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2462406212)(0)");
+        assertEquals("temp(test)(2462406212)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6621,9 +6613,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SECOND(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3443263072)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select second(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) as `temp(test)(3443263072)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3443263072)(0)");
+        assertEquals("temp(test)(3443263072)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6632,9 +6624,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1349416314)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:00' ), interval 0 second ) as `temp(test)(1349416314)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1349416314)(0)");
+        assertEquals("temp(test)(1349416314)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6643,9 +6635,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d %H:%i:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3032747293)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d %h:%i:00' ), interval 0 second ) as `temp(test)(3032747293)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3032747293)(0)");
+        assertEquals("temp(test)(3032747293)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6654,9 +6646,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL (7 * 1) DAY) AS `TEMP(Test)(2748179160)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval (7 * 1) day) as `temp(test)(2748179160)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2748179160)(0)");
+        assertEquals("temp(test)(2748179160)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6665,9 +6657,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL (7 * 1) DAY) AS `TEMP(Test)(3880453047)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval (7 * 1) day) as `temp(test)(3880453047)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3880453047)(0)");
+        assertEquals("temp(test)(3880453047)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6676,9 +6668,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`date2`) AS `TEMP(Test)(877816921)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`date2`) as `temp(test)(877816921)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(877816921)(0)");
+        assertEquals("temp(test)(877816921)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6687,9 +6679,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DAYOFYEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(707037378)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select dayofyear(`Calcs`.`datetime0`) as `temp(test)(707037378)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(707037378)(0)");
+        assertEquals("temp(test)(707037378)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6698,9 +6690,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*4 + (QUARTER(`Calcs`.`date2`) - QUARTER(`Calcs`.`date3`))) AS `TEMP(Test)(3028875325)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*4 + (quarter(`Calcs`.`date2`) - quarter(`Calcs`.`date3`))) as `temp(test)(3028875325)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3028875325)(0)");
+        assertEquals("temp(test)(3028875325)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6709,9 +6701,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`))*4 + (QUARTER(`Calcs`.`date2`) - QUARTER(`Calcs`.`date3`))) AS `TEMP(Test)(3483942593)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`date2`) - year(`Calcs`.`date3`))*4 + (quarter(`Calcs`.`date2`) - quarter(`Calcs`.`date3`))) as `temp(test)(3483942593)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3483942593)(0)");
+        assertEquals("temp(test)(3483942593)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6720,9 +6712,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*4 + (QUARTER(`Calcs`.`datetime0`) - QUARTER(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(4196684004)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*4 + (quarter(`Calcs`.`datetime0`) - quarter(timestamp(`Calcs`.`date2`)))) as `temp(test)(4196684004)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4196684004)(0)");
+        assertEquals("temp(test)(4196684004)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6731,9 +6723,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ((YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))*4 + (QUARTER(`Calcs`.`datetime0`) - QUARTER(TIMESTAMP(`Calcs`.`date2`)))) AS `TEMP(Test)(351668681)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select ((year(`Calcs`.`datetime0`) - year(timestamp(`Calcs`.`date2`)))*4 + (quarter(`Calcs`.`datetime0`) - quarter(timestamp(`Calcs`.`date2`)))) as `temp(test)(351668681)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(351668681)(0)");
+        assertEquals("temp(test)(351668681)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6742,9 +6734,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`date2`, INTERVAL 1 DAY) AS `TEMP(Test)(1139290352)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`date2`, interval 1 day) as `temp(test)(1139290352)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1139290352)(0)");
+        assertEquals("temp(test)(1139290352)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6753,9 +6745,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(748109579)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 day) as `temp(test)(748109579)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(748109579)(0)");
+        assertEquals("temp(test)(748109579)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6764,9 +6756,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`) - 1)) - (TO_DAYS(`Calcs`.`date3`) - (DAYOFWEEK(`Calcs`.`date3`) - 1) ) )/7) AS `TEMP(Test)(859582235)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`date2`) - (dayofweek(`Calcs`.`date2`) - 1)) - (to_days(`Calcs`.`date3`) - (dayofweek(`Calcs`.`date3`) - 1) ) )/7) as `temp(test)(859582235)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(859582235)(0)");
+        assertEquals("temp(test)(859582235)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6775,9 +6767,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`) - 1)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - (DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`)) - 1) ) )/7) AS `TEMP(Test)(2079052241)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`datetime0`) - (dayofweek(`Calcs`.`datetime0`) - 1)) - (to_days(timestamp(`Calcs`.`date2`)) - (dayofweek(timestamp(`Calcs`.`date2`)) - 1) ) )/7) as `temp(test)(2079052241)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2079052241)(0)");
+        assertEquals("temp(test)(2079052241)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6786,9 +6778,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ABS(`Calcs`.`int2`) AS `TEMP(Test)(2102582873)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select abs(`Calcs`.`int2`) as `temp(test)(2102582873)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2102582873)(0)");
+        assertEquals("temp(test)(2102582873)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6797,9 +6789,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ABS(`Calcs`.`num0`) AS `TEMP(Test)(3816473022)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select abs(`Calcs`.`num0`) as `temp(test)(3816473022)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3816473022)(0)");
+        assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6808,9 +6800,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1942031084)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(1942031084)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1942031084)(0)");
+        assertEquals("temp(test)(1942031084)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6819,9 +6811,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(308042462)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`date2`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(308042462)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(308042462)(0)");
+        assertEquals("temp(test)(308042462)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6830,9 +6822,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1290354772)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(1290354772)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1290354772)(0)");
+        assertEquals("temp(test)(1290354772)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6841,9 +6833,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2022110629)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select adddate( date_format( `Calcs`.`datetime0`, '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2022110629)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2022110629)(0)");
+        assertEquals("temp(test)(2022110629)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6852,9 +6844,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IF(ISNULL(((`Calcs`.`num0` + 5) * 0.29999999999999999)), NULL, SUBSTRING(`Calcs`.`str2`,GREATEST(1,FLOOR(((`Calcs`.`num0` + 5) * 0.29999999999999999))),FLOOR(`Calcs`.`num1`))) AS `TEMP(Test)(1934432200)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select if(isnull(((`Calcs`.`num0` + 5) * 0.29999999999999999)), null, substring(`Calcs`.`str2`,greatest(1,floor(((`Calcs`.`num0` + 5) * 0.29999999999999999))),floor(`Calcs`.`num1`))) as `temp(test)(1934432200)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1934432200)(0)");
+        assertEquals("temp(test)(1934432200)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6863,9 +6855,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MINUTE(`Calcs`.`datetime0`) AS `TEMP(Test)(1256004566)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select minute(`Calcs`.`datetime0`) as `temp(test)(1256004566)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1256004566)(0)");
+        assertEquals("temp(test)(1256004566)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6874,9 +6866,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (((CASE WHEN (ABS((2) - (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0)))) + SQRT(3.0) * ((ABS((`Calcs`.`int2`) - (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 THEN 1.5 ELSE 0.0 END) - (CASE WHEN ((`Calcs`.`int2`) - (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0) < 0.0) AND ((CASE WHEN (ABS((2) - (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0)))) + SQRT(3.0) * ((ABS((`Calcs`.`int2`) - (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 THEN SQRT(3.0) / 2.0 ELSE 0.0 END) > 0.0) THEN 3.0 ELSE 0.0 END)) + (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0)) AS `TEMP(Test)(2503102272)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (((case when (abs((2) - (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0)))) + sqrt(3.0) * ((abs((`Calcs`.`int2`) - (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 then 1.5 else 0.0 end) - (case when ((`Calcs`.`int2`) - (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0) < 0.0) and ((case when (abs((2) - (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0)))) + sqrt(3.0) * ((abs((`Calcs`.`int2`) - (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 then sqrt(3.0) / 2.0 else 0.0 end) > 0.0) then 3.0 else 0.0 end)) + (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0)) as `temp(test)(2503102272)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2503102272)(0)");
+        assertEquals("temp(test)(2503102272)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6885,9 +6877,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND( (((CASE WHEN (ABS((2) - (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0)))) + SQRT(3.0) * ((ABS((`Calcs`.`int2`) - (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 THEN SQRT(3.0) / 2.0 ELSE 0.0 END) - (CASE WHEN ((2) - (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0)) < 0.0) AND ((CASE WHEN (ABS((2) - (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0)))) + SQRT(3.0) * ((ABS((`Calcs`.`int2`) - (ROUND( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 THEN SQRT(3.0) / 2.0 ELSE 0.0 END) > 0.0) THEN SQRT(3.0) ELSE 0.0 END)) + (ROUND( ( (2) / SQRT(3.0) ), 0 ) * SQRT(3.0))), 3) AS `TEMP(Test)(2977666156)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round( (((case when (abs((2) - (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0)))) + sqrt(3.0) * ((abs((`Calcs`.`int2`) - (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 then sqrt(3.0) / 2.0 else 0.0 end) - (case when ((2) - (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0)) < 0.0) and ((case when (abs((2) - (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0)))) + sqrt(3.0) * ((abs((`Calcs`.`int2`) - (round( ( (`Calcs`.`int2`) / 3.0 ), 0 ) * 3.0))) - 1.0) > 0.0 then sqrt(3.0) / 2.0 else 0.0 end) > 0.0) then sqrt(3.0) else 0.0 end)) + (round( ( (2) / sqrt(3.0) ), 0 ) * sqrt(3.0))), 3) as `temp(test)(2977666156)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2977666156)(0)");
+        assertEquals("temp(test)(2977666156)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6896,9 +6888,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TIMESTAMP(STR_TO_DATE('1234-06-01', '%Y-%m-%d')) AS `TEMP(Test)(1408155083)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select timestamp(str_to_date('1234-06-01', '%y-%m-%d')) as `temp(test)(1408155083)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1408155083)(0)");
+        assertEquals("temp(test)(1408155083)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6907,9 +6899,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TIMESTAMP(STR_TO_DATE('12-06-01', '%y-%m-%d')) AS `TEMP(Test)(54082523)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select timestamp(str_to_date('12-06-01', '%y-%m-%d')) as `temp(test)(54082523)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(54082523)(0)");
+        assertEquals("temp(test)(54082523)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6918,9 +6910,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT TIMESTAMP(STR_TO_DATE('1234-06-01', '%Y-%m-%d')) AS `TEMP(Test)(2040050501)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select timestamp(str_to_date('1234-06-01', '%y-%m-%d')) as `temp(test)(2040050501)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2040050501)(0)");
+        assertEquals("temp(test)(2040050501)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6929,9 +6921,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOG10(`Calcs`.`int2`) AS `TEMP(Test)(114283928)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select log10(`Calcs`.`int2`) as `temp(test)(114283928)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(114283928)(0)");
+        assertEquals("temp(test)(114283928)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6940,9 +6932,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LOG(`Calcs`.`int2`)/LOG(2)) AS `TEMP(Test)(3322085183)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (log(`Calcs`.`int2`)/log(2)) as `temp(test)(3322085183)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3322085183)(0)");
+        assertEquals("temp(test)(3322085183)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6951,9 +6943,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOG10(`Calcs`.`num0`) AS `TEMP(Test)(1814892178)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select log10(`Calcs`.`num0`) as `temp(test)(1814892178)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1814892178)(0)");
+        assertEquals("temp(test)(1814892178)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6962,9 +6954,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LOG(`Calcs`.`num0`)/LOG(2)) AS `TEMP(Test)(3081102343)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (log(`Calcs`.`num0`)/log(2)) as `temp(test)(3081102343)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3081102343)(0)");
+        assertEquals("temp(test)(3081102343)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6973,9 +6965,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT 1 AS `TEMP(Test)(3252316215)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select 1 as `temp(test)(3252316215)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3252316215)(0)");
+        assertEquals("temp(test)(3252316215)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6984,9 +6976,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LEFT(`Calcs`.`str1`, LENGTH('BI')) = 'BI') AS `TEMP(Test)(535799381)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (left(`Calcs`.`str1`, length('bi')) = 'bi') as `temp(test)(535799381)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(535799381)(0)");
+        assertEquals("temp(test)(535799381)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -6995,9 +6987,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (LEFT(`Calcs`.`str1`, LENGTH(`Calcs`.`str2`)) = `Calcs`.`str2`) AS `TEMP(Test)(2377293421)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (left(`Calcs`.`str1`, length(`Calcs`.`str2`)) = `Calcs`.`str2`) as `temp(test)(2377293421)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2377293421)(0)");
+        assertEquals("temp(test)(2377293421)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7006,9 +6998,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`date2`) AS `TEMP(Test)(3325074545)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`date2`) as `temp(test)(3325074545)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3325074545)(0)");
+        assertEquals("temp(test)(3325074545)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7017,9 +7009,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`date2`) THEN NULL	WHEN ISNULL(`Calcs`.`date3`) THEN NULL	ELSE GREATEST(`Calcs`.`date2`, `Calcs`.`date3`) END) AS `TEMP(Test)(1996265231)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`date2`) then null	when isnull(`Calcs`.`date3`) then null	else greatest(`Calcs`.`date2`, `Calcs`.`date3`) end) as `temp(test)(1996265231)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1996265231)(0)");
+        assertEquals("temp(test)(1996265231)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7028,9 +7020,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`datetime0`) AS `TEMP(Test)(4035984656)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`datetime0`) as `temp(test)(4035984656)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4035984656)(0)");
+        assertEquals("temp(test)(4035984656)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7039,9 +7031,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(840463993)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(840463993)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(840463993)(0)");
+        assertEquals("temp(test)(840463993)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7050,9 +7042,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(1720545932)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(1720545932)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1720545932)(0)");
+        assertEquals("temp(test)(1720545932)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7061,9 +7053,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(840463993)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(840463993)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(840463993)(1)");
+        assertEquals("temp(test)(840463993)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7072,9 +7064,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(1720545932)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(1720545932)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1720545932)(1)");
+        assertEquals("temp(test)(1720545932)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7083,9 +7075,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(2707942807)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(2707942807)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2707942807)(0)");
+        assertEquals("temp(test)(2707942807)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7094,9 +7086,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(3474280307)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(3474280307)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3474280307)(0)");
+        assertEquals("temp(test)(3474280307)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7105,9 +7097,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(2707942807)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(2707942807)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2707942807)(1)");
+        assertEquals("temp(test)(2707942807)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7116,9 +7108,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(3474280307)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(3474280307)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3474280307)(1)");
+        assertEquals("temp(test)(3474280307)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7127,9 +7119,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`date2`) AS `TEMP(Test)(1671202742)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`date2`) as `temp(test)(1671202742)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1671202742)(0)");
+        assertEquals("temp(test)(1671202742)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7138,9 +7130,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`date2`) AS `TEMP(Test)(536615588)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`date2`) as `temp(test)(536615588)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(536615588)(0)");
+        assertEquals("temp(test)(536615588)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7149,9 +7141,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(1933085624)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`datetime0`) as `temp(test)(1933085624)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1933085624)(0)");
+        assertEquals("temp(test)(1933085624)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7160,9 +7152,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MONTH(`Calcs`.`datetime0`) AS `TEMP(Test)(2986113344)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select month(`Calcs`.`datetime0`) as `temp(test)(2986113344)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2986113344)(0)");
+        assertEquals("temp(test)(2986113344)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7171,9 +7163,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int2` DIV 2) AS `TEMP(Test)(266359676)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int2` div 2) as `temp(test)(266359676)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(266359676)(0)");
+        assertEquals("temp(test)(266359676)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7182,9 +7174,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int0` DIV `Calcs`.`int1`) AS `TEMP(Test)(2600727600)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int0` div `Calcs`.`int1`) as `temp(test)(2600727600)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2600727600)(0)");
+        assertEquals("temp(test)(2600727600)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7193,9 +7185,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int0` DIV `Calcs`.`int1`) AS `TEMP(Test)(2600727600)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int0` div `Calcs`.`int1`) as `temp(test)(2600727600)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2600727600)(1)");
+        assertEquals("temp(test)(2600727600)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7204,9 +7196,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int3` DIV `Calcs`.`int2`) AS `TEMP(Test)(3955107424)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int3` div `Calcs`.`int2`) as `temp(test)(3955107424)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3955107424)(0)");
+        assertEquals("temp(test)(3955107424)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7215,9 +7207,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (`Calcs`.`int3` DIV `Calcs`.`int2`) AS `TEMP(Test)(3955107424)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (`Calcs`.`int3` div `Calcs`.`int2`) as `temp(test)(3955107424)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3955107424)(1)");
+        assertEquals("temp(test)(3955107424)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7226,9 +7218,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SQRT(`Calcs`.`int2`) AS `TEMP(Test)(2398974448)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sqrt(`Calcs`.`int2`) as `temp(test)(2398974448)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2398974448)(0)");
+        assertEquals("temp(test)(2398974448)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7237,9 +7229,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT SQRT(`Calcs`.`num0`) AS `TEMP(Test)(634651992)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select sqrt(`Calcs`.`num0`) as `temp(test)(634651992)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(634651992)(0)");
+        assertEquals("temp(test)(634651992)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7248,9 +7240,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(`Calcs`.`int2`, 2) AS `TEMP(Test)(3898674109)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select power(`Calcs`.`int2`, 2) as `temp(test)(3898674109)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3898674109)(0)");
+        assertEquals("temp(test)(3898674109)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7259,9 +7251,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT POWER(`Calcs`.`num0`, 2) AS `TEMP(Test)(1119897860)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select power(`Calcs`.`num0`, 2) as `temp(test)(1119897860)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1119897860)(0)");
+        assertEquals("temp(test)(1119897860)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7270,9 +7262,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3311335472)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(3311335472)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3311335472)(0)");
+        assertEquals("temp(test)(3311335472)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7281,9 +7273,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1982106892)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-01-01 00:00:00' ), interval 0 second ) as `temp(test)(1982106892)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1982106892)(0)");
+        assertEquals("temp(test)(1982106892)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7292,9 +7284,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-' ), (3*(QUARTER(FROM_DAYS(FLOOR(NULL) + 693961))-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2616948526)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( concat( date_format( from_days(floor(null) + 693961), '%y-' ), (3*(quarter(from_days(floor(null) + 693961))-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(2616948526)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2616948526)(0)");
+        assertEquals("temp(test)(2616948526)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7303,9 +7295,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( CONCAT( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-' ), (3*(QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND))-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4099405891)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( concat( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-' ), (3*(quarter(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second))-1)+1), '-01 00:00:00' ), interval 0 second ) as `temp(test)(4099405891)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4099405891)(0)");
+        assertEquals("temp(test)(4099405891)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7314,9 +7306,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1303420554)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(1303420554)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1303420554)(0)");
+        assertEquals("temp(test)(1303420554)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7325,9 +7317,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1705284026)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-01 00:00:00' ), interval 0 second ) as `temp(test)(1705284026)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1705284026)(0)");
+        assertEquals("temp(test)(1705284026)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7336,9 +7328,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2964540366)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate(from_days( to_days(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - (dayofweek(date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second)) - 1) ), interval 0 second ) as `temp(test)(2964540366)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2964540366)(0)");
+        assertEquals("temp(test)(2964540366)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7347,9 +7339,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE(FROM_DAYS( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961)) - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3523871008)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate(from_days( to_days(from_days(floor(null) + 693961)) - (dayofweek(from_days(floor(null) + 693961)) - 1) ), interval 0 second ) as `temp(test)(3523871008)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3523871008)(0)");
+        assertEquals("temp(test)(3523871008)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7358,9 +7350,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3587526928)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3587526928)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3587526928)(0)");
+        assertEquals("temp(test)(3587526928)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7369,9 +7361,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2715649251)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(2715649251)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2715649251)(0)");
+        assertEquals("temp(test)(2715649251)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7380,9 +7372,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3912893816)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(3912893816)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3912893816)(0)");
+        assertEquals("temp(test)(3912893816)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7391,9 +7383,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(453060606)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(453060606)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(453060606)(0)");
+        assertEquals("temp(test)(453060606)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7402,9 +7394,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1466575961)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( from_days(floor(null) + 693961), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(1466575961)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1466575961)(0)");
+        assertEquals("temp(test)(1466575961)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7413,9 +7405,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(265878863)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d 00:00:00' ), interval 0 second ) as `temp(test)(265878863)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(265878863)(0)");
+        assertEquals("temp(test)(265878863)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7424,9 +7416,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3877847632)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:00:00' ), interval 0 second ) as `temp(test)(3877847632)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3877847632)(0)");
+        assertEquals("temp(test)(3877847632)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7435,9 +7427,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(263614731)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:%i:00' ), interval 0 second ) as `temp(test)(263614731)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(263614731)(0)");
+        assertEquals("temp(test)(263614731)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7446,9 +7438,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:%s' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(864002214)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select adddate( date_format( date_add(from_days(floor(null) + 693961), interval 60 * 60 * 24 * (null - floor(null)) second), '%y-%m-%d %h:%i:%s' ), interval 0 second ) as `temp(test)(864002214)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(864002214)(0)");
+        assertEquals("temp(test)(864002214)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7457,9 +7449,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT AVG(`Calcs`.`int0`) AS `TEMP(Test)(3952218057)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select avg(`Calcs`.`int0`) as `temp(test)(3952218057)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3952218057)(0)");
+        assertEquals("temp(test)(3952218057)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7468,9 +7460,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT AVG(`Calcs`.`num4`) AS `TEMP(Test)(1371989636)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select avg(`Calcs`.`num4`) as `temp(test)(1371989636)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1371989636)(0)");
+        assertEquals("temp(test)(1371989636)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7479,9 +7471,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT HOUR(`Calcs`.`datetime0`) AS `TEMP(Test)(3233853797)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select hour(`Calcs`.`datetime0`) as `temp(test)(3233853797)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3233853797)(0)");
+        assertEquals("temp(test)(3233853797)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7490,9 +7482,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(1876737518)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(1876737518)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1876737518)(0)");
+        assertEquals("temp(test)(1876737518)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7501,9 +7493,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(1437280163)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(1437280163)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1437280163)(0)");
+        assertEquals("temp(test)(1437280163)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7512,9 +7504,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(3178513645)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(3178513645)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3178513645)(0)");
+        assertEquals("temp(test)(3178513645)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7523,9 +7515,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(3727444777)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(3727444777)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3727444777)(0)");
+        assertEquals("temp(test)(3727444777)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7534,9 +7526,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 HOUR) AS `TEMP(Test)(4261466899)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select date_add(`Calcs`.`datetime0`, interval 1 hour) as `temp(test)(4261466899)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4261466899)(0)");
+        assertEquals("temp(test)(4261466899)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7545,9 +7537,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`int0`) AS `TEMP(Test)(56370746)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`int0`) as `temp(test)(56370746)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(56370746)(0)");
+        assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7556,9 +7548,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`date3`) AS `TEMP(Test)(277748206)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`date3`) as `temp(test)(277748206)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(277748206)(0)");
+        assertEquals("temp(test)(277748206)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7567,9 +7559,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`num4`) AS `TEMP(Test)(4154938655)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`num4`) as `temp(test)(4154938655)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4154938655)(0)");
+        assertEquals("temp(test)(4154938655)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7578,9 +7570,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`str2`) AS `TEMP(Test)(1812249092)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`str2`) as `temp(test)(1812249092)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1812249092)(0)");
+        assertEquals("temp(test)(1812249092)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7589,9 +7581,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`int0`) THEN NULL	WHEN ISNULL(`Calcs`.`int1`) THEN NULL	ELSE GREATEST(`Calcs`.`int0`, `Calcs`.`int1`) END) AS `TEMP(Test)(1523549003)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`int0`) then null	when isnull(`Calcs`.`int1`) then null	else greatest(`Calcs`.`int0`, `Calcs`.`int1`) end) as `temp(test)(1523549003)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1523549003)(0)");
+        assertEquals("temp(test)(1523549003)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7600,9 +7592,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOCATE('ee',`Calcs`.`str2`) AS `TEMP(Test)(3981629397)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select locate('ee',`Calcs`.`str2`) as `temp(test)(3981629397)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3981629397)(0)");
+        assertEquals("temp(test)(3981629397)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7611,9 +7603,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOCATE('E',`Calcs`.`str1`) AS `TEMP(Test)(257220821)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select locate('e',`Calcs`.`str1`) as `temp(test)(257220821)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(257220821)(0)");
+        assertEquals("temp(test)(257220821)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7622,9 +7614,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IF(ISNULL(6), NULL, LOCATE('E',`Calcs`.`str1`,GREATEST(1,FLOOR(6)))) AS `TEMP(Test)(282093116)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select if(isnull(6), null, locate('e',`Calcs`.`str1`,greatest(1,floor(6)))) as `temp(test)(282093116)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(282093116)(0)");
+        assertEquals("temp(test)(282093116)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7633,9 +7625,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT LOCATE(`Calcs`.`str3`,`Calcs`.`str2`) AS `TEMP(Test)(3096760581)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select locate(`Calcs`.`str3`,`Calcs`.`str2`) as `temp(test)(3096760581)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3096760581)(0)");
+        assertEquals("temp(test)(3096760581)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7644,9 +7636,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT IF(ISNULL((`Calcs`.`num4` * 0.20000000000000001)), NULL, LOCATE(`Calcs`.`str3`,`Calcs`.`str2`,GREATEST(1,FLOOR((`Calcs`.`num4` * 0.20000000000000001))))) AS `TEMP(Test)(2787932066)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select if(isnull((`Calcs`.`num4` * 0.20000000000000001)), null, locate(`Calcs`.`str3`,`Calcs`.`str2`,greatest(1,floor((`Calcs`.`num4` * 0.20000000000000001))))) as `temp(test)(2787932066)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2787932066)(0)");
+        assertEquals("temp(test)(2787932066)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7655,9 +7647,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(838791689)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(838791689)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(838791689)(0)");
+        assertEquals("temp(test)(838791689)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7666,9 +7658,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1647283678)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`date2`) - to_days(`Calcs`.`date3`)) as `temp(test)(1647283678)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1647283678)(0)");
+        assertEquals("temp(test)(1647283678)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7677,9 +7669,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(1719292105)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(1719292105)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1719292105)(0)");
+        assertEquals("temp(test)(1719292105)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7688,9 +7680,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`))) AS `TEMP(Test)(1567002572)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (to_days(`Calcs`.`datetime0`) - to_days(timestamp(`Calcs`.`date2`))) as `temp(test)(1567002572)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1567002572)(0)");
+        assertEquals("temp(test)(1567002572)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7699,9 +7691,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`int0`) AS `TEMP(Test)(4016644369)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`int0`) as `temp(test)(4016644369)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4016644369)(0)");
+        assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7710,9 +7702,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`date3`) AS `TEMP(Test)(3378300904)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`date3`) as `temp(test)(3378300904)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3378300904)(0)");
+        assertEquals("temp(test)(3378300904)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7721,9 +7713,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`num4`) AS `TEMP(Test)(512350875)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`num4`) as `temp(test)(512350875)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(512350875)(0)");
+        assertEquals("temp(test)(512350875)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7732,9 +7724,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MIN(`Calcs`.`str2`) AS `TEMP(Test)(3910790823)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select min(`Calcs`.`str2`) as `temp(test)(3910790823)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3910790823)(0)");
+        assertEquals("temp(test)(3910790823)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7743,9 +7735,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`int0`) THEN NULL	WHEN ISNULL(`Calcs`.`int1`) THEN NULL	ELSE LEAST(`Calcs`.`int0`, `Calcs`.`int1`) END) AS `TEMP(Test)(3683900016)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`int0`) then null	when isnull(`Calcs`.`int1`) then null	else least(`Calcs`.`int0`, `Calcs`.`int1`) end) as `temp(test)(3683900016)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3683900016)(0)");
+        assertEquals("temp(test)(3683900016)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7754,9 +7746,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT MAX(`Calcs`.`int0`) AS `TEMP(Test)(56370746)(0)`FROM `Calcs`HAVING (COUNT(1) > 0)     order by 1");
+                        "      select max(`Calcs`.`int0`) as `temp(test)(56370746)(0)`from `Calcs`having (count(1) > 0)     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(56370746)(0)");
+        assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7765,9 +7757,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT (CASE	WHEN ISNULL(`Calcs`.`int1`) THEN NULL	WHEN ISNULL(`Calcs`.`int2`) THEN NULL	ELSE GREATEST(`Calcs`.`int1`, `Calcs`.`int2`) END) AS `TEMP(Test)(2763474205)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select (case	when isnull(`Calcs`.`int1`) then null	when isnull(`Calcs`.`int2`) then null	else greatest(`Calcs`.`int1`, `Calcs`.`int2`) end) as `temp(test)(2763474205)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2763474205)(0)");
+        assertEquals("temp(test)(2763474205)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7776,9 +7768,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(3969685894)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(3969685894)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3969685894)(0)");
+        assertEquals("temp(test)(3969685894)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7787,9 +7779,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`date2`) AS `TEMP(Test)(3969685894)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`date2`) as `temp(test)(3969685894)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3969685894)(1)");
+        assertEquals("temp(test)(3969685894)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7798,9 +7790,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(4179095987)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(4179095987)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4179095987)(0)");
+        assertEquals("temp(test)(4179095987)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7809,9 +7801,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT YEAR(`Calcs`.`datetime0`) AS `TEMP(Test)(4179095987)(1)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select year(`Calcs`.`datetime0`) as `temp(test)(4179095987)(1)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(4179095987)(1)");
+        assertEquals("temp(test)(4179095987)(1)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7820,9 +7812,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND(`Calcs`.`int2`) AS `TEMP(Test)(366741644)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round(`Calcs`.`int2`) as `temp(test)(366741644)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(366741644)(0)");
+        assertEquals("temp(test)(366741644)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7831,9 +7823,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND(`Calcs`.`int2`,2) AS `TEMP(Test)(1240237577)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round(`Calcs`.`int2`,2) as `temp(test)(1240237577)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1240237577)(0)");
+        assertEquals("temp(test)(1240237577)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7842,9 +7834,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND(`Calcs`.`num0`) AS `TEMP(Test)(3892529067)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round(`Calcs`.`num0`) as `temp(test)(3892529067)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3892529067)(0)");
+        assertEquals("temp(test)(3892529067)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7853,9 +7845,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT ROUND(`Calcs`.`num4`,1) AS `TEMP(Test)(2722044748)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select round(`Calcs`.`num4`,1) as `temp(test)(2722044748)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2722044748)(0)");
+        assertEquals("temp(test)(2722044748)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7864,9 +7856,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - ((7 + DAYOFWEEK(`Calcs`.`date2`) - 2) % 7)) - (TO_DAYS(`Calcs`.`date3`) - ((7 + DAYOFWEEK(`Calcs`.`date3`) - 2) % 7) ) )/7) AS `TEMP(Test)(3550551924)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`date2`) - ((7 + dayofweek(`Calcs`.`date2`) - 2) % 7)) - (to_days(`Calcs`.`date3`) - ((7 + dayofweek(`Calcs`.`date3`) - 2) % 7) ) )/7) as `temp(test)(3550551924)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(3550551924)(0)");
+        assertEquals("temp(test)(3550551924)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7875,9 +7867,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`) - 1)) - (TO_DAYS(`Calcs`.`date3`) - (DAYOFWEEK(`Calcs`.`date3`) - 1) ) )/7) AS `TEMP(Test)(2745903531)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`date2`) - (dayofweek(`Calcs`.`date2`) - 1)) - (to_days(`Calcs`.`date3`) - (dayofweek(`Calcs`.`date3`) - 1) ) )/7) as `temp(test)(2745903531)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(2745903531)(0)");
+        assertEquals("temp(test)(2745903531)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7886,9 +7878,9 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - ((7 + DAYOFWEEK(`Calcs`.`datetime0`) - 2) % 7)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - ((7 + DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`)) - 2) % 7) ) )/7) AS `TEMP(Test)(1341534691)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`datetime0`) - ((7 + dayofweek(`Calcs`.`datetime0`) - 2) % 7)) - (to_days(timestamp(`Calcs`.`date2`)) - ((7 + dayofweek(timestamp(`Calcs`.`date2`)) - 2) % 7) ) )/7) as `temp(test)(1341534691)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1341534691)(0)");
+        assertEquals("temp(test)(1341534691)(0)", rsmd.getColumnLabel(1));
     }
 
     @Test
@@ -7897,772 +7889,8 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`) - 1)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - (DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`)) - 1) ) )/7) AS `TEMP(Test)(1157868287)(0)`FROM `Calcs`GROUP BY 1     order by 1");
+                        "      select floor((( to_days(`Calcs`.`datetime0`) - (dayofweek(`Calcs`.`datetime0`) - 1)) - (to_days(timestamp(`Calcs`.`date2`)) - (dayofweek(timestamp(`Calcs`.`date2`)) - 1) ) )/7) as `temp(test)(1157868287)(0)`from `Calcs`group by 1     order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("TEMP(Test)(1157868287)(0)");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS0() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`,  SUM(`Calcs`.`num3`) AS `sum_num3_ok`FROM `Calcs`WHERE ISNULL(`Calcs`.`str2`)GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-        rsmd.getColumnLabel(1).equals("sum_num3_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS1() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`,  SUM(`Calcs`.`num3`) AS `sum_num3_ok`FROM `Calcs`WHERE ((`Calcs`.`str2` IN ('sixteen')) OR ISNULL(`Calcs`.`str2`))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-        rsmd.getColumnLabel(1).equals("sum_num3_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS2() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`num2`) AS `sum_num2_ok`,  SUM(`Calcs`.`num2`) AS `$__alias__0`FROM `Calcs`GROUP BY 1ORDER BY `$__alias__0` DESCLIMIT 10     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_CALCS3() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT (CASE WHEN (`Calcs`.`str2` IN ('eleven', 'fifteen', 'five', 'fourteen', 'nine', 'one', 'six', 'sixteen', 'ten', 'three', 'twelve')) THEN 'eleven' ELSE `Calcs`.`str2` END) AS `Str2 (group)`FROM `Calcs`GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Str2 (group)");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS4() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`FROM `Calcs`WHERE ((NOT ((`Calcs`.`str2` >= 'eight') AND (`Calcs`.`str2` <= 'six'))) OR ISNULL(`Calcs`.`str2`))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS5() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING (SUM(`Calcs`.`int1`) <= 2)     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS6() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING (NOT ISNULL(SUM(`Calcs`.`int1`)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS7() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING (((SUM(`Calcs`.`int1`) >= 0) AND (SUM(`Calcs`.`int1`) <= 2)) OR ISNULL(SUM(`Calcs`.`int1`)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS8() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`FROM `Calcs`WHERE ((NOT (`Calcs`.`str2` IN ('eight', 'eleven', 'fifteen', 'five'))) OR ISNULL(`Calcs`.`str2`))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS9() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING (SUM(`Calcs`.`int1`) >= 0)     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS10() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str0` AS `str0`FROM `Calcs`  INNER JOIN (  SELECT `Calcs`.`str0` AS `str0`,    SUM(`Calcs`.`int2`) AS `$__alias__0`  FROM `Calcs`  WHERE ((`Calcs`.`str0` >= 'FURNITURE') AND (`Calcs`.`str0` <= 'TECHNOLOGY'))  GROUP BY 1  ORDER BY `$__alias__0` DESC  LIMIT 2) `t0` ON (`Calcs`.`str0` = `t0`.`str0`)  INNER JOIN (  SELECT `Calcs`.`str1` AS `str1`,    SUM(`Calcs`.`int1`) AS `$__alias__1`  FROM `Calcs`  WHERE (((`Calcs`.`str1` >= 'AIR PURIFIERS') AND (`Calcs`.`str1` <= 'CD-R MEDIA')) OR ((`Calcs`.`str1` >= 'CONFERENCE PHONES') AND (`Calcs`.`str1` <= 'ERICSSON')))  GROUP BY 1  ORDER BY `$__alias__1` DESC  LIMIT 5) `t1` ON (`Calcs`.`str1` = `t1`.`str1`)GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str0");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS11() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING ((SUM(`Calcs`.`int1`) >= 0) AND (SUM(`Calcs`.`int1`) <= 2))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS12() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT FLOOR((TO_DAYS(`Calcs`.`date0`) - TO_DAYS(`Calcs`.`datetime0`)) / 2) AS `DayDiffs1 (bin)`,  FLOOR((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(`Calcs`.`date0`)) / 3) AS `DayDiffs2 (bin)`,  FLOOR((TO_DAYS(`Calcs`.`date0`) - TO_DAYS(`Calcs`.`date1`)) / 4) AS `DayDiffs3 (bin)`,  FLOOR((YEAR(`Calcs`.`date0`) - YEAR(`Calcs`.`datetime0`)) / 2) AS `YearDiffs1 (bin)`,  FLOOR((YEAR(`Calcs`.`datetime0`) - YEAR(`Calcs`.`date0`)) / 3) AS `YearDiffs2 (bin)`,  FLOOR((YEAR(`Calcs`.`date0`) - YEAR(`Calcs`.`date1`)) / 4) AS `YearDiffs3 (bin)`FROM `Calcs`GROUP BY 1,  2,  3,  4,  5,  6     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("DayDiffs1 (bin)");
-        rsmd.getColumnLabel(1).equals("DayDiffs2 (bin)");
-        rsmd.getColumnLabel(2).equals("DayDiffs3 (bin)");
-        rsmd.getColumnLabel(3).equals("YearDiffs1 (bin)");
-        rsmd.getColumnLabel(4).equals("YearDiffs2 (bin)");
-        rsmd.getColumnLabel(5).equals("YearDiffs3 (bin)");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS13() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`FROM `Calcs`GROUP BY 1HAVING (SUM(`Calcs`.`int2`) > 1000)     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS14() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT IFNULL(TIMESTAMP('2016-07-15 10:11:12.123'),STR_TO_DATE('2016-07-15 10:11:12.123','%b %e %Y %l:%i%p')) AS `Calculation_958703807427547136`FROM `Calcs`WHERE (IFNULL(TIMESTAMP('2016-07-15 10:11:12.123'),STR_TO_DATE('2016-07-15 10:11:12.123','%b %e %Y %l:%i%p')) = TIMESTAMP('2016-07-15 10:11:12.123'))HAVING (COUNT(1) > 0)     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Calculation_958703807427547136");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS15() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str2` AS `str2`,  SUM(`Calcs`.`num3`) AS `sum_num3_ok`FROM `Calcs`WHERE ((`Calcs`.`str2` >= 'eight') AND (`Calcs`.`str2` <= 'two'))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str2");
-        rsmd.getColumnLabel(1).equals("sum_num3_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS16() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`str0` AS `str0`,  SUM(`Calcs`.`int2`) AS `sum_int2_ok`FROM `Calcs`  INNER JOIN (  SELECT `Calcs`.`str0` AS `str0`,    SUM(`Calcs`.`int2`) AS `$__alias__0`  FROM `Calcs`  GROUP BY 1  ORDER BY `$__alias__0` DESC  LIMIT 2) `t0` ON (`Calcs`.`str0` = `t0`.`str0`)WHERE (((`Calcs`.`str1` >= 'AIR PURIFIERS') AND (`Calcs`.`str1` <= 'CD-R MEDIA')) OR ((`Calcs`.`str1` >= 'CONFERENCE PHONES') AND (`Calcs`.`str1` <= 'ERICSSON')))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("str0");
-        rsmd.getColumnLabel(1).equals("sum_int2_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS17() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING ((SUM(`Calcs`.`int1`) <= 2) OR ISNULL(SUM(`Calcs`.`int1`)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS18() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`num2`) AS `sum_num2_ok`,  SUM(`Calcs`.`num2`) AS `$__alias__0`FROM `Calcs`GROUP BY 1ORDER BY `$__alias__0` ASCLIMIT 10     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_CALCS19() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING ((SUM(`Calcs`.`int1`) >= 0) OR ISNULL(SUM(`Calcs`.`int1`)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_CALCS20() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      --SELECT `Calcs`.`key` AS `key`,  SUM(`Calcs`.`int1`) AS `sum_int1_ok`FROM `Calcs`GROUP BY 1HAVING ISNULL(SUM(`Calcs`.`int1`))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("key");
-        rsmd.getColumnLabel(1).equals("sum_int1_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES0() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`WHERE (`Staples`.`Customer Name` = 'Hallie Redmond')GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES1() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE (`Staples`.`Call Center Region` NOT IN ('CENTRAL'))GROUP BY 1,  2HAVING ((AVG(`Staples`.`Discount`) >= 0.051399999999999488) AND (AVG(`Staples`.`Discount`) <= 0.059000000000000587))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type1");
-        rsmd.getColumnLabel(1).equals("Prod Type2");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES2() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Order Date` AS `Order Date`,  COUNT(1) AS `cnt_Number of Records_ok`FROM `Staples`WHERE ((`Staples`.`Order Date` >= TIMESTAMP('1998-02-09 00:00:00')) AND (`Staples`.`Order Date` <= TIMESTAMP('1998-07-03 23:59:59')))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Order Date");
-        rsmd.getColumnLabel(1).equals("cnt_Number of Records_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES3() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`,  YEAR(`Staples`.`Order Date`) AS `yr_Order Date_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Discount` >= -0.001) AND (`Staples`.`Discount` <= 0.215172) AND (YEAR(`Staples`.`Order Date`) IN (2001, 2002)))GROUP BY 1,  2,  5HAVING ((COUNT(`Staples`.`Discount`) >= 0) AND (COUNT(`Staples`.`Discount`) <= 822) AND (SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 4074689.000000041))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("Customer Name");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(3).equals("sum_Order Quantity_ok");
-        rsmd.getColumnLabel(4).equals("yr_Order Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES4() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT FLOOR((7 + DAYOFYEAR(`Staples`.`Ship Date`) - 1 + DAYOFWEEK(DATE_FORMAT(`Staples`.`Ship Date`, '%Y-01-01 00:00:00')) - 1) / 7) AS `DATEPART('week',Ship Date)`,  ADDDATE(FROM_DAYS( TO_DAYS(`Staples`.`Ship Date`) - (DAYOFWEEK(`Staples`.`Ship Date`) - 1) ), INTERVAL 0 SECOND ) AS `DATETRUNC('week',Ship Date)`,  `Staples`.`Ship Date` AS `Ship Date`,  DAYOFWEEK(`Staples`.`Ship Date`) AS `wd_Ship Date_ok`FROM `Staples`WHERE (`Staples`.`Ship Date` <= TIMESTAMP('1997-02-01 00:00:00'))GROUP BY 1,  2,  3,  4     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("DATEPART('week',Ship Date)");
-        rsmd.getColumnLabel(1).equals("DATETRUNC('week',Ship Date)");
-        rsmd.getColumnLabel(2).equals("Ship Date");
-        rsmd.getColumnLabel(3).equals("wd_Ship Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES5() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Employee Name` AS `Employee Name`,  AVG(`Staples`.`Employee Salary`) AS `avg_Employee Salary_ok`FROM `Staples`  INNER JOIN (  SELECT `Staples`.`Call Center Region` AS `Call Center Region`,    `Staples`.`Employee Name` AS `Employee Name`  FROM `Staples`  GROUP BY 1,    2  HAVING ((AVG(`Staples`.`Employee Salary`) >= 102499.99999999898) AND (AVG(`Staples`.`Employee Salary`) <= 110000.00000000111))) `t0` ON ((`Staples`.`Call Center Region` = `t0`.`Call Center Region`) AND (`Staples`.`Employee Name` = `t0`.`Employee Name`))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Employee Name");
-        rsmd.getColumnLabel(1).equals("avg_Employee Salary_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES6() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`PID` AS `PID`,  `Staples`.`Gross Profit` AS `sum_Gross Profit_ok`,  `Staples`.`Sales Total` AS `sum_Sales Total_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` = 'EAST') AND (`Staples`.`Sales Total` >= -3640.23) AND (`Staples`.`Sales Total` <= 24622.400000000001) AND (YEAR(`Staples`.`Order Date`) = 2002))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("PID");
-        rsmd.getColumnLabel(1).equals("sum_Gross Profit_ok");
-        rsmd.getColumnLabel(2).equals("sum_Sales Total_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES7() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`FROM `Staples`GROUP BY 1HAVING ((COUNT(`Staples`.`Discount`) >= 0) AND (COUNT(`Staples`.`Discount`) <= 822) AND (SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 4074689.000000041))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(2).equals("sum_Order Quantity_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES8() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type2` AS `Prod Type2`,  MONTH(`Staples`.`Order Date`) AS `mn_Order Date_ok`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE (MONTH(`Staples`.`Order Date`) <= 8)GROUP BY 1,  2     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type2");
-        rsmd.getColumnLabel(1).equals("mn_Order Date_ok");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES9() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`GROUP BY 1ORDER BY `Customer Name` DESCLIMIT 10     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES10() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING (AVG(`Staples`.`Discount`) < 0.070000000000000007)     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES11() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Prod Type1` NOT IN ('FURNITURE')))GROUP BY 1,  2HAVING ((AVG(`Staples`.`Discount`) >= 0.051399999999999488) AND (AVG(`Staples`.`Discount`) <= 0.059000000000000587))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type1");
-        rsmd.getColumnLabel(1).equals("Prod Type2");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES12() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Prod Type1` NOT IN ('FURNITURE')) AND ((`Staples`.`Prod Type2` IN ('APPLIANCES')) OR ((`Staples`.`Prod Type2` >= 'BOOKCASES') AND (`Staples`.`Prod Type2` <= 'COMPUTER PERIPHERALS')) OR ((`Staples`.`Prod Type2` >= 'ENVELOPES') AND (`Staples`.`Prod Type2` <= 'TELEPHONES AND COMMUNICATION'))))GROUP BY 1,  2HAVING ((AVG(`Staples`.`Discount`) >= 0.051399999999999488) AND (AVG(`Staples`.`Discount`) <= 0.059000000000000587))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type1");
-        rsmd.getColumnLabel(1).equals("Prod Type2");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES13() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`,  SUM(`Staples`.`Price`) AS `sum_Price_ok`FROM `Staples`WHERE ((`Staples`.`Order Date` >= TIMESTAMP('1998-02-09 00:00:00')) AND (`Staples`.`Order Date` <= TIMESTAMP('1998-07-03 23:59:59')))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type2");
-        rsmd.getColumnLabel(1).equals("sum_Gross Profit_ok");
-        rsmd.getColumnLabel(2).equals("sum_Price_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES14() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  AVG(`Staples`.`Customer Balance`) AS `avg_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING ((AVG(`Staples`.`Customer Balance`) >= 252.99999999999747) AND (AVG(`Staples`.`Customer Balance`) <= 3702.7330280000369))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("avg_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES15() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Prod Type1` NOT IN ('FURNITURE')) AND ((`Staples`.`Prod Type2` IN ('APPLIANCES')) OR ((`Staples`.`Prod Type2` >= 'BOOKCASES') AND (`Staples`.`Prod Type2` <= 'COMPUTER PERIPHERALS')) OR ((`Staples`.`Prod Type2` >= 'ENVELOPES') AND (`Staples`.`Prod Type2` <= 'TELEPHONES AND COMMUNICATION'))))GROUP BY 1,  2HAVING ((AVG(`Staples`.`Discount`) >= 0.051399999999999488) AND (AVG(`Staples`.`Discount`) <= 0.059000000000000587))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type1");
-        rsmd.getColumnLabel(1).equals("Prod Type2");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES17() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  COUNT(`Staples`.`Customer Balance`) AS `cnt_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING ((COUNT(`Staples`.`Customer Balance`) >= 0) AND (COUNT(`Staples`.`Customer Balance`) <= 577))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("cnt_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES18() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT (((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) AS `md_Order Date_ok`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE ((((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) >= 19970102) AND ((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) <= 19970107)) OR (((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) >= 19970109) AND ((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) <= 19970117)) OR (((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) >= 19970119) AND ((((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) <= 20021231)))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("md_Order Date_ok");
-        rsmd.getColumnLabel(1).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES19() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES20() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  MIN(`Staples`.`Customer Balance`) AS `min_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING ((MIN(`Staples`.`Customer Balance`) >= -988.00000000000989) AND (MIN(`Staples`.`Customer Balance`) <= -99.999999999999005))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("min_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES21() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`PID` AS `PID`,  `Staples`.`Customer Balance` AS `sum_Customer Balance_ok`,  `Staples`.`Order Quantity` AS `sum_Order Quantity_ok`,  YEAR(`Staples`.`Order Date`) AS `yr_Order Date_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Discount` >= 0.091693999999999998) AND (`Staples`.`Discount` <= 0.214724) AND (YEAR(`Staples`.`Order Date`) IN (2001, 2002)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("PID");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(3).equals("sum_Order Quantity_ok");
-        rsmd.getColumnLabel(4).equals("yr_Order Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES22() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT (((YEAR(`Staples`.`Order Date`) * 10000) + (MONTH(`Staples`.`Order Date`) * 100)) + DAYOFMONTH(`Staples`.`Order Date`)) AS `md_Order Date_ok`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("md_Order Date_ok");
-        rsmd.getColumnLabel(1).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES23() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`GROUP BY 1,  2HAVING ((AVG(`Staples`.`Discount`) >= 0.051399999999999488) AND (AVG(`Staples`.`Discount`) <= 0.055001000000000549))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Prod Type1");
-        rsmd.getColumnLabel(1).equals("Prod Type2");
-        rsmd.getColumnLabel(2).equals("sum_Gross Profit_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES24() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Customer State` AS `Customer State`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`FROM `Staples`WHERE ((CASE WHEN ((((TO_DAYS(`Staples`.`Received Date`) - TO_DAYS(`Staples`.`Order Date`)) + (TIME_TO_SEC(ADDDATE(`Staples`.`Received Date`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Staples`.`Order Date`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) + 0.0) IN (1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 2, 21, 22, 23, 24, 25, 26, 27, 28, 3, 4, 5, 6, 7, 8, 9)) THEN 1 WHEN ((((TO_DAYS(`Staples`.`Received Date`) - TO_DAYS(`Staples`.`Order Date`)) + (TIME_TO_SEC(ADDDATE(`Staples`.`Received Date`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Staples`.`Order Date`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) + 0.0) IN (121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 137, 138)) THEN 121 WHEN ((((TO_DAYS(`Staples`.`Received Date`) - TO_DAYS(`Staples`.`Order Date`)) + (TIME_TO_SEC(ADDDATE(`Staples`.`Received Date`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Staples`.`Order Date`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) + 0.0) IN (82, 85, 86, 88, 89, 90)) THEN 82 WHEN ((((TO_DAYS(`Staples`.`Received Date`) - TO_DAYS(`Staples`.`Order Date`)) + (TIME_TO_SEC(ADDDATE(`Staples`.`Received Date`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(`Staples`.`Order Date`, INTERVAL 0 SECOND))) / (60 * 60 * 24)) + 0.0) IN (100, 102, 103, 105, 106, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 91, 92, 93, 94, 95, 96, 97, 99)) THEN 91 ELSE -1 END) = 121)GROUP BY 1,  2     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES25() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`,  YEAR(`Staples`.`Order Date`) AS `yr_Order Date_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Discount` >= -0.001) AND (`Staples`.`Discount` <= 0.215172) AND (`Staples`.`Order Date` >= TIMESTAMP('1997-01-01 00:00:00')) AND (`Staples`.`Order Date` <= TIMESTAMP('2002-06-01 00:00:00')) AND (YEAR(`Staples`.`Order Date`) IN (2001, 2002)))GROUP BY 1,  2,  5HAVING ((COUNT(`Staples`.`Discount`) >= 0) AND (COUNT(`Staples`.`Discount`) <= 822) AND (SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 4074689.000000041))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("Customer Name");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(3).equals("sum_Order Quantity_ok");
-        rsmd.getColumnLabel(4).equals("yr_Order Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES26() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  MAX(`Staples`.`Customer Balance`) AS `max_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING ((MAX(`Staples`.`Customer Balance`) >= 7008.9899999999298) AND (MAX(`Staples`.`Customer Balance`) <= 9000.0000000000891))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("max_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES27() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`PID` AS `PID`,  `Staples`.`Customer Balance` AS `sum_Customer Balance_ok`,  `Staples`.`Order Quantity` AS `sum_Order Quantity_ok`,  YEAR(`Staples`.`Order Date`) AS `yr_Order Date_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Discount` >= 0.091693999999999998) AND (`Staples`.`Discount` <= 0.214724) AND (`Staples`.`Order Date` >= TIMESTAMP('2001-06-01 00:00:00')) AND (`Staples`.`Order Date` <= TIMESTAMP('2002-06-01 00:00:00')) AND (YEAR(`Staples`.`Order Date`) IN (2001, 2002)))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("PID");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(3).equals("sum_Order Quantity_ok");
-        rsmd.getColumnLabel(4).equals("yr_Order Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES28() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "SELECT SUM((`Staples`.`Price` / 1.1000000000000001)) AS `sum_Calculation_555068687593533440_ok`FROM `Staples` HAVING (COUNT(1) > 0) order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("sum_Calculation_555068687593533440_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES29() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`WHERE (((`Staples`.`Customer Name` >= 'Barbara Fisher') AND (`Staples`.`Customer Name` <= 'Roy Skaria')) OR ((`Staples`.`Customer Name` >= 'Sarah Jordon-Smith') AND (`Staples`.`Customer Name` <= 'Zyzzy Zzuyzyzyk')))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES30() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`GROUP BY 1HAVING ((SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 2384363.5474140239))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES31() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`FROM `Staples`GROUP BY 1HAVING ((AVG(`Staples`.`Discount`) >= 0.049244999999999504) AND (AVG(`Staples`.`Discount`) <= 0.060000000000000595))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(2).equals("sum_Order Quantity_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES32() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`  INNER JOIN (  SELECT `Staples`.`Customer Name` AS `Customer Name`,    SUM(`Staples`.`Customer Balance`) AS `$__alias__0`  FROM `Staples`  GROUP BY 1  ORDER BY `$__alias__0` DESC  LIMIT 10) `t0` ON (`Staples`.`Customer Name` = `t0`.`Customer Name`)GROUP BY 1,  2HAVING ((SUM(`Staples`.`Customer Balance`) >= 999999.99999998999) AND (SUM(`Staples`.`Customer Balance`) <= 3186976.0000000317))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("Customer Name");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES33() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`  INNER JOIN (  SELECT `Staples`.`Customer Name` AS `Customer Name`  FROM `Staples`  GROUP BY 1  HAVING (COUNT(`Staples`.`Order Date`) < 1000)) `t0` ON (`Staples`.`Customer Name` = `t0`.`Customer Name`)WHERE ((`Staples`.`Order Date` >= TIMESTAMP('1997-01-01 00:00:00')) AND (`Staples`.`Order Date` <= TIMESTAMP('1999-12-22 13:26:54')) AND (`Staples`.`Ship Mode` NOT IN ('DELIVERY TRUCK')) AND ((YEAR(`Staples`.`Order Date`) IN (2002)) OR ((YEAR(`Staples`.`Order Date`) >= 1998) AND (YEAR(`Staples`.`Order Date`) <= 2000))))GROUP BY 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES34() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` NOT IN ('CENTRAL')) AND (`Staples`.`Discount` >= -0.001) AND (`Staples`.`Discount` <= 0.215172))GROUP BY 1,  2HAVING ((COUNT(`Staples`.`Discount`) >= 0) AND (COUNT(`Staples`.`Discount`) <= 822) AND (SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 4074689.000000041))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("Customer Name");
-        rsmd.getColumnLabel(2).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(3).equals("sum_Order Quantity_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES35() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`FROM `Staples`GROUP BY 1ORDER BY `Customer Name` DESCLIMIT 1     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES36() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Market Segment` AS `Market Segment`,  `Staples`.`Prod Type1` AS `Prod Type1`,  `Staples`.`Prod Type2` AS `Prod Type2`,  `Staples`.`Prod Type3` AS `Prod Type3`,  `Staples`.`Prod Type4` AS `Prod Type4`,  SUM(`Staples`.`Gross Profit`) AS `sum_Gross Profit_ok`,  SUM(`Staples`.`Sales Total`) AS `sum_Sales Total_ok`FROM `Staples`WHERE ((`Staples`.`Customer State` = 'ALABAMA') AND (NOT ((`Staples`.`Market Segment` = 'CORPORATE') AND (`Staples`.`Prod Type1` = 'TECHNOLOGY') AND (`Staples`.`Prod Type2` = 'TELEPHONES AND COMMUNICATION') AND (`Staples`.`Prod Type3` = 'WIRELESS AND CELLULAR') AND (`Staples`.`Prod Type4` = 'NOKIA'))))GROUP BY 1,  2,  3,  4,  5     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Market Segment");
-        rsmd.getColumnLabel(1).equals("Prod Type1");
-        rsmd.getColumnLabel(2).equals("Prod Type2");
-        rsmd.getColumnLabel(3).equals("Prod Type3");
-        rsmd.getColumnLabel(4).equals("Prod Type4");
-        rsmd.getColumnLabel(5).equals("sum_Gross Profit_ok");
-        rsmd.getColumnLabel(6).equals("sum_Sales Total_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES37() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT TRUNCATE((((6 + DAYOFWEEK(DATE_ADD(ADDDATE( DATE_FORMAT( `Staples`.`Order Date`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ), INTERVAL (2 - (CASE WHEN (MONTH(`Staples`.`Order Date`) < 3) THEN 12 ELSE 0 END)) MONTH))) + ((TO_DAYS(`Staples`.`Order Date`) - TO_DAYS(DATE_ADD(ADDDATE( DATE_FORMAT( `Staples`.`Order Date`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ), INTERVAL (2 - (CASE WHEN (MONTH(`Staples`.`Order Date`) < 3) THEN 12 ELSE 0 END)) MONTH))) + (TIME_TO_SEC(ADDDATE(`Staples`.`Order Date`, INTERVAL 0 SECOND)) - TIME_TO_SEC(ADDDATE(DATE_ADD(ADDDATE( DATE_FORMAT( `Staples`.`Order Date`, '%Y-01-01 00:00:00' ), INTERVAL 0 SECOND ), INTERVAL (2 - (CASE WHEN (MONTH(`Staples`.`Order Date`) < 3) THEN 12 ELSE 0 END)) MONTH), INTERVAL 0 SECOND))) / (60 * 60 * 24))) / 7),0) AS `Week #`,  COUNT(DISTINCT `Staples`.`Order Date`) AS `ctd_Order Date_ok`,  YEAR(DATE_ADD(`Staples`.`Order Date`, INTERVAL 10 MONTH)) AS `yr_Order Date_ok`FROM `Staples`GROUP BY 1,  3     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES38() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT MONTH(`Staples`.`Order Date`) AS `mn_Order Date_qk`FROM `Staples`     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("mn_Order Date_qk");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES39() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Call Center Region` AS `Call Center Region`,  `Staples`.`Order ID` AS `Order ID`,  `Staples`.`Product Container` AS `Product Container`,  AVG(`Staples`.`Gross Profit`) AS `avg_Gross Profit_ok`,  MONTH(`Staples`.`Order Date`) AS `mn_Order Date_ok`,  SUM(`Staples`.`Price`) AS `sum_Price_ok`,  YEAR(`Staples`.`Order Date`) AS `yr_Order Date_ok`FROM `Staples`WHERE ((`Staples`.`Call Center Region` = 'WEST') AND (`Staples`.`Discount` >= 0.27489599999999997) AND (`Staples`.`Discount` <= 0.39001000000000002) AND (((`Staples`.`Order ID` >= '1') AND (`Staples`.`Order ID` <= '35361')) OR ((`Staples`.`Order ID` >= '35363') AND (`Staples`.`Order ID` <= '9991'))) AND (`Staples`.`Product Container` = 'MEDIUM BOX') AND (MONTH(`Staples`.`Order Date`) IN (1, 4, 7, 10)))GROUP BY 1,  2,  3,  5,  7     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Call Center Region");
-        rsmd.getColumnLabel(1).equals("Order ID");
-        rsmd.getColumnLabel(2).equals("Product Container");
-        rsmd.getColumnLabel(3).equals("avg_Gross Profit_ok");
-        rsmd.getColumnLabel(4).equals("mn_Order Date_ok");
-        rsmd.getColumnLabel(5).equals("sum_Price_ok");
-        rsmd.getColumnLabel(6).equals("yr_Order Date_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES40() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Customer Name` AS `Customer Name`,  SUM(`Staples`.`Customer Balance`) AS `sum_Customer Balance_ok`,  SUM(`Staples`.`Order Quantity`) AS `sum_Order Quantity_ok`FROM `Staples`WHERE ((`Staples`.`Discount` >= -0.001) AND (`Staples`.`Discount` <= 0.215172))GROUP BY 1HAVING ((COUNT(`Staples`.`Discount`) >= 0) AND (COUNT(`Staples`.`Discount`) <= 822) AND (SUM(`Staples`.`Customer Balance`) >= -746.0000000000075) AND (SUM(`Staples`.`Customer Balance`) <= 4074689.000000041))     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
-        rsmd.getColumnLabel(0).equals("Customer Name");
-        rsmd.getColumnLabel(1).equals("sum_Customer Balance_ok");
-        rsmd.getColumnLabel(2).equals("sum_Order Quantity_ok");
-    }
-
-    @Test
-    public void testLOGICAL_STAPLES41() throws SQLException {
-        Connection conn = getBasicConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs =
-                stmt.executeQuery(
-                        "      SELECT `Staples`.`Employee Name` AS `Employee Name`,  AVG(`Staples`.`Employee Salary`) AS `avg_Employee Salary_ok`,  AVG(`Staples`.`Employee Salary`) AS `$__alias__0`FROM `Staples`GROUP BY 1ORDER BY `$__alias__0` DESCLIMIT 99     order by 1");
-        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("temp(test)(1157868287)(0)", rsmd.getColumnLabel(1));
     }
 }
