@@ -59,7 +59,7 @@ functions:
       script: |
           ${PREPARE_SHELL}
           # this also runs the unit tests.
-          ./gradlew clean build
+          ./gradlew clean spotlessApply build --max-workers 1
 
   "export variables":
     - command: shell.exec
