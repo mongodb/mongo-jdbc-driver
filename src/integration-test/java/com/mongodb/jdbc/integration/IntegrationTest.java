@@ -195,7 +195,7 @@ public class IntegrationTest {
     public void databaseCOLUMN_PRVILEGES_TABLETest() throws SQLException {
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_PRVILEGES");
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
@@ -359,6 +359,27 @@ public class IntegrationTest {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
         assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseSCHEMATA_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SCHEMATA");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CATALOG_NAME",
+                    "SCHEMA_NAME",
+                    "SCHEMA_OWNER",
+                    "DEFAULT_CHARACTER_SET_CATALOG",
+                    "DEFAULT_CHARACTER_SET_SCHEMA",
+                    "DEFAULT_CHARACTER_SET_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertTrue(countRows(rs) >= 3);
     }
 
     @Test
