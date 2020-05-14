@@ -578,6 +578,34 @@ public class IntegrationTest {
     }
 
     @Test
+    public void databaseHeterogeneousDataTABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select num4 from tdvt.Calcs");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "num4",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        double[] values = {
+            0.0, 10.85, -13.47, -6.05, 8.32, 10.71, 0.0, -10.24, 4.77, 0.0, 19.39, 3.82, 3.38, 0.0,
+            -14.21, 6.75, 0.0,
+        };
+        {
+            int i = 0;
+            while (rs.next()) {
+                double diff = values[i++] - rs.getDouble(1);
+                assertTrue(diff <= 0.01 && diff >= -0.01);
+            }
+        }
+        // This will fail for now.
+        assertEquals(Types.DOUBLE, rsmd.getColumnType(1));
+    }
+
+    @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
         Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
