@@ -73,6 +73,103 @@ public class IntegrationTest {
     static final String columnNamePattern2 = "%_FOO%";
 
     @Test
+    public void databaseASSERTIONS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.ASSERTIONS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                    "IS_DEFERRABLE",
+                    "INITIALLY_DEFERRED",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseCHARACTER_SETS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHARACTER_SETS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CHARACTER_SET_CATALOG",
+                    "CHARACTER_SET_SCHEMA",
+                    "CHARACTER_SET_NAME",
+                    "FORM_OF_USE",
+                    "NUMBER_OF_CHARACTERS",
+                    "DEFAULT_COLLATE_CATALOG",
+                    "DEFAULT_COLLATE_SCHEMA",
+                    "DEFAULT_COLLATE_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertTrue(countRows(rs) >= 31);
+    }
+
+    @Test
+    public void databaseCHECK_CONSTRAINTS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHECK_CONSTRAINTS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG", "CONSTRAINT_SCHEMA", "CONSTRAINT_NAME", "CHECK_CLAUSE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseCOLUMNS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMNS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "COLUMN_NAME",
+                    "ORDINAL_POSITION",
+                    "COLUMN_DEFAULT",
+                    "IS_NULLABLE",
+                    "DATA_TYPE",
+                    "CHARACTER_MAXIMUM_LENGTH",
+                    "CHARACTER_OCTET_LENGTH",
+                    "NUMERIC_PRECISION",
+                    "NUMERIC_PRECISION_RADIX",
+                    "NUMERIC_SCALE",
+                    "DATETIME_PRECISION",
+                    "CHARACTER_SET_CATALOG",
+                    "CHARACTER_SET_SCHEMA",
+                    "CHARACTER_SET_NAME",
+                    "COLLATION_CATALOG",
+                    "COLLATION_SCHEMA",
+                    "COLLATION_NAME",
+                    "DOMAIN_CATALOG",
+                    "DOMAIN_SCHEMA",
+                    "DOMAIN_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertTrue(countRows(rs) >= 299);
+    }
+
+    @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
         Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
