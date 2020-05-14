@@ -467,6 +467,117 @@ public class IntegrationTest {
     }
 
     @Test
+    public void databaseTRANSLATIONS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TRANSLATIONS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TRANSLATION_CATALOG",
+                    "TRANSLATION_SCHEMA",
+                    "TRANSLATION_NAME",
+                    "SOURCE_CHARACTER_SET_CATALOG",
+                    "SOURCE_CHARACTER_SET_SCHEMA",
+                    "SOURCE_CHARACTER_SET_NAME",
+                    "TARGET_CHARACTER_SET_CATALOG",
+                    "TARGET_CHARACTER_SET_SCHEMA",
+                    "TARGET_CHARACTER_SET_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseUSAGE_PRIVILEGES_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.USAGE_PRIVILEGES");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "GRANTOR",
+                    "GRANTEE",
+                    "OBJECT_CATALOG",
+                    "OBJECT_SCHEMA",
+                    "OBJECT_NAME",
+                    "OBJECT_TYPE",
+                    "PRIVILEGE_TYPE",
+                    "IS_GRANTABLE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseVIEWS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEWS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "VIEW_DEFINITION",
+                    "CHECK_OPTION",
+                    "IS_UPDATABLE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseVIEW_COLUMN_USAGE_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_COLUMN_USAGE");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "VIEW_CATALOG",
+                    "VIEW_SCHEMA",
+                    "VIEW_NAME",
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "COLUMN_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseVIEW_TABLE_USAGE_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_TABLE_USAGE");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "VIEW_CATALOG",
+                    "VIEW_SCHEMA",
+                    "VIEW_NAME",
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
         Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
