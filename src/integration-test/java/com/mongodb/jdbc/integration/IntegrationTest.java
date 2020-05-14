@@ -238,6 +238,130 @@ public class IntegrationTest {
     }
 
     @Test
+    public void databaseCONSTRAINT_TABLE_USAGE_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseDOMAINS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAINS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "DOMAIN_CATALOG",
+                    "DOMAIN_SCHEMA",
+                    "DOMAIN_NAME",
+                    "DATA_TYPE",
+                    "CHARACTER_MAXIMUM_LENGTH",
+                    "CHARACTER_OCTET_LENGTH",
+                    "COLLATION_CATALOG",
+                    "COLLATION_SCHEMA",
+                    "COLLATION_NAME",
+                    "CHARACTER_SET_CATALOG",
+                    "CHARACTER_SET_SCHEMA",
+                    "CHARACTER_SET_NAME",
+                    "NUMERIC_PRECISION",
+                    "NUMERIC_PRECISION_RADIX",
+                    "NUMERIC_SCALE",
+                    "DATETIME_PRECISION",
+                    "DOMAIN_DEFAULT",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseDOMAIN_CONSTRAINTS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAIN_CONSTRAINTS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                    "DOMAIN_CATALOG",
+                    "DOMAIN_SCHEMA",
+                    "DOMAIN_NAME",
+                    "IS_DEFERRABLE",
+                    "INITIALLY_DEFERRED",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseKEY_COLUMN_USAGE_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "COLUMN_NAME",
+                    "ORDINAL_POSITION",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseREFERENTIAL_CONSTRAINTS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery("select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                    "UNIQUE_CONSTRAINT_CATALOG",
+                    "UNIQUE_CONSTRAINT_SCHEMA",
+                    "UNIQUE_CONSTRAINT_NAME",
+                    "MATCH_OPTION",
+                    "UPDATE_RULE",
+                    "DELETE_RULE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
         Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
