@@ -383,6 +383,90 @@ public class IntegrationTest {
     }
 
     @Test
+    public void databaseSQL_LANGUAGES_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SQL_LANGUAGES");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "SQL_LANGUAGE_SOURCE",
+                    "SQL_LANGUAGE_YEAR",
+                    "SQL_LANGUAGE_CONFORMANCE",
+                    "SQL_LANGUAGE_INTEGRITY",
+                    "SQL_LANGUAGE_IMPLEMENTATION",
+                    "SQL_LANGUAGE_BINDING_STYLE",
+                    "SQL_LANGUAGE_PROGRAMMING_LANGUAGE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
+    public void databaseTABLES_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLES");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "TABLE_CATALOG", "TABLE_SCHEMA", "TABLE_NAME", "TABLE_TYPE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertTrue(countRows(rs) >= 29);
+    }
+
+    @Test
+    public void databaseTABLE_CONSTRAINTS_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "CONSTRAINT_CATALOG",
+                    "CONSTRAINT_SCHEMA",
+                    "CONSTRAINT_NAME",
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "CONSTRAINT_TYPE",
+                    "IS_DEFERRABLE",
+                    "INITIALLY_DEFERRED",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertTrue(countRows(rs) >= 6);
+    }
+
+    @Test
+    public void databaseTABLE_PRIVILEGES_TABLETest() throws SQLException {
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_PRIVILEGES");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                    "GRANTOR",
+                    "GRANTEE",
+                    "TABLE_CATALOG",
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "PRIVILEGE_TYPE",
+                    "IS_GRANTABLE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(0, countRows(rs));
+    }
+
+    @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
         Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
