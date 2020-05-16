@@ -47,6 +47,8 @@ tasks:
       - func: "build jdbc driver"
 
   - name: "tdvt"
+    depends_on:
+        "build"
     commands:
       - func: "run tdvt"
 
