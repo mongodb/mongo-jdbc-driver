@@ -25,6 +25,15 @@ sourceSets {
         }
         resources.srcDir file('src/integration-test/resources')
     }
+
+    tdvtTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/tdvt/java')
+        }
+        resources.srcDir file('src/tdvt/resources')
+    }
 }
 
 allprojects {
@@ -98,6 +107,22 @@ task integrationTest(type: Test) {
 
 check.dependsOn integrationTest
 
+configurations {
+    tdvtTestImplementation.extendsFrom implementation
+    tdvtTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+task tdvtTest(type: Test) {
+    description = 'Runs tdvt tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.tdvtTest.output.classesDirs
+    classpath = sourceSets.tdvtTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+check.dependsOn tdvtTest
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -110,6 +135,8 @@ dependencies {
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
     integrationTestImplementation "junit:junit:$junitVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+    tdvtTestImplementation "junit:junit:$junitVersion"
+    tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
 def getGitVersion() {

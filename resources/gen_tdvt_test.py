@@ -3,7 +3,7 @@ import yaml
 
 test_text = """
 
-package com.mongodb.jdbc.integration;
+package com.mongodb.jdbc.tdvt;
 
 import static org.junit.Assert.*;
 
