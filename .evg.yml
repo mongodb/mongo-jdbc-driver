@@ -64,8 +64,8 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          # this also runs the unit tests.
-          ./gradlew clean -DtdvtTest spotlessApply build
+          ./gradlew clean -x tdvtTest spotlessApply test
+          ./gradlew clean -x tdvtTest integrationTest
 
   "run tdvt":
     command: shell.exec
