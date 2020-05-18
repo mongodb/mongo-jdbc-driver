@@ -65,7 +65,6 @@ functions:
       script: |
           ${PREPARE_SHELL}
           ./gradlew clean -x tdvtTest spotlessApply test
-          ./gradlew -x tdvtTest integrationTest
           ./gradlew -x tdvtTest build
 
   "run tdvt":

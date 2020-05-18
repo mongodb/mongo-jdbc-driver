@@ -94,6 +94,8 @@ allprojects {
 configurations {
     integrationTestImplementation.extendsFrom implementation
     integrationTestRuntimeOnly.extendsFrom runtimeOnly
+    tdvtTestImplementation.extendsFrom implementation
+    tdvtTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 task integrationTest(type: Test) {
@@ -106,11 +108,6 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
-
-configurations {
-    tdvtTestImplementation.extendsFrom implementation
-    tdvtTestRuntimeOnly.extendsFrom runtimeOnly
-}
 
 task tdvtTest(type: Test) {
     description = 'Runs tdvt tests.'
