@@ -64,8 +64,7 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean -x tdvtTest spotlessApply test
-          ./gradlew -x tdvtTest build
+          ./gradlew clean -x tdvtTest spotlessApply build --rerun-tasks
 
   "run tdvt":
     command: shell.exec
