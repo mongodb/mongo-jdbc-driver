@@ -9,13 +9,19 @@ post:
   - func: "upload jar file"
   - func: "upload unit test classes"
   - func: "upload integration test classes"
+  - func: "upload tdvt test classes"
   - func: "upload unit test packages"
   - func: "upload integration test packages"
-  - func: "upload test js"
+  - func: "upload tdvt test packages"
+  - func: "upload unit test js"
+  - func: "upload integration test js"
+  - func: "upload tdvt test js"
   - func: "upload unit test css "
   - func: "upload integration test css "
+  - func: "upload tdvt test css "
   - func: "upload unit test index"
   - func: "upload integration test index"
+  - func: "upload tdvt test index"
   - func: "upload xunit test results"
 
 buildvariants:
@@ -23,16 +29,10 @@ buildvariants:
     display_name: Ubuntu 18.04 jdk-8
     expansions:
       _platform: ubuntu1804-64-jdk-8
-    run_on: ubuntu1804-build
+    run_on: ubuntu1804-large
     tasks:
       - name: "build"
-  - name: ubuntu1804-64-jdk-11
-    display_name: Ubuntu 18.04 jdk-11
-    expansions:
-      _platform: ubuntu1804-64-jdk-11
-    run_on: ubuntu1804-build
-    tasks:
-      - name: "build"
+      - name: "tdvt"
   - name: release
     display_name: "Release"
     expansions:
@@ -46,6 +46,12 @@ tasks:
     commands:
       - func: "build jdbc driver"
 
+  - name: "tdvt"
+    depends_on:
+        "build"
+    commands:
+      - func: "run tdvt"
+
   - name: "publish-maven"
     commands:
       - func: "publish maven"
@@ -58,8 +64,17 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          ./gradlew clean -x tdvtTest spotlessApply build --rerun-tasks
+
+  "run tdvt":
+    command: shell.exec
+    type: test
+    params:
+      working_dir: adl-jdbc-driver
+      script: |
+          ${PREPARE_SHELL}
           # this also runs the unit tests.
-          ./gradlew clean build
+          ./gradlew clean tdvtTest --max-workers 1
 
   "export variables":
     - command: shell.exec
@@ -166,6 +181,21 @@ functions:
         display_name: "Integration Test Classes"
         visibility: none
 
+  "upload tdvt test classes":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/tdvtTest/classes/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/tdvtTest/classes/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "TDVT Test Classes"
+        visibility: none
+
   "upload unit test packages":
     - command: s3.put
       params:
@@ -196,6 +226,21 @@ functions:
         display_name: "Integration Test Packages"
         visibility: none
 
+  "upload tdvt test packages":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/tdvtTest/packages/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/tdvtTest/packages/
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "TDVT Test Packages"
+        visibility: none
+
   "upload unit test index":
     - command: s3.put
       params:
@@ -221,6 +266,19 @@ functions:
         bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Results"
+
+  "upload tdvt test index":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: adl-jdbc-driver/build/reports/tests/tdvtTest/index.html
+        remote_file: ${S3_ARTIFACTS_DIR}/tdvtTest/index.html
+        content_type: text/html
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "TDVT Test Results"
 
   "upload unit test css ":
     - command: s3.put
@@ -252,7 +310,22 @@ functions:
         display_name: "Integration Test CSS"
         visibility: none
 
-  "upload test js":
+  "upload tdvt test css ":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/tdvtTest/css/*.css
+        remote_file: ${S3_ARTIFACTS_DIR}/tdvtTest/css/
+        content_type: text/css
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "TDVT Test CSS"
+        visibility: none
+
+  "upload unit test js":
     - command: s3.put
       params:
         silent: true
@@ -260,11 +333,41 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
             - adl-jdbc-driver/build/reports/tests/test/js/*.js
-        remote_file: ${S3_ARTIFACTS_DIR}/js/
+        remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
         bucket: mciuploads
         permissions: public-read
-        display_name: "Test JS"
+        display_name: "Unit Test JS"
+        visibility: none
+
+  "upload integration test js":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/integrationTest/js/*.js
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
+        content_type: application/javascript
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "Integration Test JS"
+        visibility: none
+
+  "upload tdvt test js":
+    - command: s3.put
+      params:
+        silent: true
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+            - adl-jdbc-driver/build/reports/tests/tdvtTest/js/*.js
+        remote_file: ${S3_ARTIFACTS_DIR}/tdvtTest/js/
+        content_type: application/javascript
+        bucket: mciuploads
+        permissions: public-read
+        display_name: "TDVT Test JS"
         visibility: none
 
   "upload xunit test results":

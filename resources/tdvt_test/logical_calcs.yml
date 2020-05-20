@@ -1,0 +1,462 @@
+testcases:
+  - expected_results:
+      - [null]
+      - ['-5.54']
+    expected_error: ''
+    expected_names: [str2, sum_num3_ok]
+    expected_types: [varchar, float]
+    id: '0'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`,\n  SUM(`Calcs`.`num3`)\
+      \ AS `sum_num3_ok`\nFROM `Calcs`\nWHERE ISNULL(`Calcs`.`str2`)\nGROUP BY 1\n \
+      \    order by 1"
+  - expected_results:
+      - [null]
+      - ['-5.54']
+      - [sixteen]
+      - ['-10.98']
+    expected_error: ''
+    expected_names: [str2, sum_num3_ok]
+    expected_types: [varchar, float]
+    id: '1'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`,\n  SUM(`Calcs`.`num3`)\
+      \ AS `sum_num3_ok`\nFROM `Calcs`\nWHERE ((`Calcs`.`str2` IN ('sixteen')) OR ISNULL(`Calcs`.`str2`))\n\
+      GROUP BY 1\n     order by 1"
+  - expected_results:
+      - [key00]
+      - ['17.86']
+      - [key01]
+      - ['16.73']
+      - [key03]
+      - ['8.51']
+      - [key05]
+      - ['8.98']
+      - [key06]
+      - ['11.69']
+      - [key07]
+      - ['17.25']
+      - [key09]
+      - ['11.5']
+      - [key13]
+      - ['13.04']
+      - [key15]
+      - ['10.98']
+      - [key16]
+      - ['7.87']
+    expected_types: [varchar]
+    id: '2'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`num2`) AS\
+      \ `sum_num2_ok`,\n  SUM(`Calcs`.`num2`) AS `$__alias__0`\nFROM `Calcs`\nGROUP\
+      \ BY 1\nORDER BY `$__alias__0` DESC\nLIMIT 10\n     order by 1"
+  - expected_results:
+      - [null]
+      - [eight]
+      - [eleven]
+      - [two]
+    expected_error: ''
+    expected_names: [Str2 (group)]
+    expected_types: [varchar]
+    id: '3'
+    sql: "\n      \n\n--\n\nSELECT (CASE WHEN (`Calcs`.`str2` IN ('eleven', 'fifteen',\
+      \ 'five', 'fourteen', 'nine', 'one', 'six', 'sixteen', 'ten', 'three', 'twelve'))\
+      \ THEN 'eleven' ELSE `Calcs`.`str2` END) AS `Str2 (group)`\nFROM `Calcs`\nGROUP\
+      \ BY 1\n     order by 1"
+  - expected_results:
+      - [null]
+      - [sixteen]
+      - [ten]
+      - [three]
+      - [twelve]
+      - [two]
+    expected_error: ''
+    expected_names: [str2]
+    expected_types: [varchar]
+    id: '4'
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`\nFROM `Calcs`\nWHERE ((NOT\
+      \ ((`Calcs`.`str2` >= 'eight') AND (`Calcs`.`str2` <= 'six'))) OR ISNULL(`Calcs`.`str2`))\n\
+      GROUP BY 1\n     order by 1"
+  - expected_results:
+      - [key00]
+      - ['-3']
+      - [key01]
+      - ['-6']
+      - [key03]
+      - ['-4']
+      - [key07]
+      - ['2']
+      - [key11]
+      - ['-8']
+      - [key16]
+      - ['-9']
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '5'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING (SUM(`Calcs`.`int1`) <= 2)\n\
+      \     order by 1"
+  - expected_results:
+      - [key00]
+      - ['-3']
+      - [key01]
+      - ['-6']
+      - [key03]
+      - ['-4']
+      - [key07]
+      - ['2']
+      - [key08]
+      - ['3']
+      - [key09]
+      - ['3']
+      - [key11]
+      - ['-8']
+      - [key16]
+      - ['-9']
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '6'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING (NOT ISNULL(SUM(`Calcs`.`int1`)))\n\
+      \     order by 1"
+  - expected_results:
+      - [key02]
+      - [null]
+      - [key04]
+      - [null]
+      - [key05]
+      - [null]
+      - [key06]
+      - [null]
+      - [key07]
+      - ['2']
+      - [key10]
+      - [null]
+      - [key12]
+      - [null]
+      - [key13]
+      - [null]
+      - [key14]
+      - [null]
+      - [key15]
+      - [null]
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '7'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING (((SUM(`Calcs`.`int1`) >= 0)\
+      \ AND (SUM(`Calcs`.`int1`) <= 2)) OR ISNULL(SUM(`Calcs`.`int1`)))\n     order\
+      \ by 1"
+  - expected_results:
+      - [null]
+      - [fourteen]
+      - [nine]
+      - [one]
+      - [six]
+      - [sixteen]
+      - [ten]
+      - [three]
+      - [twelve]
+      - [two]
+    expected_error: ''
+    expected_names: [str2]
+    expected_types: [varchar]
+    id: '8'
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`\nFROM `Calcs`\nWHERE ((NOT\
+      \ (`Calcs`.`str2` IN ('eight', 'eleven', 'fifteen', 'five'))) OR ISNULL(`Calcs`.`str2`))\n\
+      GROUP BY 1\n     order by 1"
+  - expected_results:
+      - [key07]
+      - ['2']
+      - [key08]
+      - ['3']
+      - [key09]
+      - ['3']
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '9'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING (SUM(`Calcs`.`int1`) >= 0)\n\
+      \     order by 1"
+  - expected_results:
+      - [OFFICE SUPPLIES]
+    expected_error: ''
+    expected_names: [str0]
+    expected_types: [varchar]
+    id: '10'
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str0` AS `str0`\nFROM `Calcs`\n  INNER JOIN\
+      \ (\n  SELECT `Calcs`.`str0` AS `str0`,\n    SUM(`Calcs`.`int2`) AS `$__alias__0`\n\
+      \  FROM `Calcs`\n  WHERE ((`Calcs`.`str0` >= 'FURNITURE') AND (`Calcs`.`str0`\
+      \ <= 'TECHNOLOGY'))\n  GROUP BY 1\n  ORDER BY `$__alias__0` DESC\n  LIMIT 2\n\
+      ) `t0` ON (`Calcs`.`str0` = `t0`.`str0`)\n  INNER JOIN (\n  SELECT `Calcs`.`str1`\
+      \ AS `str1`,\n    SUM(`Calcs`.`int1`) AS `$__alias__1`\n  FROM `Calcs`\n  WHERE\
+      \ (((`Calcs`.`str1` >= 'AIR PURIFIERS') AND (`Calcs`.`str1` <= 'CD-R MEDIA'))\
+      \ OR ((`Calcs`.`str1` >= 'CONFERENCE PHONES') AND (`Calcs`.`str1` <= 'ERICSSON')))\n\
+      \  GROUP BY 1\n  ORDER BY `$__alias__1` DESC\n  LIMIT 5\n) `t1` ON (`Calcs`.`str1`\
+      \ = `t1`.`str1`)\nGROUP BY 1\n     order by 1"
+  - expected_results:
+      - [key07]
+      - ['2']
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '11'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING ((SUM(`Calcs`.`int1`) >= 0)\
+      \ AND (SUM(`Calcs`.`int1`) <= 2))\n     order by 1"
+  - expected_results:
+      - [null]
+      - [null]
+      - [null]
+      - [null]
+      - [null]
+      - [null]
+      - ['-5855']
+      - ['3903']
+      - ['-2899']
+      - ['-16']
+      - ['10']
+      - ['-8']
+      - ['-5246']
+      - ['3497']
+      - ['-2593']
+      - ['-15']
+      - ['9']
+      - ['-8']
+      - ['-43']
+      - ['28']
+      - ['3']
+      - ['0']
+      - ['0']
+      - ['0']
+      - ['-20']
+      - ['13']
+      - ['18']
+      - ['0']
+      - ['0']
+      - ['0']
+      - ['-16']
+      - ['10']
+      - ['15']
+      - ['0']
+      - ['0']
+      - ['0']
+    expected_error: ''
+    expected_names: [DayDiffs1 (bin), DayDiffs2 (bin), DayDiffs3 (bin), YearDiffs1 (bin), YearDiffs2 (bin), YearDiffs3 (bin)]
+    expected_types: [float, float, float, float, float, float]
+    id: '12'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT FLOOR((TO_DAYS(`Calcs`.`date0`) - TO_DAYS(`Calcs`.`datetime0`))\
+      \ / 2) AS `DayDiffs1 (bin)`,\n  FLOOR((TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(`Calcs`.`date0`))\
+      \ / 3) AS `DayDiffs2 (bin)`,\n  FLOOR((TO_DAYS(`Calcs`.`date0`) - TO_DAYS(`Calcs`.`date1`))\
+      \ / 4) AS `DayDiffs3 (bin)`,\n  FLOOR((YEAR(`Calcs`.`date0`) - YEAR(`Calcs`.`datetime0`))\
+      \ / 2) AS `YearDiffs1 (bin)`,\n  FLOOR((YEAR(`Calcs`.`datetime0`) - YEAR(`Calcs`.`date0`))\
+      \ / 3) AS `YearDiffs2 (bin)`,\n  FLOOR((YEAR(`Calcs`.`date0`) - YEAR(`Calcs`.`date1`))\
+      \ / 4) AS `YearDiffs3 (bin)`\nFROM `Calcs`\nGROUP BY 1,\n  2,\n  3,\n  4,\n  5,\n\
+      \  6\n     order by 1"
+  - expected_results:
+      - ['']
+    expected_error: ''
+    expected_names: [str2]
+    expected_types: [varchar]
+    id: '13'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`\nFROM `Calcs`\nGROUP BY\
+      \ 1\nHAVING (SUM(`Calcs`.`int2`) > 1000)\n     order by 1"
+  - expected_results:
+      - ['2016-07-15 10:11:12.123']
+    expected_error: ''
+    expected_names: [Calculation_958703807427547136]
+    expected_types: [timestamp]
+    id: '14'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT IFNULL(TIMESTAMP('2016-07-15 10:11:12.123'),STR_TO_DATE('2016-07-15\
+      \ 10:11:12.123','%b %e %Y %l:%i%p')) AS `Calculation_958703807427547136`\nFROM\
+      \ `Calcs`\nWHERE (IFNULL(TIMESTAMP('2016-07-15 10:11:12.123'),STR_TO_DATE('2016-07-15\
+      \ 10:11:12.123','%b %e %Y %l:%i%p')) = TIMESTAMP('2016-07-15 10:11:12.123'))\n\
+      HAVING (COUNT(1) > 0)\n     order by 1"
+  - expected_results:
+      - [eight]
+      - ['3.64']
+      - [eleven]
+      - ['-4.79']
+      - [fifteen]
+      - ['6.84']
+      - [five]
+      - ['12.93']
+      - [fourteen]
+      - ['-18.43']
+      - [nine]
+      - ['-13.38']
+      - [one]
+      - ['-11.52']
+      - [six]
+      - ['-19.96']
+      - [sixteen]
+      - ['-10.98']
+      - [ten]
+      - ['-10.56']
+      - [three]
+      - ['-12.17']
+      - [twelve]
+      - ['-10.81']
+      - [two]
+      - ['-9.31']
+    expected_error: ''
+    expected_names: [str2, sum_num3_ok]
+    expected_types: [varchar, float]
+    id: '15'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str2` AS `str2`,\n  SUM(`Calcs`.`num3`)\
+      \ AS `sum_num3_ok`\nFROM `Calcs`\nWHERE ((`Calcs`.`str2` >= 'eight') AND (`Calcs`.`str2`\
+      \ <= 'two'))\nGROUP BY 1\n     order by 1"
+  - expected_results:
+      - [OFFICE SUPPLIES]
+      - ['14']
+    expected_error: ''
+    expected_names: [str0, sum_int2_ok]
+    expected_types: [varchar, float]
+    id: '16'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`str0` AS `str0`,\n  SUM(`Calcs`.`int2`)\
+      \ AS `sum_int2_ok`\nFROM `Calcs`\n  INNER JOIN (\n  SELECT `Calcs`.`str0` AS `str0`,\n\
+      \    SUM(`Calcs`.`int2`) AS `$__alias__0`\n  FROM `Calcs`\n  GROUP BY 1\n  ORDER\
+      \ BY `$__alias__0` DESC\n  LIMIT 2\n) `t0` ON (`Calcs`.`str0` = `t0`.`str0`)\n\
+      WHERE (((`Calcs`.`str1` >= 'AIR PURIFIERS') AND (`Calcs`.`str1` <= 'CD-R MEDIA'))\
+      \ OR ((`Calcs`.`str1` >= 'CONFERENCE PHONES') AND (`Calcs`.`str1` <= 'ERICSSON')))\n\
+      GROUP BY 1\n     order by 1"
+  - expected_results:
+      - [key00]
+      - ['-3']
+      - [key01]
+      - ['-6']
+      - [key02]
+      - [null]
+      - [key03]
+      - ['-4']
+      - [key04]
+      - [null]
+      - [key05]
+      - [null]
+      - [key06]
+      - [null]
+      - [key07]
+      - ['2']
+      - [key10]
+      - [null]
+      - [key11]
+      - ['-8']
+      - [key12]
+      - [null]
+      - [key13]
+      - [null]
+      - [key14]
+      - [null]
+      - [key15]
+      - [null]
+      - [key16]
+      - ['-9']
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '17'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING ((SUM(`Calcs`.`int1`) <= 2)\
+      \ OR ISNULL(SUM(`Calcs`.`int1`)))\n     order by 1"
+  - expected_results:
+      - [key02]
+      - [null]
+      - [key03]
+      - ['8.51']
+      - [key04]
+      - ['6.46']
+      - [key05]
+      - ['8.98']
+      - [key08]
+      - [null]
+      - [key10]
+      - ['6.8']
+      - [key11]
+      - ['3.79']
+      - [key12]
+      - [null]
+      - [key14]
+      - [null]
+      - [key16]
+      - ['7.87']
+    expected_error: ''
+    id: '18'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`num2`) AS\
+      \ `sum_num2_ok`,\n  SUM(`Calcs`.`num2`) AS `$__alias__0`\nFROM `Calcs`\nGROUP\
+      \ BY 1\nORDER BY `$__alias__0` ASC\nLIMIT 10\n     order by 1"
+  - expected_results:
+      - [key02]
+      - [null]
+      - [key04]
+      - [null]
+      - [key05]
+      - [null]
+      - [key06]
+      - [null]
+      - [key07]
+      - ['2']
+      - [key08]
+      - ['3']
+      - [key09]
+      - ['3']
+      - [key10]
+      - [null]
+      - [key12]
+      - [null]
+      - [key13]
+      - [null]
+      - [key14]
+      - [null]
+      - [key15]
+      - [null]
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '19'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING ((SUM(`Calcs`.`int1`) >= 0)\
+      \ OR ISNULL(SUM(`Calcs`.`int1`)))\n     order by 1"
+  - expected_results:
+      - [key02]
+      - [null]
+      - [key04]
+      - [null]
+      - [key05]
+      - [null]
+      - [key06]
+      - [null]
+      - [key10]
+      - [null]
+      - [key12]
+      - [null]
+      - [key13]
+      - [null]
+      - [key14]
+      - [null]
+      - [key15]
+      - [null]
+    expected_error: ''
+    expected_names: [key, sum_int1_ok]
+    expected_types: [varchar, float]
+    id: '20'
+    skip: true
+    sql: "\n      \n\n--\n\nSELECT `Calcs`.`key` AS `key`,\n  SUM(`Calcs`.`int1`) AS\
+      \ `sum_int1_ok`\nFROM `Calcs`\nGROUP BY 1\nHAVING ISNULL(SUM(`Calcs`.`int1`))\n\
+      \     order by 1"
