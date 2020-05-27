@@ -61,15 +61,9 @@ public abstract class MongoMock {
         void test() throws SQLException;
     }
 
-    Column generateCol(String database, String table, String column, BsonValue value) {
-        Column col = new Column();
-        col.database = database;
-        col.table = table;
-        col.tableAlias = table;
-        col.column = column;
-        col.columnAlias = column;
-        col.value = value;
-        return col;
+    Column generateCol(
+            String database, String table, String column, String bsonType, BsonValue value) {
+        return new Column(database, table, table, column, column, bsonType, value);
     }
 
     MongoResultDoc generateRow(boolean isEmpty) {
@@ -95,8 +89,8 @@ public abstract class MongoMock {
            ]
          }
          */
-        Column col1 = generateCol("myDB", "foo", "a", new BsonInt32(1));
-        Column col2 = generateCol("myDB", "foo", "b", new BsonString("test"));
+        Column col1 = generateCol("myDB", "foo", "a", "int", new BsonInt32(1));
+        Column col2 = generateCol("myDB", "foo", "b", "string", new BsonString("test"));
 
         ArrayList<Column> cols = new ArrayList<>();
         cols.add(col1);

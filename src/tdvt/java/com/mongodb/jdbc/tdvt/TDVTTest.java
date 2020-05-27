@@ -51,11 +51,11 @@ public class TDVTTest {
         assertEquals("diff", rsmd.getColumnLabel(3));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         tyName = rsmd.getColumnTypeName(2);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         tyName = rsmd.getColumnTypeName(3);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(3);
@@ -78,7 +78,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2074921570)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -103,7 +103,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2348327946)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -128,7 +128,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3062347157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -153,7 +153,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -167,7 +167,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1236088422)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -178,7 +178,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1709161123)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -203,7 +203,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -217,7 +217,7 @@ public class TDVTTest {
         assertEquals("temp(test)(941741456)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -228,7 +228,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4070818381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -253,7 +253,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -267,7 +267,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1209329404)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -278,7 +278,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -292,7 +292,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2284623665)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -303,7 +303,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -317,7 +317,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3556637072)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -328,7 +328,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -342,7 +342,7 @@ public class TDVTTest {
         assertEquals("temp(test)(20465857)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -353,7 +353,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -367,7 +367,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3365622206)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -378,7 +378,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -392,7 +392,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1193407708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -403,7 +403,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -417,7 +417,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3498421513)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -428,7 +428,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -442,7 +442,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1756144708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -453,7 +453,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -467,7 +467,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2635020195)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -478,7 +478,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -492,7 +492,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2744314424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -503,7 +503,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -517,7 +517,7 @@ public class TDVTTest {
         assertEquals("temp(test)(232803726)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -567,7 +567,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -581,7 +581,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2176505489)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -631,7 +631,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -645,7 +645,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2741755004)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -704,7 +704,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -718,7 +718,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2526477208)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -777,7 +777,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -791,7 +791,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2007354609)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -850,7 +850,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -864,7 +864,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3928745396)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -914,7 +914,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -928,7 +928,7 @@ public class TDVTTest {
         assertEquals("temp(test)(746880020)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -978,7 +978,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -992,7 +992,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2699142763)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1003,7 +1003,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1017,7 +1017,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1634134069)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1028,7 +1028,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1042,7 +1042,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1949844743)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1053,7 +1053,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1067,7 +1067,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3376136658)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1078,7 +1078,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1092,7 +1092,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3672267408)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1103,7 +1103,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1117,7 +1117,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2406708804)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1128,7 +1128,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1142,7 +1142,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1073594909)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1153,7 +1153,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1167,7 +1167,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4016689999)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1178,7 +1178,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1192,7 +1192,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3405047399)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1203,7 +1203,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1217,7 +1217,7 @@ public class TDVTTest {
         assertEquals("temp(test)(55506858)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1228,7 +1228,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1242,7 +1242,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3460070750)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1253,7 +1253,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1267,7 +1267,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1494289478)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1278,7 +1278,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1292,7 +1292,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3227046355)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1303,7 +1303,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1317,7 +1317,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1233941598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1328,7 +1328,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1342,7 +1342,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3874232094)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1353,7 +1353,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1367,7 +1367,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1546814749)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1378,7 +1378,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1392,7 +1392,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3692431276)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1403,7 +1403,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1417,7 +1417,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3910975586)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1428,7 +1428,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1442,7 +1442,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1133866179)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1453,7 +1453,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1467,7 +1467,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3590771088)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1478,7 +1478,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1492,7 +1492,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1804085677)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1503,7 +1503,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1517,7 +1517,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2760211945)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1528,7 +1528,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1542,7 +1542,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3386714330)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1598,7 +1598,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1612,7 +1612,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1554877814)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1668,7 +1668,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1682,7 +1682,7 @@ public class TDVTTest {
         assertEquals("temp(test)(680392169)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1732,7 +1732,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1746,7 +1746,7 @@ public class TDVTTest {
         assertEquals("temp(test)(792760981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1796,7 +1796,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1810,7 +1810,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4192719501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1869,7 +1869,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1883,7 +1883,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2927274352)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1942,7 +1942,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -1956,7 +1956,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2443162804)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1994,7 +1994,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2008,7 +2008,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1954670685)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2055,7 +2055,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2069,7 +2069,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3664185027)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2107,7 +2107,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2121,7 +2121,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3300724379)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2180,7 +2180,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2194,7 +2194,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4107590482)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2220,7 +2220,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2234,7 +2234,7 @@ public class TDVTTest {
         assertEquals("temp(test)(766794695)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2260,7 +2260,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2274,7 +2274,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2285,7 +2285,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2299,7 +2299,7 @@ public class TDVTTest {
         assertEquals("temp(test)(334867691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2310,7 +2310,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2324,7 +2324,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1224905293)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2383,7 +2383,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2397,7 +2397,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3044284514)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2417,7 +2417,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2431,7 +2431,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2383411022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2451,7 +2451,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2465,7 +2465,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3392256124)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2476,7 +2476,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2490,7 +2490,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1426463696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2501,7 +2501,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2515,7 +2515,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1770279206)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2568,7 +2568,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2582,7 +2582,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4279914489)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2635,7 +2635,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2649,7 +2649,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2967749075)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2660,7 +2660,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2674,7 +2674,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3516395767)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2724,7 +2724,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2738,7 +2738,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3428507074)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2755,7 +2755,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2769,7 +2769,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1935567978)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2786,7 +2786,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2800,7 +2800,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3179501244)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2814,7 +2814,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2828,7 +2828,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1288552116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2845,7 +2845,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2859,7 +2859,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3848052829)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2918,7 +2918,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2932,7 +2932,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1108086785)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2946,7 +2946,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -2960,7 +2960,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3382465274)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3019,7 +3019,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3033,7 +3033,7 @@ public class TDVTTest {
         assertEquals("temp(test)(55415805)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3050,7 +3050,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3064,7 +3064,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2285743265)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3123,7 +3123,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3137,7 +3137,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3228347817)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3187,7 +3187,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3201,7 +3201,7 @@ public class TDVTTest {
         assertEquals("temp(test)(286811776)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3215,7 +3215,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3229,7 +3229,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3174765981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3261,7 +3261,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3275,7 +3275,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2829869592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3307,7 +3307,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3321,7 +3321,7 @@ public class TDVTTest {
         assertEquals("temp(test)(551775594)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3368,7 +3368,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3382,7 +3382,7 @@ public class TDVTTest {
         assertEquals("temp(test)(524492059)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3423,7 +3423,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3437,7 +3437,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3934956185)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3472,7 +3472,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3486,7 +3486,7 @@ public class TDVTTest {
         assertEquals("temp(test)(129981160)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3545,7 +3545,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3559,7 +3559,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1053269056)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3609,7 +3609,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3623,7 +3623,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3320504981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3682,7 +3682,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3696,7 +3696,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3786834202)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3743,7 +3743,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3757,7 +3757,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2728495522)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3816,7 +3816,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3830,7 +3830,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2572329321)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3841,7 +3841,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3855,7 +3855,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4144088821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3893,7 +3893,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3907,7 +3907,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2035564840)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3966,7 +3966,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -3980,7 +3980,7 @@ public class TDVTTest {
         assertEquals("temp(test)(477986140)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4018,7 +4018,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4032,7 +4032,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2224240773)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4046,7 +4046,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4060,7 +4060,7 @@ public class TDVTTest {
         assertEquals("temp(test)(535453017)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4071,7 +4071,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4085,7 +4085,7 @@ public class TDVTTest {
         assertEquals("temp(test)(497224717)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4135,7 +4135,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4149,7 +4149,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1239505702)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4163,7 +4163,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4177,7 +4177,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1298877827)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4227,7 +4227,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4241,7 +4241,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1695139533)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4291,7 +4291,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4305,7 +4305,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1003104432)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4355,7 +4355,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4369,7 +4369,7 @@ public class TDVTTest {
         assertEquals("temp(test)(381839689)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4407,7 +4407,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4421,7 +4421,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2416406882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4480,7 +4480,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4494,7 +4494,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3489013143)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4529,7 +4529,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4543,7 +4543,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3834106318)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4587,7 +4587,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4601,7 +4601,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3161246105)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4612,7 +4612,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4626,7 +4626,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2953834147)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4676,7 +4676,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4690,7 +4690,7 @@ public class TDVTTest {
         assertEquals("temp(test)(551720338)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4722,7 +4722,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4736,7 +4736,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2695057561)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4753,7 +4753,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4767,7 +4767,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2234960540)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4793,7 +4793,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4807,7 +4807,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1665700248)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4845,7 +4845,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4859,7 +4859,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2779514991)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4873,7 +4873,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4887,7 +4887,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1759936097)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4898,7 +4898,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4912,7 +4912,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3179156403)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4929,7 +4929,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -4943,7 +4943,7 @@ public class TDVTTest {
         assertEquals("temp(test)(903794974)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4993,7 +4993,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5007,7 +5007,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3917828147)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5057,7 +5057,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5071,7 +5071,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3641022413)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5097,7 +5097,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5111,7 +5111,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1193998601)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5137,7 +5137,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5151,7 +5151,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3641022413)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5177,7 +5177,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5191,7 +5191,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1193998601)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5217,7 +5217,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5231,7 +5231,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3800988289)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5257,7 +5257,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5271,7 +5271,7 @@ public class TDVTTest {
         assertEquals("temp(test)(779479971)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5297,7 +5297,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5311,7 +5311,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3800988289)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5337,7 +5337,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5351,7 +5351,7 @@ public class TDVTTest {
         assertEquals("temp(test)(779479971)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5377,7 +5377,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5391,7 +5391,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2793013592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5450,7 +5450,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5464,7 +5464,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2980130610)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5523,7 +5523,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5537,7 +5537,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2016952657)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5575,7 +5575,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5589,7 +5589,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1256216982)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5648,7 +5648,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5662,7 +5662,7 @@ public class TDVTTest {
         assertEquals("temp(test)(415603459)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5673,7 +5673,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5687,7 +5687,7 @@ public class TDVTTest {
         assertEquals("temp(test)(526259814)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5716,7 +5716,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5730,7 +5730,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4258651616)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5753,7 +5753,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5767,7 +5767,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3415515666)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5826,7 +5826,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5840,7 +5840,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2048935536)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5899,7 +5899,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5913,7 +5913,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2714077903)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5927,7 +5927,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5941,7 +5941,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1800100416)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5955,7 +5955,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -5969,7 +5969,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1007528555)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5998,7 +5998,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6012,7 +6012,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3428504110)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6059,7 +6059,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6073,7 +6073,7 @@ public class TDVTTest {
         assertEquals("temp(test)(750655768)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6108,7 +6108,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6122,7 +6122,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1656302737)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6139,7 +6139,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6153,7 +6153,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4006206882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6167,7 +6167,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6181,7 +6181,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4173709053)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6204,7 +6204,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6218,7 +6218,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1285160207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6235,7 +6235,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6249,7 +6249,7 @@ public class TDVTTest {
         assertEquals("temp(test)(898375479)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6305,7 +6305,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6319,7 +6319,7 @@ public class TDVTTest {
         assertEquals("temp(test)(490796425)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6342,7 +6342,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6356,7 +6356,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2300448284)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6415,7 +6415,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6429,7 +6429,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2077207759)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6488,7 +6488,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6502,7 +6502,7 @@ public class TDVTTest {
         assertEquals("temp(test)(289918985)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6561,7 +6561,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6575,7 +6575,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3370976929)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6628,7 +6628,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6642,7 +6642,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2942029924)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6680,7 +6680,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6694,7 +6694,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6717,7 +6717,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6731,7 +6731,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6754,7 +6754,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6768,7 +6768,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1590117682)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6806,7 +6806,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6820,7 +6820,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4199707040)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6858,7 +6858,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6872,7 +6872,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2589771434)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6931,7 +6931,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -6945,7 +6945,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1875124737)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7004,7 +7004,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7018,7 +7018,7 @@ public class TDVTTest {
         assertEquals("temp(test)(663412696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7059,7 +7059,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7073,7 +7073,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1616170242)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7102,7 +7102,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7116,7 +7116,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3854194266)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7142,7 +7142,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7156,7 +7156,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3854194266)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7182,7 +7182,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7196,7 +7196,7 @@ public class TDVTTest {
         assertEquals("temp(test)(621889678)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7222,7 +7222,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7236,7 +7236,7 @@ public class TDVTTest {
         assertEquals("temp(test)(621889678)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7262,7 +7262,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7276,7 +7276,7 @@ public class TDVTTest {
         assertEquals("temp(test)(302607578)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7296,7 +7296,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7310,7 +7310,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2001673842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7321,7 +7321,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7335,7 +7335,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3772571288)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7394,7 +7394,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7408,7 +7408,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3405329770)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7467,7 +7467,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7481,7 +7481,7 @@ public class TDVTTest {
         assertEquals("temp(test)(885008067)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7519,7 +7519,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7533,7 +7533,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3554344781)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7592,7 +7592,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7606,7 +7606,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2085924889)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7653,7 +7653,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7667,7 +7667,7 @@ public class TDVTTest {
         assertEquals("temp(test)(574618496)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7717,7 +7717,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7731,7 +7731,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7742,7 +7742,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7756,7 +7756,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1165289219)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7794,7 +7794,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7808,7 +7808,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3278952934)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7822,7 +7822,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7836,7 +7836,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3434755864)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7880,7 +7880,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7894,7 +7894,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1819497289)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7905,7 +7905,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7919,7 +7919,7 @@ public class TDVTTest {
         assertEquals("temp(test)(957319405)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7930,7 +7930,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -7944,7 +7944,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3191651815)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7997,7 +7997,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8011,7 +8011,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1126788499)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8070,7 +8070,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8084,7 +8084,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3855281255)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8095,7 +8095,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8109,7 +8109,7 @@ public class TDVTTest {
         assertEquals("temp(test)(645427419)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8120,7 +8120,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8134,7 +8134,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1450575838)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8145,7 +8145,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8159,7 +8159,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2456153780)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8218,7 +8218,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8232,7 +8232,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2524080111)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8285,7 +8285,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8299,7 +8299,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1568799041)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8322,7 +8322,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8336,7 +8336,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1744581337)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8395,7 +8395,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8409,7 +8409,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1635756518)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8468,7 +8468,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8482,7 +8482,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1985269479)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8508,7 +8508,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8522,7 +8522,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3887385220)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8545,7 +8545,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8559,7 +8559,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2843244905)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8570,7 +8570,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8584,7 +8584,7 @@ public class TDVTTest {
         assertEquals("temp(test)(868342576)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8628,7 +8628,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8642,7 +8642,7 @@ public class TDVTTest {
         assertEquals("temp(test)(427841631)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8677,7 +8677,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8691,7 +8691,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2180476504)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8750,7 +8750,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8764,7 +8764,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3361088979)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8802,7 +8802,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8816,7 +8816,7 @@ public class TDVTTest {
         assertEquals("temp(test)(299717125)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8875,7 +8875,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8889,7 +8889,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3076245501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8936,7 +8936,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -8950,7 +8950,7 @@ public class TDVTTest {
         assertEquals("temp(test)(148436784)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9000,7 +9000,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9014,7 +9014,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1364536471)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9031,7 +9031,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9045,7 +9045,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1380546255)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9059,7 +9059,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9073,7 +9073,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2988076353)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9132,7 +9132,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9146,7 +9146,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3509671532)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9163,7 +9163,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9177,7 +9177,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4247289834)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9197,7 +9197,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9211,7 +9211,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3037854782)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9243,7 +9243,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9257,7 +9257,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3972932107)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9268,7 +9268,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9282,7 +9282,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1773778045)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9293,7 +9293,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9307,7 +9307,7 @@ public class TDVTTest {
         assertEquals("temp(test)(382789366)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9318,7 +9318,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9332,7 +9332,7 @@ public class TDVTTest {
         assertEquals("temp(test)(444902156)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9343,7 +9343,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9357,7 +9357,7 @@ public class TDVTTest {
         assertEquals("temp(test)(581676997)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9368,7 +9368,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9382,7 +9382,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1831450015)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9393,7 +9393,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9407,7 +9407,7 @@ public class TDVTTest {
         assertEquals("temp(test)(360201683)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9418,7 +9418,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9432,7 +9432,7 @@ public class TDVTTest {
         assertEquals("temp(test)(872678106)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9443,7 +9443,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9457,7 +9457,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3905701997)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9468,7 +9468,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9482,7 +9482,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3359079369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9493,7 +9493,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9507,7 +9507,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1326289938)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9518,7 +9518,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9532,7 +9532,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2763829899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9543,7 +9543,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9557,7 +9557,7 @@ public class TDVTTest {
         assertEquals("temp(test)(717997108)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9568,7 +9568,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9582,7 +9582,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2963633898)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9593,7 +9593,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9607,7 +9607,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3202209617)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9618,7 +9618,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9632,7 +9632,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4266496460)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9643,7 +9643,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9657,7 +9657,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4131996060)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9668,7 +9668,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9682,7 +9682,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2935754523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9693,7 +9693,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9707,7 +9707,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3052188625)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9757,7 +9757,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9771,7 +9771,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2280873463)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9806,7 +9806,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9820,7 +9820,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2643375604)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9840,7 +9840,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9854,7 +9854,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2986242609)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9874,7 +9874,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9888,7 +9888,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1608337423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9899,7 +9899,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9913,7 +9913,7 @@ public class TDVTTest {
         assertEquals("temp(test)(925465559)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9924,7 +9924,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -9938,7 +9938,7 @@ public class TDVTTest {
         assertEquals("temp(test)(454013980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9997,7 +9997,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10011,7 +10011,7 @@ public class TDVTTest {
         assertEquals("temp(test)(499182808)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10064,7 +10064,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10078,7 +10078,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2644944117)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10131,7 +10131,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10145,7 +10145,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3094931040)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10171,7 +10171,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10185,7 +10185,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2831690081)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10208,7 +10208,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10222,7 +10222,7 @@ public class TDVTTest {
         assertEquals("temp(test)(98307893)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10281,7 +10281,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10295,7 +10295,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2537119552)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10345,7 +10345,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10359,7 +10359,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1533389080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10391,7 +10391,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10405,7 +10405,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2538631291)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("decimal"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("decimal"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10422,7 +10422,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10436,7 +10436,7 @@ public class TDVTTest {
         assertEquals("temp(test)(64617177)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10462,7 +10462,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10476,7 +10476,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2707307071)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10526,7 +10526,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10540,7 +10540,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1394352864)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10554,7 +10554,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10568,7 +10568,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2143701310)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10579,7 +10579,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10593,7 +10593,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1011144549)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10643,7 +10643,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10657,7 +10657,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2419238545)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10716,7 +10716,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10730,7 +10730,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10783,7 +10783,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10797,7 +10797,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10850,7 +10850,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10864,7 +10864,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10917,7 +10917,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10931,7 +10931,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10984,7 +10984,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -10998,7 +10998,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11024,7 +11024,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11038,7 +11038,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11061,7 +11061,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11075,7 +11075,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11101,7 +11101,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11115,7 +11115,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11138,7 +11138,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11152,7 +11152,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1706489238)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11178,7 +11178,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11192,7 +11192,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3326454598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11218,7 +11218,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11232,7 +11232,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1346443059)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11258,7 +11258,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11272,7 +11272,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2366796649)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11298,7 +11298,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11312,7 +11312,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1438827077)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11359,7 +11359,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11373,7 +11373,7 @@ public class TDVTTest {
         assertEquals("temp(test)(331799714)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11420,7 +11420,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11434,7 +11434,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3561169943)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11484,7 +11484,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11498,7 +11498,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2283476857)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11548,7 +11548,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11562,7 +11562,7 @@ public class TDVTTest {
         assertEquals("temp(test)(523796786)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11573,7 +11573,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11587,7 +11587,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1757347367)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11598,7 +11598,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11612,7 +11612,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2892653053)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11623,7 +11623,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11637,7 +11637,7 @@ public class TDVTTest {
         assertEquals("temp(test)(208306356)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11648,7 +11648,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11662,7 +11662,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3602652935)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11673,7 +11673,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11687,7 +11687,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2736821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11698,7 +11698,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11712,7 +11712,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4175150207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11723,7 +11723,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11737,7 +11737,7 @@ public class TDVTTest {
         assertEquals("temp(test)(573134401)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11748,7 +11748,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11762,7 +11762,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4284829593)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11773,7 +11773,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11787,7 +11787,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2962792486)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11798,7 +11798,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11812,7 +11812,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2631483492)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11823,7 +11823,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11837,7 +11837,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1607049625)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11848,7 +11848,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11862,7 +11862,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1299959868)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11873,7 +11873,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11887,7 +11887,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1641185958)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11898,7 +11898,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11912,7 +11912,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1258940435)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11923,7 +11923,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11937,7 +11937,7 @@ public class TDVTTest {
         assertEquals("temp(test)(401058515)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11948,7 +11948,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11962,7 +11962,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2833809390)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11973,7 +11973,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -11987,7 +11987,7 @@ public class TDVTTest {
         assertEquals("temp(test)(367110610)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12037,7 +12037,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12051,7 +12051,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1785761163)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12101,7 +12101,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12115,7 +12115,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3167158121)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12126,7 +12126,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12140,7 +12140,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4146692480)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12199,7 +12199,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12213,7 +12213,7 @@ public class TDVTTest {
         assertEquals("temp(test)(560528826)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12272,7 +12272,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12286,7 +12286,7 @@ public class TDVTTest {
         assertEquals("temp(test)(105511240)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12297,7 +12297,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12311,7 +12311,7 @@ public class TDVTTest {
         assertEquals("temp(test)(755301458)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12322,7 +12322,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12336,7 +12336,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1903992131)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12386,7 +12386,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12400,7 +12400,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4265410721)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12438,7 +12438,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12452,7 +12452,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1278698096)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12490,7 +12490,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12504,7 +12504,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3729248905)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12563,7 +12563,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12577,7 +12577,7 @@ public class TDVTTest {
         assertEquals("temp(test)(965356852)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12636,7 +12636,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12650,7 +12650,7 @@ public class TDVTTest {
         assertEquals("temp(test)(5037157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12661,7 +12661,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12675,7 +12675,7 @@ public class TDVTTest {
         assertEquals("temp(test)(382448263)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12704,7 +12704,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12718,7 +12718,7 @@ public class TDVTTest {
         assertEquals("temp(test)(653088523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12738,7 +12738,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12752,7 +12752,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3134852500)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12763,7 +12763,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12777,7 +12777,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3976315675)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12809,7 +12809,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12823,7 +12823,7 @@ public class TDVTTest {
         assertEquals("temp(test)(591126205)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12882,7 +12882,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12896,7 +12896,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3034828475)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12946,7 +12946,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12960,7 +12960,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4155671032)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12977,7 +12977,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -12991,7 +12991,7 @@ public class TDVTTest {
         assertEquals("temp(test)(344883989)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13005,7 +13005,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13019,7 +13019,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1470681487)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13036,7 +13036,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13050,7 +13050,7 @@ public class TDVTTest {
         assertEquals("temp(test)(404394451)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13082,7 +13082,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13096,7 +13096,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2582407534)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13113,7 +13113,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13127,7 +13127,7 @@ public class TDVTTest {
         assertEquals("temp(test)(485230187)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13144,7 +13144,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13158,7 +13158,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3944872634)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13172,7 +13172,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13186,7 +13186,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1030668643)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13197,7 +13197,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13211,7 +13211,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1548476355)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13225,7 +13225,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13239,7 +13239,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2733626226)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13274,7 +13274,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13288,7 +13288,7 @@ public class TDVTTest {
         assertEquals("temp(test)(746449830)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13302,7 +13302,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13316,7 +13316,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4153117630)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13330,7 +13330,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13344,7 +13344,7 @@ public class TDVTTest {
         assertEquals("temp(test)(661341884)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13394,7 +13394,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13408,7 +13408,7 @@ public class TDVTTest {
         assertEquals("temp(test)(157987442)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13425,7 +13425,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13439,7 +13439,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3250337019)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13468,7 +13468,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13482,7 +13482,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1162317302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13538,7 +13538,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13552,7 +13552,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1389344980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13593,7 +13593,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13607,7 +13607,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4224438892)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13654,7 +13654,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13668,7 +13668,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3314993157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13718,7 +13718,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13732,7 +13732,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2842042984)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13746,7 +13746,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13760,7 +13760,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4227881224)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13777,7 +13777,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13791,7 +13791,7 @@ public class TDVTTest {
         assertEquals("temp(test)(709594122)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13850,7 +13850,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13864,7 +13864,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2963734906)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13914,7 +13914,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13928,7 +13928,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4143049742)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13984,7 +13984,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -13998,7 +13998,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2451799140)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14027,7 +14027,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14041,7 +14041,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1574830296)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14088,7 +14088,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14102,7 +14102,7 @@ public class TDVTTest {
         assertEquals("temp(test)(166894492)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14131,7 +14131,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14145,7 +14145,7 @@ public class TDVTTest {
         assertEquals("temp(test)(899461877)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14204,7 +14204,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14218,7 +14218,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1630131013)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14277,7 +14277,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14291,7 +14291,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3937478358)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14314,7 +14314,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14328,7 +14328,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1235924899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14381,7 +14381,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14395,7 +14395,7 @@ public class TDVTTest {
         assertEquals("temp(test)(621896091)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14454,7 +14454,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14468,7 +14468,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3711433751)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14527,7 +14527,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14541,7 +14541,7 @@ public class TDVTTest {
         assertEquals("temp(test)(427588088)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14576,7 +14576,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14590,7 +14590,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2526313076)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14625,7 +14625,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14639,7 +14639,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1540391660)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14683,7 +14683,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14697,7 +14697,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3579576882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14741,7 +14741,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14755,7 +14755,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2740605400)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14808,7 +14808,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14822,7 +14822,7 @@ public class TDVTTest {
         assertEquals("temp(test)(356589430)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14875,7 +14875,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14889,7 +14889,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1898404202)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14948,7 +14948,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -14962,7 +14962,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4263325709)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15021,7 +15021,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15035,7 +15035,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15061,7 +15061,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15075,7 +15075,7 @@ public class TDVTTest {
         assertEquals("temp(test)(965512284)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15110,7 +15110,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15124,7 +15124,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1826927073)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15183,7 +15183,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15197,7 +15197,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3618731173)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15214,7 +15214,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15228,7 +15228,7 @@ public class TDVTTest {
         assertEquals("temp(test)(830571724)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15245,7 +15245,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15259,7 +15259,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3090944671)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15276,7 +15276,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15290,7 +15290,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4182992858)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15307,7 +15307,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15321,7 +15321,7 @@ public class TDVTTest {
         assertEquals("temp(test)(397499995)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15338,7 +15338,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15352,7 +15352,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1366787273)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15369,7 +15369,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15383,7 +15383,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3193322782)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15400,7 +15400,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15414,7 +15414,7 @@ public class TDVTTest {
         assertEquals("temp(test)(822657216)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15431,7 +15431,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15445,7 +15445,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3764753091)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15462,7 +15462,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15476,7 +15476,7 @@ public class TDVTTest {
         assertEquals("temp(test)(100938644)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15535,7 +15535,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15549,7 +15549,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2923065813)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15572,7 +15572,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15586,7 +15586,7 @@ public class TDVTTest {
         assertEquals("temp(test)(798936259)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15603,7 +15603,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15617,7 +15617,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2067341949)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15640,7 +15640,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15654,7 +15654,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1303362598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15665,7 +15665,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15679,7 +15679,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1307456344)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15699,7 +15699,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15713,7 +15713,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2402101080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15736,7 +15736,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15750,7 +15750,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3559262472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15806,7 +15806,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15820,7 +15820,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4188722171)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15855,7 +15855,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15869,7 +15869,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1413132553)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15886,7 +15886,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15900,7 +15900,7 @@ public class TDVTTest {
         assertEquals("temp(test)(496893948)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15911,7 +15911,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15925,7 +15925,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3360366790)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15942,7 +15942,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15956,7 +15956,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2564078271)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15973,7 +15973,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -15987,7 +15987,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1366300770)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16004,7 +16004,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16018,7 +16018,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4123004830)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16035,7 +16035,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16049,7 +16049,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1224631717)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16066,7 +16066,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16080,7 +16080,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1731699042)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16097,7 +16097,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16111,7 +16111,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3781247900)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16146,7 +16146,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16160,7 +16160,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4047276454)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16177,7 +16177,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16191,7 +16191,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3492695719)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16208,7 +16208,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16222,7 +16222,7 @@ public class TDVTTest {
         assertEquals("temp(test)(977554451)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16257,7 +16257,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16271,7 +16271,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1861245368)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16306,7 +16306,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16320,7 +16320,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1635792874)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16337,7 +16337,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16351,7 +16351,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1555382477)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16368,7 +16368,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16382,7 +16382,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2776534421)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16399,7 +16399,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16413,7 +16413,7 @@ public class TDVTTest {
         assertEquals("temp(test)(398649381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16430,7 +16430,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16444,7 +16444,7 @@ public class TDVTTest {
         assertEquals("temp(test)(119026413)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16461,7 +16461,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16475,7 +16475,7 @@ public class TDVTTest {
         assertEquals("temp(test)(724155660)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16510,7 +16510,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16524,7 +16524,7 @@ public class TDVTTest {
         assertEquals("temp(test)(627207302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16535,7 +16535,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16549,7 +16549,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1507734681)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16560,7 +16560,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16574,7 +16574,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2958462977)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16612,7 +16612,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16626,7 +16626,7 @@ public class TDVTTest {
         assertEquals("temp(test)(667124691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16664,7 +16664,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16678,7 +16678,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2463700949)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16737,7 +16737,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16751,7 +16751,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3778274693)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16810,7 +16810,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16824,7 +16824,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1425036653)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16865,7 +16865,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16879,7 +16879,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1486024523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16938,7 +16938,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -16952,7 +16952,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2671902822)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17011,7 +17011,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17025,7 +17025,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3929621149)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17084,7 +17084,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17098,7 +17098,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1103404331)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17157,7 +17157,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17171,7 +17171,7 @@ public class TDVTTest {
         assertEquals("temp(test)(296025979)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17230,7 +17230,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17244,7 +17244,7 @@ public class TDVTTest {
         assertEquals("temp(test)(595744937)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17258,7 +17258,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17272,7 +17272,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3907469988)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17316,7 +17316,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17330,7 +17330,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1153873435)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17341,7 +17341,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17355,7 +17355,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1314023193)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17414,7 +17414,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17428,7 +17428,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3529528921)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17472,7 +17472,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17486,7 +17486,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1066073186)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17497,7 +17497,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17511,7 +17511,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1128710711)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17522,7 +17522,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17536,7 +17536,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3816818712)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17547,7 +17547,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17561,7 +17561,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1220694026)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17572,7 +17572,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17586,7 +17586,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1878304808)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17597,7 +17597,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17611,7 +17611,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3201398499)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17622,7 +17622,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17636,7 +17636,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2380792894)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17647,7 +17647,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17661,7 +17661,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1799303116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17672,7 +17672,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17686,7 +17686,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3424623419)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17697,7 +17697,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17711,7 +17711,7 @@ public class TDVTTest {
         assertEquals("temp(test)(496128354)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17722,7 +17722,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17736,7 +17736,7 @@ public class TDVTTest {
         assertEquals("temp(test)(260207547)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17747,7 +17747,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17761,7 +17761,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4282303505)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17772,7 +17772,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17786,7 +17786,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2339877044)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17797,7 +17797,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17811,7 +17811,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3465754358)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17822,7 +17822,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17836,7 +17836,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2205674587)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17847,7 +17847,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17861,7 +17861,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4062119106)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17872,7 +17872,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17886,7 +17886,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2509274079)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17897,7 +17897,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17911,7 +17911,7 @@ public class TDVTTest {
         assertEquals("temp(test)(508245917)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17922,7 +17922,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17936,7 +17936,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1053114602)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17947,7 +17947,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17961,7 +17961,7 @@ public class TDVTTest {
         assertEquals("temp(test)(955333125)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17972,7 +17972,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -17986,7 +17986,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2396988690)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17997,7 +17997,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18011,7 +18011,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2232502461)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18022,7 +18022,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18036,7 +18036,7 @@ public class TDVTTest {
         assertEquals("temp(test)(109946472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18047,7 +18047,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18061,7 +18061,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2095510626)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18072,7 +18072,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18086,7 +18086,7 @@ public class TDVTTest {
         assertEquals("temp(test)(359186020)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18097,7 +18097,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18111,7 +18111,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3060670302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18122,7 +18122,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18136,7 +18136,7 @@ public class TDVTTest {
         assertEquals("temp(test)(592740370)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18147,7 +18147,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18161,7 +18161,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4169571243)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18172,7 +18172,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18186,7 +18186,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2477057371)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18197,7 +18197,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18211,7 +18211,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3817976182)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18222,7 +18222,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18236,7 +18236,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2329360898)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18247,7 +18247,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18261,7 +18261,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1469842605)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18272,7 +18272,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18286,7 +18286,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4189387493)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18297,7 +18297,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18311,7 +18311,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3720439076)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18322,7 +18322,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18336,7 +18336,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2985757783)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18347,7 +18347,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18361,7 +18361,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2277366246)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18411,7 +18411,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18425,7 +18425,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3926981592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18436,7 +18436,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18450,7 +18450,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1915846221)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18461,7 +18461,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18475,7 +18475,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1152843842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18486,7 +18486,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18500,7 +18500,7 @@ public class TDVTTest {
         assertEquals("temp(test)(715809068)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18559,7 +18559,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18573,7 +18573,7 @@ public class TDVTTest {
         assertEquals("temp(test)(299505631)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18632,7 +18632,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18646,7 +18646,7 @@ public class TDVTTest {
         assertEquals("temp(test)(709470143)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18705,7 +18705,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18719,7 +18719,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1620718980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18778,7 +18778,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18792,7 +18792,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2141740056)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18803,7 +18803,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18817,7 +18817,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1797652325)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18876,7 +18876,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18890,7 +18890,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2686481578)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18949,7 +18949,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -18963,7 +18963,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2341796372)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19022,7 +19022,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19036,7 +19036,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4017290474)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19095,7 +19095,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19109,7 +19109,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3033382267)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19120,7 +19120,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19134,7 +19134,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4196472080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19145,7 +19145,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19159,7 +19159,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1829388090)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19170,7 +19170,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19184,7 +19184,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2087345109)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19195,7 +19195,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19209,7 +19209,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3187080314)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19220,7 +19220,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19234,7 +19234,7 @@ public class TDVTTest {
         assertEquals("temp(test)(436529008)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19245,7 +19245,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19259,7 +19259,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1122166960)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19270,7 +19270,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19284,7 +19284,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2476649334)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19295,7 +19295,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19309,7 +19309,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1267352367)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19320,7 +19320,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19334,7 +19334,7 @@ public class TDVTTest {
         assertEquals("temp(test)(668774393)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19345,7 +19345,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19359,7 +19359,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2801366337)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19370,7 +19370,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19384,7 +19384,7 @@ public class TDVTTest {
         assertEquals("temp(test)(6065346)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19395,7 +19395,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19409,7 +19409,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4213376628)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19420,7 +19420,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19434,7 +19434,7 @@ public class TDVTTest {
         assertEquals("temp(test)(284925583)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19445,7 +19445,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19459,7 +19459,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1365124261)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19470,7 +19470,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19484,7 +19484,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4277161941)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19495,7 +19495,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19509,7 +19509,7 @@ public class TDVTTest {
         assertEquals("temp(test)(932571096)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19520,7 +19520,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19534,7 +19534,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3666462064)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19545,7 +19545,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19559,7 +19559,7 @@ public class TDVTTest {
         assertEquals("temp(test)(402015915)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19618,7 +19618,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19632,7 +19632,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3033426574)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19682,7 +19682,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19696,7 +19696,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19707,7 +19707,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19721,7 +19721,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1701645592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19750,7 +19750,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19764,7 +19764,7 @@ public class TDVTTest {
         assertEquals("temp(test)(433583207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19808,7 +19808,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19822,7 +19822,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1289371916)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19866,7 +19866,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19880,7 +19880,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3917841362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19891,7 +19891,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19905,7 +19905,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1921815362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19916,7 +19916,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19930,7 +19930,7 @@ public class TDVTTest {
         assertEquals("temp(test)(513464674)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19941,7 +19941,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19955,7 +19955,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3512378422)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19966,7 +19966,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -19980,7 +19980,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3084524178)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19991,7 +19991,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20005,7 +20005,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4202902840)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20016,7 +20016,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20030,7 +20030,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2836269094)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20041,7 +20041,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20055,7 +20055,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3924648662)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20066,7 +20066,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20080,7 +20080,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1538264184)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20091,7 +20091,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20105,7 +20105,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4042104093)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20116,7 +20116,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20130,7 +20130,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4271712345)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20141,7 +20141,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20155,7 +20155,7 @@ public class TDVTTest {
         assertEquals("temp(test)(963247111)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20166,7 +20166,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20180,7 +20180,7 @@ public class TDVTTest {
         assertEquals("temp(test)(738426766)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20191,7 +20191,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20205,7 +20205,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1202522493)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20216,7 +20216,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20230,7 +20230,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1255819744)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20241,7 +20241,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20255,7 +20255,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1639804515)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20266,7 +20266,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20280,7 +20280,7 @@ public class TDVTTest {
         assertEquals("temp(test)(299943486)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20291,7 +20291,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20305,7 +20305,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4177149407)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20316,7 +20316,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20330,7 +20330,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1457324017)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20341,7 +20341,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20355,7 +20355,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1467453495)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20366,7 +20366,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20380,7 +20380,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1408008556)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20391,7 +20391,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20405,7 +20405,7 @@ public class TDVTTest {
         assertEquals("temp(test)(175600811)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20416,7 +20416,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20430,7 +20430,7 @@ public class TDVTTest {
         assertEquals("temp(test)(41874160)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20441,7 +20441,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20455,7 +20455,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2954817995)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20466,7 +20466,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20480,7 +20480,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3715775174)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20539,7 +20539,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20553,7 +20553,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2815480624)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20603,7 +20603,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20617,7 +20617,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3738830082)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20676,7 +20676,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20690,7 +20690,7 @@ public class TDVTTest {
         assertEquals("temp(test)(151653785)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20749,7 +20749,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20763,7 +20763,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1373895161)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20813,7 +20813,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20827,7 +20827,7 @@ public class TDVTTest {
         assertEquals("temp(test)(543203842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20877,7 +20877,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20891,7 +20891,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3325657342)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20941,7 +20941,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -20955,7 +20955,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2617331766)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20987,7 +20987,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21001,7 +21001,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3200082645)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21018,7 +21018,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21032,7 +21032,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3049448927)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21082,7 +21082,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21096,7 +21096,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3494867617)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21146,7 +21146,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21160,7 +21160,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1660803953)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21198,7 +21198,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21212,7 +21212,7 @@ public class TDVTTest {
         assertEquals("temp(test)(872696424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21250,7 +21250,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21264,7 +21264,7 @@ public class TDVTTest {
         assertEquals("temp(test)(732183378)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21278,7 +21278,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21292,7 +21292,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3816689092)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21306,7 +21306,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21320,7 +21320,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2634030884)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21358,7 +21358,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21372,7 +21372,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4000895377)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21386,7 +21386,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21400,7 +21400,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1378354598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21459,7 +21459,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21473,7 +21473,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3057229987)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21484,7 +21484,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21498,7 +21498,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4063654893)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21509,7 +21509,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21523,7 +21523,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2102858309)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21534,7 +21534,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21548,7 +21548,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3270121971)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21559,7 +21559,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21573,7 +21573,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2692233594)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21584,7 +21584,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21598,7 +21598,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1772891037)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21609,7 +21609,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21623,7 +21623,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3926284460)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21634,7 +21634,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21648,7 +21648,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1415178918)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21659,7 +21659,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21673,7 +21673,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3608467423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21684,7 +21684,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21698,7 +21698,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2920782836)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21709,7 +21709,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21723,7 +21723,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3132873078)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21734,7 +21734,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21748,7 +21748,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2450943592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21759,7 +21759,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21773,7 +21773,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3530921297)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21784,7 +21784,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21798,7 +21798,7 @@ public class TDVTTest {
         assertEquals("temp(test)(304383277)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21809,7 +21809,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21823,7 +21823,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3871589708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21834,7 +21834,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21848,7 +21848,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2462406212)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21859,7 +21859,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21873,7 +21873,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3443263072)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21884,7 +21884,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21898,7 +21898,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1349416314)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21957,7 +21957,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -21971,7 +21971,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3032747293)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22030,7 +22030,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22044,7 +22044,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3880453047)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22103,7 +22103,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22117,7 +22117,7 @@ public class TDVTTest {
         assertEquals("temp(test)(877816921)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22173,7 +22173,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22187,7 +22187,7 @@ public class TDVTTest {
         assertEquals("temp(test)(707037378)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22237,7 +22237,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22251,7 +22251,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3028875325)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22289,7 +22289,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22303,7 +22303,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3483942593)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22341,7 +22341,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22355,7 +22355,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4196684004)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22414,7 +22414,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22428,7 +22428,7 @@ public class TDVTTest {
         assertEquals("temp(test)(351668681)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22487,7 +22487,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22501,7 +22501,7 @@ public class TDVTTest {
         assertEquals("temp(test)(748109579)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22560,7 +22560,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22574,7 +22574,7 @@ public class TDVTTest {
         assertEquals("temp(test)(859582235)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22612,7 +22612,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22626,7 +22626,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2079052241)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22685,7 +22685,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22699,7 +22699,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2102582873)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22731,7 +22731,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22745,7 +22745,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22771,7 +22771,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22785,7 +22785,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1942031084)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22844,7 +22844,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22858,7 +22858,7 @@ public class TDVTTest {
         assertEquals("temp(test)(308042462)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22917,7 +22917,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22931,7 +22931,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1290354772)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22981,7 +22981,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -22995,7 +22995,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2022110629)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23045,7 +23045,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23059,7 +23059,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1934432200)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23085,7 +23085,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23099,7 +23099,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1256004566)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23149,7 +23149,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23163,7 +23163,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2503102272)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23204,7 +23204,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23218,7 +23218,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2977666156)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23232,7 +23232,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23246,7 +23246,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1408155083)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23257,7 +23257,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23271,7 +23271,7 @@ public class TDVTTest {
         assertEquals("temp(test)(54082523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23282,7 +23282,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23296,7 +23296,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2040050501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23307,7 +23307,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23321,7 +23321,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3252316215)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23332,7 +23332,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23346,7 +23346,7 @@ public class TDVTTest {
         assertEquals("temp(test)(535799381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23360,7 +23360,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23374,7 +23374,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2377293421)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23388,7 +23388,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23402,7 +23402,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4035984656)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23413,7 +23413,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23427,7 +23427,7 @@ public class TDVTTest {
         assertEquals("temp(test)(840463993)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23471,7 +23471,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23485,7 +23485,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1720545932)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23529,7 +23529,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23543,7 +23543,7 @@ public class TDVTTest {
         assertEquals("temp(test)(840463993)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23587,7 +23587,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23601,7 +23601,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1720545932)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23645,7 +23645,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23659,7 +23659,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2707942807)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23670,7 +23670,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23684,7 +23684,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3474280307)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23695,7 +23695,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23709,7 +23709,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2707942807)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23720,7 +23720,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23734,7 +23734,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3474280307)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23745,7 +23745,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23759,7 +23759,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1671202742)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23797,7 +23797,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23811,7 +23811,7 @@ public class TDVTTest {
         assertEquals("temp(test)(536615588)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23849,7 +23849,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23863,7 +23863,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1933085624)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23877,7 +23877,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23891,7 +23891,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2986113344)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23905,7 +23905,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23919,7 +23919,7 @@ public class TDVTTest {
         assertEquals("temp(test)(266359676)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23954,7 +23954,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -23968,7 +23968,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2600727600)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23988,7 +23988,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24002,7 +24002,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2600727600)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24022,7 +24022,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24036,7 +24036,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3955107424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24071,7 +24071,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24085,7 +24085,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3955107424)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24120,7 +24120,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24134,7 +24134,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3898674109)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24166,7 +24166,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24180,7 +24180,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1119897860)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24206,7 +24206,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24220,7 +24220,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3311335472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24231,7 +24231,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24245,7 +24245,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1982106892)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24256,7 +24256,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24270,7 +24270,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2616948526)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24281,7 +24281,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24295,7 +24295,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4099405891)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24306,7 +24306,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24320,7 +24320,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1303420554)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24331,7 +24331,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24345,7 +24345,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1705284026)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24356,7 +24356,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24370,7 +24370,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2964540366)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24381,7 +24381,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24395,7 +24395,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3523871008)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24406,7 +24406,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24420,7 +24420,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3587526928)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24431,7 +24431,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24445,7 +24445,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2715649251)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24456,7 +24456,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24470,7 +24470,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3912893816)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24481,7 +24481,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24495,7 +24495,7 @@ public class TDVTTest {
         assertEquals("temp(test)(453060606)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24506,7 +24506,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24520,7 +24520,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1466575961)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24531,7 +24531,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24545,7 +24545,7 @@ public class TDVTTest {
         assertEquals("temp(test)(265878863)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24556,7 +24556,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24570,7 +24570,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3877847632)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24581,7 +24581,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24595,7 +24595,7 @@ public class TDVTTest {
         assertEquals("temp(test)(263614731)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24606,7 +24606,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24620,7 +24620,7 @@ public class TDVTTest {
         assertEquals("temp(test)(864002214)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24631,7 +24631,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24645,7 +24645,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1876737518)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24689,7 +24689,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24703,7 +24703,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1437280163)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24747,7 +24747,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24761,7 +24761,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3178513645)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24772,7 +24772,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24786,7 +24786,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3727444777)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24797,7 +24797,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24811,7 +24811,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4261466899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24870,7 +24870,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24884,7 +24884,7 @@ public class TDVTTest {
         assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24895,7 +24895,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24909,7 +24909,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4154938655)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24920,7 +24920,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24934,7 +24934,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1812249092)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24945,7 +24945,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24959,7 +24959,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1523549003)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24979,7 +24979,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -24993,7 +24993,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3981629397)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25016,7 +25016,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25030,7 +25030,7 @@ public class TDVTTest {
         assertEquals("temp(test)(257220821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25062,7 +25062,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25076,7 +25076,7 @@ public class TDVTTest {
         assertEquals("temp(test)(282093116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25105,7 +25105,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25119,7 +25119,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3096760581)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25148,7 +25148,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25162,7 +25162,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2787932066)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25188,7 +25188,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25202,7 +25202,7 @@ public class TDVTTest {
         assertEquals("temp(test)(838791689)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25240,7 +25240,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25254,7 +25254,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1647283678)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25292,7 +25292,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25306,7 +25306,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1719292105)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25365,7 +25365,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25379,7 +25379,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1567002572)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25438,7 +25438,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25452,7 +25452,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25463,7 +25463,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25477,7 +25477,7 @@ public class TDVTTest {
         assertEquals("temp(test)(512350875)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25488,7 +25488,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25502,7 +25502,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3910790823)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25513,7 +25513,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25527,7 +25527,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3683900016)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25550,7 +25550,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25564,7 +25564,7 @@ public class TDVTTest {
         assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25575,7 +25575,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25589,7 +25589,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2763474205)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25615,7 +25615,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25629,7 +25629,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3969685894)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25673,7 +25673,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25687,7 +25687,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3969685894)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25731,7 +25731,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25745,7 +25745,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4179095987)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25756,7 +25756,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25770,7 +25770,7 @@ public class TDVTTest {
         assertEquals("temp(test)(4179095987)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("int"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25781,7 +25781,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25795,7 +25795,7 @@ public class TDVTTest {
         assertEquals("temp(test)(366741644)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25842,7 +25842,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25856,7 +25856,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1240237577)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25903,7 +25903,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25917,7 +25917,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3892529067)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25952,7 +25952,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -25966,7 +25966,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2722044748)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26013,7 +26013,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26027,7 +26027,7 @@ public class TDVTTest {
         assertEquals("temp(test)(3550551924)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26065,7 +26065,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26079,7 +26079,7 @@ public class TDVTTest {
         assertEquals("temp(test)(2745903531)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26117,7 +26117,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26131,7 +26131,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1341534691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26190,7 +26190,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26204,7 +26204,7 @@ public class TDVTTest {
         assertEquals("temp(test)(1157868287)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26263,7 +26263,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26277,7 +26277,7 @@ public class TDVTTest {
         assertEquals("str2 (group)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26297,7 +26297,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26311,7 +26311,7 @@ public class TDVTTest {
         assertEquals("str2", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26337,7 +26337,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26351,7 +26351,7 @@ public class TDVTTest {
         assertEquals("str2", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26389,7 +26389,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26403,7 +26403,7 @@ public class TDVTTest {
         assertEquals("str0", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26414,7 +26414,7 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
@@ -26428,7 +26428,7 @@ public class TDVTTest {
         assertEquals("sum_calculation_555068687593533440_ok", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assert (tyName == "null" || tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26439,6 +26439,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         // This will be false if both HashSets are the same
-        assertFalse(rsSet.retainAll(expected));
+        assertFalse("failed result check", rsSet.retainAll(expected));
     }
 }

@@ -3,7 +3,7 @@ package com.mongodb.jdbc;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import org.bson.BsonValue;
+import org.bson.BsonType;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
     private MongoResultDoc mongoResultDoc;
@@ -33,11 +33,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return false;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case ARRAY:
             case BINARY:
             case BOOLEAN:
@@ -46,7 +43,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DECIMAL128:
             case DOCUMENT:
             case DOUBLE:
-            case END_OF_DOCUMENT:
             case INT32:
             case INT64:
             case MAX_KEY:
@@ -86,11 +82,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSigned(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return false;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case DOUBLE:
             case DECIMAL128:
             case INT32:
@@ -102,7 +95,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DATE_TIME:
             case DB_POINTER:
             case DOCUMENT:
-            case END_OF_DOCUMENT:
             case MAX_KEY:
             case MIN_KEY:
             case NULL:
@@ -121,11 +113,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return 0;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -143,8 +132,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
                 return unknownLength;
             case DOUBLE:
                 return 15;
-            case END_OF_DOCUMENT:
-                return 0;
             case INT32:
                 return 10;
             case INT64:
@@ -172,7 +159,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case UNDEFINED:
                 return 0;
         }
-        throw new SQLException("unknown bson type with value: " + o);
+        throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
@@ -195,11 +182,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getPrecision(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return 0;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -216,8 +200,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
                 return unknownLength;
             case DOUBLE:
                 return 15;
-            case END_OF_DOCUMENT:
-                return 0;
             case INT32:
                 return 10;
             case INT64:
@@ -245,23 +227,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case UNDEFINED:
                 return 0;
         }
-        throw new SQLException("unknown bson type with value: " + o);
+        throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
     public int getScale(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return 0;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case ARRAY:
             case BINARY:
             case BOOLEAN:
             case DATE_TIME:
             case DB_POINTER:
             case DOCUMENT:
-            case END_OF_DOCUMENT:
             case INT32:
             case INT64:
             case JAVASCRIPT:
@@ -281,7 +259,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case DOUBLE:
                 return 15;
         }
-        throw new SQLException("unknown bson type with value: " + o);
+        throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
@@ -296,18 +274,116 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         return mongoResultDoc.values.get(column - 1).database;
     }
 
-    private BsonValue getObject(int column) throws SQLException {
+    public BsonType getBsonType(int column) throws SQLException {
         checkBounds(column);
-        return mongoResultDoc.values.get(column - 1).value;
+        String typeName = mongoResultDoc.values.get(column - 1).bsonType;
+        return getBsonTypeHelper(typeName);
+    }
+
+    static BsonType getBsonTypeHelper(String typeName) throws SQLException {
+        int typeNameLength = typeName.length();
+        // bsonType strings as represented by the $type function:
+        // "array"
+        // "bool"
+        // "binData"
+        // "date"
+        // "dbPointer"
+        // "decimal"
+        // "double"
+        // "int"
+        // "javascript"
+        // "javascriptWithScope"
+        // "long"
+        // "maxKey"
+        // "minKey"
+        // "null"
+        // "object"
+        // "objectId"
+        // "regex"
+        // "string"
+        // "symbol"
+        // "timestamp"
+        // "undefined"
+        // This function will not always throw an exception for an unknown type name. Type
+        // names returned from ADL are assumed correct.
+        // Fortunately all type names can be guessed uniquely off a combination of first letter
+        // and length except for "minKey" vs "maxKey" and "string" vs "symbol", again, assuming
+		// all returned names are correct.
+        switch (typeName.charAt(0)) {
+            case 'a':
+                return BsonType.ARRAY;
+            case 'b':
+                switch (typeNameLength) {
+                    case 4:
+                        return BsonType.BOOLEAN;
+                    case 7:
+                        return BsonType.BINARY;
+                }
+                break;
+            case 'd':
+                switch (typeNameLength) {
+                    case 4:
+                        return BsonType.DATE_TIME;
+                    case 6:
+                        return BsonType.DOUBLE;
+                    case 7:
+                        return BsonType.DECIMAL128;
+                    case 9:
+                        return BsonType.DB_POINTER;
+                }
+                break;
+            case 'i':
+                return BsonType.INT32;
+            case 'j':
+                switch (typeNameLength) {
+                    case 10:
+                        return BsonType.JAVASCRIPT;
+                    case 19:
+                        return BsonType.JAVASCRIPT_WITH_SCOPE;
+                }
+                break;
+            case 'l':
+                return BsonType.INT64;
+            case 'm':
+                switch (typeName.charAt(1)) {
+                    case 'a':
+                        return BsonType.MAX_KEY;
+                    case 'i':
+                        return BsonType.MIN_KEY;
+                }
+                break;
+            case 'n':
+                return BsonType.NULL;
+            case 'o':
+                switch (typeNameLength) {
+                    case 6: // "object"
+                        return BsonType.DOCUMENT;
+                    case 8:
+                        return BsonType.OBJECT_ID;
+                }
+                break;
+            case 'r':
+                return BsonType.REGULAR_EXPRESSION;
+            case 's':
+                switch (typeName.charAt(1)) {
+                    case 't':
+                        return BsonType.STRING;
+                    case 'y':
+                        return BsonType.SYMBOL;
+                }
+                break;
+            case 't':
+                return BsonType.TIMESTAMP;
+            case 'u':
+                return BsonType.UNDEFINED;
+        }
+        throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
     }
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return Types.NULL;
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
             case ARRAY:
                 return Types.ARRAY;
             case BINARY:
@@ -324,8 +400,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
                 return Types.NULL;
             case DOUBLE:
                 return Types.DOUBLE;
-            case END_OF_DOCUMENT:
-                return Types.NULL;
             case INT32:
                 return Types.INTEGER;
             case INT64:
@@ -353,16 +427,13 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case UNDEFINED:
                 return Types.NULL;
         }
-        throw new SQLException("unknown bson type with value: " + o);
+        throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        BsonValue o = getObject(column);
-        if (o == null) {
-            return "null";
-        }
-        switch (o.getBsonType()) {
+        BsonType t = getBsonType(column);
+        switch (t) {
                 // we will return the same names as the mongodb $type function:
             case ARRAY:
                 return "array";
@@ -409,7 +480,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case UNDEFINED:
                 return "null";
         }
-        throw new SQLException("unknown bson type with value: " + o);
+        throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
@@ -434,7 +505,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        Object o = getObject(column);
+        checkBounds(column);
+        Object o = mongoResultDoc.values.get(column - 1).value;
         return o.getClass().getName();
     }
 

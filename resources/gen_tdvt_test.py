@@ -112,7 +112,7 @@ def make_test(fName, test):
             print('        tyName = rsmd.getColumnTypeName(' + str(i+1) + ');')
             # For now, allow the tyName to be null. We will fix this soon when the results from ADL
             # contain the type.
-            print('        assert(tyName == "null" || tyName.equals("' + types[ty] + '"));')
+            print('        assertTrue("failed type check", tyName.equals("null") || tyName.equals("' + types[ty] + '"));')
     if 'expected_results' in test and len(test['expected_results']) > 0:
         # Just compare everything as strings.
         print('        HashSet<ArrayList<String>> expected = new HashSet<>(' + str(len(test['expected_results'])) + ');')
@@ -130,7 +130,7 @@ def make_test(fName, test):
         print('        System.out.println(expected.toString());')
         print('        System.out.println(rsSet.toString());')
         print('        // This will be false if both HashSets are the same')
-        print('        assertFalse(rsSet.retainAll(expected));')
+        print('        assertFalse("failed result check", rsSet.retainAll(expected));')
     print("    }\n")
 
 def add_cases(fName):

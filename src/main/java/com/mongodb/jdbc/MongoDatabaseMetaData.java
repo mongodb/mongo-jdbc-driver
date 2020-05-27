@@ -815,12 +815,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", n));
-        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", n));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
-        doc.values.add(new Column("", "", "", "PROCEDURE_TYPE", "PROCEDURE_TYPE", n));
-        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", "string", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_TYPE", "PROCEDURE_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -839,26 +839,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", n));
-        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", n));
-        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", n));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "PRECISION", "PRECISION", n));
-        doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", n));
-        doc.values.add(new Column("", "", "", "SCALE", "SCALE", n));
-        doc.values.add(new Column("", "", "", "RADIX", "RADIX", n));
-        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", n));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
-        doc.values.add(new Column("", "", "", "COLUMN_DEF", "COLUMN_DEF", n));
-        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", n));
-        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
-        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", n));
-        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
-        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PRECISION", "PRECISION", "int", n));
+        doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", "int", n));
+        doc.values.add(new Column("", "", "", "SCALE", "SCALE", "int", n));
+        doc.values.add(new Column("", "", "", "RADIX", "RADIX", "int", n));
+        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", "int", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_DEF", "COLUMN_DEF", "string", n));
+        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int", n));
+        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string", n));
+        doc.values.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -936,7 +936,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         MongoResultDoc doc = new MongoResultDoc();
         ArrayList<MongoResultDoc> docs = new ArrayList<>(1);
         doc.values = new ArrayList<>(1);
-        doc.values.add(new Column("", "", "", "TABLE_TYPE", "TABLE_TYPE", new BsonString("TABLE")));
+        doc.values.add(
+                new Column(
+                        "", "", "", "TABLE_TYPE", "TABLE_TYPE", "string", new BsonString("TABLE")));
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
     }
@@ -1263,14 +1265,14 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "SCOPE", "SCOPE", n));
-        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", n));
-        doc.values.add(new Column("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", n));
-        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
-        doc.values.add(new Column("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", n));
+        doc.values.add(new Column("", "", "", "SCOPE", "SCOPE", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", "int", n));
+        doc.values.add(new Column("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", "int", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int", n));
+        doc.values.add(new Column("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1306,20 +1308,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
-        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
-        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
-        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
-        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
-        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1333,20 +1335,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
-        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
-        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
-        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
-        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
-        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1366,20 +1368,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", n));
-        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", n));
-        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", n));
-        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", n));
-        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", n));
-        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int", n));
+        doc.values.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int", n));
+        doc.values.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1402,9 +1404,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         BsonValue n = new BsonNull();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", new BsonString(typeName)));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(dataType)));
-        doc.values.add(new Column("", "", "", "PRECISION", "PRECISION", new BsonInt32(precision)));
+        doc.values.add(
+                new Column(
+                        "", "", "", "TYPE_NAME", "TYPE_NAME", "string", new BsonString(typeName)));
+        doc.values.add(
+                new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", new BsonInt32(dataType)));
+        doc.values.add(
+                new Column("", "", "", "PRECISION", "PRECISION", "int", new BsonInt32(precision)));
         doc.values.add(
                 new Column(
                         "",
@@ -1412,6 +1418,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "LITERAL_PREFIX",
                         "LITERAL_PREFIX",
+                        "string",
                         literalPrefix != null ? new BsonString(literalPrefix) : n));
         doc.values.add(
                 new Column(
@@ -1420,9 +1427,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "LITERAL_SUFFIX",
                         "LITERAL_SUFFIX",
+                        "string",
                         literalSuffix != null ? new BsonString(literalSuffix) : n));
-        doc.values.add(new Column("", "", "", "CREATE_PARAMS", "CREATE_PARAMS", n));
-        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(nullable)));
+        doc.values.add(new Column("", "", "", "CREATE_PARAMS", "CREATE_PARAMS", "string", n));
+        doc.values.add(
+                new Column("", "", "", "NULLABLE", "NULLABLE", "int", new BsonInt32(nullable)));
         doc.values.add(
                 new Column(
                         "",
@@ -1430,9 +1439,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "CASE_SENSITIVE",
                         "CASE_SENSITIVE",
+                        "bool",
                         new BsonBoolean(caseSensitive)));
         doc.values.add(
-                new Column("", "", "", "SEARCHABLE", "SEARCHABLE", new BsonInt32(searchable)));
+                new Column(
+                        "", "", "", "SEARCHABLE", "SEARCHABLE", "int", new BsonInt32(searchable)));
         doc.values.add(
                 new Column(
                         "",
@@ -1440,6 +1451,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "UNSIGNED_ATTRIBUTE",
                         "UNSIGNED_ATTRIBUTE",
+                        "bool",
                         new BsonBoolean(unsigned)));
         doc.values.add(
                 new Column(
@@ -1448,17 +1460,47 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "FIXED_PREC_SCALE",
                         "FIXED_PREC_SCALE",
+                        "bool",
                         new BsonBoolean(fixedPrecScale)));
         doc.values.add(
-                new Column("", "", "", "AUTO_INCREMENT", "AUTO_INCREMENT", new BsonBoolean(false)));
-        doc.values.add(new Column("", "", "", "LOCAL_TYPE_NAME", "LOCAL_TYPE_NAME", n));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "AUTO_INCREMENT",
+                        "AUTO_INCREMENT",
+                        "bool",
+                        new BsonBoolean(false)));
+        doc.values.add(new Column("", "", "", "LOCAL_TYPE_NAME", "LOCAL_TYPE_NAME", "string", n));
         doc.values.add(
-                new Column("", "", "", "MINIMUM_SCALE", "MINIMUM_SCALE", new BsonInt32(minScale)));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "MINIMUM_SCALE",
+                        "MINIMUM_SCALE",
+                        "int",
+                        new BsonInt32(minScale)));
         doc.values.add(
-                new Column("", "", "", "MAXIMUM_SCALE", "MAXIMUM_SCALE", new BsonInt32(maxScale)));
-        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", new BsonInt32(0)));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "MAXIMUM_SCALE",
+                        "MAXIMUM_SCALE",
+                        "int",
+                        new BsonInt32(maxScale)));
         doc.values.add(
-                new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", new BsonInt32(0)));
+                new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int", new BsonInt32(0)));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "SQL_DATETIME_SUB",
+                        "SQL_DATETIME_SUB",
+                        "int",
+                        new BsonInt32(0)));
         doc.values.add(
                 new Column(
                         "",
@@ -1466,6 +1508,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "NUM_PREC_RADIX",
                         "NUM_PREC_RADIX",
+                        "int",
                         new BsonInt32(numPrecRadix)));
         return doc;
     }
@@ -1720,13 +1763,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
-        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "CLASS_NAME", "CLASS_NAME", n));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
-        doc.values.add(new Column("", "", "", "BASE_TYPE", "BASE_TYPE", n));
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "CLASS_NAME", "CLASS_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", "string", n));
+        doc.values.add(new Column("", "", "", "BASE_TYPE", "BASE_TYPE", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1769,12 +1812,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
-        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "SUPERTYPE_CAT", "SUPERTYPE_CAT", n));
-        doc.values.add(new Column("", "", "", "SUPERTYPE_SCHEM", "SUPERTYPE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", n));
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_CAT", "SUPERTYPE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_SCHEM", "SUPERTYPE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", "string", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1788,10 +1831,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", n));
+        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", "string", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1809,27 +1852,27 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", n));
-        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "ATTR_NAME", "ATTR_NAME", n));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "ATTR_TYPE_NAME", "ATTR_TYPE_NAME", n));
-        doc.values.add(new Column("", "", "", "ATTR_SIZE", "ATTR_SIZE", n));
-        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
-        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", n));
-        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", n));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
-        doc.values.add(new Column("", "", "", "ATTR_DEF", "ATTR_DEF", n));
-        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", n));
-        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
-        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", n));
-        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
-        doc.values.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", n));
-        doc.values.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", n));
-        doc.values.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", n));
-        doc.values.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", n));
+        doc.values.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "ATTR_NAME", "ATTR_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "ATTR_TYPE_NAME", "ATTR_TYPE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "ATTR_SIZE", "ATTR_SIZE", "int", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int", n));
+        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "int", n));
+        doc.values.add(new Column("", "", "", "NULLABLE", "NULLABLE", "int", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", "string", n));
+        doc.values.add(new Column("", "", "", "ATTR_DEF", "ATTR_DEF", "string", n));
+        doc.values.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int", n));
+        doc.values.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string", n));
+        doc.values.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", "string", n));
+        doc.values.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", "string", n));
+        doc.values.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", "string", n));
+        doc.values.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", "int", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
@@ -1913,10 +1956,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         MongoResultDoc row = new MongoResultDoc();
         row.values = new ArrayList<>();
-        row.values.add(new Column("", "", "", "NAME", "NAME", new BsonString("user")));
-        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
+        row.values.add(new Column("", "", "", "NAME", "NAME", "string", new BsonString("user")));
+        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", "int", new BsonInt32(0)));
         row.values.add(
-                new Column("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "DEFAULT_VALUE",
+                        "DEFAULT_VALUE",
+                        "string",
+                        new BsonString("")));
         row.values.add(
                 new Column(
                         "",
@@ -1924,15 +1974,24 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "DESCRIPTION",
                         "DESCRIPTION",
+                        "string",
                         new BsonString("database user for the connection")));
         rows.add(row);
 
         row = new MongoResultDoc();
         row.values = new ArrayList<>();
-        row.values.add(new Column("", "", "", "NAME", "NAME", new BsonString("password")));
-        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(
-                new Column("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+                new Column("", "", "", "NAME", "NAME", "string", new BsonString("password")));
+        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", "int", new BsonInt32(0)));
+        row.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "DEFAULT_VALUE",
+                        "DEFAULT_VALUE",
+                        "string",
+                        new BsonString("")));
         row.values.add(
                 new Column(
                         "",
@@ -1940,15 +1999,24 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "DESCRIPTION",
                         "DESCRIPTION",
+                        "string",
                         new BsonString("user password for the connection")));
         rows.add(row);
 
         row = new MongoResultDoc();
         row.values = new ArrayList<>();
-        row.values.add(new Column("", "", "", "NAME", "NAME", new BsonString("conversionMode")));
-        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(
-                new Column("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+                new Column("", "", "", "NAME", "NAME", "string", new BsonString("conversionMode")));
+        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", "int", new BsonInt32(0)));
+        row.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "DEFAULT_VALUE",
+                        "DEFAULT_VALUE",
+                        "string",
+                        new BsonString("")));
         row.values.add(
                 new Column(
                         "",
@@ -1956,6 +2024,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "DESCRIPTION",
                         "DESCRIPTION",
+                        "string",
                         new BsonString(
                                 "conversionMode can be strict or relaxed. When strict, "
                                         + "failing conversions result in Exceptions. When relaxed, "
@@ -1964,10 +2033,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         row = new MongoResultDoc();
         row.values = new ArrayList<>();
-        row.values.add(new Column("", "", "", "NAME", "NAME", new BsonString("database")));
-        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", new BsonInt32(0)));
         row.values.add(
-                new Column("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", new BsonString("")));
+                new Column("", "", "", "NAME", "NAME", "string", new BsonString("database")));
+        row.values.add(new Column("", "", "", "MAX_LEN", "MAX_LEN", "int", new BsonInt32(0)));
+        row.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "DEFAULT_VALUE",
+                        "DEFAULT_VALUE",
+                        "string",
+                        new BsonString("")));
         row.values.add(
                 new Column(
                         "",
@@ -1975,6 +2052,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "DESCRIPTION",
                         "DESCRIPTION",
+                        "string",
                         new BsonString("database to connect to")));
         rows.add(row);
 
@@ -1985,8 +2063,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>(5);
         doc.values.add(
-                new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
-        doc.values.add(new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", new BsonNull()));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_CAT",
+                        "FUNCTION_CAT",
+                        "string",
+                        new BsonString("def")));
+        doc.values.add(
+                new Column(
+                        "", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", "string", new BsonNull()));
         doc.values.add(
                 new Column(
                         "",
@@ -1994,6 +2081,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "FUNCTION_NAME",
                         "FUNCTION_NAME",
+                        "string",
                         new BsonString(functionName)));
         doc.values.add(
                 new Column(
@@ -2002,6 +2090,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "REMARKS",
                         "REMARKS",
+                        "string",
                         // perhaps at some point add comments explaining the function.
                         new BsonString(remarks)));
         doc.values.add(
@@ -2011,6 +2100,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "FUNCTION_TYPE",
                         "FUNCTION_TYPE",
+                        "int",
                         new BsonInt32(functionNoTable)));
         doc.values.add(
                 new Column(
@@ -2019,6 +2109,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "SPECIFIC_NAME",
                         "SPECIFIC_NAME",
+                        "string",
                         new BsonString(functionName)));
         return doc;
     }
@@ -2064,8 +2155,15 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>(17);
         doc.values.add(
-                new Column("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", new BsonString("def")));
-        doc.values.add(new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", n));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "FUNCTION_CAT",
+                        "FUNCTION_CAT",
+                        "string",
+                        new BsonString("def")));
+        doc.values.add(new Column("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", "string", n));
         doc.values.add(
                 new Column(
                         "",
@@ -2073,9 +2171,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "FUNCTION_NAME",
                         "FUNCTION_NAME",
+                        "string",
                         new BsonString(functionName)));
         doc.values.add(
-                new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", new BsonString(argName)));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "COLUMN_NAME",
+                        "COLUMN_NAME",
+                        "string",
+                        new BsonString(argName)));
         doc.values.add(
                 new Column(
                         "",
@@ -2083,9 +2189,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "COLUMN_TYPE",
                         "COLUMN_TYPE",
+                        "int",
                         new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn)));
         doc.values.add(
-                new Column("", "", "", "DATA_TYPE", "DATA_TYPE", new BsonInt32(typeNum(argType))));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "DATA_TYPE",
+                        "DATA_TYPE",
+                        "int",
+                        new BsonInt32(typeNum(argType))));
         doc.values.add(
                 new Column(
                         "",
@@ -2093,15 +2207,29 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "TYPE_NAME",
                         "TYPE_NAME",
+                        "string",
                         argType == null ? n : new BsonString(argType)));
         doc.values.add(
-                new Column("", "", "", "PRECISION", "PRECISION", bsonInt32(typePrec(argType))));
-        doc.values.add(new Column("", "", "", "LENGTH", "LENGTH", bsonInt32(typeBytes(argType))));
-        doc.values.add(new Column("", "", "", "SCALE", "SCALE", bsonInt32(typeScale(argType))));
-        doc.values.add(new Column("", "", "", "RADIX", "RADIX", bsonInt32(typeRadix(argType))));
+                new Column(
+                        "", "", "", "PRECISION", "PRECISION", "int", bsonInt32(typePrec(argType))));
         doc.values.add(
-                new Column("", "", "", "NULLABLE", "NULLABLE", new BsonInt32(functionNullable)));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", new BsonString(func.comment)));
+                new Column("", "", "", "LENGTH", "LENGTH", "int", bsonInt32(typeBytes(argType))));
+        doc.values.add(
+                new Column("", "", "", "SCALE", "SCALE", "int", bsonInt32(typeScale(argType))));
+        doc.values.add(
+                new Column("", "", "", "RADIX", "RADIX", "int", bsonInt32(typeRadix(argType))));
+        doc.values.add(
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "NULLABLE",
+                        "NULLABLE",
+                        "int",
+                        new BsonInt32(functionNullable)));
+        doc.values.add(
+                new Column(
+                        "", "", "", "REMARKS", "REMARKS", "string", new BsonString(func.comment)));
         doc.values.add(
                 new Column(
                         "",
@@ -2109,10 +2237,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "CHAR_OCTET_LENGTH",
                         "CHAR_OCTET_LENGTH",
+                        "int",
                         bsonInt32(typeBytes(argType))));
         doc.values.add(
-                new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", new BsonInt32(i)));
-        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", new BsonString("YES")));
+                new Column(
+                        "",
+                        "",
+                        "",
+                        "ORDINAL_POSITION",
+                        "ORDINAL_POSITION",
+                        "int",
+                        new BsonInt32(i)));
+        doc.values.add(
+                new Column(
+                        "", "", "", "IS_NULLABLE", "IS_NULLABLE", "string", new BsonString("YES")));
         doc.values.add(
                 new Column(
                         "",
@@ -2120,6 +2258,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         "",
                         "SPECIFIC_NAME",
                         "SPECIFIC_NAME",
+                        "string",
                         new BsonString(functionName)));
         return doc;
     }
@@ -2185,18 +2324,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
         MongoResultDoc doc = new MongoResultDoc();
         doc.values = new ArrayList<>();
-        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", n));
-        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", n));
-        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", n));
-        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", n));
-        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", n));
-        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", n));
-        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", n));
-        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", n));
-        doc.values.add(new Column("", "", "", "COLUMN_USAGE", "COLUMN_USAGE", n));
-        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", n));
-        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", n));
-        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", n));
+        doc.values.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", "string", n));
+        doc.values.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", "string", n));
+        doc.values.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string", n));
+        doc.values.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int", n));
+        doc.values.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", "int", n));
+        doc.values.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int", n));
+        doc.values.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "string", n));
+        doc.values.add(new Column("", "", "", "COLUMN_USAGE", "COLUMN_USAGE", "string", n));
+        doc.values.add(new Column("", "", "", "REMARKS", "REMARKS", "string", n));
+        doc.values.add(new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int", n));
+        doc.values.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string", n));
         doc.emptyResultSet = true;
         docs.add(doc);
         return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
