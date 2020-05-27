@@ -281,7 +281,6 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     static BsonType getBsonTypeHelper(String typeName) throws SQLException {
-        int typeNameLength = typeName.length();
         // bsonType strings as represented by the $type function:
         // "array"
         // "bool"
@@ -313,7 +312,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case 'a':
                 return BsonType.ARRAY;
             case 'b':
-                switch (typeNameLength) {
+                switch (typeName.length()) {
                     case 4:
                         return BsonType.BOOLEAN;
                     case 7:
@@ -321,7 +320,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
                 }
                 break;
             case 'd':
-                switch (typeNameLength) {
+                switch (typeName.length()) {
                     case 4:
                         return BsonType.DATE_TIME;
                     case 6:
@@ -335,7 +334,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case 'i':
                 return BsonType.INT32;
             case 'j':
-                switch (typeNameLength) {
+                switch (typeName.length()) {
                     case 10:
                         return BsonType.JAVASCRIPT;
                     case 19:
@@ -355,7 +354,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             case 'n':
                 return BsonType.NULL;
             case 'o':
-                switch (typeNameLength) {
+                switch (typeName.length()) {
                     case 6: // "object"
                         return BsonType.DOCUMENT;
                     case 8:
