@@ -308,7 +308,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         // names returned from ADL are assumed correct.
         // Fortunately all type names can be guessed uniquely off a combination of first letter
         // and length except for "minKey" vs "maxKey" and "string" vs "symbol", again, assuming
-		// all returned names are correct.
+        // all returned names are correct.
         switch (typeName.charAt(0)) {
             case 'a':
                 return BsonType.ARRAY;
