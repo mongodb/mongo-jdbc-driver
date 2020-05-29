@@ -3,6 +3,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.24.3"
     id 'io.codearte.nexus-staging' version '0.21.2'
     id "de.marcphilipp.nexus-publish" version "0.3.0"
+    id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 ext {
@@ -39,6 +40,7 @@ sourceSets {
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = sourceCompatibility

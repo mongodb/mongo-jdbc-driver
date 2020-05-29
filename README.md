@@ -5,6 +5,9 @@
 ### To generate source Jar
 ./gradlew clean :sourceJar  
 You can find the generated jar in build/libs/
+### To generate fat Jar which includes all the dependencies
+./gradlew clean :shadowJar
+You can find the generated jar in build/libs/
 ### To generate test Jar
 ./gradlew clean :testJar  
 You can find the generated jar in build/libs/ 
