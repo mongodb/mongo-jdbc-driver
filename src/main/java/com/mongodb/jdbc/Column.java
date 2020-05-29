@@ -8,6 +8,7 @@ public class Column {
     public String tableAlias;
     public String column;
     public String columnAlias;
+    public String bsonType;
     public BsonValue value;
 
     public Column() {}
@@ -18,12 +19,14 @@ public class Column {
             String tableAlias,
             String column,
             String columnAlias,
+            String bsonType,
             BsonValue value) {
         this.database = database;
         this.table = table;
         this.tableAlias = tableAlias;
         this.column = column;
         this.columnAlias = columnAlias;
+        this.bsonType = bsonType;
         this.value = value;
     }
 
@@ -44,6 +47,9 @@ public class Column {
                 + '\''
                 + ", columnAlias='"
                 + columnAlias
+                + '\''
+                + ", bsonType="
+                + bsonType
                 + '\''
                 + ", value="
                 + value

@@ -81,7 +81,15 @@ class MongoResultSetTest extends MongoMock {
 
         mongoResultDoc
                 .getValues()
-                .add(new Column("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, new BsonNull()));
+                .add(
+                        new Column(
+                                "",
+                                "",
+                                "",
+                                NULL_COL_LABEL,
+                                NULL_COL_LABEL,
+                                "null",
+                                new BsonNull()));
         mongoResultDoc
                 .getValues()
                 .add(
@@ -91,6 +99,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 DOUBLE_COL_LABEL,
                                 DOUBLE_COL_LABEL,
+                                "double",
                                 new BsonDouble(1.1)));
         mongoResultDoc
                 .getValues()
@@ -101,6 +110,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 STRING_COL_LABEL,
                                 STRING_COL_LABEL,
+                                "string",
                                 new BsonString("string data")));
         mongoResultDoc
                 .getValues()
@@ -111,6 +121,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 BINARY_COL_LABEL,
                                 BINARY_COL_LABEL,
+                                "binData",
                                 new BsonBinary("data".getBytes())));
         mongoResultDoc
                 .getValues()
@@ -121,6 +132,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 UUID_COL_LABEL,
                                 UUID_COL_LABEL,
+                                "binData",
                                 new BsonBinary(new UUID(0, 0))));
         mongoResultDoc
                 .getValues()
@@ -131,6 +143,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 OBJECTID_COL_LABEL,
                                 OBJECTID_COL_LABEL,
+                                "objectId",
                                 new BsonObjectId(new ObjectId("5e334e6e780812e4896dd65e"))));
         mongoResultDoc
                 .getValues()
@@ -141,6 +154,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 BOOLEAN_COL_LABEL,
                                 BOOLEAN_COL_LABEL,
+                                "bool",
                                 new BsonBoolean(true)));
         mongoResultDoc
                 .getValues()
@@ -151,6 +165,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 DATE_COL_LABEL,
                                 DATE_COL_LABEL,
+                                "date",
                                 new BsonDateTime(-44364244526000L)));
         mongoResultDoc
                 .getValues()
@@ -161,10 +176,19 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 INTEGER_COL_LABEL,
                                 INTEGER_COL_LABEL,
+                                "int",
                                 new BsonInt32(100)));
         mongoResultDoc
                 .getValues()
-                .add(new Column("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, new BsonInt64(100L)));
+                .add(
+                        new Column(
+                                "",
+                                "",
+                                "",
+                                LONG_COL_LABEL,
+                                LONG_COL_LABEL,
+                                "long",
+                                new BsonInt64(100L)));
         mongoResultDoc
                 .getValues()
                 .add(
@@ -174,6 +198,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 DECIMAL_COL_LABEL,
                                 DECIMAL_COL_LABEL,
+                                "decimal",
                                 new BsonDecimal128(new Decimal128(100L))));
         mongoResultDoc
                 .getValues()
@@ -184,6 +209,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 UNDEFINED_COL_LABEL,
                                 UNDEFINED_COL_LABEL,
+                                "undefined",
                                 new BsonUndefined()));
         mongoResultDoc
                 .getValues()
@@ -194,6 +220,7 @@ class MongoResultSetTest extends MongoMock {
                                 "",
                                 DBPOINTER_COL_LABEL,
                                 DBPOINTER_COL_LABEL,
+                                "dbPointer",
                                 new BsonDbPointer(
                                         "foo", new ObjectId("5e334e6e780812e4896dd65e"))));
 
@@ -219,9 +246,10 @@ class MongoResultSetTest extends MongoMock {
 
     @BeforeEach
     void setup() throws NoSuchFieldException {
-        super.resetMockObjs();
+        MongoMock.resetMockObjs();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testStrictGetters() throws Exception {
         boolean hasNext = strictMongoResultSet.next();
@@ -734,6 +762,7 @@ class MongoResultSetTest extends MongoMock {
         assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void closedResultSets() throws Exception {
         try {
@@ -1091,6 +1120,7 @@ class MongoResultSetTest extends MongoMock {
                 });
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testRelaxedGetters() throws Exception {
         boolean hasNext = relaxedMongoResultSet.next();
@@ -1396,7 +1426,7 @@ class MongoResultSetTest extends MongoMock {
         AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
         List<Column> cols = new ArrayList<>();
         String colName = "a";
-        cols.add(generateCol("myDB", "foo", colName, null));
+        cols.add(generateCol("myDB", "foo", colName, "string", new BsonNull()));
         MongoResultDoc emptyResultDoc = new MongoResultDoc(cols, true);
 
         when(cursor.hasNext()).thenAnswer(invocation -> !nextCalledOnCursor.get());
@@ -1434,7 +1464,7 @@ class MongoResultSetTest extends MongoMock {
         AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
         List<Column> cols = new ArrayList<>();
         String colName = "a";
-        cols.add(generateCol("myDB", "foo", colName, null));
+        cols.add(generateCol("myDB", "foo", colName, "string", new BsonNull()));
         MongoResultDoc emptyResultDoc = new MongoResultDoc(cols, true);
 
         when(cursor.hasNext()).thenAnswer(invocation -> !nextCalledOnCursor.get());
@@ -1468,10 +1498,10 @@ class MongoResultSetTest extends MongoMock {
         AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
         List<Column> cols1 = new ArrayList<>();
         String colName = "a";
-        cols1.add(generateCol("myDB", "foo", colName, new BsonInt32(1)));
+        cols1.add(generateCol("myDB", "foo", colName, "int", new BsonInt32(1)));
         MongoResultDoc row1 = new MongoResultDoc(cols1, false);
         List<Column> cols2 = new ArrayList<>();
-        cols2.add(generateCol("myDB", "foo", colName, new BsonString("test")));
+        cols2.add(generateCol("myDB", "foo", colName, "string", new BsonString("test")));
         MongoResultDoc row2 = new MongoResultDoc(cols2, false);
 
         List<MongoResultDoc> rows = new ArrayList<>();
