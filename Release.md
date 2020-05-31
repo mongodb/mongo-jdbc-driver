@@ -23,7 +23,7 @@ git fetch upstream
 git checkout -b up-master upstream/master
 ```
 * Update version in `gradle.properties`, and update the `README.md` file to reflect the new version. Commit these changes:  
-```git commit -m "BUMP v<version>"```
+```git commit -am "BUMP v<version>"```
 * Tag it for release as follows:  
 ```git tag -a -m "<new version>" v<new version> <githash>```   
 The tag command MUST:  
@@ -31,7 +31,10 @@ The tag command MUST:
   * include a message that contains the semantic version for the release  
   * have a tagname that is exactly the name as the semantic version, prefixed with "v"  
 * Once tagged, push the newly created tag to master
-```git push upstream v<revision> ```
+```
+   git push upstream v<revision>
+   git push upstream up-master:master
+```
 * The evergreen release task will run through all the tests, check the release comment and tag name. If all passed, it will automatically push the release artifacts to Maven-Central. Check the released version in https://oss.sonatype.org 
 * Update version back to a SNAPSHOT for the next version in `gradle.properties` and commit  
 ```git commit -am "BUMP <next revision>-SNAPSHOT"```
