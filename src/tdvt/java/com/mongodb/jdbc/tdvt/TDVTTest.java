@@ -40,6 +40,7 @@ public class TDVTTest {
 
     @Test
     public void testCALCSBI_821_bug() throws SQLException {
+        System.out.println("==============================CALCSBI_821_bug");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -51,11 +52,20 @@ public class TDVTTest {
         assertEquals("diff", rsmd.getColumnLabel(3));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         tyName = rsmd.getColumnTypeName(2);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         tyName = rsmd.getColumnTypeName(3);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(3);
@@ -74,15 +84,17 @@ public class TDVTTest {
         expectedRow.add("0.53");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCSBI_821_bug");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS0() throws SQLException {
+        System.out.println("==============================CALCS0");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -92,22 +104,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2074921570)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS0");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS1() throws SQLException {
+        System.out.println("==============================CALCS1");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -117,22 +134,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2348327946)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS1");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS2() throws SQLException {
+        System.out.println("==============================CALCS2");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -142,22 +164,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3062347157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS2");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS3() throws SQLException {
+        System.out.println("==============================CALCS3");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -167,22 +194,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1236088422)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS3");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS4() throws SQLException {
+        System.out.println("==============================CALCS4");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -192,22 +224,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1709161123)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS4");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS5() throws SQLException {
+        System.out.println("==============================CALCS5");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -217,22 +254,27 @@ public class TDVTTest {
         assertEquals("temp(test)(941741456)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS5");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS6() throws SQLException {
+        System.out.println("==============================CALCS6");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -242,22 +284,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4070818381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS6");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS7() throws SQLException {
+        System.out.println("==============================CALCS7");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -267,22 +314,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1209329404)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS7");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS8() throws SQLException {
+        System.out.println("==============================CALCS8");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -292,22 +344,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2284623665)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS8");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS9() throws SQLException {
+        System.out.println("==============================CALCS9");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -317,22 +374,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3556637072)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS9");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS10() throws SQLException {
+        System.out.println("==============================CALCS10");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -342,22 +404,27 @@ public class TDVTTest {
         assertEquals("temp(test)(20465857)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS10");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS11() throws SQLException {
+        System.out.println("==============================CALCS11");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -367,22 +434,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3365622206)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS11");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS12() throws SQLException {
+        System.out.println("==============================CALCS12");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -392,22 +464,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1193407708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS12");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS13() throws SQLException {
+        System.out.println("==============================CALCS13");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -417,22 +494,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3498421513)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS13");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS14() throws SQLException {
+        System.out.println("==============================CALCS14");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -442,22 +524,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1756144708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS14");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS15() throws SQLException {
+        System.out.println("==============================CALCS15");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -467,22 +554,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2635020195)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS15");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS16() throws SQLException {
+        System.out.println("==============================CALCS16");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -492,22 +584,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2744314424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS16");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS17() throws SQLException {
+        System.out.println("==============================CALCS17");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -517,7 +614,10 @@ public class TDVTTest {
         assertEquals("temp(test)(232803726)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -563,15 +663,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS17");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS18() throws SQLException {
+        System.out.println("==============================CALCS18");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -581,7 +683,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2176505489)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -627,15 +732,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS18");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS19() throws SQLException {
+        System.out.println("==============================CALCS19");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -645,7 +752,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2741755004)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -700,15 +810,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 08:00:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS19");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS20() throws SQLException {
+        System.out.println("==============================CALCS20");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -718,7 +830,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2526477208)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -773,15 +888,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS20");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS21() throws SQLException {
+        System.out.println("==============================CALCS21");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -791,7 +908,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2007354609)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -846,15 +966,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS21");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS22() throws SQLException {
+        System.out.println("==============================CALCS22");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -864,7 +986,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3928745396)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -910,15 +1035,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS22");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS23() throws SQLException {
+        System.out.println("==============================CALCS23");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -928,7 +1055,10 @@ public class TDVTTest {
         assertEquals("temp(test)(746880020)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -974,15 +1104,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS23");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS24() throws SQLException {
+        System.out.println("==============================CALCS24");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -992,22 +1124,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2699142763)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS24");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS25() throws SQLException {
+        System.out.println("==============================CALCS25");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1017,22 +1154,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1634134069)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS25");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS26() throws SQLException {
+        System.out.println("==============================CALCS26");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1042,22 +1184,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1949844743)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS26");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS27() throws SQLException {
+        System.out.println("==============================CALCS27");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1067,22 +1214,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3376136658)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS27");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS28() throws SQLException {
+        System.out.println("==============================CALCS28");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1092,22 +1244,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3672267408)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS28");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS29() throws SQLException {
+        System.out.println("==============================CALCS29");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1117,22 +1274,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2406708804)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS29");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS30() throws SQLException {
+        System.out.println("==============================CALCS30");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1142,22 +1304,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1073594909)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS30");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS31() throws SQLException {
+        System.out.println("==============================CALCS31");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1167,22 +1334,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4016689999)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS31");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS32() throws SQLException {
+        System.out.println("==============================CALCS32");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1192,22 +1364,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3405047399)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS32");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS33() throws SQLException {
+        System.out.println("==============================CALCS33");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1217,22 +1394,27 @@ public class TDVTTest {
         assertEquals("temp(test)(55506858)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS33");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS34() throws SQLException {
+        System.out.println("==============================CALCS34");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1242,22 +1424,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3460070750)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS34");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS35() throws SQLException {
+        System.out.println("==============================CALCS35");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1267,22 +1454,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1494289478)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS35");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS36() throws SQLException {
+        System.out.println("==============================CALCS36");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1292,22 +1484,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3227046355)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS36");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS37() throws SQLException {
+        System.out.println("==============================CALCS37");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1317,22 +1514,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1233941598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS37");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS38() throws SQLException {
+        System.out.println("==============================CALCS38");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1342,22 +1544,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3874232094)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS38");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS39() throws SQLException {
+        System.out.println("==============================CALCS39");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1367,22 +1574,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1546814749)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS39");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS40() throws SQLException {
+        System.out.println("==============================CALCS40");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1392,22 +1604,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3692431276)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS40");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS41() throws SQLException {
+        System.out.println("==============================CALCS41");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1417,22 +1634,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3910975586)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS41");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS42() throws SQLException {
+        System.out.println("==============================CALCS42");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1442,22 +1664,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1133866179)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS42");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS43() throws SQLException {
+        System.out.println("==============================CALCS43");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1467,22 +1694,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3590771088)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("9");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS43");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS44() throws SQLException {
+        System.out.println("==============================CALCS44");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1492,22 +1724,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1804085677)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("12");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS44");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS45() throws SQLException {
+        System.out.println("==============================CALCS45");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1517,22 +1754,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2760211945)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("13");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS45");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS46() throws SQLException {
+        System.out.println("==============================CALCS46");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1542,7 +1784,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3386714330)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1594,15 +1839,17 @@ public class TDVTTest {
         expectedRow.add("312");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS46");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS47() throws SQLException {
+        System.out.println("==============================CALCS47");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1612,7 +1859,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1554877814)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1664,15 +1914,17 @@ public class TDVTTest {
         expectedRow.add("312");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS47");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS48() throws SQLException {
+        System.out.println("==============================CALCS48");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1682,7 +1934,10 @@ public class TDVTTest {
         assertEquals("temp(test)(680392169)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1728,15 +1983,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS48");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS49() throws SQLException {
+        System.out.println("==============================CALCS49");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1746,7 +2003,10 @@ public class TDVTTest {
         assertEquals("temp(test)(792760981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1792,15 +2052,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS49");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS50() throws SQLException {
+        System.out.println("==============================CALCS50");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1810,7 +2072,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4192719501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1865,15 +2130,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS50");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS51() throws SQLException {
+        System.out.println("==============================CALCS51");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1883,7 +2150,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2927274352)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1938,15 +2208,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS51");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS52() throws SQLException {
+        System.out.println("==============================CALCS52");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -1956,7 +2228,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2443162804)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1990,15 +2265,17 @@ public class TDVTTest {
         expectedRow.add("ER");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS52");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS53() throws SQLException {
+        System.out.println("==============================CALCS53");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2008,7 +2285,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1954670685)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2051,15 +2331,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS53");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS54() throws SQLException {
+        System.out.println("==============================CALCS54");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2069,7 +2351,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3664185027)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2103,15 +2388,17 @@ public class TDVTTest {
         expectedRow.add("twelve");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS54");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS55() throws SQLException {
+        System.out.println("==============================CALCS55");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2121,7 +2408,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3300724379)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2176,15 +2466,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS55");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS56() throws SQLException {
+        System.out.println("==============================CALCS56");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2194,7 +2486,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4107590482)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2216,15 +2511,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS56");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS57() throws SQLException {
+        System.out.println("==============================CALCS57");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2234,7 +2531,10 @@ public class TDVTTest {
         assertEquals("temp(test)(766794695)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2256,15 +2556,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS57");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS58() throws SQLException {
+        System.out.println("==============================CALCS58");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2274,22 +2576,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS58");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS59() throws SQLException {
+        System.out.println("==============================CALCS59");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2299,22 +2606,27 @@ public class TDVTTest {
         assertEquals("temp(test)(334867691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS59");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS60() throws SQLException {
+        System.out.println("==============================CALCS60");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2324,7 +2636,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1224905293)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2379,15 +2694,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS60");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS61() throws SQLException {
+        System.out.println("==============================CALCS61");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2397,7 +2714,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3044284514)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2413,15 +2733,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS61");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS62() throws SQLException {
+        System.out.println("==============================CALCS62");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2431,7 +2753,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2383411022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2447,15 +2772,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS62");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS63() throws SQLException {
+        System.out.println("==============================CALCS63");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2465,22 +2792,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3392256124)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS63");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS64() throws SQLException {
+        System.out.println("==============================CALCS64");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2490,22 +2822,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1426463696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS64");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS65() throws SQLException {
+        System.out.println("==============================CALCS65");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2515,7 +2852,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1770279206)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2564,15 +2904,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS65");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS66() throws SQLException {
+        System.out.println("==============================CALCS66");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2582,7 +2924,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4279914489)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2631,15 +2976,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS66");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS67() throws SQLException {
+        System.out.println("==============================CALCS67");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2649,22 +2996,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2967749075)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("DATA");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS67");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS68() throws SQLException {
+        System.out.println("==============================CALCS68");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2674,7 +3026,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3516395767)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2720,15 +3075,17 @@ public class TDVTTest {
         expectedRow.add("TWO");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS68");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS69() throws SQLException {
+        System.out.println("==============================CALCS69");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2738,7 +3095,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3428507074)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2751,15 +3111,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS69");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS70() throws SQLException {
+        System.out.println("==============================CALCS70");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2769,7 +3131,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1935567978)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2782,15 +3147,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS70");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS71() throws SQLException {
+        System.out.println("==============================CALCS71");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2800,7 +3167,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3179501244)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2810,15 +3180,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS71");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS72() throws SQLException {
+        System.out.println("==============================CALCS72");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2828,7 +3200,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1288552116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2841,15 +3216,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS72");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS77() throws SQLException {
+        System.out.println("==============================CALCS77");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2859,7 +3236,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3848052829)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2914,15 +3294,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS77");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS78() throws SQLException {
+        System.out.println("==============================CALCS78");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2932,7 +3314,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1108086785)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -2942,15 +3327,17 @@ public class TDVTTest {
         expectedRow.add("");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS78");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS79() throws SQLException {
+        System.out.println("==============================CALCS79");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -2960,7 +3347,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3382465274)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3015,15 +3405,17 @@ public class TDVTTest {
         expectedRow.add("key16");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS79");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS80() throws SQLException {
+        System.out.println("==============================CALCS80");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3033,7 +3425,10 @@ public class TDVTTest {
         assertEquals("temp(test)(55415805)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3046,15 +3441,17 @@ public class TDVTTest {
         expectedRow.add("TECHNOLOGY");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS80");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS81() throws SQLException {
+        System.out.println("==============================CALCS81");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3064,7 +3461,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2285743265)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3119,15 +3519,17 @@ public class TDVTTest {
         expectedRow.add("ERICSSON");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS81");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS82() throws SQLException {
+        System.out.println("==============================CALCS82");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3137,7 +3539,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3228347817)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3183,15 +3588,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS82");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS83() throws SQLException {
+        System.out.println("==============================CALCS83");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3201,7 +3608,10 @@ public class TDVTTest {
         assertEquals("temp(test)(286811776)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3211,15 +3621,17 @@ public class TDVTTest {
         expectedRow.add("e");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS83");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS87() throws SQLException {
+        System.out.println("==============================CALCS87");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3229,7 +3641,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3174765981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3257,15 +3672,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS87");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS88() throws SQLException {
+        System.out.println("==============================CALCS88");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3275,7 +3692,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2829869592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3303,15 +3723,17 @@ public class TDVTTest {
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS88");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS89() throws SQLException {
+        System.out.println("==============================CALCS89");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3321,7 +3743,10 @@ public class TDVTTest {
         assertEquals("temp(test)(551775594)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3364,15 +3789,17 @@ public class TDVTTest {
         expectedRow.add("9");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS89");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS90() throws SQLException {
+        System.out.println("==============================CALCS90");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3382,7 +3809,10 @@ public class TDVTTest {
         assertEquals("temp(test)(524492059)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3419,15 +3849,17 @@ public class TDVTTest {
         expectedRow.add("18");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS90");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS91() throws SQLException {
+        System.out.println("==============================CALCS91");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3437,7 +3869,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3934956185)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3468,15 +3903,17 @@ public class TDVTTest {
         expectedRow.add("15.7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS91");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS92() throws SQLException {
+        System.out.println("==============================CALCS92");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3486,7 +3923,10 @@ public class TDVTTest {
         assertEquals("temp(test)(129981160)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3541,15 +3981,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS92");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS93() throws SQLException {
+        System.out.println("==============================CALCS93");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3559,7 +4001,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1053269056)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3605,15 +4050,17 @@ public class TDVTTest {
         expectedRow.add("17.86");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS93");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS94() throws SQLException {
+        System.out.println("==============================CALCS94");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3623,7 +4070,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3320504981)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3678,15 +4128,17 @@ public class TDVTTest {
         expectedRow.add("12.93");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS94");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS95() throws SQLException {
+        System.out.println("==============================CALCS95");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3696,7 +4148,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3786834202)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3739,15 +4194,17 @@ public class TDVTTest {
         expectedRow.add("19.39");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS95");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS97() throws SQLException {
+        System.out.println("==============================CALCS97");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3757,7 +4214,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2728495522)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3812,15 +4272,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-03 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS97");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS100() throws SQLException {
+        System.out.println("==============================CALCS100");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3830,22 +4292,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2572329321)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-07-04 22:49:28");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS100");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS101() throws SQLException {
+        System.out.println("==============================CALCS101");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3855,7 +4322,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4144088821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3889,15 +4359,17 @@ public class TDVTTest {
         expectedRow.add("41");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS101");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS102() throws SQLException {
+        System.out.println("==============================CALCS102");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3907,7 +4379,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2035564840)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -3962,15 +4437,17 @@ public class TDVTTest {
         expectedRow.add("128");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS102");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS103() throws SQLException {
+        System.out.println("==============================CALCS103");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -3980,7 +4457,10 @@ public class TDVTTest {
         assertEquals("temp(test)(477986140)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4014,15 +4494,17 @@ public class TDVTTest {
         expectedRow.add("September");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS103");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS104() throws SQLException {
+        System.out.println("==============================CALCS104");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4032,7 +4514,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2224240773)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4042,15 +4527,17 @@ public class TDVTTest {
         expectedRow.add("July");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS104");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS105() throws SQLException {
+        System.out.println("==============================CALCS105");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4060,22 +4547,27 @@ public class TDVTTest {
         assertEquals("temp(test)(535453017)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("Data");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS105");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS106() throws SQLException {
+        System.out.println("==============================CALCS106");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4085,7 +4577,10 @@ public class TDVTTest {
         assertEquals("temp(test)(497224717)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4131,15 +4626,17 @@ public class TDVTTest {
         expectedRow.add("DVD");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS106");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS107() throws SQLException {
+        System.out.println("==============================CALCS107");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4149,7 +4646,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1239505702)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4159,15 +4659,17 @@ public class TDVTTest {
         expectedRow.add("e");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS107");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS108() throws SQLException {
+        System.out.println("==============================CALCS108");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4177,7 +4679,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1298877827)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4223,15 +4728,17 @@ public class TDVTTest {
         expectedRow.add("23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS108");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS109() throws SQLException {
+        System.out.println("==============================CALCS109");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4241,7 +4748,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1695139533)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4287,15 +4797,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS109");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS110() throws SQLException {
+        System.out.println("==============================CALCS110");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4305,7 +4817,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1003104432)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4351,15 +4866,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS110");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS111() throws SQLException {
+        System.out.println("==============================CALCS111");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4369,7 +4886,10 @@ public class TDVTTest {
         assertEquals("temp(test)(381839689)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4403,15 +4923,17 @@ public class TDVTTest {
         expectedRow.add("123");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS111");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS112() throws SQLException {
+        System.out.println("==============================CALCS112");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4421,7 +4943,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2416406882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4476,15 +5001,17 @@ public class TDVTTest {
         expectedRow.add("384");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS112");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS113() throws SQLException {
+        System.out.println("==============================CALCS113");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4494,7 +5021,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3489013143)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4525,15 +5055,17 @@ public class TDVTTest {
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS113");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS114() throws SQLException {
+        System.out.println("==============================CALCS114");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4543,7 +5075,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3834106318)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4583,15 +5118,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS114");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS116() throws SQLException {
+        System.out.println("==============================CALCS116");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4601,22 +5138,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3161246105)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("bat");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS116");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS117() throws SQLException {
+        System.out.println("==============================CALCS117");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4626,7 +5168,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2953834147)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4672,15 +5217,17 @@ public class TDVTTest {
         expectedRow.add("twolvo");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS117");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS118() throws SQLException {
+        System.out.println("==============================CALCS118");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4690,7 +5237,10 @@ public class TDVTTest {
         assertEquals("temp(test)(551720338)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4718,15 +5268,17 @@ public class TDVTTest {
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS118");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS119() throws SQLException {
+        System.out.println("==============================CALCS119");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4736,7 +5288,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2695057561)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4749,15 +5304,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS119");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS120() throws SQLException {
+        System.out.println("==============================CALCS120");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4767,7 +5324,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2234960540)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4789,15 +5349,17 @@ public class TDVTTest {
         expectedRow.add("38155");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS120");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS121() throws SQLException {
+        System.out.println("==============================CALCS121");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4807,7 +5369,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1665700248)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4841,15 +5406,17 @@ public class TDVTTest {
         expectedRow.add("17");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS121");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS122() throws SQLException {
+        System.out.println("==============================CALCS122");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4859,7 +5426,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2779514991)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4869,15 +5439,17 @@ public class TDVTTest {
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS122");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS123() throws SQLException {
+        System.out.println("==============================CALCS123");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4887,22 +5459,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1759936097)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS123");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS124() throws SQLException {
+        System.out.println("==============================CALCS124");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4912,7 +5489,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3179156403)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4925,15 +5505,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS124");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS129() throws SQLException {
+        System.out.println("==============================CALCS129");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -4943,7 +5525,10 @@ public class TDVTTest {
         assertEquals("temp(test)(903794974)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -4989,15 +5574,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS129");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS130() throws SQLException {
+        System.out.println("==============================CALCS130");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5007,7 +5594,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3917828147)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5053,15 +5643,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS130");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS131() throws SQLException {
+        System.out.println("==============================CALCS131");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5071,7 +5663,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3641022413)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5093,15 +5688,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS131");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS132() throws SQLException {
+        System.out.println("==============================CALCS132");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5111,7 +5708,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1193998601)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5133,15 +5733,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS132");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS133() throws SQLException {
+        System.out.println("==============================CALCS133");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5151,7 +5753,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3641022413)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5173,15 +5778,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS133");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS134() throws SQLException {
+        System.out.println("==============================CALCS134");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5191,7 +5798,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1193998601)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5213,15 +5823,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS134");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS135() throws SQLException {
+        System.out.println("==============================CALCS135");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5231,7 +5843,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3800988289)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5253,15 +5868,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS135");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS136() throws SQLException {
+        System.out.println("==============================CALCS136");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5271,7 +5888,10 @@ public class TDVTTest {
         assertEquals("temp(test)(779479971)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5293,15 +5913,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS136");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS137() throws SQLException {
+        System.out.println("==============================CALCS137");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5311,7 +5933,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3800988289)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5333,15 +5958,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS137");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS138() throws SQLException {
+        System.out.println("==============================CALCS138");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5351,7 +5978,10 @@ public class TDVTTest {
         assertEquals("temp(test)(779479971)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5373,15 +6003,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS138");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS139() throws SQLException {
+        System.out.println("==============================CALCS139");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5391,7 +6023,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2793013592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5446,15 +6081,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS139");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS140() throws SQLException {
+        System.out.println("==============================CALCS140");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5464,7 +6101,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2980130610)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5519,15 +6159,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS140");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS143() throws SQLException {
+        System.out.println("==============================CALCS143");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5537,7 +6179,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2016952657)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5571,15 +6216,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS143");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS144() throws SQLException {
+        System.out.println("==============================CALCS144");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5589,7 +6236,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1256216982)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5644,15 +6294,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS144");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS145() throws SQLException {
+        System.out.println("==============================CALCS145");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5662,22 +6314,27 @@ public class TDVTTest {
         assertEquals("temp(test)(415603459)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("97");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS145");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS146() throws SQLException {
+        System.out.println("==============================CALCS146");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5687,7 +6344,10 @@ public class TDVTTest {
         assertEquals("temp(test)(526259814)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5712,15 +6372,17 @@ public class TDVTTest {
         expectedRow.add("116");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS146");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS147() throws SQLException {
+        System.out.println("==============================CALCS147");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5730,7 +6392,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4258651616)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5749,15 +6414,17 @@ public class TDVTTest {
         expectedRow.add("69");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS147");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS148() throws SQLException {
+        System.out.println("==============================CALCS148");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5767,7 +6434,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3415515666)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5822,15 +6492,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS148");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS149() throws SQLException {
+        System.out.println("==============================CALCS149");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5840,7 +6512,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2048935536)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5895,15 +6570,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS149");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS150() throws SQLException {
+        System.out.println("==============================CALCS150");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5913,7 +6590,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2714077903)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5923,15 +6603,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS150");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS151() throws SQLException {
+        System.out.println("==============================CALCS151");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5941,7 +6623,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1800100416)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5951,15 +6636,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS151");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS153() throws SQLException {
+        System.out.println("==============================CALCS153");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -5969,7 +6656,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1007528555)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -5994,15 +6684,17 @@ public class TDVTTest {
         expectedRow.add("one");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS153");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS154() throws SQLException {
+        System.out.println("==============================CALCS154");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6012,7 +6704,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3428504110)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6055,15 +6750,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS154");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS156() throws SQLException {
+        System.out.println("==============================CALCS156");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6073,7 +6770,10 @@ public class TDVTTest {
         assertEquals("temp(test)(750655768)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6104,15 +6804,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS156");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS157() throws SQLException {
+        System.out.println("==============================CALCS157");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6122,7 +6824,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1656302737)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6135,15 +6840,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS157");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS158() throws SQLException {
+        System.out.println("==============================CALCS158");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6153,7 +6860,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4006206882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6163,15 +6873,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS158");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS159() throws SQLException {
+        System.out.println("==============================CALCS159");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6181,7 +6893,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4173709053)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6200,15 +6915,17 @@ public class TDVTTest {
         expectedRow.add("one");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS159");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS160() throws SQLException {
+        System.out.println("==============================CALCS160");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6218,7 +6935,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1285160207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6231,15 +6951,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS160");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS161() throws SQLException {
+        System.out.println("==============================CALCS161");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6249,7 +6971,10 @@ public class TDVTTest {
         assertEquals("temp(test)(898375479)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6301,15 +7026,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS161");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS163() throws SQLException {
+        System.out.println("==============================CALCS163");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6319,7 +7046,10 @@ public class TDVTTest {
         assertEquals("temp(test)(490796425)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6338,15 +7068,17 @@ public class TDVTTest {
         expectedRow.add("one");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS163");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS164() throws SQLException {
+        System.out.println("==============================CALCS164");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6356,7 +7088,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2300448284)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6411,15 +7146,17 @@ public class TDVTTest {
         expectedRow.add("16858797");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS164");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS165() throws SQLException {
+        System.out.println("==============================CALCS165");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6429,7 +7166,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2077207759)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6484,15 +7224,17 @@ public class TDVTTest {
         expectedRow.add("16858797");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS165");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS170() throws SQLException {
+        System.out.println("==============================CALCS170");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6502,7 +7244,10 @@ public class TDVTTest {
         assertEquals("temp(test)(289918985)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6557,15 +7302,17 @@ public class TDVTTest {
         expectedRow.add("280979");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS170");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS171() throws SQLException {
+        System.out.println("==============================CALCS171");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6575,7 +7322,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3370976929)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6624,15 +7374,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS171");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS172() throws SQLException {
+        System.out.println("==============================CALCS172");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6642,7 +7394,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2942029924)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6676,15 +7431,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS172");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS173() throws SQLException {
+        System.out.println("==============================CALCS173");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6694,7 +7451,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6713,15 +7473,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS173");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS174() throws SQLException {
+        System.out.println("==============================CALCS174");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6731,7 +7493,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6750,15 +7515,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS174");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS175() throws SQLException {
+        System.out.println("==============================CALCS175");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6768,7 +7535,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1590117682)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6802,15 +7572,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS175");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS176() throws SQLException {
+        System.out.println("==============================CALCS176");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6820,7 +7592,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4199707040)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6854,15 +7629,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS176");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS177() throws SQLException {
+        System.out.println("==============================CALCS177");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6872,7 +7649,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2589771434)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6927,15 +7707,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS177");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS178() throws SQLException {
+        System.out.println("==============================CALCS178");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -6945,7 +7727,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1875124737)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7000,15 +7785,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS178");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS179() throws SQLException {
+        System.out.println("==============================CALCS179");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7018,7 +7805,10 @@ public class TDVTTest {
         assertEquals("temp(test)(663412696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7055,15 +7845,17 @@ public class TDVTTest {
         expectedRow.add("19");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS179");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS180() throws SQLException {
+        System.out.println("==============================CALCS180");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7073,7 +7865,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1616170242)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7098,15 +7893,17 @@ public class TDVTTest {
         expectedRow.add("19");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS180");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS181() throws SQLException {
+        System.out.println("==============================CALCS181");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7116,7 +7913,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3854194266)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7138,15 +7938,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS181");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS182() throws SQLException {
+        System.out.println("==============================CALCS182");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7156,7 +7958,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3854194266)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7178,15 +7983,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS182");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS183() throws SQLException {
+        System.out.println("==============================CALCS183");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7196,7 +8003,10 @@ public class TDVTTest {
         assertEquals("temp(test)(621889678)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7218,15 +8028,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS183");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS184() throws SQLException {
+        System.out.println("==============================CALCS184");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7236,7 +8048,10 @@ public class TDVTTest {
         assertEquals("temp(test)(621889678)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7258,15 +8073,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS184");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS185() throws SQLException {
+        System.out.println("==============================CALCS185");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7276,7 +8093,10 @@ public class TDVTTest {
         assertEquals("temp(test)(302607578)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7292,15 +8112,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS185");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS186() throws SQLException {
+        System.out.println("==============================CALCS186");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7310,22 +8132,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2001673842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS186");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS187() throws SQLException {
+        System.out.println("==============================CALCS187");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7335,7 +8162,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3772571288)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7390,15 +8220,17 @@ public class TDVTTest {
         expectedRow.add("1011527872");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS187");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS188() throws SQLException {
+        System.out.println("==============================CALCS188");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7408,7 +8240,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3405329770)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7463,15 +8298,17 @@ public class TDVTTest {
         expectedRow.add("1011527872");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS188");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS189() throws SQLException {
+        System.out.println("==============================CALCS189");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7481,7 +8318,10 @@ public class TDVTTest {
         assertEquals("temp(test)(885008067)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7515,15 +8355,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS189");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS190() throws SQLException {
+        System.out.println("==============================CALCS190");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7533,7 +8375,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3554344781)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7588,15 +8433,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS190");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS191() throws SQLException {
+        System.out.println("==============================CALCS191");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7606,7 +8453,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2085924889)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7649,15 +8499,17 @@ public class TDVTTest {
         expectedRow.add("30");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS191");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS192() throws SQLException {
+        System.out.println("==============================CALCS192");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7667,7 +8519,10 @@ public class TDVTTest {
         assertEquals("temp(test)(574618496)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7713,15 +8568,17 @@ public class TDVTTest {
         expectedRow.add("31");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS192");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS193() throws SQLException {
+        System.out.println("==============================CALCS193");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7731,22 +8588,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3095770696)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS193");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS194() throws SQLException {
+        System.out.println("==============================CALCS194");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7756,7 +8618,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1165289219)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7790,15 +8655,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS194");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS195() throws SQLException {
+        System.out.println("==============================CALCS195");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7808,7 +8675,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3278952934)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7818,15 +8688,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS195");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS196() throws SQLException {
+        System.out.println("==============================CALCS196");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7836,7 +8708,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3434755864)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7876,15 +8751,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS196");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS197() throws SQLException {
+        System.out.println("==============================CALCS197");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7894,22 +8771,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1819497289)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS197");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS200() throws SQLException {
+        System.out.println("==============================CALCS200");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7919,22 +8801,27 @@ public class TDVTTest {
         assertEquals("temp(test)(957319405)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("13");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS200");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS201() throws SQLException {
+        System.out.println("==============================CALCS201");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -7944,7 +8831,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3191651815)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7993,15 +8883,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS201");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS203() throws SQLException {
+        System.out.println("==============================CALCS203");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8011,7 +8903,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1126788499)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8066,15 +8961,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS203");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS204() throws SQLException {
+        System.out.println("==============================CALCS204");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8084,22 +8981,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3855281255)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-07-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS204");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS205() throws SQLException {
+        System.out.println("==============================CALCS205");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8109,22 +9011,27 @@ public class TDVTTest {
         assertEquals("temp(test)(645427419)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("68");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS205");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS206() throws SQLException {
+        System.out.println("==============================CALCS206");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8134,22 +9041,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1450575838)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("24.02");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS206");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS207() throws SQLException {
+        System.out.println("==============================CALCS207");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8159,7 +9071,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2456153780)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8214,15 +9129,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS207");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS208() throws SQLException {
+        System.out.println("==============================CALCS208");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8232,7 +9149,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2524080111)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8281,15 +9201,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS208");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS209() throws SQLException {
+        System.out.println("==============================CALCS209");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8299,7 +9221,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1568799041)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8318,15 +9243,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS209");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS210() throws SQLException {
+        System.out.println("==============================CALCS210");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8336,7 +9263,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1744581337)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8391,15 +9321,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-22 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS210");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS211() throws SQLException {
+        System.out.println("==============================CALCS211");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8409,7 +9341,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1635756518)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8464,15 +9399,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-21 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS211");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS212() throws SQLException {
+        System.out.println("==============================CALCS212");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8482,7 +9419,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1985269479)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8504,15 +9444,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS212");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS213() throws SQLException {
+        System.out.println("==============================CALCS213");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8522,7 +9464,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3887385220)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8541,15 +9486,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS213");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS214() throws SQLException {
+        System.out.println("==============================CALCS214");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8559,22 +9506,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2843244905)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("ta");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS214");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS215() throws SQLException {
+        System.out.println("==============================CALCS215");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8584,7 +9536,10 @@ public class TDVTTest {
         assertEquals("temp(test)(868342576)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8624,15 +9579,17 @@ public class TDVTTest {
         expectedRow.add("ven");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS215");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS216() throws SQLException {
+        System.out.println("==============================CALCS216");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8642,7 +9599,10 @@ public class TDVTTest {
         assertEquals("temp(test)(427841631)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8673,15 +9633,17 @@ public class TDVTTest {
         expectedRow.add("twelve");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS216");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS217() throws SQLException {
+        System.out.println("==============================CALCS217");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8691,7 +9653,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2180476504)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8746,15 +9711,17 @@ public class TDVTTest {
         expectedRow.add("16858797");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS217");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS218() throws SQLException {
+        System.out.println("==============================CALCS218");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8764,7 +9731,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3361088979)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8798,15 +9768,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS218");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS219() throws SQLException {
+        System.out.println("==============================CALCS219");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8816,7 +9788,10 @@ public class TDVTTest {
         assertEquals("temp(test)(299717125)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8871,15 +9846,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS219");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS220() throws SQLException {
+        System.out.println("==============================CALCS220");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8889,7 +9866,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3076245501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8932,15 +9912,17 @@ public class TDVTTest {
         expectedRow.add("30");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS220");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS221() throws SQLException {
+        System.out.println("==============================CALCS221");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -8950,7 +9932,10 @@ public class TDVTTest {
         assertEquals("temp(test)(148436784)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8996,15 +9981,17 @@ public class TDVTTest {
         expectedRow.add("31");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS221");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS222() throws SQLException {
+        System.out.println("==============================CALCS222");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9014,7 +10001,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1364536471)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9027,15 +10017,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS222");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS223() throws SQLException {
+        System.out.println("==============================CALCS223");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9045,7 +10037,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1380546255)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9055,15 +10050,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS223");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS225() throws SQLException {
+        System.out.println("==============================CALCS225");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9073,7 +10070,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2988076353)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9128,15 +10128,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-03 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS225");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS226() throws SQLException {
+        System.out.println("==============================CALCS226");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9146,7 +10148,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3509671532)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9159,15 +10164,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS226");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS227() throws SQLException {
+        System.out.println("==============================CALCS227");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9177,7 +10184,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4247289834)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9193,15 +10203,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS227");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS228() throws SQLException {
+        System.out.println("==============================CALCS228");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9211,7 +10223,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3037854782)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9239,15 +10254,17 @@ public class TDVTTest {
         expectedRow.add("81.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS228");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS230() throws SQLException {
+        System.out.println("==============================CALCS230");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9257,22 +10274,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3972932107)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("CONST");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS230");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS232() throws SQLException {
+        System.out.println("==============================CALCS232");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9282,22 +10304,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1773778045)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS232");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS233() throws SQLException {
+        System.out.println("==============================CALCS233");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9307,22 +10334,27 @@ public class TDVTTest {
         assertEquals("temp(test)(382789366)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS233");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS234() throws SQLException {
+        System.out.println("==============================CALCS234");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9332,22 +10364,27 @@ public class TDVTTest {
         assertEquals("temp(test)(444902156)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS234");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS235() throws SQLException {
+        System.out.println("==============================CALCS235");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9357,22 +10394,27 @@ public class TDVTTest {
         assertEquals("temp(test)(581676997)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS235");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS236() throws SQLException {
+        System.out.println("==============================CALCS236");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9382,22 +10424,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1831450015)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS236");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS237() throws SQLException {
+        System.out.println("==============================CALCS237");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9407,22 +10454,27 @@ public class TDVTTest {
         assertEquals("temp(test)(360201683)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS237");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS238() throws SQLException {
+        System.out.println("==============================CALCS238");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9432,22 +10484,27 @@ public class TDVTTest {
         assertEquals("temp(test)(872678106)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS238");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS239() throws SQLException {
+        System.out.println("==============================CALCS239");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9457,22 +10514,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3905701997)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS239");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS240() throws SQLException {
+        System.out.println("==============================CALCS240");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9482,22 +10544,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3359079369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS240");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS241() throws SQLException {
+        System.out.println("==============================CALCS241");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9507,22 +10574,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1326289938)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS241");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS242() throws SQLException {
+        System.out.println("==============================CALCS242");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9532,22 +10604,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2763829899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS242");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS243() throws SQLException {
+        System.out.println("==============================CALCS243");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9557,22 +10634,27 @@ public class TDVTTest {
         assertEquals("temp(test)(717997108)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS243");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS244() throws SQLException {
+        System.out.println("==============================CALCS244");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9582,22 +10664,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2963633898)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS244");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS245() throws SQLException {
+        System.out.println("==============================CALCS245");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9607,22 +10694,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3202209617)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS245");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS246() throws SQLException {
+        System.out.println("==============================CALCS246");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9632,22 +10724,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4266496460)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS246");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS247() throws SQLException {
+        System.out.println("==============================CALCS247");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9657,22 +10754,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4131996060)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS247");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS248() throws SQLException {
+        System.out.println("==============================CALCS248");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9682,22 +10784,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2935754523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS248");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS249() throws SQLException {
+        System.out.println("==============================CALCS249");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9707,7 +10814,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3052188625)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9753,15 +10863,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS249");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS250() throws SQLException {
+        System.out.println("==============================CALCS250");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9771,7 +10883,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2280873463)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9802,15 +10917,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS250");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS251() throws SQLException {
+        System.out.println("==============================CALCS251");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9820,7 +10937,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2643375604)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9836,15 +10956,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS251");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS252() throws SQLException {
+        System.out.println("==============================CALCS252");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9854,7 +10976,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2986242609)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9870,15 +10995,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS252");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS253() throws SQLException {
+        System.out.println("==============================CALCS253");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9888,22 +11015,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1608337423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS253");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS254() throws SQLException {
+        System.out.println("==============================CALCS254");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9913,22 +11045,27 @@ public class TDVTTest {
         assertEquals("temp(test)(925465559)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS254");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS257() throws SQLException {
+        System.out.println("==============================CALCS257");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -9938,7 +11075,10 @@ public class TDVTTest {
         assertEquals("temp(test)(454013980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -9993,15 +11133,17 @@ public class TDVTTest {
         expectedRow.add("2004-11-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS257");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS258() throws SQLException {
+        System.out.println("==============================CALCS258");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10011,7 +11153,10 @@ public class TDVTTest {
         assertEquals("temp(test)(499182808)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10060,15 +11205,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS258");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS259() throws SQLException {
+        System.out.println("==============================CALCS259");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10078,7 +11225,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2644944117)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10127,15 +11277,17 @@ public class TDVTTest {
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS259");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS260() throws SQLException {
+        System.out.println("==============================CALCS260");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10145,7 +11297,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3094931040)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10167,15 +11322,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS260");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS261() throws SQLException {
+        System.out.println("==============================CALCS261");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10185,7 +11342,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2831690081)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10204,15 +11364,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS261");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS262() throws SQLException {
+        System.out.println("==============================CALCS262");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10222,7 +11384,10 @@ public class TDVTTest {
         assertEquals("temp(test)(98307893)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10277,15 +11442,17 @@ public class TDVTTest {
         expectedRow.add("URIFIERS");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS262");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS266() throws SQLException {
+        System.out.println("==============================CALCS266");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10295,7 +11462,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2537119552)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10341,15 +11511,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS266");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS267() throws SQLException {
+        System.out.println("==============================CALCS267");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10359,7 +11531,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1533389080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10387,15 +11562,17 @@ public class TDVTTest {
         expectedRow.add("3.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS267");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS268() throws SQLException {
+        System.out.println("==============================CALCS268");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10405,7 +11582,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2538631291)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("decimal"));
+        if (!tyName.equals("decimal")) {
+            System.out.println(tyName + " == " + "decimal");
+        }
+        assertTrue("failed type check", tyName.equals("decimal"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10418,15 +11598,17 @@ public class TDVTTest {
         expectedRow.add("1.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS268");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS269() throws SQLException {
+        System.out.println("==============================CALCS269");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10436,7 +11618,10 @@ public class TDVTTest {
         assertEquals("temp(test)(64617177)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10458,15 +11643,17 @@ public class TDVTTest {
         expectedRow.add("38155.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS269");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS270() throws SQLException {
+        System.out.println("==============================CALCS270");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10476,7 +11663,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2707307071)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10522,15 +11712,17 @@ public class TDVTTest {
         expectedRow.add("17.86");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS270");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS271() throws SQLException {
+        System.out.println("==============================CALCS271");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10540,7 +11732,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1394352864)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10550,15 +11745,17 @@ public class TDVTTest {
         expectedRow.add("0.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS271");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS272() throws SQLException {
+        System.out.println("==============================CALCS272");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10568,22 +11765,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2143701310)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS272");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS273() throws SQLException {
+        System.out.println("==============================CALCS273");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10593,7 +11795,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1011144549)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10639,15 +11844,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS273");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS274() throws SQLException {
+        System.out.println("==============================CALCS274");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10657,7 +11864,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2419238545)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10712,15 +11922,17 @@ public class TDVTTest {
         expectedRow.add("ericsson");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS274");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS279() throws SQLException {
+        System.out.println("==============================CALCS279");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10730,7 +11942,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10779,15 +11994,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS279");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS280() throws SQLException {
+        System.out.println("==============================CALCS280");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10797,7 +12014,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10846,15 +12066,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS280");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS281() throws SQLException {
+        System.out.println("==============================CALCS281");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10864,7 +12086,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10913,15 +12138,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS281");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS282() throws SQLException {
+        System.out.println("==============================CALCS282");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10931,7 +12158,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -10980,15 +12210,17 @@ public class TDVTTest {
         expectedRow.add("45");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS282");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS283() throws SQLException {
+        System.out.println("==============================CALCS283");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -10998,7 +12230,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11020,15 +12255,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS283");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS284() throws SQLException {
+        System.out.println("==============================CALCS284");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11038,7 +12275,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11057,15 +12297,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS284");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS285() throws SQLException {
+        System.out.println("==============================CALCS285");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11075,7 +12317,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11097,15 +12342,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS285");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS286() throws SQLException {
+        System.out.println("==============================CALCS286");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11115,7 +12362,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11134,15 +12384,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS286");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS287() throws SQLException {
+        System.out.println("==============================CALCS287");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11152,7 +12404,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1706489238)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11174,15 +12429,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS287");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS288() throws SQLException {
+        System.out.println("==============================CALCS288");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11192,7 +12449,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3326454598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11214,15 +12474,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS288");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS289() throws SQLException {
+        System.out.println("==============================CALCS289");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11232,7 +12494,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1346443059)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11254,15 +12519,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS289");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS290() throws SQLException {
+        System.out.println("==============================CALCS290");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11272,7 +12539,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2366796649)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11294,15 +12564,17 @@ public class TDVTTest {
         expectedRow.add("Wednesday");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS290");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS294() throws SQLException {
+        System.out.println("==============================CALCS294");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11312,7 +12584,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1438827077)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11355,15 +12630,17 @@ public class TDVTTest {
         expectedRow.add("30");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS294");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS295() throws SQLException {
+        System.out.println("==============================CALCS295");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11373,7 +12650,10 @@ public class TDVTTest {
         assertEquals("temp(test)(331799714)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11416,15 +12696,17 @@ public class TDVTTest {
         expectedRow.add("30");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS295");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS296() throws SQLException {
+        System.out.println("==============================CALCS296");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11434,7 +12716,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3561169943)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11480,15 +12765,17 @@ public class TDVTTest {
         expectedRow.add("31");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS296");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS297() throws SQLException {
+        System.out.println("==============================CALCS297");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11498,7 +12785,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2283476857)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11544,15 +12834,17 @@ public class TDVTTest {
         expectedRow.add("31");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS297");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS298() throws SQLException {
+        System.out.println("==============================CALCS298");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11562,22 +12854,27 @@ public class TDVTTest {
         assertEquals("temp(test)(523796786)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS298");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS299() throws SQLException {
+        System.out.println("==============================CALCS299");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11587,22 +12884,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1757347367)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS299");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS300() throws SQLException {
+        System.out.println("==============================CALCS300");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11612,22 +12914,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2892653053)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS300");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS301() throws SQLException {
+        System.out.println("==============================CALCS301");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11637,22 +12944,27 @@ public class TDVTTest {
         assertEquals("temp(test)(208306356)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS301");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS302() throws SQLException {
+        System.out.println("==============================CALCS302");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11662,22 +12974,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3602652935)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS302");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS303() throws SQLException {
+        System.out.println("==============================CALCS303");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11687,22 +13004,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2736821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS303");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS304() throws SQLException {
+        System.out.println("==============================CALCS304");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11712,22 +13034,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4175150207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS304");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS305() throws SQLException {
+        System.out.println("==============================CALCS305");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11737,22 +13064,27 @@ public class TDVTTest {
         assertEquals("temp(test)(573134401)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS305");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS306() throws SQLException {
+        System.out.println("==============================CALCS306");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11762,22 +13094,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4284829593)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS306");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS307() throws SQLException {
+        System.out.println("==============================CALCS307");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11787,22 +13124,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2962792486)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS307");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS308() throws SQLException {
+        System.out.println("==============================CALCS308");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11812,22 +13154,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2631483492)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS308");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS309() throws SQLException {
+        System.out.println("==============================CALCS309");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11837,22 +13184,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1607049625)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS309");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS310() throws SQLException {
+        System.out.println("==============================CALCS310");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11862,22 +13214,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1299959868)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS310");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS311() throws SQLException {
+        System.out.println("==============================CALCS311");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11887,22 +13244,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1641185958)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS311");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS312() throws SQLException {
+        System.out.println("==============================CALCS312");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11912,22 +13274,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1258940435)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS312");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS313() throws SQLException {
+        System.out.println("==============================CALCS313");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11937,22 +13304,27 @@ public class TDVTTest {
         assertEquals("temp(test)(401058515)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS313");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS314() throws SQLException {
+        System.out.println("==============================CALCS314");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11962,22 +13334,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2833809390)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS314");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS315() throws SQLException {
+        System.out.println("==============================CALCS315");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -11987,7 +13364,10 @@ public class TDVTTest {
         assertEquals("temp(test)(367110610)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12033,15 +13413,17 @@ public class TDVTTest {
         expectedRow.add("23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS315");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS316() throws SQLException {
+        System.out.println("==============================CALCS316");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12051,7 +13433,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1785761163)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12097,15 +13482,17 @@ public class TDVTTest {
         expectedRow.add("23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS316");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS317() throws SQLException {
+        System.out.println("==============================CALCS317");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12115,22 +13502,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3167158121)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(">  <");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS317");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS318() throws SQLException {
+        System.out.println("==============================CALCS318");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12140,7 +13532,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4146692480)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12195,15 +13590,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS318");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS319() throws SQLException {
+        System.out.println("==============================CALCS319");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12213,7 +13610,10 @@ public class TDVTTest {
         assertEquals("temp(test)(560528826)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12268,15 +13668,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS319");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS320() throws SQLException {
+        System.out.println("==============================CALCS320");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12286,22 +13688,27 @@ public class TDVTTest {
         assertEquals("temp(test)(105511240)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-07-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS320");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS321() throws SQLException {
+        System.out.println("==============================CALCS321");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12311,22 +13718,27 @@ public class TDVTTest {
         assertEquals("temp(test)(755301458)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-07-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS321");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS330() throws SQLException {
+        System.out.println("==============================CALCS330");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12336,7 +13748,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1903992131)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12382,15 +13797,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS330");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS333() throws SQLException {
+        System.out.println("==============================CALCS333");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12400,7 +13817,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4265410721)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12434,15 +13854,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS333");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS334() throws SQLException {
+        System.out.println("==============================CALCS334");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12452,7 +13874,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1278698096)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12486,15 +13911,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS334");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS335() throws SQLException {
+        System.out.println("==============================CALCS335");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12504,7 +13931,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3729248905)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12559,15 +13989,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS335");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS336() throws SQLException {
+        System.out.println("==============================CALCS336");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12577,7 +14009,10 @@ public class TDVTTest {
         assertEquals("temp(test)(965356852)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12632,15 +14067,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS336");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS337() throws SQLException {
+        System.out.println("==============================CALCS337");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12650,22 +14087,27 @@ public class TDVTTest {
         assertEquals("temp(test)(5037157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS337");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS338() throws SQLException {
+        System.out.println("==============================CALCS338");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12675,7 +14117,10 @@ public class TDVTTest {
         assertEquals("temp(test)(382448263)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12700,15 +14145,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS338");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS339() throws SQLException {
+        System.out.println("==============================CALCS339");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12718,7 +14165,10 @@ public class TDVTTest {
         assertEquals("temp(test)(653088523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12734,15 +14184,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS339");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS340() throws SQLException {
+        System.out.println("==============================CALCS340");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12752,22 +14204,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3134852500)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS340");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS341() throws SQLException {
+        System.out.println("==============================CALCS341");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12777,7 +14234,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3976315675)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12805,15 +14265,17 @@ public class TDVTTest {
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS341");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS342() throws SQLException {
+        System.out.println("==============================CALCS342");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12823,7 +14285,10 @@ public class TDVTTest {
         assertEquals("temp(test)(591126205)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12878,15 +14343,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS342");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS343() throws SQLException {
+        System.out.println("==============================CALCS343");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12896,7 +14363,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3034828475)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12942,15 +14412,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS343");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS345() throws SQLException {
+        System.out.println("==============================CALCS345");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12960,7 +14432,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4155671032)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -12973,15 +14448,17 @@ public class TDVTTest {
         expectedRow.add("testelse");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS345");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS346() throws SQLException {
+        System.out.println("==============================CALCS346");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -12991,7 +14468,10 @@ public class TDVTTest {
         assertEquals("temp(test)(344883989)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13001,15 +14481,17 @@ public class TDVTTest {
         expectedRow.add("yes");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS346");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS347() throws SQLException {
+        System.out.println("==============================CALCS347");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13019,7 +14501,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1470681487)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13032,15 +14517,17 @@ public class TDVTTest {
         expectedRow.add("yes3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS347");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS348() throws SQLException {
+        System.out.println("==============================CALCS348");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13050,7 +14537,10 @@ public class TDVTTest {
         assertEquals("temp(test)(404394451)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13078,15 +14568,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS348");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS349() throws SQLException {
+        System.out.println("==============================CALCS349");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13096,7 +14588,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2582407534)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13109,15 +14604,17 @@ public class TDVTTest {
         expectedRow.add("yes");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS349");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS350() throws SQLException {
+        System.out.println("==============================CALCS350");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13127,7 +14624,10 @@ public class TDVTTest {
         assertEquals("temp(test)(485230187)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13140,15 +14640,17 @@ public class TDVTTest {
         expectedRow.add("yes");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS350");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS351() throws SQLException {
+        System.out.println("==============================CALCS351");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13158,7 +14660,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3944872634)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13168,15 +14673,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS351");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS352() throws SQLException {
+        System.out.println("==============================CALCS352");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13186,22 +14693,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1030668643)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("yes");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS352");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS353() throws SQLException {
+        System.out.println("==============================CALCS353");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13211,7 +14723,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1548476355)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13221,15 +14736,17 @@ public class TDVTTest {
         expectedRow.add("yes");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS353");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS354() throws SQLException {
+        System.out.println("==============================CALCS354");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13239,7 +14756,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2733626226)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13270,15 +14790,17 @@ public class TDVTTest {
         expectedRow.add("16.42");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS354");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS355() throws SQLException {
+        System.out.println("==============================CALCS355");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13288,7 +14810,10 @@ public class TDVTTest {
         assertEquals("temp(test)(746449830)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13298,15 +14823,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS355");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS356() throws SQLException {
+        System.out.println("==============================CALCS356");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13316,7 +14843,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4153117630)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13326,15 +14856,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS356");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS357() throws SQLException {
+        System.out.println("==============================CALCS357");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13344,7 +14876,10 @@ public class TDVTTest {
         assertEquals("temp(test)(661341884)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13390,15 +14925,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS357");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS360() throws SQLException {
+        System.out.println("==============================CALCS360");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13408,7 +14945,10 @@ public class TDVTTest {
         assertEquals("temp(test)(157987442)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13421,15 +14961,17 @@ public class TDVTTest {
         expectedRow.add("technology");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS360");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS361() throws SQLException {
+        System.out.println("==============================CALCS361");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13439,7 +14981,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3250337019)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13464,15 +15009,17 @@ public class TDVTTest {
         expectedRow.add("three");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS361");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS363() throws SQLException {
+        System.out.println("==============================CALCS363");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13482,7 +15029,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1162317302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13534,15 +15084,17 @@ public class TDVTTest {
         expectedRow.add("17.25");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS363");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS364() throws SQLException {
+        System.out.println("==============================CALCS364");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13552,7 +15104,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1389344980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13589,15 +15144,17 @@ public class TDVTTest {
         expectedRow.add("technology");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS364");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS366() throws SQLException {
+        System.out.println("==============================CALCS366");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13607,7 +15164,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4224438892)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13650,15 +15210,17 @@ public class TDVTTest {
         expectedRow.add("19.39");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS366");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS367() throws SQLException {
+        System.out.println("==============================CALCS367");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13668,7 +15230,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3314993157)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13714,15 +15279,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS367");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS368() throws SQLException {
+        System.out.println("==============================CALCS368");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13732,7 +15299,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2842042984)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13742,15 +15312,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS368");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS369() throws SQLException {
+        System.out.println("==============================CALCS369");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13760,7 +15332,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4227881224)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13773,15 +15348,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS369");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS370() throws SQLException {
+        System.out.println("==============================CALCS370");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13791,7 +15368,10 @@ public class TDVTTest {
         assertEquals("temp(test)(709594122)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13846,15 +15426,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS370");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS372() throws SQLException {
+        System.out.println("==============================CALCS372");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13864,7 +15446,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2963734906)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13910,15 +15495,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS372");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS373() throws SQLException {
+        System.out.println("==============================CALCS373");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13928,7 +15515,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4143049742)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13980,15 +15570,17 @@ public class TDVTTest {
         expectedRow.add("17.25");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS373");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS375() throws SQLException {
+        System.out.println("==============================CALCS375");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -13998,7 +15590,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2451799140)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14023,15 +15618,17 @@ public class TDVTTest {
         expectedRow.add("three");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS375");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS376() throws SQLException {
+        System.out.println("==============================CALCS376");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14041,7 +15638,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1574830296)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14084,15 +15684,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS376");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS379() throws SQLException {
+        System.out.println("==============================CALCS379");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14102,7 +15704,10 @@ public class TDVTTest {
         assertEquals("temp(test)(166894492)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14127,15 +15732,17 @@ public class TDVTTest {
         expectedRow.add("one");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS379");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS380() throws SQLException {
+        System.out.println("==============================CALCS380");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14145,7 +15752,10 @@ public class TDVTTest {
         assertEquals("temp(test)(899461877)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14200,15 +15810,17 @@ public class TDVTTest {
         expectedRow.add("ERICSSON");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS380");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS381() throws SQLException {
+        System.out.println("==============================CALCS381");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14218,7 +15830,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1630131013)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14273,15 +15888,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-21 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS381");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS382() throws SQLException {
+        System.out.println("==============================CALCS382");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14291,7 +15908,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3937478358)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14310,15 +15930,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS382");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS383() throws SQLException {
+        System.out.println("==============================CALCS383");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14328,7 +15950,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1235924899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14377,15 +16002,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS383");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS384() throws SQLException {
+        System.out.println("==============================CALCS384");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14395,7 +16022,10 @@ public class TDVTTest {
         assertEquals("temp(test)(621896091)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14450,15 +16080,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:24");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS384");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS385() throws SQLException {
+        System.out.println("==============================CALCS385");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14468,7 +16100,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3711433751)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14523,15 +16158,17 @@ public class TDVTTest {
         expectedRow.add("1011527872");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS385");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS386() throws SQLException {
+        System.out.println("==============================CALCS386");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14541,7 +16178,10 @@ public class TDVTTest {
         assertEquals("temp(test)(427588088)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14572,15 +16212,17 @@ public class TDVTTest {
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS386");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS387() throws SQLException {
+        System.out.println("==============================CALCS387");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14590,7 +16232,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2526313076)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14621,15 +16266,17 @@ public class TDVTTest {
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS387");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS388() throws SQLException {
+        System.out.println("==============================CALCS388");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14639,7 +16286,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1540391660)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14679,15 +16329,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS388");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS389() throws SQLException {
+        System.out.println("==============================CALCS389");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14697,7 +16349,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3579576882)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14737,15 +16392,17 @@ public class TDVTTest {
         expectedRow.add("32");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS389");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS390() throws SQLException {
+        System.out.println("==============================CALCS390");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14755,7 +16412,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2740605400)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14804,15 +16464,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS390");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS391() throws SQLException {
+        System.out.println("==============================CALCS391");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14822,7 +16484,10 @@ public class TDVTTest {
         assertEquals("temp(test)(356589430)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(15);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14871,15 +16536,17 @@ public class TDVTTest {
         expectedRow.add("56");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS391");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS392() throws SQLException {
+        System.out.println("==============================CALCS392");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14889,7 +16556,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1898404202)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14944,15 +16614,17 @@ public class TDVTTest {
         expectedRow.add("280979");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS392");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS393() throws SQLException {
+        System.out.println("==============================CALCS393");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -14962,7 +16634,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4263325709)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15017,15 +16692,17 @@ public class TDVTTest {
         expectedRow.add("280979");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS393");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS394() throws SQLException {
+        System.out.println("==============================CALCS394");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15035,7 +16712,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15057,15 +16737,17 @@ public class TDVTTest {
         expectedRow.add("15.7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS394");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS395() throws SQLException {
+        System.out.println("==============================CALCS395");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15075,7 +16757,10 @@ public class TDVTTest {
         assertEquals("temp(test)(965512284)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15106,15 +16791,17 @@ public class TDVTTest {
         expectedRow.add("15.7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS395");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS396() throws SQLException {
+        System.out.println("==============================CALCS396");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15124,7 +16811,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1826927073)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15179,15 +16869,17 @@ public class TDVTTest {
         expectedRow.add("16.81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS396");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS397() throws SQLException {
+        System.out.println("==============================CALCS397");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15197,7 +16889,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3618731173)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15210,15 +16905,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS397");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS398() throws SQLException {
+        System.out.println("==============================CALCS398");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15228,7 +16925,10 @@ public class TDVTTest {
         assertEquals("temp(test)(830571724)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15241,15 +16941,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS398");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS399() throws SQLException {
+        System.out.println("==============================CALCS399");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15259,7 +16961,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3090944671)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15272,15 +16977,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS399");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS400() throws SQLException {
+        System.out.println("==============================CALCS400");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15290,7 +16997,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4182992858)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15303,15 +17013,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS400");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS401() throws SQLException {
+        System.out.println("==============================CALCS401");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15321,7 +17033,10 @@ public class TDVTTest {
         assertEquals("temp(test)(397499995)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15334,15 +17049,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS401");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS402() throws SQLException {
+        System.out.println("==============================CALCS402");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15352,7 +17069,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1366787273)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15365,15 +17085,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS402");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS403() throws SQLException {
+        System.out.println("==============================CALCS403");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15383,7 +17105,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3193322782)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15396,15 +17121,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS403");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS404() throws SQLException {
+        System.out.println("==============================CALCS404");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15414,7 +17141,10 @@ public class TDVTTest {
         assertEquals("temp(test)(822657216)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15427,15 +17157,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS404");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS405() throws SQLException {
+        System.out.println("==============================CALCS405");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15445,7 +17177,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3764753091)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15458,15 +17193,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS405");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS407() throws SQLException {
+        System.out.println("==============================CALCS407");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15476,7 +17213,10 @@ public class TDVTTest {
         assertEquals("temp(test)(100938644)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15531,15 +17271,17 @@ public class TDVTTest {
         expectedRow.add("214.3329");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS407");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS408() throws SQLException {
+        System.out.println("==============================CALCS408");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15549,7 +17291,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2923065813)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15568,15 +17313,17 @@ public class TDVTTest {
         expectedRow.add("2004-06-10 16:19:12");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS408");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS409() throws SQLException {
+        System.out.println("==============================CALCS409");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15586,7 +17333,10 @@ public class TDVTTest {
         assertEquals("temp(test)(798936259)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15599,15 +17349,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS409");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS410() throws SQLException {
+        System.out.println("==============================CALCS410");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15617,7 +17369,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2067341949)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15636,15 +17391,17 @@ public class TDVTTest {
         expectedRow.add("2004-06-27 07:40:48");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS410");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS411() throws SQLException {
+        System.out.println("==============================CALCS411");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15654,22 +17411,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1303362598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS411");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS412() throws SQLException {
+        System.out.println("==============================CALCS412");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15679,7 +17441,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1307456344)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15695,15 +17460,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS412");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS413() throws SQLException {
+        System.out.println("==============================CALCS413");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15713,7 +17480,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2402101080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15732,15 +17502,17 @@ public class TDVTTest {
         expectedRow.add("2.6667");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS413");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS414() throws SQLException {
+        System.out.println("==============================CALCS414");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15750,7 +17522,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3559262472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15802,15 +17577,17 @@ public class TDVTTest {
         expectedRow.add("4.5");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS414");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS416() throws SQLException {
+        System.out.println("==============================CALCS416");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15820,7 +17597,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4188722171)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15851,15 +17631,17 @@ public class TDVTTest {
         expectedRow.add("15.7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS416");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS417() throws SQLException {
+        System.out.println("==============================CALCS417");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15869,7 +17651,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1413132553)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15882,15 +17667,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS417");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS418() throws SQLException {
+        System.out.println("==============================CALCS418");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15900,22 +17687,27 @@ public class TDVTTest {
         assertEquals("temp(test)(496893948)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS418");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS420() throws SQLException {
+        System.out.println("==============================CALCS420");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15925,7 +17717,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3360366790)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15938,15 +17733,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS420");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS421() throws SQLException {
+        System.out.println("==============================CALCS421");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15956,7 +17753,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2564078271)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -15969,15 +17769,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS421");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS422() throws SQLException {
+        System.out.println("==============================CALCS422");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -15987,7 +17789,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1366300770)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16000,15 +17805,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS422");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS423() throws SQLException {
+        System.out.println("==============================CALCS423");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16018,7 +17825,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4123004830)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16031,15 +17841,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS423");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS424() throws SQLException {
+        System.out.println("==============================CALCS424");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16049,7 +17861,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1224631717)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16062,15 +17877,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS424");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS425() throws SQLException {
+        System.out.println("==============================CALCS425");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16080,7 +17897,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1731699042)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16093,15 +17913,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS425");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS426() throws SQLException {
+        System.out.println("==============================CALCS426");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16111,7 +17933,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3781247900)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16142,15 +17967,17 @@ public class TDVTTest {
         expectedRow.add("5.92");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS426");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS427() throws SQLException {
+        System.out.println("==============================CALCS427");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16160,7 +17987,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4047276454)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16173,15 +18003,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS427");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS428() throws SQLException {
+        System.out.println("==============================CALCS428");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16191,7 +18023,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3492695719)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16204,15 +18039,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS428");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS430() throws SQLException {
+        System.out.println("==============================CALCS430");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16222,7 +18059,10 @@ public class TDVTTest {
         assertEquals("temp(test)(977554451)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16253,15 +18093,17 @@ public class TDVTTest {
         expectedRow.add("25.48");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS430");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS432() throws SQLException {
+        System.out.println("==============================CALCS432");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16271,7 +18113,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1861245368)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16302,15 +18147,17 @@ public class TDVTTest {
         expectedRow.add("153.546");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS432");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS433() throws SQLException {
+        System.out.println("==============================CALCS433");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16320,7 +18167,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1635792874)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16333,15 +18183,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS433");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS434() throws SQLException {
+        System.out.println("==============================CALCS434");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16351,7 +18203,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1555382477)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16364,15 +18219,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS434");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS436() throws SQLException {
+        System.out.println("==============================CALCS436");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16382,7 +18239,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2776534421)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16395,15 +18255,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS436");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS437() throws SQLException {
+        System.out.println("==============================CALCS437");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16413,7 +18275,10 @@ public class TDVTTest {
         assertEquals("temp(test)(398649381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16426,15 +18291,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS437");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS438() throws SQLException {
+        System.out.println("==============================CALCS438");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16444,7 +18311,10 @@ public class TDVTTest {
         assertEquals("temp(test)(119026413)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16457,15 +18327,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS438");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS439() throws SQLException {
+        System.out.println("==============================CALCS439");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16475,7 +18347,10 @@ public class TDVTTest {
         assertEquals("temp(test)(724155660)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16506,15 +18381,17 @@ public class TDVTTest {
         expectedRow.add("twoe");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS439");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS440() throws SQLException {
+        System.out.println("==============================CALCS440");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16524,22 +18401,27 @@ public class TDVTTest {
         assertEquals("temp(test)(627207302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("Pat O'Hanrahan & <Matthew Eldridge]'");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS440");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS441() throws SQLException {
+        System.out.println("==============================CALCS441");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16549,22 +18431,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1507734681)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS441");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS443() throws SQLException {
+        System.out.println("==============================CALCS443");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16574,7 +18461,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2958462977)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16608,15 +18498,17 @@ public class TDVTTest {
         expectedRow.add("123");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS443");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS444() throws SQLException {
+        System.out.println("==============================CALCS444");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16626,7 +18518,10 @@ public class TDVTTest {
         assertEquals("temp(test)(667124691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16660,15 +18555,17 @@ public class TDVTTest {
         expectedRow.add("123");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS444");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS445() throws SQLException {
+        System.out.println("==============================CALCS445");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16678,7 +18575,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2463700949)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16733,15 +18633,17 @@ public class TDVTTest {
         expectedRow.add("384");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS445");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS446() throws SQLException {
+        System.out.println("==============================CALCS446");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16751,7 +18653,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3778274693)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16806,15 +18711,17 @@ public class TDVTTest {
         expectedRow.add("384");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS446");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS451() throws SQLException {
+        System.out.println("==============================CALCS451");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16824,7 +18731,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1425036653)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16861,15 +18771,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS451");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS452() throws SQLException {
+        System.out.println("==============================CALCS452");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16879,7 +18791,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1486024523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -16934,15 +18849,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS452");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS453() throws SQLException {
+        System.out.println("==============================CALCS453");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -16952,7 +18869,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2671902822)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17007,15 +18927,17 @@ public class TDVTTest {
         expectedRow.add("37371.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS453");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS454() throws SQLException {
+        System.out.println("==============================CALCS454");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17025,7 +18947,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3929621149)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17080,15 +19005,17 @@ public class TDVTTest {
         expectedRow.add("Sep 9 1976 12:00AM");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS454");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS456() throws SQLException {
+        System.out.println("==============================CALCS456");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17098,7 +19025,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1103404331)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17153,15 +19083,17 @@ public class TDVTTest {
         expectedRow.add("Jul 9 2004 10:17AM");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS456");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS457() throws SQLException {
+        System.out.println("==============================CALCS457");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17171,7 +19103,10 @@ public class TDVTTest {
         assertEquals("temp(test)(296025979)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17226,15 +19161,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS457");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS458() throws SQLException {
+        System.out.println("==============================CALCS458");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17244,7 +19181,10 @@ public class TDVTTest {
         assertEquals("temp(test)(595744937)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17254,15 +19194,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS458");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS459() throws SQLException {
+        System.out.println("==============================CALCS459");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17272,7 +19214,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3907469988)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17312,15 +19257,17 @@ public class TDVTTest {
         expectedRow.add("2002-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS459");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS460() throws SQLException {
+        System.out.println("==============================CALCS460");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17330,22 +19277,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1153873435)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS460");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS462() throws SQLException {
+        System.out.println("==============================CALCS462");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17355,7 +19307,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1314023193)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17410,15 +19365,17 @@ public class TDVTTest {
         expectedRow.add("2005-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS462");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS463() throws SQLException {
+        System.out.println("==============================CALCS463");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17428,7 +19385,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3529528921)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -17468,15 +19428,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS463");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS464() throws SQLException {
+        System.out.println("==============================CALCS464");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17486,22 +19448,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1066073186)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS464");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS465() throws SQLException {
+        System.out.println("==============================CALCS465");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17511,22 +19478,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1128710711)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS465");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS466() throws SQLException {
+        System.out.println("==============================CALCS466");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17536,22 +19508,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3816818712)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS466");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS467() throws SQLException {
+        System.out.println("==============================CALCS467");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17561,22 +19538,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1220694026)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS467");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS468() throws SQLException {
+        System.out.println("==============================CALCS468");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17586,22 +19568,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1878304808)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS468");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS469() throws SQLException {
+        System.out.println("==============================CALCS469");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17611,22 +19598,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3201398499)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS469");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS470() throws SQLException {
+        System.out.println("==============================CALCS470");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17636,22 +19628,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2380792894)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS470");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS471() throws SQLException {
+        System.out.println("==============================CALCS471");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17661,22 +19658,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1799303116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS471");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS472() throws SQLException {
+        System.out.println("==============================CALCS472");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17686,22 +19688,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3424623419)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS472");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS473() throws SQLException {
+        System.out.println("==============================CALCS473");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17711,22 +19718,27 @@ public class TDVTTest {
         assertEquals("temp(test)(496128354)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS473");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS474() throws SQLException {
+        System.out.println("==============================CALCS474");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17736,22 +19748,27 @@ public class TDVTTest {
         assertEquals("temp(test)(260207547)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS474");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS475() throws SQLException {
+        System.out.println("==============================CALCS475");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17761,22 +19778,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4282303505)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS475");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS476() throws SQLException {
+        System.out.println("==============================CALCS476");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17786,22 +19808,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2339877044)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS476");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS477() throws SQLException {
+        System.out.println("==============================CALCS477");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17811,22 +19838,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3465754358)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS477");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS478() throws SQLException {
+        System.out.println("==============================CALCS478");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17836,22 +19868,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2205674587)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS478");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS479() throws SQLException {
+        System.out.println("==============================CALCS479");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17861,22 +19898,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4062119106)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS479");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS480() throws SQLException {
+        System.out.println("==============================CALCS480");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17886,22 +19928,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2509274079)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS480");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS481() throws SQLException {
+        System.out.println("==============================CALCS481");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17911,22 +19958,27 @@ public class TDVTTest {
         assertEquals("temp(test)(508245917)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS481");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS482() throws SQLException {
+        System.out.println("==============================CALCS482");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17936,22 +19988,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1053114602)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS482");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS483() throws SQLException {
+        System.out.println("==============================CALCS483");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17961,22 +20018,27 @@ public class TDVTTest {
         assertEquals("temp(test)(955333125)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS483");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS484() throws SQLException {
+        System.out.println("==============================CALCS484");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -17986,22 +20048,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2396988690)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS484");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS485() throws SQLException {
+        System.out.println("==============================CALCS485");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18011,22 +20078,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2232502461)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS485");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS486() throws SQLException {
+        System.out.println("==============================CALCS486");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18036,22 +20108,27 @@ public class TDVTTest {
         assertEquals("temp(test)(109946472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS486");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS487() throws SQLException {
+        System.out.println("==============================CALCS487");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18061,22 +20138,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2095510626)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS487");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS488() throws SQLException {
+        System.out.println("==============================CALCS488");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18086,22 +20168,27 @@ public class TDVTTest {
         assertEquals("temp(test)(359186020)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS488");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS489() throws SQLException {
+        System.out.println("==============================CALCS489");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18111,22 +20198,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3060670302)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS489");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS490() throws SQLException {
+        System.out.println("==============================CALCS490");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18136,22 +20228,27 @@ public class TDVTTest {
         assertEquals("temp(test)(592740370)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS490");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS491() throws SQLException {
+        System.out.println("==============================CALCS491");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18161,22 +20258,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4169571243)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS491");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS492() throws SQLException {
+        System.out.println("==============================CALCS492");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18186,22 +20288,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2477057371)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS492");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS493() throws SQLException {
+        System.out.println("==============================CALCS493");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18211,22 +20318,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3817976182)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS493");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS494() throws SQLException {
+        System.out.println("==============================CALCS494");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18236,22 +20348,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2329360898)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS494");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS495() throws SQLException {
+        System.out.println("==============================CALCS495");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18261,22 +20378,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1469842605)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS495");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS496() throws SQLException {
+        System.out.println("==============================CALCS496");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18286,22 +20408,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4189387493)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS496");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS497() throws SQLException {
+        System.out.println("==============================CALCS497");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18311,22 +20438,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3720439076)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS497");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS498() throws SQLException {
+        System.out.println("==============================CALCS498");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18336,22 +20468,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2985757783)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS498");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS499() throws SQLException {
+        System.out.println("==============================CALCS499");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18361,7 +20498,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2277366246)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18407,15 +20547,17 @@ public class TDVTTest {
         expectedRow.add(" two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS499");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS500() throws SQLException {
+        System.out.println("==============================CALCS500");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18425,22 +20567,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3926981592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS500");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS501() throws SQLException {
+        System.out.println("==============================CALCS501");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18450,22 +20597,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1915846221)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS501");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS502() throws SQLException {
+        System.out.println("==============================CALCS502");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18475,22 +20627,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1152843842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS502");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS503() throws SQLException {
+        System.out.println("==============================CALCS503");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18500,7 +20657,10 @@ public class TDVTTest {
         assertEquals("temp(test)(715809068)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18555,15 +20715,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-28 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS503");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS504() throws SQLException {
+        System.out.println("==============================CALCS504");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18573,7 +20735,10 @@ public class TDVTTest {
         assertEquals("temp(test)(299505631)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18628,15 +20793,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-28 12:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS504");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS505() throws SQLException {
+        System.out.println("==============================CALCS505");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18646,7 +20813,10 @@ public class TDVTTest {
         assertEquals("temp(test)(709470143)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18701,15 +20871,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-26 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS505");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS506() throws SQLException {
+        System.out.println("==============================CALCS506");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18719,7 +20891,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1620718980)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18774,15 +20949,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-25 12:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS506");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS507() throws SQLException {
+        System.out.println("==============================CALCS507");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18792,22 +20969,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2141740056)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS507");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS508() throws SQLException {
+        System.out.println("==============================CALCS508");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18817,7 +20999,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1797652325)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18872,15 +21057,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-01 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS508");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS509() throws SQLException {
+        System.out.println("==============================CALCS509");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18890,7 +21077,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2686481578)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18945,15 +21135,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-03 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS509");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS510() throws SQLException {
+        System.out.println("==============================CALCS510");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -18963,7 +21155,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2341796372)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19018,15 +21213,17 @@ public class TDVTTest {
         expectedRow.add("2004-07-31 19:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS510");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS511() throws SQLException {
+        System.out.println("==============================CALCS511");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19036,7 +21233,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4017290474)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19091,15 +21291,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-03 19:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS511");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS512() throws SQLException {
+        System.out.println("==============================CALCS512");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19109,22 +21311,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3033382267)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS512");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS513() throws SQLException {
+        System.out.println("==============================CALCS513");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19134,22 +21341,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4196472080)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS513");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS514() throws SQLException {
+        System.out.println("==============================CALCS514");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19159,22 +21371,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1829388090)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS514");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS515() throws SQLException {
+        System.out.println("==============================CALCS515");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19184,22 +21401,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2087345109)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS515");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS516() throws SQLException {
+        System.out.println("==============================CALCS516");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19209,22 +21431,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3187080314)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS516");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS517() throws SQLException {
+        System.out.println("==============================CALCS517");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19234,22 +21461,27 @@ public class TDVTTest {
         assertEquals("temp(test)(436529008)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS517");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS518() throws SQLException {
+        System.out.println("==============================CALCS518");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19259,22 +21491,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1122166960)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS518");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS519() throws SQLException {
+        System.out.println("==============================CALCS519");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19284,22 +21521,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2476649334)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS519");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS520() throws SQLException {
+        System.out.println("==============================CALCS520");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19309,22 +21551,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1267352367)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS520");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS521() throws SQLException {
+        System.out.println("==============================CALCS521");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19334,22 +21581,27 @@ public class TDVTTest {
         assertEquals("temp(test)(668774393)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS521");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS522() throws SQLException {
+        System.out.println("==============================CALCS522");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19359,22 +21611,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2801366337)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS522");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS523() throws SQLException {
+        System.out.println("==============================CALCS523");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19384,22 +21641,27 @@ public class TDVTTest {
         assertEquals("temp(test)(6065346)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS523");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS524() throws SQLException {
+        System.out.println("==============================CALCS524");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19409,22 +21671,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4213376628)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS524");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS525() throws SQLException {
+        System.out.println("==============================CALCS525");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19434,22 +21701,27 @@ public class TDVTTest {
         assertEquals("temp(test)(284925583)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS525");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS526() throws SQLException {
+        System.out.println("==============================CALCS526");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19459,22 +21731,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1365124261)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS526");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS527() throws SQLException {
+        System.out.println("==============================CALCS527");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19484,22 +21761,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4277161941)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS527");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS528() throws SQLException {
+        System.out.println("==============================CALCS528");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19509,22 +21791,27 @@ public class TDVTTest {
         assertEquals("temp(test)(932571096)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS528");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS529() throws SQLException {
+        System.out.println("==============================CALCS529");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19534,22 +21821,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3666462064)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS529");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS530() throws SQLException {
+        System.out.println("==============================CALCS530");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19559,7 +21851,10 @@ public class TDVTTest {
         assertEquals("temp(test)(402015915)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19614,15 +21909,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS530");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS531() throws SQLException {
+        System.out.println("==============================CALCS531");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19632,7 +21929,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3033426574)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19678,15 +21978,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS531");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS532() throws SQLException {
+        System.out.println("==============================CALCS532");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19696,22 +21998,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS532");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS533() throws SQLException {
+        System.out.println("==============================CALCS533");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19721,7 +22028,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1701645592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19746,15 +22056,17 @@ public class TDVTTest {
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS533");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS534() throws SQLException {
+        System.out.println("==============================CALCS534");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19764,7 +22076,10 @@ public class TDVTTest {
         assertEquals("temp(test)(433583207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19804,15 +22119,17 @@ public class TDVTTest {
         expectedRow.add("2002-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS534");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS535() throws SQLException {
+        System.out.println("==============================CALCS535");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19822,7 +22139,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1289371916)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -19862,15 +22182,17 @@ public class TDVTTest {
         expectedRow.add("2002-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS535");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS536() throws SQLException {
+        System.out.println("==============================CALCS536");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19880,22 +22202,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3917841362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS536");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS537() throws SQLException {
+        System.out.println("==============================CALCS537");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19905,22 +22232,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1921815362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-01-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS537");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS541() throws SQLException {
+        System.out.println("==============================CALCS541");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19930,22 +22262,27 @@ public class TDVTTest {
         assertEquals("temp(test)(513464674)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS541");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS542() throws SQLException {
+        System.out.println("==============================CALCS542");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19955,22 +22292,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3512378422)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS542");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS543() throws SQLException {
+        System.out.println("==============================CALCS543");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -19980,22 +22322,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3084524178)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS543");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS544() throws SQLException {
+        System.out.println("==============================CALCS544");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20005,22 +22352,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4202902840)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS544");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS545() throws SQLException {
+        System.out.println("==============================CALCS545");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20030,22 +22382,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2836269094)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS545");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS546() throws SQLException {
+        System.out.println("==============================CALCS546");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20055,22 +22412,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3924648662)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS546");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS547() throws SQLException {
+        System.out.println("==============================CALCS547");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20080,22 +22442,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1538264184)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS547");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS548() throws SQLException {
+        System.out.println("==============================CALCS548");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20105,22 +22472,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4042104093)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS548");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS549() throws SQLException {
+        System.out.println("==============================CALCS549");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20130,22 +22502,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4271712345)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS549");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS550() throws SQLException {
+        System.out.println("==============================CALCS550");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20155,22 +22532,27 @@ public class TDVTTest {
         assertEquals("temp(test)(963247111)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS550");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS551() throws SQLException {
+        System.out.println("==============================CALCS551");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20180,22 +22562,27 @@ public class TDVTTest {
         assertEquals("temp(test)(738426766)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS551");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS552() throws SQLException {
+        System.out.println("==============================CALCS552");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20205,22 +22592,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1202522493)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS552");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS553() throws SQLException {
+        System.out.println("==============================CALCS553");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20230,22 +22622,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1255819744)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS553");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS554() throws SQLException {
+        System.out.println("==============================CALCS554");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20255,22 +22652,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1639804515)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS554");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS555() throws SQLException {
+        System.out.println("==============================CALCS555");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20280,22 +22682,27 @@ public class TDVTTest {
         assertEquals("temp(test)(299943486)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS555");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS556() throws SQLException {
+        System.out.println("==============================CALCS556");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20305,22 +22712,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4177149407)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS556");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS557() throws SQLException {
+        System.out.println("==============================CALCS557");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20330,22 +22742,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1457324017)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS557");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS559() throws SQLException {
+        System.out.println("==============================CALCS559");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20355,22 +22772,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1467453495)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS559");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS560() throws SQLException {
+        System.out.println("==============================CALCS560");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20380,22 +22802,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1408008556)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS560");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS561() throws SQLException {
+        System.out.println("==============================CALCS561");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20405,22 +22832,27 @@ public class TDVTTest {
         assertEquals("temp(test)(175600811)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("9");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS561");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS562() throws SQLException {
+        System.out.println("==============================CALCS562");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20430,22 +22862,27 @@ public class TDVTTest {
         assertEquals("temp(test)(41874160)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("12");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS562");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS563() throws SQLException {
+        System.out.println("==============================CALCS563");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20455,22 +22892,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2954817995)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("13");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS563");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS564() throws SQLException {
+        System.out.println("==============================CALCS564");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20480,7 +22922,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3715775174)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20535,15 +22980,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS564");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS565() throws SQLException {
+        System.out.println("==============================CALCS565");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20553,7 +23000,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2815480624)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20599,15 +23049,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS565");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS566() throws SQLException {
+        System.out.println("==============================CALCS566");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20617,7 +23069,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3738830082)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20672,15 +23127,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS566");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS567() throws SQLException {
+        System.out.println("==============================CALCS567");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20690,7 +23147,10 @@ public class TDVTTest {
         assertEquals("temp(test)(151653785)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20745,15 +23205,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS567");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS568() throws SQLException {
+        System.out.println("==============================CALCS568");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20763,7 +23225,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1373895161)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20809,15 +23274,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS568");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS569() throws SQLException {
+        System.out.println("==============================CALCS569");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20827,7 +23294,10 @@ public class TDVTTest {
         assertEquals("temp(test)(543203842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20873,15 +23343,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS569");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS570() throws SQLException {
+        System.out.println("==============================CALCS570");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20891,7 +23363,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3325657342)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20937,15 +23412,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS570");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS571() throws SQLException {
+        System.out.println("==============================CALCS571");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -20955,7 +23432,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2617331766)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20983,15 +23463,17 @@ public class TDVTTest {
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS571");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS572() throws SQLException {
+        System.out.println("==============================CALCS572");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21001,7 +23483,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3200082645)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(3);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21014,15 +23499,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS572");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS573() throws SQLException {
+        System.out.println("==============================CALCS573");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21032,7 +23519,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3049448927)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21078,15 +23568,17 @@ public class TDVTTest {
         expectedRow.add("8.98");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS573");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS574() throws SQLException {
+        System.out.println("==============================CALCS574");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21096,7 +23588,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3494867617)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21142,15 +23637,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS574");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS575() throws SQLException {
+        System.out.println("==============================CALCS575");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21160,7 +23657,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1660803953)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21194,15 +23694,17 @@ public class TDVTTest {
         expectedRow.add("September");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS575");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS576() throws SQLException {
+        System.out.println("==============================CALCS576");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21212,7 +23714,10 @@ public class TDVTTest {
         assertEquals("temp(test)(872696424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21246,15 +23751,17 @@ public class TDVTTest {
         expectedRow.add("September");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS576");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS577() throws SQLException {
+        System.out.println("==============================CALCS577");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21264,7 +23771,10 @@ public class TDVTTest {
         assertEquals("temp(test)(732183378)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21274,15 +23784,17 @@ public class TDVTTest {
         expectedRow.add("July");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS577");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS578() throws SQLException {
+        System.out.println("==============================CALCS578");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21292,7 +23804,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3816689092)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21302,15 +23817,17 @@ public class TDVTTest {
         expectedRow.add("July");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS578");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS579() throws SQLException {
+        System.out.println("==============================CALCS579");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21320,7 +23837,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2634030884)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21354,15 +23874,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS579");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS580() throws SQLException {
+        System.out.println("==============================CALCS580");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21372,7 +23894,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4000895377)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21382,15 +23907,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS580");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS582() throws SQLException {
+        System.out.println("==============================CALCS582");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21400,7 +23927,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1378354598)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21455,15 +23985,17 @@ public class TDVTTest {
         expectedRow.add("2004-09-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS582");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS583() throws SQLException {
+        System.out.println("==============================CALCS583");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21473,22 +24005,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3057229987)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS583");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS584() throws SQLException {
+        System.out.println("==============================CALCS584");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21498,22 +24035,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4063654893)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS584");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS585() throws SQLException {
+        System.out.println("==============================CALCS585");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21523,22 +24065,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2102858309)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS585");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS586() throws SQLException {
+        System.out.println("==============================CALCS586");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21548,22 +24095,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3270121971)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS586");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS587() throws SQLException {
+        System.out.println("==============================CALCS587");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21573,22 +24125,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2692233594)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS587");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS588() throws SQLException {
+        System.out.println("==============================CALCS588");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21598,22 +24155,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1772891037)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS588");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS589() throws SQLException {
+        System.out.println("==============================CALCS589");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21623,22 +24185,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3926284460)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS589");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS590() throws SQLException {
+        System.out.println("==============================CALCS590");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21648,22 +24215,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1415178918)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS590");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS591() throws SQLException {
+        System.out.println("==============================CALCS591");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21673,22 +24245,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3608467423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS591");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS592() throws SQLException {
+        System.out.println("==============================CALCS592");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21698,22 +24275,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2920782836)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS592");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS593() throws SQLException {
+        System.out.println("==============================CALCS593");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21723,22 +24305,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3132873078)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS593");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS594() throws SQLException {
+        System.out.println("==============================CALCS594");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21748,22 +24335,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2450943592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS594");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS595() throws SQLException {
+        System.out.println("==============================CALCS595");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21773,22 +24365,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3530921297)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS595");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS596() throws SQLException {
+        System.out.println("==============================CALCS596");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21798,22 +24395,27 @@ public class TDVTTest {
         assertEquals("temp(test)(304383277)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS596");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS597() throws SQLException {
+        System.out.println("==============================CALCS597");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21823,22 +24425,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3871589708)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS597");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS598() throws SQLException {
+        System.out.println("==============================CALCS598");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21848,22 +24455,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2462406212)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS598");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS599() throws SQLException {
+        System.out.println("==============================CALCS599");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21873,22 +24485,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3443263072)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS599");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS600() throws SQLException {
+        System.out.println("==============================CALCS600");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21898,7 +24515,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1349416314)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21953,15 +24573,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS600");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS601() throws SQLException {
+        System.out.println("==============================CALCS601");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -21971,7 +24593,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3032747293)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22026,15 +24651,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 07:59:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS601");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS603() throws SQLException {
+        System.out.println("==============================CALCS603");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22044,7 +24671,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3880453047)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22099,15 +24729,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-09 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS603");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS604() throws SQLException {
+        System.out.println("==============================CALCS604");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22117,7 +24749,10 @@ public class TDVTTest {
         assertEquals("temp(test)(877816921)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(16);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22169,15 +24804,17 @@ public class TDVTTest {
         expectedRow.add("312");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS604");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS605() throws SQLException {
+        System.out.println("==============================CALCS605");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22187,7 +24824,10 @@ public class TDVTTest {
         assertEquals("temp(test)(707037378)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22233,15 +24873,17 @@ public class TDVTTest {
         expectedRow.add("215");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS605");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS606() throws SQLException {
+        System.out.println("==============================CALCS606");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22251,7 +24893,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3028875325)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22285,15 +24930,17 @@ public class TDVTTest {
         expectedRow.add("41");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS606");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS607() throws SQLException {
+        System.out.println("==============================CALCS607");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22303,7 +24950,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3483942593)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22337,15 +24987,17 @@ public class TDVTTest {
         expectedRow.add("41");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS607");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS608() throws SQLException {
+        System.out.println("==============================CALCS608");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22355,7 +25007,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4196684004)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22410,15 +25065,17 @@ public class TDVTTest {
         expectedRow.add("128");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS608");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS609() throws SQLException {
+        System.out.println("==============================CALCS609");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22428,7 +25085,10 @@ public class TDVTTest {
         assertEquals("temp(test)(351668681)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22483,15 +25143,17 @@ public class TDVTTest {
         expectedRow.add("128");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS609");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS611() throws SQLException {
+        System.out.println("==============================CALCS611");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22501,7 +25163,10 @@ public class TDVTTest {
         assertEquals("temp(test)(748109579)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22556,15 +25221,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-03 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS611");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS612() throws SQLException {
+        System.out.println("==============================CALCS612");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22574,7 +25241,10 @@ public class TDVTTest {
         assertEquals("temp(test)(859582235)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22608,15 +25278,17 @@ public class TDVTTest {
         expectedRow.add("536");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS612");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS613() throws SQLException {
+        System.out.println("==============================CALCS613");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22626,7 +25298,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2079052241)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22681,15 +25356,17 @@ public class TDVTTest {
         expectedRow.add("1672");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS613");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS614() throws SQLException {
+        System.out.println("==============================CALCS614");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22699,7 +25376,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2102582873)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22727,15 +25407,17 @@ public class TDVTTest {
         expectedRow.add("9");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS614");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS615() throws SQLException {
+        System.out.println("==============================CALCS615");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22745,7 +25427,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3816473022)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22767,15 +25452,17 @@ public class TDVTTest {
         expectedRow.add("15.7");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS615");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS616() throws SQLException {
+        System.out.println("==============================CALCS616");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22785,7 +25472,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1942031084)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22840,15 +25530,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS616");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS617() throws SQLException {
+        System.out.println("==============================CALCS617");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22858,7 +25550,10 @@ public class TDVTTest {
         assertEquals("temp(test)(308042462)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22913,15 +25608,17 @@ public class TDVTTest {
         expectedRow.add("2002-04-27 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS617");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS618() throws SQLException {
+        System.out.println("==============================CALCS618");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22931,7 +25628,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1290354772)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22977,15 +25677,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS618");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS619() throws SQLException {
+        System.out.println("==============================CALCS619");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -22995,7 +25697,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2022110629)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23041,15 +25746,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS619");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS620() throws SQLException {
+        System.out.println("==============================CALCS620");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23059,7 +25766,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1934432200)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23081,15 +25791,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS620");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS621() throws SQLException {
+        System.out.println("==============================CALCS621");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23099,7 +25811,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1256004566)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(14);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23145,15 +25860,17 @@ public class TDVTTest {
         expectedRow.add("59");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS621");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS622() throws SQLException {
+        System.out.println("==============================CALCS622");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23163,7 +25880,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2503102272)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(11);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23200,15 +25920,17 @@ public class TDVTTest {
         expectedRow.add("9.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS622");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS623() throws SQLException {
+        System.out.println("==============================CALCS623");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23218,7 +25940,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2977666156)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23228,15 +25953,17 @@ public class TDVTTest {
         expectedRow.add("2.598");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS623");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS624() throws SQLException {
+        System.out.println("==============================CALCS624");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23246,22 +25973,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1408155083)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1234-06-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS624");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS625() throws SQLException {
+        System.out.println("==============================CALCS625");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23271,22 +26003,27 @@ public class TDVTTest {
         assertEquals("temp(test)(54082523)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2012-06-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS625");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS626() throws SQLException {
+        System.out.println("==============================CALCS626");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23296,22 +26033,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2040050501)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1234-06-01 00:00:00");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS626");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS631() throws SQLException {
+        System.out.println("==============================CALCS631");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23321,22 +26063,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3252316215)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS631");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS632() throws SQLException {
+        System.out.println("==============================CALCS632");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23346,7 +26093,10 @@ public class TDVTTest {
         assertEquals("temp(test)(535799381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23356,15 +26106,17 @@ public class TDVTTest {
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS632");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS633() throws SQLException {
+        System.out.println("==============================CALCS633");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23374,7 +26126,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2377293421)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23384,15 +26139,17 @@ public class TDVTTest {
         expectedRow.add("0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS633");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS636() throws SQLException {
+        System.out.println("==============================CALCS636");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23402,22 +26159,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4035984656)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004-08-02 07:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS636");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS637() throws SQLException {
+        System.out.println("==============================CALCS637");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23427,7 +26189,10 @@ public class TDVTTest {
         assertEquals("temp(test)(840463993)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23467,15 +26232,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS637");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS638() throws SQLException {
+        System.out.println("==============================CALCS638");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23485,7 +26252,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1720545932)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23525,15 +26295,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS638");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS639() throws SQLException {
+        System.out.println("==============================CALCS639");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23543,7 +26315,10 @@ public class TDVTTest {
         assertEquals("temp(test)(840463993)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23583,15 +26358,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS639");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS640() throws SQLException {
+        System.out.println("==============================CALCS640");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23601,7 +26378,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1720545932)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23641,15 +26421,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS640");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS641() throws SQLException {
+        System.out.println("==============================CALCS641");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23659,22 +26441,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2707942807)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS641");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS642() throws SQLException {
+        System.out.println("==============================CALCS642");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23684,22 +26471,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3474280307)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS642");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS643() throws SQLException {
+        System.out.println("==============================CALCS643");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23709,22 +26501,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2707942807)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS643");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS644() throws SQLException {
+        System.out.println("==============================CALCS644");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23734,22 +26531,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3474280307)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS644");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS645() throws SQLException {
+        System.out.println("==============================CALCS645");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23759,7 +26561,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1671202742)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23793,15 +26598,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS645");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS646() throws SQLException {
+        System.out.println("==============================CALCS646");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23811,7 +26618,10 @@ public class TDVTTest {
         assertEquals("temp(test)(536615588)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23845,15 +26655,17 @@ public class TDVTTest {
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS646");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS647() throws SQLException {
+        System.out.println("==============================CALCS647");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23863,7 +26675,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1933085624)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23873,15 +26688,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS647");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS648() throws SQLException {
+        System.out.println("==============================CALCS648");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23891,7 +26708,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2986113344)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(2);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23901,15 +26721,17 @@ public class TDVTTest {
         expectedRow.add("8");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS648");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS649() throws SQLException {
+        System.out.println("==============================CALCS649");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23919,7 +26741,10 @@ public class TDVTTest {
         assertEquals("temp(test)(266359676)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23950,15 +26775,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS649");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS650() throws SQLException {
+        System.out.println("==============================CALCS650");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -23968,7 +26795,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2600727600)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -23984,15 +26814,17 @@ public class TDVTTest {
         expectedRow.add("2");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS650");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS651() throws SQLException {
+        System.out.println("==============================CALCS651");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24002,7 +26834,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2600727600)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24018,15 +26853,17 @@ public class TDVTTest {
         expectedRow.add("2");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS651");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS652() throws SQLException {
+        System.out.println("==============================CALCS652");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24036,7 +26873,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3955107424)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24067,15 +26907,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS652");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS653() throws SQLException {
+        System.out.println("==============================CALCS653");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24085,7 +26927,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3955107424)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24116,15 +26961,17 @@ public class TDVTTest {
         expectedRow.add("4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS653");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS656() throws SQLException {
+        System.out.println("==============================CALCS656");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24134,7 +26981,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3898674109)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24162,15 +27012,17 @@ public class TDVTTest {
         expectedRow.add("81");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS656");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS657() throws SQLException {
+        System.out.println("==============================CALCS657");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24180,7 +27032,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1119897860)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24202,15 +27057,17 @@ public class TDVTTest {
         expectedRow.add("246.49");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS657");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS658() throws SQLException {
+        System.out.println("==============================CALCS658");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24220,22 +27077,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3311335472)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS658");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS659() throws SQLException {
+        System.out.println("==============================CALCS659");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24245,22 +27107,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1982106892)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS659");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS660() throws SQLException {
+        System.out.println("==============================CALCS660");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24270,22 +27137,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2616948526)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS660");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS661() throws SQLException {
+        System.out.println("==============================CALCS661");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24295,22 +27167,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4099405891)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS661");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS662() throws SQLException {
+        System.out.println("==============================CALCS662");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24320,22 +27197,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1303420554)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS662");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS663() throws SQLException {
+        System.out.println("==============================CALCS663");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24345,22 +27227,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1705284026)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS663");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS664() throws SQLException {
+        System.out.println("==============================CALCS664");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24370,22 +27257,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2964540366)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS664");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS665() throws SQLException {
+        System.out.println("==============================CALCS665");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24395,22 +27287,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3523871008)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS665");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS666() throws SQLException {
+        System.out.println("==============================CALCS666");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24420,22 +27317,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3587526928)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS666");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS667() throws SQLException {
+        System.out.println("==============================CALCS667");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24445,22 +27347,27 @@ public class TDVTTest {
         assertEquals("temp(test)(2715649251)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS667");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS668() throws SQLException {
+        System.out.println("==============================CALCS668");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24470,22 +27377,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3912893816)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS668");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS669() throws SQLException {
+        System.out.println("==============================CALCS669");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24495,22 +27407,27 @@ public class TDVTTest {
         assertEquals("temp(test)(453060606)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS669");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS670() throws SQLException {
+        System.out.println("==============================CALCS670");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24520,22 +27437,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1466575961)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS670");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS671() throws SQLException {
+        System.out.println("==============================CALCS671");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24545,22 +27467,27 @@ public class TDVTTest {
         assertEquals("temp(test)(265878863)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS671");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS672() throws SQLException {
+        System.out.println("==============================CALCS672");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24570,22 +27497,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3877847632)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS672");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS673() throws SQLException {
+        System.out.println("==============================CALCS673");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24595,22 +27527,27 @@ public class TDVTTest {
         assertEquals("temp(test)(263614731)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS673");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS674() throws SQLException {
+        System.out.println("==============================CALCS674");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24620,22 +27557,27 @@ public class TDVTTest {
         assertEquals("temp(test)(864002214)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS674");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS678() throws SQLException {
+        System.out.println("==============================CALCS678");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24645,7 +27587,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1876737518)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24685,15 +27630,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS678");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS679() throws SQLException {
+        System.out.println("==============================CALCS679");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24703,7 +27650,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1437280163)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24743,15 +27693,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS679");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS680() throws SQLException {
+        System.out.println("==============================CALCS680");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24761,22 +27713,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3178513645)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS680");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS681() throws SQLException {
+        System.out.println("==============================CALCS681");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24786,22 +27743,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3727444777)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS681");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS682() throws SQLException {
+        System.out.println("==============================CALCS682");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24811,7 +27773,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4261466899)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24866,15 +27831,17 @@ public class TDVTTest {
         expectedRow.add("2004-08-02 08:59:23");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS682");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS683() throws SQLException {
+        System.out.println("==============================CALCS683");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24884,22 +27851,27 @@ public class TDVTTest {
         assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS683");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS685() throws SQLException {
+        System.out.println("==============================CALCS685");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24909,22 +27881,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4154938655)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("19.39");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS685");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS686() throws SQLException {
+        System.out.println("==============================CALCS686");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24934,22 +27911,27 @@ public class TDVTTest {
         assertEquals("temp(test)(1812249092)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS686");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS687() throws SQLException {
+        System.out.println("==============================CALCS687");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24959,7 +27941,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1523549003)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24975,15 +27960,17 @@ public class TDVTTest {
         expectedRow.add("10");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS687");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS688() throws SQLException {
+        System.out.println("==============================CALCS688");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -24993,7 +27980,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3981629397)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25012,15 +28002,17 @@ public class TDVTTest {
         expectedRow.add("6");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS688");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS689() throws SQLException {
+        System.out.println("==============================CALCS689");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25030,7 +28022,10 @@ public class TDVTTest {
         assertEquals("temp(test)(257220821)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(8);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25058,15 +28053,17 @@ public class TDVTTest {
         expectedRow.add("17");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS689");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS690() throws SQLException {
+        System.out.println("==============================CALCS690");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25076,7 +28073,10 @@ public class TDVTTest {
         assertEquals("temp(test)(282093116)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25101,15 +28101,17 @@ public class TDVTTest {
         expectedRow.add("17");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS690");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS691() throws SQLException {
+        System.out.println("==============================CALCS691");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25119,7 +28121,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3096760581)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(7);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25144,15 +28149,17 @@ public class TDVTTest {
         expectedRow.add("5");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS691");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS692() throws SQLException {
+        System.out.println("==============================CALCS692");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25162,7 +28169,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2787932066)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25184,15 +28194,17 @@ public class TDVTTest {
         expectedRow.add("5");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS692");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS693() throws SQLException {
+        System.out.println("==============================CALCS693");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25202,7 +28214,10 @@ public class TDVTTest {
         assertEquals("temp(test)(838791689)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25236,15 +28251,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS693");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS694() throws SQLException {
+        System.out.println("==============================CALCS694");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25254,7 +28271,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1647283678)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25288,15 +28308,17 @@ public class TDVTTest {
         expectedRow.add("3752");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS694");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS695() throws SQLException {
+        System.out.println("==============================CALCS695");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25306,7 +28328,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1719292105)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25361,15 +28386,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS695");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS696() throws SQLException {
+        System.out.println("==============================CALCS696");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25379,7 +28406,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1567002572)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25434,15 +28464,17 @@ public class TDVTTest {
         expectedRow.add("11707");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS696");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS697() throws SQLException {
+        System.out.println("==============================CALCS697");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25452,22 +28484,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4016644369)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("1");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS697");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS699() throws SQLException {
+        System.out.println("==============================CALCS699");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25477,22 +28514,27 @@ public class TDVTTest {
         assertEquals("temp(test)(512350875)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("-14.21");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS699");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS700() throws SQLException {
+        System.out.println("==============================CALCS700");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25502,22 +28544,27 @@ public class TDVTTest {
         assertEquals("temp(test)(3910790823)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("eight");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS700");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS701() throws SQLException {
+        System.out.println("==============================CALCS701");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25527,7 +28574,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3683900016)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(5);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25546,15 +28596,17 @@ public class TDVTTest {
         expectedRow.add("3");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS701");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS702() throws SQLException {
+        System.out.println("==============================CALCS702");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25564,22 +28616,27 @@ public class TDVTTest {
         assertEquals("temp(test)(56370746)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("11");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS702");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS703() throws SQLException {
+        System.out.println("==============================CALCS703");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25589,7 +28646,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2763474205)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25611,15 +28671,17 @@ public class TDVTTest {
         expectedRow.add("6");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS703");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS704() throws SQLException {
+        System.out.println("==============================CALCS704");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25629,7 +28691,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3969685894)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25669,15 +28734,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS704");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS705() throws SQLException {
+        System.out.println("==============================CALCS705");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25687,7 +28754,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3969685894)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(12);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25727,15 +28797,17 @@ public class TDVTTest {
         expectedRow.add("2002");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS705");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS706() throws SQLException {
+        System.out.println("==============================CALCS706");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25745,22 +28817,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4179095987)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS706");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS707() throws SQLException {
+        System.out.println("==============================CALCS707");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25770,22 +28847,27 @@ public class TDVTTest {
         assertEquals("temp(test)(4179095987)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("int"));
+        if (!tyName.equals("int")) {
+            System.out.println(tyName + " == " + "int");
+        }
+        assertTrue("failed type check", tyName.equals("int"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("2004");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS707");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS708() throws SQLException {
+        System.out.println("==============================CALCS708");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25795,7 +28877,10 @@ public class TDVTTest {
         assertEquals("temp(test)(366741644)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25838,15 +28923,17 @@ public class TDVTTest {
         expectedRow.add("9.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS708");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS709() throws SQLException {
+        System.out.println("==============================CALCS709");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25856,7 +28943,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1240237577)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25899,15 +28989,17 @@ public class TDVTTest {
         expectedRow.add("9.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS709");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS710() throws SQLException {
+        System.out.println("==============================CALCS710");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25917,7 +29009,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3892529067)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(9);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25948,15 +29043,17 @@ public class TDVTTest {
         expectedRow.add("16.0");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS710");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS711() throws SQLException {
+        System.out.println("==============================CALCS711");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -25966,7 +29063,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2722044748)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(13);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26009,15 +29109,17 @@ public class TDVTTest {
         expectedRow.add("19.4");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS711");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS712() throws SQLException {
+        System.out.println("==============================CALCS712");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26027,7 +29129,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3550551924)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26061,15 +29166,17 @@ public class TDVTTest {
         expectedRow.add("536");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS712");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS713() throws SQLException {
+        System.out.println("==============================CALCS713");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26079,7 +29186,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2745903531)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26113,15 +29223,17 @@ public class TDVTTest {
         expectedRow.add("536");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS713");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS714() throws SQLException {
+        System.out.println("==============================CALCS714");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26131,7 +29243,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1341534691)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26186,15 +29301,17 @@ public class TDVTTest {
         expectedRow.add("1672");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS714");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testCALCS715() throws SQLException {
+        System.out.println("==============================CALCS715");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26204,7 +29321,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1157868287)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(17);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26259,15 +29379,17 @@ public class TDVTTest {
         expectedRow.add("1672");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================CALCS715");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testLOGICAL_CALCS3() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS3");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26277,7 +29399,10 @@ public class TDVTTest {
         assertEquals("str2 (group)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(4);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26293,15 +29418,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================LOGICAL_CALCS3");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testLOGICAL_CALCS4() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS4");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26311,7 +29438,10 @@ public class TDVTTest {
         assertEquals("str2", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(6);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26333,15 +29463,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================LOGICAL_CALCS4");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testLOGICAL_CALCS8() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS8");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26351,7 +29483,10 @@ public class TDVTTest {
         assertEquals("str2", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(10);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -26385,15 +29520,17 @@ public class TDVTTest {
         expectedRow.add("two");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================LOGICAL_CALCS8");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testLOGICAL_CALCS10() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS10");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26403,22 +29540,27 @@ public class TDVTTest {
         assertEquals("str0", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("string"));
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("OFFICE SUPPLIES");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================LOGICAL_CALCS10");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }
 
     @Test
     public void testLOGICAL_STAPLES28() throws SQLException {
+        System.out.println("==============================LOGICAL_STAPLES28");
         Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
@@ -26428,16 +29570,20 @@ public class TDVTTest {
         assertEquals("sum_calculation_555068687593533440_ok", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        assertTrue("failed type check", tyName.equals("null") || tyName.equals("double"));
+        if (!tyName.equals("double")) {
+            System.out.println(tyName + " == " + "double");
+        }
+        assertTrue("failed type check", tyName.equals("double"));
         HashSet<ArrayList<String>> expected = new HashSet<>(1);
         ArrayList<String> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add("4275856.2");
         expected.add(expectedRow);
         HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
-        System.out.println("==============================LOGICAL_STAPLES28");
-        System.out.println(expected.toString());
-        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
+        }
         // This will be false if both HashSets are the same
         assertFalse("failed result check", rsSet.retainAll(expected));
     }

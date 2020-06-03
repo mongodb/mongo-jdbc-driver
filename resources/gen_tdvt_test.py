@@ -97,6 +97,7 @@ def make_test(fName, test):
     testName = fName + test["id"]
     print("    @Test")
     print("    public void test" + testName + "() throws SQLException {")
+    print('        System.out.println("=============================='+ testName +'");')
     print("        Connection conn = getBasicConnection();")
     print("        Statement stmt = conn.createStatement();")
     sql = clean_sql(test["sql"])
@@ -110,9 +111,12 @@ def make_test(fName, test):
         print('        String tyName;')
         for i, ty in enumerate(test['expected_types']):
             print('        tyName = rsmd.getColumnTypeName(' + str(i+1) + ');')
+            print('if(!tyName.equals("' + types[ty] + '")) {')
+            print('    System.out.println(tyName + " == " + "' + types[ty] + '");')
+            print('}')
             # For now, allow the tyName to be null. We will fix this soon when the results from ADL
             # contain the type.
-            print('        assertTrue("failed type check", tyName.equals("null") || tyName.equals("' + types[ty] + '"));')
+            print('        assertTrue("failed type check", tyName.equals("' + types[ty] + '"));')
     if 'expected_results' in test and len(test['expected_results']) > 0:
         # Just compare everything as strings.
         print('        HashSet<ArrayList<String>> expected = new HashSet<>(' + str(len(test['expected_results'])) + ');')
@@ -126,9 +130,10 @@ def make_test(fName, test):
         print('        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);')
         # We'll leave the printouts here until we are done fixing the failing tests in a future
         # ticket.
-        print('        System.out.println("=============================='+ testName +'");')
+        print('        if(rsSet.retainAll(expected)) {')
         print('        System.out.println(expected.toString());')
         print('        System.out.println(rsSet.toString());')
+        print('        }')
         print('        // This will be false if both HashSets are the same')
         print('        assertFalse("failed result check", rsSet.retainAll(expected));')
     print("    }\n")
@@ -136,9 +141,10 @@ def make_test(fName, test):
 def add_cases(fName):
     y = yaml.load(open(fName), Loader=yaml.FullLoader)
 
+    i = 0
     for test in y['testcases']:
         make_test(os.path.basename(fName).split('.')[0].upper(), test)
-
+        i += 1
 
 for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml', 'logical_calcs.yml', 'logical_staples.yml']):
     add_cases(f)
