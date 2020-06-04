@@ -219,7 +219,7 @@ testcases:
       - ['2004-08-02 08:00:23']
     expected_error: ''
     expected_names: [TEMP(Test)(2741755004)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '19'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 MINUTE) AS `TEMP(Test)(2741755004)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"

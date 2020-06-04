@@ -49,7 +49,8 @@ print(test_text)
 types = {
         'varchar': 'string',
         'string': 'string',
-        'int': 'int',
+        'int': 'long',
+        'long': 'long',
         'float': 'double',
         'double': 'double',
         'date': 'date',
@@ -133,9 +134,9 @@ def make_test(fName, test):
         print('        if(rsSet.retainAll(expected)) {')
         print('        System.out.println(expected.toString());')
         print('        System.out.println(rsSet.toString());')
-        print('        }')
         print('        // This will be false if both HashSets are the same')
-        print('        assertFalse("failed result check", rsSet.retainAll(expected));')
+        print('        assertTrue("failed result check", false);')
+        print('        }')
     print("    }\n")
 
 def add_cases(fName):
@@ -146,7 +147,8 @@ def add_cases(fName):
         make_test(os.path.basename(fName).split('.')[0].upper(), test)
         i += 1
 
-for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml', 'logical_calcs.yml', 'logical_staples.yml']):
+#for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml', 'logical_calcs.yml', 'logical_staples.yml']):
+for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml']):
     add_cases(f)
 
 print("}")
