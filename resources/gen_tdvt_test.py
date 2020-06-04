@@ -49,6 +49,7 @@ print(test_text)
 types = {
         'varchar': 'string',
         'string': 'string',
+        'bool': 'bool',
         'int': 'long',
         'long': 'long',
         'float': 'double',

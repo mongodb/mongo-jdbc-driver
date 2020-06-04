@@ -1044,7 +1044,7 @@ testcases:
       - ['2004-08-02 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(3848052829)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '77'
     sql: "\n      SELECT `Calcs`.`datetime0` AS `TEMP(Test)(3848052829)(0)`\nFROM `Calcs`\n\
       GROUP BY 1\n     order by 1"
@@ -1053,7 +1053,7 @@ testcases:
       - ['']
     expected_error: ''
     expected_names: [TEMP(Test)(1108086785)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '78'
     sql: "\n      SELECT `Calcs`.`datetime1` AS `TEMP(Test)(1108086785)(0)`\nFROM `Calcs`\n\
       GROUP BY 1\n     order by 1"
@@ -1434,7 +1434,7 @@ testcases:
       - ['2004-08-03 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(2728495522)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '97'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(2728495522)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1470,7 +1470,7 @@ testcases:
       - ['2004-07-04 22:49:28']
     expected_error: ''
     expected_names: [TEMP(Test)(2572329321)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '100'
     sql: "\n      SELECT MIN(`Calcs`.`datetime0`) AS `TEMP(Test)(2572329321)(0)`\nFROM\
       \ `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -1701,7 +1701,7 @@ testcases:
       - [10]
     expected_error: ''
     expected_names: [TEMP(Test)(3489013143)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '113'
     sql: "\n      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(3489013143)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1720,7 +1720,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3834106318)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '114'
     sql: "\n      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(3834106318)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1827,7 +1827,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(1759936097)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '123'
     sql: "\n      SELECT (RIGHT(RTRIM(`Calcs`.`str1`), LENGTH('s')) = 's') AS `TEMP(Test)(1759936097)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1837,7 +1837,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3179156403)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '124'
     sql: "\n      SELECT (RIGHT(RTRIM(`Calcs`.`str2`), LENGTH('een')) = 'een') AS `TEMP(Test)(3179156403)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2174,7 +2174,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(2016952657)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '143'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(2016952657)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2198,7 +2198,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(1256216982)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '144'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(1256216982)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3553,7 +3553,7 @@ testcases:
       - ['2004-08-03 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(2988076353)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '225'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(2988076353)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3644,7 +3644,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1773778045)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '232'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1773778045)(0)`\nFROM `Calcs`\n\
@@ -3653,7 +3653,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(382789366)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '233'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00' ),\
@@ -3663,7 +3663,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(444902156)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '234'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-01\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(444902156)(0)`\nFROM `Calcs`\n\
@@ -3672,7 +3672,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(581676997)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '235'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-01 00:00:00' ),\
@@ -3682,7 +3682,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1831450015)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '236'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961),\
       \ '%Y-' ), (3*(QUARTER(FROM_DAYS(FLOOR(NULL) + 693961))-1)+1), '-01 00:00:00'\
@@ -3692,7 +3692,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(360201683)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '237'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL)\
       \ + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-' ), (3*(QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -3703,7 +3703,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(872678106)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '238'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))\
       \ - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ), INTERVAL 0 SECOND ) AS\
@@ -3713,7 +3713,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3905701997)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '239'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) +\
       \ 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -3724,7 +3724,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3359079369)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '240'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3359079369)(0)`\nFROM `Calcs`\n\
@@ -3733,7 +3733,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1326289938)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '241'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -3743,7 +3743,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2763829899)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '242'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2763829899)(0)`\nFROM `Calcs`\n\
@@ -3752,7 +3752,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(717997108)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '243'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -3762,7 +3762,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2963633898)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '244'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2963633898)(0)`\nFROM `Calcs`\n\
@@ -3771,7 +3771,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3202209617)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '245'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -3781,7 +3781,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4266496460)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '246'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:00:00' ),\
@@ -3791,7 +3791,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4131996060)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '247'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:%s' ),\
@@ -3801,7 +3801,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2935754523)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '248'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:00' ),\
@@ -6029,7 +6029,7 @@ testcases:
       - ['2004-08-02 07:59:24']
     expected_error: ''
     expected_names: [TEMP(Test)(621896091)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '384'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 SECOND) AS `TEMP(Test)(621896091)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7020,7 +7020,7 @@ testcases:
       - ['2002-04-27 00:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(1486024523)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '452'
     sql: "\n      SELECT TIMESTAMP(`Calcs`.`date2`) AS `TEMP(Test)(1486024523)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7452,7 +7452,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1053114602)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '482'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 YEAR)\
       \ AS `TEMP(Test)(1053114602)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -7461,7 +7461,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(955333125)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '483'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 YEAR) AS `TEMP(Test)(955333125)(0)`\n\
@@ -7470,7 +7470,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2396988690)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '484'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL (3 * 1)\
       \ MONTH) AS `TEMP(Test)(2396988690)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n\
@@ -7479,7 +7479,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2232502461)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '485'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(2232502461)(0)`\n\
@@ -7488,7 +7488,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(109946472)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '486'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 MONTH)\
       \ AS `TEMP(Test)(109946472)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -7497,7 +7497,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2095510626)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '487'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 MONTH) AS `TEMP(Test)(2095510626)(0)`\n\
@@ -7506,7 +7506,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(359186020)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '488'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL (7 * 1)\
       \ DAY) AS `TEMP(Test)(359186020)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n  \
@@ -7515,7 +7515,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3060670302)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '489'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL (7 * 1) DAY) AS `TEMP(Test)(3060670302)(0)`\n\
@@ -7524,7 +7524,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(592740370)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '490'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS\
       \ `TEMP(Test)(592740370)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -7533,7 +7533,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4169571243)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '491'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(4169571243)(0)`\n\
@@ -7542,7 +7542,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2477057371)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '492'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS\
       \ `TEMP(Test)(2477057371)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -7551,7 +7551,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3817976182)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '493'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(3817976182)(0)`\n\
@@ -7560,7 +7560,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2329360898)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '494'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 DAY) AS\
       \ `TEMP(Test)(2329360898)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -7569,7 +7569,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1469842605)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '495'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 DAY) AS `TEMP(Test)(1469842605)(0)`\n\
@@ -7578,7 +7578,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4189387493)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '496'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 HOUR) AS `TEMP(Test)(4189387493)(0)`\n\
@@ -7587,7 +7587,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3720439076)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '497'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 MINUTE) AS `TEMP(Test)(3720439076)(0)`\n\
@@ -7596,7 +7596,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2985757783)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '498'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), INTERVAL 1 SECOND) AS `TEMP(Test)(2985757783)(0)`\n\
@@ -7668,7 +7668,7 @@ testcases:
       - ['2002-04-28 00:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(715809068)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '503'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(`Calcs`.`date2`, INTERVAL FLOOR(1) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(715809068)(0)`\n\
@@ -7693,7 +7693,7 @@ testcases:
       - ['2002-04-28 12:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(299505631)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '504'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(`Calcs`.`date2`, INTERVAL FLOOR(1.5) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(299505631)(0)`\n\
@@ -7718,7 +7718,7 @@ testcases:
       - ['2002-04-26 00:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(709470143)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '505'
     sql: "\n      SELECT DATE_SUB(DATE_SUB(`Calcs`.`date2`, INTERVAL FLOOR(1) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(709470143)(0)`\n\
@@ -7743,7 +7743,7 @@ testcases:
       - ['2002-04-25 12:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(1620718980)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '506'
     sql: "\n      SELECT DATE_SUB(DATE_SUB(`Calcs`.`date2`, INTERVAL FLOOR(1.5) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(1620718980)(0)`\n\
@@ -7778,7 +7778,7 @@ testcases:
       - ['2004-08-01 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(1797652325)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '508'
     sql: "\n      SELECT DATE_SUB(DATE_SUB(`Calcs`.`datetime0`, INTERVAL FLOOR(1) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(1797652325)(0)`\n\
@@ -7803,7 +7803,7 @@ testcases:
       - ['2004-08-03 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(2686481578)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '509'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(`Calcs`.`datetime0`, INTERVAL FLOOR(1) DAY),\
       \ INTERVAL 60 * 60 * 24 * (1 - FLOOR(1)) SECOND) AS `TEMP(Test)(2686481578)(0)`\n\
@@ -7828,7 +7828,7 @@ testcases:
       - ['2004-07-31 19:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(2341796372)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '510'
     sql: "\n      SELECT DATE_SUB(DATE_SUB(`Calcs`.`datetime0`, INTERVAL FLOOR(1.5)\
       \ DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(2341796372)(0)`\n\
@@ -7853,7 +7853,7 @@ testcases:
       - ['2004-08-03 19:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(4017290474)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '511'
     sql: "\n      SELECT DATE_ADD(DATE_ADD(`Calcs`.`datetime0`, INTERVAL FLOOR(1.5)\
       \ DAY), INTERVAL 60 * 60 * 24 * (1.5 - FLOOR(1.5)) SECOND) AS `TEMP(Test)(4017290474)(0)`\n\
@@ -8991,7 +8991,7 @@ testcases:
       - ['2004-08-09 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(3880453047)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '603'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL (7 * 1) DAY) AS `TEMP(Test)(3880453047)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -9170,7 +9170,7 @@ testcases:
       - ['2004-08-03 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(748109579)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '611'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 DAY) AS `TEMP(Test)(748109579)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -9428,7 +9428,7 @@ testcases:
       - ['2012-06-01 00:00:00']
     expected_error: ''
     expected_names: [TEMP(Test)(54082523)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '625'
     sql: "\n      SELECT TIMESTAMP(STR_TO_DATE('12-06-01', '%y-%m-%d')) AS `TEMP(Test)(54082523)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -9554,7 +9554,7 @@ testcases:
       - ['2004-08-02 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(4035984656)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '636'
     sql: "\n      SELECT MAX(`Calcs`.`datetime0`) AS `TEMP(Test)(4035984656)(0)`\nFROM\
       \ `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -9850,7 +9850,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3311335472)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '658'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3311335472)(0)`\nFROM `Calcs`\n\
@@ -9859,7 +9859,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1982106892)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '659'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-01-01 00:00:00' ),\
@@ -9869,7 +9869,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2616948526)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '660'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961),\
       \ '%Y-' ), (3*(QUARTER(FROM_DAYS(FLOOR(NULL) + 693961))-1)+1), '-01 00:00:00'\
@@ -9879,7 +9879,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4099405891)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '661'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL)\
       \ + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-' ), (3*(QUARTER(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -9890,7 +9890,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1303420554)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '662'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-01\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1303420554)(0)`\nFROM `Calcs`\n\
@@ -9899,7 +9899,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1705284026)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '663'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-01 00:00:00' ),\
@@ -9909,7 +9909,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2964540366)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '664'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(DATE_ADD(FROM_DAYS(FLOOR(NULL) +\
       \ 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - (DAYOFWEEK(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -9920,7 +9920,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3523871008)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '665'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(FROM_DAYS(FLOOR(NULL) + 693961))\
       \ - (DAYOFWEEK(FROM_DAYS(FLOOR(NULL) + 693961)) - 1) ), INTERVAL 0 SECOND ) AS\
@@ -9930,7 +9930,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3587526928)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '666'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -9940,7 +9940,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2715649251)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '667'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2715649251)(0)`\nFROM `Calcs`\n\
@@ -9949,7 +9949,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3912893816)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '668'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3912893816)(0)`\nFROM `Calcs`\n\
@@ -9958,7 +9958,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(453060606)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '669'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -9968,7 +9968,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1466575961)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '670'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( FROM_DAYS(FLOOR(NULL) + 693961), '%Y-%m-%d\
       \ 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1466575961)(0)`\nFROM `Calcs`\n\
@@ -9977,7 +9977,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(265878863)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '671'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d 00:00:00' ),\
@@ -9987,7 +9987,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3877847632)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '672'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:00:00' ),\
@@ -9997,7 +9997,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(263614731)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '673'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:00' ),\
@@ -10007,7 +10007,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(864002214)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '674'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND), '%Y-%m-%d %H:%i:%s' ),\
@@ -10127,7 +10127,7 @@ testcases:
       - ['2004-08-02 08:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(4261466899)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '682'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 HOUR) AS `TEMP(Test)(4261466899)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
