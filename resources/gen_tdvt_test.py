@@ -35,7 +35,11 @@ public class TDVTTest {
         while(rs.next()) {
             ArrayList<String> row = new ArrayList<>(count);
             for(int i = 0; i < count; ++i) {
-                row.add(rs.getString(i+1));
+                String result = rs.getString(i+1);
+                if( result != null) {
+                     result = result.replaceAll("true", "1").replaceAll("false", "0");
+                }
+                row.add(result);
             }
             ret.add(row);
         }
