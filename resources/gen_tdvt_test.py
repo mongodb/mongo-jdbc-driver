@@ -132,9 +132,10 @@ def make_test(fName, test):
         print('        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);')
         # We'll leave the printouts here until we are done fixing the failing tests in a future
         # ticket.
-        print('        if(rsSet.retainAll(expected)) {')
         print('        System.out.println(expected.toString());')
         print('        System.out.println(rsSet.toString());')
+        print('        if (rsSet.retainAll(expected)) {')
+        print('        System.out.println("Failed: " + rsSet.toString());')
         print('        // This will be false if both HashSets are the same')
         print('        assertTrue("failed result check", false);')
         print('        }')

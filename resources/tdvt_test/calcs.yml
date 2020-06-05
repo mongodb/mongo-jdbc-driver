@@ -909,7 +909,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3428507074)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '69'
     sql: "\n      SELECT (`Calcs`.`bool0_` <> 0) AS `TEMP(Test)(3428507074)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -919,7 +919,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1935567978)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '70'
     sql: "\n      SELECT (`Calcs`.`bool1_` <> 0) AS `TEMP(Test)(1935567978)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -928,7 +928,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3179501244)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '71'
     sql: "\n      SELECT (`Calcs`.`bool2_` <> 0) AS `TEMP(Test)(3179501244)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -938,7 +938,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1288552116)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '72'
     sql: "\n      SELECT (`Calcs`.`bool3_` <> 0) AS `TEMP(Test)(1288552116)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1769,7 +1769,7 @@ testcases:
       - [3]
     expected_error: ''
     expected_names: [TEMP(Test)(551720338)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '118'
     sql: "\n      SELECT TRUNCATE(`Calcs`.`int1`,0) AS `TEMP(Test)(551720338)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -1793,7 +1793,7 @@ testcases:
       - [38155]
     expected_error: ''
     expected_names: [TEMP(Test)(2234960540)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '120'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date0`) - 693961) AS `TEMP(Test)(2234960540)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2406,7 +2406,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1656302737)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '157'
     sql: "\n      SELECT (((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) OR ((NOT\
       \ (`Calcs`.`bool0_` <> 0)) AND (`Calcs`.`bool2_` <> 0))) AS `TEMP(Test)(1656302737)(0)`\n\
@@ -2416,7 +2416,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4006206882)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '158'
     sql: "\n      SELECT ISNULL((`Calcs`.`bool0_` <> 0)) AS `TEMP(Test)(4006206882)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2439,7 +2439,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1285160207)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '160'
     sql: "\n      SELECT ((CASE WHEN (`Calcs`.`bool0_` <> 0) THEN (CASE\n\tWHEN (`Calcs`.`bool1_`\
       \ <> 0) THEN 1\n\tWHEN NOT (`Calcs`.`bool1_` <> 0) THEN 0\n\tELSE NULL END) ELSE\
@@ -2734,7 +2734,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(1590117682)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '175'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1590117682)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2751,7 +2751,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(4199707040)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '176'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(4199707040)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2775,7 +2775,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(2589771434)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '177'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(2589771434)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2799,7 +2799,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(1875124737)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '178'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(1875124737)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2971,7 +2971,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(885008067)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '189'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(885008067)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -2995,7 +2995,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(3554344781)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '190'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(3554344781)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3420,7 +3420,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(3361088979)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '218'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(3361088979)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3444,7 +3444,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(299717125)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '219'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(299717125)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3495,7 +3495,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1364536471)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '222'
     sql: "\n      SELECT (LOCATE('e',`Calcs`.`str2`) > 0) AS `TEMP(Test)(1364536471)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3504,7 +3504,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1380546255)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '223'
     sql: "\n      SELECT (LOCATE('IND',`Calcs`.`str1`) > 0) AS `TEMP(Test)(1380546255)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3589,7 +3589,7 @@ testcases:
       - [81.0]
     expected_error: ''
     expected_names: [TEMP(Test)(3037854782)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '228'
     sql: "\n      SELECT POWER(`Calcs`.`int2`,2) AS `TEMP(Test)(3037854782)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -3944,7 +3944,7 @@ testcases:
       - ['2004-11-02 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(454013980)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '257'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL (3 * 1) MONTH) AS `TEMP(Test)(454013980)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -4138,7 +4138,7 @@ testcases:
       - [3.0]
     expected_error: ''
     expected_names: [TEMP(Test)(1533389080)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '267'
     sql: "\n      SELECT (`Calcs`.`int1` + 0.0) AS `TEMP(Test)(1533389080)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5164,7 +5164,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(4265410721)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '333'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(4265410721)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5181,7 +5181,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(1278698096)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '334'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1278698096)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5205,7 +5205,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(3729248905)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '335'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(3729248905)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5229,7 +5229,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(965356852)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '336'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(965356852)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5414,7 +5414,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3944872634)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '351'
     sql: "\n      SELECT ISNULL(`Calcs`.`int0`) AS `TEMP(Test)(3944872634)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5457,7 +5457,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(746449830)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '355'
     sql: "\n      SELECT ISNULL(`Calcs`.`num4`) AS `TEMP(Test)(746449830)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5466,7 +5466,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4153117630)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '356'
     sql: "\n      SELECT ISNULL(`Calcs`.`str2`) AS `TEMP(Test)(4153117630)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5682,7 +5682,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(2842042984)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '368'
     sql: "\n      SELECT ISNULL(`Calcs`.`date0`) AS `TEMP(Test)(2842042984)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -5692,7 +5692,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4227881224)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '369'
     sql: "\n      SELECT ((CASE WHEN (`Calcs`.`num0` > `Calcs`.`num1`) THEN (CASE\n\t\
       WHEN (`Calcs`.`bool1_` <> 0) THEN 1\n\tWHEN NOT (`Calcs`.`bool1_` <> 0) THEN 0\n\
@@ -6071,7 +6071,7 @@ testcases:
       - [10]
     expected_error: ''
     expected_names: [TEMP(Test)(427588088)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '386'
     sql: "\n      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(427588088)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6087,7 +6087,7 @@ testcases:
       - [10]
     expected_error: ''
     expected_names: [TEMP(Test)(2526313076)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '387'
     sql: "\n      SELECT (YEAR(`Calcs`.`date2`) - YEAR(`Calcs`.`date3`)) AS `TEMP(Test)(2526313076)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6106,7 +6106,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(1540391660)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '388'
     sql: "\n      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(1540391660)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6125,7 +6125,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3579576882)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '389'
     sql: "\n      SELECT (YEAR(`Calcs`.`datetime0`) - YEAR(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(3579576882)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6286,7 +6286,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3618731173)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '397'
     sql: "\n      SELECT ((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(3618731173)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6296,7 +6296,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(830571724)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '398'
     sql: "\n      SELECT ((`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0) OR NOT\
       \ (`Calcs`.`bool0_` <> 0) AND NOT (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(830571724)(0)`\n\
@@ -6307,7 +6307,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3090944671)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '399'
     sql: "\n      SELECT ((`Calcs`.`bool0_` <> 0) AND NOT (`Calcs`.`bool1_` <> 0) OR\
       \ NOT (`Calcs`.`bool0_` <> 0) AND (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(3090944671)(0)`\n\
@@ -6318,7 +6318,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4182992858)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '400'
     sql: "\n      SELECT ((`Calcs`.`bool0_` <> 0) OR (`Calcs`.`bool1_` <> 0)) AS `TEMP(Test)(4182992858)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6328,7 +6328,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(397499995)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '401'
     sql: "\n      SELECT (`Calcs`.`date0` = DATE('1972-07-04')) AS `TEMP(Test)(397499995)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6338,7 +6338,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1366787273)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '402'
     sql: "\n      SELECT (`Calcs`.`date0` >= DATE('1975-11-12')) AS `TEMP(Test)(1366787273)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6348,7 +6348,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3193322782)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '403'
     sql: "\n      SELECT (`Calcs`.`date0` > DATE('1975-11-12')) AS `TEMP(Test)(3193322782)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6358,7 +6358,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(822657216)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '404'
     sql: "\n      SELECT (`Calcs`.`date0` <= DATE('1975-11-12')) AS `TEMP(Test)(822657216)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6368,7 +6368,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3764753091)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '405'
     sql: "\n      SELECT (`Calcs`.`date0` < DATE('1975-11-12')) AS `TEMP(Test)(3764753091)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6431,7 +6431,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(798936259)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '409'
     sql: "\n      SELECT (`Calcs`.`date0` <> DATE('1975-11-12')) AS `TEMP(Test)(798936259)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6544,7 +6544,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1413132553)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '417'
     sql: "\n      SELECT (`Calcs`.`bool0_` = 0) AS `TEMP(Test)(1413132553)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6579,7 +6579,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3360366790)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '420'
     sql: "\n      SELECT (`Calcs`.`num0` = ABS(`Calcs`.`num0`)) AS `TEMP(Test)(3360366790)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6589,7 +6589,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(2564078271)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '421'
     sql: "\n      SELECT (`Calcs`.`num0` = ABS(`Calcs`.`num0`)) AS `TEMP(Test)(2564078271)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6599,7 +6599,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1366300770)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '422'
     sql: "\n      SELECT (`Calcs`.`num0` >= `Calcs`.`num1`) AS `TEMP(Test)(1366300770)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6609,7 +6609,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4123004830)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '423'
     sql: "\n      SELECT (`Calcs`.`num0` > `Calcs`.`num1`) AS `TEMP(Test)(4123004830)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6619,7 +6619,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1224631717)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '424'
     sql: "\n      SELECT (`Calcs`.`num0` <= `Calcs`.`num1`) AS `TEMP(Test)(1224631717)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6629,7 +6629,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1731699042)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '425'
     sql: "\n      SELECT (`Calcs`.`num0` < `Calcs`.`num1`) AS `TEMP(Test)(1731699042)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6655,7 +6655,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4047276454)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '427'
     sql: "\n      SELECT (`Calcs`.`num0` <> ABS(`Calcs`.`num0`)) AS `TEMP(Test)(4047276454)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6665,7 +6665,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3492695719)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '428'
     sql: "\n      SELECT (`Calcs`.`num0` <> ABS(`Calcs`.`num0`)) AS `TEMP(Test)(3492695719)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -6718,7 +6718,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1635792874)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '433'
     sql: "\n      SELECT (`Calcs`.`str2` = (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str2`\
       \ WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(1635792874)(0)`\n\
@@ -6729,7 +6729,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1555382477)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '434'
     sql: "\n      SELECT (`Calcs`.`str2` >= (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`)\
       \ WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(1555382477)(0)`\n\
@@ -6740,7 +6740,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3821822049)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '435'
     skip: true
     sql: "\n      SELECT (`Calcs`.`str2` > (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str0`\
@@ -6752,7 +6752,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(2776534421)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '436'
     sql: "\n      SELECT (`Calcs`.`str2` <= (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`)\
       \ WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(2776534421)(0)`\n\
@@ -6763,7 +6763,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(398649381)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '437'
     sql: "\n      SELECT (`Calcs`.`str2` < (CASE WHEN (`Calcs`.`num3` > 0) THEN LOWER(`Calcs`.`str0`)\
       \ WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(398649381)(0)`\n\
@@ -6774,7 +6774,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(119026413)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '438'
     sql: "\n      SELECT (`Calcs`.`str2` <> (CASE WHEN (`Calcs`.`num3` > 0) THEN `Calcs`.`str2`\
       \ WHEN NOT (`Calcs`.`num3` > 0) THEN `Calcs`.`str3` ELSE NULL END)) AS `TEMP(Test)(119026413)(0)`\n\
@@ -7232,7 +7232,7 @@ testcases:
       - ['2005-08-02 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(1314023193)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '462'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 YEAR) AS `TEMP(Test)(1314023193)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7626,7 +7626,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(3926981592)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '500'
     sql: "\n      SELECT (TO_DAYS(NOW()) - TO_DAYS(NOW())) AS `TEMP(Test)(3926981592)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -7634,7 +7634,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(1915846221)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '501'
     sql: "\n      SELECT (TO_DAYS(CURDATE()) - TO_DAYS(CURDATE())) AS `TEMP(Test)(1915846221)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -7862,7 +7862,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3033382267)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '512'
     sql: "\n      SELECT (`Calcs`.`datetime0` = `Calcs`.`datetime0`) AS `TEMP(Test)(3033382267)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7870,7 +7870,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(4196472080)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '513'
     sql: "\n      SELECT (`Calcs`.`datetime0` > `Calcs`.`datetime0`) AS `TEMP(Test)(4196472080)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7878,7 +7878,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1829388090)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '514'
     sql: "\n      SELECT (`Calcs`.`datetime0` >= `Calcs`.`datetime0`) AS `TEMP(Test)(1829388090)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7886,7 +7886,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(2087345109)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '515'
     sql: "\n      SELECT (`Calcs`.`datetime0` < `Calcs`.`datetime0`) AS `TEMP(Test)(2087345109)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7894,7 +7894,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(3187080314)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '516'
     sql: "\n      SELECT (`Calcs`.`datetime0` <= `Calcs`.`datetime0`) AS `TEMP(Test)(3187080314)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7902,7 +7902,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(436529008)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '517'
     sql: "\n      SELECT (`Calcs`.`datetime0` <> `Calcs`.`datetime0`) AS `TEMP(Test)(436529008)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7910,7 +7910,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(1122166960)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '518'
     sql: "\n      SELECT (`Calcs`.`date2` = `Calcs`.`datetime0`) AS `TEMP(Test)(1122166960)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7918,7 +7918,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(2476649334)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '519'
     sql: "\n      SELECT (`Calcs`.`date2` > `Calcs`.`datetime0`) AS `TEMP(Test)(2476649334)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7926,7 +7926,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(1267352367)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '520'
     sql: "\n      SELECT (`Calcs`.`date2` >= `Calcs`.`datetime0`) AS `TEMP(Test)(1267352367)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7934,7 +7934,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(668774393)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '521'
     sql: "\n      SELECT (`Calcs`.`date2` < `Calcs`.`datetime0`) AS `TEMP(Test)(668774393)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7942,7 +7942,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(2801366337)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '522'
     sql: "\n      SELECT (`Calcs`.`date2` <= `Calcs`.`datetime0`) AS `TEMP(Test)(2801366337)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7950,7 +7950,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(6065346)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '523'
     sql: "\n      SELECT (`Calcs`.`date2` <> `Calcs`.`datetime0`) AS `TEMP(Test)(6065346)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7958,7 +7958,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(4213376628)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '524'
     sql: "\n      SELECT (`Calcs`.`date2` = `Calcs`.`date2`) AS `TEMP(Test)(4213376628)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7966,7 +7966,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(284925583)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '525'
     sql: "\n      SELECT (`Calcs`.`date2` > `Calcs`.`date2`) AS `TEMP(Test)(284925583)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7974,7 +7974,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(1365124261)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '526'
     sql: "\n      SELECT (`Calcs`.`date2` >= `Calcs`.`date2`) AS `TEMP(Test)(1365124261)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7982,7 +7982,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(4277161941)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '527'
     sql: "\n      SELECT (`Calcs`.`date2` < `Calcs`.`date2`) AS `TEMP(Test)(4277161941)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7990,7 +7990,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(932571096)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '528'
     sql: "\n      SELECT (`Calcs`.`date2` <= `Calcs`.`date2`) AS `TEMP(Test)(932571096)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -7998,7 +7998,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(3666462064)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '529'
     sql: "\n      SELECT (`Calcs`.`date2` <> `Calcs`.`date2`) AS `TEMP(Test)(3666462064)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -8742,7 +8742,7 @@ testcases:
       - ['2004-09-02 07:59:23']
     expected_error: ''
     expected_names: [TEMP(Test)(1378354598)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '582'
     sql: "\n      SELECT DATE_ADD(`Calcs`.`datetime0`, INTERVAL 1 MONTH) AS `TEMP(Test)(1378354598)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -9187,7 +9187,7 @@ testcases:
       - [536]
     expected_error: ''
     expected_names: [TEMP(Test)(859582235)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '612'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`)\
       \ - 1)) - (TO_DAYS(`Calcs`.`date3`) - (DAYOFWEEK(`Calcs`.`date3`) - 1) ) )/7)\
@@ -9212,7 +9212,7 @@ testcases:
       - [1672]
     expected_error: ''
     expected_names: [TEMP(Test)(2079052241)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '613'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 1)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - (DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`))\
@@ -9229,7 +9229,7 @@ testcases:
       - [9]
     expected_error: ''
     expected_names: [TEMP(Test)(2102582873)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '614'
     sql: "\n      SELECT ABS(`Calcs`.`int2`) AS `TEMP(Test)(2102582873)(0)`\nFROM `Calcs`\n\
       GROUP BY 1\n     order by 1"
@@ -9509,7 +9509,7 @@ testcases:
       - [1]
     expected_error: ''
     expected_names: [TEMP(Test)(535799381)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '632'
     sql: "\n      SELECT (LEFT(`Calcs`.`str1`, LENGTH('BI')) = 'BI') AS `TEMP(Test)(535799381)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -9518,7 +9518,7 @@ testcases:
       - [0]
     expected_error: ''
     expected_names: [TEMP(Test)(2377293421)(0)]
-    expected_types: [int]
+    expected_types: [bool]
     id: '633'
     sql: "\n      SELECT (LEFT(`Calcs`.`str1`, LENGTH(`Calcs`.`str2`)) = `Calcs`.`str2`)\
       \ AS `TEMP(Test)(2377293421)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -9829,7 +9829,7 @@ testcases:
       - [81]
     expected_error: ''
     expected_names: [TEMP(Test)(3898674109)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '656'
     sql: "\n      SELECT POWER(`Calcs`.`int2`, 2) AS `TEMP(Test)(3898674109)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10258,7 +10258,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(838791689)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '693'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(838791689)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10275,7 +10275,7 @@ testcases:
       - [3752]
     expected_error: ''
     expected_names: [TEMP(Test)(1647283678)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '694'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`date2`) - TO_DAYS(`Calcs`.`date3`)) AS `TEMP(Test)(1647283678)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10299,7 +10299,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(1719292105)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '695'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(1719292105)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10323,7 +10323,7 @@ testcases:
       - [11707]
     expected_error: ''
     expected_names: [TEMP(Test)(1567002572)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '696'
     sql: "\n      SELECT (TO_DAYS(`Calcs`.`datetime0`) - TO_DAYS(TIMESTAMP(`Calcs`.`date2`)))\
       \ AS `TEMP(Test)(1567002572)(0)`\nFROM `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10465,7 +10465,7 @@ testcases:
       - [9.0]
     expected_error: ''
     expected_names: [TEMP(Test)(366741644)(0)]
-    expected_types: [float]
+    expected_types: [decimal]
     id: '708'
     sql: "\n      SELECT ROUND(`Calcs`.`int2`) AS `TEMP(Test)(366741644)(0)`\nFROM `Calcs`\n\
       GROUP BY 1\n     order by 1"
@@ -10485,7 +10485,7 @@ testcases:
       - [9.0]
     expected_error: ''
     expected_names: [TEMP(Test)(1240237577)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '709'
     sql: "\n      SELECT ROUND(`Calcs`.`int2`,2) AS `TEMP(Test)(1240237577)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10501,7 +10501,7 @@ testcases:
       - [16.0]
     expected_error: ''
     expected_names: [TEMP(Test)(3892529067)(0)]
-    expected_types: [float]
+    expected_types: [decimal]
     id: '710'
     sql: "\n      SELECT ROUND(`Calcs`.`num0`) AS `TEMP(Test)(3892529067)(0)`\nFROM\
       \ `Calcs`\nGROUP BY 1\n     order by 1"
@@ -10538,7 +10538,7 @@ testcases:
       - [536]
     expected_error: ''
     expected_names: [TEMP(Test)(3550551924)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '712'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - ((7 + DAYOFWEEK(`Calcs`.`date2`)\
       \ - 2) % 7)) - (TO_DAYS(`Calcs`.`date3`) - ((7 + DAYOFWEEK(`Calcs`.`date3`) -\
@@ -10557,7 +10557,7 @@ testcases:
       - [536]
     expected_error: ''
     expected_names: [TEMP(Test)(2745903531)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '713'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`)\
       \ - 1)) - (TO_DAYS(`Calcs`.`date3`) - (DAYOFWEEK(`Calcs`.`date3`) - 1) ) )/7)\
@@ -10582,7 +10582,7 @@ testcases:
       - [1672]
     expected_error: ''
     expected_names: [TEMP(Test)(1341534691)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '714'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - ((7 + DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 2) % 7)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - ((7 + DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`))\
@@ -10608,7 +10608,7 @@ testcases:
       - [1672]
     expected_error: ''
     expected_names: [TEMP(Test)(1157868287)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '715'
     sql: "\n      SELECT FLOOR((( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 1)) - (TO_DAYS(TIMESTAMP(`Calcs`.`date2`)) - (DAYOFWEEK(TIMESTAMP(`Calcs`.`date2`))\
