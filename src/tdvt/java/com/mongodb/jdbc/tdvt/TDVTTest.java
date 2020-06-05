@@ -30009,4 +30009,210 @@ public class TDVTTest {
             assertTrue("failed result check", false);
         }
     }
+
+    @Test
+    public void testLOGICAL_CALCS3() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS3");
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery(
+                        "            select (case when (`Calcs`.`str2` in ('eleven', 'fifteen', 'five', 'fourteen', 'nine', 'one', 'six', 'sixteen', 'ten', 'three', 'twelve')) then 'eleven' else `Calcs`.`str2` end) as `str2 (group)` from `Calcs` group by 1      order by 1");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("str2 (group)", rsmd.getColumnLabel(1));
+        String tyName;
+        tyName = rsmd.getColumnTypeName(1);
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
+        HashSet<ArrayList<String>> expected = new HashSet<>(4);
+        ArrayList<String> expectedRow;
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add(null);
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("eight");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("eleven");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("two");
+        expected.add(expectedRow);
+        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
+        System.out.println(expected.toString());
+        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println("Failed: " + rsSet.toString());
+            // This will be false if both HashSets are the same
+            assertTrue("failed result check", false);
+        }
+    }
+
+    @Test
+    public void testLOGICAL_CALCS4() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS4");
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery(
+                        "            select `Calcs`.`str2` as `str2` from `Calcs` where ((not ((`Calcs`.`str2` >= 'eight') and (`Calcs`.`str2` <= 'six'))) or isnull(`Calcs`.`str2`)) group by 1      order by 1");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("str2", rsmd.getColumnLabel(1));
+        String tyName;
+        tyName = rsmd.getColumnTypeName(1);
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
+        HashSet<ArrayList<String>> expected = new HashSet<>(6);
+        ArrayList<String> expectedRow;
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add(null);
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("sixteen");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("ten");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("three");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("twelve");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("two");
+        expected.add(expectedRow);
+        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
+        System.out.println(expected.toString());
+        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println("Failed: " + rsSet.toString());
+            // This will be false if both HashSets are the same
+            assertTrue("failed result check", false);
+        }
+    }
+
+    @Test
+    public void testLOGICAL_CALCS8() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS8");
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery(
+                        "            select `Calcs`.`str2` as `str2` from `Calcs` where ((not (`Calcs`.`str2` in ('eight', 'eleven', 'fifteen', 'five'))) or isnull(`Calcs`.`str2`)) group by 1      order by 1");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("str2", rsmd.getColumnLabel(1));
+        String tyName;
+        tyName = rsmd.getColumnTypeName(1);
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
+        HashSet<ArrayList<String>> expected = new HashSet<>(10);
+        ArrayList<String> expectedRow;
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add(null);
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("fourteen");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("nine");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("one");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("six");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("sixteen");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("ten");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("three");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("twelve");
+        expected.add(expectedRow);
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("two");
+        expected.add(expectedRow);
+        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
+        System.out.println(expected.toString());
+        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println("Failed: " + rsSet.toString());
+            // This will be false if both HashSets are the same
+            assertTrue("failed result check", false);
+        }
+    }
+
+    @Test
+    public void testLOGICAL_CALCS10() throws SQLException {
+        System.out.println("==============================LOGICAL_CALCS10");
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery(
+                        "            select `Calcs`.`str0` as `str0` from `Calcs`   inner join (   select `Calcs`.`str0` as `str0`,     sum(`Calcs`.`int2`) as `$__alias__0`   from `Calcs`   where ((`Calcs`.`str0` >= 'furniture') and (`Calcs`.`str0` <= 'technology'))   group by 1   order by `$__alias__0` desc   limit 2 ) `t0` on (`Calcs`.`str0` = `t0`.`str0`)   inner join (   select `Calcs`.`str1` as `str1`,     sum(`Calcs`.`int1`) as `$__alias__1`   from `Calcs`   where (((`Calcs`.`str1` >= 'air purifiers') and (`Calcs`.`str1` <= 'cd-r media')) or ((`Calcs`.`str1` >= 'conference phones') and (`Calcs`.`str1` <= 'ericsson')))   group by 1   order by `$__alias__1` desc   limit 5 ) `t1` on (`Calcs`.`str1` = `t1`.`str1`) group by 1      order by 1");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("str0", rsmd.getColumnLabel(1));
+        String tyName;
+        tyName = rsmd.getColumnTypeName(1);
+        if (!tyName.equals("string")) {
+            System.out.println(tyName + " == " + "string");
+        }
+        assertTrue("failed type check", tyName.equals("string"));
+        HashSet<ArrayList<String>> expected = new HashSet<>(1);
+        ArrayList<String> expectedRow;
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("OFFICE SUPPLIES");
+        expected.add(expectedRow);
+        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
+        System.out.println(expected.toString());
+        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println("Failed: " + rsSet.toString());
+            // This will be false if both HashSets are the same
+            assertTrue("failed result check", false);
+        }
+    }
+
+    @Test
+    public void testLOGICAL_STAPLES28() throws SQLException {
+        System.out.println("==============================LOGICAL_STAPLES28");
+        Connection conn = getBasicConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs =
+                stmt.executeQuery(
+                        "select sum((`Staples`.`Price` / 1.1000000000000001)) as `sum_calculation_555068687593533440_ok`from `Staples` having (count(1) > 0) order by 1");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        assertEquals("sum_calculation_555068687593533440_ok", rsmd.getColumnLabel(1));
+        String tyName;
+        tyName = rsmd.getColumnTypeName(1);
+        if (!tyName.equals("decimal")) {
+            System.out.println(tyName + " == " + "decimal");
+        }
+        assertTrue("failed type check", tyName.equals("decimal"));
+        HashSet<ArrayList<String>> expected = new HashSet<>(1);
+        ArrayList<String> expectedRow;
+        expectedRow = new ArrayList<>(1);
+        expectedRow.add("4275856.2");
+        expected.add(expectedRow);
+        HashSet<ArrayList<String>> rsSet = buildResultSetSet(rs);
+        System.out.println(expected.toString());
+        System.out.println(rsSet.toString());
+        if (rsSet.retainAll(expected)) {
+            System.out.println("Failed: " + rsSet.toString());
+            // This will be false if both HashSets are the same
+            assertTrue("failed result check", false);
+        }
+    }
 }

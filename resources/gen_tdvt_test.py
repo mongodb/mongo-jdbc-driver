@@ -144,13 +144,10 @@ def make_test(fName, test):
 def add_cases(fName):
     y = yaml.load(open(fName), Loader=yaml.FullLoader)
 
-    i = 0
     for test in y['testcases']:
         make_test(os.path.basename(fName).split('.')[0].upper(), test)
-        i += 1
 
-#for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml', 'logical_calcs.yml', 'logical_staples.yml']):
-for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml']):
+for f  in map(lambda x: os.path.join("tdvt_test", x), ['calcs.yml', 'logical_calcs.yml', 'logical_staples.yml']):
     add_cases(f)
 
 print("}")
