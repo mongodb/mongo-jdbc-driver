@@ -13,6 +13,15 @@ import org.junit.experimental.categories.Category;
 @Category(TDVTTest.class)
 public class TDVTTest {
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/tdvt";
+    static Connection conn;
+
+    static {
+        try {
+            conn = getBasicConnection();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     static Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
@@ -45,7 +54,6 @@ public class TDVTTest {
     @Test
     public void testCALCSBI_821_bug() throws SQLException {
         System.out.println("==============================CALCSBI_821_bug");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -100,7 +108,6 @@ public class TDVTTest {
     @Test
     public void testCALCS0() throws SQLException {
         System.out.println("==============================CALCS0");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -131,7 +138,6 @@ public class TDVTTest {
     @Test
     public void testCALCS1() throws SQLException {
         System.out.println("==============================CALCS1");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -162,7 +168,6 @@ public class TDVTTest {
     @Test
     public void testCALCS2() throws SQLException {
         System.out.println("==============================CALCS2");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -193,7 +198,6 @@ public class TDVTTest {
     @Test
     public void testCALCS3() throws SQLException {
         System.out.println("==============================CALCS3");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -224,7 +228,6 @@ public class TDVTTest {
     @Test
     public void testCALCS4() throws SQLException {
         System.out.println("==============================CALCS4");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -255,7 +258,6 @@ public class TDVTTest {
     @Test
     public void testCALCS5() throws SQLException {
         System.out.println("==============================CALCS5");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -286,7 +288,6 @@ public class TDVTTest {
     @Test
     public void testCALCS6() throws SQLException {
         System.out.println("==============================CALCS6");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -317,7 +318,6 @@ public class TDVTTest {
     @Test
     public void testCALCS7() throws SQLException {
         System.out.println("==============================CALCS7");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -348,7 +348,6 @@ public class TDVTTest {
     @Test
     public void testCALCS8() throws SQLException {
         System.out.println("==============================CALCS8");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -379,7 +378,6 @@ public class TDVTTest {
     @Test
     public void testCALCS9() throws SQLException {
         System.out.println("==============================CALCS9");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -410,7 +408,6 @@ public class TDVTTest {
     @Test
     public void testCALCS10() throws SQLException {
         System.out.println("==============================CALCS10");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -441,7 +438,6 @@ public class TDVTTest {
     @Test
     public void testCALCS11() throws SQLException {
         System.out.println("==============================CALCS11");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -472,7 +468,6 @@ public class TDVTTest {
     @Test
     public void testCALCS12() throws SQLException {
         System.out.println("==============================CALCS12");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -503,7 +498,6 @@ public class TDVTTest {
     @Test
     public void testCALCS13() throws SQLException {
         System.out.println("==============================CALCS13");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -534,7 +528,6 @@ public class TDVTTest {
     @Test
     public void testCALCS14() throws SQLException {
         System.out.println("==============================CALCS14");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -565,7 +558,6 @@ public class TDVTTest {
     @Test
     public void testCALCS15() throws SQLException {
         System.out.println("==============================CALCS15");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -596,7 +588,6 @@ public class TDVTTest {
     @Test
     public void testCALCS16() throws SQLException {
         System.out.println("==============================CALCS16");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -627,7 +618,6 @@ public class TDVTTest {
     @Test
     public void testCALCS17() throws SQLException {
         System.out.println("==============================CALCS17");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -697,7 +687,6 @@ public class TDVTTest {
     @Test
     public void testCALCS18() throws SQLException {
         System.out.println("==============================CALCS18");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -767,7 +756,6 @@ public class TDVTTest {
     @Test
     public void testCALCS19() throws SQLException {
         System.out.println("==============================CALCS19");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -846,7 +834,6 @@ public class TDVTTest {
     @Test
     public void testCALCS20() throws SQLException {
         System.out.println("==============================CALCS20");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -925,7 +912,6 @@ public class TDVTTest {
     @Test
     public void testCALCS21() throws SQLException {
         System.out.println("==============================CALCS21");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1004,7 +990,6 @@ public class TDVTTest {
     @Test
     public void testCALCS22() throws SQLException {
         System.out.println("==============================CALCS22");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1074,7 +1059,6 @@ public class TDVTTest {
     @Test
     public void testCALCS23() throws SQLException {
         System.out.println("==============================CALCS23");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1144,7 +1128,6 @@ public class TDVTTest {
     @Test
     public void testCALCS24() throws SQLException {
         System.out.println("==============================CALCS24");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1175,7 +1158,6 @@ public class TDVTTest {
     @Test
     public void testCALCS25() throws SQLException {
         System.out.println("==============================CALCS25");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1206,7 +1188,6 @@ public class TDVTTest {
     @Test
     public void testCALCS26() throws SQLException {
         System.out.println("==============================CALCS26");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1237,7 +1218,6 @@ public class TDVTTest {
     @Test
     public void testCALCS27() throws SQLException {
         System.out.println("==============================CALCS27");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1268,7 +1248,6 @@ public class TDVTTest {
     @Test
     public void testCALCS28() throws SQLException {
         System.out.println("==============================CALCS28");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1299,7 +1278,6 @@ public class TDVTTest {
     @Test
     public void testCALCS29() throws SQLException {
         System.out.println("==============================CALCS29");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1330,7 +1308,6 @@ public class TDVTTest {
     @Test
     public void testCALCS30() throws SQLException {
         System.out.println("==============================CALCS30");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1361,7 +1338,6 @@ public class TDVTTest {
     @Test
     public void testCALCS31() throws SQLException {
         System.out.println("==============================CALCS31");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1392,7 +1368,6 @@ public class TDVTTest {
     @Test
     public void testCALCS32() throws SQLException {
         System.out.println("==============================CALCS32");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1423,7 +1398,6 @@ public class TDVTTest {
     @Test
     public void testCALCS33() throws SQLException {
         System.out.println("==============================CALCS33");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1454,7 +1428,6 @@ public class TDVTTest {
     @Test
     public void testCALCS34() throws SQLException {
         System.out.println("==============================CALCS34");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1485,7 +1458,6 @@ public class TDVTTest {
     @Test
     public void testCALCS35() throws SQLException {
         System.out.println("==============================CALCS35");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1516,7 +1488,6 @@ public class TDVTTest {
     @Test
     public void testCALCS36() throws SQLException {
         System.out.println("==============================CALCS36");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1547,7 +1518,6 @@ public class TDVTTest {
     @Test
     public void testCALCS37() throws SQLException {
         System.out.println("==============================CALCS37");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1578,7 +1548,6 @@ public class TDVTTest {
     @Test
     public void testCALCS38() throws SQLException {
         System.out.println("==============================CALCS38");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1609,7 +1578,6 @@ public class TDVTTest {
     @Test
     public void testCALCS39() throws SQLException {
         System.out.println("==============================CALCS39");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1640,7 +1608,6 @@ public class TDVTTest {
     @Test
     public void testCALCS40() throws SQLException {
         System.out.println("==============================CALCS40");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1671,7 +1638,6 @@ public class TDVTTest {
     @Test
     public void testCALCS41() throws SQLException {
         System.out.println("==============================CALCS41");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1702,7 +1668,6 @@ public class TDVTTest {
     @Test
     public void testCALCS42() throws SQLException {
         System.out.println("==============================CALCS42");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1733,7 +1698,6 @@ public class TDVTTest {
     @Test
     public void testCALCS43() throws SQLException {
         System.out.println("==============================CALCS43");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1764,7 +1728,6 @@ public class TDVTTest {
     @Test
     public void testCALCS44() throws SQLException {
         System.out.println("==============================CALCS44");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1795,7 +1758,6 @@ public class TDVTTest {
     @Test
     public void testCALCS45() throws SQLException {
         System.out.println("==============================CALCS45");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1826,7 +1788,6 @@ public class TDVTTest {
     @Test
     public void testCALCS46() throws SQLException {
         System.out.println("==============================CALCS46");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1902,7 +1863,6 @@ public class TDVTTest {
     @Test
     public void testCALCS47() throws SQLException {
         System.out.println("==============================CALCS47");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -1978,7 +1938,6 @@ public class TDVTTest {
     @Test
     public void testCALCS48() throws SQLException {
         System.out.println("==============================CALCS48");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2048,7 +2007,6 @@ public class TDVTTest {
     @Test
     public void testCALCS49() throws SQLException {
         System.out.println("==============================CALCS49");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2118,7 +2076,6 @@ public class TDVTTest {
     @Test
     public void testCALCS50() throws SQLException {
         System.out.println("==============================CALCS50");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2197,7 +2154,6 @@ public class TDVTTest {
     @Test
     public void testCALCS51() throws SQLException {
         System.out.println("==============================CALCS51");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2276,7 +2232,6 @@ public class TDVTTest {
     @Test
     public void testCALCS52() throws SQLException {
         System.out.println("==============================CALCS52");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2334,7 +2289,6 @@ public class TDVTTest {
     @Test
     public void testCALCS53() throws SQLException {
         System.out.println("==============================CALCS53");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2401,7 +2355,6 @@ public class TDVTTest {
     @Test
     public void testCALCS54() throws SQLException {
         System.out.println("==============================CALCS54");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2459,7 +2412,6 @@ public class TDVTTest {
     @Test
     public void testCALCS55() throws SQLException {
         System.out.println("==============================CALCS55");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2538,7 +2490,6 @@ public class TDVTTest {
     @Test
     public void testCALCS56() throws SQLException {
         System.out.println("==============================CALCS56");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2584,7 +2535,6 @@ public class TDVTTest {
     @Test
     public void testCALCS57() throws SQLException {
         System.out.println("==============================CALCS57");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2630,7 +2580,6 @@ public class TDVTTest {
     @Test
     public void testCALCS58() throws SQLException {
         System.out.println("==============================CALCS58");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2661,7 +2610,6 @@ public class TDVTTest {
     @Test
     public void testCALCS59() throws SQLException {
         System.out.println("==============================CALCS59");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2692,7 +2640,6 @@ public class TDVTTest {
     @Test
     public void testCALCS60() throws SQLException {
         System.out.println("==============================CALCS60");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2771,7 +2718,6 @@ public class TDVTTest {
     @Test
     public void testCALCS61() throws SQLException {
         System.out.println("==============================CALCS61");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2811,7 +2757,6 @@ public class TDVTTest {
     @Test
     public void testCALCS62() throws SQLException {
         System.out.println("==============================CALCS62");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2851,7 +2796,6 @@ public class TDVTTest {
     @Test
     public void testCALCS63() throws SQLException {
         System.out.println("==============================CALCS63");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2882,7 +2826,6 @@ public class TDVTTest {
     @Test
     public void testCALCS64() throws SQLException {
         System.out.println("==============================CALCS64");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2913,7 +2856,6 @@ public class TDVTTest {
     @Test
     public void testCALCS65() throws SQLException {
         System.out.println("==============================CALCS65");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -2986,7 +2928,6 @@ public class TDVTTest {
     @Test
     public void testCALCS66() throws SQLException {
         System.out.println("==============================CALCS66");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3059,7 +3000,6 @@ public class TDVTTest {
     @Test
     public void testCALCS67() throws SQLException {
         System.out.println("==============================CALCS67");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3090,7 +3030,6 @@ public class TDVTTest {
     @Test
     public void testCALCS68() throws SQLException {
         System.out.println("==============================CALCS68");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3160,7 +3099,6 @@ public class TDVTTest {
     @Test
     public void testCALCS69() throws SQLException {
         System.out.println("==============================CALCS69");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3197,7 +3135,6 @@ public class TDVTTest {
     @Test
     public void testCALCS70() throws SQLException {
         System.out.println("==============================CALCS70");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3234,7 +3171,6 @@ public class TDVTTest {
     @Test
     public void testCALCS71() throws SQLException {
         System.out.println("==============================CALCS71");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3268,7 +3204,6 @@ public class TDVTTest {
     @Test
     public void testCALCS72() throws SQLException {
         System.out.println("==============================CALCS72");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3305,7 +3240,6 @@ public class TDVTTest {
     @Test
     public void testCALCS77() throws SQLException {
         System.out.println("==============================CALCS77");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3384,7 +3318,6 @@ public class TDVTTest {
     @Test
     public void testCALCS78() throws SQLException {
         System.out.println("==============================CALCS78");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3418,7 +3351,6 @@ public class TDVTTest {
     @Test
     public void testCALCS79() throws SQLException {
         System.out.println("==============================CALCS79");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3497,7 +3429,6 @@ public class TDVTTest {
     @Test
     public void testCALCS80() throws SQLException {
         System.out.println("==============================CALCS80");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3534,7 +3465,6 @@ public class TDVTTest {
     @Test
     public void testCALCS81() throws SQLException {
         System.out.println("==============================CALCS81");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3613,7 +3543,6 @@ public class TDVTTest {
     @Test
     public void testCALCS82() throws SQLException {
         System.out.println("==============================CALCS82");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3683,7 +3612,6 @@ public class TDVTTest {
     @Test
     public void testCALCS83() throws SQLException {
         System.out.println("==============================CALCS83");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3717,7 +3645,6 @@ public class TDVTTest {
     @Test
     public void testCALCS87() throws SQLException {
         System.out.println("==============================CALCS87");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3769,7 +3696,6 @@ public class TDVTTest {
     @Test
     public void testCALCS88() throws SQLException {
         System.out.println("==============================CALCS88");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3821,7 +3747,6 @@ public class TDVTTest {
     @Test
     public void testCALCS89() throws SQLException {
         System.out.println("==============================CALCS89");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3888,7 +3813,6 @@ public class TDVTTest {
     @Test
     public void testCALCS90() throws SQLException {
         System.out.println("==============================CALCS90");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -3949,7 +3873,6 @@ public class TDVTTest {
     @Test
     public void testCALCS91() throws SQLException {
         System.out.println("==============================CALCS91");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4004,7 +3927,6 @@ public class TDVTTest {
     @Test
     public void testCALCS92() throws SQLException {
         System.out.println("==============================CALCS92");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4083,7 +4005,6 @@ public class TDVTTest {
     @Test
     public void testCALCS93() throws SQLException {
         System.out.println("==============================CALCS93");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4153,7 +4074,6 @@ public class TDVTTest {
     @Test
     public void testCALCS94() throws SQLException {
         System.out.println("==============================CALCS94");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4232,7 +4152,6 @@ public class TDVTTest {
     @Test
     public void testCALCS95() throws SQLException {
         System.out.println("==============================CALCS95");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4299,7 +4218,6 @@ public class TDVTTest {
     @Test
     public void testCALCS97() throws SQLException {
         System.out.println("==============================CALCS97");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4378,7 +4296,6 @@ public class TDVTTest {
     @Test
     public void testCALCS100() throws SQLException {
         System.out.println("==============================CALCS100");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4409,7 +4326,6 @@ public class TDVTTest {
     @Test
     public void testCALCS101() throws SQLException {
         System.out.println("==============================CALCS101");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4467,7 +4383,6 @@ public class TDVTTest {
     @Test
     public void testCALCS102() throws SQLException {
         System.out.println("==============================CALCS102");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4546,7 +4461,6 @@ public class TDVTTest {
     @Test
     public void testCALCS103() throws SQLException {
         System.out.println("==============================CALCS103");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4604,7 +4518,6 @@ public class TDVTTest {
     @Test
     public void testCALCS104() throws SQLException {
         System.out.println("==============================CALCS104");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4638,7 +4551,6 @@ public class TDVTTest {
     @Test
     public void testCALCS105() throws SQLException {
         System.out.println("==============================CALCS105");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4669,7 +4581,6 @@ public class TDVTTest {
     @Test
     public void testCALCS106() throws SQLException {
         System.out.println("==============================CALCS106");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4739,7 +4650,6 @@ public class TDVTTest {
     @Test
     public void testCALCS107() throws SQLException {
         System.out.println("==============================CALCS107");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4773,7 +4683,6 @@ public class TDVTTest {
     @Test
     public void testCALCS108() throws SQLException {
         System.out.println("==============================CALCS108");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4843,7 +4752,6 @@ public class TDVTTest {
     @Test
     public void testCALCS109() throws SQLException {
         System.out.println("==============================CALCS109");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4913,7 +4821,6 @@ public class TDVTTest {
     @Test
     public void testCALCS110() throws SQLException {
         System.out.println("==============================CALCS110");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -4983,7 +4890,6 @@ public class TDVTTest {
     @Test
     public void testCALCS111() throws SQLException {
         System.out.println("==============================CALCS111");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5041,7 +4947,6 @@ public class TDVTTest {
     @Test
     public void testCALCS112() throws SQLException {
         System.out.println("==============================CALCS112");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5120,7 +5025,6 @@ public class TDVTTest {
     @Test
     public void testCALCS113() throws SQLException {
         System.out.println("==============================CALCS113");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5175,7 +5079,6 @@ public class TDVTTest {
     @Test
     public void testCALCS114() throws SQLException {
         System.out.println("==============================CALCS114");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5239,7 +5142,6 @@ public class TDVTTest {
     @Test
     public void testCALCS116() throws SQLException {
         System.out.println("==============================CALCS116");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5270,7 +5172,6 @@ public class TDVTTest {
     @Test
     public void testCALCS117() throws SQLException {
         System.out.println("==============================CALCS117");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5340,7 +5241,6 @@ public class TDVTTest {
     @Test
     public void testCALCS118() throws SQLException {
         System.out.println("==============================CALCS118");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5392,7 +5292,6 @@ public class TDVTTest {
     @Test
     public void testCALCS119() throws SQLException {
         System.out.println("==============================CALCS119");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5429,7 +5328,6 @@ public class TDVTTest {
     @Test
     public void testCALCS120() throws SQLException {
         System.out.println("==============================CALCS120");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5475,7 +5373,6 @@ public class TDVTTest {
     @Test
     public void testCALCS121() throws SQLException {
         System.out.println("==============================CALCS121");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5533,7 +5430,6 @@ public class TDVTTest {
     @Test
     public void testCALCS122() throws SQLException {
         System.out.println("==============================CALCS122");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5567,7 +5463,6 @@ public class TDVTTest {
     @Test
     public void testCALCS123() throws SQLException {
         System.out.println("==============================CALCS123");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5598,7 +5493,6 @@ public class TDVTTest {
     @Test
     public void testCALCS124() throws SQLException {
         System.out.println("==============================CALCS124");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5635,7 +5529,6 @@ public class TDVTTest {
     @Test
     public void testCALCS129() throws SQLException {
         System.out.println("==============================CALCS129");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5705,7 +5598,6 @@ public class TDVTTest {
     @Test
     public void testCALCS130() throws SQLException {
         System.out.println("==============================CALCS130");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5775,7 +5667,6 @@ public class TDVTTest {
     @Test
     public void testCALCS131() throws SQLException {
         System.out.println("==============================CALCS131");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5821,7 +5712,6 @@ public class TDVTTest {
     @Test
     public void testCALCS132() throws SQLException {
         System.out.println("==============================CALCS132");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5867,7 +5757,6 @@ public class TDVTTest {
     @Test
     public void testCALCS133() throws SQLException {
         System.out.println("==============================CALCS133");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5913,7 +5802,6 @@ public class TDVTTest {
     @Test
     public void testCALCS134() throws SQLException {
         System.out.println("==============================CALCS134");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -5959,7 +5847,6 @@ public class TDVTTest {
     @Test
     public void testCALCS135() throws SQLException {
         System.out.println("==============================CALCS135");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6005,7 +5892,6 @@ public class TDVTTest {
     @Test
     public void testCALCS136() throws SQLException {
         System.out.println("==============================CALCS136");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6051,7 +5937,6 @@ public class TDVTTest {
     @Test
     public void testCALCS137() throws SQLException {
         System.out.println("==============================CALCS137");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6097,7 +5982,6 @@ public class TDVTTest {
     @Test
     public void testCALCS138() throws SQLException {
         System.out.println("==============================CALCS138");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6143,7 +6027,6 @@ public class TDVTTest {
     @Test
     public void testCALCS139() throws SQLException {
         System.out.println("==============================CALCS139");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6222,7 +6105,6 @@ public class TDVTTest {
     @Test
     public void testCALCS140() throws SQLException {
         System.out.println("==============================CALCS140");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6301,7 +6183,6 @@ public class TDVTTest {
     @Test
     public void testCALCS143() throws SQLException {
         System.out.println("==============================CALCS143");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6359,7 +6240,6 @@ public class TDVTTest {
     @Test
     public void testCALCS144() throws SQLException {
         System.out.println("==============================CALCS144");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6438,7 +6318,6 @@ public class TDVTTest {
     @Test
     public void testCALCS145() throws SQLException {
         System.out.println("==============================CALCS145");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6469,7 +6348,6 @@ public class TDVTTest {
     @Test
     public void testCALCS146() throws SQLException {
         System.out.println("==============================CALCS146");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6518,7 +6396,6 @@ public class TDVTTest {
     @Test
     public void testCALCS147() throws SQLException {
         System.out.println("==============================CALCS147");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6561,7 +6438,6 @@ public class TDVTTest {
     @Test
     public void testCALCS148() throws SQLException {
         System.out.println("==============================CALCS148");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6640,7 +6516,6 @@ public class TDVTTest {
     @Test
     public void testCALCS149() throws SQLException {
         System.out.println("==============================CALCS149");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6719,7 +6594,6 @@ public class TDVTTest {
     @Test
     public void testCALCS150() throws SQLException {
         System.out.println("==============================CALCS150");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6753,7 +6627,6 @@ public class TDVTTest {
     @Test
     public void testCALCS151() throws SQLException {
         System.out.println("==============================CALCS151");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6787,7 +6660,6 @@ public class TDVTTest {
     @Test
     public void testCALCS153() throws SQLException {
         System.out.println("==============================CALCS153");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6836,7 +6708,6 @@ public class TDVTTest {
     @Test
     public void testCALCS154() throws SQLException {
         System.out.println("==============================CALCS154");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6903,7 +6774,6 @@ public class TDVTTest {
     @Test
     public void testCALCS156() throws SQLException {
         System.out.println("==============================CALCS156");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6958,7 +6828,6 @@ public class TDVTTest {
     @Test
     public void testCALCS157() throws SQLException {
         System.out.println("==============================CALCS157");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -6995,7 +6864,6 @@ public class TDVTTest {
     @Test
     public void testCALCS158() throws SQLException {
         System.out.println("==============================CALCS158");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7029,7 +6897,6 @@ public class TDVTTest {
     @Test
     public void testCALCS159() throws SQLException {
         System.out.println("==============================CALCS159");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7072,7 +6939,6 @@ public class TDVTTest {
     @Test
     public void testCALCS160() throws SQLException {
         System.out.println("==============================CALCS160");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7109,7 +6975,6 @@ public class TDVTTest {
     @Test
     public void testCALCS161() throws SQLException {
         System.out.println("==============================CALCS161");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7185,7 +7050,6 @@ public class TDVTTest {
     @Test
     public void testCALCS163() throws SQLException {
         System.out.println("==============================CALCS163");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7228,7 +7092,6 @@ public class TDVTTest {
     @Test
     public void testCALCS164() throws SQLException {
         System.out.println("==============================CALCS164");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7307,7 +7170,6 @@ public class TDVTTest {
     @Test
     public void testCALCS165() throws SQLException {
         System.out.println("==============================CALCS165");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7386,7 +7248,6 @@ public class TDVTTest {
     @Test
     public void testCALCS170() throws SQLException {
         System.out.println("==============================CALCS170");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7465,7 +7326,6 @@ public class TDVTTest {
     @Test
     public void testCALCS171() throws SQLException {
         System.out.println("==============================CALCS171");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7538,7 +7398,6 @@ public class TDVTTest {
     @Test
     public void testCALCS172() throws SQLException {
         System.out.println("==============================CALCS172");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7596,7 +7455,6 @@ public class TDVTTest {
     @Test
     public void testCALCS173() throws SQLException {
         System.out.println("==============================CALCS173");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7639,7 +7497,6 @@ public class TDVTTest {
     @Test
     public void testCALCS174() throws SQLException {
         System.out.println("==============================CALCS174");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7682,7 +7539,6 @@ public class TDVTTest {
     @Test
     public void testCALCS175() throws SQLException {
         System.out.println("==============================CALCS175");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7740,7 +7596,6 @@ public class TDVTTest {
     @Test
     public void testCALCS176() throws SQLException {
         System.out.println("==============================CALCS176");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7798,7 +7653,6 @@ public class TDVTTest {
     @Test
     public void testCALCS177() throws SQLException {
         System.out.println("==============================CALCS177");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7877,7 +7731,6 @@ public class TDVTTest {
     @Test
     public void testCALCS178() throws SQLException {
         System.out.println("==============================CALCS178");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -7956,7 +7809,6 @@ public class TDVTTest {
     @Test
     public void testCALCS179() throws SQLException {
         System.out.println("==============================CALCS179");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8017,7 +7869,6 @@ public class TDVTTest {
     @Test
     public void testCALCS180() throws SQLException {
         System.out.println("==============================CALCS180");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8066,7 +7917,6 @@ public class TDVTTest {
     @Test
     public void testCALCS181() throws SQLException {
         System.out.println("==============================CALCS181");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8112,7 +7962,6 @@ public class TDVTTest {
     @Test
     public void testCALCS182() throws SQLException {
         System.out.println("==============================CALCS182");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8158,7 +8007,6 @@ public class TDVTTest {
     @Test
     public void testCALCS183() throws SQLException {
         System.out.println("==============================CALCS183");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8204,7 +8052,6 @@ public class TDVTTest {
     @Test
     public void testCALCS184() throws SQLException {
         System.out.println("==============================CALCS184");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8250,7 +8097,6 @@ public class TDVTTest {
     @Test
     public void testCALCS185() throws SQLException {
         System.out.println("==============================CALCS185");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8290,7 +8136,6 @@ public class TDVTTest {
     @Test
     public void testCALCS186() throws SQLException {
         System.out.println("==============================CALCS186");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8321,7 +8166,6 @@ public class TDVTTest {
     @Test
     public void testCALCS187() throws SQLException {
         System.out.println("==============================CALCS187");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8400,7 +8244,6 @@ public class TDVTTest {
     @Test
     public void testCALCS188() throws SQLException {
         System.out.println("==============================CALCS188");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8479,7 +8322,6 @@ public class TDVTTest {
     @Test
     public void testCALCS189() throws SQLException {
         System.out.println("==============================CALCS189");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8537,7 +8379,6 @@ public class TDVTTest {
     @Test
     public void testCALCS190() throws SQLException {
         System.out.println("==============================CALCS190");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8616,7 +8457,6 @@ public class TDVTTest {
     @Test
     public void testCALCS191() throws SQLException {
         System.out.println("==============================CALCS191");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8683,7 +8523,6 @@ public class TDVTTest {
     @Test
     public void testCALCS192() throws SQLException {
         System.out.println("==============================CALCS192");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8753,7 +8592,6 @@ public class TDVTTest {
     @Test
     public void testCALCS193() throws SQLException {
         System.out.println("==============================CALCS193");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8784,7 +8622,6 @@ public class TDVTTest {
     @Test
     public void testCALCS194() throws SQLException {
         System.out.println("==============================CALCS194");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8842,7 +8679,6 @@ public class TDVTTest {
     @Test
     public void testCALCS195() throws SQLException {
         System.out.println("==============================CALCS195");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8876,7 +8712,6 @@ public class TDVTTest {
     @Test
     public void testCALCS196() throws SQLException {
         System.out.println("==============================CALCS196");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8940,7 +8775,6 @@ public class TDVTTest {
     @Test
     public void testCALCS197() throws SQLException {
         System.out.println("==============================CALCS197");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -8971,7 +8805,6 @@ public class TDVTTest {
     @Test
     public void testCALCS200() throws SQLException {
         System.out.println("==============================CALCS200");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9002,7 +8835,6 @@ public class TDVTTest {
     @Test
     public void testCALCS201() throws SQLException {
         System.out.println("==============================CALCS201");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9075,7 +8907,6 @@ public class TDVTTest {
     @Test
     public void testCALCS203() throws SQLException {
         System.out.println("==============================CALCS203");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9154,7 +8985,6 @@ public class TDVTTest {
     @Test
     public void testCALCS204() throws SQLException {
         System.out.println("==============================CALCS204");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9185,7 +9015,6 @@ public class TDVTTest {
     @Test
     public void testCALCS205() throws SQLException {
         System.out.println("==============================CALCS205");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9216,7 +9045,6 @@ public class TDVTTest {
     @Test
     public void testCALCS206() throws SQLException {
         System.out.println("==============================CALCS206");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9247,7 +9075,6 @@ public class TDVTTest {
     @Test
     public void testCALCS207() throws SQLException {
         System.out.println("==============================CALCS207");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9326,7 +9153,6 @@ public class TDVTTest {
     @Test
     public void testCALCS208() throws SQLException {
         System.out.println("==============================CALCS208");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9399,7 +9225,6 @@ public class TDVTTest {
     @Test
     public void testCALCS209() throws SQLException {
         System.out.println("==============================CALCS209");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9442,7 +9267,6 @@ public class TDVTTest {
     @Test
     public void testCALCS210() throws SQLException {
         System.out.println("==============================CALCS210");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9521,7 +9345,6 @@ public class TDVTTest {
     @Test
     public void testCALCS211() throws SQLException {
         System.out.println("==============================CALCS211");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9600,7 +9423,6 @@ public class TDVTTest {
     @Test
     public void testCALCS212() throws SQLException {
         System.out.println("==============================CALCS212");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9646,7 +9468,6 @@ public class TDVTTest {
     @Test
     public void testCALCS213() throws SQLException {
         System.out.println("==============================CALCS213");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9689,7 +9510,6 @@ public class TDVTTest {
     @Test
     public void testCALCS214() throws SQLException {
         System.out.println("==============================CALCS214");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9720,7 +9540,6 @@ public class TDVTTest {
     @Test
     public void testCALCS215() throws SQLException {
         System.out.println("==============================CALCS215");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9784,7 +9603,6 @@ public class TDVTTest {
     @Test
     public void testCALCS216() throws SQLException {
         System.out.println("==============================CALCS216");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9839,7 +9657,6 @@ public class TDVTTest {
     @Test
     public void testCALCS217() throws SQLException {
         System.out.println("==============================CALCS217");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9918,7 +9735,6 @@ public class TDVTTest {
     @Test
     public void testCALCS218() throws SQLException {
         System.out.println("==============================CALCS218");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -9976,7 +9792,6 @@ public class TDVTTest {
     @Test
     public void testCALCS219() throws SQLException {
         System.out.println("==============================CALCS219");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10055,7 +9870,6 @@ public class TDVTTest {
     @Test
     public void testCALCS220() throws SQLException {
         System.out.println("==============================CALCS220");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10122,7 +9936,6 @@ public class TDVTTest {
     @Test
     public void testCALCS221() throws SQLException {
         System.out.println("==============================CALCS221");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10192,7 +10005,6 @@ public class TDVTTest {
     @Test
     public void testCALCS222() throws SQLException {
         System.out.println("==============================CALCS222");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10229,7 +10041,6 @@ public class TDVTTest {
     @Test
     public void testCALCS223() throws SQLException {
         System.out.println("==============================CALCS223");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10263,7 +10074,6 @@ public class TDVTTest {
     @Test
     public void testCALCS225() throws SQLException {
         System.out.println("==============================CALCS225");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10342,7 +10152,6 @@ public class TDVTTest {
     @Test
     public void testCALCS226() throws SQLException {
         System.out.println("==============================CALCS226");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10379,7 +10188,6 @@ public class TDVTTest {
     @Test
     public void testCALCS227() throws SQLException {
         System.out.println("==============================CALCS227");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10419,7 +10227,6 @@ public class TDVTTest {
     @Test
     public void testCALCS228() throws SQLException {
         System.out.println("==============================CALCS228");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10471,7 +10278,6 @@ public class TDVTTest {
     @Test
     public void testCALCS230() throws SQLException {
         System.out.println("==============================CALCS230");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10502,7 +10308,6 @@ public class TDVTTest {
     @Test
     public void testCALCS232() throws SQLException {
         System.out.println("==============================CALCS232");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10533,7 +10338,6 @@ public class TDVTTest {
     @Test
     public void testCALCS233() throws SQLException {
         System.out.println("==============================CALCS233");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10564,7 +10368,6 @@ public class TDVTTest {
     @Test
     public void testCALCS234() throws SQLException {
         System.out.println("==============================CALCS234");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10595,7 +10398,6 @@ public class TDVTTest {
     @Test
     public void testCALCS235() throws SQLException {
         System.out.println("==============================CALCS235");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10626,7 +10428,6 @@ public class TDVTTest {
     @Test
     public void testCALCS236() throws SQLException {
         System.out.println("==============================CALCS236");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10657,7 +10458,6 @@ public class TDVTTest {
     @Test
     public void testCALCS237() throws SQLException {
         System.out.println("==============================CALCS237");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10688,7 +10488,6 @@ public class TDVTTest {
     @Test
     public void testCALCS238() throws SQLException {
         System.out.println("==============================CALCS238");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10719,7 +10518,6 @@ public class TDVTTest {
     @Test
     public void testCALCS239() throws SQLException {
         System.out.println("==============================CALCS239");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10750,7 +10548,6 @@ public class TDVTTest {
     @Test
     public void testCALCS240() throws SQLException {
         System.out.println("==============================CALCS240");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10781,7 +10578,6 @@ public class TDVTTest {
     @Test
     public void testCALCS241() throws SQLException {
         System.out.println("==============================CALCS241");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10812,7 +10608,6 @@ public class TDVTTest {
     @Test
     public void testCALCS242() throws SQLException {
         System.out.println("==============================CALCS242");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10843,7 +10638,6 @@ public class TDVTTest {
     @Test
     public void testCALCS243() throws SQLException {
         System.out.println("==============================CALCS243");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10874,7 +10668,6 @@ public class TDVTTest {
     @Test
     public void testCALCS244() throws SQLException {
         System.out.println("==============================CALCS244");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10905,7 +10698,6 @@ public class TDVTTest {
     @Test
     public void testCALCS245() throws SQLException {
         System.out.println("==============================CALCS245");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10936,7 +10728,6 @@ public class TDVTTest {
     @Test
     public void testCALCS246() throws SQLException {
         System.out.println("==============================CALCS246");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10967,7 +10758,6 @@ public class TDVTTest {
     @Test
     public void testCALCS247() throws SQLException {
         System.out.println("==============================CALCS247");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -10998,7 +10788,6 @@ public class TDVTTest {
     @Test
     public void testCALCS248() throws SQLException {
         System.out.println("==============================CALCS248");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11029,7 +10818,6 @@ public class TDVTTest {
     @Test
     public void testCALCS249() throws SQLException {
         System.out.println("==============================CALCS249");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11099,7 +10887,6 @@ public class TDVTTest {
     @Test
     public void testCALCS250() throws SQLException {
         System.out.println("==============================CALCS250");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11154,7 +10941,6 @@ public class TDVTTest {
     @Test
     public void testCALCS251() throws SQLException {
         System.out.println("==============================CALCS251");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11194,7 +10980,6 @@ public class TDVTTest {
     @Test
     public void testCALCS252() throws SQLException {
         System.out.println("==============================CALCS252");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11234,7 +11019,6 @@ public class TDVTTest {
     @Test
     public void testCALCS253() throws SQLException {
         System.out.println("==============================CALCS253");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11265,7 +11049,6 @@ public class TDVTTest {
     @Test
     public void testCALCS254() throws SQLException {
         System.out.println("==============================CALCS254");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11296,7 +11079,6 @@ public class TDVTTest {
     @Test
     public void testCALCS257() throws SQLException {
         System.out.println("==============================CALCS257");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11375,7 +11157,6 @@ public class TDVTTest {
     @Test
     public void testCALCS258() throws SQLException {
         System.out.println("==============================CALCS258");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11448,7 +11229,6 @@ public class TDVTTest {
     @Test
     public void testCALCS259() throws SQLException {
         System.out.println("==============================CALCS259");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11521,7 +11301,6 @@ public class TDVTTest {
     @Test
     public void testCALCS260() throws SQLException {
         System.out.println("==============================CALCS260");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11567,7 +11346,6 @@ public class TDVTTest {
     @Test
     public void testCALCS261() throws SQLException {
         System.out.println("==============================CALCS261");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11610,7 +11388,6 @@ public class TDVTTest {
     @Test
     public void testCALCS262() throws SQLException {
         System.out.println("==============================CALCS262");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11689,7 +11466,6 @@ public class TDVTTest {
     @Test
     public void testCALCS266() throws SQLException {
         System.out.println("==============================CALCS266");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11759,7 +11535,6 @@ public class TDVTTest {
     @Test
     public void testCALCS267() throws SQLException {
         System.out.println("==============================CALCS267");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11811,7 +11586,6 @@ public class TDVTTest {
     @Test
     public void testCALCS268() throws SQLException {
         System.out.println("==============================CALCS268");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11848,7 +11622,6 @@ public class TDVTTest {
     @Test
     public void testCALCS269() throws SQLException {
         System.out.println("==============================CALCS269");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11894,7 +11667,6 @@ public class TDVTTest {
     @Test
     public void testCALCS270() throws SQLException {
         System.out.println("==============================CALCS270");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11964,7 +11736,6 @@ public class TDVTTest {
     @Test
     public void testCALCS271() throws SQLException {
         System.out.println("==============================CALCS271");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -11998,7 +11769,6 @@ public class TDVTTest {
     @Test
     public void testCALCS272() throws SQLException {
         System.out.println("==============================CALCS272");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12029,7 +11799,6 @@ public class TDVTTest {
     @Test
     public void testCALCS273() throws SQLException {
         System.out.println("==============================CALCS273");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12099,7 +11868,6 @@ public class TDVTTest {
     @Test
     public void testCALCS274() throws SQLException {
         System.out.println("==============================CALCS274");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12178,7 +11946,6 @@ public class TDVTTest {
     @Test
     public void testCALCS279() throws SQLException {
         System.out.println("==============================CALCS279");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12251,7 +12018,6 @@ public class TDVTTest {
     @Test
     public void testCALCS280() throws SQLException {
         System.out.println("==============================CALCS280");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12324,7 +12090,6 @@ public class TDVTTest {
     @Test
     public void testCALCS281() throws SQLException {
         System.out.println("==============================CALCS281");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12397,7 +12162,6 @@ public class TDVTTest {
     @Test
     public void testCALCS282() throws SQLException {
         System.out.println("==============================CALCS282");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12470,7 +12234,6 @@ public class TDVTTest {
     @Test
     public void testCALCS283() throws SQLException {
         System.out.println("==============================CALCS283");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12516,7 +12279,6 @@ public class TDVTTest {
     @Test
     public void testCALCS284() throws SQLException {
         System.out.println("==============================CALCS284");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12559,7 +12321,6 @@ public class TDVTTest {
     @Test
     public void testCALCS285() throws SQLException {
         System.out.println("==============================CALCS285");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12605,7 +12366,6 @@ public class TDVTTest {
     @Test
     public void testCALCS286() throws SQLException {
         System.out.println("==============================CALCS286");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12648,7 +12408,6 @@ public class TDVTTest {
     @Test
     public void testCALCS287() throws SQLException {
         System.out.println("==============================CALCS287");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12694,7 +12453,6 @@ public class TDVTTest {
     @Test
     public void testCALCS288() throws SQLException {
         System.out.println("==============================CALCS288");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12740,7 +12498,6 @@ public class TDVTTest {
     @Test
     public void testCALCS289() throws SQLException {
         System.out.println("==============================CALCS289");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12786,7 +12543,6 @@ public class TDVTTest {
     @Test
     public void testCALCS290() throws SQLException {
         System.out.println("==============================CALCS290");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12832,7 +12588,6 @@ public class TDVTTest {
     @Test
     public void testCALCS294() throws SQLException {
         System.out.println("==============================CALCS294");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12899,7 +12654,6 @@ public class TDVTTest {
     @Test
     public void testCALCS295() throws SQLException {
         System.out.println("==============================CALCS295");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -12966,7 +12720,6 @@ public class TDVTTest {
     @Test
     public void testCALCS296() throws SQLException {
         System.out.println("==============================CALCS296");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13036,7 +12789,6 @@ public class TDVTTest {
     @Test
     public void testCALCS297() throws SQLException {
         System.out.println("==============================CALCS297");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13106,7 +12858,6 @@ public class TDVTTest {
     @Test
     public void testCALCS298() throws SQLException {
         System.out.println("==============================CALCS298");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13137,7 +12888,6 @@ public class TDVTTest {
     @Test
     public void testCALCS299() throws SQLException {
         System.out.println("==============================CALCS299");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13168,7 +12918,6 @@ public class TDVTTest {
     @Test
     public void testCALCS300() throws SQLException {
         System.out.println("==============================CALCS300");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13199,7 +12948,6 @@ public class TDVTTest {
     @Test
     public void testCALCS301() throws SQLException {
         System.out.println("==============================CALCS301");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13230,7 +12978,6 @@ public class TDVTTest {
     @Test
     public void testCALCS302() throws SQLException {
         System.out.println("==============================CALCS302");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13261,7 +13008,6 @@ public class TDVTTest {
     @Test
     public void testCALCS303() throws SQLException {
         System.out.println("==============================CALCS303");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13292,7 +13038,6 @@ public class TDVTTest {
     @Test
     public void testCALCS304() throws SQLException {
         System.out.println("==============================CALCS304");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13323,7 +13068,6 @@ public class TDVTTest {
     @Test
     public void testCALCS305() throws SQLException {
         System.out.println("==============================CALCS305");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13354,7 +13098,6 @@ public class TDVTTest {
     @Test
     public void testCALCS306() throws SQLException {
         System.out.println("==============================CALCS306");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13385,7 +13128,6 @@ public class TDVTTest {
     @Test
     public void testCALCS307() throws SQLException {
         System.out.println("==============================CALCS307");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13416,7 +13158,6 @@ public class TDVTTest {
     @Test
     public void testCALCS308() throws SQLException {
         System.out.println("==============================CALCS308");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13447,7 +13188,6 @@ public class TDVTTest {
     @Test
     public void testCALCS309() throws SQLException {
         System.out.println("==============================CALCS309");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13478,7 +13218,6 @@ public class TDVTTest {
     @Test
     public void testCALCS310() throws SQLException {
         System.out.println("==============================CALCS310");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13509,7 +13248,6 @@ public class TDVTTest {
     @Test
     public void testCALCS311() throws SQLException {
         System.out.println("==============================CALCS311");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13540,7 +13278,6 @@ public class TDVTTest {
     @Test
     public void testCALCS312() throws SQLException {
         System.out.println("==============================CALCS312");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13571,7 +13308,6 @@ public class TDVTTest {
     @Test
     public void testCALCS313() throws SQLException {
         System.out.println("==============================CALCS313");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13602,7 +13338,6 @@ public class TDVTTest {
     @Test
     public void testCALCS314() throws SQLException {
         System.out.println("==============================CALCS314");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13633,7 +13368,6 @@ public class TDVTTest {
     @Test
     public void testCALCS315() throws SQLException {
         System.out.println("==============================CALCS315");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13703,7 +13437,6 @@ public class TDVTTest {
     @Test
     public void testCALCS316() throws SQLException {
         System.out.println("==============================CALCS316");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13773,7 +13506,6 @@ public class TDVTTest {
     @Test
     public void testCALCS317() throws SQLException {
         System.out.println("==============================CALCS317");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13804,7 +13536,6 @@ public class TDVTTest {
     @Test
     public void testCALCS318() throws SQLException {
         System.out.println("==============================CALCS318");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13883,7 +13614,6 @@ public class TDVTTest {
     @Test
     public void testCALCS319() throws SQLException {
         System.out.println("==============================CALCS319");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13962,7 +13692,6 @@ public class TDVTTest {
     @Test
     public void testCALCS320() throws SQLException {
         System.out.println("==============================CALCS320");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -13993,7 +13722,6 @@ public class TDVTTest {
     @Test
     public void testCALCS321() throws SQLException {
         System.out.println("==============================CALCS321");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14024,7 +13752,6 @@ public class TDVTTest {
     @Test
     public void testCALCS330() throws SQLException {
         System.out.println("==============================CALCS330");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14094,7 +13821,6 @@ public class TDVTTest {
     @Test
     public void testCALCS333() throws SQLException {
         System.out.println("==============================CALCS333");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14152,7 +13878,6 @@ public class TDVTTest {
     @Test
     public void testCALCS334() throws SQLException {
         System.out.println("==============================CALCS334");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14210,7 +13935,6 @@ public class TDVTTest {
     @Test
     public void testCALCS335() throws SQLException {
         System.out.println("==============================CALCS335");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14289,7 +14013,6 @@ public class TDVTTest {
     @Test
     public void testCALCS336() throws SQLException {
         System.out.println("==============================CALCS336");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14368,7 +14091,6 @@ public class TDVTTest {
     @Test
     public void testCALCS337() throws SQLException {
         System.out.println("==============================CALCS337");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14399,7 +14121,6 @@ public class TDVTTest {
     @Test
     public void testCALCS338() throws SQLException {
         System.out.println("==============================CALCS338");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14448,7 +14169,6 @@ public class TDVTTest {
     @Test
     public void testCALCS339() throws SQLException {
         System.out.println("==============================CALCS339");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14488,7 +14208,6 @@ public class TDVTTest {
     @Test
     public void testCALCS340() throws SQLException {
         System.out.println("==============================CALCS340");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14519,7 +14238,6 @@ public class TDVTTest {
     @Test
     public void testCALCS341() throws SQLException {
         System.out.println("==============================CALCS341");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14571,7 +14289,6 @@ public class TDVTTest {
     @Test
     public void testCALCS342() throws SQLException {
         System.out.println("==============================CALCS342");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14650,7 +14367,6 @@ public class TDVTTest {
     @Test
     public void testCALCS343() throws SQLException {
         System.out.println("==============================CALCS343");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14720,7 +14436,6 @@ public class TDVTTest {
     @Test
     public void testCALCS345() throws SQLException {
         System.out.println("==============================CALCS345");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14757,7 +14472,6 @@ public class TDVTTest {
     @Test
     public void testCALCS346() throws SQLException {
         System.out.println("==============================CALCS346");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14791,7 +14505,6 @@ public class TDVTTest {
     @Test
     public void testCALCS347() throws SQLException {
         System.out.println("==============================CALCS347");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14828,7 +14541,6 @@ public class TDVTTest {
     @Test
     public void testCALCS348() throws SQLException {
         System.out.println("==============================CALCS348");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14880,7 +14592,6 @@ public class TDVTTest {
     @Test
     public void testCALCS349() throws SQLException {
         System.out.println("==============================CALCS349");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14917,7 +14628,6 @@ public class TDVTTest {
     @Test
     public void testCALCS350() throws SQLException {
         System.out.println("==============================CALCS350");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14954,7 +14664,6 @@ public class TDVTTest {
     @Test
     public void testCALCS351() throws SQLException {
         System.out.println("==============================CALCS351");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -14988,7 +14697,6 @@ public class TDVTTest {
     @Test
     public void testCALCS352() throws SQLException {
         System.out.println("==============================CALCS352");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15019,7 +14727,6 @@ public class TDVTTest {
     @Test
     public void testCALCS353() throws SQLException {
         System.out.println("==============================CALCS353");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15053,7 +14760,6 @@ public class TDVTTest {
     @Test
     public void testCALCS354() throws SQLException {
         System.out.println("==============================CALCS354");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15108,7 +14814,6 @@ public class TDVTTest {
     @Test
     public void testCALCS355() throws SQLException {
         System.out.println("==============================CALCS355");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15142,7 +14847,6 @@ public class TDVTTest {
     @Test
     public void testCALCS356() throws SQLException {
         System.out.println("==============================CALCS356");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15176,7 +14880,6 @@ public class TDVTTest {
     @Test
     public void testCALCS357() throws SQLException {
         System.out.println("==============================CALCS357");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15246,7 +14949,6 @@ public class TDVTTest {
     @Test
     public void testCALCS360() throws SQLException {
         System.out.println("==============================CALCS360");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15283,7 +14985,6 @@ public class TDVTTest {
     @Test
     public void testCALCS361() throws SQLException {
         System.out.println("==============================CALCS361");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15332,7 +15033,6 @@ public class TDVTTest {
     @Test
     public void testCALCS363() throws SQLException {
         System.out.println("==============================CALCS363");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15408,7 +15108,6 @@ public class TDVTTest {
     @Test
     public void testCALCS364() throws SQLException {
         System.out.println("==============================CALCS364");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15469,7 +15168,6 @@ public class TDVTTest {
     @Test
     public void testCALCS366() throws SQLException {
         System.out.println("==============================CALCS366");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15536,7 +15234,6 @@ public class TDVTTest {
     @Test
     public void testCALCS367() throws SQLException {
         System.out.println("==============================CALCS367");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15606,7 +15303,6 @@ public class TDVTTest {
     @Test
     public void testCALCS368() throws SQLException {
         System.out.println("==============================CALCS368");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15640,7 +15336,6 @@ public class TDVTTest {
     @Test
     public void testCALCS369() throws SQLException {
         System.out.println("==============================CALCS369");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15677,7 +15372,6 @@ public class TDVTTest {
     @Test
     public void testCALCS370() throws SQLException {
         System.out.println("==============================CALCS370");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15756,7 +15450,6 @@ public class TDVTTest {
     @Test
     public void testCALCS372() throws SQLException {
         System.out.println("==============================CALCS372");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15826,7 +15519,6 @@ public class TDVTTest {
     @Test
     public void testCALCS373() throws SQLException {
         System.out.println("==============================CALCS373");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15902,7 +15594,6 @@ public class TDVTTest {
     @Test
     public void testCALCS375() throws SQLException {
         System.out.println("==============================CALCS375");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -15951,7 +15642,6 @@ public class TDVTTest {
     @Test
     public void testCALCS376() throws SQLException {
         System.out.println("==============================CALCS376");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16018,7 +15708,6 @@ public class TDVTTest {
     @Test
     public void testCALCS379() throws SQLException {
         System.out.println("==============================CALCS379");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16067,7 +15756,6 @@ public class TDVTTest {
     @Test
     public void testCALCS380() throws SQLException {
         System.out.println("==============================CALCS380");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16146,7 +15834,6 @@ public class TDVTTest {
     @Test
     public void testCALCS381() throws SQLException {
         System.out.println("==============================CALCS381");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16225,7 +15912,6 @@ public class TDVTTest {
     @Test
     public void testCALCS382() throws SQLException {
         System.out.println("==============================CALCS382");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16268,7 +15954,6 @@ public class TDVTTest {
     @Test
     public void testCALCS383() throws SQLException {
         System.out.println("==============================CALCS383");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16341,7 +16026,6 @@ public class TDVTTest {
     @Test
     public void testCALCS384() throws SQLException {
         System.out.println("==============================CALCS384");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16420,7 +16104,6 @@ public class TDVTTest {
     @Test
     public void testCALCS385() throws SQLException {
         System.out.println("==============================CALCS385");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16499,7 +16182,6 @@ public class TDVTTest {
     @Test
     public void testCALCS386() throws SQLException {
         System.out.println("==============================CALCS386");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16554,7 +16236,6 @@ public class TDVTTest {
     @Test
     public void testCALCS387() throws SQLException {
         System.out.println("==============================CALCS387");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16609,7 +16290,6 @@ public class TDVTTest {
     @Test
     public void testCALCS388() throws SQLException {
         System.out.println("==============================CALCS388");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16673,7 +16353,6 @@ public class TDVTTest {
     @Test
     public void testCALCS389() throws SQLException {
         System.out.println("==============================CALCS389");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16737,7 +16416,6 @@ public class TDVTTest {
     @Test
     public void testCALCS390() throws SQLException {
         System.out.println("==============================CALCS390");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16810,7 +16488,6 @@ public class TDVTTest {
     @Test
     public void testCALCS391() throws SQLException {
         System.out.println("==============================CALCS391");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16883,7 +16560,6 @@ public class TDVTTest {
     @Test
     public void testCALCS392() throws SQLException {
         System.out.println("==============================CALCS392");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -16962,7 +16638,6 @@ public class TDVTTest {
     @Test
     public void testCALCS393() throws SQLException {
         System.out.println("==============================CALCS393");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17041,7 +16716,6 @@ public class TDVTTest {
     @Test
     public void testCALCS394() throws SQLException {
         System.out.println("==============================CALCS394");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17087,7 +16761,6 @@ public class TDVTTest {
     @Test
     public void testCALCS395() throws SQLException {
         System.out.println("==============================CALCS395");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17142,7 +16815,6 @@ public class TDVTTest {
     @Test
     public void testCALCS396() throws SQLException {
         System.out.println("==============================CALCS396");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17221,7 +16893,6 @@ public class TDVTTest {
     @Test
     public void testCALCS397() throws SQLException {
         System.out.println("==============================CALCS397");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17258,7 +16929,6 @@ public class TDVTTest {
     @Test
     public void testCALCS398() throws SQLException {
         System.out.println("==============================CALCS398");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17295,7 +16965,6 @@ public class TDVTTest {
     @Test
     public void testCALCS399() throws SQLException {
         System.out.println("==============================CALCS399");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17332,7 +17001,6 @@ public class TDVTTest {
     @Test
     public void testCALCS400() throws SQLException {
         System.out.println("==============================CALCS400");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17369,7 +17037,6 @@ public class TDVTTest {
     @Test
     public void testCALCS401() throws SQLException {
         System.out.println("==============================CALCS401");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17406,7 +17073,6 @@ public class TDVTTest {
     @Test
     public void testCALCS402() throws SQLException {
         System.out.println("==============================CALCS402");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17443,7 +17109,6 @@ public class TDVTTest {
     @Test
     public void testCALCS403() throws SQLException {
         System.out.println("==============================CALCS403");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17480,7 +17145,6 @@ public class TDVTTest {
     @Test
     public void testCALCS404() throws SQLException {
         System.out.println("==============================CALCS404");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17517,7 +17181,6 @@ public class TDVTTest {
     @Test
     public void testCALCS405() throws SQLException {
         System.out.println("==============================CALCS405");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17554,7 +17217,6 @@ public class TDVTTest {
     @Test
     public void testCALCS407() throws SQLException {
         System.out.println("==============================CALCS407");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17633,7 +17295,6 @@ public class TDVTTest {
     @Test
     public void testCALCS408() throws SQLException {
         System.out.println("==============================CALCS408");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17676,7 +17337,6 @@ public class TDVTTest {
     @Test
     public void testCALCS409() throws SQLException {
         System.out.println("==============================CALCS409");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17713,7 +17373,6 @@ public class TDVTTest {
     @Test
     public void testCALCS410() throws SQLException {
         System.out.println("==============================CALCS410");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17756,7 +17415,6 @@ public class TDVTTest {
     @Test
     public void testCALCS411() throws SQLException {
         System.out.println("==============================CALCS411");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17787,7 +17445,6 @@ public class TDVTTest {
     @Test
     public void testCALCS412() throws SQLException {
         System.out.println("==============================CALCS412");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17827,7 +17484,6 @@ public class TDVTTest {
     @Test
     public void testCALCS413() throws SQLException {
         System.out.println("==============================CALCS413");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17870,7 +17526,6 @@ public class TDVTTest {
     @Test
     public void testCALCS414() throws SQLException {
         System.out.println("==============================CALCS414");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -17946,7 +17601,6 @@ public class TDVTTest {
     @Test
     public void testCALCS416() throws SQLException {
         System.out.println("==============================CALCS416");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18001,7 +17655,6 @@ public class TDVTTest {
     @Test
     public void testCALCS417() throws SQLException {
         System.out.println("==============================CALCS417");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18038,7 +17691,6 @@ public class TDVTTest {
     @Test
     public void testCALCS418() throws SQLException {
         System.out.println("==============================CALCS418");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18069,7 +17721,6 @@ public class TDVTTest {
     @Test
     public void testCALCS420() throws SQLException {
         System.out.println("==============================CALCS420");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18106,7 +17757,6 @@ public class TDVTTest {
     @Test
     public void testCALCS421() throws SQLException {
         System.out.println("==============================CALCS421");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18143,7 +17793,6 @@ public class TDVTTest {
     @Test
     public void testCALCS422() throws SQLException {
         System.out.println("==============================CALCS422");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18180,7 +17829,6 @@ public class TDVTTest {
     @Test
     public void testCALCS423() throws SQLException {
         System.out.println("==============================CALCS423");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18217,7 +17865,6 @@ public class TDVTTest {
     @Test
     public void testCALCS424() throws SQLException {
         System.out.println("==============================CALCS424");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18254,7 +17901,6 @@ public class TDVTTest {
     @Test
     public void testCALCS425() throws SQLException {
         System.out.println("==============================CALCS425");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18291,7 +17937,6 @@ public class TDVTTest {
     @Test
     public void testCALCS426() throws SQLException {
         System.out.println("==============================CALCS426");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18346,7 +17991,6 @@ public class TDVTTest {
     @Test
     public void testCALCS427() throws SQLException {
         System.out.println("==============================CALCS427");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18383,7 +18027,6 @@ public class TDVTTest {
     @Test
     public void testCALCS428() throws SQLException {
         System.out.println("==============================CALCS428");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18420,7 +18063,6 @@ public class TDVTTest {
     @Test
     public void testCALCS430() throws SQLException {
         System.out.println("==============================CALCS430");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18475,7 +18117,6 @@ public class TDVTTest {
     @Test
     public void testCALCS432() throws SQLException {
         System.out.println("==============================CALCS432");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18530,7 +18171,6 @@ public class TDVTTest {
     @Test
     public void testCALCS433() throws SQLException {
         System.out.println("==============================CALCS433");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18567,7 +18207,6 @@ public class TDVTTest {
     @Test
     public void testCALCS434() throws SQLException {
         System.out.println("==============================CALCS434");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18604,7 +18243,6 @@ public class TDVTTest {
     @Test
     public void testCALCS436() throws SQLException {
         System.out.println("==============================CALCS436");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18641,7 +18279,6 @@ public class TDVTTest {
     @Test
     public void testCALCS437() throws SQLException {
         System.out.println("==============================CALCS437");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18678,7 +18315,6 @@ public class TDVTTest {
     @Test
     public void testCALCS438() throws SQLException {
         System.out.println("==============================CALCS438");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18715,7 +18351,6 @@ public class TDVTTest {
     @Test
     public void testCALCS439() throws SQLException {
         System.out.println("==============================CALCS439");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18770,7 +18405,6 @@ public class TDVTTest {
     @Test
     public void testCALCS440() throws SQLException {
         System.out.println("==============================CALCS440");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18801,7 +18435,6 @@ public class TDVTTest {
     @Test
     public void testCALCS441() throws SQLException {
         System.out.println("==============================CALCS441");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18832,7 +18465,6 @@ public class TDVTTest {
     @Test
     public void testCALCS443() throws SQLException {
         System.out.println("==============================CALCS443");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18890,7 +18522,6 @@ public class TDVTTest {
     @Test
     public void testCALCS444() throws SQLException {
         System.out.println("==============================CALCS444");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -18948,7 +18579,6 @@ public class TDVTTest {
     @Test
     public void testCALCS445() throws SQLException {
         System.out.println("==============================CALCS445");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19027,7 +18657,6 @@ public class TDVTTest {
     @Test
     public void testCALCS446() throws SQLException {
         System.out.println("==============================CALCS446");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19106,7 +18735,6 @@ public class TDVTTest {
     @Test
     public void testCALCS451() throws SQLException {
         System.out.println("==============================CALCS451");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19167,7 +18795,6 @@ public class TDVTTest {
     @Test
     public void testCALCS452() throws SQLException {
         System.out.println("==============================CALCS452");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19246,7 +18873,6 @@ public class TDVTTest {
     @Test
     public void testCALCS453() throws SQLException {
         System.out.println("==============================CALCS453");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19325,7 +18951,6 @@ public class TDVTTest {
     @Test
     public void testCALCS454() throws SQLException {
         System.out.println("==============================CALCS454");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19404,7 +19029,6 @@ public class TDVTTest {
     @Test
     public void testCALCS456() throws SQLException {
         System.out.println("==============================CALCS456");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19483,7 +19107,6 @@ public class TDVTTest {
     @Test
     public void testCALCS457() throws SQLException {
         System.out.println("==============================CALCS457");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19562,7 +19185,6 @@ public class TDVTTest {
     @Test
     public void testCALCS458() throws SQLException {
         System.out.println("==============================CALCS458");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19596,7 +19218,6 @@ public class TDVTTest {
     @Test
     public void testCALCS459() throws SQLException {
         System.out.println("==============================CALCS459");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19660,7 +19281,6 @@ public class TDVTTest {
     @Test
     public void testCALCS460() throws SQLException {
         System.out.println("==============================CALCS460");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19691,7 +19311,6 @@ public class TDVTTest {
     @Test
     public void testCALCS462() throws SQLException {
         System.out.println("==============================CALCS462");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19770,7 +19389,6 @@ public class TDVTTest {
     @Test
     public void testCALCS463() throws SQLException {
         System.out.println("==============================CALCS463");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19834,7 +19452,6 @@ public class TDVTTest {
     @Test
     public void testCALCS464() throws SQLException {
         System.out.println("==============================CALCS464");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19865,7 +19482,6 @@ public class TDVTTest {
     @Test
     public void testCALCS465() throws SQLException {
         System.out.println("==============================CALCS465");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19896,7 +19512,6 @@ public class TDVTTest {
     @Test
     public void testCALCS466() throws SQLException {
         System.out.println("==============================CALCS466");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19927,7 +19542,6 @@ public class TDVTTest {
     @Test
     public void testCALCS467() throws SQLException {
         System.out.println("==============================CALCS467");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19958,7 +19572,6 @@ public class TDVTTest {
     @Test
     public void testCALCS468() throws SQLException {
         System.out.println("==============================CALCS468");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -19989,7 +19602,6 @@ public class TDVTTest {
     @Test
     public void testCALCS469() throws SQLException {
         System.out.println("==============================CALCS469");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20020,7 +19632,6 @@ public class TDVTTest {
     @Test
     public void testCALCS470() throws SQLException {
         System.out.println("==============================CALCS470");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20051,7 +19662,6 @@ public class TDVTTest {
     @Test
     public void testCALCS471() throws SQLException {
         System.out.println("==============================CALCS471");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20082,7 +19692,6 @@ public class TDVTTest {
     @Test
     public void testCALCS472() throws SQLException {
         System.out.println("==============================CALCS472");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20113,7 +19722,6 @@ public class TDVTTest {
     @Test
     public void testCALCS473() throws SQLException {
         System.out.println("==============================CALCS473");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20144,7 +19752,6 @@ public class TDVTTest {
     @Test
     public void testCALCS474() throws SQLException {
         System.out.println("==============================CALCS474");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20175,7 +19782,6 @@ public class TDVTTest {
     @Test
     public void testCALCS475() throws SQLException {
         System.out.println("==============================CALCS475");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20206,7 +19812,6 @@ public class TDVTTest {
     @Test
     public void testCALCS476() throws SQLException {
         System.out.println("==============================CALCS476");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20237,7 +19842,6 @@ public class TDVTTest {
     @Test
     public void testCALCS477() throws SQLException {
         System.out.println("==============================CALCS477");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20268,7 +19872,6 @@ public class TDVTTest {
     @Test
     public void testCALCS478() throws SQLException {
         System.out.println("==============================CALCS478");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20299,7 +19902,6 @@ public class TDVTTest {
     @Test
     public void testCALCS479() throws SQLException {
         System.out.println("==============================CALCS479");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20330,7 +19932,6 @@ public class TDVTTest {
     @Test
     public void testCALCS480() throws SQLException {
         System.out.println("==============================CALCS480");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20361,7 +19962,6 @@ public class TDVTTest {
     @Test
     public void testCALCS481() throws SQLException {
         System.out.println("==============================CALCS481");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20392,7 +19992,6 @@ public class TDVTTest {
     @Test
     public void testCALCS482() throws SQLException {
         System.out.println("==============================CALCS482");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20423,7 +20022,6 @@ public class TDVTTest {
     @Test
     public void testCALCS483() throws SQLException {
         System.out.println("==============================CALCS483");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20454,7 +20052,6 @@ public class TDVTTest {
     @Test
     public void testCALCS484() throws SQLException {
         System.out.println("==============================CALCS484");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20485,7 +20082,6 @@ public class TDVTTest {
     @Test
     public void testCALCS485() throws SQLException {
         System.out.println("==============================CALCS485");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20516,7 +20112,6 @@ public class TDVTTest {
     @Test
     public void testCALCS486() throws SQLException {
         System.out.println("==============================CALCS486");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20547,7 +20142,6 @@ public class TDVTTest {
     @Test
     public void testCALCS487() throws SQLException {
         System.out.println("==============================CALCS487");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20578,7 +20172,6 @@ public class TDVTTest {
     @Test
     public void testCALCS488() throws SQLException {
         System.out.println("==============================CALCS488");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20609,7 +20202,6 @@ public class TDVTTest {
     @Test
     public void testCALCS489() throws SQLException {
         System.out.println("==============================CALCS489");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20640,7 +20232,6 @@ public class TDVTTest {
     @Test
     public void testCALCS490() throws SQLException {
         System.out.println("==============================CALCS490");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20671,7 +20262,6 @@ public class TDVTTest {
     @Test
     public void testCALCS491() throws SQLException {
         System.out.println("==============================CALCS491");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20702,7 +20292,6 @@ public class TDVTTest {
     @Test
     public void testCALCS492() throws SQLException {
         System.out.println("==============================CALCS492");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20733,7 +20322,6 @@ public class TDVTTest {
     @Test
     public void testCALCS493() throws SQLException {
         System.out.println("==============================CALCS493");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20764,7 +20352,6 @@ public class TDVTTest {
     @Test
     public void testCALCS494() throws SQLException {
         System.out.println("==============================CALCS494");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20795,7 +20382,6 @@ public class TDVTTest {
     @Test
     public void testCALCS495() throws SQLException {
         System.out.println("==============================CALCS495");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20826,7 +20412,6 @@ public class TDVTTest {
     @Test
     public void testCALCS496() throws SQLException {
         System.out.println("==============================CALCS496");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20857,7 +20442,6 @@ public class TDVTTest {
     @Test
     public void testCALCS497() throws SQLException {
         System.out.println("==============================CALCS497");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20888,7 +20472,6 @@ public class TDVTTest {
     @Test
     public void testCALCS498() throws SQLException {
         System.out.println("==============================CALCS498");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20919,7 +20502,6 @@ public class TDVTTest {
     @Test
     public void testCALCS499() throws SQLException {
         System.out.println("==============================CALCS499");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -20989,7 +20571,6 @@ public class TDVTTest {
     @Test
     public void testCALCS500() throws SQLException {
         System.out.println("==============================CALCS500");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21020,7 +20601,6 @@ public class TDVTTest {
     @Test
     public void testCALCS501() throws SQLException {
         System.out.println("==============================CALCS501");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21051,7 +20631,6 @@ public class TDVTTest {
     @Test
     public void testCALCS502() throws SQLException {
         System.out.println("==============================CALCS502");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21082,7 +20661,6 @@ public class TDVTTest {
     @Test
     public void testCALCS503() throws SQLException {
         System.out.println("==============================CALCS503");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21161,7 +20739,6 @@ public class TDVTTest {
     @Test
     public void testCALCS504() throws SQLException {
         System.out.println("==============================CALCS504");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21240,7 +20817,6 @@ public class TDVTTest {
     @Test
     public void testCALCS505() throws SQLException {
         System.out.println("==============================CALCS505");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21319,7 +20895,6 @@ public class TDVTTest {
     @Test
     public void testCALCS506() throws SQLException {
         System.out.println("==============================CALCS506");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21398,7 +20973,6 @@ public class TDVTTest {
     @Test
     public void testCALCS507() throws SQLException {
         System.out.println("==============================CALCS507");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21429,7 +21003,6 @@ public class TDVTTest {
     @Test
     public void testCALCS508() throws SQLException {
         System.out.println("==============================CALCS508");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21508,7 +21081,6 @@ public class TDVTTest {
     @Test
     public void testCALCS509() throws SQLException {
         System.out.println("==============================CALCS509");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21587,7 +21159,6 @@ public class TDVTTest {
     @Test
     public void testCALCS510() throws SQLException {
         System.out.println("==============================CALCS510");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21666,7 +21237,6 @@ public class TDVTTest {
     @Test
     public void testCALCS511() throws SQLException {
         System.out.println("==============================CALCS511");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21745,7 +21315,6 @@ public class TDVTTest {
     @Test
     public void testCALCS512() throws SQLException {
         System.out.println("==============================CALCS512");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21776,7 +21345,6 @@ public class TDVTTest {
     @Test
     public void testCALCS513() throws SQLException {
         System.out.println("==============================CALCS513");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21807,7 +21375,6 @@ public class TDVTTest {
     @Test
     public void testCALCS514() throws SQLException {
         System.out.println("==============================CALCS514");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21838,7 +21405,6 @@ public class TDVTTest {
     @Test
     public void testCALCS515() throws SQLException {
         System.out.println("==============================CALCS515");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21869,7 +21435,6 @@ public class TDVTTest {
     @Test
     public void testCALCS516() throws SQLException {
         System.out.println("==============================CALCS516");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21900,7 +21465,6 @@ public class TDVTTest {
     @Test
     public void testCALCS517() throws SQLException {
         System.out.println("==============================CALCS517");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21931,7 +21495,6 @@ public class TDVTTest {
     @Test
     public void testCALCS518() throws SQLException {
         System.out.println("==============================CALCS518");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21962,7 +21525,6 @@ public class TDVTTest {
     @Test
     public void testCALCS519() throws SQLException {
         System.out.println("==============================CALCS519");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -21993,7 +21555,6 @@ public class TDVTTest {
     @Test
     public void testCALCS520() throws SQLException {
         System.out.println("==============================CALCS520");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22024,7 +21585,6 @@ public class TDVTTest {
     @Test
     public void testCALCS521() throws SQLException {
         System.out.println("==============================CALCS521");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22055,7 +21615,6 @@ public class TDVTTest {
     @Test
     public void testCALCS522() throws SQLException {
         System.out.println("==============================CALCS522");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22086,7 +21645,6 @@ public class TDVTTest {
     @Test
     public void testCALCS523() throws SQLException {
         System.out.println("==============================CALCS523");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22117,7 +21675,6 @@ public class TDVTTest {
     @Test
     public void testCALCS524() throws SQLException {
         System.out.println("==============================CALCS524");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22148,7 +21705,6 @@ public class TDVTTest {
     @Test
     public void testCALCS525() throws SQLException {
         System.out.println("==============================CALCS525");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22179,7 +21735,6 @@ public class TDVTTest {
     @Test
     public void testCALCS526() throws SQLException {
         System.out.println("==============================CALCS526");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22210,7 +21765,6 @@ public class TDVTTest {
     @Test
     public void testCALCS527() throws SQLException {
         System.out.println("==============================CALCS527");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22241,7 +21795,6 @@ public class TDVTTest {
     @Test
     public void testCALCS528() throws SQLException {
         System.out.println("==============================CALCS528");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22272,7 +21825,6 @@ public class TDVTTest {
     @Test
     public void testCALCS529() throws SQLException {
         System.out.println("==============================CALCS529");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22303,7 +21855,6 @@ public class TDVTTest {
     @Test
     public void testCALCS530() throws SQLException {
         System.out.println("==============================CALCS530");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22382,7 +21933,6 @@ public class TDVTTest {
     @Test
     public void testCALCS531() throws SQLException {
         System.out.println("==============================CALCS531");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22452,7 +22002,6 @@ public class TDVTTest {
     @Test
     public void testCALCS532() throws SQLException {
         System.out.println("==============================CALCS532");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22483,7 +22032,6 @@ public class TDVTTest {
     @Test
     public void testCALCS533() throws SQLException {
         System.out.println("==============================CALCS533");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22532,7 +22080,6 @@ public class TDVTTest {
     @Test
     public void testCALCS534() throws SQLException {
         System.out.println("==============================CALCS534");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22596,7 +22143,6 @@ public class TDVTTest {
     @Test
     public void testCALCS535() throws SQLException {
         System.out.println("==============================CALCS535");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22660,7 +22206,6 @@ public class TDVTTest {
     @Test
     public void testCALCS536() throws SQLException {
         System.out.println("==============================CALCS536");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22691,7 +22236,6 @@ public class TDVTTest {
     @Test
     public void testCALCS537() throws SQLException {
         System.out.println("==============================CALCS537");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22722,7 +22266,6 @@ public class TDVTTest {
     @Test
     public void testCALCS541() throws SQLException {
         System.out.println("==============================CALCS541");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22753,7 +22296,6 @@ public class TDVTTest {
     @Test
     public void testCALCS542() throws SQLException {
         System.out.println("==============================CALCS542");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22784,7 +22326,6 @@ public class TDVTTest {
     @Test
     public void testCALCS543() throws SQLException {
         System.out.println("==============================CALCS543");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22815,7 +22356,6 @@ public class TDVTTest {
     @Test
     public void testCALCS544() throws SQLException {
         System.out.println("==============================CALCS544");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22846,7 +22386,6 @@ public class TDVTTest {
     @Test
     public void testCALCS545() throws SQLException {
         System.out.println("==============================CALCS545");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22877,7 +22416,6 @@ public class TDVTTest {
     @Test
     public void testCALCS546() throws SQLException {
         System.out.println("==============================CALCS546");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22908,7 +22446,6 @@ public class TDVTTest {
     @Test
     public void testCALCS547() throws SQLException {
         System.out.println("==============================CALCS547");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22939,7 +22476,6 @@ public class TDVTTest {
     @Test
     public void testCALCS548() throws SQLException {
         System.out.println("==============================CALCS548");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -22970,7 +22506,6 @@ public class TDVTTest {
     @Test
     public void testCALCS549() throws SQLException {
         System.out.println("==============================CALCS549");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23001,7 +22536,6 @@ public class TDVTTest {
     @Test
     public void testCALCS550() throws SQLException {
         System.out.println("==============================CALCS550");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23032,7 +22566,6 @@ public class TDVTTest {
     @Test
     public void testCALCS551() throws SQLException {
         System.out.println("==============================CALCS551");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23063,7 +22596,6 @@ public class TDVTTest {
     @Test
     public void testCALCS552() throws SQLException {
         System.out.println("==============================CALCS552");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23094,7 +22626,6 @@ public class TDVTTest {
     @Test
     public void testCALCS553() throws SQLException {
         System.out.println("==============================CALCS553");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23125,7 +22656,6 @@ public class TDVTTest {
     @Test
     public void testCALCS554() throws SQLException {
         System.out.println("==============================CALCS554");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23156,7 +22686,6 @@ public class TDVTTest {
     @Test
     public void testCALCS555() throws SQLException {
         System.out.println("==============================CALCS555");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23187,7 +22716,6 @@ public class TDVTTest {
     @Test
     public void testCALCS556() throws SQLException {
         System.out.println("==============================CALCS556");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23218,7 +22746,6 @@ public class TDVTTest {
     @Test
     public void testCALCS557() throws SQLException {
         System.out.println("==============================CALCS557");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23249,7 +22776,6 @@ public class TDVTTest {
     @Test
     public void testCALCS559() throws SQLException {
         System.out.println("==============================CALCS559");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23280,7 +22806,6 @@ public class TDVTTest {
     @Test
     public void testCALCS560() throws SQLException {
         System.out.println("==============================CALCS560");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23311,7 +22836,6 @@ public class TDVTTest {
     @Test
     public void testCALCS561() throws SQLException {
         System.out.println("==============================CALCS561");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23342,7 +22866,6 @@ public class TDVTTest {
     @Test
     public void testCALCS562() throws SQLException {
         System.out.println("==============================CALCS562");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23373,7 +22896,6 @@ public class TDVTTest {
     @Test
     public void testCALCS563() throws SQLException {
         System.out.println("==============================CALCS563");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23404,7 +22926,6 @@ public class TDVTTest {
     @Test
     public void testCALCS564() throws SQLException {
         System.out.println("==============================CALCS564");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23483,7 +23004,6 @@ public class TDVTTest {
     @Test
     public void testCALCS565() throws SQLException {
         System.out.println("==============================CALCS565");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23553,7 +23073,6 @@ public class TDVTTest {
     @Test
     public void testCALCS566() throws SQLException {
         System.out.println("==============================CALCS566");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23632,7 +23151,6 @@ public class TDVTTest {
     @Test
     public void testCALCS567() throws SQLException {
         System.out.println("==============================CALCS567");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23711,7 +23229,6 @@ public class TDVTTest {
     @Test
     public void testCALCS568() throws SQLException {
         System.out.println("==============================CALCS568");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23781,7 +23298,6 @@ public class TDVTTest {
     @Test
     public void testCALCS569() throws SQLException {
         System.out.println("==============================CALCS569");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23851,7 +23367,6 @@ public class TDVTTest {
     @Test
     public void testCALCS570() throws SQLException {
         System.out.println("==============================CALCS570");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23921,7 +23436,6 @@ public class TDVTTest {
     @Test
     public void testCALCS571() throws SQLException {
         System.out.println("==============================CALCS571");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -23973,7 +23487,6 @@ public class TDVTTest {
     @Test
     public void testCALCS572() throws SQLException {
         System.out.println("==============================CALCS572");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24010,7 +23523,6 @@ public class TDVTTest {
     @Test
     public void testCALCS573() throws SQLException {
         System.out.println("==============================CALCS573");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24080,7 +23592,6 @@ public class TDVTTest {
     @Test
     public void testCALCS574() throws SQLException {
         System.out.println("==============================CALCS574");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24150,7 +23661,6 @@ public class TDVTTest {
     @Test
     public void testCALCS575() throws SQLException {
         System.out.println("==============================CALCS575");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24208,7 +23718,6 @@ public class TDVTTest {
     @Test
     public void testCALCS576() throws SQLException {
         System.out.println("==============================CALCS576");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24266,7 +23775,6 @@ public class TDVTTest {
     @Test
     public void testCALCS577() throws SQLException {
         System.out.println("==============================CALCS577");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24300,7 +23808,6 @@ public class TDVTTest {
     @Test
     public void testCALCS578() throws SQLException {
         System.out.println("==============================CALCS578");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24334,7 +23841,6 @@ public class TDVTTest {
     @Test
     public void testCALCS579() throws SQLException {
         System.out.println("==============================CALCS579");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24392,7 +23898,6 @@ public class TDVTTest {
     @Test
     public void testCALCS580() throws SQLException {
         System.out.println("==============================CALCS580");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24426,7 +23931,6 @@ public class TDVTTest {
     @Test
     public void testCALCS582() throws SQLException {
         System.out.println("==============================CALCS582");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24505,7 +24009,6 @@ public class TDVTTest {
     @Test
     public void testCALCS583() throws SQLException {
         System.out.println("==============================CALCS583");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24536,7 +24039,6 @@ public class TDVTTest {
     @Test
     public void testCALCS584() throws SQLException {
         System.out.println("==============================CALCS584");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24567,7 +24069,6 @@ public class TDVTTest {
     @Test
     public void testCALCS585() throws SQLException {
         System.out.println("==============================CALCS585");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24598,7 +24099,6 @@ public class TDVTTest {
     @Test
     public void testCALCS586() throws SQLException {
         System.out.println("==============================CALCS586");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24629,7 +24129,6 @@ public class TDVTTest {
     @Test
     public void testCALCS587() throws SQLException {
         System.out.println("==============================CALCS587");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24660,7 +24159,6 @@ public class TDVTTest {
     @Test
     public void testCALCS588() throws SQLException {
         System.out.println("==============================CALCS588");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24691,7 +24189,6 @@ public class TDVTTest {
     @Test
     public void testCALCS589() throws SQLException {
         System.out.println("==============================CALCS589");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24722,7 +24219,6 @@ public class TDVTTest {
     @Test
     public void testCALCS590() throws SQLException {
         System.out.println("==============================CALCS590");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24753,7 +24249,6 @@ public class TDVTTest {
     @Test
     public void testCALCS591() throws SQLException {
         System.out.println("==============================CALCS591");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24784,7 +24279,6 @@ public class TDVTTest {
     @Test
     public void testCALCS592() throws SQLException {
         System.out.println("==============================CALCS592");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24815,7 +24309,6 @@ public class TDVTTest {
     @Test
     public void testCALCS593() throws SQLException {
         System.out.println("==============================CALCS593");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24846,7 +24339,6 @@ public class TDVTTest {
     @Test
     public void testCALCS594() throws SQLException {
         System.out.println("==============================CALCS594");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24877,7 +24369,6 @@ public class TDVTTest {
     @Test
     public void testCALCS595() throws SQLException {
         System.out.println("==============================CALCS595");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24908,7 +24399,6 @@ public class TDVTTest {
     @Test
     public void testCALCS596() throws SQLException {
         System.out.println("==============================CALCS596");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24939,7 +24429,6 @@ public class TDVTTest {
     @Test
     public void testCALCS597() throws SQLException {
         System.out.println("==============================CALCS597");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -24970,7 +24459,6 @@ public class TDVTTest {
     @Test
     public void testCALCS598() throws SQLException {
         System.out.println("==============================CALCS598");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25001,7 +24489,6 @@ public class TDVTTest {
     @Test
     public void testCALCS599() throws SQLException {
         System.out.println("==============================CALCS599");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25032,7 +24519,6 @@ public class TDVTTest {
     @Test
     public void testCALCS600() throws SQLException {
         System.out.println("==============================CALCS600");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25111,7 +24597,6 @@ public class TDVTTest {
     @Test
     public void testCALCS601() throws SQLException {
         System.out.println("==============================CALCS601");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25190,7 +24675,6 @@ public class TDVTTest {
     @Test
     public void testCALCS603() throws SQLException {
         System.out.println("==============================CALCS603");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25269,7 +24753,6 @@ public class TDVTTest {
     @Test
     public void testCALCS604() throws SQLException {
         System.out.println("==============================CALCS604");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25345,7 +24828,6 @@ public class TDVTTest {
     @Test
     public void testCALCS605() throws SQLException {
         System.out.println("==============================CALCS605");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25415,7 +24897,6 @@ public class TDVTTest {
     @Test
     public void testCALCS606() throws SQLException {
         System.out.println("==============================CALCS606");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25473,7 +24954,6 @@ public class TDVTTest {
     @Test
     public void testCALCS607() throws SQLException {
         System.out.println("==============================CALCS607");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25531,7 +25011,6 @@ public class TDVTTest {
     @Test
     public void testCALCS608() throws SQLException {
         System.out.println("==============================CALCS608");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25610,7 +25089,6 @@ public class TDVTTest {
     @Test
     public void testCALCS609() throws SQLException {
         System.out.println("==============================CALCS609");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25689,7 +25167,6 @@ public class TDVTTest {
     @Test
     public void testCALCS611() throws SQLException {
         System.out.println("==============================CALCS611");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25768,7 +25245,6 @@ public class TDVTTest {
     @Test
     public void testCALCS612() throws SQLException {
         System.out.println("==============================CALCS612");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25826,7 +25302,6 @@ public class TDVTTest {
     @Test
     public void testCALCS613() throws SQLException {
         System.out.println("==============================CALCS613");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25905,7 +25380,6 @@ public class TDVTTest {
     @Test
     public void testCALCS614() throws SQLException {
         System.out.println("==============================CALCS614");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -25957,7 +25431,6 @@ public class TDVTTest {
     @Test
     public void testCALCS615() throws SQLException {
         System.out.println("==============================CALCS615");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26003,7 +25476,6 @@ public class TDVTTest {
     @Test
     public void testCALCS616() throws SQLException {
         System.out.println("==============================CALCS616");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26082,7 +25554,6 @@ public class TDVTTest {
     @Test
     public void testCALCS617() throws SQLException {
         System.out.println("==============================CALCS617");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26161,7 +25632,6 @@ public class TDVTTest {
     @Test
     public void testCALCS618() throws SQLException {
         System.out.println("==============================CALCS618");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26231,7 +25701,6 @@ public class TDVTTest {
     @Test
     public void testCALCS619() throws SQLException {
         System.out.println("==============================CALCS619");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26301,7 +25770,6 @@ public class TDVTTest {
     @Test
     public void testCALCS620() throws SQLException {
         System.out.println("==============================CALCS620");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26347,7 +25815,6 @@ public class TDVTTest {
     @Test
     public void testCALCS621() throws SQLException {
         System.out.println("==============================CALCS621");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26417,7 +25884,6 @@ public class TDVTTest {
     @Test
     public void testCALCS622() throws SQLException {
         System.out.println("==============================CALCS622");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26478,7 +25944,6 @@ public class TDVTTest {
     @Test
     public void testCALCS623() throws SQLException {
         System.out.println("==============================CALCS623");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26512,7 +25977,6 @@ public class TDVTTest {
     @Test
     public void testCALCS624() throws SQLException {
         System.out.println("==============================CALCS624");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26543,7 +26007,6 @@ public class TDVTTest {
     @Test
     public void testCALCS625() throws SQLException {
         System.out.println("==============================CALCS625");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26574,7 +26037,6 @@ public class TDVTTest {
     @Test
     public void testCALCS626() throws SQLException {
         System.out.println("==============================CALCS626");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26605,7 +26067,6 @@ public class TDVTTest {
     @Test
     public void testCALCS631() throws SQLException {
         System.out.println("==============================CALCS631");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26636,7 +26097,6 @@ public class TDVTTest {
     @Test
     public void testCALCS632() throws SQLException {
         System.out.println("==============================CALCS632");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26670,7 +26130,6 @@ public class TDVTTest {
     @Test
     public void testCALCS633() throws SQLException {
         System.out.println("==============================CALCS633");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26704,7 +26163,6 @@ public class TDVTTest {
     @Test
     public void testCALCS636() throws SQLException {
         System.out.println("==============================CALCS636");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26735,7 +26193,6 @@ public class TDVTTest {
     @Test
     public void testCALCS637() throws SQLException {
         System.out.println("==============================CALCS637");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26799,7 +26256,6 @@ public class TDVTTest {
     @Test
     public void testCALCS638() throws SQLException {
         System.out.println("==============================CALCS638");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26863,7 +26319,6 @@ public class TDVTTest {
     @Test
     public void testCALCS639() throws SQLException {
         System.out.println("==============================CALCS639");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26927,7 +26382,6 @@ public class TDVTTest {
     @Test
     public void testCALCS640() throws SQLException {
         System.out.println("==============================CALCS640");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -26991,7 +26445,6 @@ public class TDVTTest {
     @Test
     public void testCALCS641() throws SQLException {
         System.out.println("==============================CALCS641");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27022,7 +26475,6 @@ public class TDVTTest {
     @Test
     public void testCALCS642() throws SQLException {
         System.out.println("==============================CALCS642");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27053,7 +26505,6 @@ public class TDVTTest {
     @Test
     public void testCALCS643() throws SQLException {
         System.out.println("==============================CALCS643");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27084,7 +26535,6 @@ public class TDVTTest {
     @Test
     public void testCALCS644() throws SQLException {
         System.out.println("==============================CALCS644");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27115,7 +26565,6 @@ public class TDVTTest {
     @Test
     public void testCALCS645() throws SQLException {
         System.out.println("==============================CALCS645");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27173,7 +26622,6 @@ public class TDVTTest {
     @Test
     public void testCALCS646() throws SQLException {
         System.out.println("==============================CALCS646");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27231,7 +26679,6 @@ public class TDVTTest {
     @Test
     public void testCALCS647() throws SQLException {
         System.out.println("==============================CALCS647");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27265,7 +26712,6 @@ public class TDVTTest {
     @Test
     public void testCALCS648() throws SQLException {
         System.out.println("==============================CALCS648");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27299,7 +26745,6 @@ public class TDVTTest {
     @Test
     public void testCALCS649() throws SQLException {
         System.out.println("==============================CALCS649");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27354,7 +26799,6 @@ public class TDVTTest {
     @Test
     public void testCALCS650() throws SQLException {
         System.out.println("==============================CALCS650");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27394,7 +26838,6 @@ public class TDVTTest {
     @Test
     public void testCALCS651() throws SQLException {
         System.out.println("==============================CALCS651");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27434,7 +26877,6 @@ public class TDVTTest {
     @Test
     public void testCALCS652() throws SQLException {
         System.out.println("==============================CALCS652");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27489,7 +26931,6 @@ public class TDVTTest {
     @Test
     public void testCALCS653() throws SQLException {
         System.out.println("==============================CALCS653");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27544,7 +26985,6 @@ public class TDVTTest {
     @Test
     public void testCALCS656() throws SQLException {
         System.out.println("==============================CALCS656");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27596,7 +27036,6 @@ public class TDVTTest {
     @Test
     public void testCALCS657() throws SQLException {
         System.out.println("==============================CALCS657");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27642,7 +27081,6 @@ public class TDVTTest {
     @Test
     public void testCALCS658() throws SQLException {
         System.out.println("==============================CALCS658");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27673,7 +27111,6 @@ public class TDVTTest {
     @Test
     public void testCALCS659() throws SQLException {
         System.out.println("==============================CALCS659");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27704,7 +27141,6 @@ public class TDVTTest {
     @Test
     public void testCALCS660() throws SQLException {
         System.out.println("==============================CALCS660");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27735,7 +27171,6 @@ public class TDVTTest {
     @Test
     public void testCALCS661() throws SQLException {
         System.out.println("==============================CALCS661");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27766,7 +27201,6 @@ public class TDVTTest {
     @Test
     public void testCALCS662() throws SQLException {
         System.out.println("==============================CALCS662");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27797,7 +27231,6 @@ public class TDVTTest {
     @Test
     public void testCALCS663() throws SQLException {
         System.out.println("==============================CALCS663");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27828,7 +27261,6 @@ public class TDVTTest {
     @Test
     public void testCALCS664() throws SQLException {
         System.out.println("==============================CALCS664");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27859,7 +27291,6 @@ public class TDVTTest {
     @Test
     public void testCALCS665() throws SQLException {
         System.out.println("==============================CALCS665");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27890,7 +27321,6 @@ public class TDVTTest {
     @Test
     public void testCALCS666() throws SQLException {
         System.out.println("==============================CALCS666");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27921,7 +27351,6 @@ public class TDVTTest {
     @Test
     public void testCALCS667() throws SQLException {
         System.out.println("==============================CALCS667");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27952,7 +27381,6 @@ public class TDVTTest {
     @Test
     public void testCALCS668() throws SQLException {
         System.out.println("==============================CALCS668");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -27983,7 +27411,6 @@ public class TDVTTest {
     @Test
     public void testCALCS669() throws SQLException {
         System.out.println("==============================CALCS669");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28014,7 +27441,6 @@ public class TDVTTest {
     @Test
     public void testCALCS670() throws SQLException {
         System.out.println("==============================CALCS670");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28045,7 +27471,6 @@ public class TDVTTest {
     @Test
     public void testCALCS671() throws SQLException {
         System.out.println("==============================CALCS671");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28076,7 +27501,6 @@ public class TDVTTest {
     @Test
     public void testCALCS672() throws SQLException {
         System.out.println("==============================CALCS672");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28107,7 +27531,6 @@ public class TDVTTest {
     @Test
     public void testCALCS673() throws SQLException {
         System.out.println("==============================CALCS673");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28138,7 +27561,6 @@ public class TDVTTest {
     @Test
     public void testCALCS674() throws SQLException {
         System.out.println("==============================CALCS674");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28169,7 +27591,6 @@ public class TDVTTest {
     @Test
     public void testCALCS678() throws SQLException {
         System.out.println("==============================CALCS678");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28233,7 +27654,6 @@ public class TDVTTest {
     @Test
     public void testCALCS679() throws SQLException {
         System.out.println("==============================CALCS679");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28297,7 +27717,6 @@ public class TDVTTest {
     @Test
     public void testCALCS680() throws SQLException {
         System.out.println("==============================CALCS680");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28328,7 +27747,6 @@ public class TDVTTest {
     @Test
     public void testCALCS681() throws SQLException {
         System.out.println("==============================CALCS681");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28359,7 +27777,6 @@ public class TDVTTest {
     @Test
     public void testCALCS682() throws SQLException {
         System.out.println("==============================CALCS682");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28438,7 +27855,6 @@ public class TDVTTest {
     @Test
     public void testCALCS683() throws SQLException {
         System.out.println("==============================CALCS683");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28469,7 +27885,6 @@ public class TDVTTest {
     @Test
     public void testCALCS685() throws SQLException {
         System.out.println("==============================CALCS685");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28500,7 +27915,6 @@ public class TDVTTest {
     @Test
     public void testCALCS686() throws SQLException {
         System.out.println("==============================CALCS686");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28531,7 +27945,6 @@ public class TDVTTest {
     @Test
     public void testCALCS687() throws SQLException {
         System.out.println("==============================CALCS687");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28571,7 +27984,6 @@ public class TDVTTest {
     @Test
     public void testCALCS688() throws SQLException {
         System.out.println("==============================CALCS688");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28614,7 +28026,6 @@ public class TDVTTest {
     @Test
     public void testCALCS689() throws SQLException {
         System.out.println("==============================CALCS689");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28666,7 +28077,6 @@ public class TDVTTest {
     @Test
     public void testCALCS690() throws SQLException {
         System.out.println("==============================CALCS690");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28715,7 +28125,6 @@ public class TDVTTest {
     @Test
     public void testCALCS691() throws SQLException {
         System.out.println("==============================CALCS691");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28764,7 +28173,6 @@ public class TDVTTest {
     @Test
     public void testCALCS692() throws SQLException {
         System.out.println("==============================CALCS692");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28810,7 +28218,6 @@ public class TDVTTest {
     @Test
     public void testCALCS693() throws SQLException {
         System.out.println("==============================CALCS693");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28868,7 +28275,6 @@ public class TDVTTest {
     @Test
     public void testCALCS694() throws SQLException {
         System.out.println("==============================CALCS694");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -28926,7 +28332,6 @@ public class TDVTTest {
     @Test
     public void testCALCS695() throws SQLException {
         System.out.println("==============================CALCS695");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29005,7 +28410,6 @@ public class TDVTTest {
     @Test
     public void testCALCS696() throws SQLException {
         System.out.println("==============================CALCS696");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29084,7 +28488,6 @@ public class TDVTTest {
     @Test
     public void testCALCS697() throws SQLException {
         System.out.println("==============================CALCS697");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29115,7 +28518,6 @@ public class TDVTTest {
     @Test
     public void testCALCS699() throws SQLException {
         System.out.println("==============================CALCS699");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29146,7 +28548,6 @@ public class TDVTTest {
     @Test
     public void testCALCS700() throws SQLException {
         System.out.println("==============================CALCS700");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29177,7 +28578,6 @@ public class TDVTTest {
     @Test
     public void testCALCS701() throws SQLException {
         System.out.println("==============================CALCS701");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29220,7 +28620,6 @@ public class TDVTTest {
     @Test
     public void testCALCS702() throws SQLException {
         System.out.println("==============================CALCS702");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29251,7 +28650,6 @@ public class TDVTTest {
     @Test
     public void testCALCS703() throws SQLException {
         System.out.println("==============================CALCS703");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29297,7 +28695,6 @@ public class TDVTTest {
     @Test
     public void testCALCS704() throws SQLException {
         System.out.println("==============================CALCS704");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29361,7 +28758,6 @@ public class TDVTTest {
     @Test
     public void testCALCS705() throws SQLException {
         System.out.println("==============================CALCS705");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29425,7 +28821,6 @@ public class TDVTTest {
     @Test
     public void testCALCS706() throws SQLException {
         System.out.println("==============================CALCS706");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29456,7 +28851,6 @@ public class TDVTTest {
     @Test
     public void testCALCS707() throws SQLException {
         System.out.println("==============================CALCS707");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29487,7 +28881,6 @@ public class TDVTTest {
     @Test
     public void testCALCS708() throws SQLException {
         System.out.println("==============================CALCS708");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29554,7 +28947,6 @@ public class TDVTTest {
     @Test
     public void testCALCS709() throws SQLException {
         System.out.println("==============================CALCS709");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29621,7 +29013,6 @@ public class TDVTTest {
     @Test
     public void testCALCS710() throws SQLException {
         System.out.println("==============================CALCS710");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29676,7 +29067,6 @@ public class TDVTTest {
     @Test
     public void testCALCS711() throws SQLException {
         System.out.println("==============================CALCS711");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29743,7 +29133,6 @@ public class TDVTTest {
     @Test
     public void testCALCS712() throws SQLException {
         System.out.println("==============================CALCS712");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29801,7 +29190,6 @@ public class TDVTTest {
     @Test
     public void testCALCS713() throws SQLException {
         System.out.println("==============================CALCS713");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29859,7 +29247,6 @@ public class TDVTTest {
     @Test
     public void testCALCS714() throws SQLException {
         System.out.println("==============================CALCS714");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -29938,7 +29325,6 @@ public class TDVTTest {
     @Test
     public void testCALCS715() throws SQLException {
         System.out.println("==============================CALCS715");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -30017,7 +29403,6 @@ public class TDVTTest {
     @Test
     public void testLOGICAL_CALCS3() throws SQLException {
         System.out.println("==============================LOGICAL_CALCS3");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -30057,7 +29442,6 @@ public class TDVTTest {
     @Test
     public void testLOGICAL_CALCS4() throws SQLException {
         System.out.println("==============================LOGICAL_CALCS4");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -30103,7 +29487,6 @@ public class TDVTTest {
     @Test
     public void testLOGICAL_CALCS8() throws SQLException {
         System.out.println("==============================LOGICAL_CALCS8");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -30161,7 +29544,6 @@ public class TDVTTest {
     @Test
     public void testLOGICAL_CALCS10() throws SQLException {
         System.out.println("==============================LOGICAL_CALCS10");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
@@ -30192,7 +29574,6 @@ public class TDVTTest {
     @Test
     public void testLOGICAL_STAPLES28() throws SQLException {
         System.out.println("==============================LOGICAL_STAPLES28");
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(

@@ -16,7 +16,15 @@ import org.junit.experimental.categories.Category;
 @Category(TDVTTest.class)
 public class TDVTTest {
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/tdvt";
+    static Connection conn;
 
+    static {
+        try {
+            conn =  getBasicConnection();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     static Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
@@ -72,7 +80,7 @@ def clean_sql(sql):
     # Our column names in Staples are all Capitalized, so replace back to the capitalized form. The
     # queries were originally written for case insensitive MySQL.
     for key in [
- "Item Count" , "Ship Priority" , "Order Priority" , "Order Status" , "Order Quantity" , "Sales Total" , "Discount" , "Tax Rate" , "Ship Mode" , "Fill Time" , "Gross Profit" , "Price" , "Ship Handle Cost" , "Employee Name" , "Employee Dept" , "Manager Name" , "Employee Yrs Exp" , "Employee Salary" , "Customer Name" , "Customer State" , "Call Center Region" , "Customer Balance" , "Customer Segment" , "Prod Type1" , "Prod Type2" , "Prod Type3" , "Prod Type4" , "Product Name" , "Product Container" , "Ship Promo" , "Supplier Name" , "Supplier Balance" , "Supplier Region" , "Supplier State" , "Order ID" , "Order Year" , "Order Month" , "Order Day" , "Order Date" , "Order Quarter" , "Product Base Margin" , "Product ID" , "Receive Time" , "Received Date" , "Ship Date" , "Ship Charge" , "Total Cycle Time" , "Product In Stock" , "PID" , "Market Segment "	]:
+ "Item Count" , "Ship Priority" , "Order Priority" , "Order Status" , "Order Quantity" , "Sales Total" , "Discount" , "Tax Rate" , "Ship Mode" , "Fill Time" , "Gross Profit" , "Price" , "Ship Handle Cost" , "Employee Name" , "Employee Dept" , "Manager Name" , "Employee Yrs Exp" , "Employee Salary" , "Customer Name" , "Customer State" , "Call Center Region" , "Customer Balance" , "Customer Segment" , "Prod Type1" , "Prod Type2" , "Prod Type3" , "Prod Type4" , "Product Name" , "Product Container" , "Ship Promo" , "Supplier Name" , "Supplier Balance" , "Supplier Region" , "Supplier State" , "Order ID" , "Order Year" , "Order Month" , "Order Day" , "Order Date" , "Order Quarter" , "Product Base Margin" , "Product ID" , "Receive Time" , "Received Date" , "Ship Date" , "Ship Charge" , "Total Cycle Time" , "Product In Stock" , "PID" , "Market Segment "    ]:
         sql = sql.replace(key.lower(), key)
     # tdvt has a mode where bool columns end with _. We did not map the columns this way in ADL, so
     # we need to remove those underscores. E.g., we replace bool0_ with bool0.
@@ -104,7 +112,6 @@ def make_test(fName, test):
     print("    @Test")
     print("    public void test" + testName + "() throws SQLException {")
     print('        System.out.println("=============================='+ testName +'");')
-    print("        Connection conn = getBasicConnection();")
     print("        Statement stmt = conn.createStatement();")
     sql = clean_sql(test["sql"])
     print('        ResultSet rs = stmt.executeQuery("' + sql + '");')
