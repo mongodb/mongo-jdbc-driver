@@ -106,6 +106,19 @@ public class TDVTTest {
                                         + resultVal);
                         return false;
                     }
+                } else if (resultVal instanceof Long) {
+                    if ((long) resultVal != (long) expectedVal) {
+                        System.out.println(
+                                "At position: "
+                                        + rowIdx
+                                        + ", "
+                                        + colIdx
+                                        + " expected value: "
+                                        + expectedVal
+                                        + " != "
+                                        + resultVal);
+                        return false;
+                    }
                 } else if (!resultVal.equals(expectedVal)) {
                     System.out.println(
                             "At position: "
@@ -190,8 +203,10 @@ def make_col_str(ty, col):
         if col == '0':
             return 'false'
         return 'true'
-    if ty == 'long' or ty == 'double' or ty == 'decimal':
-        return str(col)
+    if ty == 'long':
+        return str(long(col)) + 'l'
+    if ty == 'double' or ty == 'decimal':
+        return str(float(col)) + 'd'
 
 def make_test(fName, test):
     # we are only doing tests expected to run correctly.
