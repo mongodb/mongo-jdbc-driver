@@ -143,6 +143,8 @@ public class TDVTTest {
 print(test_text)
 
 types = {
+        None: 'null',
+        'null': 'null',
         'varchar': 'string',
         'string': 'string',
         'bool': 'bool',
@@ -179,6 +181,8 @@ def make_col_str(ty, col):
     if col is None:
         return 'null'
     if col == 'NULL':
+        return 'null'
+    if ty == 'null':
         return 'null'
     if ty == 'string' or ty == 'date':
         return '"' + str(col) + '"'
