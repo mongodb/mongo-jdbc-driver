@@ -239,8 +239,6 @@ def make_test(fName, test):
         print('        ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);')
         # We'll leave the printouts here until we are done fixing the failing tests in a future
         # ticket.
-        print('        System.out.println(expected.toString());')
-        print('        System.out.println(rsSet.toString());')
         print('        if (!compareResults(expected, rsSet)) {')
         print('        // This will be false if both ArrayLists are the same')
         print('        assertTrue("failed result check", false);')
