@@ -67,7 +67,7 @@ public class TDVTTest {
         }
         for (int rowIdx = 0; rowIdx < expected.size(); ++rowIdx) {
             ArrayList<Object> expectedRow = expected.get(rowIdx);
-            ArrayList<Object> resultRow = expected.get(rowIdx);
+            ArrayList<Object> resultRow = result.get(rowIdx);
             if (expectedRow.size() != resultRow.size()) {
                 System.out.println(
                         "Expected row and result row differ in length, "
