@@ -11,7 +11,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2074921570)(0)]
-    expected_types: [int]
+    expected_types: [null]
     id: '0'
     sql: "\n      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2074921570)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -62,7 +62,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4070818381)(0)]
-    expected_types: [float]
+    expected_types: [null]
     id: '6'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961)) - 1 +\
       \ DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00'))\
@@ -72,7 +72,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1209329404)(0)]
-    expected_types: [float]
+    expected_types: [null]
     id: '7'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961),\
       \ INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -355,7 +355,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3672267408)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '28'
     sql: "\n      SELECT MONTHNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3672267408)(0)`\n\
@@ -364,7 +364,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(2406708804)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '29'
     sql: "\n      SELECT MONTHNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(2406708804)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -372,7 +372,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1073594909)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '30'
     sql: "\n      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
       \ + 693961), INTERVAL 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE_ADD(FROM_DAYS(FLOOR(NULL)\
@@ -383,7 +383,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(4016689999)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '31'
     sql: "\n      SELECT CONCAT(FLOOR((7 + DAYOFYEAR(FROM_DAYS(FLOOR(NULL) + 693961))\
       \ - 1 + DAYOFWEEK(DATE_FORMAT(FROM_DAYS(FLOOR(NULL) + 693961), '%Y-01-01 00:00:00'))\
@@ -393,7 +393,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3405047399)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '32'
     sql: "\n      SELECT DAYNAME(DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL\
       \ 60 * 60 * 24 * (NULL - FLOOR(NULL)) SECOND)) AS `TEMP(Test)(3405047399)(0)`\n\
@@ -402,7 +402,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(55506858)(0)]
-    expected_types: [varchar]
+    expected_types: [null]
     id: '33'
     sql: "\n      SELECT DAYNAME(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(55506858)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"
@@ -7452,7 +7452,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(1053114602)(0)]
-    expected_types: [date]
+    expected_types: [null]
     id: '482'
     sql: "\n      SELECT DATE_ADD(FROM_DAYS(FLOOR(NULL) + 693961), INTERVAL 1 YEAR)\
       \ AS `TEMP(Test)(1053114602)(0)`\nFROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order\
@@ -8750,7 +8750,7 @@ testcases:
       - [null]
     expected_error: ''
     expected_names: [TEMP(Test)(3057229987)(0)]
-    expected_types: [int]
+    expected_types: [null]
     id: '583'
     sql: "\n      SELECT YEAR(FROM_DAYS(FLOOR(NULL) + 693961)) AS `TEMP(Test)(3057229987)(0)`\n\
       FROM `Calcs`\nHAVING (COUNT(1) > 0)\n     order by 1"

@@ -240,7 +240,6 @@ def make_test(fName, test):
         print('        System.out.println(expected.toString());')
         print('        System.out.println(rsSet.toString());')
         print('        if (!compareResults(expected, rsSet)) {')
-        print('        System.out.println("Failed: " + rsSet.toString());')
         print('        // This will be false if both ArrayLists are the same')
         print('        assertTrue("failed result check", false);')
         print('        }')

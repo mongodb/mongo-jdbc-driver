@@ -183,7 +183,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -200,10 +199,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2074921570)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("long")) {
-            System.out.println(tyName + " == " + "long");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("long"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -213,7 +212,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -243,7 +241,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -273,7 +270,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -303,7 +299,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -333,7 +328,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -363,7 +357,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -380,10 +373,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4070818381)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -393,7 +386,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -410,10 +402,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1209329404)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -423,7 +415,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -453,7 +444,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -483,7 +473,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -513,7 +502,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -543,7 +531,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -573,7 +560,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -603,7 +589,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -633,7 +618,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -663,7 +647,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -693,7 +676,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -762,7 +744,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -831,7 +812,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -909,7 +889,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -987,7 +966,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1065,7 +1043,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1134,7 +1111,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1203,7 +1179,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1233,7 +1208,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1263,7 +1237,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1293,7 +1266,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1323,7 +1295,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1340,10 +1311,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3672267408)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1353,7 +1324,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1370,10 +1340,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2406708804)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1383,7 +1353,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1400,10 +1369,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1073594909)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1413,7 +1382,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1430,10 +1398,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4016689999)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1443,7 +1411,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1460,10 +1427,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3405047399)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1473,7 +1440,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1490,10 +1456,10 @@ public class TDVTTest {
         assertEquals("temp(test)(55506858)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1503,7 +1469,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1533,7 +1498,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1563,7 +1527,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1593,7 +1556,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1623,7 +1585,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1653,7 +1614,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1683,7 +1643,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1713,7 +1672,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1743,7 +1701,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1773,7 +1730,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1803,7 +1759,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1833,7 +1788,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1863,7 +1817,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -1938,7 +1891,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2013,7 +1965,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2082,7 +2033,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2151,7 +2101,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2229,7 +2178,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2307,7 +2255,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2364,7 +2311,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2430,7 +2376,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2487,7 +2432,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2565,7 +2509,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2610,7 +2553,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2655,7 +2597,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2685,7 +2626,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2715,7 +2655,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2793,7 +2732,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2832,7 +2770,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2871,7 +2808,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2901,7 +2837,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -2931,7 +2866,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3003,7 +2937,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3075,7 +3008,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3105,7 +3037,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3174,7 +3105,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3210,7 +3140,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3246,7 +3175,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3279,7 +3207,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3315,7 +3242,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3393,7 +3319,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3426,7 +3351,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3504,7 +3428,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3540,7 +3463,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3618,7 +3540,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3687,7 +3608,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3720,7 +3640,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3771,7 +3690,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3822,7 +3740,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3888,7 +3805,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -3948,7 +3864,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4002,7 +3917,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4080,7 +3994,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4149,7 +4062,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4227,7 +4139,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4293,7 +4204,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4371,7 +4281,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4401,7 +4310,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4458,7 +4366,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4536,7 +4443,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4593,7 +4499,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4626,7 +4531,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4656,7 +4560,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4725,7 +4628,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4758,7 +4660,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4827,7 +4728,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4896,7 +4796,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -4965,7 +4864,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5022,7 +4920,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5100,7 +4997,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5154,7 +5050,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5217,7 +5112,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5247,7 +5141,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5316,7 +5209,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5367,7 +5259,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5403,7 +5294,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5448,7 +5338,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5505,7 +5394,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5538,7 +5426,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5568,7 +5455,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5604,7 +5490,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5673,7 +5558,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5742,7 +5626,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5787,7 +5670,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5832,7 +5714,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5877,7 +5758,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5922,7 +5802,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -5967,7 +5846,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6012,7 +5890,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6057,7 +5934,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6102,7 +5978,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6180,7 +6055,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6258,7 +6132,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6315,7 +6188,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6393,7 +6265,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6423,7 +6294,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6471,7 +6341,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6513,7 +6382,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6591,7 +6459,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6669,7 +6536,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6702,7 +6568,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6735,7 +6600,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6783,7 +6647,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6849,7 +6712,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6903,7 +6765,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6939,7 +6800,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -6972,7 +6832,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7014,7 +6873,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7050,7 +6908,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7125,7 +6982,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7167,7 +7023,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7245,7 +7100,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7323,7 +7177,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7401,7 +7254,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7473,7 +7325,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7530,7 +7381,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7572,7 +7422,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7614,7 +7463,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7671,7 +7519,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7728,7 +7575,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7806,7 +7652,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7884,7 +7729,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7944,7 +7788,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -7992,7 +7835,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8037,7 +7879,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8082,7 +7923,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8127,7 +7967,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8172,7 +8011,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8211,7 +8049,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8241,7 +8078,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8319,7 +8155,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8397,7 +8232,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8454,7 +8288,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8532,7 +8365,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8598,7 +8430,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8667,7 +8498,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8697,7 +8527,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8754,7 +8583,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8787,7 +8615,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8850,7 +8677,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8880,7 +8706,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8910,7 +8735,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -8982,7 +8806,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9060,7 +8883,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9090,7 +8912,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9120,7 +8941,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9150,7 +8970,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9228,7 +9047,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9300,7 +9118,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9342,7 +9159,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9420,7 +9236,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9498,7 +9313,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9543,7 +9357,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9585,7 +9398,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9615,7 +9427,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9678,7 +9489,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9732,7 +9542,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9810,7 +9619,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9867,7 +9675,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -9945,7 +9752,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10011,7 +9817,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10080,7 +9885,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10116,7 +9920,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10149,7 +9952,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10227,7 +10029,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10263,7 +10064,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10302,7 +10102,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10353,7 +10152,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10383,7 +10181,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10413,7 +10210,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10443,7 +10239,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10473,7 +10268,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10503,7 +10297,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10533,7 +10326,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10563,7 +10355,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10593,7 +10384,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10623,7 +10413,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10653,7 +10442,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10683,7 +10471,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10713,7 +10500,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10743,7 +10529,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10773,7 +10558,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10803,7 +10587,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10833,7 +10616,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10863,7 +10645,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10893,7 +10674,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -10962,7 +10742,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11016,7 +10795,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11055,7 +10833,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11094,7 +10871,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11124,7 +10900,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11154,7 +10929,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11232,7 +11006,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11304,7 +11077,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11376,7 +11148,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11421,7 +11192,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11463,7 +11233,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11541,7 +11310,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11610,7 +11378,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11661,7 +11428,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11697,7 +11463,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11742,7 +11507,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11811,7 +11575,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11844,7 +11607,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11874,7 +11636,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -11943,7 +11704,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12021,7 +11781,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12093,7 +11852,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12165,7 +11923,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12237,7 +11994,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12309,7 +12065,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12354,7 +12109,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12396,7 +12150,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12441,7 +12194,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12483,7 +12235,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12528,7 +12279,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12573,7 +12323,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12618,7 +12367,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12663,7 +12411,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12729,7 +12476,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12795,7 +12541,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12864,7 +12609,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12933,7 +12677,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12963,7 +12706,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -12993,7 +12735,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13023,7 +12764,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13053,7 +12793,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13083,7 +12822,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13113,7 +12851,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13143,7 +12880,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13173,7 +12909,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13203,7 +12938,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13233,7 +12967,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13263,7 +12996,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13293,7 +13025,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13323,7 +13054,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13353,7 +13083,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13383,7 +13112,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13413,7 +13141,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13443,7 +13170,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13512,7 +13238,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13581,7 +13306,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13611,7 +13335,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13689,7 +13412,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13767,7 +13489,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13797,7 +13518,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13827,7 +13547,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13896,7 +13615,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -13953,7 +13671,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14010,7 +13727,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14088,7 +13804,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14166,7 +13881,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14196,7 +13910,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14244,7 +13957,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14283,7 +13995,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14313,7 +14024,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14364,7 +14074,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14442,7 +14151,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14511,7 +14219,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14547,7 +14254,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14580,7 +14286,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14616,7 +14321,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14667,7 +14371,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14703,7 +14406,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14739,7 +14441,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14772,7 +14473,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14802,7 +14502,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14835,7 +14534,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14889,7 +14587,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14922,7 +14619,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -14955,7 +14651,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15024,7 +14719,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15060,7 +14754,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15108,7 +14801,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15183,7 +14875,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15243,7 +14934,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15309,7 +14999,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15378,7 +15067,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15411,7 +15099,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15447,7 +15134,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15525,7 +15211,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15594,7 +15279,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15669,7 +15353,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15717,7 +15400,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15783,7 +15465,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15831,7 +15512,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15909,7 +15589,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -15987,7 +15666,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16029,7 +15707,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16101,7 +15778,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16179,7 +15855,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16257,7 +15932,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16311,7 +15985,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16365,7 +16038,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16428,7 +16100,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16491,7 +16162,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16563,7 +16233,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16635,7 +16304,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16713,7 +16381,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16791,7 +16458,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16836,7 +16502,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16890,7 +16555,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -16968,7 +16632,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17004,7 +16667,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17040,7 +16702,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17076,7 +16737,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17112,7 +16772,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17148,7 +16807,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17184,7 +16842,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17220,7 +16877,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17256,7 +16912,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17292,7 +16947,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17370,7 +17024,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17412,7 +17065,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17448,7 +17100,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17490,7 +17141,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17520,7 +17170,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17559,7 +17208,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17601,7 +17249,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17676,7 +17323,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17730,7 +17376,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17766,7 +17411,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17796,7 +17440,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17832,7 +17475,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17868,7 +17510,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17904,7 +17545,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17940,7 +17580,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -17976,7 +17615,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18012,7 +17650,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18066,7 +17703,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18102,7 +17738,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18138,7 +17773,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18192,7 +17826,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18246,7 +17879,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18282,7 +17914,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18318,7 +17949,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18354,7 +17984,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18390,7 +18019,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18426,7 +18054,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18480,7 +18107,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18510,7 +18136,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18540,7 +18165,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18597,7 +18221,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18654,7 +18277,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18732,7 +18354,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18810,7 +18431,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18870,7 +18490,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -18948,7 +18567,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19026,7 +18644,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19104,7 +18721,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19182,7 +18798,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19260,7 +18875,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19293,7 +18907,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19356,7 +18969,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19386,7 +18998,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19464,7 +19075,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19527,7 +19137,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19557,7 +19166,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19587,7 +19195,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19617,7 +19224,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19647,7 +19253,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19677,7 +19282,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19707,7 +19311,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19737,7 +19340,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19767,7 +19369,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19797,7 +19398,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19827,7 +19427,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19857,7 +19456,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19887,7 +19485,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19917,7 +19514,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19947,7 +19543,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -19977,7 +19572,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20007,7 +19601,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20037,7 +19630,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20067,7 +19659,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20084,10 +19675,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1053114602)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("date")) {
-            System.out.println(tyName + " == " + "date");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("date"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -20097,7 +19688,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20127,7 +19717,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20157,7 +19746,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20187,7 +19775,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20217,7 +19804,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20247,7 +19833,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20277,7 +19862,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20307,7 +19891,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20337,7 +19920,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20367,7 +19949,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20397,7 +19978,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20427,7 +20007,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20457,7 +20036,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20487,7 +20065,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20517,7 +20094,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20547,7 +20123,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20577,7 +20152,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20646,7 +20220,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20676,7 +20249,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20706,7 +20278,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20736,7 +20307,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20814,7 +20384,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20892,7 +20461,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -20970,7 +20538,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21048,7 +20615,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21078,7 +20644,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21156,7 +20721,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21234,7 +20798,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21312,7 +20875,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21390,7 +20952,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21420,7 +20981,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21450,7 +21010,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21480,7 +21039,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21510,7 +21068,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21540,7 +21097,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21570,7 +21126,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21600,7 +21155,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21630,7 +21184,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21660,7 +21213,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21690,7 +21242,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21720,7 +21271,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21750,7 +21300,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21780,7 +21329,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21810,7 +21358,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21840,7 +21387,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21870,7 +21416,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21900,7 +21445,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -21930,7 +21474,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22008,7 +21551,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22077,7 +21619,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22107,7 +21648,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22155,7 +21695,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22218,7 +21757,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22281,7 +21819,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22311,7 +21848,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22341,7 +21877,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22371,7 +21906,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22401,7 +21935,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22431,7 +21964,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22461,7 +21993,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22491,7 +22022,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22521,7 +22051,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22551,7 +22080,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22581,7 +22109,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22611,7 +22138,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22641,7 +22167,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22671,7 +22196,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22701,7 +22225,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22731,7 +22254,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22761,7 +22283,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22791,7 +22312,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22821,7 +22341,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22851,7 +22370,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22881,7 +22399,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22911,7 +22428,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22941,7 +22457,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -22971,7 +22486,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23001,7 +22515,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23079,7 +22592,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23148,7 +22660,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23226,7 +22737,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23304,7 +22814,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23373,7 +22882,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23442,7 +22950,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23511,7 +23018,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23562,7 +23068,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23598,7 +23103,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23667,7 +23171,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23736,7 +23239,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23793,7 +23295,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23850,7 +23351,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23883,7 +23383,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23916,7 +23415,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -23973,7 +23471,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24006,7 +23503,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24084,7 +23580,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24101,10 +23596,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3057229987)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("long")) {
-            System.out.println(tyName + " == " + "long");
+        if (!tyName.equals("null")) {
+            System.out.println(tyName + " == " + "null");
         }
-        assertTrue("failed type check", tyName.equals("long"));
+        assertTrue("failed type check", tyName.equals("null"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -24114,7 +23609,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24144,7 +23638,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24174,7 +23667,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24204,7 +23696,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24234,7 +23725,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24264,7 +23754,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24294,7 +23783,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24324,7 +23812,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24354,7 +23841,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24384,7 +23870,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24414,7 +23899,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24444,7 +23928,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24474,7 +23957,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24504,7 +23986,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24534,7 +24015,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24564,7 +24044,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24594,7 +24073,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24672,7 +24150,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24750,7 +24227,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24828,7 +24304,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24903,7 +24378,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -24972,7 +24446,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25029,7 +24502,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25086,7 +24558,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25164,7 +24635,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25242,7 +24712,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25320,7 +24789,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25377,7 +24845,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25455,7 +24922,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25506,7 +24972,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25551,7 +25016,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25629,7 +25093,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25707,7 +25170,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25776,7 +25238,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25845,7 +25306,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25890,7 +25350,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -25959,7 +25418,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26019,7 +25477,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26052,7 +25509,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26082,7 +25538,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26112,7 +25567,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26142,7 +25596,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26172,7 +25625,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26205,7 +25657,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26238,7 +25689,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26268,7 +25718,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26331,7 +25780,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26394,7 +25842,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26457,7 +25904,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26520,7 +25966,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26550,7 +25995,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26580,7 +26024,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26610,7 +26053,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26640,7 +26082,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26697,7 +26138,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26754,7 +26194,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26787,7 +26226,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26820,7 +26258,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26874,7 +26311,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26913,7 +26349,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -26952,7 +26387,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27006,7 +26440,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27060,7 +26493,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27111,7 +26543,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27156,7 +26587,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27186,7 +26616,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27216,7 +26645,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27246,7 +26674,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27276,7 +26703,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27306,7 +26732,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27336,7 +26761,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27366,7 +26790,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27396,7 +26819,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27426,7 +26848,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27456,7 +26877,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27486,7 +26906,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27516,7 +26935,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27546,7 +26964,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27576,7 +26993,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27606,7 +27022,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27636,7 +27051,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27666,7 +27080,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27729,7 +27142,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27792,7 +27204,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27822,7 +27233,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27852,7 +27262,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27930,7 +27339,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27960,7 +27368,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -27990,7 +27397,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28020,7 +27426,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28059,7 +27464,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28101,7 +27505,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28152,7 +27555,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28200,7 +27602,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28248,7 +27649,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28293,7 +27693,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28350,7 +27749,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28407,7 +27805,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28485,7 +27882,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28563,7 +27959,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28593,7 +27988,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28623,7 +28017,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28653,7 +28046,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28695,7 +28087,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28725,7 +28116,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28770,7 +28160,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28833,7 +28222,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28896,7 +28284,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28926,7 +28313,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -28956,7 +28342,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29022,7 +28407,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29088,7 +28472,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29142,7 +28525,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29208,7 +28590,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29265,7 +28646,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29322,7 +28702,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29400,7 +28779,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29478,7 +28856,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29517,7 +28894,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29562,7 +28938,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29619,7 +28994,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29649,7 +29023,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
@@ -29679,7 +29052,6 @@ public class TDVTTest {
         System.out.println(expected.toString());
         System.out.println(rsSet.toString());
         if (!compareResults(expected, rsSet)) {
-            System.out.println("Failed: " + rsSet.toString());
             // This will be false if both ArrayLists are the same
             assertTrue("failed result check", false);
         }
