@@ -106,19 +106,6 @@ public class TDVTTest {
                                         + resultVal);
                         return false;
                     }
-                } else if (resultVal instanceof Long) {
-                    if ((long) resultVal != (long) expectedVal) {
-                        System.out.println(
-                                "At position: "
-                                        + rowIdx
-                                        + ", "
-                                        + colIdx
-                                        + " expected value: "
-                                        + expectedVal
-                                        + " != "
-                                        + resultVal);
-                        return false;
-                    }
                 } else if (!resultVal.equals(expectedVal)) {
                     System.out.println(
                             "At position: "
