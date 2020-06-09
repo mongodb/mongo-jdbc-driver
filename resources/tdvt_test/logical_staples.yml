@@ -2258,7 +2258,7 @@ testcases:
       - [4275856.2]
     expected_error: ''
     expected_names: [sum_Calculation_555068687593533440_ok]
-    expected_types: [float]
+    expected_types: [decimal]
     id: '28'
     min_server_version: '3.4'
     sql: "SELECT SUM((`Staples`.`Price` / 1.1000000000000001)) AS `sum_Calculation_555068687593533440_ok`FROM `Staples` HAVING (COUNT(1) > 0) order by 1"
