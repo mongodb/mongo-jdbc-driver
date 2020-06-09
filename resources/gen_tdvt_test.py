@@ -40,8 +40,6 @@ public class TDVTTest {
         switch (rsmd.getColumnType(i)) {
             case Types.BIT:
                 return rs.getBoolean(i);
-            case Types.TIMESTAMP:
-                return rs.getDate(i);
             case Types.NULL:
                 return null;
             case Types.DOUBLE:
@@ -240,8 +238,10 @@ def make_test(fName, test):
         # We'll leave the printouts here until we are done fixing the failing tests in a future
         # ticket.
         print('        if (!compareResults(expected, rsSet)) {')
-        print('        // This will be false if both ArrayLists are the same')
-        print('        assertTrue("failed result check", false);')
+        print('            // This will be false if both ArrayLists are the same')
+        print('            System.out.println(expected.toString());')
+        print('            System.out.println(rsSet.toString());')
+        print('            assertTrue("failed result check", false);')
         print('        }')
     print("    }\n")
 

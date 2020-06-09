@@ -37,8 +37,6 @@ public class TDVTTest {
         switch (rsmd.getColumnType(i)) {
             case Types.BIT:
                 return rs.getBoolean(i);
-            case Types.TIMESTAMP:
-                return rs.getDate(i);
             case Types.NULL:
                 return null;
             case Types.DOUBLE:
@@ -182,6 +180,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -209,6 +209,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -236,6 +238,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -263,6 +267,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -290,6 +296,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -317,6 +325,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -344,6 +354,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -371,6 +383,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -398,6 +412,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -425,6 +441,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -452,6 +470,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -479,6 +499,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -506,6 +528,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -533,6 +557,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -560,6 +586,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -587,6 +615,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -614,6 +644,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -641,6 +673,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -707,6 +741,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -773,6 +809,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -795,59 +833,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:50:28");
+        expectedRow.add("2004-07-04T22:50:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:15:20");
+        expectedRow.add("2004-07-05T13:15:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:18:35");
+        expectedRow.add("2004-07-09T10:18:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:31:16");
+        expectedRow.add("2004-07-12T17:31:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:44:00");
+        expectedRow.add("2004-07-14T07:44:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:17:44");
+        expectedRow.add("2004-07-14T08:17:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:02:56");
+        expectedRow.add("2004-07-17T14:02:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:22:31");
+        expectedRow.add("2004-07-19T22:22:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:31:23");
+        expectedRow.add("2004-07-22T00:31:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:14:37");
+        expectedRow.add("2004-07-23T21:14:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:23:26");
+        expectedRow.add("2004-07-25T15:23:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:31:34");
+        expectedRow.add("2004-07-26T12:31:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:55:50");
+        expectedRow.add("2004-07-28T06:55:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:35:28");
+        expectedRow.add("2004-07-28T12:35:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:31:22");
+        expectedRow.add("2004-07-28T23:31:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:58:52");
+        expectedRow.add("2004-07-31T11:58:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 08:00:23");
+        expectedRow.add("2004-08-02T08:00:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -870,59 +910,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -945,59 +987,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1020,50 +1064,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1086,50 +1132,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1157,6 +1205,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1184,6 +1234,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1211,6 +1263,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1238,6 +1292,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1265,6 +1321,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1292,6 +1350,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1319,6 +1379,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1346,6 +1408,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1373,6 +1437,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1400,6 +1466,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1427,6 +1495,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1454,6 +1524,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1481,6 +1553,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1508,6 +1582,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1535,6 +1611,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1562,6 +1640,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1589,6 +1669,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1616,6 +1698,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1643,6 +1727,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1670,6 +1756,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1697,6 +1785,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1724,6 +1814,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1796,6 +1888,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1868,6 +1962,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -1934,6 +2030,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2000,6 +2098,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2022,59 +2122,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:28");
+        expectedRow.add("2004-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:20");
+        expectedRow.add("2004-07-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:35");
+        expectedRow.add("2004-07-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:16");
+        expectedRow.add("2004-07-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:44");
+        expectedRow.add("2004-07-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:56");
+        expectedRow.add("2004-07-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:31");
+        expectedRow.add("2004-07-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:23");
+        expectedRow.add("2004-07-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:37");
+        expectedRow.add("2004-07-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:26");
+        expectedRow.add("2004-07-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:34");
+        expectedRow.add("2004-07-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:50");
+        expectedRow.add("2004-07-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:28");
+        expectedRow.add("2004-07-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:22");
+        expectedRow.add("2004-07-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:52");
+        expectedRow.add("2004-07-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:23");
+        expectedRow.add("2004-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2097,59 +2199,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:28");
+        expectedRow.add("2004-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:20");
+        expectedRow.add("2004-07-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:35");
+        expectedRow.add("2004-07-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:16");
+        expectedRow.add("2004-07-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:44");
+        expectedRow.add("2004-07-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:56");
+        expectedRow.add("2004-07-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:31");
+        expectedRow.add("2004-07-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:23");
+        expectedRow.add("2004-07-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:37");
+        expectedRow.add("2004-07-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:26");
+        expectedRow.add("2004-07-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:34");
+        expectedRow.add("2004-07-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:50");
+        expectedRow.add("2004-07-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:28");
+        expectedRow.add("2004-07-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:22");
+        expectedRow.add("2004-07-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:52");
+        expectedRow.add("2004-07-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:23");
+        expectedRow.add("2004-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2204,6 +2308,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2267,6 +2373,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2321,6 +2429,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2343,59 +2453,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:28");
+        expectedRow.add("2004-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:20");
+        expectedRow.add("2004-07-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:35");
+        expectedRow.add("2004-07-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:16");
+        expectedRow.add("2004-07-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:44");
+        expectedRow.add("2004-07-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:56");
+        expectedRow.add("2004-07-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:31");
+        expectedRow.add("2004-07-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:23");
+        expectedRow.add("2004-07-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:37");
+        expectedRow.add("2004-07-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:26");
+        expectedRow.add("2004-07-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:34");
+        expectedRow.add("2004-07-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:50");
+        expectedRow.add("2004-07-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:28");
+        expectedRow.add("2004-07-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:22");
+        expectedRow.add("2004-07-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:52");
+        expectedRow.add("2004-07-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:23");
+        expectedRow.add("2004-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2438,6 +2550,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2480,6 +2594,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2507,6 +2623,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2534,6 +2652,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2556,59 +2676,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:00");
+        expectedRow.add("2004-07-04T22:49:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:00");
+        expectedRow.add("2004-07-05T13:14:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:00");
+        expectedRow.add("2004-07-09T10:17:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:00");
+        expectedRow.add("2004-07-12T17:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:00");
+        expectedRow.add("2004-07-14T08:16:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:00");
+        expectedRow.add("2004-07-17T14:01:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:00");
+        expectedRow.add("2004-07-19T22:21:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:00");
+        expectedRow.add("2004-07-22T00:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:00");
+        expectedRow.add("2004-07-23T21:13:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:00");
+        expectedRow.add("2004-07-25T15:22:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:00");
+        expectedRow.add("2004-07-26T12:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:00");
+        expectedRow.add("2004-07-28T06:54:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:00");
+        expectedRow.add("2004-07-28T12:34:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:00");
+        expectedRow.add("2004-07-28T23:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:00");
+        expectedRow.add("2004-07-31T11:57:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:00");
+        expectedRow.add("2004-08-02T07:59:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2645,6 +2767,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2681,6 +2805,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2708,6 +2834,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2735,6 +2863,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2804,6 +2934,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2873,6 +3005,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2900,6 +3034,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2966,6 +3102,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -2999,6 +3137,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3032,6 +3172,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3062,6 +3204,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3095,6 +3239,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3117,59 +3263,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:28");
+        expectedRow.add("2004-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:20");
+        expectedRow.add("2004-07-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:35");
+        expectedRow.add("2004-07-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:16");
+        expectedRow.add("2004-07-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:44");
+        expectedRow.add("2004-07-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:56");
+        expectedRow.add("2004-07-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:31");
+        expectedRow.add("2004-07-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:23");
+        expectedRow.add("2004-07-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:37");
+        expectedRow.add("2004-07-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:26");
+        expectedRow.add("2004-07-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:34");
+        expectedRow.add("2004-07-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:50");
+        expectedRow.add("2004-07-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:28");
+        expectedRow.add("2004-07-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:22");
+        expectedRow.add("2004-07-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:52");
+        expectedRow.add("2004-07-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:23");
+        expectedRow.add("2004-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3200,6 +3348,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3275,6 +3425,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3308,6 +3460,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3383,6 +3537,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3449,6 +3605,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3479,6 +3637,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3527,6 +3687,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3575,6 +3737,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3638,6 +3802,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3695,6 +3861,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3746,6 +3914,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3821,6 +3991,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3887,6 +4059,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -3962,6 +4136,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4025,6 +4201,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4047,59 +4225,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 22:49:28");
+        expectedRow.add("2004-07-05T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-06 13:14:20");
+        expectedRow.add("2004-07-06T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-10 10:17:35");
+        expectedRow.add("2004-07-10T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 17:30:16");
+        expectedRow.add("2004-07-13T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 07:43:00");
+        expectedRow.add("2004-07-15T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 08:16:44");
+        expectedRow.add("2004-07-15T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 14:01:56");
+        expectedRow.add("2004-07-18T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-20 22:21:31");
+        expectedRow.add("2004-07-20T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:30:23");
+        expectedRow.add("2004-07-23T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 21:13:37");
+        expectedRow.add("2004-07-24T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 15:22:26");
+        expectedRow.add("2004-07-26T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 12:30:34");
+        expectedRow.add("2004-07-27T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 06:54:50");
+        expectedRow.add("2004-07-29T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 12:34:28");
+        expectedRow.add("2004-07-29T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 23:30:22");
+        expectedRow.add("2004-07-29T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 11:57:52");
+        expectedRow.add("2004-08-01T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-03 07:59:23");
+        expectedRow.add("2004-08-03T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4122,11 +4302,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:28");
+        expectedRow.add("2004-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4181,6 +4363,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4256,6 +4440,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4310,6 +4496,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4340,6 +4528,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4367,6 +4557,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4433,6 +4625,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4463,6 +4657,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4529,6 +4725,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4595,6 +4793,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4661,6 +4861,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4715,6 +4917,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4790,6 +4994,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4841,6 +5047,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4901,6 +5109,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4928,6 +5138,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -4994,6 +5206,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5042,6 +5256,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5075,6 +5291,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5117,6 +5335,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5171,6 +5391,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5201,6 +5423,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5228,6 +5452,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5261,6 +5487,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5327,6 +5555,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5393,6 +5623,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5435,6 +5667,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5477,6 +5711,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5519,6 +5755,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5561,6 +5799,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5603,6 +5843,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5645,6 +5887,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5687,6 +5931,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5729,6 +5975,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5751,59 +5999,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:00:00");
+        expectedRow.add("2004-07-04T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:00:00");
+        expectedRow.add("2004-07-05T13:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:00:00");
+        expectedRow.add("2004-07-09T10:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:00:00");
+        expectedRow.add("2004-07-12T17:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:00:00");
+        expectedRow.add("2004-07-14T07:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:00:00");
+        expectedRow.add("2004-07-14T08:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:00:00");
+        expectedRow.add("2004-07-17T14:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:00:00");
+        expectedRow.add("2004-07-19T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:00:00");
+        expectedRow.add("2004-07-23T21:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:00:00");
+        expectedRow.add("2004-07-25T15:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:00:00");
+        expectedRow.add("2004-07-26T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:00:00");
+        expectedRow.add("2004-07-28T06:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:00:00");
+        expectedRow.add("2004-07-28T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:00:00");
+        expectedRow.add("2004-07-28T23:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:00:00");
+        expectedRow.add("2004-07-31T11:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:00:00");
+        expectedRow.add("2004-08-02T07:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5826,59 +6076,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:00:00");
+        expectedRow.add("2004-07-04T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:00:00");
+        expectedRow.add("2004-07-05T13:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:00:00");
+        expectedRow.add("2004-07-09T10:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:00:00");
+        expectedRow.add("2004-07-12T17:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:00:00");
+        expectedRow.add("2004-07-14T07:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:00:00");
+        expectedRow.add("2004-07-14T08:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:00:00");
+        expectedRow.add("2004-07-17T14:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:00:00");
+        expectedRow.add("2004-07-19T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:00:00");
+        expectedRow.add("2004-07-23T21:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:00:00");
+        expectedRow.add("2004-07-25T15:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:00:00");
+        expectedRow.add("2004-07-26T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:00:00");
+        expectedRow.add("2004-07-28T06:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:00:00");
+        expectedRow.add("2004-07-28T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:00:00");
+        expectedRow.add("2004-07-28T23:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:00:00");
+        expectedRow.add("2004-07-31T11:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:00:00");
+        expectedRow.add("2004-08-02T07:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -5933,6 +6185,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6008,6 +6262,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6035,6 +6291,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6080,6 +6338,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6119,6 +6379,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6141,59 +6403,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-01 00:00:00");
+        expectedRow.add("1974-03-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-01 00:00:00");
+        expectedRow.add("1974-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-01 00:00:00");
+        expectedRow.add("1976-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-01 00:00:00");
+        expectedRow.add("1977-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-01 00:00:00");
+        expectedRow.add("1980-11-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-01 00:00:00");
+        expectedRow.add("1995-06-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-01 00:00:00");
+        expectedRow.add("1995-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-01 00:00:00");
+        expectedRow.add("1997-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-01 00:00:00");
+        expectedRow.add("1997-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-01 00:00:00");
+        expectedRow.add("1998-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-01 00:00:00");
+        expectedRow.add("2001-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6216,59 +6480,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-01 00:00:00");
+        expectedRow.add("1974-03-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-01 00:00:00");
+        expectedRow.add("1974-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-01 00:00:00");
+        expectedRow.add("1976-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-01 00:00:00");
+        expectedRow.add("1977-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-01 00:00:00");
+        expectedRow.add("1980-11-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-01 00:00:00");
+        expectedRow.add("1995-06-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-01 00:00:00");
+        expectedRow.add("1995-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-01 00:00:00");
+        expectedRow.add("1997-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-01 00:00:00");
+        expectedRow.add("1997-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-01 00:00:00");
+        expectedRow.add("1998-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-01 00:00:00");
+        expectedRow.add("2001-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6291,14 +6557,16 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 00:00:00");
+        expectedRow.add("2004-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6321,14 +6589,16 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 00:00:00");
+        expectedRow.add("2004-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6374,6 +6644,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6437,6 +6709,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6488,6 +6762,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6521,6 +6797,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6551,6 +6829,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6590,6 +6870,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6623,6 +6905,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6695,6 +6979,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6734,6 +7020,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6809,6 +7097,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6884,6 +7174,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -6959,6 +7251,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7028,6 +7322,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7082,6 +7378,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7121,6 +7419,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7160,6 +7460,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7214,6 +7516,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7268,6 +7572,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7343,6 +7649,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7418,6 +7726,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7475,6 +7785,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7520,6 +7832,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7562,6 +7876,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7604,6 +7920,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7646,6 +7964,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7688,6 +8008,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7724,6 +8046,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7751,6 +8075,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7826,6 +8152,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7901,6 +8229,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -7955,6 +8285,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8030,6 +8362,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8093,6 +8427,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8159,6 +8495,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8186,6 +8524,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8240,6 +8580,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8270,6 +8612,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8330,6 +8674,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8357,6 +8703,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8384,6 +8732,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8453,6 +8803,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8475,59 +8827,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-01 00:00:00");
+        expectedRow.add("1974-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-07-01 00:00:00");
+        expectedRow.add("1976-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-10-01 00:00:00");
+        expectedRow.add("1980-10-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-04-01 00:00:00");
+        expectedRow.add("1995-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-07-01 00:00:00");
+        expectedRow.add("1995-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-04-01 00:00:00");
+        expectedRow.add("1997-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-07-01 00:00:00");
+        expectedRow.add("1997-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-07-01 00:00:00");
+        expectedRow.add("1998-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8550,11 +8904,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8582,6 +8938,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8609,6 +8967,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8631,59 +8991,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:00:00");
+        expectedRow.add("2004-07-04T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:00:00");
+        expectedRow.add("2004-07-05T13:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:00:00");
+        expectedRow.add("2004-07-09T10:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:00:00");
+        expectedRow.add("2004-07-12T17:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:00:00");
+        expectedRow.add("2004-07-14T07:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:00:00");
+        expectedRow.add("2004-07-14T08:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:00:00");
+        expectedRow.add("2004-07-17T14:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:00:00");
+        expectedRow.add("2004-07-19T22:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:00:00");
+        expectedRow.add("2004-07-23T21:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:00:00");
+        expectedRow.add("2004-07-25T15:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:00:00");
+        expectedRow.add("2004-07-26T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:00:00");
+        expectedRow.add("2004-07-28T06:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:00:00");
+        expectedRow.add("2004-07-28T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:00:00");
+        expectedRow.add("2004-07-28T23:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:00:00");
+        expectedRow.add("2004-07-31T11:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:00:00");
+        expectedRow.add("2004-08-02T07:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8753,6 +9115,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8792,6 +9156,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8814,59 +9180,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-10 00:00:00");
+        expectedRow.add("1972-07-10T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-11 00:00:00");
+        expectedRow.add("1974-03-11T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-29 00:00:00");
+        expectedRow.add("1974-04-29T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-06 00:00:00");
+        expectedRow.add("1976-09-06T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-07 00:00:00");
+        expectedRow.add("1977-02-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-18 00:00:00");
+        expectedRow.add("1977-04-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-21 00:00:00");
+        expectedRow.add("1980-07-21T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-03 00:00:00");
+        expectedRow.add("1980-11-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-04 00:00:00");
+        expectedRow.add("1988-01-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-18 00:00:00");
+        expectedRow.add("1994-04-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-05-29 00:00:00");
+        expectedRow.add("1995-05-29T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-08-28 00:00:00");
+        expectedRow.add("1995-08-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-26 00:00:00");
+        expectedRow.add("1997-05-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-15 00:00:00");
+        expectedRow.add("1997-09-15T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-10 00:00:00");
+        expectedRow.add("1998-08-10T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-29 00:00:00");
+        expectedRow.add("2001-01-29T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-22 00:00:00");
+        expectedRow.add("2002-04-22T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8889,59 +9257,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-09 00:00:00");
+        expectedRow.add("1972-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-28 00:00:00");
+        expectedRow.add("1974-04-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-05 00:00:00");
+        expectedRow.add("1976-09-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-06 00:00:00");
+        expectedRow.add("1977-02-06T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-17 00:00:00");
+        expectedRow.add("1977-04-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-20 00:00:00");
+        expectedRow.add("1980-07-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-02 00:00:00");
+        expectedRow.add("1980-11-02T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-03 00:00:00");
+        expectedRow.add("1988-01-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-17 00:00:00");
+        expectedRow.add("1994-04-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-25 00:00:00");
+        expectedRow.add("1997-05-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-14 00:00:00");
+        expectedRow.add("1997-09-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-09 00:00:00");
+        expectedRow.add("1998-08-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-21 00:00:00");
+        expectedRow.add("2002-04-21T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -8964,26 +9334,28 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(6);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-06-28 00:00:00");
+        expectedRow.add("2004-06-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9006,23 +9378,25 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-11 00:00:00");
+        expectedRow.add("2004-07-11T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 00:00:00");
+        expectedRow.add("2004-07-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 00:00:00");
+        expectedRow.add("2004-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9050,6 +9424,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9110,6 +9486,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9161,6 +9539,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9236,6 +9616,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9290,6 +9672,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9365,6 +9749,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9428,6 +9814,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9494,6 +9882,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9527,6 +9917,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9557,6 +9949,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9579,59 +9973,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 22:49:28");
+        expectedRow.add("2004-07-05T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-06 13:14:20");
+        expectedRow.add("2004-07-06T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-10 10:17:35");
+        expectedRow.add("2004-07-10T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 17:30:16");
+        expectedRow.add("2004-07-13T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 07:43:00");
+        expectedRow.add("2004-07-15T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 08:16:44");
+        expectedRow.add("2004-07-15T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 14:01:56");
+        expectedRow.add("2004-07-18T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-20 22:21:31");
+        expectedRow.add("2004-07-20T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:30:23");
+        expectedRow.add("2004-07-23T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 21:13:37");
+        expectedRow.add("2004-07-24T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 15:22:26");
+        expectedRow.add("2004-07-26T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 12:30:34");
+        expectedRow.add("2004-07-27T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 06:54:50");
+        expectedRow.add("2004-07-29T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 12:34:28");
+        expectedRow.add("2004-07-29T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 23:30:22");
+        expectedRow.add("2004-07-29T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 11:57:52");
+        expectedRow.add("2004-08-01T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-03 07:59:23");
+        expectedRow.add("2004-08-03T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9665,6 +10061,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9701,6 +10099,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9749,6 +10149,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9776,6 +10178,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9803,6 +10207,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9830,6 +10236,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9857,6 +10265,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9884,6 +10294,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9911,6 +10323,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9938,6 +10352,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9965,6 +10381,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -9992,6 +10410,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10019,6 +10439,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10046,6 +10468,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10073,6 +10497,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10100,6 +10526,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10127,6 +10555,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10154,6 +10584,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10181,6 +10613,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10208,6 +10642,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10235,6 +10671,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10301,6 +10739,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10352,6 +10792,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10388,6 +10830,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10424,6 +10868,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10451,6 +10897,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10478,6 +10926,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10500,59 +10950,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-04 22:49:28");
+        expectedRow.add("2004-10-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-05 13:14:20");
+        expectedRow.add("2004-10-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-09 10:17:35");
+        expectedRow.add("2004-10-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-12 17:30:16");
+        expectedRow.add("2004-10-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-14 07:43:00");
+        expectedRow.add("2004-10-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-14 08:16:44");
+        expectedRow.add("2004-10-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-17 14:01:56");
+        expectedRow.add("2004-10-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-19 22:21:31");
+        expectedRow.add("2004-10-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-22 00:30:23");
+        expectedRow.add("2004-10-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-23 21:13:37");
+        expectedRow.add("2004-10-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-25 15:22:26");
+        expectedRow.add("2004-10-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-26 12:30:34");
+        expectedRow.add("2004-10-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-28 06:54:50");
+        expectedRow.add("2004-10-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-28 12:34:28");
+        expectedRow.add("2004-10-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-28 23:30:22");
+        expectedRow.add("2004-10-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-10-31 11:57:52");
+        expectedRow.add("2004-10-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-11-02 07:59:23");
+        expectedRow.add("2004-11-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10622,6 +11074,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10691,6 +11145,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10733,6 +11189,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10772,6 +11230,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10847,6 +11307,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10913,6 +11375,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10961,6 +11425,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -10994,6 +11460,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11036,6 +11504,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11102,6 +11572,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11132,6 +11604,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11159,6 +11633,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11225,6 +11701,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11300,6 +11778,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11369,6 +11849,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11438,6 +11920,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11507,6 +11991,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11576,6 +12062,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11618,6 +12106,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11657,6 +12147,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11699,6 +12191,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11738,6 +12232,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11780,6 +12276,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11822,6 +12320,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11864,6 +12364,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11906,6 +12408,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -11969,6 +12473,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12032,6 +12538,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12098,6 +12606,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12164,6 +12674,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12191,6 +12703,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12218,6 +12732,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12245,6 +12761,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12272,6 +12790,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12299,6 +12819,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12326,6 +12848,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12353,6 +12877,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12380,6 +12906,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12407,6 +12935,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12434,6 +12964,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12461,6 +12993,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12488,6 +13022,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12515,6 +13051,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12542,6 +13080,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12569,6 +13109,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12596,6 +13138,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12623,6 +13167,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12689,6 +13235,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12755,6 +13303,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12782,6 +13332,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12804,59 +13356,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-01 00:00:00");
+        expectedRow.add("1974-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-07-01 00:00:00");
+        expectedRow.add("1976-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-10-01 00:00:00");
+        expectedRow.add("1980-10-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-04-01 00:00:00");
+        expectedRow.add("1995-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-07-01 00:00:00");
+        expectedRow.add("1995-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-04-01 00:00:00");
+        expectedRow.add("1997-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-07-01 00:00:00");
+        expectedRow.add("1997-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-07-01 00:00:00");
+        expectedRow.add("1998-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12879,59 +13433,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-01 00:00:00");
+        expectedRow.add("1974-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-07-01 00:00:00");
+        expectedRow.add("1976-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-10-01 00:00:00");
+        expectedRow.add("1980-10-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-04-01 00:00:00");
+        expectedRow.add("1995-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-07-01 00:00:00");
+        expectedRow.add("1995-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-04-01 00:00:00");
+        expectedRow.add("1997-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-07-01 00:00:00");
+        expectedRow.add("1997-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-07-01 00:00:00");
+        expectedRow.add("1998-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12954,11 +13510,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -12981,11 +13539,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13052,6 +13612,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13106,6 +13668,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13160,6 +13724,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13235,6 +13801,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13310,6 +13878,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13337,6 +13907,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13382,6 +13954,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13418,6 +13992,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13445,6 +14021,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13493,6 +14071,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13515,59 +14095,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13590,50 +14172,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13667,6 +14251,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13697,6 +14283,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13730,6 +14318,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13778,6 +14368,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13811,6 +14403,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13844,6 +14438,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13874,6 +14470,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13901,6 +14499,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13931,6 +14531,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -13982,6 +14584,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14012,6 +14616,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14042,6 +14648,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14108,6 +14716,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14141,6 +14751,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14186,6 +14798,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14258,6 +14872,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14315,6 +14931,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14378,6 +14996,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14444,6 +15064,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14474,6 +15096,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14507,6 +15131,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14582,6 +15208,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14648,6 +15276,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14720,6 +15350,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14765,6 +15397,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14828,6 +15462,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14873,6 +15509,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14948,6 +15586,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -14970,59 +15610,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-09 00:00:00");
+        expectedRow.add("1972-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-04-28 00:00:00");
+        expectedRow.add("1974-04-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-05 00:00:00");
+        expectedRow.add("1976-09-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-06 00:00:00");
+        expectedRow.add("1977-02-06T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-17 00:00:00");
+        expectedRow.add("1977-04-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-20 00:00:00");
+        expectedRow.add("1980-07-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-02 00:00:00");
+        expectedRow.add("1980-11-02T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-03 00:00:00");
+        expectedRow.add("1988-01-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-17 00:00:00");
+        expectedRow.add("1994-04-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-25 00:00:00");
+        expectedRow.add("1997-05-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-14 00:00:00");
+        expectedRow.add("1997-09-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-09 00:00:00");
+        expectedRow.add("1998-08-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-21 00:00:00");
+        expectedRow.add("2002-04-21T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15045,23 +15687,25 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-11 00:00:00");
+        expectedRow.add("2004-07-11T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 00:00:00");
+        expectedRow.add("2004-07-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 00:00:00");
+        expectedRow.add("2004-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15131,6 +15775,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15153,59 +15799,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:29");
+        expectedRow.add("2004-07-04T22:49:29.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:21");
+        expectedRow.add("2004-07-05T13:14:21.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:36");
+        expectedRow.add("2004-07-09T10:17:36.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:17");
+        expectedRow.add("2004-07-12T17:30:17.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:01");
+        expectedRow.add("2004-07-14T07:43:01.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:45");
+        expectedRow.add("2004-07-14T08:16:45.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:57");
+        expectedRow.add("2004-07-17T14:01:57.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:32");
+        expectedRow.add("2004-07-19T22:21:32.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:24");
+        expectedRow.add("2004-07-22T00:30:24.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:38");
+        expectedRow.add("2004-07-23T21:13:38.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:27");
+        expectedRow.add("2004-07-25T15:22:27.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:35");
+        expectedRow.add("2004-07-26T12:30:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:51");
+        expectedRow.add("2004-07-28T06:54:51.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:29");
+        expectedRow.add("2004-07-28T12:34:29.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:23");
+        expectedRow.add("2004-07-28T23:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:53");
+        expectedRow.add("2004-07-31T11:57:53.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:24");
+        expectedRow.add("2004-08-02T07:59:24.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15281,6 +15929,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15332,6 +15982,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15383,6 +16035,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15443,6 +16097,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15503,6 +16159,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15572,6 +16230,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15641,6 +16301,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15716,6 +16378,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15791,6 +16455,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15833,6 +16499,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15884,6 +16552,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15959,6 +16629,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -15992,6 +16664,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16025,6 +16699,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16058,6 +16734,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16091,6 +16769,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16124,6 +16804,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16157,6 +16839,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16190,6 +16874,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16223,6 +16909,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16256,6 +16944,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16331,6 +17021,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16356,20 +17048,22 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-06-23 03:36:00.000000");
+        expectedRow.add("1972-06-23T03:36:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1975-11-25 11:16:48.000000");
+        expectedRow.add("1975-11-25T11:16:48.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-06-10 01:12:00");
+        expectedRow.add("2004-06-10T01:12:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-06-10 16:19:12");
+        expectedRow.add("2004-06-10T16:19:12.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16403,6 +17097,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16428,20 +17124,22 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-14 20:23:59.999999");
+        expectedRow.add("1972-07-14T20:23:59.999Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1975-10-29 12:43:11.999999");
+        expectedRow.add("1975-10-29T12:43:11.999Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-05-28 22:48:00");
+        expectedRow.add("2004-05-28T22:48:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-06-27 07:40:48");
+        expectedRow.add("2004-06-27T07:40:48.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16469,6 +17167,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16505,6 +17205,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16544,6 +17246,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16616,6 +17320,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16667,6 +17373,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16700,6 +17408,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16727,6 +17437,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16760,6 +17472,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16793,6 +17507,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16826,6 +17542,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16859,6 +17577,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16892,6 +17612,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16925,6 +17647,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -16976,6 +17700,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17009,6 +17735,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17042,6 +17770,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17093,6 +17823,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17144,6 +17876,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17177,6 +17911,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17210,6 +17946,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17243,6 +17981,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17276,6 +18016,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17309,6 +18051,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17360,6 +18104,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17387,6 +18133,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17414,6 +18162,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17468,6 +18218,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17522,6 +18274,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17597,6 +18351,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17672,6 +18428,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17729,6 +18487,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17751,59 +18511,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17879,6 +18641,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -17954,6 +18718,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18029,6 +18795,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18051,59 +18819,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-01 00:00:00");
+        expectedRow.add("1972-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-01 00:00:00");
+        expectedRow.add("1974-03-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-01 00:00:00");
+        expectedRow.add("1974-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-01 00:00:00");
+        expectedRow.add("1976-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-01 00:00:00");
+        expectedRow.add("1977-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-01 00:00:00");
+        expectedRow.add("1977-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-01 00:00:00");
+        expectedRow.add("1980-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-01 00:00:00");
+        expectedRow.add("1980-11-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-01 00:00:00");
+        expectedRow.add("1994-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-01 00:00:00");
+        expectedRow.add("1995-06-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-01 00:00:00");
+        expectedRow.add("1995-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-01 00:00:00");
+        expectedRow.add("1997-05-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-01 00:00:00");
+        expectedRow.add("1997-09-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-01 00:00:00");
+        expectedRow.add("1998-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-01 00:00:00");
+        expectedRow.add("2001-02-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-01 00:00:00");
+        expectedRow.add("2002-04-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18126,14 +18896,16 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-01 00:00:00");
+        expectedRow.add("2004-07-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 00:00:00");
+        expectedRow.add("2004-08-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18156,44 +18928,46 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-01-01 00:00:00");
+        expectedRow.add("1972-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-01-01 00:00:00");
+        expectedRow.add("1976-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-01-01 00:00:00");
+        expectedRow.add("1980-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-01-01 00:00:00");
+        expectedRow.add("1994-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-01-01 00:00:00");
+        expectedRow.add("1995-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-01-01 00:00:00");
+        expectedRow.add("1997-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-01-01 00:00:00");
+        expectedRow.add("1998-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-01-01 00:00:00");
+        expectedRow.add("2002-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18216,11 +18990,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-01-01 00:00:00");
+        expectedRow.add("2004-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18243,59 +19019,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-04 22:49:28");
+        expectedRow.add("2005-07-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-05 13:14:20");
+        expectedRow.add("2005-07-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-09 10:17:35");
+        expectedRow.add("2005-07-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-12 17:30:16");
+        expectedRow.add("2005-07-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-14 07:43:00");
+        expectedRow.add("2005-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-14 08:16:44");
+        expectedRow.add("2005-07-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-17 14:01:56");
+        expectedRow.add("2005-07-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-19 22:21:31");
+        expectedRow.add("2005-07-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-22 00:30:23");
+        expectedRow.add("2005-07-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-23 21:13:37");
+        expectedRow.add("2005-07-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-25 15:22:26");
+        expectedRow.add("2005-07-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-26 12:30:34");
+        expectedRow.add("2005-07-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-28 06:54:50");
+        expectedRow.add("2005-07-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-28 12:34:28");
+        expectedRow.add("2005-07-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-28 23:30:22");
+        expectedRow.add("2005-07-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-07-31 11:57:52");
+        expectedRow.add("2005-07-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2005-08-02 07:59:23");
+        expectedRow.add("2005-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18356,6 +19134,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18383,6 +19163,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18410,6 +19192,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18437,6 +19221,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18464,6 +19250,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18491,6 +19279,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18518,6 +19308,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18545,6 +19337,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18572,6 +19366,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18599,6 +19395,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18626,6 +19424,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18653,6 +19453,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18680,6 +19482,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18707,6 +19511,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18734,6 +19540,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18761,6 +19569,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18788,6 +19598,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18815,6 +19627,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18842,6 +19656,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18869,6 +19685,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18896,6 +19714,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18923,6 +19743,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18950,6 +19772,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -18977,6 +19801,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19004,6 +19830,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19031,6 +19859,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19058,6 +19888,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19085,6 +19917,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19112,6 +19946,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19139,6 +19975,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19166,6 +20004,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19193,6 +20033,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19220,6 +20062,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19247,6 +20091,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19274,6 +20120,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19301,6 +20149,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19367,6 +20217,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19394,6 +20246,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19421,6 +20275,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19448,6 +20304,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19470,59 +20328,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-13 00:00:00");
+        expectedRow.add("1972-07-13T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-18 00:00:00");
+        expectedRow.add("1974-03-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-04 00:00:00");
+        expectedRow.add("1974-05-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-10 00:00:00");
+        expectedRow.add("1976-09-10T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-09 00:00:00");
+        expectedRow.add("1977-02-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-21 00:00:00");
+        expectedRow.add("1977-04-21T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-27 00:00:00");
+        expectedRow.add("1980-07-27T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-08 00:00:00");
+        expectedRow.add("1980-11-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-06 00:00:00");
+        expectedRow.add("1988-01-06T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-21 00:00:00");
+        expectedRow.add("1994-04-21T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-05 00:00:00");
+        expectedRow.add("1995-06-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-04 00:00:00");
+        expectedRow.add("1995-09-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-31 00:00:00");
+        expectedRow.add("1997-05-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-20 00:00:00");
+        expectedRow.add("1997-09-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-13 00:00:00");
+        expectedRow.add("1998-08-13T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-05 00:00:00");
+        expectedRow.add("2001-02-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-28 00:00:00");
+        expectedRow.add("2002-04-28T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19545,59 +20405,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-13 12:00:00");
+        expectedRow.add("1972-07-13T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-18 12:00:00");
+        expectedRow.add("1974-03-18T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-04 12:00:00");
+        expectedRow.add("1974-05-04T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-10 12:00:00");
+        expectedRow.add("1976-09-10T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-09 12:00:00");
+        expectedRow.add("1977-02-09T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-21 12:00:00");
+        expectedRow.add("1977-04-21T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-27 12:00:00");
+        expectedRow.add("1980-07-27T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-08 12:00:00");
+        expectedRow.add("1980-11-08T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-06 12:00:00");
+        expectedRow.add("1988-01-06T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-21 12:00:00");
+        expectedRow.add("1994-04-21T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-05 12:00:00");
+        expectedRow.add("1995-06-05T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-04 12:00:00");
+        expectedRow.add("1995-09-04T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-31 12:00:00");
+        expectedRow.add("1997-05-31T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-20 12:00:00");
+        expectedRow.add("1997-09-20T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-13 12:00:00");
+        expectedRow.add("1998-08-13T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-05 12:00:00");
+        expectedRow.add("2001-02-05T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-28 12:00:00");
+        expectedRow.add("2002-04-28T12:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19620,59 +20482,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-11 00:00:00");
+        expectedRow.add("1972-07-11T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-16 00:00:00");
+        expectedRow.add("1974-03-16T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-02 00:00:00");
+        expectedRow.add("1974-05-02T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-08 00:00:00");
+        expectedRow.add("1976-09-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-07 00:00:00");
+        expectedRow.add("1977-02-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-19 00:00:00");
+        expectedRow.add("1977-04-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-25 00:00:00");
+        expectedRow.add("1980-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-06 00:00:00");
+        expectedRow.add("1980-11-06T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-04 00:00:00");
+        expectedRow.add("1988-01-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-19 00:00:00");
+        expectedRow.add("1994-04-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-03 00:00:00");
+        expectedRow.add("1995-06-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-02 00:00:00");
+        expectedRow.add("1995-09-02T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-29 00:00:00");
+        expectedRow.add("1997-05-29T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-18 00:00:00");
+        expectedRow.add("1997-09-18T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-11 00:00:00");
+        expectedRow.add("1998-08-11T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-03 00:00:00");
+        expectedRow.add("2001-02-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-26 00:00:00");
+        expectedRow.add("2002-04-26T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19695,59 +20559,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-10 12:00:00");
+        expectedRow.add("1972-07-10T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-15 12:00:00");
+        expectedRow.add("1974-03-15T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-01 12:00:00");
+        expectedRow.add("1974-05-01T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-07 12:00:00");
+        expectedRow.add("1976-09-07T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-06 12:00:00");
+        expectedRow.add("1977-02-06T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-18 12:00:00");
+        expectedRow.add("1977-04-18T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-24 12:00:00");
+        expectedRow.add("1980-07-24T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-05 12:00:00");
+        expectedRow.add("1980-11-05T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-03 12:00:00");
+        expectedRow.add("1988-01-03T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-18 12:00:00");
+        expectedRow.add("1994-04-18T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-02 12:00:00");
+        expectedRow.add("1995-06-02T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-01 12:00:00");
+        expectedRow.add("1995-09-01T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-28 12:00:00");
+        expectedRow.add("1997-05-28T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-17 12:00:00");
+        expectedRow.add("1997-09-17T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-10 12:00:00");
+        expectedRow.add("1998-08-10T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-02 12:00:00");
+        expectedRow.add("2001-02-02T12:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-25 12:00:00");
+        expectedRow.add("2002-04-25T12:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19775,6 +20641,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19797,59 +20665,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-03 22:49:28");
+        expectedRow.add("2004-07-03T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 13:14:20");
+        expectedRow.add("2004-07-04T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-08 10:17:35");
+        expectedRow.add("2004-07-08T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-11 17:30:16");
+        expectedRow.add("2004-07-11T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 07:43:00");
+        expectedRow.add("2004-07-13T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 08:16:44");
+        expectedRow.add("2004-07-13T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-16 14:01:56");
+        expectedRow.add("2004-07-16T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 22:21:31");
+        expectedRow.add("2004-07-18T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-21 00:30:23");
+        expectedRow.add("2004-07-21T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 21:13:37");
+        expectedRow.add("2004-07-22T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 15:22:26");
+        expectedRow.add("2004-07-24T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 12:30:34");
+        expectedRow.add("2004-07-25T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 06:54:50");
+        expectedRow.add("2004-07-27T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 12:34:28");
+        expectedRow.add("2004-07-27T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 23:30:22");
+        expectedRow.add("2004-07-27T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-30 11:57:52");
+        expectedRow.add("2004-07-30T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 07:59:23");
+        expectedRow.add("2004-08-01T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19872,59 +20742,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 22:49:28");
+        expectedRow.add("2004-07-05T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-06 13:14:20");
+        expectedRow.add("2004-07-06T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-10 10:17:35");
+        expectedRow.add("2004-07-10T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 17:30:16");
+        expectedRow.add("2004-07-13T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 07:43:00");
+        expectedRow.add("2004-07-15T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 08:16:44");
+        expectedRow.add("2004-07-15T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 14:01:56");
+        expectedRow.add("2004-07-18T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-20 22:21:31");
+        expectedRow.add("2004-07-20T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:30:23");
+        expectedRow.add("2004-07-23T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 21:13:37");
+        expectedRow.add("2004-07-24T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 15:22:26");
+        expectedRow.add("2004-07-26T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 12:30:34");
+        expectedRow.add("2004-07-27T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 06:54:50");
+        expectedRow.add("2004-07-29T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 12:34:28");
+        expectedRow.add("2004-07-29T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 23:30:22");
+        expectedRow.add("2004-07-29T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 11:57:52");
+        expectedRow.add("2004-08-01T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-03 07:59:23");
+        expectedRow.add("2004-08-03T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -19947,59 +20819,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-03 10:49:28");
+        expectedRow.add("2004-07-03T10:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 01:14:20");
+        expectedRow.add("2004-07-04T01:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-07 22:17:35");
+        expectedRow.add("2004-07-07T22:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-11 05:30:16");
+        expectedRow.add("2004-07-11T05:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 19:43:00");
+        expectedRow.add("2004-07-12T19:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 20:16:44");
+        expectedRow.add("2004-07-12T20:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-16 02:01:56");
+        expectedRow.add("2004-07-16T02:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 10:21:31");
+        expectedRow.add("2004-07-18T10:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-20 12:30:23");
+        expectedRow.add("2004-07-20T12:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 09:13:37");
+        expectedRow.add("2004-07-22T09:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 03:22:26");
+        expectedRow.add("2004-07-24T03:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:30:34");
+        expectedRow.add("2004-07-25T00:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 18:54:50");
+        expectedRow.add("2004-07-26T18:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 00:34:28");
+        expectedRow.add("2004-07-27T00:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 11:30:22");
+        expectedRow.add("2004-07-27T11:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 23:57:52");
+        expectedRow.add("2004-07-29T23:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 19:59:23");
+        expectedRow.add("2004-07-31T19:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20022,59 +20896,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-06 10:49:28");
+        expectedRow.add("2004-07-06T10:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-07 01:14:20");
+        expectedRow.add("2004-07-07T01:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-10 22:17:35");
+        expectedRow.add("2004-07-10T22:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 05:30:16");
+        expectedRow.add("2004-07-14T05:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 19:43:00");
+        expectedRow.add("2004-07-15T19:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 20:16:44");
+        expectedRow.add("2004-07-15T20:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 02:01:56");
+        expectedRow.add("2004-07-19T02:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-21 10:21:31");
+        expectedRow.add("2004-07-21T10:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 12:30:23");
+        expectedRow.add("2004-07-23T12:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 09:13:37");
+        expectedRow.add("2004-07-25T09:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 03:22:26");
+        expectedRow.add("2004-07-27T03:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:30:34");
+        expectedRow.add("2004-07-28T00:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 18:54:50");
+        expectedRow.add("2004-07-29T18:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-30 00:34:28");
+        expectedRow.add("2004-07-30T00:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-30 11:30:22");
+        expectedRow.add("2004-07-30T11:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 23:57:52");
+        expectedRow.add("2004-08-01T23:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-03 19:59:23");
+        expectedRow.add("2004-08-03T19:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20102,6 +20978,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20129,6 +21007,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20156,6 +21036,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20183,6 +21065,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20210,6 +21094,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20237,6 +21123,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20264,6 +21152,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20291,6 +21181,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20318,6 +21210,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20345,6 +21239,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20372,6 +21268,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20399,6 +21297,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20426,6 +21326,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20453,6 +21355,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20480,6 +21384,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20507,6 +21413,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20534,6 +21442,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20561,6 +21471,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20583,59 +21495,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20658,50 +21572,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20729,6 +21645,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20774,6 +21692,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20796,44 +21716,46 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-01-01 00:00:00");
+        expectedRow.add("1972-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-01-01 00:00:00");
+        expectedRow.add("1976-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-01-01 00:00:00");
+        expectedRow.add("1980-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-01-01 00:00:00");
+        expectedRow.add("1994-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-01-01 00:00:00");
+        expectedRow.add("1995-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-01-01 00:00:00");
+        expectedRow.add("1997-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-01-01 00:00:00");
+        expectedRow.add("1998-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-01-01 00:00:00");
+        expectedRow.add("2002-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20856,44 +21778,46 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-01-01 00:00:00");
+        expectedRow.add("1972-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-01-01 00:00:00");
+        expectedRow.add("1974-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-01-01 00:00:00");
+        expectedRow.add("1976-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-01-01 00:00:00");
+        expectedRow.add("1977-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-01-01 00:00:00");
+        expectedRow.add("1980-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-01 00:00:00");
+        expectedRow.add("1988-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-01-01 00:00:00");
+        expectedRow.add("1994-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-01-01 00:00:00");
+        expectedRow.add("1995-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-01-01 00:00:00");
+        expectedRow.add("1997-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-01-01 00:00:00");
+        expectedRow.add("1998-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-01-01 00:00:00");
+        expectedRow.add("2001-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-01-01 00:00:00");
+        expectedRow.add("2002-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20916,11 +21840,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-01-01 00:00:00");
+        expectedRow.add("2004-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20943,11 +21869,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-01-01 00:00:00");
+        expectedRow.add("2004-01-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -20975,6 +21903,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21002,6 +21932,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21029,6 +21961,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21056,6 +21990,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21083,6 +22019,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21110,6 +22048,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21137,6 +22077,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21164,6 +22106,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21191,6 +22135,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21218,6 +22164,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21245,6 +22193,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21272,6 +22222,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21299,6 +22251,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21326,6 +22280,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21353,6 +22309,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21380,6 +22338,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21407,6 +22367,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21434,6 +22396,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21461,6 +22425,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21488,6 +22454,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21515,6 +22483,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21542,6 +22512,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21564,59 +22536,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21639,50 +22613,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21705,59 +22681,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21780,59 +22758,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21855,50 +22835,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -21921,50 +22903,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22031,6 +23015,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22079,6 +23065,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22112,6 +23100,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22178,6 +23168,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22244,6 +23236,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22298,6 +23292,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22352,6 +23348,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22382,6 +23380,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22412,6 +23412,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22466,6 +23468,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22496,6 +23500,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22518,59 +23524,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-04 22:49:28");
+        expectedRow.add("2004-08-04T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-05 13:14:20");
+        expectedRow.add("2004-08-05T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-09 10:17:35");
+        expectedRow.add("2004-08-09T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-12 17:30:16");
+        expectedRow.add("2004-08-12T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-14 07:43:00");
+        expectedRow.add("2004-08-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-14 08:16:44");
+        expectedRow.add("2004-08-14T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-17 14:01:56");
+        expectedRow.add("2004-08-17T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-19 22:21:31");
+        expectedRow.add("2004-08-19T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-22 00:30:23");
+        expectedRow.add("2004-08-22T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-23 21:13:37");
+        expectedRow.add("2004-08-23T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-25 15:22:26");
+        expectedRow.add("2004-08-25T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-26 12:30:34");
+        expectedRow.add("2004-08-26T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-28 06:54:50");
+        expectedRow.add("2004-08-28T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-28 12:34:28");
+        expectedRow.add("2004-08-28T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-28 23:30:22");
+        expectedRow.add("2004-08-28T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-31 11:57:52");
+        expectedRow.add("2004-08-31T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-09-02 07:59:23");
+        expectedRow.add("2004-09-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22598,6 +23606,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22625,6 +23635,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22652,6 +23664,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22679,6 +23693,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22706,6 +23722,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22733,6 +23751,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22760,6 +23780,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22787,6 +23809,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22814,6 +23838,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22841,6 +23867,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22868,6 +23896,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22895,6 +23925,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22922,6 +23954,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22949,6 +23983,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -22976,6 +24012,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23003,6 +24041,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23030,6 +24070,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23052,59 +24094,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:00");
+        expectedRow.add("2004-07-04T22:49:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:00");
+        expectedRow.add("2004-07-05T13:14:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:00");
+        expectedRow.add("2004-07-09T10:17:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:00");
+        expectedRow.add("2004-07-12T17:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:00");
+        expectedRow.add("2004-07-14T08:16:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:00");
+        expectedRow.add("2004-07-17T14:01:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:00");
+        expectedRow.add("2004-07-19T22:21:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:00");
+        expectedRow.add("2004-07-22T00:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:00");
+        expectedRow.add("2004-07-23T21:13:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:00");
+        expectedRow.add("2004-07-25T15:22:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:00");
+        expectedRow.add("2004-07-26T12:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:00");
+        expectedRow.add("2004-07-28T06:54:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:00");
+        expectedRow.add("2004-07-28T12:34:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:00");
+        expectedRow.add("2004-07-28T23:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:00");
+        expectedRow.add("2004-07-31T11:57:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:00");
+        expectedRow.add("2004-08-02T07:59:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23127,59 +24171,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 22:49:00");
+        expectedRow.add("2004-07-04T22:49:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 13:14:00");
+        expectedRow.add("2004-07-05T13:14:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 10:17:00");
+        expectedRow.add("2004-07-09T10:17:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 17:30:00");
+        expectedRow.add("2004-07-12T17:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 07:43:00");
+        expectedRow.add("2004-07-14T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:16:00");
+        expectedRow.add("2004-07-14T08:16:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 14:01:00");
+        expectedRow.add("2004-07-17T14:01:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 22:21:00");
+        expectedRow.add("2004-07-19T22:21:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:30:00");
+        expectedRow.add("2004-07-22T00:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 21:13:00");
+        expectedRow.add("2004-07-23T21:13:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 15:22:00");
+        expectedRow.add("2004-07-25T15:22:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 12:30:00");
+        expectedRow.add("2004-07-26T12:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 06:54:00");
+        expectedRow.add("2004-07-28T06:54:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 12:34:00");
+        expectedRow.add("2004-07-28T12:34:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 23:30:00");
+        expectedRow.add("2004-07-28T23:30:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 11:57:00");
+        expectedRow.add("2004-07-31T11:57:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:00");
+        expectedRow.add("2004-08-02T07:59:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23202,59 +24248,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-11 22:49:28");
+        expectedRow.add("2004-07-11T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 13:14:20");
+        expectedRow.add("2004-07-12T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-16 10:17:35");
+        expectedRow.add("2004-07-16T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 17:30:16");
+        expectedRow.add("2004-07-19T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-21 07:43:00");
+        expectedRow.add("2004-07-21T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-21 08:16:44");
+        expectedRow.add("2004-07-21T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 14:01:56");
+        expectedRow.add("2004-07-24T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 22:21:31");
+        expectedRow.add("2004-07-26T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 00:30:23");
+        expectedRow.add("2004-07-29T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-30 21:13:37");
+        expectedRow.add("2004-07-30T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 15:22:26");
+        expectedRow.add("2004-08-01T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 12:30:34");
+        expectedRow.add("2004-08-02T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-04 06:54:50");
+        expectedRow.add("2004-08-04T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-04 12:34:28");
+        expectedRow.add("2004-08-04T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-04 23:30:22");
+        expectedRow.add("2004-08-04T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-07 11:57:52");
+        expectedRow.add("2004-08-07T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-09 07:59:23");
+        expectedRow.add("2004-08-09T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23327,6 +24375,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23393,6 +24443,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23447,6 +24499,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23501,6 +24555,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23576,6 +24632,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23651,6 +24709,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23673,59 +24733,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 22:49:28");
+        expectedRow.add("2004-07-05T22:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-06 13:14:20");
+        expectedRow.add("2004-07-06T13:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-10 10:17:35");
+        expectedRow.add("2004-07-10T10:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-13 17:30:16");
+        expectedRow.add("2004-07-13T17:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 07:43:00");
+        expectedRow.add("2004-07-15T07:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-15 08:16:44");
+        expectedRow.add("2004-07-15T08:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-18 14:01:56");
+        expectedRow.add("2004-07-18T14:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-20 22:21:31");
+        expectedRow.add("2004-07-20T22:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:30:23");
+        expectedRow.add("2004-07-23T00:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-24 21:13:37");
+        expectedRow.add("2004-07-24T21:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 15:22:26");
+        expectedRow.add("2004-07-26T15:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-27 12:30:34");
+        expectedRow.add("2004-07-27T12:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 06:54:50");
+        expectedRow.add("2004-07-29T06:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 12:34:28");
+        expectedRow.add("2004-07-29T12:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 23:30:22");
+        expectedRow.add("2004-07-29T23:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-01 11:57:52");
+        expectedRow.add("2004-08-01T11:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-03 07:59:23");
+        expectedRow.add("2004-08-03T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23780,6 +24842,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23855,6 +24919,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23903,6 +24969,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23945,6 +25013,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -23967,59 +25037,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24042,59 +25114,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1972-07-12 00:00:00");
+        expectedRow.add("1972-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-03-17 00:00:00");
+        expectedRow.add("1974-03-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1974-05-03 00:00:00");
+        expectedRow.add("1974-05-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1976-09-09 00:00:00");
+        expectedRow.add("1976-09-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-02-08 00:00:00");
+        expectedRow.add("1977-02-08T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1977-04-20 00:00:00");
+        expectedRow.add("1977-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-07-26 00:00:00");
+        expectedRow.add("1980-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1980-11-07 00:00:00");
+        expectedRow.add("1980-11-07T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1988-01-05 00:00:00");
+        expectedRow.add("1988-01-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1994-04-20 00:00:00");
+        expectedRow.add("1994-04-20T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-06-04 00:00:00");
+        expectedRow.add("1995-06-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1995-09-03 00:00:00");
+        expectedRow.add("1995-09-03T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-05-30 00:00:00");
+        expectedRow.add("1997-05-30T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1997-09-19 00:00:00");
+        expectedRow.add("1997-09-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("1998-08-12 00:00:00");
+        expectedRow.add("1998-08-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2001-02-04 00:00:00");
+        expectedRow.add("2001-02-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2002-04-27 00:00:00");
+        expectedRow.add("2002-04-27T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24117,50 +25191,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24183,50 +25259,52 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 00:00:00");
+        expectedRow.add("2004-07-04T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 00:00:00");
+        expectedRow.add("2004-07-05T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 00:00:00");
+        expectedRow.add("2004-07-09T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 00:00:00");
+        expectedRow.add("2004-07-12T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 00:00:00");
+        expectedRow.add("2004-07-14T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 00:00:00");
+        expectedRow.add("2004-07-17T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 00:00:00");
+        expectedRow.add("2004-07-19T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 00:00:00");
+        expectedRow.add("2004-07-22T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 00:00:00");
+        expectedRow.add("2004-07-23T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 00:00:00");
+        expectedRow.add("2004-07-25T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 00:00:00");
+        expectedRow.add("2004-07-26T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 00:00:00");
+        expectedRow.add("2004-07-28T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 00:00:00");
+        expectedRow.add("2004-07-31T00:00:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 00:00:00");
+        expectedRow.add("2004-08-02T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24269,6 +25347,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24335,6 +25415,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24392,6 +25474,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24422,6 +25506,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24449,6 +25535,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24471,11 +25559,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2012-06-01 00:00:00");
+        expectedRow.add("2012-06-01T00:00:00.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24503,6 +25593,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24530,6 +25622,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24560,6 +25654,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24590,6 +25686,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24612,11 +25710,13 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 07:59:23");
+        expectedRow.add("2004-08-02T07:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24677,6 +25777,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24737,6 +25839,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24797,6 +25901,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24857,6 +25963,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24884,6 +25992,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24911,6 +26021,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24938,6 +26050,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -24965,6 +26079,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25019,6 +26135,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25073,6 +26191,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25103,6 +26223,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25133,6 +26255,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25184,6 +26308,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25220,6 +26346,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25256,6 +26384,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25307,6 +26437,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25358,6 +26490,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25406,6 +26540,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25448,6 +26584,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25475,6 +26613,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25502,6 +26642,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25529,6 +26671,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25556,6 +26700,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25583,6 +26729,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25610,6 +26758,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25637,6 +26787,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25664,6 +26816,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25691,6 +26845,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25718,6 +26874,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25745,6 +26903,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25772,6 +26932,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25799,6 +26961,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25826,6 +26990,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25853,6 +27019,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25880,6 +27048,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25907,6 +27077,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -25967,6 +27139,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26027,6 +27201,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26054,6 +27230,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26081,6 +27259,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26103,59 +27283,61 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-04 23:49:28");
+        expectedRow.add("2004-07-04T23:49:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-05 14:14:20");
+        expectedRow.add("2004-07-05T14:14:20.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-09 11:17:35");
+        expectedRow.add("2004-07-09T11:17:35.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-12 18:30:16");
+        expectedRow.add("2004-07-12T18:30:16.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 08:43:00");
+        expectedRow.add("2004-07-14T08:43:00.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-14 09:16:44");
+        expectedRow.add("2004-07-14T09:16:44.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-17 15:01:56");
+        expectedRow.add("2004-07-17T15:01:56.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-19 23:21:31");
+        expectedRow.add("2004-07-19T23:21:31.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-22 01:30:23");
+        expectedRow.add("2004-07-22T01:30:23.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-23 22:13:37");
+        expectedRow.add("2004-07-23T22:13:37.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-25 16:22:26");
+        expectedRow.add("2004-07-25T16:22:26.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-26 13:30:34");
+        expectedRow.add("2004-07-26T13:30:34.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 07:54:50");
+        expectedRow.add("2004-07-28T07:54:50.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-28 13:34:28");
+        expectedRow.add("2004-07-28T13:34:28.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-29 00:30:22");
+        expectedRow.add("2004-07-29T00:30:22.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-07-31 12:57:52");
+        expectedRow.add("2004-07-31T12:57:52.000Z");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("2004-08-02 08:59:23");
+        expectedRow.add("2004-08-02T08:59:23.000Z");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26183,6 +27365,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26210,6 +27394,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26237,6 +27423,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26273,6 +27461,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26312,6 +27502,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26360,6 +27552,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26405,6 +27599,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26450,6 +27646,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26492,6 +27690,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26546,6 +27746,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26600,6 +27802,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26675,6 +27879,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26750,6 +27956,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26777,6 +27985,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26804,6 +28014,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26831,6 +28043,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26870,6 +28084,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26897,6 +28113,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26939,6 +28157,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -26999,6 +28219,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27059,6 +28281,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27086,6 +28310,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27113,6 +28339,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27176,6 +28404,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27239,6 +28469,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27290,6 +28522,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27353,6 +28587,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27407,6 +28643,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27461,6 +28699,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27536,6 +28776,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27611,6 +28853,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27647,6 +28891,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27689,6 +28935,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27743,6 +28991,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27770,6 +29020,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
@@ -27797,6 +29049,8 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
             // This will be false if both ArrayLists are the same
+            System.out.println(expected.toString());
+            System.out.println(rsSet.toString());
             assertTrue("failed result check", false);
         }
     }
