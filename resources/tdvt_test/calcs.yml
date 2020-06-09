@@ -3279,7 +3279,7 @@ testcases:
       - ['2002-04-22T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1744581337)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '210'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - ((7 + DAYOFWEEK(`Calcs`.`date2`)\
       \ - 2) % 7) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1744581337)(0)`\nFROM `Calcs`\n\
@@ -3304,7 +3304,7 @@ testcases:
       - ['2002-04-21T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1635756518)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '211'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`)\
       \ - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1635756518)(0)`\nFROM `Calcs`\nGROUP\
@@ -3318,7 +3318,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1985269479)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '212'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - ((7 + DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 2) % 7) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1985269479)(0)`\nFROM `Calcs`\n\
@@ -3331,7 +3331,7 @@ testcases:
       - ['2004-08-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3887385220)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '213'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3887385220)(0)`\nFROM `Calcs`\nGROUP\
@@ -5969,7 +5969,7 @@ testcases:
       - ['2002-04-21T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1630131013)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '381'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`date2`) - (DAYOFWEEK(`Calcs`.`date2`)\
       \ - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1630131013)(0)`\nFROM `Calcs`\nGROUP\
@@ -5982,7 +5982,7 @@ testcases:
       - ['2004-08-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3937478358)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '382'
     sql: "\n      SELECT ADDDATE(FROM_DAYS( TO_DAYS(`Calcs`.`datetime0`) - (DAYOFWEEK(`Calcs`.`datetime0`)\
       \ - 1) ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3937478358)(0)`\nFROM `Calcs`\nGROUP\
@@ -6422,7 +6422,7 @@ testcases:
       - ['2004-06-10T16:19:12.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2923065813)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '408'
     sql: "SELECT DATE_SUB(DATE_SUB(`Calcs`.`date0`, INTERVAL FLOOR(`Calcs`.`num4`) DAY), INTERVAL 60 * 60 * 24 * (`Calcs`.`num4` - FLOOR(`Calcs`.`num4`)) SECOND) AS `TEMP(Test)(2923065813)(0)` FROM `Calcs` GROUP BY 1 order by 1"
   - expected_results:
