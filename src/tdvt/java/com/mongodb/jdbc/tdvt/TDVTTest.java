@@ -34,18 +34,23 @@ public class TDVTTest {
     }
 
     static Object getTestObject(int i, ResultSetMetaData rsmd, ResultSet rs) throws SQLException {
+        Object ret;
         switch (rsmd.getColumnType(i)) {
             case Types.BIT:
-                return rs.getBoolean(i);
+                ret = rs.getBoolean(i);
+                return rs.wasNull() ? null : ret;
             case Types.NULL:
                 return null;
             case Types.DOUBLE:
             case Types.DECIMAL:
-                return rs.getDouble(i);
+                ret = rs.getDouble(i);
+                return rs.wasNull() ? null : ret;
             case Types.INTEGER:
-                return rs.getLong(i);
+                ret = rs.getLong(i);
+                return rs.wasNull() ? null : ret;
             default:
-                return rs.getString(i);
+                ret = rs.getString(i);
+                return rs.wasNull() ? null : ret;
         }
     }
 
@@ -101,7 +106,7 @@ public class TDVTTest {
                                         + resultVal);
                         return false;
                     }
-                } else if (!resultVal.equals(expectedVal)) {
+                } else if (!expectedVal.equals(resultVal)) {
                     System.out.println(
                             "At position: "
                                     + rowIdx
@@ -21657,7 +21662,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "       select (case 	when isnull(`Calcs`.`int1`) then null 	when isnull(`Calcs`.`int2`) then null 	else least(`Calcs`.`int1`, `Calcs`.`int2`) end) as `temp(test)(1701645592)(0)` from `Calcs` group by 1      order by 1");
+                        "select (case when isnull(`Calcs`.`int1`) then null when isnull(`Calcs`.`int2`) then null else least(`Calcs`.`int1`, `Calcs`.`int2`) end) as `temp(test)(1701645592)(0)` from `Calcs`group by 1 order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
         assertEquals("temp(test)(1701645592)(0)", rsmd.getColumnLabel(1));
         String tyName;

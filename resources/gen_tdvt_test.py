@@ -37,18 +37,23 @@ public class TDVTTest {
     }
 
     static Object getTestObject(int i, ResultSetMetaData rsmd, ResultSet rs) throws SQLException {
+        Object ret;
         switch (rsmd.getColumnType(i)) {
             case Types.BIT:
-                return rs.getBoolean(i);
+                ret = rs.getBoolean(i);
+                return rs.wasNull()?null:ret;
             case Types.NULL:
                 return null;
             case Types.DOUBLE:
             case Types.DECIMAL:
-                return rs.getDouble(i);
+                ret = rs.getDouble(i);
+                return rs.wasNull()?null:ret;
             case Types.INTEGER:
-                return rs.getLong(i);
+                ret = rs.getLong(i);
+                return rs.wasNull()?null:ret;
             default:
-                return rs.getString(i);
+                ret = rs.getString(i);
+                return rs.wasNull()?null:ret;
         }
     }
 
@@ -104,7 +109,7 @@ public class TDVTTest {
                                         + resultVal);
                         return false;
                     }
-                } else if (!resultVal.equals(expectedVal)) {
+                } else if (!expectedVal.equals(resultVal)) {
                     System.out.println(
                             "At position: "
                                     + rowIdx

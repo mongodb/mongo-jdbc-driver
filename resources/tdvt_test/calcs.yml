@@ -8069,9 +8069,7 @@ testcases:
     expected_names: [TEMP(Test)(1701645592)(0)]
     expected_types: [int]
     id: '533'
-    sql: "\n      SELECT (CASE\n\tWHEN ISNULL(`Calcs`.`int1`) THEN NULL\n\tWHEN ISNULL(`Calcs`.`int2`)\
-      \ THEN NULL\n\tELSE LEAST(`Calcs`.`int1`, `Calcs`.`int2`) END) AS `TEMP(Test)(1701645592)(0)`\n\
-      FROM `Calcs`\nGROUP BY 1\n     order by 1"
+    sql: "SELECT (CASE WHEN ISNULL(`Calcs`.`int1`) THEN NULL WHEN ISNULL(`Calcs`.`int2`) THEN NULL ELSE LEAST(`Calcs`.`int1`, `Calcs`.`int2`) END) AS `TEMP(Test)(1701645592)(0)` FROM `Calcs`GROUP BY 1 order by 1"
   - expected_results:
       - ['1972-01-01T00:00:00.000Z']
       - ['1974-01-01T00:00:00.000Z']
