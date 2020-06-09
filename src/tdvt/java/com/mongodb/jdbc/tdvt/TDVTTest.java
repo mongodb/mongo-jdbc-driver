@@ -94,7 +94,7 @@ public class TDVTTest {
                         return false;
                     }
                 } else if (resultVal instanceof Double) {
-                    if (Math.abs((double) resultVal - (double) expectedVal) > 0.05) {
+                    if (Math.abs((double) resultVal - (double) expectedVal) > 0.005) {
                         System.out.println(
                                 "At position: "
                                         + rowIdx
