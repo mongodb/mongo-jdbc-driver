@@ -169,7 +169,7 @@ def clean_sql(sql):
     # Our column names in Staples are all Capitalized, so replace back to the capitalized form. The
     # queries were originally written for case insensitive MySQL.
     for key in [
- "Item Count" , "Ship Priority" , "Order Priority" , "Order Status" , "Order Quantity" , "Sales Total" , "Discount" , "Tax Rate" , "Ship Mode" , "Fill Time" , "Gross Profit" , "Price" , "Ship Handle Cost" , "Employee Name" , "Employee Dept" , "Manager Name" , "Employee Yrs Exp" , "Employee Salary" , "Customer Name" , "Customer State" , "Call Center Region" , "Customer Balance" , "Customer Segment" , "Prod Type1" , "Prod Type2" , "Prod Type3" , "Prod Type4" , "Product Name" , "Product Container" , "Ship Promo" , "Supplier Name" , "Supplier Balance" , "Supplier Region" , "Supplier State" , "Order ID" , "Order Year" , "Order Month" , "Order Day" , "Order Date" , "Order Quarter" , "Product Base Margin" , "Product ID" , "Receive Time" , "Received Date" , "Ship Date" , "Ship Charge" , "Total Cycle Time" , "Product In Stock" , "PID" , "Market Segment "    ]:
+ "Item Count" , "Ship Priority" , "Order Priority" , "Order Status" , "Order Quantity" , "Sales Total" , "Discount" , "Tax Rate" , "Ship Mode" , "Fill Time" , "Gross Profit" , "Price" , "Ship Handle Cost" , "Employee Name" , "Employee Dept" , "Manager Name" , "Employee Yrs Exp" , "Employee Salary" , "Customer Name" , "Customer State" , "Call Center Region" , "Customer Balance" , "Customer Segment" , "Prod Type1" , "Prod Type2" , "Prod Type3" , "Prod Type4" , "Product Name" , "Product Container" , "Ship Promo" , "Supplier Name" , "Supplier Balance" , "Supplier Region" , "Supplier State" , "Order ID" , "Order Year" , "Order Month" , "Order Day" , "Order Date" , "Order Quarter" , "Product Base Margin" , "Product ID" , "Receive Time" , "Received Date" , "Ship Date" , "Ship Charge" , "Total Cycle Time" , "Product In Stock" , "PID" , "Market Segment ", "LOCATE('E'"]:
         sql = sql.replace(key.lower(), key)
     # tdvt has a mode where bool columns end with _. We did not map the columns this way in ADL, so
     # we need to remove those underscores. E.g., we replace bool0_ with bool0.
@@ -190,11 +190,11 @@ def make_col_str(ty, col):
     if ty == 'string' or ty == 'date':
         return '"' + str(col) + '"'
     if ty == 'bool':
-        if col == '0':
+        if col == '0' or col == 0:
             return 'false'
         return 'true'
     if ty == 'long':
-        return str(long(col)) + 'l'
+        return str(int(col)) + 'l'
     if ty == 'double' or ty == 'decimal':
         return str(float(col)) + 'd'
 
@@ -223,9 +223,9 @@ def make_test(fName, test):
         print('        String tyName;')
         for i, ty in enumerate(test['expected_types']):
             print('        tyName = rsmd.getColumnTypeName(' + str(i+1) + ');')
-            print('if(!tyName.equals("' + types[ty] + '")) {')
-            print('    System.out.println(tyName + " == " + "' + types[ty] + '");')
-            print('}')
+            print('        if(!tyName.equals("' + types[ty] + '")) {')
+            print('            System.out.println(tyName + " == " + "' + types[ty] + '");')
+            print('        }')
             # For now, allow the tyName to be null. We will fix this soon when the results from ADL
             # contain the type.
             print('        assertTrue("failed type check", tyName.equals("' + types[ty] + '"));')

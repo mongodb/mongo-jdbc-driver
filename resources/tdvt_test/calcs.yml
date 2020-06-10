@@ -875,7 +875,7 @@ testcases:
     sql: "\n      SELECT SECOND(TIMESTAMP(`Calcs`.`datetime0`)) AS `TEMP(Test)(4279914489)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
   - expected_results:
-      - [DATA]
+      - [data]
     expected_error: ''
     expected_names: [TEMP(Test)(2967749075)(0)]
     expected_types: [varchar]
@@ -1544,7 +1544,7 @@ testcases:
     sql: "\n      SELECT MONTHNAME(`Calcs`.`datetime0`) AS `TEMP(Test)(2224240773)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
   - expected_results:
-      - [Data]
+      - [data]
     expected_error: ''
     expected_names: [TEMP(Test)(535453017)(0)]
     expected_types: [varchar]
@@ -3616,7 +3616,7 @@ testcases:
     sql: "\n      SELECT CONCAT(CONCAT('      ', `Calcs`.`str2`), '      ') AS `TEMP(Test)(2313738384)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
   - expected_results:
-      - [CONST]
+      - [const]
     expected_error: ''
     expected_names: [TEMP(Test)(3972932107)(0)]
     expected_types: [varchar]
@@ -5399,7 +5399,7 @@ testcases:
       \ > 3) THEN 'no' ELSE NULL END) AS `TEMP(Test)(2582407534)(0)`\nFROM `Calcs`\n\
       GROUP BY 1\n     order by 1"
   - expected_results:
-      - [I dont know]
+      - [i dont know]
       - ['no']
       - ['yes']
     expected_error: ''
@@ -6796,7 +6796,7 @@ testcases:
     sql: "\n      SELECT CONCAT(`Calcs`.`str2`, `Calcs`.`str3`) AS `TEMP(Test)(724155660)(0)`\n\
       FROM `Calcs`\nGROUP BY 1\n     order by 1"
   - expected_results:
-      - ['Pat O''Hanrahan & <Matthew Eldridge]''']
+      - ['pat o''hanrahan & <matthew eldridge]''']
     expected_error: ''
     expected_names: [TEMP(Test)(627207302)(0)]
     expected_types: [varchar]
