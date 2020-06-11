@@ -175,12 +175,12 @@ public class TDVTTest {
         expectedRow = new ArrayList<>(3);
         expectedRow.add(-13.47d);
         expectedRow.add(-14.0d);
-        expectedRow.add(0.53d);
+        expectedRow.add(0.5299999999999994d);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(3);
         expectedRow.add(10.85d);
         expectedRow.add(10.0d);
-        expectedRow.add(0.85d);
+        expectedRow.add(0.8499999999999996d);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -3034,7 +3034,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("DATA");
+        expectedRow.add("data");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -3134,7 +3134,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -3169,7 +3169,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -3201,7 +3201,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -3236,7 +3236,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -4557,7 +4557,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("Data");
+        expectedRow.add("data");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -5452,7 +5452,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -5484,7 +5484,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -6794,7 +6794,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -6826,7 +6826,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -6902,7 +6902,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -9899,7 +9899,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "       select (locate('e',`Calcs`.`str2`) > 0) as `temp(test)(1364536471)(0)` from `Calcs` group by 1      order by 1");
+                        "       select (LOCATE('E',`Calcs`.`str2`) > 0) as `temp(test)(1364536471)(0)` from `Calcs` group by 1      order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
         assertEquals("temp(test)(1364536471)(0)", rsmd.getColumnLabel(1));
         String tyName;
@@ -9914,7 +9914,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -9946,7 +9946,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -10178,7 +10178,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("CONST");
+        expectedRow.add("const");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -14432,7 +14432,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(3);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("I dont know");
+        expectedRow.add("i dont know");
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add("no");
@@ -14467,7 +14467,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -14613,7 +14613,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -14645,7 +14645,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -15093,7 +15093,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -15128,7 +15128,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16661,7 +16661,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16696,7 +16696,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16731,7 +16731,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16766,7 +16766,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16801,7 +16801,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16836,7 +16836,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16871,7 +16871,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16906,7 +16906,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -16941,7 +16941,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17094,7 +17094,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17405,7 +17405,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17469,7 +17469,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17504,7 +17504,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17539,7 +17539,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17574,7 +17574,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17609,7 +17609,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17644,7 +17644,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17732,7 +17732,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17767,7 +17767,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17908,7 +17908,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17943,7 +17943,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -17978,7 +17978,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -18013,7 +18013,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -18048,7 +18048,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -18133,7 +18133,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add("Pat O'Hanrahan & <Matthew Eldridge]'");
+        expectedRow.add("pat o'hanrahan & <matthew eldridge]'");
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21007,7 +21007,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21065,7 +21065,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21123,7 +21123,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21152,7 +21152,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21181,7 +21181,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21210,7 +21210,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21355,7 +21355,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21413,7 +21413,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -21471,7 +21471,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -25651,7 +25651,7 @@ public class TDVTTest {
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
         expectedRow.add(true);
@@ -25686,7 +25686,7 @@ public class TDVTTest {
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(true);
+        expectedRow.add(false);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -27519,7 +27519,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "       select locate('e',`Calcs`.`str1`) as `temp(test)(257220821)(0)` from `Calcs` group by 1      order by 1");
+                        "       select LOCATE('E',`Calcs`.`str1`) as `temp(test)(257220821)(0)` from `Calcs` group by 1      order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
         assertEquals("temp(test)(257220821)(0)", rsmd.getColumnLabel(1));
         String tyName;
@@ -27569,7 +27569,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "       select if(isnull(6), null, locate('e',`Calcs`.`str1`,greatest(1,floor(6)))) as `temp(test)(282093116)(0)` from `Calcs` group by 1      order by 1");
+                        "       select if(isnull(6), null, LOCATE('E',`Calcs`.`str1`,greatest(1,floor(6)))) as `temp(test)(282093116)(0)` from `Calcs` group by 1      order by 1");
         ResultSetMetaData rsmd = rs.getMetaData();
         assertEquals("temp(test)(282093116)(0)", rsmd.getColumnLabel(1));
         String tyName;
