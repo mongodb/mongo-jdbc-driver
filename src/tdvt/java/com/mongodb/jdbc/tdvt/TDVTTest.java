@@ -144,7 +144,7 @@ public class TDVTTest {
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery(
-                        "select num4, floor(Calcs.num4) as floor, Calcs.num4-floor(Calcs.num4) as diff from Calcs limit 3 order by 1");
+                        "select num4, floor(Calcs.num4) as floor, Calcs.num4-floor(Calcs.num4) as diff from Calcs order by 1 limit 3");
         ResultSetMetaData rsmd = rs.getMetaData();
         assertEquals("num4", rsmd.getColumnLabel(1));
         assertEquals("floor", rsmd.getColumnLabel(2));
@@ -175,12 +175,12 @@ public class TDVTTest {
         expectedRow = new ArrayList<>(3);
         expectedRow.add(-13.47d);
         expectedRow.add(-14.0d);
-        expectedRow.add(0.5299999999999994d);
+        expectedRow.add(0.53d);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(3);
         expectedRow.add(10.85d);
         expectedRow.add(10.0d);
-        expectedRow.add(0.8499999999999996d);
+        expectedRow.add(0.85d);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {

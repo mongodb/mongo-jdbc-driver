@@ -6,7 +6,7 @@ testcases:
     expected_names: [num4, floor, diff]
     expected_types: [float, float, float]
     id: 'BI_821_bug'
-    sql: 'select num4, floor(calcs.num4) as floor, calcs.num4-floor(calcs.num4) as diff from calcs limit 3 order by 1'
+    sql: 'select num4, floor(calcs.num4) as floor, calcs.num4-floor(calcs.num4) as diff from calcs order by 1 limit 3'
   - expected_results:
       - [null]
     expected_error: ''
