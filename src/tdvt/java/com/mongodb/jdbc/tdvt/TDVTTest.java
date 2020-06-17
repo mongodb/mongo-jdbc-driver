@@ -908,10 +908,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2526477208)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -985,10 +985,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2007354609)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1062,10 +1062,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3928745396)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -1130,10 +1130,10 @@ public class TDVTTest {
         assertEquals("temp(test)(746880020)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6401,10 +6401,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3415515666)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6478,10 +6478,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2048935536)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6555,10 +6555,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2714077903)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -6587,10 +6587,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1800100416)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -7273,56 +7273,56 @@ public class TDVTTest {
         assertEquals("temp(test)(3370976929)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(15);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(2.0d);
+        expectedRow.add(2l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(6.0d);
+        expectedRow.add(6l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(7.0d);
+        expectedRow.add(7l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(12.0d);
+        expectedRow.add(12l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(17.0d);
+        expectedRow.add(17l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(18.0d);
+        expectedRow.add(18l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(23.0d);
+        expectedRow.add(23l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(33.0d);
+        expectedRow.add(33l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(36.0d);
+        expectedRow.add(36l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(37.0d);
+        expectedRow.add(37l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(38.0d);
+        expectedRow.add(38l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -7344,41 +7344,41 @@ public class TDVTTest {
         assertEquals("temp(test)(2942029924)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(10);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
         expectedRow.add(null);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(3.0d);
+        expectedRow.add(3l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(6.0d);
+        expectedRow.add(6l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(10.0d);
+        expectedRow.add(10l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(12.0d);
+        expectedRow.add(12l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(14.0d);
+        expectedRow.add(14l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(20.0d);
+        expectedRow.add(20l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(34.0d);
+        expectedRow.add(34l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -7400,26 +7400,26 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -7441,26 +7441,26 @@ public class TDVTTest {
         assertEquals("temp(test)(3904538922)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -8825,10 +8825,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1126788499)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -8902,10 +8902,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3855281255)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -11800,56 +11800,56 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(15);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(2.0d);
+        expectedRow.add(2l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(5.0d);
+        expectedRow.add(5l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(7.0d);
+        expectedRow.add(7l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(11.0d);
+        expectedRow.add(11l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(17.0d);
+        expectedRow.add(17l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(18.0d);
+        expectedRow.add(18l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(23.0d);
+        expectedRow.add(23l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(33.0d);
+        expectedRow.add(33l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(36.0d);
+        expectedRow.add(36l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(37.0d);
+        expectedRow.add(37l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(38.0d);
+        expectedRow.add(38l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -11871,56 +11871,56 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(15);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(2.0d);
+        expectedRow.add(2l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(6.0d);
+        expectedRow.add(6l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(7.0d);
+        expectedRow.add(7l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(12.0d);
+        expectedRow.add(12l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(17.0d);
+        expectedRow.add(17l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(18.0d);
+        expectedRow.add(18l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(23.0d);
+        expectedRow.add(23l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(33.0d);
+        expectedRow.add(33l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(36.0d);
+        expectedRow.add(36l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(37.0d);
+        expectedRow.add(37l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(38.0d);
+        expectedRow.add(38l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -11942,56 +11942,56 @@ public class TDVTTest {
         assertEquals("temp(test)(3400925592)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(15);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(2.0d);
+        expectedRow.add(2l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(5.0d);
+        expectedRow.add(5l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(7.0d);
+        expectedRow.add(7l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(11.0d);
+        expectedRow.add(11l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(17.0d);
+        expectedRow.add(17l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(18.0d);
+        expectedRow.add(18l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(23.0d);
+        expectedRow.add(23l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(33.0d);
+        expectedRow.add(33l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(36.0d);
+        expectedRow.add(36l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(37.0d);
+        expectedRow.add(37l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(38.0d);
+        expectedRow.add(38l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -12013,56 +12013,56 @@ public class TDVTTest {
         assertEquals("temp(test)(1636919423)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(15);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(2.0d);
+        expectedRow.add(2l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(6.0d);
+        expectedRow.add(6l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(7.0d);
+        expectedRow.add(7l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(12.0d);
+        expectedRow.add(12l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(17.0d);
+        expectedRow.add(17l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(18.0d);
+        expectedRow.add(18l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(22.0d);
+        expectedRow.add(22l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(23.0d);
+        expectedRow.add(23l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(33.0d);
+        expectedRow.add(33l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(36.0d);
+        expectedRow.add(36l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(37.0d);
+        expectedRow.add(37l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(38.0d);
+        expectedRow.add(38l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(45.0d);
+        expectedRow.add(45l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -12084,29 +12084,29 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(6);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(27.0d);
+        expectedRow.add(27l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -12128,26 +12128,26 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -12169,29 +12169,29 @@ public class TDVTTest {
         assertEquals("temp(test)(3595934100)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(6);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(27.0d);
+        expectedRow.add(27l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -12213,26 +12213,26 @@ public class TDVTTest {
         assertEquals("temp(test)(4171408365)(1)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("double")) {
-            System.out.println(tyName + " == " + "double");
+        if (!tyName.equals("long")) {
+            System.out.println(tyName + " == " + "long");
         }
-        assertTrue("failed type check", tyName.equals("double"));
+        assertTrue("failed type check", tyName.equals("long"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(5);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(28.0d);
+        expectedRow.add(28l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(29.0d);
+        expectedRow.add(29l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(30.0d);
+        expectedRow.add(30l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(31.0d);
+        expectedRow.add(31l);
         expected.add(expectedRow);
         expectedRow = new ArrayList<>(1);
-        expectedRow.add(32.0d);
+        expectedRow.add(32l);
         expected.add(expectedRow);
         ArrayList<ArrayList<Object>> rsSet = buildResultSetSet(rs);
         if (!compareResults(expected, rsSet)) {
@@ -13354,10 +13354,10 @@ public class TDVTTest {
         assertEquals("temp(test)(4146692480)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13431,10 +13431,10 @@ public class TDVTTest {
         assertEquals("temp(test)(560528826)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13508,10 +13508,10 @@ public class TDVTTest {
         assertEquals("temp(test)(105511240)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -13537,10 +13537,10 @@ public class TDVTTest {
         assertEquals("temp(test)(755301458)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14093,10 +14093,10 @@ public class TDVTTest {
         assertEquals("temp(test)(591126205)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -14170,10 +14170,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3034828475)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18817,10 +18817,10 @@ public class TDVTTest {
         assertEquals("temp(test)(296025979)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18894,10 +18894,10 @@ public class TDVTTest {
         assertEquals("temp(test)(595744937)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(2);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18926,10 +18926,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3907469988)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -18988,10 +18988,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1153873435)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21493,10 +21493,10 @@ public class TDVTTest {
         assertEquals("temp(test)(402015915)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21570,10 +21570,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3033426574)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21714,10 +21714,10 @@ public class TDVTTest {
         assertEquals("temp(test)(433583207)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21776,10 +21776,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1289371916)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(12);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21838,10 +21838,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3917841362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -21867,10 +21867,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1921815362)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(1);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22534,10 +22534,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3715775174)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22611,10 +22611,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2815480624)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22679,10 +22679,10 @@ public class TDVTTest {
         assertEquals("temp(test)(3738830082)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22756,10 +22756,10 @@ public class TDVTTest {
         assertEquals("temp(test)(151653785)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22833,10 +22833,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1373895161)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -22901,10 +22901,10 @@ public class TDVTTest {
         assertEquals("temp(test)(543203842)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25035,10 +25035,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1942031084)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25112,10 +25112,10 @@ public class TDVTTest {
         assertEquals("temp(test)(308042462)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(17);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25189,10 +25189,10 @@ public class TDVTTest {
         assertEquals("temp(test)(1290354772)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);
@@ -25257,10 +25257,10 @@ public class TDVTTest {
         assertEquals("temp(test)(2022110629)(0)", rsmd.getColumnLabel(1));
         String tyName;
         tyName = rsmd.getColumnTypeName(1);
-        if (!tyName.equals("string")) {
-            System.out.println(tyName + " == " + "string");
+        if (!tyName.equals("date")) {
+            System.out.println(tyName + " == " + "date");
         }
-        assertTrue("failed type check", tyName.equals("string"));
+        assertTrue("failed type check", tyName.equals("date"));
         ArrayList<ArrayList<Object>> expected = new ArrayList<>(14);
         ArrayList<Object> expectedRow;
         expectedRow = new ArrayList<>(1);

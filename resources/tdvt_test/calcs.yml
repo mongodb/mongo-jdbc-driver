@@ -243,7 +243,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2526477208)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '20'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2526477208)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -268,7 +268,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2007354609)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '21'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2007354609)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -290,7 +290,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3928745396)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '22'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3928745396)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -312,7 +312,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(746880020)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '23'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(746880020)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -2256,7 +2256,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3415515666)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '148'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3415515666)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -2281,7 +2281,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2048935536)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '149'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2048935536)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -2291,7 +2291,7 @@ testcases:
       - ['2004-08-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2714077903)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '150'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2714077903)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -2301,7 +2301,7 @@ testcases:
       - ['2004-08-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1800100416)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '151'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1800100416)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -2672,7 +2672,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(3370976929)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '171'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3370976929)(0)`\nFROM `Calcs`\n\
@@ -2690,7 +2690,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(2942029924)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '172'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(DATE(`Calcs`.`date3`)) - 1 + DAYOFWEEK(DATE_FORMAT(DATE(`Calcs`.`date3`),\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(2942029924)(0)`\nFROM `Calcs`\n\
@@ -2703,7 +2703,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3904538922)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '173'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3904538922)(0)`\nFROM `Calcs`\n\
@@ -2716,7 +2716,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3904538922)(1)]
-    expected_types: [float]
+    expected_types: [long]
     id: '174'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(3904538922)(1)`\nFROM `Calcs`\n\
@@ -3168,7 +3168,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1126788499)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '203'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1),\
       \ '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1126788499)(0)`\nFROM `Calcs`\n\
@@ -3177,7 +3177,7 @@ testcases:
       - ['2004-07-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3855281255)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '204'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ),\
       \ (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND\
@@ -4339,7 +4339,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(3400925592)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '279'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`,\
       \ '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3400925592)(0)`\nFROM\
@@ -4362,7 +4362,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(1636919423)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '280'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1636919423)(0)`\nFROM `Calcs`\n\
@@ -4385,7 +4385,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(3400925592)(1)]
-    expected_types: [float]
+    expected_types: [long]
     id: '281'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`,\
       \ '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3400925592)(1)`\nFROM\
@@ -4408,7 +4408,7 @@ testcases:
       - [45]
     expected_error: ''
     expected_names: [TEMP(Test)(1636919423)(1)]
-    expected_types: [float]
+    expected_types: [long]
     id: '282'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`date2`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`date2`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(1636919423)(1)`\nFROM `Calcs`\n\
@@ -4422,7 +4422,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3595934100)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '283'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3595934100)(0)`\nFROM\
@@ -4435,7 +4435,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(4171408365)(0)]
-    expected_types: [float]
+    expected_types: [long]
     id: '284'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4171408365)(0)`\nFROM `Calcs`\n\
@@ -4449,7 +4449,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(3595934100)(1)]
-    expected_types: [float]
+    expected_types: [long]
     id: '285'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + ((7 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 2) % 7) ) / 7) AS `TEMP(Test)(3595934100)(1)`\nFROM\
@@ -4462,7 +4462,7 @@ testcases:
       - [32]
     expected_error: ''
     expected_names: [TEMP(Test)(4171408365)(1)]
-    expected_types: [float]
+    expected_types: [long]
     id: '286'
     sql: "\n      SELECT FLOOR((7 + DAYOFYEAR(`Calcs`.`datetime0`) - 1 + DAYOFWEEK(DATE_FORMAT(`Calcs`.`datetime0`,\
       \ '%Y-01-01 00:00:00')) - 1) / 7) AS `TEMP(Test)(4171408365)(1)`\nFROM `Calcs`\n\
@@ -4915,7 +4915,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(4146692480)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '318'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1),\
       \ '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(4146692480)(0)`\nFROM `Calcs`\n\
@@ -4940,7 +4940,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(560528826)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '319'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`date2`, '%Y-' ), (3*(QUARTER(`Calcs`.`date2`)-1)+1),\
       \ '-01 00:00:00' ), INTERVAL 0 SECOND ) AS `TEMP(Test)(560528826)(0)`\nFROM `Calcs`\n\
@@ -4949,7 +4949,7 @@ testcases:
       - ['2004-07-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(105511240)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '320'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ),\
       \ (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND\
@@ -4958,7 +4958,7 @@ testcases:
       - ['2004-07-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(755301458)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '321'
     sql: "\n      SELECT ADDDATE( CONCAT( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-' ),\
       \ (3*(QUARTER(`Calcs`.`datetime0`)-1)+1), '-01 00:00:00' ), INTERVAL 0 SECOND\
@@ -5309,7 +5309,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(591126205)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '342'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(591126205)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -5331,7 +5331,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3034828475)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '343'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3034828475)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -7143,7 +7143,7 @@ testcases:
       - ['2002-04-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(296025979)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '457'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(296025979)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -7153,7 +7153,7 @@ testcases:
       - ['2004-08-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(595744937)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '458'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(595744937)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -7173,7 +7173,7 @@ testcases:
       - ['2002-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3907469988)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '459'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3907469988)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -7182,7 +7182,7 @@ testcases:
       - ['2004-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1153873435)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '460'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1153873435)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8022,7 +8022,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(402015915)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '530'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(402015915)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8044,7 +8044,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3033426574)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '531'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3033426574)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8085,7 +8085,7 @@ testcases:
       - ['2002-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(433583207)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '534'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(433583207)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8105,7 +8105,7 @@ testcases:
       - ['2002-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1289371916)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '535'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1289371916)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8114,7 +8114,7 @@ testcases:
       - ['2004-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3917841362)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '536'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3917841362)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8123,7 +8123,7 @@ testcases:
       - ['2004-01-01T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1921815362)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '537'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-01-01 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1921815362)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8407,7 +8407,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3715775174)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '564'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3715775174)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8429,7 +8429,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2815480624)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '565'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2815480624)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8454,7 +8454,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(3738830082)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '566'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(3738830082)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8479,7 +8479,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(151653785)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '567'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(151653785)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8501,7 +8501,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1373895161)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '568'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1373895161)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -8523,7 +8523,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(543203842)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '569'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(543203842)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -9264,7 +9264,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1942031084)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '616'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1942031084)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -9289,7 +9289,7 @@ testcases:
       - ['2002-04-27T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(308042462)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '617'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`date2`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(308042462)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -9311,7 +9311,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(1290354772)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '618'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(1290354772)(0)`\nFROM `Calcs`\nGROUP BY\
@@ -9333,7 +9333,7 @@ testcases:
       - ['2004-08-02T00:00:00.000Z']
     expected_error: ''
     expected_names: [TEMP(Test)(2022110629)(0)]
-    expected_types: [varchar]
+    expected_types: [date]
     id: '619'
     sql: "\n      SELECT ADDDATE( DATE_FORMAT( `Calcs`.`datetime0`, '%Y-%m-%d 00:00:00'\
       \ ), INTERVAL 0 SECOND ) AS `TEMP(Test)(2022110629)(0)`\nFROM `Calcs`\nGROUP BY\
