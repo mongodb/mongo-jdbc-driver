@@ -48,6 +48,9 @@ public class MongoConnection implements Connection {
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
+		if (database == null || database.equals("")) {
+			this.currentDB = "test";
+		}
         mongoClient = MongoClients.create(cs);
         relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
