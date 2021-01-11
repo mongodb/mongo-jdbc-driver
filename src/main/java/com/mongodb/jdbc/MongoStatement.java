@@ -21,7 +21,7 @@ public class MongoStatement implements Statement {
     private boolean relaxed;
     private boolean isClosed = false;
     private boolean closeOnCompletion = false;
-    private int fetchSize = 10;
+    private int fetchSize = 0;
     private int maxQuerySec = 0;
     private String currentDBName;
     private final BsonInt32 formatVersion = new BsonInt32(1);
