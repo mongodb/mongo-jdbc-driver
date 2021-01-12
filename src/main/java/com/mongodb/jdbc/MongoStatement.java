@@ -3,6 +3,7 @@ package com.mongodb.jdbc;
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.MongoDatabase;
 import java.sql.*;
 import java.util.Collections;
@@ -60,14 +61,16 @@ public class MongoStatement implements Statement {
         sqlDoc.put("dialect", new BsonString("mysql"));
         stage.put("$sql", sqlDoc);
         try {
-            MongoCursor<MongoResultDoc> cursor =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), MongoResultDoc.class)
-                            .batchSize(fetchSize)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS)
-                            .cursor();
-            resultSet = new MongoResultSet(this, cursor, relaxed);
+			MongoIterable<MongoResultDoc> iterable =
+				currentDB
+						.withCodecRegistry(MongoDriver.registry)
+						.aggregate(Collections.singletonList(stage), MongoResultDoc.class)
+						.maxTime(maxQuerySec, TimeUnit.SECONDS);
+			if (fetchSize != 0) {
+				iterable = iterable.batchSize(fetchSize);
+			}
+
+            resultSet = new MongoResultSet(this, iterable.cursor(), relaxed);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
