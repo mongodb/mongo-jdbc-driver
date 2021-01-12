@@ -229,14 +229,24 @@ class MongoResultSetTest extends MongoMock {
         try {
             mongoStatement = new MongoStatement(mongoConnection, "test", true);
         } catch (SQLException e) {
-            e.printStackTrace();
+			throw new RuntimeException(e);
         }
+
+		// create result sets used by tests.
         strictMongoResultSet =
                 new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
         relaxedMongoResultSet =
                 new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
         closedMongoResultSet =
                 new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
+
+		// call next() so that each result set is on the pre-populated row.
+		try {
+			relaxedMongoResultSet.next();
+			strictMongoResultSet.next();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
     }
 
     @BeforeAll
@@ -252,9 +262,6 @@ class MongoResultSetTest extends MongoMock {
     @SuppressWarnings("deprecation")
     @Test
     void testStrictGetters() throws Exception {
-        boolean hasNext = strictMongoResultSet.next();
-        assertTrue(hasNext);
-
         // Test findColumn.
         assertEquals(NULL_COL_IDX, strictMongoResultSet.findColumn(NULL_COL_LABEL));
         assertEquals(DOUBLE_COL_IDX, strictMongoResultSet.findColumn(DOUBLE_COL_LABEL));
@@ -762,6 +769,66 @@ class MongoResultSetTest extends MongoMock {
         assertEquals(new Timestamp(100L), strictMongoResultSet.getTimestamp(DECIMAL_COL_LABEL));
     }
 
+	@Test
+	void testGetObject() throws Exception {
+		// test that the index and label versions of getObject have matching results
+        assertEquals(
+                strictMongoResultSet.getObject(NULL_COL_IDX),
+                strictMongoResultSet.getObject(NULL_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(DOUBLE_COL_IDX),
+                strictMongoResultSet.getObject(DOUBLE_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(STRING_COL_IDX),
+                strictMongoResultSet.getObject(STRING_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(OBJECTID_COL_IDX),
+                strictMongoResultSet.getObject(OBJECTID_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(BOOLEAN_COL_IDX),
+                strictMongoResultSet.getObject(BOOLEAN_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(DATE_COL_IDX),
+                strictMongoResultSet.getObject(DATE_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(INTEGER_COL_IDX),
+                strictMongoResultSet.getObject(INTEGER_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(LONG_COL_IDX),
+                strictMongoResultSet.getObject(LONG_COL_LABEL));
+        assertEquals(
+                strictMongoResultSet.getObject(DECIMAL_COL_IDX),
+                strictMongoResultSet.getObject(DECIMAL_COL_LABEL));
+
+		// test that getObject returns the expected java object for each bson type
+        assertNull(strictMongoResultSet.getObject(NULL_COL_LABEL));
+        assertEquals(
+				1.1,
+				strictMongoResultSet.getObject(DOUBLE_COL_LABEL));
+        assertEquals(
+				"string data",
+				strictMongoResultSet.getObject(STRING_COL_LABEL));
+        assertEquals(
+				"5e334e6e780812e4896dd65e",
+				strictMongoResultSet.getObject(OBJECTID_COL_LABEL));
+        assertEquals(
+				true,
+                strictMongoResultSet.getObject(BOOLEAN_COL_LABEL));
+        assertEquals(
+				new Date(-44364244526000L),
+                strictMongoResultSet.getObject(DATE_COL_LABEL));
+        assertEquals(
+				100,
+                strictMongoResultSet.getObject(INTEGER_COL_LABEL));
+        assertEquals(
+				100,
+                strictMongoResultSet.getObject(LONG_COL_LABEL));
+        assertEquals(
+				new BigDecimal(100),
+                strictMongoResultSet.getObject(DECIMAL_COL_LABEL));
+
+	}
+
     @SuppressWarnings("deprecation")
     @Test
     void closedResultSets() throws Exception {
@@ -1123,9 +1190,6 @@ class MongoResultSetTest extends MongoMock {
     @SuppressWarnings("deprecation")
     @Test
     void testRelaxedGetters() throws Exception {
-        boolean hasNext = relaxedMongoResultSet.next();
-        assertTrue(hasNext);
-
         // Test findColumn.
         assertEquals(NULL_COL_IDX, relaxedMongoResultSet.findColumn(NULL_COL_LABEL));
         assertEquals(DOUBLE_COL_IDX, relaxedMongoResultSet.findColumn(DOUBLE_COL_LABEL));

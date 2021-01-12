@@ -24,6 +24,7 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -813,14 +814,120 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+		checkBounds(columnIndex);
+		int zeroIndex = columnIndex - 1;
+		BsonValue out = current.getValues().get(zeroIndex).value;
+		int columnType = rsMetaData.getColumnType(columnIndex);
+		switch (columnType) {
+			case Types.ARRAY:
+				// not supported
+				break;
+			case Types.BIGINT:
+				return getInt(out);
+			case Types.BINARY:
+				// not supported
+				break;
+			case Types.BIT:
+				return getBoolean(out);
+			case Types.BLOB:
+				// not supported
+				break;
+			case Types.BOOLEAN:
+				return getBoolean(out);
+			case Types.CHAR:
+				// not supported
+				break;
+			case Types.CLOB:
+				// not supported
+				break;
+			case Types.DATALINK:
+				// not supported
+				break;
+			case Types.DATE:
+				// not supported
+				break;
+			case Types.DECIMAL:
+				return getBigDecimal(out);
+			case Types.DISTINCT:
+				// not supported
+				break;
+			case Types.DOUBLE:
+				return getDouble(out);
+			case Types.FLOAT:
+				return getFloat(out);
+			case Types.INTEGER:
+				return getInt(out);
+			case Types.JAVA_OBJECT:
+				// not supported
+				break;
+			case Types.LONGNVARCHAR:
+				return getString(out);
+			case Types.LONGVARBINARY:
+				// not supported
+				break;
+			case Types.LONGVARCHAR:
+				return getString(out);
+			case Types.NCHAR:
+				return getString(out);
+			case Types.NCLOB:
+				// not supported
+				break;
+			case Types.NULL:
+				return null;
+			case Types.NUMERIC:
+				return getDouble(out);
+			case Types.NVARCHAR:
+				return getString(out);
+			case Types.OTHER:
+				// not supported
+				break;
+			case Types.REAL:
+				// not supported
+				break;
+			case Types.REF:
+				// not supported
+				break;
+			case Types.REF_CURSOR:
+				// not supported
+				break;
+			case Types.ROWID:
+				// not supported
+				break;
+			case Types.SMALLINT:
+				return getInt(out);
+			case Types.SQLXML:
+				// not supported
+				break;
+			case Types.STRUCT:
+				// not supported
+				break;
+			case Types.TIME:
+				// not supported
+				break;
+			case Types.TIME_WITH_TIMEZONE:
+				// not supported
+				break;
+			case Types.TIMESTAMP:
+				return getTimestamp(out);
+			case Types.TIMESTAMP_WITH_TIMEZONE:
+				// not supported
+				break;
+			case Types.TINYINT:
+				return getInt(out);
+			case Types.VARBINARY:
+				// not supported
+				break;
+			case Types.VARCHAR:
+				return getString(out);
+		}
+		throw new SQLException("getObject not supported for column type " + columnType);
     }
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+		checkKey(columnLabel);
+		int zeroIndex = columnPositionCache.get(columnLabel);
+		return getObject(zeroIndex + 1);
     }
 
     // ----------------------------------------------------------------
