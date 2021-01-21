@@ -28,7 +28,6 @@ import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.TimeZone;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
@@ -62,19 +61,20 @@ public class MongoResultSet implements ResultSet {
     private final String SYMBOL = "symbol";
     private final String TIMESTAMP = "timestamp";
 
-    // Row count for the current cursor, always 0 for empty result set
+    // The one-indexed number of the current row. Will be zero until
+    // next() is called for the first time.
     private int rowNum = 0;
+
+    // The MongoResultDoc for the current row. Will be null until
+    // next() is called for the first time.
+    private MongoResultDoc current;
+
     private boolean closed = false;
     private Statement statement;
     private MongoCursor<MongoResultDoc> cursor;
-    // This contains the current row info. If next() is not yet called or it's an empty result set, the value remains null
-    private MongoResultDoc current;
-    private HashMap<String, Integer> columnPositionCache;
     private boolean wasNull = false;
     private boolean relaxed = true;
-    // This contains the first doc returned from mongoCursor, it could contain an empty result set or a valid row
-    private MongoResultDoc firstDoc;
-    private ResultSetMetaData rsMetaData;
+    private MongoResultSetMetaData rsMetaData;
 
     public MongoResultSet(
             Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
@@ -82,9 +82,14 @@ public class MongoResultSet implements ResultSet {
         this.statement = statement;
         this.cursor = cursor;
         this.relaxed = relaxed;
+
         // dateFormat is not thread safe, so we do not want to make it a static field.
         TimeZone UTC = TimeZone.getTimeZone("UTC");
         dateFormat.setTimeZone(UTC);
+
+        // iterate the cursor to get the metadata doc
+        MongoResultDoc metadataDoc = cursor.next();
+        rsMetaData = new MongoResultSetMetaData(metadataDoc);
     }
 
     // This is only used for testing, and that is why it has package level access, and the
@@ -93,36 +98,22 @@ public class MongoResultSet implements ResultSet {
         return current;
     }
 
-    private void checkClosed() throws SQLException {
-        if (closed) throw new SQLException("MongoResultSet is closed.");
+    private BsonValue getBsonValue(int columnIndex) throws SQLException {
+        checkBounds(columnIndex);
+        return current.values.get(columnIndex - 1);
     }
 
-    private void checkAndCacheFirstDocAndMetaData() {
-        if (firstDoc != null) {
-            return;
-        }
-        // The next() is guaranteed to return a doc for the first call, either for empty ResultSet or not
-        firstDoc = cursor.next();
-        rsMetaData = new MongoResultSetMetaData(firstDoc);
+    private BsonValue getBsonValue(String columnLabel) throws SQLException {
+        return getBsonValue(findColumn(columnLabel));
+    }
+
+    private void checkClosed() throws SQLException {
+        if (closed) throw new SQLException("MongoResultSet is closed.");
     }
 
     @Override
     public boolean next() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-
-        if (rowNum == 0) {
-            // This is an empty result set or
-            // next() is called first time for non-empty result set
-            if (!firstDoc.isEmpty()) {
-                // Non-empty result set
-                ++rowNum;
-                current = firstDoc;
-                return true;
-            } else {
-                return false;
-            }
-        }
 
         boolean result;
         result = cursor.hasNext();
@@ -156,35 +147,8 @@ public class MongoResultSet implements ResultSet {
         if (current == null) {
             throw new SQLException("No current row in the result set. Make sure to call next().");
         }
-        if (i > current.columnCount()) {
+        if (i > rsMetaData.getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
-        }
-    }
-
-    private void checkKey(String key) throws SQLException {
-        checkClosed();
-        if (columnPositionCache == null) {
-            buildColumnPositionCache();
-        }
-        if (!columnPositionCache.containsKey(key)) {
-            throw new SQLException("No such column: '" + key + "'.");
-        }
-    }
-
-    private void buildColumnPositionCache() throws SQLException {
-        if (current == null) {
-            // Either result is empty or next() is not yet called
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        // MongoDB does actually allow for a 0 size document!
-        if (current.values.size() == 0) {
-            columnPositionCache = new HashMap<>();
-            return;
-        }
-        columnPositionCache = new HashMap<>(current.columnCount());
-        int i = 0;
-        for (Column c : current.getValues()) {
-            columnPositionCache.put(c.columnAlias, i++);
         }
     }
 
@@ -233,7 +197,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        checkBounds(columnIndex);
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -302,15 +265,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getBytes(out);
     }
 
     @Override
     public byte[] getBytes(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getBytes(out);
     }
 
@@ -323,7 +284,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getAsciiStream(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
         final String encoding = "ASCII";
         try {
             return getNewByteArrayInputStream(getString(columnIndex).getBytes(encoding));
@@ -334,7 +294,6 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getAsciiStream(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
         final String encoding = "ASCII";
         try {
             return getNewByteArrayInputStream(getString(columnLabel).getBytes(encoding));
@@ -346,7 +305,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
         final String encoding = "UTF-8";
         try {
             return getNewByteArrayInputStream(getString(columnIndex).getBytes(encoding));
@@ -358,7 +316,6 @@ public class MongoResultSet implements ResultSet {
     @Deprecated
     @Override
     public java.io.InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
         final String encoding = "UTF-8";
         try {
             return getNewByteArrayInputStream(getString(columnLabel).getBytes(encoding));
@@ -369,13 +326,11 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public java.io.InputStream getBinaryStream(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
         return getNewByteArrayInputStream(getBytes(columnIndex));
     }
 
     @Override
     public java.io.InputStream getBinaryStream(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
         return getNewByteArrayInputStream(getBytes(columnLabel));
     }
 
@@ -444,15 +399,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public String getString(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getString(out);
     }
 
     @Override
     public String getString(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getString(out);
     }
 
@@ -524,15 +477,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public boolean getBoolean(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getBoolean(out);
     }
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getBoolean(out);
     }
 
@@ -544,15 +495,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public byte getByte(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getByte(out);
     }
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getByte(out);
     }
 
@@ -564,15 +513,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public short getShort(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getShort(out);
     }
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getShort(out);
     }
 
@@ -585,15 +532,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public int getInt(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getInt(out);
     }
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getInt(out);
     }
 
@@ -665,15 +610,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public long getLong(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getLong(out);
     }
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getLong(out);
     }
 
@@ -683,15 +626,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public float getFloat(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getFloat(out);
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getFloat(out);
     }
 
@@ -763,22 +704,19 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public double getDouble(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getDouble(out);
     }
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getDouble(out);
     }
 
     @Deprecated
     @Override
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        checkKey(columnLabel);
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
@@ -805,137 +743,138 @@ public class MongoResultSet implements ResultSet {
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-        if (current != null) {
-            rsMetaData = new MongoResultSetMetaData(current);
-        }
         return rsMetaData;
+    }
+
+    private Object getObject(BsonValue o, int columnType) throws SQLException {
+        switch (columnType) {
+            case Types.ARRAY:
+                // not supported
+                break;
+            case Types.BIGINT:
+                return getInt(o);
+            case Types.BINARY:
+                // not supported
+                break;
+            case Types.BIT:
+                return getBoolean(o);
+            case Types.BLOB:
+                // not supported
+                break;
+            case Types.BOOLEAN:
+                return getBoolean(o);
+            case Types.CHAR:
+                // not supported
+                break;
+            case Types.CLOB:
+                // not supported
+                break;
+            case Types.DATALINK:
+                // not supported
+                break;
+            case Types.DATE:
+                // not supported
+                break;
+            case Types.DECIMAL:
+                return getBigDecimal(o);
+            case Types.DISTINCT:
+                // not supported
+                break;
+            case Types.DOUBLE:
+                return getDouble(o);
+            case Types.FLOAT:
+                return getFloat(o);
+            case Types.INTEGER:
+                return getInt(o);
+            case Types.JAVA_OBJECT:
+                // not supported
+                break;
+            case Types.LONGNVARCHAR:
+                return getString(o);
+            case Types.LONGVARBINARY:
+                // not supported
+                break;
+            case Types.LONGVARCHAR:
+                return getString(o);
+            case Types.NCHAR:
+                return getString(o);
+            case Types.NCLOB:
+                // not supported
+                break;
+            case Types.NULL:
+                return null;
+            case Types.NUMERIC:
+                return getDouble(o);
+            case Types.NVARCHAR:
+                return getString(o);
+            case Types.OTHER:
+                // not supported
+                break;
+            case Types.REAL:
+                // not supported
+                break;
+            case Types.REF:
+                // not supported
+                break;
+            case Types.REF_CURSOR:
+                // not supported
+                break;
+            case Types.ROWID:
+                // not supported
+                break;
+            case Types.SMALLINT:
+                return getInt(o);
+            case Types.SQLXML:
+                // not supported
+                break;
+            case Types.STRUCT:
+                // not supported
+                break;
+            case Types.TIME:
+                // not supported
+                break;
+            case Types.TIME_WITH_TIMEZONE:
+                // not supported
+                break;
+            case Types.TIMESTAMP:
+                return getTimestamp(o);
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                // not supported
+                break;
+            case Types.TINYINT:
+                return getInt(o);
+            case Types.VARBINARY:
+                // not supported
+                break;
+            case Types.VARCHAR:
+                return getString(o);
+        }
+        throw new SQLException("getObject not supported for column type " + columnType);
     }
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
-		checkBounds(columnIndex);
-		int zeroIndex = columnIndex - 1;
-		BsonValue out = current.getValues().get(zeroIndex).value;
-		int columnType = rsMetaData.getColumnType(columnIndex);
-		switch (columnType) {
-			case Types.ARRAY:
-				// not supported
-				break;
-			case Types.BIGINT:
-				return getInt(out);
-			case Types.BINARY:
-				// not supported
-				break;
-			case Types.BIT:
-				return getBoolean(out);
-			case Types.BLOB:
-				// not supported
-				break;
-			case Types.BOOLEAN:
-				return getBoolean(out);
-			case Types.CHAR:
-				// not supported
-				break;
-			case Types.CLOB:
-				// not supported
-				break;
-			case Types.DATALINK:
-				// not supported
-				break;
-			case Types.DATE:
-				// not supported
-				break;
-			case Types.DECIMAL:
-				return getBigDecimal(out);
-			case Types.DISTINCT:
-				// not supported
-				break;
-			case Types.DOUBLE:
-				return getDouble(out);
-			case Types.FLOAT:
-				return getFloat(out);
-			case Types.INTEGER:
-				return getInt(out);
-			case Types.JAVA_OBJECT:
-				// not supported
-				break;
-			case Types.LONGNVARCHAR:
-				return getString(out);
-			case Types.LONGVARBINARY:
-				// not supported
-				break;
-			case Types.LONGVARCHAR:
-				return getString(out);
-			case Types.NCHAR:
-				return getString(out);
-			case Types.NCLOB:
-				// not supported
-				break;
-			case Types.NULL:
-				return null;
-			case Types.NUMERIC:
-				return getDouble(out);
-			case Types.NVARCHAR:
-				return getString(out);
-			case Types.OTHER:
-				// not supported
-				break;
-			case Types.REAL:
-				// not supported
-				break;
-			case Types.REF:
-				// not supported
-				break;
-			case Types.REF_CURSOR:
-				// not supported
-				break;
-			case Types.ROWID:
-				// not supported
-				break;
-			case Types.SMALLINT:
-				return getInt(out);
-			case Types.SQLXML:
-				// not supported
-				break;
-			case Types.STRUCT:
-				// not supported
-				break;
-			case Types.TIME:
-				// not supported
-				break;
-			case Types.TIME_WITH_TIMEZONE:
-				// not supported
-				break;
-			case Types.TIMESTAMP:
-				return getTimestamp(out);
-			case Types.TIMESTAMP_WITH_TIMEZONE:
-				// not supported
-				break;
-			case Types.TINYINT:
-				return getInt(out);
-			case Types.VARBINARY:
-				// not supported
-				break;
-			case Types.VARCHAR:
-				return getString(out);
-		}
-		throw new SQLException("getObject not supported for column type " + columnType);
+        BsonValue out = getBsonValue(columnIndex);
+        int columnType = rsMetaData.getColumnType(columnIndex);
+        return getObject(out, columnType);
     }
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
-		checkKey(columnLabel);
-		int zeroIndex = columnPositionCache.get(columnLabel);
-		return getObject(zeroIndex + 1);
+        BsonValue out = getBsonValue(columnLabel);
+        int columnType = rsMetaData.getColumnType(findColumn(columnLabel));
+        return getObject(out, columnType);
     }
 
     // ----------------------------------------------------------------
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        return columnPositionCache.get(columnLabel) + 1;
+        checkClosed();
+        if (!rsMetaData.hasColumnWithLabel(columnLabel)) {
+            throw new SQLException("No such column: '" + columnLabel + "'.");
+        }
+        return rsMetaData.getColumnPositionFromLabel(columnLabel) + 1;
     }
 
     // --------------------------JDBC 2.0-----------------------------------
@@ -1024,15 +963,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getBigDecimal(out);
     }
 
     @Override
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getBigDecimal(out);
     }
 
@@ -1061,19 +998,7 @@ public class MongoResultSet implements ResultSet {
     @Override
     public boolean isLast() throws SQLException {
         checkClosed();
-        checkAndCacheFirstDocAndMetaData();
-        if (rowNum == 0) {
-            // Two cases fell in this condition
-            // 1. It's an empty result set. isLast = true
-            // 2. next() is not yet called on non-empty result set. isLast = false
-            if (firstDoc.isEmpty()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return !cursor.hasNext();
-        }
+        return !cursor.hasNext();
     }
 
     @Override
@@ -1494,15 +1419,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Blob getBlob(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getNewBlob(getBytes(out));
     }
 
     @Override
     public Blob getBlob(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getNewBlob(getBytes(out));
     }
 
@@ -1512,15 +1435,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Clob getClob(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getClob(out);
     }
 
     @Override
     public Clob getClob(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getClob(out);
     }
 
@@ -1620,15 +1541,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Date getDate(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getDate(out);
     }
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getDate(out);
     }
 
@@ -1659,15 +1578,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Time getTime(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getTime(out);
     }
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getTime(out);
     }
 
@@ -1698,15 +1615,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public Timestamp getTimestamp(String columnLabel) throws SQLException {
-        checkKey(columnLabel);
-        BsonValue out = current.getValues().get(columnPositionCache.get(columnLabel)).value;
+        BsonValue out = getBsonValue(columnLabel);
         return getTimestamp(out);
     }
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        BsonValue out = current.getValues().get(columnIndex - 1).value;
+        BsonValue out = getBsonValue(columnIndex);
         return getTimestamp(out);
     }
 

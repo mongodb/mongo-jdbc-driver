@@ -1,28 +1,46 @@
 package com.mongodb.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
 import org.bson.BsonType;
 
 public class MongoResultSetMetaData implements ResultSetMetaData {
-    private MongoResultDoc mongoResultDoc;
-
+    private List<Column> columns;
+    private HashMap<String, Integer> columnPositions;
     private final int unknownLength = 0;
 
-    public MongoResultSetMetaData(MongoResultDoc mongoResultDoc) {
-        this.mongoResultDoc = mongoResultDoc;
+    public MongoResultSetMetaData(MongoResultDoc metadataDoc) {
+        columns = metadataDoc.columns;
+
+        columnPositions = new HashMap<>(columns.size());
+        int i = 0;
+        for (Column c : columns) {
+            columnPositions.put(c.columnAlias, i++);
+        }
     }
 
     private void checkBounds(int i) throws SQLException {
-        if (i > mongoResultDoc.columnCount()) {
+        if (i > getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
     }
 
+    public int getColumnPositionFromLabel(String label) {
+        return columnPositions.get(label);
+    }
+
+    public boolean hasColumnWithLabel(String label) {
+        return columnPositions.containsKey(label);
+    }
+
     @Override
     public int getColumnCount() throws SQLException {
-        return mongoResultDoc.columnCount();
+        return columns.size();
     }
 
     @Override
@@ -165,13 +183,13 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getColumnLabel(int column) throws SQLException {
         checkBounds(column);
-        return mongoResultDoc.values.get(column - 1).columnAlias;
+        return columns.get(column - 1).columnAlias;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
         checkBounds(column);
-        return mongoResultDoc.values.get(column - 1).column;
+        return columns.get(column - 1).column;
     }
 
     @Override
@@ -265,18 +283,18 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getTableName(int column) throws SQLException {
         checkBounds(column);
-        return mongoResultDoc.values.get(column).tableAlias;
+        return columns.get(column).tableAlias;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
         checkBounds(column);
-        return mongoResultDoc.values.get(column - 1).database;
+        return columns.get(column - 1).database;
     }
 
     public BsonType getBsonType(int column) throws SQLException {
         checkBounds(column);
-        String typeName = mongoResultDoc.values.get(column - 1).bsonType;
+        String typeName = columns.get(column - 1).bsonType;
         return getBsonTypeHelper(typeName);
     }
 
@@ -505,8 +523,119 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     @Override
     public String getColumnClassName(int column) throws SQLException {
         checkBounds(column);
-        Object o = mongoResultDoc.values.get(column - 1).value;
-        return o.getClass().getName();
+
+        String intClassName = int.class.getName();
+        String booleanClassName = boolean.class.getName();
+        String stringClassName = String.class.getName();
+        String floatClassName = float.class.getName();
+        String doubleClassName = double.class.getName();
+        String bigDecimalClassName = BigDecimal.class.getName();
+        String timestampClassName = Timestamp.class.getName();
+
+        int columnType = getColumnType(column);
+        switch (columnType) {
+            case Types.ARRAY:
+                // not supported
+                break;
+            case Types.BIGINT:
+                return intClassName;
+            case Types.BINARY:
+                // not supported
+                break;
+            case Types.BIT:
+                return booleanClassName;
+            case Types.BLOB:
+                // not supported
+                break;
+            case Types.BOOLEAN:
+                return booleanClassName;
+            case Types.CHAR:
+                // not supported
+                break;
+            case Types.CLOB:
+                // not supported
+                break;
+            case Types.DATALINK:
+                // not supported
+                break;
+            case Types.DATE:
+                // not supported
+                break;
+            case Types.DECIMAL:
+                return bigDecimalClassName;
+            case Types.DISTINCT:
+                // not supported
+                break;
+            case Types.DOUBLE:
+                return doubleClassName;
+            case Types.FLOAT:
+                return floatClassName;
+            case Types.INTEGER:
+                return intClassName;
+            case Types.JAVA_OBJECT:
+                // not supported
+                break;
+            case Types.LONGNVARCHAR:
+                return stringClassName;
+            case Types.LONGVARBINARY:
+                // not supported
+                break;
+            case Types.LONGVARCHAR:
+                return stringClassName;
+            case Types.NCHAR:
+                return stringClassName;
+            case Types.NCLOB:
+                // not supported
+                break;
+            case Types.NULL:
+                return null;
+            case Types.NUMERIC:
+                return doubleClassName;
+            case Types.NVARCHAR:
+                return stringClassName;
+            case Types.OTHER:
+                // not supported
+                break;
+            case Types.REAL:
+                // not supported
+                break;
+            case Types.REF:
+                // not supported
+                break;
+            case Types.REF_CURSOR:
+                // not supported
+                break;
+            case Types.ROWID:
+                // not supported
+                break;
+            case Types.SMALLINT:
+                return intClassName;
+            case Types.SQLXML:
+                // not supported
+                break;
+            case Types.STRUCT:
+                // not supported
+                break;
+            case Types.TIME:
+                // not supported
+                break;
+            case Types.TIME_WITH_TIMEZONE:
+                // not supported
+                break;
+            case Types.TIMESTAMP:
+                return timestampClassName;
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                // not supported
+                break;
+            case Types.TINYINT:
+                return intClassName;
+            case Types.VARBINARY:
+                // not supported
+                break;
+            case Types.VARCHAR:
+                return stringClassName;
+        }
+        throw new SQLException("getObject not supported for column type " + columnType);
     }
 
     // java.sql.Wrapper impl

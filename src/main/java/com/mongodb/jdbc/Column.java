@@ -1,7 +1,5 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonValue;
-
 public class Column {
     public String database;
     public String table;
@@ -9,7 +7,6 @@ public class Column {
     public String column;
     public String columnAlias;
     public String bsonType;
-    public BsonValue value;
 
     public Column() {}
 
@@ -19,15 +16,13 @@ public class Column {
             String tableAlias,
             String column,
             String columnAlias,
-            String bsonType,
-            BsonValue value) {
+            String bsonType) {
         this.database = database;
         this.table = table;
         this.tableAlias = tableAlias;
         this.column = column;
         this.columnAlias = columnAlias;
         this.bsonType = bsonType;
-        this.value = value;
     }
 
     @Override
@@ -50,9 +45,6 @@ public class Column {
                 + '\''
                 + ", bsonType="
                 + bsonType
-                + '\''
-                + ", value="
-                + value
                 + '}';
     }
 }

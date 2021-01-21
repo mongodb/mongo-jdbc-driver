@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
-import org.bson.BsonValue;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
@@ -61,12 +60,11 @@ public abstract class MongoMock {
         void test() throws SQLException;
     }
 
-    Column generateCol(
-            String database, String table, String column, String bsonType, BsonValue value) {
-        return new Column(database, table, table, column, column, bsonType, value);
+    Column generateCol(String database, String table, String column, String bsonType) {
+        return new Column(database, table, table, column, column, bsonType);
     }
 
-    MongoResultDoc generateRow(boolean isEmpty) {
+    MongoResultDoc generateMetadataDoc() {
         /*
         {
            values: [
@@ -89,12 +87,43 @@ public abstract class MongoMock {
            ]
          }
          */
-        Column col1 = generateCol("myDB", "foo", "a", "int", new BsonInt32(1));
-        Column col2 = generateCol("myDB", "foo", "b", "string", new BsonString("test"));
 
-        ArrayList<Column> cols = new ArrayList<>();
-        cols.add(col1);
-        cols.add(col2);
-        return new MongoResultDoc(cols, isEmpty);
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(generateCol("myDB", "foo", "a", "int"));
+        metaDoc.columns.add(generateCol("myDB", "foo", "b", "string"));
+
+        return metaDoc;
+    }
+
+    MongoResultDoc generateRow() {
+        /*
+        {
+           values: [
+        {
+             database: "myDB",
+             table: "foo",
+             tableAlias: "foo",
+             column: "a",
+             columnAlias: "a",
+             value: 1
+           },
+        {
+             database: "myDB",
+             table: "foo",
+             tableAlias: "foo",
+             column: "b",
+             columnAlias: "b",
+             value: "test"
+           }
+           ]
+         }
+         */
+        MongoResultDoc doc = new MongoResultDoc();
+        doc.values = new ArrayList<>();
+        doc.values.add(new BsonInt32(1));
+        doc.values.add(new BsonString("test"));
+
+        return doc;
     }
 }

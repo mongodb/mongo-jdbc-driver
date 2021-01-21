@@ -75,7 +75,7 @@ class MongoStatementTest extends MongoMock {
                 .thenAnswer(
                         invocation -> {
                             rowCnt.incrementAndGet();
-                            return generateRow(true);
+                            return generateMetadataDoc();
                         });
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
@@ -107,13 +107,15 @@ class MongoStatementTest extends MongoMock {
     void testExecuteQuery() throws SQLException {
 
         AtomicInteger rowCnt = new AtomicInteger();
-        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 1);
+        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 2);
 
         when(mongoCursor.next())
                 .thenAnswer(
                         invocation -> {
-                            rowCnt.incrementAndGet();
-                            return generateRow(false);
+                            if (rowCnt.incrementAndGet() == 1) {
+                                return generateMetadataDoc();
+                            }
+                            return generateRow();
                         });
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
@@ -148,6 +150,9 @@ class MongoStatementTest extends MongoMock {
 
     @Test
     void testCloseForExecutedStatement() throws SQLException {
+        when(mongoCursor.hasNext()).thenReturn(true);
+        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+
         assertFalse(mongoStatement.isClosed());
         ResultSet rs = mongoStatement.executeQuery("select * from test");
         mongoStatement.close();
@@ -214,6 +219,9 @@ class MongoStatementTest extends MongoMock {
 
     @Test
     void testGetResultSet() throws SQLException {
+        when(mongoCursor.hasNext()).thenReturn(true);
+        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+
         assertNull(mongoStatement.getResultSet());
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         assertEquals(rs, mongoStatement.getResultSet());
@@ -262,6 +270,9 @@ class MongoStatementTest extends MongoMock {
 
     @Test
     void testGetMoreResultsWithInstructions() throws SQLException {
+        when(mongoCursor.hasNext()).thenReturn(true);
+        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         assertFalse(rs.isClosed());
         mongoStatement.getMoreResults(CLOSE_CURRENT_RESULT);
@@ -284,6 +295,9 @@ class MongoStatementTest extends MongoMock {
 
     @Test
     void testSetGetCloseOnComplete() throws SQLException {
+        when(mongoCursor.hasNext()).thenReturn(true);
+        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+
         // When not close on complete
         assertFalse(mongoStatement.isCloseOnCompletion());
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
