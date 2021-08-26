@@ -1761,7 +1761,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-        // We do not have UDTs.
+        // We do not have SuperTypes.
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
 
         MongoResultDoc metaDoc = new MongoResultDoc();

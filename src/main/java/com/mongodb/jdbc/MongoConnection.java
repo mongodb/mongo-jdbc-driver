@@ -211,15 +211,20 @@ public class MongoConnection implements Connection {
             return createStatement();
         } else {
             throw new SQLFeatureNotSupportedException(
-                    Thread.currentThread().getStackTrace().toString());
+                    Thread.currentThread().getStackTrace()[1].toString());
         }
     }
 
     @Override
     public PreparedStatement prepareStatement(
             String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
+                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
+            return prepareStatement(sql);
+        } else {
+            throw new SQLFeatureNotSupportedException(
+                    Thread.currentThread().getStackTrace()[1].toString());
+        }
     }
 
     @Override
