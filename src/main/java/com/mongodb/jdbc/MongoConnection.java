@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
@@ -48,7 +49,16 @@ public class MongoConnection implements Connection {
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
-        mongoClient = MongoClients.create(cs);
+
+        StringBuilder version = new StringBuilder();
+        version.append(MongoDriver.MAJOR_VERSION).append(".").append(MongoDriver.MINOR_VERSION);
+        mongoClient =
+                MongoClients.create(
+                        cs,
+                        MongoDriverInformation.builder()
+                                .driverName(MongoDriver.NAME)
+                                .driverVersion(version.toString())
+                                .build());
         relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
     }

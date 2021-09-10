@@ -54,6 +54,7 @@ public class MongoDriver implements Driver {
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
+    static final String NAME;
     static final String VERSION;
     static final int MAJOR_VERSION;
     static final int MINOR_VERSION;
@@ -86,6 +87,8 @@ public class MongoDriver implements Driver {
             MAJOR_VERSION = 0;
             MINOR_VERSION = 0;
         }
+        String name = unit.getClass().getPackage().getImplementationTitle();
+        NAME = (name != null) ? name : "mongodb-jdbc";
     }
 
     @Override
