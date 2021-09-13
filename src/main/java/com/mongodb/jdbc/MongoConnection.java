@@ -49,15 +49,21 @@ public class MongoConnection implements Connection {
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
+        String version =
+                MongoDriver.VERSION != null
+                        ? MongoDriver.VERSION
+                        : new StringBuilder()
+                                .append(MongoDriver.MAJOR_VERSION)
+                                .append(".")
+                                .append(MongoDriver.MINOR_VERSION)
+                                .toString();
 
-        StringBuilder version = new StringBuilder();
-        version.append(MongoDriver.MAJOR_VERSION).append(".").append(MongoDriver.MINOR_VERSION);
         mongoClient =
                 MongoClients.create(
                         cs,
                         MongoDriverInformation.builder()
                                 .driverName(MongoDriver.NAME)
-                                .driverVersion(version.toString())
+                                .driverVersion(version)
                                 .build());
         relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
