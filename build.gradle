@@ -52,6 +52,7 @@ allprojects {
     dependencies {
         // MongoDB
         implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
+        implementation group: 'org.mongodb', name: 'mongodb-driver-core', version: mongodbDriverVersion
         implementation group: 'org.mongodb', name: 'mongodb-driver', version: mongodbDriverVersion
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
