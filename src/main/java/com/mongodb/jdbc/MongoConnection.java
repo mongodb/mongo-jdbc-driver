@@ -135,12 +135,16 @@ public class MongoConnection implements Connection {
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         checkConnection();
+        if (autoCommit) {
+            throw new SQLFeatureNotSupportedException(
+                    Thread.currentThread().getStackTrace()[1].toString());
+        }
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+        checkConnection();
+        return false;
     }
 
     @Override
