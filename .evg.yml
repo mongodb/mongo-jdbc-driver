@@ -32,6 +32,8 @@ buildvariants:
     run_on: ubuntu1804-large
     tasks:
       - name: "build"
+      - name: "unittest"
+      - name: "integrationtest"
       - name: "tdvt"
   - name: release
     display_name: "Release"
@@ -45,6 +47,18 @@ tasks:
   - name: "build"
     commands:
       - func: "build jdbc driver"
+
+  - name: "unittest"
+    depends_on:
+        "build"
+    commands:
+      - func: "run unit test"
+
+  - name: "integrationtest"
+    depends_on:
+        "build"
+    commands:
+      - func: "run integration test"
 
   - name: "tdvt"
     depends_on:
@@ -64,7 +78,25 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean -x tdvtTest spotlessApply build --rerun-tasks
+          ./gradlew clean -x test -x tdvtTest -x integrationTest spotlessApply build --rerun-tasks
+
+  "run unit test":
+    command: shell.exec
+    type: test
+    params:
+      working_dir: adl-jdbc-driver
+      script: |
+          ${PREPARE_SHELL}
+          ./gradlew clean test 
+
+  "run integration test":
+    command: shell.exec
+    type: test
+    params:
+      working_dir: adl-jdbc-driver
+      script: |
+          ${PREPARE_SHELL}
+          ./gradlew clean integrationTest -x test
 
   "run tdvt":
     command: shell.exec
@@ -73,8 +105,7 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          # this also runs the unit tests.
-          ./gradlew clean tdvtTest
+          ./gradlew clean tdvtTest -x test
 
   "export variables":
     - command: shell.exec
