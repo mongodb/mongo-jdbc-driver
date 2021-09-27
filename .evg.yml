@@ -34,7 +34,7 @@ buildvariants:
       - name: "build"
       - name: "test-unit"
       - name: "test-integration"
-      - name: "tdvt"
+      - name: "test-tdvt"
   - name: release
     display_name: "Release"
     expansions:
@@ -48,21 +48,15 @@ tasks:
     commands:
       - func: "build jdbc driver"
 
-  - name: "unittest"
-    depends_on:
-        "build"
+  - name: "test-unit"
     commands:
       - func: "run unit test"
 
-  - name: "integrationtest"
-    depends_on:
-        "build"
+  - name: "test-integration"
     commands:
       - func: "run integration test"
 
-  - name: "tdvt"
-    depends_on:
-        "build"
+  - name: "test-tdvt"
     commands:
       - func: "run tdvt"
 
