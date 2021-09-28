@@ -38,7 +38,7 @@ public class MySQLStatement extends MongoStatement implements Statement {
                 iterable = iterable.batchSize(fetchSize);
             }
 
-            resultSet = new MongoResultSet(this, iterable.cursor(), relaxed);
+            resultSet = new MySQLResultSet(this, iterable.cursor(), relaxed);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);

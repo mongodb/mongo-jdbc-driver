@@ -824,7 +824,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -864,7 +864,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     private String patternCond(String colName, String pattern) {
@@ -949,7 +949,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         docs.add(metaDoc);
         docs.add(valuesDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     public static String[] typeNames =
@@ -1285,7 +1285,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1334,7 +1334,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1362,7 +1362,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1396,7 +1396,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     private MongoResultDoc getTypeInfoMetaDoc() {
@@ -1599,7 +1599,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         0, //maxScale
                         0)); //numPrecRadix
 
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1726,7 +1726,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "BASE_TYPE", "BASE_TYPE", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1774,7 +1774,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", "string"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1791,7 +1791,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", "string"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1830,7 +1830,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", "int"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -1953,7 +1953,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new BsonString("database to connect to"));
         docs.add(doc);
 
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     private MongoResultDoc getFunctionMetaDoc() {
@@ -2003,7 +2003,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             docs.add(doc);
         }
 
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     private BsonValue bsonInt32(Integer i) {
@@ -2109,7 +2109,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             }
         }
 
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     //--------------------------JDBC 4.1 -----------------------------
@@ -2137,7 +2137,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         metaDoc.columns.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
 
         docs.add(metaDoc);
-        return new MongoResultSet(null, new MongoExplicitCursor(docs), true);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override

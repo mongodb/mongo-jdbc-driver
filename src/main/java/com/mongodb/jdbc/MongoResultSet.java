@@ -36,45 +36,45 @@ import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
-public class MongoResultSet implements ResultSet {
+public abstract class MongoResultSet implements ResultSet {
     // dateFormat cannot be static due to a threading bug in the library.
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    private final String ARRAY = "array";
-    private final String BINARY = "binary";
-    private final String BOOLEAN = "boolean";
-    private final String DATE = "date";
-    private final String DB_POINTER = "db_pointer";
-    private final String DECIMAL128 = "decimal128";
-    private final String DOCUMENT = "document";
-    private final String DOUBLE = "double";
-    private final String END_OF_DOCUMENT = "end_of_document";
-    private final String INT32 = "int32";
-    private final String INT64 = "int64";
-    private final String JAVASCRIPT = "javascript";
-    private final String JAVASCRIPT_WITH_CODE = "javascript_with_code";
-    private final String MAX_KEY = "max_key";
-    private final String MIN_KEY = "min_key";
-    private final String OBJECT_ID = "objectId";
-    private final String REGEX = "regex";
-    private final String STRING = "string";
-    private final String SYMBOL = "symbol";
-    private final String TIMESTAMP = "timestamp";
+    protected final String ARRAY = "array";
+    protected final String BINARY = "binary";
+    protected final String BOOLEAN = "boolean";
+    protected final String DATE = "date";
+    protected final String DB_POINTER = "db_pointer";
+    protected final String DECIMAL128 = "decimal128";
+    protected final String DOCUMENT = "document";
+    protected final String DOUBLE = "double";
+    protected final String END_OF_DOCUMENT = "end_of_document";
+    protected final String INT32 = "int32";
+    protected final String INT64 = "int64";
+    protected final String JAVASCRIPT = "javascript";
+    protected final String JAVASCRIPT_WITH_CODE = "javascript_with_code";
+    protected final String MAX_KEY = "max_key";
+    protected final String MIN_KEY = "min_key";
+    protected final String OBJECT_ID = "objectId";
+    protected final String REGEX = "regex";
+    protected final String STRING = "string";
+    protected final String SYMBOL = "symbol";
+    protected final String TIMESTAMP = "timestamp";
 
     // The one-indexed number of the current row. Will be zero until
     // next() is called for the first time.
-    private int rowNum = 0;
+    protected int rowNum = 0;
 
     // The MongoResultDoc for the current row. Will be null until
     // next() is called for the first time.
-    private MongoResultDoc current;
+    protected MongoResultDoc current;
 
-    private boolean closed = false;
-    private Statement statement;
-    private MongoCursor<MongoResultDoc> cursor;
-    private boolean wasNull = false;
-    private boolean relaxed = true;
-    private MongoResultSetMetaData rsMetaData;
+    protected boolean closed = false;
+    protected Statement statement;
+    protected MongoCursor<MongoResultDoc> cursor;
+    protected boolean wasNull = false;
+    protected boolean relaxed = true;
+    protected MongoResultSetMetaData rsMetaData;
 
     public MongoResultSet(
             Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
@@ -92,22 +92,11 @@ public class MongoResultSet implements ResultSet {
         rsMetaData = new MongoResultSetMetaData(metadataDoc);
     }
 
-    // This is only used for testing, and that is why it has package level access, and the
-    // tests have been moved into this package.
-    MongoResultDoc getCurrent() {
-        return current;
-    }
+    protected abstract BsonValue getBsonValue(int columnIndex) throws SQLException;
 
-    private BsonValue getBsonValue(int columnIndex) throws SQLException {
-        checkBounds(columnIndex);
-        return current.values.get(columnIndex - 1);
-    }
+    protected abstract BsonValue getBsonValue(String columnLabel) throws SQLException;
 
-    private BsonValue getBsonValue(String columnLabel) throws SQLException {
-        return getBsonValue(findColumn(columnLabel));
-    }
-
-    private void checkClosed() throws SQLException {
+    protected void checkClosed() throws SQLException {
         if (closed) throw new SQLException("MongoResultSet is closed.");
     }
 
@@ -142,7 +131,7 @@ public class MongoResultSet implements ResultSet {
         return wasNull;
     }
 
-    private void checkBounds(int i) throws SQLException {
+    protected void checkBounds(int i) throws SQLException {
         checkClosed();
         if (current == null) {
             throw new SQLException("No current row in the result set. Make sure to call next().");
@@ -155,7 +144,7 @@ public class MongoResultSet implements ResultSet {
     // checkNull returns true if the Object o is null. Crucially,
     // it also sets the value of `wasNull`, since that is part
     // of the JDBC API.
-    private boolean checkNull(BsonValue o) {
+    protected boolean checkNull(BsonValue o) {
         // reset wasNull from previous check.
         wasNull = false;
         if (o == null) {
@@ -201,12 +190,12 @@ public class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    private byte[] handleBytesConversionFailure(String from) throws SQLException {
+    protected byte[] handleBytesConversionFailure(String from) throws SQLException {
         if (relaxed) return null;
         throw new SQLException("The " + from + " type cannot be converted to blob.");
     }
 
-    private byte[] getBytes(BsonValue o) throws SQLException {
+    protected byte[] getBytes(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return null;
         }
@@ -275,7 +264,7 @@ public class MongoResultSet implements ResultSet {
         return getBytes(out);
     }
 
-    private static ByteArrayInputStream getNewByteArrayInputStream(byte[] bytes) {
+    protected static ByteArrayInputStream getNewByteArrayInputStream(byte[] bytes) {
         if (bytes == null) {
             return null;
         }
@@ -335,14 +324,14 @@ public class MongoResultSet implements ResultSet {
     }
 
     // Methods for accessing results
-    private String handleStringConversionFailure(String from) throws SQLException {
+    protected String handleStringConversionFailure(String from) throws SQLException {
         if (relaxed) return null;
         throw new SQLException("The " + from + " type cannot be converted to string.");
     }
 
     // Everything here follows the conventions of $convert to string in mongodb
     // except for some special handling for binary.
-    private String getString(BsonValue o) throws SQLException {
+    protected String getString(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return null;
         }
@@ -409,12 +398,12 @@ public class MongoResultSet implements ResultSet {
         return getString(out);
     }
 
-    private boolean handleBooleanConversionFailure(String from) throws SQLException {
+    protected boolean handleBooleanConversionFailure(String from) throws SQLException {
         if (relaxed) return false;
         throw new SQLException("The " + from + " type cannot be converted to boolean.");
     }
 
-    private boolean getBoolean(BsonValue o) throws SQLException {
+    protected boolean getBoolean(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return false;
         }
@@ -487,7 +476,7 @@ public class MongoResultSet implements ResultSet {
         return getBoolean(out);
     }
 
-    private byte getByte(BsonValue o) throws SQLException {
+    protected byte getByte(BsonValue o) throws SQLException {
         // Just be lazy, I doubt this will be called often.
         // HotSpot should inline these, anyway.
         return (byte) getLong(o);
@@ -505,7 +494,7 @@ public class MongoResultSet implements ResultSet {
         return getByte(out);
     }
 
-    private short getShort(BsonValue o) throws SQLException {
+    protected short getShort(BsonValue o) throws SQLException {
         // Just be lazy, I doubt this will be called often.
         // HotSpot should inline these, anyway.
         return (short) getLong(o);
@@ -523,7 +512,7 @@ public class MongoResultSet implements ResultSet {
         return getShort(out);
     }
 
-    private int getInt(BsonValue o) throws SQLException {
+    protected int getInt(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return 0;
         }
@@ -542,12 +531,12 @@ public class MongoResultSet implements ResultSet {
         return getInt(out);
     }
 
-    private long handleLongConversionFailure(String from) throws SQLException {
+    protected long handleLongConversionFailure(String from) throws SQLException {
         if (relaxed) return 0L;
         throw new SQLException("The " + from + " type cannot be converted to integral type.");
     }
 
-    private long getLong(BsonValue o) throws SQLException {
+    protected long getLong(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return 0L;
         }
@@ -620,7 +609,7 @@ public class MongoResultSet implements ResultSet {
         return getLong(out);
     }
 
-    private float getFloat(BsonValue o) throws SQLException {
+    protected float getFloat(BsonValue o) throws SQLException {
         return (float) getDouble(o);
     }
 
@@ -636,12 +625,12 @@ public class MongoResultSet implements ResultSet {
         return getFloat(out);
     }
 
-    private double handleDoubleConversionFailure(String from) throws SQLException {
+    protected double handleDoubleConversionFailure(String from) throws SQLException {
         if (relaxed) return 0.0;
         throw new SQLException("The " + from + " type cannot be converted to double.");
     }
 
-    private double getDouble(BsonValue o) throws SQLException {
+    protected double getDouble(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return 0.0;
         }
@@ -746,125 +735,13 @@ public class MongoResultSet implements ResultSet {
         return rsMetaData;
     }
 
-    private Object getObject(BsonValue o, int columnType) throws SQLException {
-        switch (columnType) {
-            case Types.ARRAY:
-                // not supported
-                break;
-            case Types.BIGINT:
-                return getInt(o);
-            case Types.BINARY:
-                // not supported
-                break;
-            case Types.BIT:
-                return getBoolean(o);
-            case Types.BLOB:
-                // not supported
-                break;
-            case Types.BOOLEAN:
-                return getBoolean(o);
-            case Types.CHAR:
-                // not supported
-                break;
-            case Types.CLOB:
-                // not supported
-                break;
-            case Types.DATALINK:
-                // not supported
-                break;
-            case Types.DATE:
-                // not supported
-                break;
-            case Types.DECIMAL:
-                return getBigDecimal(o);
-            case Types.DISTINCT:
-                // not supported
-                break;
-            case Types.DOUBLE:
-                return getDouble(o);
-            case Types.FLOAT:
-                return getFloat(o);
-            case Types.INTEGER:
-                return getInt(o);
-            case Types.JAVA_OBJECT:
-                // not supported
-                break;
-            case Types.LONGNVARCHAR:
-                return getString(o);
-            case Types.LONGVARBINARY:
-                // not supported
-                break;
-            case Types.LONGVARCHAR:
-                return getString(o);
-            case Types.NCHAR:
-                return getString(o);
-            case Types.NCLOB:
-                // not supported
-                break;
-            case Types.NULL:
-                return null;
-            case Types.NUMERIC:
-                return getDouble(o);
-            case Types.NVARCHAR:
-                return getString(o);
-            case Types.OTHER:
-                // not supported
-                break;
-            case Types.REAL:
-                // not supported
-                break;
-            case Types.REF:
-                // not supported
-                break;
-            case Types.REF_CURSOR:
-                // not supported
-                break;
-            case Types.ROWID:
-                // not supported
-                break;
-            case Types.SMALLINT:
-                return getInt(o);
-            case Types.SQLXML:
-                // not supported
-                break;
-            case Types.STRUCT:
-                // not supported
-                break;
-            case Types.TIME:
-                // not supported
-                break;
-            case Types.TIME_WITH_TIMEZONE:
-                // not supported
-                break;
-            case Types.TIMESTAMP:
-                return getTimestamp(o);
-            case Types.TIMESTAMP_WITH_TIMEZONE:
-                // not supported
-                break;
-            case Types.TINYINT:
-                return getInt(o);
-            case Types.VARBINARY:
-                // not supported
-                break;
-            case Types.VARCHAR:
-                return getString(o);
-        }
-        throw new SQLException("getObject not supported for column type " + columnType);
-    }
+    protected abstract Object getObject(BsonValue o, int columnType) throws SQLException;
 
     @Override
-    public Object getObject(int columnIndex) throws SQLException {
-        BsonValue out = getBsonValue(columnIndex);
-        int columnType = rsMetaData.getColumnType(columnIndex);
-        return getObject(out, columnType);
-    }
+    public abstract Object getObject(int columnIndex) throws SQLException;
 
     @Override
-    public Object getObject(String columnLabel) throws SQLException {
-        BsonValue out = getBsonValue(columnLabel);
-        int columnType = rsMetaData.getColumnType(findColumn(columnLabel));
-        return getObject(out, columnType);
-    }
+    public abstract Object getObject(String columnLabel) throws SQLException;
 
     // ----------------------------------------------------------------
 
@@ -895,12 +772,12 @@ public class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    private BigDecimal handleBigDecimalConversionFailure(String from) throws SQLException {
+    protected BigDecimal handleBigDecimalConversionFailure(String from) throws SQLException {
         if (relaxed) return BigDecimal.ZERO;
         throw new SQLException("The " + from + " type cannot be converted to BigDecimal.");
     }
 
-    private BigDecimal getBigDecimal(BsonValue o) throws SQLException {
+    protected BigDecimal getBigDecimal(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return BigDecimal.ZERO;
         }
@@ -1394,11 +1271,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     @Override
-    public Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
+    public abstract Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
+            throws SQLException;
 
     @Override
     public Ref getRef(int columnIndex) throws SQLException {
@@ -1406,7 +1280,7 @@ public class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    private Blob getNewBlob(byte[] bytes) throws SQLException {
+    protected Blob getNewBlob(byte[] bytes) throws SQLException {
         if (bytes == null) {
             return null;
         }
@@ -1429,7 +1303,7 @@ public class MongoResultSet implements ResultSet {
         return getNewBlob(getBytes(out));
     }
 
-    private Clob getClob(BsonValue o) throws SQLException {
+    protected Clob getClob(BsonValue o) throws SQLException {
         return new SerialClob(getString(o).toCharArray());
     }
 
@@ -1452,11 +1326,8 @@ public class MongoResultSet implements ResultSet {
     }
 
     @Override
-    public Object getObject(String columnLabel, java.util.Map<String, Class<?>> map)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
+    public abstract Object getObject(String columnLabel, java.util.Map<String, Class<?>> map)
+            throws SQLException;
 
     @Override
     public Ref getRef(String columnLabel) throws SQLException {
@@ -1470,12 +1341,12 @@ public class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    private java.util.Date handleUtilDateConversionFailure(String from) throws SQLException {
+    protected java.util.Date handleUtilDateConversionFailure(String from) throws SQLException {
         if (relaxed) return null;
         throw new SQLException("The " + from + " type cannot be converted to java.util.Date");
     }
 
-    private java.util.Date getUtilDate(BsonValue o) throws SQLException {
+    protected java.util.Date getUtilDate(BsonValue o) throws SQLException {
         if (checkNull(o)) {
             return null;
         }
@@ -1534,7 +1405,7 @@ public class MongoResultSet implements ResultSet {
         throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
     }
 
-    private Date getDate(BsonValue o) throws SQLException {
+    protected Date getDate(BsonValue o) throws SQLException {
         java.util.Date utilDate = getUtilDate(o);
         return (utilDate == null) ? null : new Date(utilDate.getTime());
     }
@@ -1571,7 +1442,7 @@ public class MongoResultSet implements ResultSet {
         return new Date(cal.getTime().getTime());
     }
 
-    private Time getTime(BsonValue o) throws SQLException {
+    protected Time getTime(BsonValue o) throws SQLException {
         java.util.Date utilDate = getUtilDate(o);
         return (utilDate == null) ? null : new Time(utilDate.getTime());
     }
@@ -1608,7 +1479,7 @@ public class MongoResultSet implements ResultSet {
         return new Time(cal.getTime().getTime());
     }
 
-    private Timestamp getTimestamp(BsonValue o) throws SQLException {
+    protected Timestamp getTimestamp(BsonValue o) throws SQLException {
         java.util.Date utilDate = getUtilDate(o);
         return (utilDate == null) ? null : new Timestamp(utilDate.getTime());
     }

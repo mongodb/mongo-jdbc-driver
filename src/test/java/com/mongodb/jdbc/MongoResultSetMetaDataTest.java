@@ -89,7 +89,7 @@ class MongoResultSetMetaDataTest extends MongoMock {
         }
 
         MongoResultSet rs =
-                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
+                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
 
         try {
             rs.next();
