@@ -32,7 +32,7 @@ public class MySQLConnection extends MongoConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return new MongoDatabaseMetaData(this);
+        return new MySQLDatabaseMetaData(this);
     }
 
     // --------------------------JDBC 2.0-----------------------------

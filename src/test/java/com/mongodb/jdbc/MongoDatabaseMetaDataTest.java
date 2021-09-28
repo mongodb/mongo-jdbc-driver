@@ -12,7 +12,7 @@ class MongoDatabaseMetaDataTest extends MongoMock {
     private static DatabaseMetaData databaseMetaData;
 
     static {
-        databaseMetaData = new MongoDatabaseMetaData(null);
+        databaseMetaData = new MySQLDatabaseMetaData(null);
     }
 
     private int countRows(ResultSet rs) throws SQLException {
