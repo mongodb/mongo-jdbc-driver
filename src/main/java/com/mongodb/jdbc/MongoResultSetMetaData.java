@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import org.bson.BsonType;
 
-public class MongoResultSetMetaData implements ResultSetMetaData {
-    private List<Column> columns;
-    private HashMap<String, Integer> columnPositions;
-    private final int unknownLength = 0;
+public abstract class MongoResultSetMetaData implements ResultSetMetaData {
+    protected List<Column> columns;
+    protected HashMap<String, Integer> columnPositions;
+    protected final int unknownLength = 0;
 
     public MongoResultSetMetaData(MongoResultDoc metadataDoc) {
         columns = metadataDoc.columns;
@@ -24,7 +24,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         }
     }
 
-    private void checkBounds(int i) throws SQLException {
+    protected void checkBounds(int i) throws SQLException {
         if (i > getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
@@ -39,9 +39,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public int getColumnCount() throws SQLException {
-        return columns.size();
-    }
+    public abstract int getColumnCount() throws SQLException;
 
     @Override
     public boolean isAutoIncrement(int column) throws SQLException {
@@ -93,10 +91,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public int isNullable(int column) throws SQLException {
-        checkBounds(column);
-        return columnNullableUnknown;
-    }
+    public abstract int isNullable(int column) throws SQLException;
 
     @Override
     public boolean isSigned(int column) throws SQLException {
@@ -181,16 +176,10 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public String getColumnLabel(int column) throws SQLException {
-        checkBounds(column);
-        return columns.get(column - 1).columnAlias;
-    }
+    public abstract String getColumnLabel(int column) throws SQLException;
 
     @Override
-    public String getColumnName(int column) throws SQLException {
-        checkBounds(column);
-        return columns.get(column - 1).column;
-    }
+    public abstract String getColumnName(int column) throws SQLException;
 
     @Override
     public String getSchemaName(int column) throws SQLException {
@@ -281,22 +270,12 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public String getTableName(int column) throws SQLException {
-        checkBounds(column);
-        return columns.get(column).tableAlias;
-    }
+    public abstract String getTableName(int column) throws SQLException;
 
     @Override
-    public String getCatalogName(int column) throws SQLException {
-        checkBounds(column);
-        return columns.get(column - 1).database;
-    }
+    public abstract String getCatalogName(int column) throws SQLException;
 
-    public BsonType getBsonType(int column) throws SQLException {
-        checkBounds(column);
-        String typeName = columns.get(column - 1).bsonType;
-        return getBsonTypeHelper(typeName);
-    }
+    public abstract BsonType getBsonType(int column) throws SQLException;
 
     static BsonType getBsonTypeHelper(String typeName) throws SQLException {
         // bsonType strings as represented by the $type function:
@@ -398,107 +377,10 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public int getColumnType(int column) throws SQLException {
-        BsonType t = getBsonType(column);
-        switch (t) {
-            case ARRAY:
-                return Types.ARRAY;
-            case BINARY:
-                return Types.BLOB;
-            case BOOLEAN:
-                return Types.BIT;
-            case DATE_TIME:
-                return Types.TIMESTAMP;
-            case DB_POINTER:
-                return Types.NULL;
-            case DECIMAL128:
-                return Types.DECIMAL;
-            case DOCUMENT:
-                return Types.NULL;
-            case DOUBLE:
-                return Types.DOUBLE;
-            case INT32:
-                return Types.INTEGER;
-            case INT64:
-                return Types.INTEGER;
-            case JAVASCRIPT:
-                return Types.NULL;
-            case JAVASCRIPT_WITH_SCOPE:
-                return Types.NULL;
-            case MAX_KEY:
-                return Types.NULL;
-            case MIN_KEY:
-                return Types.NULL;
-            case NULL:
-                return Types.NULL;
-            case OBJECT_ID:
-                return Types.LONGVARCHAR;
-            case REGULAR_EXPRESSION:
-                return Types.NULL;
-            case STRING:
-                return Types.LONGVARCHAR;
-            case SYMBOL:
-                return Types.NULL;
-            case TIMESTAMP:
-                return Types.NULL;
-            case UNDEFINED:
-                return Types.NULL;
-        }
-        throw new SQLException("unknown bson type: " + t);
-    }
+    public abstract int getColumnType(int column) throws SQLException;
 
     @Override
-    public String getColumnTypeName(int column) throws SQLException {
-        BsonType t = getBsonType(column);
-        switch (t) {
-                // we will return the same names as the mongodb $type function:
-            case ARRAY:
-                return "array";
-            case BINARY:
-                return "binData";
-            case BOOLEAN:
-                return "bool";
-            case DATE_TIME:
-                return "date";
-            case DB_POINTER:
-                return "null";
-            case DECIMAL128:
-                return "decimal";
-            case DOCUMENT:
-                return "null";
-            case DOUBLE:
-                return "double";
-            case END_OF_DOCUMENT:
-                return "null";
-            case INT32:
-                return "int";
-            case INT64:
-                return "long";
-            case JAVASCRIPT:
-                return "null";
-            case JAVASCRIPT_WITH_SCOPE:
-                return "null";
-            case MAX_KEY:
-                return "null";
-            case MIN_KEY:
-                return "null";
-            case NULL:
-                return "null";
-            case OBJECT_ID:
-                return "string";
-            case REGULAR_EXPRESSION:
-                return "null";
-            case STRING:
-                return "string";
-            case SYMBOL:
-                return "null";
-            case TIMESTAMP:
-                return "null";
-            case UNDEFINED:
-                return "null";
-        }
-        throw new SQLException("unknown bson type: " + t);
-    }
+    public abstract String getColumnTypeName(int column) throws SQLException;
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {

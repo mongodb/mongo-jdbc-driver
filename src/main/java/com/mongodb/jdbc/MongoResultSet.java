@@ -89,7 +89,7 @@ public abstract class MongoResultSet implements ResultSet {
 
         // iterate the cursor to get the metadata doc
         MongoResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MongoResultSetMetaData(metadataDoc);
+        rsMetaData = new MySQLResultSetMetaData(metadataDoc);
     }
 
     protected abstract BsonValue getBsonValue(int columnIndex) throws SQLException;
