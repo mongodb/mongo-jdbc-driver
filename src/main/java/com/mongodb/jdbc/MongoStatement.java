@@ -11,20 +11,20 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
-public class MongoStatement implements Statement {
+public abstract class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
-    private MongoDatabase currentDB;
-    private MongoResultSet resultSet;
-    private MongoConnection conn;
-    private boolean relaxed;
-    private boolean isClosed = false;
-    private boolean closeOnCompletion = false;
-    private int fetchSize = 0;
-    private int maxQuerySec = 0;
-    private String currentDBName;
-    private final BsonInt32 formatVersion = new BsonInt32(2);
+    protected MongoDatabase currentDB;
+    protected MongoResultSet resultSet;
+    protected MongoConnection conn;
+    protected boolean relaxed;
+    protected boolean isClosed = false;
+    protected boolean closeOnCompletion = false;
+    protected int fetchSize = 0;
+    protected int maxQuerySec = 0;
+    protected String currentDBName;
+    protected final BsonInt32 formatVersion = new BsonInt32(2);
 
     public MongoStatement(MongoConnection conn, String databaseName, boolean relaxed)
             throws SQLException {
@@ -41,40 +41,14 @@ public class MongoStatement implements Statement {
         }
     }
 
-    private void checkClosed() throws SQLException {
+    protected void checkClosed() throws SQLException {
         if (isClosed()) {
             throw new SQLException("Connection is closed.");
         }
     }
 
     @SuppressWarnings("unchecked")
-    public ResultSet executeQuery(String sql) throws SQLException {
-        checkClosed();
-        closeExistingResultSet();
-
-        BsonDocument stage = new BsonDocument();
-        BsonDocument sqlDoc = new BsonDocument();
-        sqlDoc.put("statement", new BsonString(sql));
-        sqlDoc.put("formatVersion", formatVersion);
-        sqlDoc.put("format", new BsonString("jdbc"));
-        sqlDoc.put("dialect", new BsonString("mysql"));
-        stage.put("$sql", sqlDoc);
-        try {
-            MongoIterable<MongoResultDoc> iterable =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), MongoResultDoc.class)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            if (fetchSize != 0) {
-                iterable = iterable.batchSize(fetchSize);
-            }
-
-            resultSet = new MongoResultSet(this, iterable.cursor(), relaxed);
-            return resultSet;
-        } catch (MongoExecutionTimeoutException e) {
-            throw new SQLTimeoutException(e);
-        }
-    }
+    public abstract ResultSet executeQuery(String sql) throws SQLException;
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
@@ -134,7 +108,7 @@ public class MongoStatement implements Statement {
     }
 
     // Close any existing resultsets associated with this statement.
-    private void closeExistingResultSet() {
+    protected void closeExistingResultSet() {
         try {
             if (resultSet != null) {
                 resultSet.close();

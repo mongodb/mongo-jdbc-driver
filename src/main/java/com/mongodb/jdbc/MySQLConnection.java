@@ -14,7 +14,7 @@ public class MySQLConnection extends MongoConnection implements Connection {
     public Statement createStatement() throws SQLException {
         checkConnection();
         try {
-            return new MongoStatement(this, currentDB, relaxed);
+            return new MySQLStatement(this, currentDB, relaxed);
         } catch (IllegalArgumentException e) {
             throw new SQLException(e);
         }
