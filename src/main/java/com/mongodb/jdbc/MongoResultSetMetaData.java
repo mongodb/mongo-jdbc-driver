@@ -39,9 +39,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public abstract int getColumnCount() throws SQLException;
-
-    @Override
     public boolean isAutoIncrement(int column) throws SQLException {
         checkBounds(column);
         return false;
@@ -89,9 +86,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         checkBounds(column);
         return false;
     }
-
-    @Override
-    public abstract int isNullable(int column) throws SQLException;
 
     @Override
     public boolean isSigned(int column) throws SQLException {
@@ -174,12 +168,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         }
         throw new SQLException("unknown bson type: " + t);
     }
-
-    @Override
-    public abstract String getColumnLabel(int column) throws SQLException;
-
-    @Override
-    public abstract String getColumnName(int column) throws SQLException;
 
     @Override
     public String getSchemaName(int column) throws SQLException {
@@ -268,12 +256,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         }
         throw new SQLException("unknown bson type: " + t);
     }
-
-    @Override
-    public abstract String getTableName(int column) throws SQLException;
-
-    @Override
-    public abstract String getCatalogName(int column) throws SQLException;
 
     public abstract BsonType getBsonType(int column) throws SQLException;
 
@@ -375,12 +357,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         }
         throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
     }
-
-    @Override
-    public abstract int getColumnType(int column) throws SQLException;
-
-    @Override
-    public abstract String getColumnTypeName(int column) throws SQLException;
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {

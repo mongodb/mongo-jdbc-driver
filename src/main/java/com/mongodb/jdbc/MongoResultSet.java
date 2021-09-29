@@ -24,7 +24,6 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -737,12 +736,6 @@ public abstract class MongoResultSet implements ResultSet {
 
     protected abstract Object getObject(BsonValue o, int columnType) throws SQLException;
 
-    @Override
-    public abstract Object getObject(int columnIndex) throws SQLException;
-
-    @Override
-    public abstract Object getObject(String columnLabel) throws SQLException;
-
     // ----------------------------------------------------------------
 
     @Override
@@ -1271,10 +1264,6 @@ public abstract class MongoResultSet implements ResultSet {
     }
 
     @Override
-    public abstract Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
-            throws SQLException;
-
-    @Override
     public Ref getRef(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
@@ -1324,10 +1313,6 @@ public abstract class MongoResultSet implements ResultSet {
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
-
-    @Override
-    public abstract Object getObject(String columnLabel, java.util.Map<String, Class<?>> map)
-            throws SQLException;
 
     @Override
     public Ref getRef(String columnLabel) throws SQLException {

@@ -6,11 +6,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
@@ -171,21 +169,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     public String getIdentifierQuoteString() throws SQLException {
         return "`";
     }
-
-    @Override
-    public abstract String getSQLKeywords() throws SQLException;
-
-    @Override
-    public abstract String getNumericFunctions() throws SQLException;
-
-    @Override
-    public abstract String getStringFunctions() throws SQLException;
-
-    @Override
-    public abstract String getSystemFunctions() throws SQLException;
-
-    @Override
-    public abstract String getTimeDateFunctions() throws SQLException;
 
     @Override
     public String getSearchStringEscape() throws SQLException {
@@ -745,17 +728,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public abstract ResultSet getTables(
-            String catalog, String schemaPattern, String tableNamePattern, String types[])
-            throws SQLException;
-
-    @Override
-    public abstract ResultSet getSchemas() throws SQLException;
-
-    @Override
-    public abstract ResultSet getCatalogs() throws SQLException;
-
-    @Override
     public ResultSet getTableTypes() throws SQLException {
         MongoResultDoc doc = new MongoResultDoc();
         ArrayList<MongoResultDoc> docs = new ArrayList<>();
@@ -956,25 +928,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public abstract ResultSet getColumns(
-            String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-            throws SQLException;
-
-    @Override
-    public abstract ResultSet getColumnPrivileges(
-            String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-            throws SQLException;
-
-    @Override
-    public abstract ResultSet getTablePrivileges(
-            String catalog, String schemaPattern, String tableNamePattern) throws SQLException;
-
-    @Override
-    public abstract ResultSet getBestRowIdentifier(
-            String catalog, String schema, String table, int scope, boolean nullable)
-            throws SQLException;
-
-    @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
         // We do not have updates, so this will always be empty.
@@ -995,10 +948,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
-
-    @Override
-    public abstract ResultSet getPrimaryKeys(String catalog, String schema, String table)
-            throws SQLException;
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
@@ -1292,11 +1241,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
-    @Override
-    public abstract ResultSet getIndexInfo(
-            String catalog, String schema, String table, boolean unique, boolean approximate)
-            throws SQLException;
-
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
@@ -1549,9 +1493,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     @Override
-    public abstract ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException;
-
-    @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
         // This is related to using stored procedure escape syntax, which we do not support.
         return false;
@@ -1562,9 +1503,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         // No writes.
         return false;
     }
-
-    @Override
-    public abstract ResultSet getClientInfoProperties() throws SQLException;
 
     protected MongoResultDoc getFunctionMetaDoc() {
         MongoResultDoc metaDoc = new MongoResultDoc();
@@ -1590,10 +1528,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new BsonString(functionName));
         return doc;
     }
-
-    @Override
-    public abstract ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
-            throws SQLException;
 
     protected BsonValue bsonInt32(Integer i) {
         if (i == null) {
@@ -1651,14 +1585,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         doc.values.add(new BsonString(functionName));
         return doc;
     }
-
-    @Override
-    public abstract ResultSet getFunctionColumns(
-            String catalog,
-            String schemaPattern,
-            String functionNamePattern,
-            String columnNamePattern)
-            throws SQLException;
 
     //--------------------------JDBC 4.1 -----------------------------
     @Override

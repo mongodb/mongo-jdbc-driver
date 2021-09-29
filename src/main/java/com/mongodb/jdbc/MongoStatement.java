@@ -47,9 +47,6 @@ public abstract class MongoStatement implements Statement {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public abstract ResultSet executeQuery(String sql) throws SQLException;
-
     @Override
     public int executeUpdate(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException(
