@@ -103,14 +103,4 @@ public class MySQLConnection extends MongoConnection implements Connection {
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
-
-    @Override
-    protected void validateConn() throws SQLException {
-        Statement statement = createStatement();
-        boolean resultExists = statement.execute("SELECT 1 from DUAL");
-        if (!resultExists) {
-            // no resultSet returned
-            throw new SQLException("Connection error");
-        }
-    }
 }

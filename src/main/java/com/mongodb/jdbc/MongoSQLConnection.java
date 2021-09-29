@@ -71,9 +71,4 @@ public class MongoSQLConnection extends MongoConnection implements Connection {
             throws SQLException {
         throw new SQLFeatureNotSupportedException("TODO");
     }
-
-    @Override
-    protected void validateConn() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
-    }
 }

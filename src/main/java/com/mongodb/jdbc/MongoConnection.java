@@ -324,7 +324,14 @@ public abstract class MongoConnection implements Connection {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    protected abstract void validateConn() throws SQLException;
+    private void validateConn() throws SQLException {
+        Statement statement = createStatement();
+        boolean resultExists = statement.execute("SELECT 1");
+        if (!resultExists) {
+            // no resultSet returned
+            throw new SQLException("Connection error");
+        }
+    }
 
     class ConnValidation implements Callable<Object> {
         @Override
