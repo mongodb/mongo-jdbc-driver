@@ -566,13 +566,15 @@ public class MongoPreparedStatement implements PreparedStatement {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
-    }
-
+    // java.sql.Wrapper impl
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return false;
+        return iface.isInstance(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return (T) this;
     }
 }
