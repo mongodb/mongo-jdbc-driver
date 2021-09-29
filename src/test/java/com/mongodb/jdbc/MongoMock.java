@@ -9,6 +9,8 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.bson.BsonInt32;
@@ -28,17 +30,29 @@ public abstract class MongoMock {
     @InjectMocks
     protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null);
 
+    private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName) throws NoSuchFieldException {
+        try {
+            return c.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class superClass = c.getSuperclass();
+            if (superClass != null) {
+                return getDeclaredFieldFromClassOrSuperClass(superClass, fieldName);
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+
     // reset the mock objects before every test case
     protected static void resetMockObjs() throws NoSuchFieldException {
         FieldSetter.setField(
                 mongoConnection,
-                mongoConnection.getClass().getDeclaredField("mongoClient"),
+                getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "mongoClient"),
                 mongoClient);
         FieldSetter.setField(
-                mongoConnection, mongoConnection.getClass().getDeclaredField("isClosed"), false);
+                mongoConnection, getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "isClosed"), false);
         FieldSetter.setField(
                 mongoConnection,
-                mongoConnection.getClass().getDeclaredField("currentDB"),
+                getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "currentDB"),
                 database);
 
         doNothing().when(mongoClient).close();
