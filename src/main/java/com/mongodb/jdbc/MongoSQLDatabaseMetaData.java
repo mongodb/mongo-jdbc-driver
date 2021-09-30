@@ -1,11 +1,9 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonInt32;
-import org.bson.BsonString;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 

@@ -5,7 +5,6 @@ import org.bson.BsonType;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Types;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
 

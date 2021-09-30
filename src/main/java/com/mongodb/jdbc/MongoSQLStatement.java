@@ -1,6 +1,9 @@
 package com.mongodb.jdbc;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
 
 public class MongoSQLStatement extends MongoStatement implements Statement {
 

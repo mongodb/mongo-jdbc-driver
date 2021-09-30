@@ -3,7 +3,11 @@ package com.mongodb.jdbc;
 import com.mongodb.client.MongoCursor;
 import org.bson.BsonValue;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
+import java.sql.Types;
 
 public class MySQLResultSet extends MongoResultSet implements ResultSet {
 

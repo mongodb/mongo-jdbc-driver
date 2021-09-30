@@ -5,7 +5,10 @@ import com.mongodb.client.MongoIterable;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
