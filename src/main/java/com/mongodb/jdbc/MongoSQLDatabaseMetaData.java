@@ -37,6 +37,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     @Override
+    public ResultSet getProcedures(
+            String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getProcedureColumns(
+            String catalog,
+            String schemaPattern,
+            String procedureNamePattern,
+            String columnNamePattern)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getTableTypes() throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String types[])
             throws SQLException {
@@ -81,14 +102,78 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     @Override
+    public ResultSet getVersionColumns(String catalog, String schema, String table)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getImportedKeys(String catalog, String schema, String table)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getExportedKeys(String catalog, String schema, String table)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getCrossReference(
+            String parentCatalog,
+            String parentSchema,
+            String parentTable,
+            String foreignCatalog,
+            String foreignSchema,
+            String foreignTable)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
     @Override
+    public ResultSet getTypeInfo() throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getUDTs(
+            String catalog, String schemaPattern, String typeNamePattern, int[] types)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    @Override
+    public ResultSet getAttributes(
+            String catalog,
+            String schemaPattern,
+            String typeNamePattern,
+            String attributeNamePattern)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("TODO");
     }
@@ -117,6 +202,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String schemaPattern,
             String functionNamePattern,
             String columnNamePattern)
+            throws SQLException {
+        throw new SQLFeatureNotSupportedException("TODO");
+    }
+
+    //--------------------------JDBC 4.1 -----------------------------
+    @Override
+    public ResultSet getPseudoColumns(
+            String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
         throw new SQLFeatureNotSupportedException("TODO");
     }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -166,6 +167,85 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     @Override
     public String getTimeDateFunctions() throws SQLException {
         return MongoFunction.dateFunctionsString;
+    }
+
+    @Override
+    public ResultSet getProcedures(
+            String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+
+        // No procedures so we always return an empty result set.
+        BsonValue n = new BsonNull();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "REMARKS", "REMARKS", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_TYPE", "PROCEDURE_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getProcedureColumns(
+            String catalog,
+            String schemaPattern,
+            String procedureNamePattern,
+            String columnNamePattern)
+            throws SQLException {
+
+        // No procedures so we always return an empty result set.
+        BsonValue n = new BsonNull();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PRECISION", "PRECISION", "int"));
+        metaDoc.columns.add(new Column("", "", "", "LENGTH", "LENGTH", "int"));
+        metaDoc.columns.add(new Column("", "", "", "SCALE", "SCALE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "RADIX", "RADIX", "int"));
+        metaDoc.columns.add(new Column("", "", "", "NULLABLE", "NULLABLE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "REMARKS", "REMARKS", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_DEF", "COLUMN_DEF", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
+        metaDoc.columns.add(
+                new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
+        metaDoc.columns.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int"));
+        metaDoc.columns.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getTableTypes() throws SQLException {
+        MongoResultDoc doc = new MongoResultDoc();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TABLE_TYPE", "TABLE_TYPE", "string"));
+
+        MongoResultDoc valuesDoc = new MongoResultDoc();
+        valuesDoc.values = new ArrayList<>();
+        valuesDoc.values.add(new BsonString("TABLE"));
+
+        docs.add(metaDoc);
+        docs.add(valuesDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -354,6 +434,117 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     }
 
     @Override
+    public ResultSet getVersionColumns(String catalog, String schema, String table)
+            throws SQLException {
+        // We do not have updates, so this will always be empty.
+        BsonValue n = new BsonNull();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "SCOPE", "SCOPE", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int"));
+        metaDoc.columns.add(new Column("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getImportedKeys(String catalog, String schema, String table)
+            throws SQLException {
+        // We do not have foreign keys, so this will always be empty.
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int"));
+        metaDoc.columns.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getExportedKeys(String catalog, String schema, String table)
+            throws SQLException {
+        // We do not have foreign keys, so this will always be empty.
+        BsonValue n = new BsonNull();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int"));
+        metaDoc.columns.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getCrossReference(
+            String parentCatalog,
+            String parentSchema,
+            String parentTable,
+            String foreignCatalog,
+            String foreignSchema,
+            String foreignTable)
+            throws SQLException {
+        // We do not have foreign keys, so this will always be empty.
+        BsonValue n = new BsonNull();
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "KEY_SEQ", "KEY_SEQ", "int"));
+        metaDoc.columns.add(new Column("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DELETE_RULE", "DELETE_RULE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "FK_NAME", "FK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "PK_NAME", "PK_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
         Statement stmt = conn.createStatement();
@@ -373,6 +564,142 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         + "  and "
                         + equalsCond("kcu.TABLE_NAME", table)
                         + "  and c.CONSTRAINT_TYPE = 'PRIMARY KEY'");
+    }
+
+    @Override
+    public ResultSet getTypeInfo() throws SQLException {
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(11);
+        docs.add(getTypeInfoMetaDoc());
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "binData", //typeName
+                        Types.NULL, //dataType
+                        0, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typePredNone, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "bool", //typeName
+                        Types.BIT, //dataType
+                        1, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        true, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "date", //typeName
+                        Types.TIMESTAMP, //dataType
+                        24, //precision
+                        "'", //literalPrefix
+                        "'", //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "decimal", //typeName
+                        Types.DECIMAL, //dataType
+                        34, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        34, //minScale
+                        34, //maxScale
+                        10)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "double", //typeName
+                        Types.DOUBLE, //dataType
+                        15, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        15, //minScale
+                        15, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "int", //typeName
+                        Types.INTEGER, //dataType
+                        10, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        true, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "long", //typeName
+                        Types.INTEGER, //dataType
+                        19, //precision
+                        null, //literalPrefix
+                        null, //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        false, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        true, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        2)); //numPrecRadix
+
+        docs.add(
+                getTypeInfoValuesDoc(
+                        "string", //typeName
+                        Types.LONGVARCHAR, //dataType
+                        0, //precision
+                        "'", //literalPrefix
+                        "'", //literalSuffix
+                        ResultSetMetaData.columnNullable, //nullable
+                        true, //caseSensitive
+                        typeSearchable, //seachable
+                        false, //unsigned
+                        false, //fixedPrecScale
+                        0, //minScale
+                        0, //maxScale
+                        0)); //numPrecRadix
+
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     @Override
@@ -422,6 +749,102 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             return " 1 "; //just return a true condition.
         }
         return " " + colName + " = '" + escapeString(literal) + "' ";
+    }
+
+    @Override
+    public ResultSet getUDTs(
+            String catalog, String schemaPattern, String typeNamePattern, int[] types)
+            throws SQLException {
+        // We do not have UDTs.
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "CLASS_NAME", "CLASS_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "REMARKS", "REMARKS", "string"));
+        metaDoc.columns.add(new Column("", "", "", "BASE_TYPE", "BASE_TYPE", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
+            throws SQLException {
+        // We do not have SuperTypes.
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SUPERTYPE_CAT", "SUPERTYPE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SUPERTYPE_SCHEM", "SUPERTYPE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", "string"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
+            throws SQLException {
+        // We do not have SuperTables.
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", "string"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    @Override
+    public ResultSet getAttributes(
+            String catalog,
+            String schemaPattern,
+            String typeNamePattern,
+            String attributeNamePattern)
+            throws SQLException {
+        // We do not have UDTs.
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "ATTR_NAME", "ATTR_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "ATTR_TYPE_NAME", "ATTR_TYPE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "ATTR_SIZE", "ATTR_SIZE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int"));
+        metaDoc.columns.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "int"));
+        metaDoc.columns.add(new Column("", "", "", "NULLABLE", "NULLABLE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "REMARKS", "REMARKS", "string"));
+        metaDoc.columns.add(new Column("", "", "", "ATTR_DEF", "ATTR_DEF", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
+        metaDoc.columns.add(
+                new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
+        metaDoc.columns.add(new Column("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int"));
+        metaDoc.columns.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", "string"));
+        metaDoc.columns.add(new Column("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", "int"));
+
+        docs.add(metaDoc);
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -553,6 +976,34 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             }
         }
 
+        return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
+    }
+
+    //--------------------------JDBC 4.1 -----------------------------
+    @Override
+    public ResultSet getPseudoColumns(
+            String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
+            throws SQLException {
+        // We do not support pseudoColumns (hidden columns).
+        ArrayList<MongoResultDoc> docs = new ArrayList<>();
+
+        MongoResultDoc metaDoc = new MongoResultDoc();
+        metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new Column("", "", "", "TABLE_CAT", "TABLE_CAT", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", "string"));
+        metaDoc.columns.add(new Column("", "", "", "TABLE_NAME", "TABLE_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
+        metaDoc.columns.add(new Column("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", "int"));
+        metaDoc.columns.add(new Column("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int"));
+        metaDoc.columns.add(new Column("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "string"));
+        metaDoc.columns.add(new Column("", "", "", "COLUMN_USAGE", "COLUMN_USAGE", "string"));
+        metaDoc.columns.add(new Column("", "", "", "REMARKS", "REMARKS", "string"));
+        metaDoc.columns.add(
+                new Column("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
+        metaDoc.columns.add(new Column("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
+
+        docs.add(metaDoc);
         return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 }
