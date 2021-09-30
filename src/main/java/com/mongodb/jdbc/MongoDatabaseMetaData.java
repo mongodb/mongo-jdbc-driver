@@ -713,20 +713,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MySQLResultSet(null, new MongoExplicitCursor(docs), true);
     }
 
-    protected String patternCond(String colName, String pattern) {
-        if (pattern == null) {
-            return " 1 "; //just return a true condition.
-        }
-        return " " + colName + " like '" + escapeString(pattern) + "' ";
-    }
-
-    protected String equalsCond(String colName, String literal) {
-        if (literal == null) {
-            return " 1 "; //just return a true condition.
-        }
-        return " " + colName + " = '" + escapeString(literal) + "' ";
-    }
-
     @Override
     public ResultSet getTableTypes() throws SQLException {
         MongoResultDoc doc = new MongoResultDoc();

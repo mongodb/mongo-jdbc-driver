@@ -410,6 +410,20 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 : ""));
     }
 
+    private String patternCond(String colName, String pattern) {
+        if (pattern == null) {
+            return " 1 "; //just return a true condition.
+        }
+        return " " + colName + " like '" + escapeString(pattern) + "' ";
+    }
+
+    private String equalsCond(String colName, String literal) {
+        if (literal == null) {
+            return " 1 "; //just return a true condition.
+        }
+        return " " + colName + " = '" + escapeString(literal) + "' ";
+    }
+
     //------------------------- JDBC 4.0 -----------------------------------
 
     @Override
