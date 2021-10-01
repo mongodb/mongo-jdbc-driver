@@ -29,7 +29,7 @@ class MongoStatementTest extends MongoMock {
 
     static {
         try {
-            mongoStatement = new MongoStatement(mongoConnection, database, true);
+            mongoStatement = new MySQLStatement(mongoConnection, database, true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ class MongoStatementTest extends MongoMock {
     @BeforeEach
     void setupTest() throws NoSuchFieldException, SQLException {
         resetMockObjs();
-        mongoStatement = new MongoStatement(mongoConnection, database, true);
+        mongoStatement = new MySQLStatement(mongoConnection, database, true);
     }
 
     void testExceptionAfterConnectionClosed(MongoConnectionTest.TestInterface ti)

@@ -11,10 +11,7 @@ import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -36,13 +33,13 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
 
-public class MongoConnection implements Connection {
-    private MongoClient mongoClient;
-    private String currentDB;
-    private String url;
-    private String user;
-    private boolean isClosed;
-    private boolean relaxed;
+public abstract class MongoConnection implements Connection {
+    protected MongoClient mongoClient;
+    protected String currentDB;
+    protected String url;
+    protected String user;
+    protected boolean isClosed;
+    protected boolean relaxed;
 
     public MongoConnection(ConnectionString cs, String database, String conversionMode) {
         Preconditions.checkNotNull(cs);
@@ -69,7 +66,7 @@ public class MongoConnection implements Connection {
         isClosed = false;
     }
 
-    private void checkConnection() throws SQLException {
+    protected void checkConnection() throws SQLException {
         if (isClosed()) {
             throw new SQLException("Connection is closed.");
         }
@@ -96,28 +93,8 @@ public class MongoConnection implements Connection {
         }
     }
 
-    @Override
-    public Statement createStatement() throws SQLException {
-        checkConnection();
-        try {
-            return new MongoStatement(this, currentDB, relaxed);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException(e);
-        }
-    }
-
     protected MongoDatabase getDatabase(String DBName) {
         return mongoClient.getDatabase(DBName);
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
-        checkConnection();
-        try {
-            return new MongoPreparedStatement(sql, this, currentDB, relaxed);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException(e);
-        }
     }
 
     @Override
@@ -172,11 +149,6 @@ public class MongoConnection implements Connection {
     }
 
     @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
-        return new MongoDatabaseMetaData(this);
-    }
-
-    @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
         checkConnection();
     }
@@ -222,30 +194,6 @@ public class MongoConnection implements Connection {
     }
 
     // --------------------------JDBC 2.0-----------------------------
-
-    @Override
-    public Statement createStatement(int resultSetType, int resultSetConcurrency)
-            throws SQLException {
-        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
-                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
-            return createStatement();
-        } else {
-            throw new SQLFeatureNotSupportedException(
-                    Thread.currentThread().getStackTrace()[1].toString());
-        }
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(
-            String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
-                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
-            return prepareStatement(sql);
-        } else {
-            throw new SQLFeatureNotSupportedException(
-                    Thread.currentThread().getStackTrace()[1].toString());
-        }
-    }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency)
@@ -304,49 +252,8 @@ public class MongoConnection implements Connection {
     }
 
     @Override
-    public Statement createStatement(
-            int resultSetType, int resultSetConcurrency, int resultSetHoldability)
-            throws SQLException {
-        if (resultSetType == ResultSet.TYPE_FORWARD_ONLY
-                && resultSetConcurrency == ResultSet.CONCUR_READ_ONLY) {
-            return createStatement();
-        } else {
-            throw new SQLFeatureNotSupportedException(
-                    Thread.currentThread().getStackTrace()[1].toString());
-        }
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(
-            String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
-    @Override
     public CallableStatement prepareCall(
             String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
-            throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String sql, String columnNames[])
             throws SQLException {
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
@@ -378,7 +285,7 @@ public class MongoConnection implements Connection {
 
     private void validateConn() throws SQLException {
         Statement statement = createStatement();
-        boolean resultExists = statement.execute("SELECT 1 from DUAL");
+        boolean resultExists = statement.execute("SELECT 1");
         if (!resultExists) {
             // no resultSet returned
             throw new SQLException("Connection error");

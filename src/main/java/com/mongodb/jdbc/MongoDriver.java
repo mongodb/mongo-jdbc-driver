@@ -120,7 +120,7 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return new MongoConnection(
+        return new MySQLConnection(
                 p.left(), info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
     }
 

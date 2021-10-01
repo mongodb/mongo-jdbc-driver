@@ -83,13 +83,13 @@ class MongoResultSetMetaDataTest extends MongoMock {
         mongoResultDocs.add(valuesDoc);
 
         try {
-            mongoStatement = new MongoStatement(mongoConnection, "test", true);
+            mongoStatement = new MySQLStatement(mongoConnection, "test", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         MongoResultSet rs =
-                new MongoResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
+                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
 
         try {
             rs.next();
