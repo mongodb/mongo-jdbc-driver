@@ -8,7 +8,10 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import org.bson.*;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
