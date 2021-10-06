@@ -39,9 +39,8 @@ public abstract class MongoConnection implements Connection {
     protected String url;
     protected String user;
     protected boolean isClosed;
-    protected boolean relaxed;
 
-    public MongoConnection(ConnectionString cs, String database, String conversionMode) {
+    public MongoConnection(ConnectionString cs, String database) {
         Preconditions.checkNotNull(cs);
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
@@ -62,7 +61,6 @@ public abstract class MongoConnection implements Connection {
                                 .driverName(MongoDriver.NAME)
                                 .driverVersion(version)
                                 .build());
-        relaxed = conversionMode == null || !conversionMode.equals("strict");
         isClosed = false;
     }
 

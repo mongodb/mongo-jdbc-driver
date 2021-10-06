@@ -29,10 +29,10 @@ public class MongoPreparedStatement implements PreparedStatement {
     private MongoStatement statement;
 
     public MongoPreparedStatement(
-            String sql, MongoConnection conn, String databaseName, boolean relaxed)
+            String sql, MongoStatement statement)
             throws SQLException {
         this.sql = sql;
-        this.statement = new MySQLStatement(conn, databaseName, relaxed);
+        this.statement = statement;
     }
 
     @Override

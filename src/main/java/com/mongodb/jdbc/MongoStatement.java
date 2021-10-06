@@ -18,28 +18,12 @@ public abstract class MongoStatement implements Statement {
     protected MongoDatabase currentDB;
     protected MongoResultSet resultSet;
     protected MongoConnection conn;
-    protected boolean relaxed;
     protected boolean isClosed = false;
     protected boolean closeOnCompletion = false;
     protected int fetchSize = 0;
     protected int maxQuerySec = 0;
     protected String currentDBName;
     protected final BsonInt32 formatVersion = new BsonInt32(2);
-
-    public MongoStatement(MongoConnection conn, String databaseName, boolean relaxed)
-            throws SQLException {
-        Preconditions.checkNotNull(conn);
-        Preconditions.checkNotNull(databaseName);
-        this.conn = conn;
-        currentDBName = databaseName;
-        this.relaxed = relaxed;
-
-        try {
-            currentDB = conn.getDatabase(databaseName);
-        } catch (IllegalArgumentException e) {
-            throw new SQLException("Database name %s is invalid", databaseName);
-        }
-    }
 
     protected void checkClosed() throws SQLException {
         if (isClosed()) {

@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
 
+import com.google.common.base.Preconditions;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -11,18 +12,27 @@ import java.sql.Statement;
 
 public class MongoSQLConnection extends MongoConnection implements Connection {
 
-    public MongoSQLConnection(ConnectionString cs, String database, String conversionMode) {
-        super(cs, database, conversionMode);
+    public MongoSQLConnection(ConnectionString cs, String database) {
+        super(cs, database);
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
-    }
+        checkConnection();
+        try {
+            return new MongoSQLStatement(this, currentDB);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
+   }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        try {
+            return new MongoPreparedStatement(sql, new MongoSQLStatement(this, currentDB));
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
     }
 
     @Override

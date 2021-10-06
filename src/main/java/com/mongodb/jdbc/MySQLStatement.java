@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoIterable;
 import org.bson.BsonDocument;
@@ -13,10 +14,21 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MySQLStatement extends MongoStatement implements Statement {
+    private boolean relaxed;
 
     public MySQLStatement(MongoConnection conn, String databaseName, boolean relaxed)
             throws SQLException {
-        super(conn, databaseName, relaxed);
+        Preconditions.checkNotNull(conn);
+        Preconditions.checkNotNull(databaseName);
+        this.conn = conn;
+        currentDBName = databaseName;
+        this.relaxed = relaxed;
+
+        try {
+            currentDB = conn.getDatabase(databaseName);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Database name %s is invalid", databaseName);
+        }
     }
 
     @SuppressWarnings("unchecked")
