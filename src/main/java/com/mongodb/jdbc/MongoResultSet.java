@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.client.MongoCursor;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -30,7 +31,7 @@ import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 import org.bson.BsonValue;
 
-public abstract class MongoResultSet implements ResultSet {
+public abstract class MongoResultSet<T> implements ResultSet {
     // dateFormat cannot be static due to a threading bug in the library.
     protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -57,6 +58,11 @@ public abstract class MongoResultSet implements ResultSet {
     protected final String SYMBOL = "symbol";
     protected final String TIMESTAMP = "timestamp";
 
+    // T representing the current row
+    protected T current;
+    // cursor over all rows of type T
+    protected MongoCursor<T> cursor;
+
     // The one-indexed number of the current row. Will be zero until
     // next() is called for the first time.
     protected int rowNum = 0;
@@ -72,6 +78,53 @@ public abstract class MongoResultSet implements ResultSet {
         // dateFormat is not thread safe, so we do not want to make it a static field.
         TimeZone UTC = TimeZone.getTimeZone("UTC");
         dateFormat.setTimeZone(UTC);
+    }
+
+    // This is only used for testing, and that is why it has package level access, and the
+    // tests have been moved into this package.
+    T getCurrent() {
+        return current;
+    }
+
+    protected void checkBounds(int i) throws SQLException {
+        checkClosed();
+        if (current == null) {
+            throw new SQLException("No current row in the result set. Make sure to call next().");
+        }
+        if (i > rsMetaData.getColumnCount()) {
+            throw new SQLException("Index out of bounds: '" + i + "'.");
+        }
+    }
+
+    @Override
+    public boolean next() throws SQLException {
+        checkClosed();
+
+        boolean result;
+        result = cursor.hasNext();
+        if (result) {
+            current = cursor.next();
+            ++rowNum;
+        }
+        return result;
+    }
+
+    @Override
+    public void close() throws SQLException {
+        if (closed) {
+            return;
+        }
+        cursor.close();
+        closed = true;
+        if (statement != null && statement.isCloseOnCompletion()) {
+            statement.close();
+        }
+    }
+
+    @Override
+    public boolean isLast() throws SQLException {
+        checkClosed();
+        return !cursor.hasNext();
     }
 
     protected abstract BsonValue getBsonValue(int columnIndex) throws SQLException;
@@ -92,8 +145,6 @@ public abstract class MongoResultSet implements ResultSet {
     // it also must set the value of `wasNull`, since that is part
     // of the JDBC API.
     protected abstract boolean checkNull(BsonValue o);
-
-    protected abstract void checkBounds(int i) throws SQLException;
 
     @Deprecated
     @Override

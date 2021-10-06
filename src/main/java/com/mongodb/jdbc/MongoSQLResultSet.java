@@ -9,10 +9,7 @@ import java.sql.Statement;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
-public class MongoSQLResultSet extends MongoResultSet implements ResultSet {
-    MongoCursor<BsonDocument> cursor;
-    BsonDocument current;
-
+public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
     public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor) {
         super(statement);
         this.cursor = cursor;
@@ -22,48 +19,6 @@ public class MongoSQLResultSet extends MongoResultSet implements ResultSet {
     // tests have been moved into this package.
     BsonDocument getCurrent() {
         return current;
-    }
-
-    @Override
-    protected void checkBounds(int i) throws SQLException {
-        checkClosed();
-        if (current == null) {
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        if (i > rsMetaData.getColumnCount()) {
-            throw new SQLException("Index out of bounds: '" + i + "'.");
-        }
-    }
-
-    @Override
-    public boolean next() throws SQLException {
-        checkClosed();
-
-        boolean result;
-        result = cursor.hasNext();
-        if (result) {
-            current = cursor.next();
-            ++rowNum;
-        }
-        return result;
-    }
-
-    @Override
-    public void close() throws SQLException {
-        if (closed) {
-            return;
-        }
-        cursor.close();
-        closed = true;
-        if (statement != null && statement.isCloseOnCompletion()) {
-            statement.close();
-        }
-    }
-
-    @Override
-    public boolean isLast() throws SQLException {
-        checkClosed();
-        return !cursor.hasNext();
     }
 
     @Override

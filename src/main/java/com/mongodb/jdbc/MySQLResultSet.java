@@ -14,12 +14,8 @@ import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
-public class MySQLResultSet extends MongoResultSet implements ResultSet {
+public class MySQLResultSet extends MongoResultSet<MongoResultDoc> implements ResultSet {
     private boolean relaxed = true;
-    // The MongoResultDoc for the current row. Will be null until
-    // next() is called for the first time.
-    protected MongoResultDoc current;
-    private MongoCursor<MongoResultDoc> cursor;
 
     public MySQLResultSet(
             Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
@@ -30,48 +26,6 @@ public class MySQLResultSet extends MongoResultSet implements ResultSet {
         rsMetaData = new MySQLResultSetMetaData(metadataDoc);
         this.cursor = cursor;
         this.relaxed = relaxed;
-    }
-
-    // This is only used for testing, and that is why it has package level access, and the
-    // tests have been moved into this package.
-    MongoResultDoc getCurrent() {
-        return current;
-    }
-
-    @Override
-    protected void checkBounds(int i) throws SQLException {
-        checkClosed();
-        if (current == null) {
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        if (i > rsMetaData.getColumnCount()) {
-            throw new SQLException("Index out of bounds: '" + i + "'.");
-        }
-    }
-
-    @Override
-    public boolean next() throws SQLException {
-        checkClosed();
-
-        boolean result;
-        result = cursor.hasNext();
-        if (result) {
-            current = cursor.next();
-            ++rowNum;
-        }
-        return result;
-    }
-
-    @Override
-    public void close() throws SQLException {
-        if (closed) {
-            return;
-        }
-        cursor.close();
-        closed = true;
-        if (statement != null && statement.isCloseOnCompletion()) {
-            statement.close();
-        }
     }
 
     // checkNull returns true if the Object o is null. Crucially,
@@ -699,12 +653,6 @@ public class MySQLResultSet extends MongoResultSet implements ResultSet {
                 return null;
         }
         throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
-
-    @Override
-    public boolean isLast() throws SQLException {
-        checkClosed();
-        return !cursor.hasNext();
     }
 
     @Override
