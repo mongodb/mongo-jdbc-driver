@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 
-public class MySQLStatement extends MongoStatement implements Statement {
+public class MySQLStatement extends MongoStatement<MongoResultDoc> implements Statement {
     private boolean relaxed;
 
     public MySQLStatement(MongoConnection conn, String databaseName, boolean relaxed)

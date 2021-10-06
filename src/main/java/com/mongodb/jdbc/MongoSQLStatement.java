@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 
-public class MongoSQLStatement extends MongoStatement implements Statement {
+public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
     public MongoSQLStatement(MongoConnection conn, String databaseName) throws SQLException {
         super(conn, databaseName);
     }
