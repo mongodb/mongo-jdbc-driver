@@ -28,9 +28,7 @@ public class MongoPreparedStatement implements PreparedStatement {
     private String sql;
     private MongoStatement statement;
 
-    public MongoPreparedStatement(
-            String sql, MongoStatement statement)
-            throws SQLException {
+    public MongoPreparedStatement(String sql, MongoStatement statement) throws SQLException {
         this.sql = sql;
         this.statement = statement;
     }

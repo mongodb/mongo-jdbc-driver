@@ -1,15 +1,9 @@
 package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
-import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
 import java.sql.*;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.BsonString;
 
 public abstract class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
@@ -24,6 +18,19 @@ public abstract class MongoStatement implements Statement {
     protected int maxQuerySec = 0;
     protected String currentDBName;
     protected final BsonInt32 formatVersion = new BsonInt32(2);
+
+    public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
+        Preconditions.checkNotNull(conn);
+        Preconditions.checkNotNull(databaseName);
+        this.conn = conn;
+        currentDBName = databaseName;
+
+        try {
+            currentDB = conn.getDatabase(databaseName);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Database name %s is invalid", databaseName);
+        }
+    }
 
     protected void checkClosed() throws SQLException {
         if (isClosed()) {

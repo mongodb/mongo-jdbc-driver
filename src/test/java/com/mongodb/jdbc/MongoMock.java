@@ -9,7 +9,6 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,7 +29,8 @@ public abstract class MongoMock {
     @InjectMocks
     protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null);
 
-    private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName) throws NoSuchFieldException {
+    private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
+            throws NoSuchFieldException {
         try {
             return c.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
@@ -49,7 +49,9 @@ public abstract class MongoMock {
                 getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "mongoClient"),
                 mongoClient);
         FieldSetter.setField(
-                mongoConnection, getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "isClosed"), false);
+                mongoConnection,
+                getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "isClosed"),
+                false);
         FieldSetter.setField(
                 mongoConnection,
                 getDeclaredFieldFromClassOrSuperClass(mongoConnection.getClass(), "currentDB"),

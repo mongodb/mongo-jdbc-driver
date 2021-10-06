@@ -1,7 +1,5 @@
 package com.mongodb.jdbc;
 
-import org.bson.*;
-
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -10,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import org.bson.*;
 
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 

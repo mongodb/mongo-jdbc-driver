@@ -1,10 +1,9 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonType;
-
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import org.bson.BsonType;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
 
