@@ -2,21 +2,22 @@ package com.mongodb.jdbc;
 
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoIterable;
-import org.bson.BsonDocument;
-import org.bson.BsonString;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
 
 public class MySQLStatement extends MongoStatement implements Statement {
+    private boolean relaxed;
 
     public MySQLStatement(MongoConnection conn, String databaseName, boolean relaxed)
             throws SQLException {
-        super(conn, databaseName, relaxed);
+        super(conn, databaseName);
+        this.relaxed = relaxed;
     }
 
     @SuppressWarnings("unchecked")

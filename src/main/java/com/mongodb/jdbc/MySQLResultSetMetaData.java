@@ -1,10 +1,9 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonType;
-
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.bson.BsonType;
 
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
 
