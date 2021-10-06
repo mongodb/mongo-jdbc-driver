@@ -1,5 +1,5 @@
 // This is generated code. To regenerate go to the resources directory:
-//     $ cd adl-jdbc-driver/resources
+//     $ cd mongo-jdbc-driver/resources
 // and run:
 //     $ make
 package com.mongodb.jdbc;
@@ -19,7 +19,7 @@ public class MongoFunction {
         this.argTypes = argTypes;
     }
 
-    public static final MongoFunction[] functions =
+    public static final MongoFunction[] mySQLFunctions =
             new MongoFunction[] {
                 new MongoFunction(
                         "ABS",
@@ -584,25 +584,23 @@ public class MongoFunction {
                         "returns cumulative sample standard deviation of a group.",
                         new String[] {"numeric"})
             };
-    public static final String[] functionNames;
-    public static final String functionNamesString;
-    public static final String numericFunctionsString;
-    public static final String stringFunctionsString;
-    public static final String dateFunctionsString;
+    public static final String[] mySQLFunctionNames;
+    public static final String mySQLNumericFunctionsString;
+    public static final String mySQLStringFunctionsString;
+    public static final String mySQLDateFunctionsString;
 
     static {
-        functionNames = new String[MongoFunction.functions.length];
-        for (int i = 0; i < functionNames.length; ++i) {
-            functionNames[i] = MongoFunction.functions[i].name;
+        mySQLFunctionNames = new String[MongoFunction.mySQLFunctions.length];
+        for (int i = 0; i < mySQLFunctionNames.length; ++i) {
+            mySQLFunctionNames[i] = MongoFunction.mySQLFunctions[i].name;
         }
-        functionNamesString = String.join(",", functionNames);
 
-        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(functionNames.length);
-        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(functionNames.length);
-        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(functionNames.length);
-        for (int i = 0; i < MongoFunction.functions.length; ++i) {
-            for (String argType : MongoFunction.functions[i].argTypes) {
-                String name = MongoFunction.functions[i].name;
+        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
+        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
+        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
+        for (int i = 0; i < MongoFunction.mySQLFunctions.length; ++i) {
+            for (String argType : MongoFunction.mySQLFunctions[i].argTypes) {
+                String name = MongoFunction.mySQLFunctions[i].name;
                 if (argType == null) {
                     continue;
                 }
@@ -632,8 +630,8 @@ public class MongoFunction {
                 }
             }
         }
-        numericFunctionsString = String.join(",", numericFunctionSet);
-        stringFunctionsString = String.join(",", stringFunctionSet);
-        dateFunctionsString = String.join(",", dateFunctionSet);
+        mySQLNumericFunctionsString = String.join(",", numericFunctionSet);
+        mySQLStringFunctionsString = String.join(",", stringFunctionSet);
+        mySQLDateFunctionsString = String.join(",", dateFunctionSet);
     }
 }
