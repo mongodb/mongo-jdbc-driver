@@ -1,7 +1,5 @@
 package com.mongodb.jdbc;
 
-import com.google.common.base.Preconditions;
-import com.mongodb.client.MongoCursor;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -24,16 +22,13 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
-import org.bson.BsonType;
 import org.bson.BsonValue;
-import org.bson.types.Decimal128;
 
 public abstract class MongoResultSet implements ResultSet {
     // dateFormat cannot be static due to a threading bug in the library.
@@ -42,6 +37,7 @@ public abstract class MongoResultSet implements ResultSet {
     protected final String ARRAY = "array";
     protected final String BINARY = "binary";
     protected final String BOOLEAN = "boolean";
+    protected final String BSON = "bson";
     protected final String DATE = "date";
     protected final String DB_POINTER = "db_pointer";
     protected final String DECIMAL128 = "decimal128";
@@ -55,6 +51,7 @@ public abstract class MongoResultSet implements ResultSet {
     protected final String MAX_KEY = "max_key";
     protected final String MIN_KEY = "min_key";
     protected final String OBJECT_ID = "objectId";
+    protected final String OBJECT = "object";
     protected final String REGEX = "regex";
     protected final String STRING = "string";
     protected final String SYMBOL = "symbol";
@@ -64,31 +61,17 @@ public abstract class MongoResultSet implements ResultSet {
     // next() is called for the first time.
     protected int rowNum = 0;
 
-    // The MongoResultDoc for the current row. Will be null until
-    // next() is called for the first time.
-    protected MongoResultDoc current;
-
     protected boolean closed = false;
     protected Statement statement;
-    protected MongoCursor<MongoResultDoc> cursor;
     protected boolean wasNull = false;
-    protected boolean relaxed = true;
     protected MongoResultSetMetaData rsMetaData;
 
-    public MongoResultSet(
-            Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
-        Preconditions.checkNotNull(cursor);
+    public MongoResultSet(Statement statement) {
         this.statement = statement;
-        this.cursor = cursor;
-        this.relaxed = relaxed;
 
         // dateFormat is not thread safe, so we do not want to make it a static field.
         TimeZone UTC = TimeZone.getTimeZone("UTC");
         dateFormat.setTimeZone(UTC);
-
-        // iterate the cursor to get the metadata doc
-        MongoResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MySQLResultSetMetaData(metadataDoc);
     }
 
     protected abstract BsonValue getBsonValue(int columnIndex) throws SQLException;
@@ -100,87 +83,17 @@ public abstract class MongoResultSet implements ResultSet {
     }
 
     @Override
-    public boolean next() throws SQLException {
-        checkClosed();
-
-        boolean result;
-        result = cursor.hasNext();
-        if (result) {
-            current = cursor.next();
-            ++rowNum;
-        }
-        return result;
-    }
-
-    @Override
-    public void close() throws SQLException {
-        if (closed) {
-            return;
-        }
-        cursor.close();
-        closed = true;
-        if (statement != null && statement.isCloseOnCompletion()) {
-            statement.close();
-        }
-    }
-
-    @Override
     public boolean wasNull() throws SQLException {
         checkClosed();
         return wasNull;
     }
 
-    protected void checkBounds(int i) throws SQLException {
-        checkClosed();
-        if (current == null) {
-            throw new SQLException("No current row in the result set. Make sure to call next().");
-        }
-        if (i > rsMetaData.getColumnCount()) {
-            throw new SQLException("Index out of bounds: '" + i + "'.");
-        }
-    }
-
     // checkNull returns true if the Object o is null. Crucially,
-    // it also sets the value of `wasNull`, since that is part
+    // it also must set the value of `wasNull`, since that is part
     // of the JDBC API.
-    protected boolean checkNull(BsonValue o) {
-        // reset wasNull from previous check.
-        wasNull = false;
-        if (o == null) {
-            wasNull = true;
-            return true;
-        }
-        BsonType ty = o.getBsonType();
-        // In strict mode, we only want to report undefined and null as null.
-        if (!relaxed) {
-            switch (ty) {
-                case NULL:
-                case UNDEFINED:
-                    wasNull = true;
-                    return true;
-            }
-            return false;
-        }
-        // in relaxed mode, we want to treat all of these types as null.
-        switch (ty) {
-            case ARRAY:
-            case DB_POINTER:
-            case DOCUMENT:
-            case END_OF_DOCUMENT:
-            case JAVASCRIPT:
-            case JAVASCRIPT_WITH_SCOPE:
-            case MAX_KEY:
-            case MIN_KEY:
-            case NULL:
-            case REGULAR_EXPRESSION:
-            case SYMBOL:
-            case TIMESTAMP:
-            case UNDEFINED:
-                wasNull = true;
-                return true;
-        }
-        return false;
-    }
+    protected abstract boolean checkNull(BsonValue o);
+
+    protected abstract void checkBounds(int i) throws SQLException;
 
     @Deprecated
     @Override
@@ -189,67 +102,9 @@ public abstract class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    protected byte[] handleBytesConversionFailure(String from) throws SQLException {
-        if (relaxed) return null;
-        throw new SQLException("The " + from + " type cannot be converted to blob.");
-    }
+    protected abstract byte[] handleBytesConversionFailure(String from) throws SQLException;
 
-    protected byte[] getBytes(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return null;
-        }
-        // we only allow getting Strings and Binaries as Bytes so that
-        // we can conveniently ignore Endianess issues. Null and undefined
-        // are still supported because Bytes's can be null.
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleBytesConversionFailure(ARRAY);
-            case BINARY:
-                return o.asBinary().getData();
-            case BOOLEAN:
-                return handleBytesConversionFailure(BOOLEAN);
-            case DATE_TIME:
-                return handleBytesConversionFailure(DATE);
-            case DB_POINTER:
-                return handleBytesConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return handleBytesConversionFailure(DECIMAL128);
-            case DOCUMENT:
-                return handleBytesConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return handleBytesConversionFailure(DOUBLE);
-            case END_OF_DOCUMENT:
-                return handleBytesConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return handleBytesConversionFailure(INT32);
-            case INT64:
-                return handleBytesConversionFailure(INT64);
-            case JAVASCRIPT:
-                return handleBytesConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleBytesConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleBytesConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleBytesConversionFailure(MIN_KEY);
-            case NULL:
-                return null;
-            case OBJECT_ID:
-                return handleBytesConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleBytesConversionFailure(REGEX);
-            case STRING:
-                return handleBytesConversionFailure(STRING);
-            case SYMBOL:
-                return handleBytesConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleBytesConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb.
-                return null;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract byte[] getBytes(BsonValue o) throws SQLException;
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
@@ -322,68 +177,9 @@ public abstract class MongoResultSet implements ResultSet {
         return getNewByteArrayInputStream(getBytes(columnLabel));
     }
 
-    // Methods for accessing results
-    protected String handleStringConversionFailure(String from) throws SQLException {
-        if (relaxed) return null;
-        throw new SQLException("The " + from + " type cannot be converted to string.");
-    }
+    protected abstract String handleStringConversionFailure(String from) throws SQLException;
 
-    // Everything here follows the conventions of $convert to string in mongodb
-    // except for some special handling for binary.
-    protected String getString(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return null;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleStringConversionFailure(ARRAY);
-            case BINARY:
-                return handleStringConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? "true" : "false";
-            case DATE_TIME:
-                Date d = new Date(o.asDateTime().getValue());
-                return dateFormat.format(d);
-            case DB_POINTER:
-                return handleStringConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().getValue().toString();
-            case DOCUMENT:
-                return handleStringConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return Double.toString(o.asDouble().getValue());
-            case END_OF_DOCUMENT:
-                return handleStringConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return Integer.toString(o.asInt32().getValue());
-            case INT64:
-                return Long.toString(o.asInt64().getValue());
-            case JAVASCRIPT:
-                return handleStringConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleStringConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleStringConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleStringConversionFailure(MIN_KEY);
-            case NULL:
-                return null;
-            case OBJECT_ID:
-                return o.asObjectId().getValue().toString();
-            case REGULAR_EXPRESSION:
-                return handleStringConversionFailure(REGEX);
-            case STRING:
-                return o.asString().getValue();
-            case SYMBOL:
-                return handleStringConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleStringConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb.
-                return null;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract String getString(BsonValue o) throws SQLException;
 
     @Override
     public String getString(String columnLabel) throws SQLException {
@@ -397,71 +193,9 @@ public abstract class MongoResultSet implements ResultSet {
         return getString(out);
     }
 
-    protected boolean handleBooleanConversionFailure(String from) throws SQLException {
-        if (relaxed) return false;
-        throw new SQLException("The " + from + " type cannot be converted to boolean.");
-    }
+    protected abstract boolean handleBooleanConversionFailure(String from) throws SQLException;
 
-    protected boolean getBoolean(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return false;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleBooleanConversionFailure(ARRAY);
-            case BINARY:
-                return handleBooleanConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue();
-            case DATE_TIME:
-                return handleBooleanConversionFailure(DATE);
-            case DB_POINTER:
-                return handleBooleanConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                {
-                    Decimal128 v = o.asDecimal128().getValue();
-                    return v != Decimal128.POSITIVE_ZERO && v != Decimal128.NEGATIVE_ZERO;
-                }
-            case DOCUMENT:
-                return handleBooleanConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return o.asDouble().getValue() != 0.0;
-            case END_OF_DOCUMENT:
-                return handleBooleanConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return o.asInt32().getValue() != 0;
-            case INT64:
-                return o.asInt64().getValue() != 0;
-            case JAVASCRIPT:
-                return handleBooleanConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleBooleanConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleBooleanConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleBooleanConversionFailure(MIN_KEY);
-            case NULL:
-                // this is consistent with $convert in mongodb insofar as getBoolean
-                // returns false for null values.
-                return false;
-            case OBJECT_ID:
-                return handleBooleanConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleBooleanConversionFailure(REGEX);
-            case STRING:
-                // mongodb $convert converts all strings to true, even the empty string.
-                return true;
-            case SYMBOL:
-                return handleBooleanConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleBooleanConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb insofar as getBoolean
-                // returns false for null values.
-                return false;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract boolean getBoolean(BsonValue o) throws SQLException;
 
     @Override
     public boolean getBoolean(String columnLabel) throws SQLException {
@@ -530,71 +264,9 @@ public abstract class MongoResultSet implements ResultSet {
         return getInt(out);
     }
 
-    protected long handleLongConversionFailure(String from) throws SQLException {
-        if (relaxed) return 0L;
-        throw new SQLException("The " + from + " type cannot be converted to integral type.");
-    }
+    protected abstract long handleLongConversionFailure(String from) throws SQLException;
 
-    protected long getLong(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return 0L;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleLongConversionFailure(ARRAY);
-            case BINARY:
-                return handleLongConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? 1 : 0;
-            case DATE_TIME:
-                // This is what $convert does.
-                return o.asDateTime().getValue();
-            case DB_POINTER:
-                return handleLongConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().longValue();
-            case DOCUMENT:
-                return handleLongConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return (long) o.asDouble().getValue();
-            case END_OF_DOCUMENT:
-                return handleLongConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return (long) o.asInt32().getValue();
-            case INT64:
-                return o.asInt64().getValue();
-            case JAVASCRIPT:
-                return handleLongConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleLongConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleLongConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleLongConversionFailure(MIN_KEY);
-            case NULL:
-                return 0L;
-            case OBJECT_ID:
-                return handleLongConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleLongConversionFailure(REGEX);
-            case STRING:
-                try {
-                    return Long.parseLong(o.asString().getValue());
-                } catch (NumberFormatException e) {
-                    if (relaxed) return 0;
-                    throw new SQLException(e);
-                }
-            case SYMBOL:
-                return handleLongConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleLongConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb insofar as getLong
-                // returns 0.0 for null values.
-                return 0L;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract long getLong(BsonValue o) throws SQLException;
 
     @Override
     public long getLong(String columnLabel) throws SQLException {
@@ -624,71 +296,9 @@ public abstract class MongoResultSet implements ResultSet {
         return getFloat(out);
     }
 
-    protected double handleDoubleConversionFailure(String from) throws SQLException {
-        if (relaxed) return 0.0;
-        throw new SQLException("The " + from + " type cannot be converted to double.");
-    }
+    protected abstract double handleDoubleConversionFailure(String from) throws SQLException;
 
-    protected double getDouble(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return 0.0;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleDoubleConversionFailure(ARRAY);
-            case BINARY:
-                return handleDoubleConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? 1.0 : 0.0;
-            case DATE_TIME:
-                // This is what $convert does.
-                return (double) o.asDateTime().getValue();
-            case DB_POINTER:
-                return handleDoubleConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().doubleValue();
-            case DOCUMENT:
-                return handleDoubleConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return o.asDouble().getValue();
-            case END_OF_DOCUMENT:
-                return handleDoubleConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return (double) o.asInt32().getValue();
-            case INT64:
-                return (double) o.asInt64().getValue();
-            case JAVASCRIPT:
-                return handleDoubleConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleDoubleConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleDoubleConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleDoubleConversionFailure(MIN_KEY);
-            case NULL:
-                return 0.0;
-            case OBJECT_ID:
-                return handleDoubleConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleDoubleConversionFailure(REGEX);
-            case STRING:
-                try {
-                    return Double.parseDouble(o.asString().getValue());
-                } catch (NumberFormatException e) {
-                    if (relaxed) return 0.0;
-                    throw new SQLException(e);
-                }
-            case SYMBOL:
-                return handleDoubleConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleDoubleConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb insofar as getDouble
-                // returns 0.0 for null values.
-                return 0.0;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract double getDouble(BsonValue o) throws SQLException;
 
     @Override
     public double getDouble(String columnLabel) throws SQLException {
@@ -765,71 +375,10 @@ public abstract class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    protected BigDecimal handleBigDecimalConversionFailure(String from) throws SQLException {
-        if (relaxed) return BigDecimal.ZERO;
-        throw new SQLException("The " + from + " type cannot be converted to BigDecimal.");
-    }
+    protected abstract BigDecimal handleBigDecimalConversionFailure(String from)
+            throws SQLException;
 
-    protected BigDecimal getBigDecimal(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return BigDecimal.ZERO;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleBigDecimalConversionFailure(ARRAY);
-            case BINARY:
-                return handleBigDecimalConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? BigDecimal.ONE : BigDecimal.ZERO;
-            case DATE_TIME:
-                // This is what $convert does.
-                return new BigDecimal(o.asDateTime().getValue());
-            case DB_POINTER:
-                return handleBigDecimalConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().decimal128Value().bigDecimalValue();
-            case DOCUMENT:
-                return handleBigDecimalConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return new BigDecimal(o.asDouble().getValue());
-            case END_OF_DOCUMENT:
-                return handleBigDecimalConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return new BigDecimal(o.asInt32().getValue());
-            case INT64:
-                return new BigDecimal(o.asInt64().getValue());
-            case JAVASCRIPT:
-                return handleBigDecimalConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleBigDecimalConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleBigDecimalConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleBigDecimalConversionFailure(MIN_KEY);
-            case NULL:
-                return BigDecimal.ZERO;
-            case OBJECT_ID:
-                return handleBigDecimalConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleBigDecimalConversionFailure(REGEX);
-            case STRING:
-                try {
-                    return new BigDecimal(o.asString().getValue());
-                } catch (NumberFormatException | ArithmeticException e) {
-                    if (relaxed) return BigDecimal.ZERO;
-                    throw new SQLException(e);
-                }
-            case SYMBOL:
-                return handleBigDecimalConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleBigDecimalConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb insofar as getBigDecimal
-                // returns 0.0 for null values.
-                return BigDecimal.ZERO;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract BigDecimal getBigDecimal(BsonValue o) throws SQLException;
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
@@ -863,12 +412,6 @@ public abstract class MongoResultSet implements ResultSet {
     public boolean isFirst() throws SQLException {
         checkClosed();
         return rowNum == 1;
-    }
-
-    @Override
-    public boolean isLast() throws SQLException {
-        checkClosed();
-        return !cursor.hasNext();
     }
 
     @Override
@@ -1326,69 +869,10 @@ public abstract class MongoResultSet implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    protected java.util.Date handleUtilDateConversionFailure(String from) throws SQLException {
-        if (relaxed) return null;
-        throw new SQLException("The " + from + " type cannot be converted to java.util.Date");
-    }
+    protected abstract java.util.Date handleUtilDateConversionFailure(String from)
+            throws SQLException;
 
-    protected java.util.Date getUtilDate(BsonValue o) throws SQLException {
-        if (checkNull(o)) {
-            return null;
-        }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                return handleUtilDateConversionFailure(ARRAY);
-            case BINARY:
-                return handleUtilDateConversionFailure(BINARY);
-            case BOOLEAN:
-                return handleUtilDateConversionFailure(BOOLEAN);
-            case DATE_TIME:
-                return new java.util.Date(o.asDateTime().getValue());
-            case DB_POINTER:
-                return handleUtilDateConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return new Date(o.asDecimal128().longValue());
-            case DOCUMENT:
-                return handleUtilDateConversionFailure(DOCUMENT);
-            case DOUBLE:
-                return new Date((long) o.asDouble().getValue());
-            case END_OF_DOCUMENT:
-                return handleUtilDateConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return new Date(o.asInt32().getValue());
-            case INT64:
-                return new Date(o.asInt64().getValue());
-            case JAVASCRIPT:
-                return handleUtilDateConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleUtilDateConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleUtilDateConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleUtilDateConversionFailure(MIN_KEY);
-            case NULL:
-                return null;
-            case OBJECT_ID:
-                return handleUtilDateConversionFailure(OBJECT_ID);
-            case REGULAR_EXPRESSION:
-                return handleUtilDateConversionFailure(REGEX);
-            case STRING:
-                try {
-                    return dateFormat.parse(o.asString().getValue());
-                } catch (ParseException e) {
-                    if (relaxed) return null;
-                    throw new SQLException(e);
-                }
-            case SYMBOL:
-                return handleUtilDateConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleUtilDateConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb.
-                return null;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
-    }
+    protected abstract java.util.Date getUtilDate(BsonValue o) throws SQLException;
 
     protected Date getDate(BsonValue o) throws SQLException {
         java.util.Date utilDate = getUtilDate(o);

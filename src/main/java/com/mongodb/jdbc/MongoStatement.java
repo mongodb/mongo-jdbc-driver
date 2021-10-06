@@ -3,7 +3,9 @@ package com.mongodb.jdbc;
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoDatabase;
 import java.sql.*;
+import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import org.bson.BsonString;
 
 public abstract class MongoStatement implements Statement {
     // Likely, the actual mongo sql command will not
@@ -30,6 +32,17 @@ public abstract class MongoStatement implements Statement {
         } catch (IllegalArgumentException e) {
             throw new SQLException("Database name %s is invalid", databaseName);
         }
+    }
+
+    protected BsonDocument constructQueryDocument(String sql, String dialect) {
+        BsonDocument stage = new BsonDocument();
+        BsonDocument sqlDoc = new BsonDocument();
+        sqlDoc.put("statement", new BsonString(sql));
+        sqlDoc.put("formatVersion", formatVersion);
+        sqlDoc.put("format", new BsonString("jdbc"));
+        sqlDoc.put("dialect", new BsonString(dialect));
+        stage.put("$sql", sqlDoc);
+        return stage;
     }
 
     protected void checkClosed() throws SQLException {
