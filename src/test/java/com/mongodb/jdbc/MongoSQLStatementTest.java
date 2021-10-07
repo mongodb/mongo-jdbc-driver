@@ -62,7 +62,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testExecuteQueryEmptyResult() throws SQLException {
-        // TODO: MongoResultSet implementation
+        // TODO: SQL-535, requires MongoResultSet implementation
         //        AtomicInteger rowCnt = new AtomicInteger();
         //
         //        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 1);
@@ -101,7 +101,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testExecuteQuery() throws SQLException {
-        // TODO: MongoResultSet implementation
+        // TODO: SQL-535, requires MongoResultSet implementation
         //        AtomicInteger rowCnt = new AtomicInteger();
         //        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 2);
         //
@@ -216,7 +216,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testGetResultSet() throws SQLException {
-        // TODO: MongoResultSet implementation
+        // TODO: SQL-535, requires MongoResultSet implementation
         //        when(mongoCursor.hasNext()).thenReturn(true);
         //        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
         //
@@ -268,7 +268,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testGetMoreResultsWithInstructions() throws SQLException {
-        // TODO: MongoResultSet implementation
+        // TODO: SQL-535, requires MongoResultSet implementation
         //        when(mongoCursor.hasNext()).thenReturn(true);
         //        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
         //
@@ -294,7 +294,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testSetGetCloseOnComplete() throws SQLException {
-        // TODO: MongoResultSet implementation
+        // TODO: SQL-535, requires MongoResultSet implementation
         //        when(mongoCursor.hasNext()).thenReturn(true);
         //        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
         //
