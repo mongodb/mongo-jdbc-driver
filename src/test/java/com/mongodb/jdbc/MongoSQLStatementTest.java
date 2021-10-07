@@ -24,12 +24,12 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MongoStatementTest extends MongoMock {
-    private static MongoStatement mongoStatement;
+class MongoSQLStatementTest extends MongoMock {
+    private static MongoSQLStatement mongoStatement;
 
     static {
         try {
-            mongoStatement = new MySQLStatement(mongoConnection, database, true);
+            mongoStatement = new MongoSQLStatement(mongoConnection, database);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ class MongoStatementTest extends MongoMock {
     @BeforeEach
     void setupTest() throws NoSuchFieldException, SQLException {
         resetMockObjs();
-        mongoStatement = new MySQLStatement(mongoConnection, database, true);
+        mongoStatement = new MongoSQLStatement(mongoConnection, database);
     }
 
     void testExceptionAfterConnectionClosed(MongoConnectionTest.TestInterface ti)
