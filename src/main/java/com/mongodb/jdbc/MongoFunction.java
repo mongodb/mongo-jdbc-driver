@@ -1,7 +1,3 @@
-// This is generated code. To regenerate go to the resources directory:
-//     $ cd mongo-jdbc-driver/resources
-// and run:
-//     $ make
 package com.mongodb.jdbc;
 
 import java.util.LinkedHashSet;
