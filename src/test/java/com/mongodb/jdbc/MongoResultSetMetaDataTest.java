@@ -33,7 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoResultSetMetaDataTest extends MongoMock {
+class MongoResultSetMetaDataTest extends MySQLMock {
     private static ResultSetMetaData resultSetMetaData;
     private static MongoStatement mongoStatement;
 

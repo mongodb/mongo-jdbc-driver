@@ -24,7 +24,7 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MongoSQLStatementTest extends MongoMock {
+class MongoSQLStatementTest extends MongoSQLMock {
     private static MongoSQLStatement mongoStatement;
 
     static {
@@ -48,14 +48,14 @@ class MongoSQLStatementTest extends MongoMock {
         mongoStatement = new MongoSQLStatement(mongoConnection, database);
     }
 
-    void testExceptionAfterConnectionClosed(MongoConnectionTest.TestInterface ti)
+    void testExceptionAfterConnectionClosed(MongoSQLConnectionTest.TestInterface ti)
             throws SQLException {
         // create statement after closed throws exception
         mongoStatement.close();
         assertThrows(SQLException.class, ti::test);
     }
 
-    void testNoop(MongoConnectionTest.TestInterface ti) throws SQLException {
+    void testNoop(MongoSQLConnectionTest.TestInterface ti) throws SQLException {
         assertDoesNotThrow(ti::test);
         testExceptionAfterConnectionClosed(ti::test);
     }

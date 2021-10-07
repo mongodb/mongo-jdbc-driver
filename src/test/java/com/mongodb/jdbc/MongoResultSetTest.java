@@ -40,10 +40,10 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MySQLResultSetTest extends MongoMock {
+class MySQLResultSetTest extends MySQLMock {
     @Mock MongoCursor<MongoResultDoc> cursor;
     MySQLResultSet mockResultSet;
-    static MongoStatement mongoStatement;
+    static MySQLStatement mongoStatement;
     static MySQLResultSet relaxedMySQLResultSet;
     static MySQLResultSet strictMySQLResultSet;
     static MySQLResultSet closedMySQLResultSet;
@@ -147,7 +147,7 @@ class MySQLResultSetTest extends MongoMock {
 
     @BeforeEach
     void setup() throws NoSuchFieldException {
-        MongoMock.resetMockObjs();
+        MySQLMock.resetMockObjs();
     }
 
     @SuppressWarnings("deprecation")

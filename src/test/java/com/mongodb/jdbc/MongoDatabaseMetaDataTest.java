@@ -8,7 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 
-class MongoDatabaseMetaDataTest extends MongoMock {
+class MongoDatabaseMetaDataTest extends MySQLMock {
     private static DatabaseMetaData databaseMetaData;
 
     static {
