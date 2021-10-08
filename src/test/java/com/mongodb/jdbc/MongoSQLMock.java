@@ -12,6 +12,9 @@ import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 import org.mockito.InjectMocks;
@@ -80,66 +83,78 @@ public abstract class MongoSQLMock {
         return new Column(database, table, table, column, column, bsonType);
     }
 
-    MongoResultDoc generateMetadataDoc() {
+    MongoJsonSchema generateMetadataSchema() {
         /*
-        {
-           values: [
-        {
-             database: "myDB",
-             table: "foo",
-             tableAlias: "foo",
-             column: "a",
-             columnAlias: "a",
-             value: 1
-           },
-        {
-             database: "myDB",
-             table: "foo",
-             tableAlias: "foo",
-             column: "b",
-             columnAlias: "b",
-             value: "test"
-           }
-           ]
+         {
+             bsonType: object,
+             properties: {
+                 foo: {
+                     bsonType: object,
+                     properties: {
+                         a: {
+                             anyOf: [
+                                 {bsonType: int},
+                                 {bsonType: string},
+                             ],
+                         },
+                         b: {
+                             anyOf: [
+                                {bsonType: int},
+                                {bsonType: null},
+                             ],
+                         },
+                         c: {
+                             bsonType: int
+                         },
+                     },
+                     required: [a, b],
+                 },
+             },
+             required: [foo]
          }
          */
+        MongoJsonSchema schema = new MongoJsonSchema();
+        schema.bsonType = "object";
+        schema.required = new HashSet<String>();
+        schema.required.add("foo");
 
-        MongoResultDoc metaDoc = new MongoResultDoc();
-        metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(generateCol("myDB", "foo", "a", "int"));
-        metaDoc.columns.add(generateCol("myDB", "foo", "b", "string"));
+        MongoJsonSchema fooSchema = new MongoJsonSchema();
+        fooSchema.bsonType = "object";
+        fooSchema.required = new HashSet<String>();
+        fooSchema.required.add("a");
+        fooSchema.required.add("b");
 
-        return metaDoc;
+        MongoJsonSchema aSchema = new MongoJsonSchema();
+        aSchema.anyOf = new HashSet<MongoJsonSchema>();
+        MongoJsonSchema anyOf1Schema = new MongoJsonSchema();
+        anyOf1Schema.bsonType = "int";
+        MongoJsonSchema anyOf2Schema = new MongoJsonSchema();
+        anyOf2Schema.bsonType = "string";
+        aSchema.anyOf.add(anyOf1Schema);
+        aSchema.anyOf.add(anyOf2Schema);
+
+        MongoJsonSchema bSchema = new MongoJsonSchema();
+        bSchema.anyOf = new HashSet<MongoJsonSchema>();
+        anyOf1Schema = new MongoJsonSchema();
+        anyOf1Schema.bsonType = "int";
+        anyOf2Schema = new MongoJsonSchema();
+        anyOf2Schema.bsonType = "null";
+        bSchema.anyOf.add(anyOf1Schema);
+        bSchema.anyOf.add(anyOf2Schema);
+
+        MongoJsonSchema cSchema = new MongoJsonSchema();
+        cSchema.bsonType = "int";
+
+        fooSchema.properties.put("a", aSchema);
+        fooSchema.properties.put("b", bSchema);
+        fooSchema.properties.put("c", cSchema);
+
+        schema.properties.put("foo", fooSchema);
+        return schema;
     }
 
-    MongoResultDoc generateRow() {
-        /*
-        {
-           values: [
-        {
-             database: "myDB",
-             table: "foo",
-             tableAlias: "foo",
-             column: "a",
-             columnAlias: "a",
-             value: 1
-           },
-        {
-             database: "myDB",
-             table: "foo",
-             tableAlias: "foo",
-             column: "b",
-             columnAlias: "b",
-             value: "test"
-           }
-           ]
-         }
-         */
-        MongoResultDoc doc = new MongoResultDoc();
-        doc.values = new ArrayList<>();
-        doc.values.add(new BsonInt32(1));
-        doc.values.add(new BsonString("test"));
-
-        return doc;
+    BsonDocument generateRow() {
+        /**/
+        return null;
     }
 }

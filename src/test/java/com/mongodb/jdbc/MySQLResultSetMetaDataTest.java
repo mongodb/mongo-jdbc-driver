@@ -33,9 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoResultSetMetaDataTest extends MySQLMock {
+class MySQLResultSetMetaDataTest extends MySQLMock {
     private static ResultSetMetaData resultSetMetaData;
-    private static MongoStatement mongoStatement;
+    private static MySQLStatement mongoStatement;
 
     static int NULL_COL = 1;
     static int DOUBLE_COL = 2;
@@ -88,7 +88,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
             e.printStackTrace();
         }
 
-        MongoResultSet rs =
+        MySQLResultSet rs =
                 new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
 
         try {
@@ -99,7 +99,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
         }
     }
 
-    MongoResultSet mongoResultSet;
+    MySQLResultSet mongoResultSet;
 
     @BeforeAll
     void initMocks() {
@@ -108,7 +108,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
 
     @Test
     void testGetColumnCount() throws SQLException {
-        assertEquals(11, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+        assertEquals(11, MySQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
