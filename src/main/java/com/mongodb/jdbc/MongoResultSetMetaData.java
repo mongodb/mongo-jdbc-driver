@@ -237,6 +237,8 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     public abstract BsonType getBsonType(int column) throws SQLException;
+    public abstract boolean hasColumnWithLabel(String label) throws SQLException;
+    public abstract int getColumnPositionFromLabel(String label) throws SQLException;
 
     static BsonType getBsonTypeHelper(String typeName) throws SQLException {
         // bsonType strings as represented by the $type function:

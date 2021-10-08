@@ -23,22 +23,66 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
+    private static class LabelAndIndex {
+        String columnLabel;
+        int index;
+
+        LabelAndIndex(String columnLabel, int index) {
+            this.columnLabel = columnLabel;
+            this.index = index;
+        }
+    }
+
     private static class ColumnTypeInfo {
         int jdbcType;
         BsonType bsonType;
         String bsonTypeName;
-        boolean nullable;
+        int nullable;
 
         ColumnTypeInfo(MongoJsonSchema schema, boolean nullable) throws SQLException {
-            if(schema.anyOf != null) {
-                for(var anyOfSchema: schem.anyOf) {
+            // All schemata except AnyOf and Unsat must have a BsonType (and we do not support
+            // Unsat).
+            if(schema.bsonType != null) {
+                this.bsonTypeName = bsonTypeName;
+                this.bsonType = getBsonTypeHelper(bsonTypeName);
+                this.jdbcType = getJDBCTypeForBsonType(this.bsonType);
+                this.nullable = convertNullable(nullable);
+                return;
+            }
+            // Otherwise, the schema must be an AnyOf.
+            constructFromAnyOf(schema, nullable);
+        }
 
+        private int convertNullable(boolean nullable) {
+             return nullable ?
+                    ResultSetMetaData.columnNullable
+                    :ResultSetMetaData.columnNoNulls;
+        }
+
+        private void constructFromAnyOf(MongoJsonSchema schema, boolean nullable) throws SQLException {
+            if(schema.anyOf == null) {
+                throw new SQLException("both bsonType and anyOf are null, this is not a valid schema");
+            }
+            for(MongoJsonSchema anyOfSchema: schema.anyOf) {
+                if(anyOfSchema.bsonType == null) {
+                    throw new SQLException("anyOf subschema must have bsonType field");
+                }
+                // Presense of null means this is nullable, whether or not the required keys
+                // of the parent object schema indicate this is nullable.
+                if(anyOfSchema.bsonType.equals("null")) {
+                    nullable = true;
+                } else {
+                    // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
+                    // we default to "bson"
+                    bsonTypeName = (bsonTypeName == null)?
+                         anyOfSchema.bsonType
+                        :"bson";
                 }
             }
             this.bsonTypeName = bsonTypeName;
             this.bsonType = getBsonTypeHelper(bsonTypeName);
             this.jdbcType = getJDBCTypeForBsonType(this.bsonType);
-            this.nullable = nullable;
+            this.nullable = convertNullable(nullable);
         }
     }
 
@@ -80,7 +124,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     }
 
     // A mapping from columnLabel name to datasource name.
-    private Map<String, String> columnLabels;
+    private Map<String, LabelAndIndex> columnLabels;
     // A mapping from index position to NameSpace (datasource, columnLabel).
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
@@ -95,29 +139,29 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     }
 
     private void processDataSource(String datasource) throws SQLException {
-        var datasourceSchema = schema.properties.get(datasource);
+        MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertObjectSchema(datasourceSchema);
 
         Object[] columns = datasourceSchema.properties.keySet().toArray();
         Arrays.sort(columns);
 
-        for(var column: columns) {
-            var columnAsStr = (String) column;
-            var columnSchema = datasourceSchema.properties.get(columnAsStr);
-            if(!columnLabels.containsKey(columnAsStr)) {
-                columnLabels.put(columnAsStr, datasource);
-            }
+        for(Object column: columns) {
+            String columnAsStr = (String) column;
+            MongoJsonSchema columnSchema = datasourceSchema.properties.get(columnAsStr);
             columnIndices.add(new NameSpace(datasource, columnAsStr));
             columnTypeInfo.add(new ColumnTypeInfo(columnSchema,
                         datasourceSchema.required == null
                      || !datasourceSchema.required.contains(columnAsStr)));
+            if(!columnLabels.containsKey(columnAsStr)) {
+                columnLabels.put(columnAsStr, new LabelAndIndex(datasource, columnIndices.size() - 1));
+            }
         }
     };
 
     public MongoSQLResultSetMetaData(MongoJsonSchema schema) throws SQLException {
         assertObjectSchema(schema);
 
-        columnLabels = new HashMap<String, String>();
+        columnLabels = new HashMap<String, LabelAndIndex>();
         columnIndices = new ArrayList<NameSpace>();
         columnTypeInfo = new ArrayList<ColumnTypeInfo>();
         this.schema = schema;
@@ -125,54 +169,62 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         Object[] datasources = schema.properties.keySet().toArray();
         Arrays.sort(datasources);
 
-        for(var datasource: datasources) {
-            var datasourceAsString = (String) datasource;
+        for(Object datasource: datasources) {
+            String datasourceAsString = (String) datasource;
             processDataSource(datasourceAsString);
         }
     }
 
+    public int getColumnPositionFromLabel(String label) {
+        return columnLabels.get(label).index;
+    }
+
+    public boolean hasColumnWithLabel(String label) {
+        return columnLabels.containsKey(label);
+    }
+
     @Override
     public int getColumnCount() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnIndices.size();
     }
 
     @Override
     public int isNullable(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnTypeInfo.get(column - 1).nullable;
     }
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnIndices.get(column - 1).columnLabel;
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnIndices.get(column - 1).columnLabel;
     }
 
     @Override
     public String getTableName(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnIndices.get(column - 1).datasource;
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return "";
     }
 
     @Override
     public BsonType getBsonType(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnTypeInfo.get(column - 1).bsonType;
     }
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnTypeInfo.get(column - 1).jdbcType;
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return columnTypeInfo.get(column - 1).bsonTypeName;
     }
 }
