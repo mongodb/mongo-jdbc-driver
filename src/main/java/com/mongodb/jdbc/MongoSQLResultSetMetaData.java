@@ -23,11 +23,11 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    private static class LabelAndIndex {
+    private static class DatasourceAndIndex {
         String columnLabel;
         int index;
 
-        LabelAndIndex(String columnLabel, int index) {
+        DatasourceAndIndex(String columnLabel, int index) {
             this.columnLabel = columnLabel;
             this.index = index;
         }
@@ -123,8 +123,8 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         throw new SQLException("unknown bson type: " + t);
     }
 
-    // A mapping from columnLabel name to datasource name.
-    private Map<String, LabelAndIndex> columnLabels;
+    // A mapping from columnLabel name to datasource name and index.
+    private Map<String, DatasourceAndIndex> columnLabels;
     // A mapping from index position to NameSpace (datasource, columnLabel).
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
@@ -153,7 +153,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
                         datasourceSchema.required == null
                      || !datasourceSchema.required.contains(columnAsStr)));
             if(!columnLabels.containsKey(columnAsStr)) {
-                columnLabels.put(columnAsStr, new LabelAndIndex(datasource, columnIndices.size() - 1));
+                columnLabels.put(columnAsStr, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
             }
         }
     };
@@ -161,7 +161,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     public MongoSQLResultSetMetaData(MongoJsonSchema schema) throws SQLException {
         assertObjectSchema(schema);
 
-        columnLabels = new HashMap<String, LabelAndIndex>();
+        columnLabels = new HashMap<String, DatasourceAndIndex>();
         columnIndices = new ArrayList<NameSpace>();
         columnTypeInfo = new ArrayList<ColumnTypeInfo>();
         this.schema = schema;
