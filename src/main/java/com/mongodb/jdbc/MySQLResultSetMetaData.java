@@ -1,14 +1,34 @@
 package com.mongodb.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
 import org.bson.BsonType;
 
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
+    protected List<Column> columns;
+    protected HashMap<String, Integer> columnPositions;
 
     public MySQLResultSetMetaData(MongoResultDoc metadataDoc) {
-        super(metadataDoc);
+        columns = metadataDoc.columns;
+
+        columnPositions = new HashMap<>(columns.size());
+        int i = 0;
+        for (Column c : columns) {
+            columnPositions.put(c.columnAlias, i++);
+        }
+    }
+
+    public int getColumnPositionFromLabel(String label) {
+        return columnPositions.get(label);
+    }
+
+    public boolean hasColumnWithLabel(String label) {
+        return columnPositions.containsKey(label);
     }
 
     @Override

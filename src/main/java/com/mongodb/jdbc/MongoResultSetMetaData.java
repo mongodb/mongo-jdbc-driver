@@ -5,37 +5,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
 import org.bson.BsonType;
+import org.bson.BsonValue;
 
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
-    protected List<Column> columns;
-    protected HashMap<String, Integer> columnPositions;
     protected final int unknownLength = 0;
-
-    public MongoResultSetMetaData(MongoResultDoc metadataDoc) {
-        columns = metadataDoc.columns;
-
-        columnPositions = new HashMap<>(columns.size());
-        int i = 0;
-        for (Column c : columns) {
-            columnPositions.put(c.columnAlias, i++);
-        }
-    }
 
     protected void checkBounds(int i) throws SQLException {
         if (i > getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
-    }
-
-    public int getColumnPositionFromLabel(String label) {
-        return columnPositions.get(label);
-    }
-
-    public boolean hasColumnWithLabel(String label) {
-        return columnPositions.containsKey(label);
     }
 
     @Override
@@ -377,7 +356,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     // --------------------------JDBC 2.0-----------------------------------
-
     @Override
     public String getColumnClassName(int column) throws SQLException {
         checkBounds(column);
@@ -389,6 +367,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         String doubleClassName = double.class.getName();
         String bigDecimalClassName = BigDecimal.class.getName();
         String timestampClassName = Timestamp.class.getName();
+        String bsonClassName = BsonValue.class.getName();
 
         int columnType = getColumnType(column);
         switch (columnType) {
@@ -452,8 +431,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case Types.NVARCHAR:
                 return stringClassName;
             case Types.OTHER:
-                // not supported
-                break;
+                return bsonClassName;
             case Types.REAL:
                 // not supported
                 break;
