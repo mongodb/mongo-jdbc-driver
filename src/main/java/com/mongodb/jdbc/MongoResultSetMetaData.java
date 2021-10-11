@@ -5,7 +5,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import org.bson.BsonType;
 import org.bson.BsonValue;
 
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
@@ -25,7 +24,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
             case ARRAY:
             case BINARY:
@@ -44,6 +43,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case TIMESTAMP:
             case UNDEFINED:
                 return false;
+            case ANY:
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case REGULAR_EXPRESSION:
@@ -68,8 +68,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public boolean isSigned(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
+            case ANY:
             case DOUBLE:
             case DECIMAL128:
             case INT32:
@@ -99,8 +100,10 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
+            case ANY:
+                return unknownLength;
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -156,8 +159,10 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getPrecision(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
+            case ANY:
+                return unknownLength;
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -206,8 +211,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getScale(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
+            case ANY:
             case ARRAY:
             case BINARY:
             case BOOLEAN:
@@ -236,15 +242,16 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type: " + t);
     }
 
-    public abstract BsonType getBsonType(int column) throws SQLException;
+    public abstract ExtendedBsonType getExtendedBsonType(int column) throws SQLException;
     public abstract boolean hasColumnWithLabel(String label) throws SQLException;
     public abstract int getColumnPositionFromLabel(String label) throws SQLException;
 
-    static BsonType getBsonTypeHelper(String typeName) throws SQLException {
+    static ExtendedBsonType getExtendedBsonTypeHelper(String typeName) throws SQLException {
         // bsonType strings as represented by the $type function:
         // "array"
         // "bool"
         // "binData"
+        // "bson"
         // "date"
         // "dbPointer"
         // "decimal"
@@ -270,71 +277,77 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         // all returned names are correct.
         switch (typeName.charAt(0)) {
             case 'a':
-                return BsonType.ARRAY;
+                switch (typeName.length()) {
+                    case 3:
+                        return ExtendedBsonType.ANY;
+                    case 5:
+                        return ExtendedBsonType.ARRAY;
+                }
+                break;
             case 'b':
                 switch (typeName.length()) {
                     case 4:
-                        return BsonType.BOOLEAN;
+                        return ExtendedBsonType.BOOLEAN;
                     case 7:
-                        return BsonType.BINARY;
+                        return ExtendedBsonType.BINARY;
                 }
                 break;
             case 'd':
                 switch (typeName.length()) {
                     case 4:
-                        return BsonType.DATE_TIME;
+                        return ExtendedBsonType.DATE_TIME;
                     case 6:
-                        return BsonType.DOUBLE;
+                        return ExtendedBsonType.DOUBLE;
                     case 7:
-                        return BsonType.DECIMAL128;
+                        return ExtendedBsonType.DECIMAL128;
                     case 9:
-                        return BsonType.DB_POINTER;
+                        return ExtendedBsonType.DB_POINTER;
                 }
                 break;
             case 'i':
-                return BsonType.INT32;
+                return ExtendedBsonType.INT32;
             case 'j':
                 switch (typeName.length()) {
                     case 10:
-                        return BsonType.JAVASCRIPT;
+                        return ExtendedBsonType.JAVASCRIPT;
                     case 19:
-                        return BsonType.JAVASCRIPT_WITH_SCOPE;
+                        return ExtendedBsonType.JAVASCRIPT_WITH_SCOPE;
                 }
                 break;
             case 'l':
-                return BsonType.INT64;
+                return ExtendedBsonType.INT64;
             case 'm':
                 switch (typeName.charAt(1)) {
                     case 'a':
-                        return BsonType.MAX_KEY;
+                        return ExtendedBsonType.MAX_KEY;
                     case 'i':
-                        return BsonType.MIN_KEY;
+                        return ExtendedBsonType.MIN_KEY;
                 }
                 break;
             case 'n':
-                return BsonType.NULL;
+                return ExtendedBsonType.NULL;
             case 'o':
                 switch (typeName.length()) {
                     case 6: // "object"
-                        return BsonType.DOCUMENT;
+                        return ExtendedBsonType.DOCUMENT;
                     case 8:
-                        return BsonType.OBJECT_ID;
+                        return ExtendedBsonType.OBJECT_ID;
                 }
                 break;
             case 'r':
-                return BsonType.REGULAR_EXPRESSION;
+                return ExtendedBsonType.REGULAR_EXPRESSION;
             case 's':
                 switch (typeName.charAt(1)) {
                     case 't':
-                        return BsonType.STRING;
+                        return ExtendedBsonType.STRING;
                     case 'y':
-                        return BsonType.SYMBOL;
+                        return ExtendedBsonType.SYMBOL;
                 }
                 break;
             case 't':
-                return BsonType.TIMESTAMP;
+                return ExtendedBsonType.TIMESTAMP;
             case 'u':
-                return BsonType.UNDEFINED;
+                return ExtendedBsonType.UNDEFINED;
         }
         throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
     }

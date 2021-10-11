@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
-import org.bson.BsonType;
 
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     protected List<Column> columns;
@@ -67,15 +66,15 @@ public class MySQLResultSetMetaData extends MongoResultSetMetaData implements Re
     }
 
     @Override
-    public BsonType getBsonType(int column) throws SQLException {
+    public ExtendedBsonType getExtendedBsonType(int column) throws SQLException {
         checkBounds(column);
         String typeName = columns.get(column - 1).bsonType;
-        return getBsonTypeHelper(typeName);
+        return getExtendedBsonTypeHelper(typeName);
     }
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
             case ARRAY:
                 return Types.ARRAY;
@@ -119,13 +118,15 @@ public class MySQLResultSetMetaData extends MongoResultSetMetaData implements Re
                 return Types.NULL;
             case UNDEFINED:
                 return Types.NULL;
+            case ANY:
+                throw new SQLException("MySQL Dialect does not support dynamic BSON values");
         }
         throw new SQLException("unknown bson type: " + t);
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        ExtendedBsonType t = getExtendedBsonType(column);
         switch (t) {
                 // we will return the same names as the mongodb $type function:
             case ARRAY:
@@ -172,6 +173,8 @@ public class MySQLResultSetMetaData extends MongoResultSetMetaData implements Re
                 return "null";
             case UNDEFINED:
                 return "null";
+            case ANY:
+                throw new SQLException("MySQL Dialect does not support dynamic BSON values");
         }
         throw new SQLException("unknown bson type: " + t);
     }

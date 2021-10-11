@@ -79,11 +79,7 @@ public abstract class MongoSQLMock {
         void test() throws SQLException;
     }
 
-    Column generateCol(String database, String table, String column, String bsonType) {
-        return new Column(database, table, table, column, column, bsonType);
-    }
-
-    MongoJsonSchema generateMetadataSchema() {
+    protected static MongoJsonSchema generateMongoJsonSchema() {
         /*
          {
              bsonType: object,
@@ -91,26 +87,38 @@ public abstract class MongoSQLMock {
                  foo: {
                      bsonType: object,
                      properties: {
+                         c: {
+                             bsonType: int
+                         },
                          a: {
                              anyOf: [
                                  {bsonType: int},
                                  {bsonType: string},
                              ],
                          },
+                         d: {},
                          b: {
                              anyOf: [
                                 {bsonType: int},
                                 {bsonType: null},
                              ],
                          },
-                         c: {
-                             bsonType: int
-                         },
                      },
                      required: [a, b],
                  },
+                 "": {
+                    bsonType: object,
+                    properties: {
+                        a: {
+                            bsonType: double
+                        }
+                        str: {
+                            bsonType: string
+                        }
+                    }
+                 },
              },
-             required: [foo]
+             required: [foo, ""]
          }
          */
         MongoJsonSchema schema = new MongoJsonSchema();
@@ -145,11 +153,22 @@ public abstract class MongoSQLMock {
         MongoJsonSchema cSchema = new MongoJsonSchema();
         cSchema.bsonType = "int";
 
-        fooSchema.properties.put("a", aSchema);
-        fooSchema.properties.put("b", bSchema);
         fooSchema.properties.put("c", cSchema);
+        fooSchema.properties.put("a", aSchema);
+        // new MongoJsonSchema() == ANY
+        fooSchema.properties.put("d", new MongoJsonSchema());
+        fooSchema.properties.put("b", bSchema);
+
+        MongoJsonSchema botSchema = new MongoJsonSchema();
+        aSchema = new MongoJsonSchema();
+        aSchema.bsonType = "double";
+        botSchema.properties.put("a", aSchema);
+        MongoJsonSchema strSchema = new MongoJsonSchema();
+        strSchema.bsonType = "string";
+        botSchema.properties.put("str", strSchema);
 
         schema.properties.put("foo", fooSchema);
+        schema.properties.put("", botSchema);
         return schema;
     }
 

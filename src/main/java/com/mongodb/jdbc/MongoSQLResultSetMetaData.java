@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import org.bson.BsonType;
 import org.bson.BsonDocument;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
@@ -33,102 +32,12 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    private static class ColumnTypeInfo {
-        int jdbcType;
-        BsonType bsonType;
-        String bsonTypeName;
-        int nullable;
-
-        ColumnTypeInfo(MongoJsonSchema schema, boolean nullable) throws SQLException {
-            // All schemata except AnyOf and Unsat must have a BsonType (and we do not support
-            // Unsat).
-            if(schema.bsonType != null) {
-                this.bsonTypeName = bsonTypeName;
-                this.bsonType = getBsonTypeHelper(bsonTypeName);
-                this.jdbcType = getJDBCTypeForBsonType(this.bsonType);
-                this.nullable = convertNullable(nullable);
-                return;
-            }
-            // Otherwise, the schema must be an AnyOf.
-            constructFromAnyOf(schema, nullable);
-        }
-
-        private int convertNullable(boolean nullable) {
-             return nullable ?
-                    ResultSetMetaData.columnNullable
-                    :ResultSetMetaData.columnNoNulls;
-        }
-
-        private void constructFromAnyOf(MongoJsonSchema schema, boolean nullable) throws SQLException {
-            if(schema.anyOf == null) {
-                throw new SQLException("both bsonType and anyOf are null, this is not a valid schema");
-            }
-            for(MongoJsonSchema anyOfSchema: schema.anyOf) {
-                if(anyOfSchema.bsonType == null) {
-                    throw new SQLException("anyOf subschema must have bsonType field");
-                }
-                // Presense of null means this is nullable, whether or not the required keys
-                // of the parent object schema indicate this is nullable.
-                if(anyOfSchema.bsonType.equals("null")) {
-                    nullable = true;
-                } else {
-                    // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
-                    // we default to "bson"
-                    bsonTypeName = (bsonTypeName == null)?
-                         anyOfSchema.bsonType
-                        :"bson";
-                }
-            }
-            this.bsonTypeName = bsonTypeName;
-            this.bsonType = getBsonTypeHelper(bsonTypeName);
-            this.jdbcType = getJDBCTypeForBsonType(this.bsonType);
-            this.nullable = convertNullable(nullable);
-        }
-    }
-
-    private static int getJDBCTypeForBsonType(BsonType t) throws SQLException {
-        switch (t) {
-            case ARRAY:
-            case DB_POINTER:
-            case DOCUMENT:
-            case JAVASCRIPT:
-            case JAVASCRIPT_WITH_SCOPE:
-            case MAX_KEY:
-            case MIN_KEY:
-            case OBJECT_ID:
-            case REGULAR_EXPRESSION:
-            case SYMBOL:
-            case TIMESTAMP:
-            case UNDEFINED:
-                return Types.OTHER;
-            case BINARY:
-                return Types.BINARY;
-            case BOOLEAN:
-                return Types.BIT;
-            case DATE_TIME:
-                return Types.TIMESTAMP;
-            case INT32:
-                return Types.INTEGER;
-            case INT64:
-                return Types.BIGINT;
-            case NULL:
-                return Types.NULL;
-            case STRING:
-                return  Types.LONGVARCHAR;
-            case DECIMAL128:
-                return Types.DECIMAL;
-            case DOUBLE:
-                return Types.DOUBLE;
-        }
-        throw new SQLException("unknown bson type: " + t);
-    }
-
     // A mapping from columnLabel name to datasource name and index.
     private Map<String, DatasourceAndIndex> columnLabels;
     // A mapping from index position to NameSpace (datasource, columnLabel).
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
-    private List<ColumnTypeInfo> columnTypeInfo;
+    private List<MongoSQLColumnTypeInfo> columnTypeInfo;
     // The metadata JsonSchema
     private MongoJsonSchema schema;
 
@@ -214,7 +123,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     }
 
     @Override
-    public BsonType getBsonType(int column) throws SQLException {
+    public ExtendedBsonType getExtendedBsonType(int column) throws SQLException {
         return columnTypeInfo.get(column - 1).bsonType;
     }
 
