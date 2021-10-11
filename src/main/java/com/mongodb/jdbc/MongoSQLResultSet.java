@@ -24,7 +24,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     protected boolean checkNull(BsonValue o) {
         // TODO, actually check if null
-        return false;
+        throw new RuntimeException("TODO");
     }
 
     @Override
