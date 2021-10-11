@@ -243,7 +243,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     public abstract ExtendedBsonType getExtendedBsonType(int column) throws SQLException;
+
     public abstract boolean hasColumnWithLabel(String label) throws SQLException;
+
     public abstract int getColumnPositionFromLabel(String label) throws SQLException;
 
     static ExtendedBsonType getExtendedBsonTypeHelper(String typeName) throws SQLException {

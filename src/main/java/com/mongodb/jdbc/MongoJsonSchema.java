@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.BsonValue;
 
 public class MongoJsonSchema {
     public String bsonType;

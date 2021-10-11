@@ -2,27 +2,10 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import org.bson.BsonBinary;
-import org.bson.BsonBoolean;
-import org.bson.BsonDateTime;
-import org.bson.BsonDecimal128;
-import org.bson.BsonDouble;
-import org.bson.BsonInt32;
-import org.bson.BsonInt64;
-import org.bson.BsonNull;
-import org.bson.BsonObjectId;
-import org.bson.BsonString;
-import org.bson.types.Decimal128;
-import org.bson.types.ObjectId;
+import org.bson.BsonValue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -49,7 +32,11 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     private static int ANY_COL = 6;
 
     static {
-        resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema());
+        try {
+            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     MongoResultSet mongoResultSet;
@@ -112,29 +99,126 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     @Test
     void testGetColumnDisplaySize() throws SQLException {
+        assertEquals(15, resultSetMetaData.getColumnDisplaySize(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(STRING_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(ANY_OF_INT_STRING_COL));
+        assertEquals(10, resultSetMetaData.getColumnDisplaySize(INT_NULLABLE_COL));
+        assertEquals(10, resultSetMetaData.getColumnDisplaySize(INT_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(ANY_COL));
     }
 
     @Test
     void testGetPrecision() throws SQLException {
+        assertEquals(15, resultSetMetaData.getPrecision(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(STRING_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(ANY_OF_INT_STRING_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(INT_NULLABLE_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(INT_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(ANY_COL));
     }
 
     @Test
     void testGetScale() throws SQLException {
+        assertEquals(15, resultSetMetaData.getScale(DOUBLE_COL));
+        assertEquals(0, resultSetMetaData.getScale(STRING_COL));
+        assertEquals(0, resultSetMetaData.getScale(ANY_OF_INT_STRING_COL));
+        assertEquals(0, resultSetMetaData.getScale(INT_NULLABLE_COL));
+        assertEquals(0, resultSetMetaData.getScale(INT_COL));
+        assertEquals(0, resultSetMetaData.getScale(ANY_COL));
     }
 
     @Test
     void testGetColumnType() throws SQLException {
+        assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(DOUBLE_COL));
+        assertEquals(Types.LONGVARCHAR, resultSetMetaData.getColumnType(STRING_COL));
+        assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ANY_OF_INT_STRING_COL));
+        assertEquals(Types.OTHER, resultSetMetaData.getColumnType(INT_NULLABLE_COL));
+        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INT_COL));
+        assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ANY_COL));
     }
 
     @Test
     void testGetColumnTypeClassName() throws SQLException {
+        assertEquals(double.class.getName(), resultSetMetaData.getColumnType(DOUBLE_COL));
+        assertEquals(String.class.getName(), resultSetMetaData.getColumnType(STRING_COL));
+        assertEquals(
+                BsonValue.class.getName(), resultSetMetaData.getColumnType(ANY_OF_INT_STRING_COL));
+        assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnType(INT_NULLABLE_COL));
+        assertEquals(int.class.getName(), resultSetMetaData.getColumnType(INT_COL));
+        assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnType(ANY_COL));
     }
 
     @Test
     void testGetColumnTypeName() throws SQLException {
+        assertEquals("double", resultSetMetaData.getColumnTypeName(DOUBLE_COL));
+        assertEquals("string", resultSetMetaData.getColumnTypeName(STRING_COL));
+        assertEquals("bson", resultSetMetaData.getColumnTypeName(ANY_OF_INT_STRING_COL));
+        assertEquals("bson", resultSetMetaData.getColumnTypeName(INT_NULLABLE_COL));
+        assertEquals("int", resultSetMetaData.getColumnTypeName(INT_COL));
+        assertEquals("bson", resultSetMetaData.getColumnTypeName(ANY_COL));
     }
 
     @Test
     void testGetExtendedBsonTypeHelper() throws SQLException {
+        assertEquals(
+                ExtendedBsonType.ANY, MongoResultSetMetaData.getExtendedBsonTypeHelper("bson"));
+        assertEquals(
+                ExtendedBsonType.ARRAY, MongoResultSetMetaData.getExtendedBsonTypeHelper("array"));
+        assertEquals(
+                ExtendedBsonType.BOOLEAN, MongoResultSetMetaData.getExtendedBsonTypeHelper("bool"));
+        assertEquals(
+                ExtendedBsonType.BINARY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("binData"));
+        assertEquals(
+                ExtendedBsonType.DATE_TIME,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("date"));
+        assertEquals(
+                ExtendedBsonType.DB_POINTER,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("dbPointer"));
+        assertEquals(
+                ExtendedBsonType.DECIMAL128,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("decimal"));
+        assertEquals(
+                ExtendedBsonType.DOUBLE,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("double"));
+        assertEquals(
+                ExtendedBsonType.INT32, MongoResultSetMetaData.getExtendedBsonTypeHelper("int"));
+        assertEquals(
+                ExtendedBsonType.JAVASCRIPT,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("javascript"));
+        assertEquals(
+                ExtendedBsonType.JAVASCRIPT_WITH_SCOPE,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("javascriptWithScope"));
+        assertEquals(
+                ExtendedBsonType.INT64, MongoResultSetMetaData.getExtendedBsonTypeHelper("long"));
+        assertEquals(
+                ExtendedBsonType.MAX_KEY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("maxKey"));
+        assertEquals(
+                ExtendedBsonType.MIN_KEY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("minKey"));
+        assertEquals(
+                ExtendedBsonType.NULL, MongoResultSetMetaData.getExtendedBsonTypeHelper("null"));
+        assertEquals(
+                ExtendedBsonType.DOCUMENT,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("object"));
+        assertEquals(
+                ExtendedBsonType.OBJECT_ID,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("objectId"));
+        assertEquals(
+                ExtendedBsonType.REGULAR_EXPRESSION,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("regex"));
+        assertEquals(
+                ExtendedBsonType.STRING,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("string"));
+        assertEquals(
+                ExtendedBsonType.SYMBOL,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("symbol"));
+        assertEquals(
+                ExtendedBsonType.TIMESTAMP,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("timestamp"));
+        assertEquals(
+                ExtendedBsonType.UNDEFINED,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("undefined"));
     }
 }

@@ -11,12 +11,8 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
@@ -81,46 +77,46 @@ public abstract class MongoSQLMock {
 
     protected static MongoJsonSchema generateMongoJsonSchema() {
         /*
-         {
-             bsonType: object,
-             properties: {
-                 foo: {
-                     bsonType: object,
-                     properties: {
-                         c: {
-                             bsonType: int
-                         },
-                         a: {
-                             anyOf: [
-                                 {bsonType: int},
-                                 {bsonType: string},
-                             ],
-                         },
-                         d: {},
-                         b: {
-                             anyOf: [
-                                {bsonType: int},
-                                {bsonType: null},
-                             ],
-                         },
-                     },
-                     required: [a, b],
-                 },
-                 "": {
+        {
+            bsonType: object,
+            properties: {
+                foo: {
                     bsonType: object,
                     properties: {
+                        c: {
+                            bsonType: int
+                        },
                         a: {
-                            bsonType: double
-                        }
-                        str: {
-                            bsonType: string
-                        }
-                    }
-                 },
-             },
-             required: [foo, ""]
-         }
-         */
+                            anyOf: [
+                                {bsonType: int},
+                                {bsonType: string},
+                            ],
+                        },
+                        d: {},
+                        b: {
+                            anyOf: [
+                               {bsonType: int},
+                               {bsonType: null},
+                            ],
+                        },
+                    },
+                    required: [a, b],
+                },
+                "": {
+                   bsonType: object,
+                   properties: {
+                       a: {
+                           bsonType: double
+                       }
+                       str: {
+                           bsonType: string
+                       }
+                   }
+                },
+            },
+            required: [foo, ""]
+        }
+        */
         MongoJsonSchema schema = new MongoJsonSchema();
         schema.bsonType = "object";
         schema.required = new HashSet<String>();

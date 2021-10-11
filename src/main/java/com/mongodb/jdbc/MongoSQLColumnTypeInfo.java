@@ -1,60 +1,72 @@
 package com.mongodb.jdbc;
 
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.sql.ResultSetMetaData;
 
 class MongoSQLColumnTypeInfo {
-        int jdbcType;
-        ExtendedBsonType bsonType;
-        String bsonTypeName;
-        int nullable;
+    int jdbcType;
+    ExtendedBsonType bsonType;
+    String bsonTypeName;
+    int nullable;
 
-        MongoSQLColumnTypeInfo(MongoJsonSchema schema, boolean nullable) throws SQLException {
-            // All schemata except AnyOf and Unsat must have a ExtendedBsonType (and we do not support
-            // Unsat).
-            if(schema.bsonType != null) {
-                this.bsonTypeName = bsonTypeName;
-                this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(bsonTypeName);
-                this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
-                this.nullable = convertNullable(nullable);
-                return;
-            }
-            // Otherwise, the schema must be an AnyOf.
-            constructFromAnyOf(schema, nullable);
-        }
-
-        private int convertNullable(boolean nullable) {
-             return nullable ?
-                    ResultSetMetaData.columnNullable
-                    :ResultSetMetaData.columnNoNulls;
-        }
-
-        private void constructFromAnyOf(MongoJsonSchema schema, boolean nullable) throws SQLException {
-            if(schema.anyOf == null) {
-                throw new SQLException("both bsonType and anyOf are null, this is not a valid schema");
-            }
-            for(MongoJsonSchema anyOfSchema: schema.anyOf) {
-                if(anyOfSchema.bsonType == null) {
-                    throw new SQLException("anyOf subschema must have bsonType field");
-                }
-                // Presense of null means this is nullable, whether or not the required keys
-                // of the parent object schema indicate this is nullable.
-                if(anyOfSchema.bsonType.equals("null")) {
-                    nullable = true;
-                } else {
-                    // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
-                    // we default to "bson"
-                    bsonTypeName = (bsonTypeName == null)?
-                         anyOfSchema.bsonType
-                        :"bson";
-                }
-            }
+    MongoSQLColumnTypeInfo(MongoJsonSchema schema, int nullable) throws SQLException {
+        // All schemata except AnyOf and Unsat must have a ExtendedBsonType (and we do not support
+        // Unsat).
+        if (schema.bsonType != null) {
             this.bsonTypeName = bsonTypeName;
             this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(bsonTypeName);
             this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
-            this.nullable = convertNullable(nullable);
+            this.nullable = nullable;
+            return;
         }
+        if (isAnyOrEmptyDoc(schema)) {
+            this.bsonTypeName = "bson";
+            this.jdbcType = Types.OTHER;
+            // This is ANY so NULL is possible
+            if (schema.additionalProperties) {
+                this.bsonType = ExtendedBsonType.ANY;
+                this.nullable = ResultSetMetaData.columnNullable;
+            // This is Empty Document so NULL is not possible
+            } else {
+                this.bsonType = ExtendedBsonType.DOCUMENT;
+                this.nullable = ResultSetMetaData.columnNoNulls;
+            }
+            return;
+        }
+        // Otherwise, the schema must be an AnyOf.
+        constructFromAnyOf(schema, nullable);
+    }
+
+    private boolean isAnyOrEmptyDoc(MongoJsonSchema schema) {
+        return schema.bsonType == null && schema.properties == null
+            &&schema.anyOf == null && schema.required == null
+            && schema.items == null;
+    }
+
+    private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
+        if (schema.anyOf == null) {
+            throw new SQLException("both bsonType and anyOf are null and this is not ANY or the Empty Document, this is not a valid schema");
+        }
+        for (MongoJsonSchema anyOfSchema : schema.anyOf) {
+            if (anyOfSchema.bsonType == null) {
+                throw new SQLException("anyOf subschema must have bsonType field");
+            }
+            // Presense of null means this is nullable, whether or not the required keys
+            // of the parent object schema indicate this is nullable.
+            if (anyOfSchema.bsonType.equals("null")) {
+                nullable = ResultSetMetaData.columnNullable;
+            } else {
+                // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
+                // we default to "bson"
+                bsonTypeName = (bsonTypeName == null) ? anyOfSchema.bsonType : "bson";
+            }
+        }
+        this.bsonTypeName = bsonTypeName;
+        this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(bsonTypeName);
+        this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
+        this.nullable = nullable;
+    }
 
     private static int getJDBCTypeForExtendedBsonType(ExtendedBsonType t) throws SQLException {
         switch (t) {
@@ -85,7 +97,7 @@ class MongoSQLColumnTypeInfo {
             case NULL:
                 return Types.NULL;
             case STRING:
-                return  Types.LONGVARCHAR;
+                return Types.LONGVARCHAR;
             case DECIMAL128:
                 return Types.DECIMAL;
             case DOUBLE:

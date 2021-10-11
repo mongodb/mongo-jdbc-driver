@@ -266,29 +266,63 @@ class MySQLResultSetMetaDataTest extends MySQLMock {
 
     @Test
     void testGetExtendedBsonTypeHelper() throws SQLException {
-        assertEquals(ExtendedBsonType.ARRAY, MongoResultSetMetaData.getExtendedBsonTypeHelper("array"));
-        assertEquals(ExtendedBsonType.BOOLEAN, MongoResultSetMetaData.getExtendedBsonTypeHelper("bool"));
-        assertEquals(ExtendedBsonType.BINARY, MongoResultSetMetaData.getExtendedBsonTypeHelper("binData"));
-        assertEquals(ExtendedBsonType.DATE_TIME, MongoResultSetMetaData.getExtendedBsonTypeHelper("date"));
-        assertEquals(ExtendedBsonType.DB_POINTER, MongoResultSetMetaData.getExtendedBsonTypeHelper("dbPointer"));
-        assertEquals(ExtendedBsonType.DECIMAL128, MongoResultSetMetaData.getExtendedBsonTypeHelper("decimal"));
-        assertEquals(ExtendedBsonType.DOUBLE, MongoResultSetMetaData.getExtendedBsonTypeHelper("double"));
-        assertEquals(ExtendedBsonType.INT32, MongoResultSetMetaData.getExtendedBsonTypeHelper("int"));
-        assertEquals(ExtendedBsonType.JAVASCRIPT, MongoResultSetMetaData.getExtendedBsonTypeHelper("javascript"));
+        assertEquals(
+                ExtendedBsonType.ARRAY, MongoResultSetMetaData.getExtendedBsonTypeHelper("array"));
+        assertEquals(
+                ExtendedBsonType.BOOLEAN, MongoResultSetMetaData.getExtendedBsonTypeHelper("bool"));
+        assertEquals(
+                ExtendedBsonType.BINARY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("binData"));
+        assertEquals(
+                ExtendedBsonType.DATE_TIME,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("date"));
+        assertEquals(
+                ExtendedBsonType.DB_POINTER,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("dbPointer"));
+        assertEquals(
+                ExtendedBsonType.DECIMAL128,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("decimal"));
+        assertEquals(
+                ExtendedBsonType.DOUBLE,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("double"));
+        assertEquals(
+                ExtendedBsonType.INT32, MongoResultSetMetaData.getExtendedBsonTypeHelper("int"));
+        assertEquals(
+                ExtendedBsonType.JAVASCRIPT,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("javascript"));
         assertEquals(
                 ExtendedBsonType.JAVASCRIPT_WITH_SCOPE,
                 MongoResultSetMetaData.getExtendedBsonTypeHelper("javascriptWithScope"));
-        assertEquals(ExtendedBsonType.INT64, MongoResultSetMetaData.getExtendedBsonTypeHelper("long"));
-        assertEquals(ExtendedBsonType.MAX_KEY, MongoResultSetMetaData.getExtendedBsonTypeHelper("maxKey"));
-        assertEquals(ExtendedBsonType.MIN_KEY, MongoResultSetMetaData.getExtendedBsonTypeHelper("minKey"));
-        assertEquals(ExtendedBsonType.NULL, MongoResultSetMetaData.getExtendedBsonTypeHelper("null"));
-        assertEquals(ExtendedBsonType.DOCUMENT, MongoResultSetMetaData.getExtendedBsonTypeHelper("object"));
-        assertEquals(ExtendedBsonType.OBJECT_ID, MongoResultSetMetaData.getExtendedBsonTypeHelper("objectId"));
         assertEquals(
-                ExtendedBsonType.REGULAR_EXPRESSION, MongoResultSetMetaData.getExtendedBsonTypeHelper("regex"));
-        assertEquals(ExtendedBsonType.STRING, MongoResultSetMetaData.getExtendedBsonTypeHelper("string"));
-        assertEquals(ExtendedBsonType.SYMBOL, MongoResultSetMetaData.getExtendedBsonTypeHelper("symbol"));
-        assertEquals(ExtendedBsonType.TIMESTAMP, MongoResultSetMetaData.getExtendedBsonTypeHelper("timestamp"));
-        assertEquals(ExtendedBsonType.UNDEFINED, MongoResultSetMetaData.getExtendedBsonTypeHelper("undefined"));
+                ExtendedBsonType.INT64, MongoResultSetMetaData.getExtendedBsonTypeHelper("long"));
+        assertEquals(
+                ExtendedBsonType.MAX_KEY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("maxKey"));
+        assertEquals(
+                ExtendedBsonType.MIN_KEY,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("minKey"));
+        assertEquals(
+                ExtendedBsonType.NULL, MongoResultSetMetaData.getExtendedBsonTypeHelper("null"));
+        assertEquals(
+                ExtendedBsonType.DOCUMENT,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("object"));
+        assertEquals(
+                ExtendedBsonType.OBJECT_ID,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("objectId"));
+        assertEquals(
+                ExtendedBsonType.REGULAR_EXPRESSION,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("regex"));
+        assertEquals(
+                ExtendedBsonType.STRING,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("string"));
+        assertEquals(
+                ExtendedBsonType.SYMBOL,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("symbol"));
+        assertEquals(
+                ExtendedBsonType.TIMESTAMP,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("timestamp"));
+        assertEquals(
+                ExtendedBsonType.UNDEFINED,
+                MongoResultSetMetaData.getExtendedBsonTypeHelper("undefined"));
     }
 }
