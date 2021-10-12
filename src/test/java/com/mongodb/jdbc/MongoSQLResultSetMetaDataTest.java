@@ -2,7 +2,6 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import org.bson.BsonValue;
@@ -142,7 +141,8 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(double.class.getName(), resultSetMetaData.getColumnClassName(DOUBLE_COL));
         assertEquals(String.class.getName(), resultSetMetaData.getColumnClassName(STRING_COL));
         assertEquals(
-                BsonValue.class.getName(), resultSetMetaData.getColumnClassName(ANY_OF_INT_STRING_COL));
+                BsonValue.class.getName(),
+                resultSetMetaData.getColumnClassName(ANY_OF_INT_STRING_COL));
         assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(INT_NULLABLE_COL));
         assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(INT_COL));
         assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnClassName(ANY_COL));

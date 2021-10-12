@@ -6,7 +6,7 @@ import java.sql.Types;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-class MongoSQLColumnTypeInfo {
+public class MongoSQLColumnTypeInfo {
     int jdbcType;
     ExtendedBsonType bsonType;
     String bsonTypeName;
@@ -29,7 +29,7 @@ class MongoSQLColumnTypeInfo {
             if (schema.additionalProperties) {
                 this.bsonType = ExtendedBsonType.ANY;
                 this.nullable = ResultSetMetaData.columnNullable;
-            // This is Empty Document so NULL is not possible
+                // This is Empty Document so NULL is not possible
             } else {
                 this.bsonType = ExtendedBsonType.DOCUMENT;
                 this.nullable = ResultSetMetaData.columnNoNulls;
@@ -41,14 +41,17 @@ class MongoSQLColumnTypeInfo {
     }
 
     private boolean isAnyOrEmptyDoc(MongoJsonSchema schema) {
-        return schema.bsonType == null && schema.properties == null
-            &&schema.anyOf == null && schema.required == null
-            && schema.items == null;
+        return schema.bsonType == null
+                && schema.properties == null
+                && schema.anyOf == null
+                && schema.required == null
+                && schema.items == null;
     }
 
     private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
         if (schema.anyOf == null) {
-            throw new SQLException("both bsonType and anyOf are null and this is not ANY or the Empty Document, this is not a valid schema");
+            throw new SQLException(
+                    "both bsonType and anyOf are null and this is not ANY or the Empty Document, this is not a valid schema");
         }
         for (MongoJsonSchema anyOfSchema : schema.anyOf) {
             if (anyOfSchema.bsonType == null) {
@@ -107,7 +110,7 @@ class MongoSQLColumnTypeInfo {
         }
         throw new SQLException("unknown bson type: " + t);
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
