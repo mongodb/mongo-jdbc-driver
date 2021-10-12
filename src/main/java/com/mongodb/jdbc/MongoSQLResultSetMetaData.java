@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
-    private static class NameSpace {
+    static class NameSpace {
         String datasource;
         String columnLabel;
 
@@ -19,12 +19,12 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    private static class DatasourceAndIndex {
-        String columnLabel;
+    static class DatasourceAndIndex {
+        String datasource;
         int index;
 
-        DatasourceAndIndex(String columnLabel, int index) {
-            this.columnLabel = columnLabel;
+        DatasourceAndIndex(String datasource, int index) {
+            this.datasource = datasource;
             this.index = index;
         }
     }
@@ -35,6 +35,12 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
     private List<MongoSQLColumnTypeInfo> columnTypeInfo;
+
+    // This gets the datasource for a given columnLabel, and is used
+    // in MongoSQLResultSet to retrieve data by label.
+    String getDatasource(String columnLabel) {
+        return columnLabels.get(columnLabel).datasource;
+    }
 
     private static void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
         if (schema.bsonType == null

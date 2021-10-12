@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
-    private static MongoResultSetMetaData resultSetMetaData;
+    private static MongoSQLResultSetMetaData resultSetMetaData;
 
     // __bot.a
     private static int DOUBLE_COL = 1;
@@ -259,5 +259,16 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(
                 ExtendedBsonType.UNDEFINED,
                 MongoResultSetMetaData.getExtendedBsonTypeHelper("undefined"));
+    }
+
+    @Test
+    void testGetDatasource() throws SQLException {
+        // note, we cannot get foo.a using the label a.
+        assertEquals("", resultSetMetaData.getDatasource("a"));
+        assertEquals("", resultSetMetaData.getDatasource("str"));
+        assertEquals("foo", resultSetMetaData.getDatasource("b"));
+        assertEquals("foo", resultSetMetaData.getDatasource("c"));
+        assertEquals("foo", resultSetMetaData.getDatasource("d"));
+        assertEquals("foo", resultSetMetaData.getDatasource("vec"));
     }
 }
