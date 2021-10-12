@@ -19,35 +19,28 @@ public class MongoSQLColumnTypeInfo {
             this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(schema.bsonType);
             this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
             this.nullable = nullable;
-        System.out.println(this);
             return;
         }
-        if (isAnyOrEmptyDoc(schema)) {
+        if (isAny(schema)) {
             this.bsonTypeName = "bson";
             this.jdbcType = Types.OTHER;
-            // This is ANY so NULL is possible
-            if (schema.additionalProperties) {
-                this.bsonType = ExtendedBsonType.ANY;
-                this.nullable = ResultSetMetaData.columnNullable;
-                // This is Empty Document so NULL is not possible
-            } else {
-                this.bsonType = ExtendedBsonType.DOCUMENT;
-                this.nullable = ResultSetMetaData.columnNoNulls;
-            }
-        System.out.println(this);
+            this.bsonType = ExtendedBsonType.ANY;
+            this.nullable = ResultSetMetaData.columnNullable;
             return;
         }
         // Otherwise, the schema must be an AnyOf.
         constructFromAnyOf(schema, nullable);
-        System.out.println(this);
     }
 
-    private boolean isAnyOrEmptyDoc(MongoJsonSchema schema) {
+    // Any is represented by the empty json schema {}, so all fields
+    // will be null or false
+    private boolean isAny(MongoJsonSchema schema) {
         return schema.bsonType == null
                 && schema.properties == null
                 && schema.anyOf == null
                 && schema.required == null
-                && schema.items == null;
+                && schema.items == null
+                && schema.additionalProperties == false;
     }
 
     private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {

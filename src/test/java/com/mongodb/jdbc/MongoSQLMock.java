@@ -165,9 +165,8 @@ public abstract class MongoSQLMock {
         fooSchema.properties = new HashMap<String, MongoJsonSchema>();
         fooSchema.properties.put("c", cSchema);
         fooSchema.properties.put("a", aSchema);
-        MongoJsonSchema anySchema = new MongoJsonSchema();
-        anySchema.additionalProperties = true;
-        fooSchema.properties.put("d", anySchema);
+        // new MongoJsonSchema() is the ANY schema
+        fooSchema.properties.put("d", new MongoJsonSchema());
         fooSchema.properties.put("b", bSchema);
         fooSchema.properties.put("vec", vecSchema);
 
