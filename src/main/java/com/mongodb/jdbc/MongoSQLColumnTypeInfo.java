@@ -46,7 +46,7 @@ public class MongoSQLColumnTypeInfo {
     private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
         if (schema.anyOf == null) {
             throw new SQLException(
-                    "both bsonType and anyOf are null and this is not ANY or the Empty Document, this is not a valid schema");
+                    "both bsonType and anyOf are null and this is not ANY, this is not a valid schema");
         }
         for (MongoJsonSchema anyOfSchema : schema.anyOf) {
             if (anyOfSchema.bsonType == null) {
