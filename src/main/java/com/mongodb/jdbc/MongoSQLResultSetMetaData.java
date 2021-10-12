@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
-    static class NameSpace {
+    private static class NameSpace {
         String datasource;
         String columnLabel;
 
@@ -19,7 +19,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    static class DatasourceAndIndex {
+    private static class DatasourceAndIndex {
         String datasource;
         int index;
 
