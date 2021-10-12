@@ -2,9 +2,9 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.sql.ResultSetMetaData;
 import org.bson.BsonValue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -107,8 +107,11 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     void testIsNullable() throws SQLException {
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(DOUBLE_COL));
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(STRING_COL));
-        assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(ANY_OF_INT_STRING_COL));
-        assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_NULLABLE_COL));
+        assertEquals(
+                ResultSetMetaData.columnNoNulls,
+                resultSetMetaData.isNullable(ANY_OF_INT_STRING_COL));
+        assertEquals(
+                ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_NULLABLE_COL));
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_COL));
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(ANY_COL));
         assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(ARRAY_COL));
