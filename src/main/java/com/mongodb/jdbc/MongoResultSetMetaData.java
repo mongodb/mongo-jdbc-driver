@@ -279,13 +279,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         // all returned names are correct.
         switch (typeName.charAt(0)) {
             case 'a':
-                switch (typeName.length()) {
-                    case 3:
-                        return ExtendedBsonType.ANY;
-                    case 5:
-                        return ExtendedBsonType.ARRAY;
-                }
-                break;
+                return ExtendedBsonType.ARRAY;
             case 'b':
                 switch (typeName.charAt(1)) {
                     case 's':
