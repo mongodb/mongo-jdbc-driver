@@ -35,8 +35,6 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
     private List<MongoSQLColumnTypeInfo> columnTypeInfo;
-    // The metadata JsonSchema
-    private MongoJsonSchema schema;
 
     private static void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
         if (schema.bsonType == null
@@ -46,7 +44,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    private void processDataSource(String datasource) throws SQLException {
+    private void processDataSource(MongoJsonSchema schema, String datasource) throws SQLException {
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertObjectSchema(datasourceSchema);
 
@@ -76,14 +74,13 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         columnLabels = new HashMap<String, DatasourceAndIndex>();
         columnIndices = new ArrayList<NameSpace>();
         columnTypeInfo = new ArrayList<MongoSQLColumnTypeInfo>();
-        this.schema = schema;
 
         Object[] datasources = schema.properties.keySet().toArray();
         Arrays.sort(datasources);
 
         for (Object datasource : datasources) {
             String datasourceAsString = (String) datasource;
-            processDataSource(datasourceAsString);
+            processDataSource(schema, datasourceAsString);
         }
     }
 
