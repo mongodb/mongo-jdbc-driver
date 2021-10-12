@@ -184,6 +184,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     @Test
     void testGetExtendedBsonTypeHelper() throws SQLException {
+        // This test covers all bsonTypes not explicitly covered in the other tests
         assertEquals(
                 ExtendedBsonType.ANY, MongoResultSetMetaData.getExtendedBsonTypeHelper("bson"));
         assertEquals(
