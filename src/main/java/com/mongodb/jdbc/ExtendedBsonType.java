@@ -46,9 +46,7 @@ public enum ExtendedBsonType {
      * @since 3.4
      */
     DECIMAL128(0x13),
-    /**
-     * This encodes an unknown, poissibly changeable BSON type
-     */
+    /** This encodes an unknown, poissibly dynamically changing BSON type */
     ANY(0x14),
     /** A BSON MinKey value. */
     MIN_KEY(0xff),
