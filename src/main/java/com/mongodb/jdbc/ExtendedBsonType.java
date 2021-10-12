@@ -46,7 +46,7 @@ public enum ExtendedBsonType {
      * @since 3.4
      */
     DECIMAL128(0x13),
-    /*
+    /**
      * This encodes an unknown, poissibly changeable BSON type
      */
     ANY(0x14),
