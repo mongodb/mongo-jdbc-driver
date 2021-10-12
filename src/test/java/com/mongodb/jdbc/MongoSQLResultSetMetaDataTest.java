@@ -82,6 +82,17 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     }
 
     @Test
+    void testGetTableName() throws SQLException {
+        assertEquals("", resultSetMetaData.getTableName(DOUBLE_COL));
+        assertEquals("", resultSetMetaData.getTableName(STRING_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(ANY_OF_INT_STRING_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(INT_NULLABLE_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(INT_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(ANY_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(ARRAY_COL));
+    }
+
+    @Test
     void testIsCaseSensitive() throws SQLException {
         assertEquals(false, resultSetMetaData.isCaseSensitive(DOUBLE_COL));
         assertEquals(true, resultSetMetaData.isCaseSensitive(STRING_COL));
