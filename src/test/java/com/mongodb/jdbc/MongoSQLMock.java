@@ -11,6 +11,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import org.bson.BsonDocument;
 import org.mockito.InjectMocks;
@@ -149,13 +150,17 @@ public abstract class MongoSQLMock {
         MongoJsonSchema cSchema = new MongoJsonSchema();
         cSchema.bsonType = "int";
 
+        fooSchema.properties = new HashMap<String, MongoJsonSchema>();
         fooSchema.properties.put("c", cSchema);
         fooSchema.properties.put("a", aSchema);
-        // new MongoJsonSchema() == ANY
-        fooSchema.properties.put("d", new MongoJsonSchema());
+        MongoJsonSchema anySchema = new MongoJsonSchema();
+        anySchema.additionalProperties = true;
+        fooSchema.properties.put("d", anySchema);
         fooSchema.properties.put("b", bSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
+        botSchema.bsonType = "object";
+        botSchema.properties = new HashMap<String, MongoJsonSchema>();
         aSchema = new MongoJsonSchema();
         aSchema.bsonType = "double";
         botSchema.properties.put("a", aSchema);
@@ -163,6 +168,7 @@ public abstract class MongoSQLMock {
         strSchema.bsonType = "string";
         botSchema.properties.put("str", strSchema);
 
+        schema.properties = new HashMap<String, MongoJsonSchema>();
         schema.properties.put("foo", fooSchema);
         schema.properties.put("", botSchema);
         return schema;

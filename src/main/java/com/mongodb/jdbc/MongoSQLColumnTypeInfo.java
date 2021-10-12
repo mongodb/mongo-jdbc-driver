@@ -3,6 +3,8 @@ package com.mongodb.jdbc;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 class MongoSQLColumnTypeInfo {
     int jdbcType;
@@ -14,8 +16,8 @@ class MongoSQLColumnTypeInfo {
         // All schemata except AnyOf and Unsat must have a ExtendedBsonType (and we do not support
         // Unsat).
         if (schema.bsonType != null) {
-            this.bsonTypeName = bsonTypeName;
-            this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(bsonTypeName);
+            this.bsonTypeName = schema.bsonType;
+            this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(schema.bsonType);
             this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
             this.nullable = nullable;
             return;
@@ -104,5 +106,10 @@ class MongoSQLColumnTypeInfo {
                 return Types.DOUBLE;
         }
         throw new SQLException("unknown bson type: " + t);
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

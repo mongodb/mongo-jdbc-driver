@@ -39,7 +39,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     private MongoJsonSchema schema;
 
     private static void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
-        if (schema.bsonType == null || !schema.equals("object") || schema.properties == null) {
+        if (schema.bsonType == null || !schema.bsonType.equals("object") || schema.properties == null) {
             throw new SQLException("ResultSetMetaData json schema must be object with properties");
         }
     }

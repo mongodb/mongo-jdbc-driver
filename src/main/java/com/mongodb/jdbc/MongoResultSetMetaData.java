@@ -287,10 +287,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
                 }
                 break;
             case 'b':
-                switch (typeName.length()) {
-                    case 4:
+                switch (typeName.charAt(1)) {
+                    case 's':
+                        return ExtendedBsonType.ANY;
+                    case 'o':
                         return ExtendedBsonType.BOOLEAN;
-                    case 7:
+                    case 'i':
                         return ExtendedBsonType.BINARY;
                 }
                 break;
