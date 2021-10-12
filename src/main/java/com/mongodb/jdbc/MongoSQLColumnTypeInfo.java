@@ -19,6 +19,7 @@ public class MongoSQLColumnTypeInfo {
             this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(schema.bsonType);
             this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
             this.nullable = nullable;
+        System.out.println(this);
             return;
         }
         if (isAnyOrEmptyDoc(schema)) {
@@ -33,10 +34,12 @@ public class MongoSQLColumnTypeInfo {
                 this.bsonType = ExtendedBsonType.DOCUMENT;
                 this.nullable = ResultSetMetaData.columnNoNulls;
             }
+        System.out.println(this);
             return;
         }
         // Otherwise, the schema must be an AnyOf.
         constructFromAnyOf(schema, nullable);
+        System.out.println(this);
     }
 
     private boolean isAnyOrEmptyDoc(MongoJsonSchema schema) {

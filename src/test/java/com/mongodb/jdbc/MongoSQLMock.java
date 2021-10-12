@@ -100,15 +100,21 @@ public abstract class MongoSQLMock {
                                {bsonType: null},
                             ],
                         },
+                        vec: {
+                           bsonType: array,
+                           items: {
+                               bsonType: int,
+                           }
+                        }
                     },
-                    required: [a, b],
+                    required: [a, b, vec],
                 },
                 "": {
                    bsonType: object,
                    properties: {
                        a: {
                            bsonType: double
-                       }
+                       },
                        str: {
                            bsonType: string
                        }
@@ -128,6 +134,7 @@ public abstract class MongoSQLMock {
         fooSchema.required = new HashSet<String>();
         fooSchema.required.add("a");
         fooSchema.required.add("b");
+        fooSchema.required.add("vec");
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
@@ -150,6 +157,11 @@ public abstract class MongoSQLMock {
         MongoJsonSchema cSchema = new MongoJsonSchema();
         cSchema.bsonType = "int";
 
+        MongoJsonSchema vecSchema = new MongoJsonSchema();
+        vecSchema.bsonType = "array";
+        vecSchema.items = new MongoJsonSchema();
+        vecSchema.items.bsonType = "int";
+
         fooSchema.properties = new HashMap<String, MongoJsonSchema>();
         fooSchema.properties.put("c", cSchema);
         fooSchema.properties.put("a", aSchema);
@@ -157,6 +169,7 @@ public abstract class MongoSQLMock {
         anySchema.additionalProperties = true;
         fooSchema.properties.put("d", anySchema);
         fooSchema.properties.put("b", bSchema);
+        fooSchema.properties.put("vec", vecSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
