@@ -253,7 +253,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         // "array"
         // "bool"
         // "binData"
-        // "bson"
         // "date"
         // "dbPointer"
         // "decimal"
@@ -272,6 +271,10 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         // "symbol"
         // "timestamp"
         // "undefined"
+        //
+        // additionally:
+        // "bson" represents a type that may change dynamically at runtime or is unknown
+        //
         // This function will not always throw an exception for an unknown type name. Type
         // names returned from ADL are assumed correct.
         // Fortunately all type names can be guessed uniquely off a combination of first letter
