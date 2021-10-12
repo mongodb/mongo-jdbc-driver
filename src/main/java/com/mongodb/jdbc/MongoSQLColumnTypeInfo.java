@@ -13,7 +13,7 @@ public class MongoSQLColumnTypeInfo {
     int nullable;
 
     MongoSQLColumnTypeInfo(MongoJsonSchema schema, int nullable) throws SQLException {
-        // All schemata except AnyOf must have a bsonType.
+        // All schemata except Any and AnyOf must have a bsonType.
         if (schema.bsonType != null) {
             this.bsonTypeName = schema.bsonType;
             this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(schema.bsonType);
