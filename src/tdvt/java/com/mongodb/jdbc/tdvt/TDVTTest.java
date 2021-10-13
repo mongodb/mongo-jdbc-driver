@@ -8992,6 +8992,7 @@ public class TDVTTest {
             // This will be false if both ArrayLists are the same
             System.out.println(expected.toString());
             System.out.println(rsSet.toString());
+            // Disabled: SQL-539
             // assertTrue("failed result check", false);
         }
     }
