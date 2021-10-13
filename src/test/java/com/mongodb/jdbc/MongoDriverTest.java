@@ -2,6 +2,8 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -21,6 +23,7 @@ class MongoDriverTest {
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
+    static final String dbNameURL = "jdbc:mongodb://foo:bar@localhost:27017/admin?database=foo";
     // Even though ADL does not support replSets, this tests that we handle these URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
@@ -69,6 +72,12 @@ class MongoDriverTest {
         // Database is not the same as the authDatabase in the uri.
         // So this is safe and should not throw.
         assertNotNull(d.connect(authDBURL, p));
+    }
+
+    @Test
+    public void testDBNameInUrl() throws SQLException {
+        Connection conn = DriverManager.getConnection(dbNameURL);
+        conn.createStatement().close();
     }
 
     @Test

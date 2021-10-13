@@ -322,6 +322,7 @@ public class MongoDriver implements Driver {
                     continue;
                 }
                 options.put(normalizedKey, kv[1]);
+                info.put(normalizedKey, kv[1]);
             }
         }
 
