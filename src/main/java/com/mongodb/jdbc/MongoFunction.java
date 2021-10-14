@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 public class MongoFunction {
@@ -580,23 +581,132 @@ public class MongoFunction {
                         "returns cumulative sample standard deviation of a group.",
                         new String[] {"numeric"})
             };
+
     public static final String[] mySQLFunctionNames;
     public static final String mySQLNumericFunctionsString;
     public static final String mySQLStringFunctionsString;
     public static final String mySQLDateFunctionsString;
 
+    public static final MongoFunction[] mongoSQLFunctions =
+            new MongoFunction[]{
+                    new MongoFunction(
+                            "BIT_LENGTH",
+                            "long",
+                            "returns length of string in bits",
+                            new String[] {"string"}),
+                    new MongoFunction(
+                            "CAST",
+                            null,
+                            "converts the provided expression into a value of the specified type.",
+                            new String[] {null, null, null, null}),
+                    new MongoFunction(
+                            "CHAR_LENGTH",
+                            "long",
+                            "returns length of string",
+                            new String[] {"string"}),
+                    new MongoFunction(
+                            "COALESCE",
+                            null,
+                            "returns the first non-null value in the list, or null if there are no non-null values.",
+                            new String[] {null}),
+                    new MongoFunction(
+                            "CURRENT_TIMESTAMP",
+                            "date",
+                            "returns the current date and time.",
+                            new String[] {"int"}),
+                    new MongoFunction(
+                            "EXTRACT",
+                            "long",
+                            "returns the value of the specified unit from the provided date.",
+                            new String[] {"string", "date"}),
+                    new MongoFunction(
+                            "LOWER",
+                            "string",
+                            "returns the provided string with all characters changed to lowercase.",
+                            new String[] {"string"}),
+                    new MongoFunction(
+                            "NULLIF",
+                            null,
+                            "returns null if the two arguments are equal, and the first argument otherwise.",
+                            new String[] {null, null}),
+                    new MongoFunction(
+                            "OCTET_LENGTH",
+                            "long",
+                            "returns length of string in bytes",
+                            new String[] {"string"}),
+                    new MongoFunction(
+                            "POSITION",
+                            "long",
+                            "returns the position of the first occurrence of substring substr in string str.",
+                            new String[] {"string", "string"}),
+                    new MongoFunction(
+                            "SLICE",
+                            null,
+                            "returns a slice of an array.",
+                            new String[] {"array", "int", "int"}),
+                    new MongoFunction(
+                            "SIZE",
+                            "numeric",
+                            "returns the size of an array.",
+                            new String[] {"array"}),
+                    new MongoFunction(
+                            "SUBSTRING",
+                            "string",
+                            "takes a substring from a string",
+                            new String[] {"string", "long"}),
+                    new MongoFunction(
+                            "TRIM",
+                            "string",
+                            "returns the string str with all remstr prefixes and/or suffixes removed.",
+                            new String[] {"string"}),
+                    new MongoFunction(
+                            "UPPER",
+                            "string",
+                            "returns the provided string with all characters changed to uppercase.",
+                            new String[] {"string"}),
+            };
+
+    public static final String[] mongoSQLFunctionNames;
+    public static final String mongoSQLNumericFunctionsString;
+    public static final String mongoSQLStringFunctionsString;
+    public static final String mongoSQLDateFunctionsString;
+
+    private static final String NUMERIC_FUNCTIONS_KEY = "numeric";
+    private static final String STRING_FUNCTIONS_KEY = "string";
+    private static final String DATE_FUNCTIONS_KEY = "date";
+
     static {
-        mySQLFunctionNames = new String[MongoFunction.mySQLFunctions.length];
-        for (int i = 0; i < mySQLFunctionNames.length; ++i) {
-            mySQLFunctionNames[i] = MongoFunction.mySQLFunctions[i].name;
+        // MySQL
+        Pair<String[], HashMap<String, String>> mySQLFunctionMetadata = buildFunctionMetadata(MongoFunction.mySQLFunctions);
+        HashMap<String, String> m = mySQLFunctionMetadata.getSecond();
+
+        mySQLFunctionNames = mySQLFunctionMetadata.getFirst();
+        mySQLNumericFunctionsString = m.get(NUMERIC_FUNCTIONS_KEY);
+        mySQLStringFunctionsString = m.get(STRING_FUNCTIONS_KEY);
+        mySQLDateFunctionsString = m.get(DATE_FUNCTIONS_KEY);
+
+        // MongoSQL
+        Pair<String[], HashMap<String, String>> mongoSQLFunctionMetadata = buildFunctionMetadata(MongoFunction.mongoSQLFunctions);
+        m = mongoSQLFunctionMetadata.getSecond();
+
+        mongoSQLFunctionNames = mongoSQLFunctionMetadata.getFirst();
+        mongoSQLNumericFunctionsString = m.get(NUMERIC_FUNCTIONS_KEY);
+        mongoSQLStringFunctionsString = m.get(STRING_FUNCTIONS_KEY);
+        mongoSQLDateFunctionsString = m.get(DATE_FUNCTIONS_KEY);
+    }
+
+    private static Pair<String[], HashMap<String, String>> buildFunctionMetadata(MongoFunction[] functions) {
+        String[] functionNames = new String[functions.length];
+        for (int i = 0; i < functionNames.length; ++i) {
+            functionNames[i] = functions[i].name;
         }
 
-        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
-        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
-        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(mySQLFunctionNames.length);
-        for (int i = 0; i < MongoFunction.mySQLFunctions.length; ++i) {
-            for (String argType : MongoFunction.mySQLFunctions[i].argTypes) {
-                String name = MongoFunction.mySQLFunctions[i].name;
+        LinkedHashSet<String> numericFunctionSet = new LinkedHashSet<>(functionNames.length);
+        LinkedHashSet<String> stringFunctionSet = new LinkedHashSet<>(functionNames.length);
+        LinkedHashSet<String> dateFunctionSet = new LinkedHashSet<>(functionNames.length);
+        for (int i = 0; i < functions.length; ++i) {
+            for (String argType : functions[i].argTypes) {
+                String name = functions[i].name;
                 if (argType == null) {
                     continue;
                 }
@@ -626,8 +736,32 @@ public class MongoFunction {
                 }
             }
         }
-        mySQLNumericFunctionsString = String.join(",", numericFunctionSet);
-        mySQLStringFunctionsString = String.join(",", stringFunctionSet);
-        mySQLDateFunctionsString = String.join(",", dateFunctionSet);
+
+        HashMap<String, String> m = new HashMap<>();
+
+        m.put(NUMERIC_FUNCTIONS_KEY, String.join(",", numericFunctionSet));
+        m.put(STRING_FUNCTIONS_KEY, String.join(",", stringFunctionSet));
+        m.put(DATE_FUNCTIONS_KEY, String.join(",", dateFunctionSet));
+
+        return new Pair<>(functionNames, m);
     }
+
+    private static class Pair<X, Y> {
+        private final X x;
+        private final Y y;
+
+        public Pair(X x, Y y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public X getFirst() {
+            return this.x;
+        }
+
+        public Y getSecond() {
+            return this.y;
+        }
+    }
+
 }
