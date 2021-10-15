@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bson.BsonType;
 
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     private static class NameSpace {
@@ -34,7 +35,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     // A mapping from index position to NameSpace (datasource, columnLabel).
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
-    private List<MongoSQLColumnTypeInfo> columnTypeInfo;
+    private List<MongoSQLColumnInfo> columnInfo;
 
     // This gets the datasource for a given columnLabel, and is used
     // in MongoSQLResultSet to retrieve data by label.
@@ -52,21 +53,21 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertObjectSchema(datasourceSchema);
 
-        String[] columns = datasourceSchema.properties.keySet().toArray(new String[0]);
-        Arrays.sort(columns);
+        String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
+        Arrays.sort(fields);
 
-        for (String column : columns) {
-            MongoJsonSchema columnSchema = datasourceSchema.properties.get(column);
-            columnIndices.add(new NameSpace(datasource, column));
+        for (String field : fields) {
+            MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
+            columnIndices.add(new NameSpace(datasource, field));
             int subNullability =
                     (datasourceSchema.required == null
-                                    || !datasourceSchema.required.contains(column))
+                                    || !datasourceSchema.required.contains(field))
                             ? ResultSetMetaData.columnNullable
                             : ResultSetMetaData.columnNoNulls;
-            columnTypeInfo.add(new MongoSQLColumnTypeInfo(columnSchema, subNullability));
-            if (!columnLabels.containsKey(column)) {
+            columnInfo.add(new MongoSQLColumnInfo(datasource, field, columnSchema, subNullability));
+            if (!columnLabels.containsKey(field)) {
                 columnLabels.put(
-                        column, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
+                        field, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
             }
         }
     };
@@ -76,7 +77,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();
         columnIndices = new ArrayList<NameSpace>();
-        columnTypeInfo = new ArrayList<MongoSQLColumnTypeInfo>();
+        columnInfo = new ArrayList<MongoSQLColumnInfo>();
 
         String[] datasources = schema.properties.keySet().toArray(new String[0]);
         Arrays.sort(datasources);
@@ -95,47 +96,13 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     }
 
     @Override
+    public MongoColumnInfo getColumnInfo(int column) throws SQLException {
+        checkBounds(column);
+        return columnInfo.get(column - 1);
+    }
+
+    @Override
     public int getColumnCount() throws SQLException {
         return columnIndices.size();
-    }
-
-    @Override
-    public int isNullable(int column) throws SQLException {
-        return columnTypeInfo.get(column - 1).nullable;
-    }
-
-    @Override
-    public String getColumnLabel(int column) throws SQLException {
-        return columnIndices.get(column - 1).columnLabel;
-    }
-
-    @Override
-    public String getColumnName(int column) throws SQLException {
-        return columnIndices.get(column - 1).columnLabel;
-    }
-
-    @Override
-    public String getTableName(int column) throws SQLException {
-        return columnIndices.get(column - 1).datasource;
-    }
-
-    @Override
-    public String getCatalogName(int column) throws SQLException {
-        return "";
-    }
-
-    @Override
-    public ExtendedBsonType getExtendedBsonType(int column) throws SQLException {
-        return columnTypeInfo.get(column - 1).bsonType;
-    }
-
-    @Override
-    public int getColumnType(int column) throws SQLException {
-        return columnTypeInfo.get(column - 1).jdbcType;
-    }
-
-    @Override
-    public String getColumnTypeName(int column) throws SQLException {
-        return columnTypeInfo.get(column - 1).bsonTypeName;
     }
 }

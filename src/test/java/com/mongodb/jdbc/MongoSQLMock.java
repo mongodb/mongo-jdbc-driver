@@ -23,8 +23,8 @@ public abstract class MongoSQLMock {
     protected static String database = "test";
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
-    @Mock protected static AggregateIterable<MongoResultDoc> aggregateIterable;
-    @Mock protected static MongoCursor<MongoResultDoc> mongoCursor;
+    @Mock protected static AggregateIterable<MySQLResultDoc> aggregateIterable;
+    @Mock protected static MongoCursor<MySQLResultDoc> mongoCursor;
 
     @InjectMocks
     protected static MongoConnection mongoConnection = new MongoSQLConnection(uri, database);
@@ -61,7 +61,7 @@ public abstract class MongoSQLMock {
         // Mock mongoDatabase
         when(mongoConnection.getDatabase(anyString())).thenReturn(mongoDatabase);
         when(mongoDatabase.withCodecRegistry(any())).thenReturn(mongoDatabase);
-        when(mongoDatabase.aggregate(any(), eq(MongoResultDoc.class)))
+        when(mongoDatabase.aggregate(any(), eq(MySQLResultDoc.class)))
                 .thenReturn(aggregateIterable);
         // Mock aggregateIterable
         when(aggregateIterable.batchSize(anyInt())).thenReturn(aggregateIterable);

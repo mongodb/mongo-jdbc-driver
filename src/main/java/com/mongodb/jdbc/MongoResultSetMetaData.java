@@ -5,6 +5,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import org.bson.BsonType;
 import org.bson.BsonValue;
 
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
@@ -23,8 +24,103 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
+    public boolean isSearchable(int column) throws SQLException {
+        checkBounds(column);
+        return true;
+    }
+
+    @Override
+    public boolean isCurrency(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public String getSchemaName(int column) throws SQLException {
+        checkBounds(column);
+        return "";
+    }
+
+    public abstract MongoColumnInfo getColumnInfo(int column) throws SQLException;
+
+    public abstract boolean hasColumnWithLabel(String label) throws SQLException;
+
+    public abstract int getColumnPositionFromLabel(String label) throws SQLException;
+
+    @Override
+    public boolean isReadOnly(int column) throws SQLException {
+        checkBounds(column);
+        return true;
+    }
+
+    @Override
+    public boolean isWritable(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public boolean isDefinitelyWritable(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public int isNullable(int column) throws SQLException {
+        return getColumnInfo(column).getNullability();
+    }
+
+    @Override
+    public String getColumnLabel(int column) throws SQLException {
+        return getColumnInfo(column).getColumnAlias();
+    }
+
+    @Override
+    public String getColumnName(int column) throws SQLException {
+        return getColumnInfo(column).getColumnName();
+    }
+
+    @Override
+    public String getTableName(int column) throws SQLException {
+        return getColumnInfo(column).getTableAlias();
+    }
+
+    @Override
+    public String getCatalogName(int column) throws SQLException {
+        return getColumnInfo(column).getDatabase();
+    }
+
+    @Override
+    public int getColumnType(int column) throws SQLException {
+        MongoColumnInfo ci = getColumnInfo(column);
+        return ci.getJdbcType();
+    }
+
+    @Override
+    public String getColumnTypeName(int column) throws SQLException {
+        MongoColumnInfo ci = getColumnInfo(column);
+        return ci.getBsonTypeName();
+    }
+
+    // java.sql.Wrapper impl
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isInstance(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return (T) this;
+    }
+
+    @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        ExtendedBsonType t = getExtendedBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return true;
+        }
+        BsonType t = ci.getBsonType();
         switch (t) {
             case ARRAY:
             case BINARY:
@@ -43,7 +139,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case TIMESTAMP:
             case UNDEFINED:
                 return false;
-            case ANY:
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case REGULAR_EXPRESSION:
@@ -55,22 +150,13 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public boolean isSearchable(int column) throws SQLException {
-        checkBounds(column);
-        return true;
-    }
-
-    @Override
-    public boolean isCurrency(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
-    @Override
     public boolean isSigned(int column) throws SQLException {
-        ExtendedBsonType t = getExtendedBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return true;
+        }
+        BsonType t = ci.getBsonType();
         switch (t) {
-            case ANY:
             case DOUBLE:
             case DECIMAL128:
             case INT32:
@@ -100,10 +186,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        ExtendedBsonType t = getExtendedBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonType();
         switch (t) {
-            case ANY:
-                return unknownLength;
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -152,17 +240,13 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public String getSchemaName(int column) throws SQLException {
-        checkBounds(column);
-        return "";
-    }
-
-    @Override
     public int getPrecision(int column) throws SQLException {
-        ExtendedBsonType t = getExtendedBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonType();
         switch (t) {
-            case ANY:
-                return unknownLength;
             case ARRAY:
                 return unknownLength;
             case BINARY:
@@ -211,9 +295,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getScale(int column) throws SQLException {
-        ExtendedBsonType t = getExtendedBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonType();
         switch (t) {
-            case ANY:
             case ARRAY:
             case BINARY:
             case BOOLEAN:
@@ -242,140 +329,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type: " + t);
     }
 
-    public abstract ExtendedBsonType getExtendedBsonType(int column) throws SQLException;
-
-    public abstract boolean hasColumnWithLabel(String label) throws SQLException;
-
-    public abstract int getColumnPositionFromLabel(String label) throws SQLException;
-
-    static ExtendedBsonType getExtendedBsonTypeHelper(String typeName) throws SQLException {
-        // bsonType strings as represented by the $type function:
-        // "array"
-        // "bool"
-        // "binData"
-        // "date"
-        // "dbPointer"
-        // "decimal"
-        // "double"
-        // "int"
-        // "javascript"
-        // "javascriptWithScope"
-        // "long"
-        // "maxKey"
-        // "minKey"
-        // "null"
-        // "object"
-        // "objectId"
-        // "regex"
-        // "string"
-        // "symbol"
-        // "timestamp"
-        // "undefined"
-        //
-        // additionally:
-        // "bson" represents a type that may change dynamically at runtime or is unknown
-        //
-        // This function will not always throw an exception for an unknown type name. Type
-        // names returned from ADL are assumed correct.
-        // Fortunately all type names can be guessed uniquely off a combination of first letter
-        // and length except for "minKey" vs "maxKey" and "string" vs "symbol", again, assuming
-        // all returned names are correct.
-        switch (typeName.charAt(0)) {
-            case 'a':
-                return ExtendedBsonType.ARRAY;
-            case 'b':
-                switch (typeName.charAt(1)) {
-                    case 's':
-                        return ExtendedBsonType.ANY;
-                    case 'o':
-                        return ExtendedBsonType.BOOLEAN;
-                    case 'i':
-                        return ExtendedBsonType.BINARY;
-                }
-                break;
-            case 'd':
-                switch (typeName.length()) {
-                    case 4:
-                        return ExtendedBsonType.DATE_TIME;
-                    case 6:
-                        return ExtendedBsonType.DOUBLE;
-                    case 7:
-                        return ExtendedBsonType.DECIMAL128;
-                    case 9:
-                        return ExtendedBsonType.DB_POINTER;
-                }
-                break;
-            case 'i':
-                return ExtendedBsonType.INT32;
-            case 'j':
-                switch (typeName.length()) {
-                    case 10:
-                        return ExtendedBsonType.JAVASCRIPT;
-                    case 19:
-                        return ExtendedBsonType.JAVASCRIPT_WITH_SCOPE;
-                }
-                break;
-            case 'l':
-                return ExtendedBsonType.INT64;
-            case 'm':
-                switch (typeName.charAt(1)) {
-                    case 'a':
-                        return ExtendedBsonType.MAX_KEY;
-                    case 'i':
-                        return ExtendedBsonType.MIN_KEY;
-                }
-                break;
-            case 'n':
-                return ExtendedBsonType.NULL;
-            case 'o':
-                switch (typeName.length()) {
-                    case 6: // "object"
-                        return ExtendedBsonType.DOCUMENT;
-                    case 8:
-                        return ExtendedBsonType.OBJECT_ID;
-                }
-                break;
-            case 'r':
-                return ExtendedBsonType.REGULAR_EXPRESSION;
-            case 's':
-                switch (typeName.charAt(1)) {
-                    case 't':
-                        return ExtendedBsonType.STRING;
-                    case 'y':
-                        return ExtendedBsonType.SYMBOL;
-                }
-                break;
-            case 't':
-                return ExtendedBsonType.TIMESTAMP;
-            case 'u':
-                return ExtendedBsonType.UNDEFINED;
-        }
-        throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
-    }
-
-    @Override
-    public boolean isReadOnly(int column) throws SQLException {
-        checkBounds(column);
-        return true;
-    }
-
-    @Override
-    public boolean isWritable(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
-    @Override
-    public boolean isDefinitelyWritable(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
     // --------------------------JDBC 2.0-----------------------------------
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        checkBounds(column);
-
         String intClassName = int.class.getName();
         String booleanClassName = boolean.class.getName();
         String stringClassName = String.class.getName();
@@ -488,17 +444,5 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
                 return stringClassName;
         }
         throw new SQLException("getObject not supported for column type " + columnType);
-    }
-
-    // java.sql.Wrapper impl
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isInstance(this);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return (T) this;
     }
 }

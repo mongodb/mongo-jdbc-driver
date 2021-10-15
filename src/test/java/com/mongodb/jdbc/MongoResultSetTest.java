@@ -41,7 +41,7 @@ import org.mockito.quality.Strictness;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
 class MySQLResultSetTest extends MySQLMock {
-    @Mock MongoCursor<MongoResultDoc> cursor;
+    @Mock MongoCursor<MySQLResultDoc> cursor;
     MySQLResultSet mockResultSet;
     static MySQLStatement mongoStatement;
     static MySQLResultSet relaxedMySQLResultSet;
@@ -77,27 +77,31 @@ class MySQLResultSetTest extends MySQLMock {
     static String DBPOINTER_COL_LABEL = "db_pointer";
 
     static {
-        MongoResultDoc metaDoc = new MongoResultDoc();
+        MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new Column("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, "null"));
-        metaDoc.columns.add(new Column("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, "double"));
-        metaDoc.columns.add(new Column("", "", "", STRING_COL_LABEL, STRING_COL_LABEL, "string"));
-        metaDoc.columns.add(new Column("", "", "", BINARY_COL_LABEL, BINARY_COL_LABEL, "binData"));
-        metaDoc.columns.add(new Column("", "", "", UUID_COL_LABEL, UUID_COL_LABEL, "binData"));
-        metaDoc.columns.add(
-                new Column("", "", "", OBJECTID_COL_LABEL, OBJECTID_COL_LABEL, "objectId"));
-        metaDoc.columns.add(new Column("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, "bool"));
-        metaDoc.columns.add(new Column("", "", "", DATE_COL_LABEL, DATE_COL_LABEL, "date"));
-        metaDoc.columns.add(new Column("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, "int"));
-        metaDoc.columns.add(new Column("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, "long"));
-        metaDoc.columns.add(
-                new Column("", "", "", DECIMAL_COL_LABEL, DECIMAL_COL_LABEL, "decimal"));
-        metaDoc.columns.add(
-                new Column("", "", "", UNDEFINED_COL_LABEL, UNDEFINED_COL_LABEL, "undefined"));
-        metaDoc.columns.add(
-                new Column("", "", "", DBPOINTER_COL_LABEL, DBPOINTER_COL_LABEL, "dbPointer"));
+        try {
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, "null"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, "double"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", STRING_COL_LABEL, STRING_COL_LABEL, "string"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", BINARY_COL_LABEL, BINARY_COL_LABEL, "binData"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", UUID_COL_LABEL, UUID_COL_LABEL, "binData"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", OBJECTID_COL_LABEL, OBJECTID_COL_LABEL, "objectId"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, "bool"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATE_COL_LABEL, DATE_COL_LABEL, "date"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, "int"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, "long"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", DECIMAL_COL_LABEL, DECIMAL_COL_LABEL, "decimal"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", UNDEFINED_COL_LABEL, UNDEFINED_COL_LABEL, "undefined"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", DBPOINTER_COL_LABEL, DBPOINTER_COL_LABEL, "dbPointer"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-        MongoResultDoc valuesDoc = new MongoResultDoc();
+        MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
         valuesDoc.values.add(new BsonNull());
         valuesDoc.values.add(new BsonDouble(1.1));
@@ -113,7 +117,7 @@ class MySQLResultSetTest extends MySQLMock {
         valuesDoc.values.add(new BsonUndefined());
         valuesDoc.values.add(new BsonDbPointer("foo", new ObjectId("5e334e6e780812e4896dd65e")));
 
-        List<MongoResultDoc> mongoResultDocs = new ArrayList<MongoResultDoc>();
+        List<MySQLResultDoc> mongoResultDocs = new ArrayList<MySQLResultDoc>();
         mongoResultDocs.add(metaDoc);
         mongoResultDocs.add(valuesDoc);
 
@@ -125,11 +129,11 @@ class MySQLResultSetTest extends MySQLMock {
 
         // create result sets used by tests.
         strictMySQLResultSet =
-                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
+                new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
         relaxedMySQLResultSet =
-                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
+                new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
         closedMySQLResultSet =
-                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), true);
+                new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
 
         // call next() so that each result set is on the pre-populated row.
         try {
@@ -1345,17 +1349,17 @@ class MySQLResultSetTest extends MySQLMock {
     // unit test sample
     @Test
     void returnNextRowWhenAvailable() throws Exception {
-        MongoResultDoc metaDoc = new MongoResultDoc();
+        MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
 
-        MongoResultDoc valuesDoc = new MongoResultDoc();
+        MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
 
-        MongoResultDoc valuesDoc2 = new MongoResultDoc();
+        MySQLResultDoc valuesDoc2 = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
 
-        MongoExplicitCursor cursor =
-                new MongoExplicitCursor(Arrays.asList(metaDoc, valuesDoc, valuesDoc2));
+        MySQLExplicitCursor cursor =
+                new MySQLExplicitCursor(Arrays.asList(metaDoc, valuesDoc, valuesDoc2));
         mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
 
         assertFalse(mockResultSet.isFirst());
@@ -1379,7 +1383,7 @@ class MySQLResultSetTest extends MySQLMock {
 
         String colName = "a";
 
-        MongoResultDoc emptyResultDoc = new MongoResultDoc();
+        MySQLResultDoc emptyResultDoc = new MySQLResultDoc();
         emptyResultDoc.columns = new ArrayList<>();
         emptyResultDoc.columns.add(generateCol("myDB", "foo", colName, "string"));
 
@@ -1418,7 +1422,7 @@ class MySQLResultSetTest extends MySQLMock {
     void testEmptyResultSetWhenGetMetadataCalledFirst() throws SQLException {
         String colName = "a";
 
-        MongoResultDoc emptyResultDoc = new MongoResultDoc();
+        MySQLResultDoc emptyResultDoc = new MySQLResultDoc();
         emptyResultDoc.columns = new ArrayList<>();
         emptyResultDoc.columns.add(generateCol("myDB", "foo", colName, "string"));
 
@@ -1453,29 +1457,29 @@ class MySQLResultSetTest extends MySQLMock {
     void sameMetaDataOnDifferentRowsEvenWithDifferentBsonTypes() throws SQLException {
         AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
 
-        MongoResultDoc metaDoc = new MongoResultDoc();
+        MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
         metaDoc.columns.add(generateCol("myDB", "foo", "a", "int"));
 
-        MongoResultDoc row1 = new MongoResultDoc();
+        MySQLResultDoc row1 = new MySQLResultDoc();
         row1.values = new ArrayList<>();
         row1.values.add(new BsonInt32(1));
 
-        MongoResultDoc row2 = new MongoResultDoc();
+        MySQLResultDoc row2 = new MySQLResultDoc();
         row2.values = new ArrayList<>();
         row2.values.add(new BsonString("test"));
 
-        List<MongoResultDoc> rows = new ArrayList<>();
+        List<MySQLResultDoc> rows = new ArrayList<>();
         rows.add(metaDoc);
         rows.add(row1);
         rows.add(row2);
 
-        Iterator<MongoResultDoc> iter = rows.iterator();
+        Iterator<MySQLResultDoc> iter = rows.iterator();
         when(cursor.hasNext()).thenAnswer(invocation -> iter.hasNext());
         when(cursor.next())
                 .thenAnswer(
                         invocation -> {
-                            MongoResultDoc doc = iter.next();
+                            MySQLResultDoc doc = iter.next();
                             return doc;
                         });
 

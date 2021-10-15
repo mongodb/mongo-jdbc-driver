@@ -5,26 +5,35 @@ import java.sql.SQLException;
 import java.sql.Types;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.BsonType;
 
-public class MongoSQLColumnTypeInfo {
-    int jdbcType;
-    ExtendedBsonType bsonType;
-    String bsonTypeName;
-    int nullable;
+public class MongoSQLColumnInfo implements MongoColumnInfo {
+    private String datasource;
+    private String field;
+    private String bsonTypeName;
+    private BsonType bsonType;
+    private int jdbcType;
+    private boolean isPolymorphic;
+    private int nullable;
 
-    MongoSQLColumnTypeInfo(MongoJsonSchema schema, int nullable) throws SQLException {
+    MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, int nullable) throws SQLException {
+        System.out.println("!!! " + datasource + "." + field + " --> " + nullable);
+        this.datasource = datasource;
+        this.field = field;
         // All schemata except Any and AnyOf must have a bsonType.
         if (schema.bsonType != null) {
-            this.bsonTypeName = schema.bsonType;
-            this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(schema.bsonType);
-            this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
+            bsonTypeName = schema.bsonType;
+            bsonType = MongoColumnInfo.getBsonTypeHelper(schema.bsonType);
+            jdbcType = getJDBCTypeForBsonType(this.bsonType);
+            isPolymorphic = false;
             this.nullable = nullable;
             return;
         }
         if (schema.isAny()) {
-            this.bsonTypeName = "bson";
-            this.jdbcType = Types.OTHER;
-            this.bsonType = ExtendedBsonType.ANY;
+            bsonTypeName = "bson";
+            jdbcType = Types.OTHER;
+            bsonType = BsonType.UNDEFINED;
+            isPolymorphic = true;
             this.nullable = ResultSetMetaData.columnNullable;
             return;
         }
@@ -49,19 +58,28 @@ public class MongoSQLColumnTypeInfo {
                 nullable = ResultSetMetaData.columnNullable;
             } else {
                 // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
-                // we default to "bson"
-                bsonTypeName = (bsonTypeName == null) ? anyOfSchema.bsonType : "bson";
+                // we default to "bson" and set isPolymorphic to true.
+                if (bsonTypeName != null) {
+                    bsonTypeName = "bson";
+                    isPolymorphic = true;
+                } else {
+                    bsonTypeName = anyOfSchema.bsonType;
+                }
             }
         }
-        this.bsonTypeName = bsonTypeName;
-        this.bsonType = MongoResultSetMetaData.getExtendedBsonTypeHelper(bsonTypeName);
-        this.jdbcType = getJDBCTypeForExtendedBsonType(this.bsonType);
+        System.out.println(nullable);
         this.nullable = nullable;
+        if (isPolymorphic) {
+            bsonType = BsonType.UNDEFINED;
+            jdbcType = Types.OTHER;
+        } else {
+            bsonType = MongoColumnInfo.getBsonTypeHelper(bsonTypeName);
+            jdbcType = getJDBCTypeForBsonType(bsonType);
+        }
     }
 
-    private static int getJDBCTypeForExtendedBsonType(ExtendedBsonType t) throws SQLException {
+    private static int getJDBCTypeForBsonType(BsonType t) throws SQLException {
         switch (t) {
-            case ANY:
             case ARRAY:
             case DB_POINTER:
             case DOCUMENT:
@@ -100,5 +118,56 @@ public class MongoSQLColumnTypeInfo {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    @Override
+    public boolean isPolymorphic() {
+        return isPolymorphic;
+    }
+
+    @Override
+    public BsonType getBsonType() {
+        return bsonType;
+    }
+
+    @Override
+    public String getBsonTypeName() {
+        return bsonTypeName;
+    }
+
+    @Override
+    public int getJdbcType() {
+        return jdbcType;
+    }
+
+    @Override
+    public int getNullability() {
+        System.out.println(" == " + nullable);
+        return nullable;
+    }
+
+    @Override
+    public String getColumnName() {
+        return field;
+    }
+
+    @Override
+    public String getColumnAlias() {
+        return field;
+    }
+
+    @Override
+    public String getTableName() {
+        return datasource;
+    }
+
+    @Override
+    public String getTableAlias() {
+        return datasource;
+    }
+
+    @Override
+    public String getDatabase() {
+        return "";
     }
 }
