@@ -42,10 +42,8 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         return columnLabels.get(columnLabel).datasource;
     }
 
-    private static void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
-        if (schema.bsonType == null
-                || !schema.bsonType.equals("object")
-                || schema.properties == null) {
+    private void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
+        if (!schema.isObject() || schema.properties == null) {
             throw new SQLException("ResultSetMetaData json schema must be object with properties");
         }
     }
@@ -54,22 +52,21 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertObjectSchema(datasourceSchema);
 
-        Object[] columns = datasourceSchema.properties.keySet().toArray();
+        String[] columns = datasourceSchema.properties.keySet().toArray(new String[0]);
         Arrays.sort(columns);
 
-        for (Object column : columns) {
-            String columnAsStr = (String) column;
-            MongoJsonSchema columnSchema = datasourceSchema.properties.get(columnAsStr);
-            columnIndices.add(new NameSpace(datasource, columnAsStr));
+        for (String column : columns) {
+            MongoJsonSchema columnSchema = datasourceSchema.properties.get(column);
+            columnIndices.add(new NameSpace(datasource, column));
             int subNullability =
                     (datasourceSchema.required == null
-                                    || !datasourceSchema.required.contains(columnAsStr))
+                                    || !datasourceSchema.required.contains(column))
                             ? ResultSetMetaData.columnNullable
                             : ResultSetMetaData.columnNoNulls;
             columnTypeInfo.add(new MongoSQLColumnTypeInfo(columnSchema, subNullability));
-            if (!columnLabels.containsKey(columnAsStr)) {
+            if (!columnLabels.containsKey(column)) {
                 columnLabels.put(
-                        columnAsStr, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
+                        column, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
             }
         }
     };
@@ -81,12 +78,11 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         columnIndices = new ArrayList<NameSpace>();
         columnTypeInfo = new ArrayList<MongoSQLColumnTypeInfo>();
 
-        Object[] datasources = schema.properties.keySet().toArray();
+        String[] datasources = schema.properties.keySet().toArray(new String[0]);
         Arrays.sort(datasources);
 
-        for (Object datasource : datasources) {
-            String datasourceAsString = (String) datasource;
-            processDataSource(schema, datasourceAsString);
+        for (String datasource : datasources) {
+            processDataSource(schema, datasource);
         }
     }
 

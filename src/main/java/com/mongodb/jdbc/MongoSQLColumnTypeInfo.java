@@ -35,11 +35,13 @@ public class MongoSQLColumnTypeInfo {
     private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
         if (schema.anyOf == null) {
             throw new SQLException(
-                    "both bsonType and anyOf are null and this is not ANY, this is not a valid schema");
+                    "invalid schema: both bsonType and anyOf are null and this is not ANY");
         }
         for (MongoJsonSchema anyOfSchema : schema.anyOf) {
             if (anyOfSchema.bsonType == null) {
-                throw new SQLException("anyOf subschema must have bsonType field");
+                // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
+                throw new SQLException(
+                        "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
             }
             // Presense of null means this is nullable, whether or not the required keys
             // of the parent object schema indicate this is nullable.
