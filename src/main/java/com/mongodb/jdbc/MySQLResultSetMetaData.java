@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     protected List<Column> columns;
-    protected HashMap<String, Integer> columnPositions;
+    protected Map<String, Integer> columnPositions;
 
     public MySQLResultSetMetaData(MongoResultDoc metadataDoc) {
         columns = metadataDoc.columns;
