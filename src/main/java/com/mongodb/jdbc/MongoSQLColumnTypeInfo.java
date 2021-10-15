@@ -21,7 +21,7 @@ public class MongoSQLColumnTypeInfo {
             this.nullable = nullable;
             return;
         }
-        if (isAny(schema)) {
+        if (schema.isAny()) {
             this.bsonTypeName = "bson";
             this.jdbcType = Types.OTHER;
             this.bsonType = ExtendedBsonType.ANY;
@@ -30,17 +30,6 @@ public class MongoSQLColumnTypeInfo {
         }
         // Otherwise, the schema must be an AnyOf.
         constructFromAnyOf(schema, nullable);
-    }
-
-    // Any is represented by the empty json schema {}, so all fields
-    // will be null or false
-    private boolean isAny(MongoJsonSchema schema) {
-        return schema.bsonType == null
-                && schema.properties == null
-                && schema.anyOf == null
-                && schema.required == null
-                && schema.items == null
-                && schema.additionalProperties == false;
     }
 
     private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
