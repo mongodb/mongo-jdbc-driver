@@ -134,7 +134,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public int getJdbcType() {
+    public int getJDBCType() {
         return jdbcType;
     }
 

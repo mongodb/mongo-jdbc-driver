@@ -7,7 +7,7 @@ public interface MongoColumnInfo {
     public boolean isPolymorphic();
     public BsonType getBsonType() throws SQLException;
     public String getBsonTypeName();
-    public int getJdbcType();
+    public int getJDBCType();
     public int getNullability();
     public String getColumnName();
     public String getColumnAlias();

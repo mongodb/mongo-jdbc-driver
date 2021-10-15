@@ -46,10 +46,10 @@ public class MySQLColumnInfo implements MongoColumnInfo {
         this.columnAlias = columnAlias;
         this.bsonType = bsonType;
         this.bsonTypeEnum = MongoColumnInfo.getBsonTypeHelper(bsonType);
-        this.jdbcType = convertToJdbcType(bsonTypeEnum);
+        this.jdbcType = convertToJDBCType(bsonTypeEnum);
     }
 
-    private static int convertToJdbcType(BsonType bsonTypeEnum) throws SQLException {
+    private static int convertToJDBCType(BsonType bsonTypeEnum) throws SQLException {
         switch (bsonTypeEnum) {
             case ARRAY:
                 return Types.ARRAY;
@@ -142,7 +142,7 @@ public class MySQLColumnInfo implements MongoColumnInfo {
 	}
 
     @Override
-	public int getJdbcType(){
+	public int getJDBCType(){
         return jdbcType;
     }
 
