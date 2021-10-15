@@ -17,7 +17,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private int nullable;
 
     MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, int nullable) throws SQLException {
-        System.out.println("!!! " + datasource + "." + field + " --> " + nullable);
         this.datasource = datasource;
         this.field = field;
         // All schemata except Any and AnyOf must have a bsonType.
@@ -67,7 +66,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
                 }
             }
         }
-        System.out.println(nullable);
         this.nullable = nullable;
         if (isPolymorphic) {
             bsonType = BsonType.UNDEFINED;
@@ -142,7 +140,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
 
     @Override
     public int getNullability() {
-        System.out.println(" == " + nullable);
         return nullable;
     }
 
