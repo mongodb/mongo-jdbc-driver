@@ -120,52 +120,52 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public boolean isPolymorphic() throws SQLException {
+    public boolean isPolymorphic() {
         return isPolymorphic;
     }
 
     @Override
-    public BsonType getBsonType() throws SQLException {
+    public BsonType getBsonType() {
         return bsonType;
     }
 
     @Override
-    public String getBsonTypeName() throws SQLException {
+    public String getBsonTypeName() {
         return bsonTypeName;
     }
 
     @Override
-    public int getJDBCType() throws SQLException {
+    public int getJDBCType() {
         return jdbcType;
     }
 
     @Override
-    public int getNullability() throws SQLException {
+    public int getNullability() {
         return nullable;
     }
 
     @Override
-    public String getColumnName() throws SQLException {
+    public String getColumnName() {
         return field;
     }
 
     @Override
-    public String getColumnAlias() throws SQLException {
+    public String getColumnAlias() {
         return field;
     }
 
     @Override
-    public String getTableName() throws SQLException {
+    public String getTableName() {
         return datasource;
     }
 
     @Override
-    public String getTableAlias() throws SQLException {
+    public String getTableAlias() {
         return datasource;
     }
 
     @Override
-    public String getDatabase() throws SQLException {
+    public String getDatabase() {
         return "";
     }
 }

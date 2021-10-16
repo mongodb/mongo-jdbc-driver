@@ -15,6 +15,8 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     public String columnAlias;
     public String bsonType;
     private static Set<String> nullTypes;
+    private BsonType bsonTypeEnum;
+    private int jdbcType;
 
     static {
         nullTypes = new HashSet<String>();
@@ -44,6 +46,17 @@ public class MySQLColumnInfo implements MongoColumnInfo {
         this.column = column;
         this.columnAlias = columnAlias;
         this.bsonType = bsonType;
+    }
+
+    public void init() throws SQLException {
+        bsonTypeEnum = MongoColumnInfo.getBsonTypeHelper(bsonType);
+        if (nullTypes.contains(bsonType)) {
+            bsonType = "null";
+        }
+        if ("objectId".equals(bsonType)) {
+            bsonType = "string";
+        }
+        jdbcType = getJDBCTypeForBsonType(bsonTypeEnum);
     }
 
     private static int getJDBCTypeForBsonType(BsonType bsonTypeEnum) throws SQLException {
@@ -123,53 +136,47 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public BsonType getBsonType() throws SQLException {
-        return MongoColumnInfo.getBsonTypeHelper(bsonType);
+    public BsonType getBsonType() {
+        return bsonTypeEnum;
     }
 
     @Override
     public String getBsonTypeName() {
-        if (nullTypes.contains(bsonType)) {
-            return "null";
-        }
-        if ("objectId".equals(bsonType)) {
-            return "string";
-        }
         return bsonType;
     }
 
     @Override
-    public int getJDBCType() throws SQLException {
-        return getJDBCTypeForBsonType(getBsonType());
+    public int getJDBCType() {
+        return jdbcType;
     }
 
     @Override
-    public int getNullability() throws SQLException {
+    public int getNullability() {
         return ResultSetMetaData.columnNullableUnknown;
     }
 
     @Override
-    public String getColumnName() throws SQLException {
+    public String getColumnName() {
         return column;
     }
 
     @Override
-    public String getColumnAlias() throws SQLException {
+    public String getColumnAlias() {
         return columnAlias;
     }
 
     @Override
-    public String getTableName() throws SQLException {
+    public String getTableName() {
         return table;
     }
 
     @Override
-    public String getTableAlias() throws SQLException {
+    public String getTableAlias() {
         return tableAlias;
     }
 
     @Override
-    public String getDatabase() throws SQLException {
+    public String getDatabase() {
         return database;
     }
 }

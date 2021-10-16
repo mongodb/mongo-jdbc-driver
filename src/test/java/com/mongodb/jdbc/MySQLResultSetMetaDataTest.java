@@ -97,10 +97,9 @@ class MySQLResultSetMetaDataTest extends MySQLMock {
             e.printStackTrace();
         }
 
-        MySQLResultSet rs =
-                new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
-
         try {
+            MySQLResultSet rs =
+                new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
             rs.next();
             resultSetMetaData = rs.getMetaData();
         } catch (SQLException e) {

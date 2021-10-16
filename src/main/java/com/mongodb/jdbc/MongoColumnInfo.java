@@ -4,25 +4,25 @@ import java.sql.SQLException;
 import org.bson.BsonType;
 
 public interface MongoColumnInfo {
-    public boolean isPolymorphic() throws SQLException;
+    public boolean isPolymorphic();
 
-    public BsonType getBsonType() throws SQLException;
+    public BsonType getBsonType();
 
-    public String getBsonTypeName() throws SQLException;
+    public String getBsonTypeName();
 
-    public int getJDBCType() throws SQLException;
+    public int getJDBCType();
 
-    public int getNullability() throws SQLException;
+    public int getNullability();
 
-    public String getColumnName() throws SQLException;
+    public String getColumnName();
 
-    public String getColumnAlias() throws SQLException;
+    public String getColumnAlias();
 
-    public String getDatabase() throws SQLException;
+    public String getDatabase();
 
-    public String getTableName() throws SQLException;
+    public String getTableName();
 
-    public String getTableAlias() throws SQLException;
+    public String getTableAlias();
 
     public static BsonType getBsonTypeHelper(String typeName) throws SQLException {
         // bsonType strings as represented by the $type function:

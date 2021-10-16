@@ -140,6 +140,7 @@ class MySQLResultSetTest extends MySQLMock {
             throw new RuntimeException(e);
         }
 
+        try {
         // create result sets used by tests.
         strictMySQLResultSet =
                 new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
@@ -147,9 +148,7 @@ class MySQLResultSetTest extends MySQLMock {
                 new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
         closedMySQLResultSet =
                 new MySQLResultSet(mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
-
         // call next() so that each result set is on the pre-populated row.
-        try {
             relaxedMySQLResultSet.next();
             strictMySQLResultSet.next();
         } catch (SQLException e) {

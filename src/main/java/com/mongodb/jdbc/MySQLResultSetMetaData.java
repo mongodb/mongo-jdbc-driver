@@ -10,12 +10,13 @@ public class MySQLResultSetMetaData extends MongoResultSetMetaData implements Re
     protected List<MySQLColumnInfo> columnInfo;
     protected Map<String, Integer> columnPositions;
 
-    public MySQLResultSetMetaData(MySQLResultDoc metadataDoc) {
+    public MySQLResultSetMetaData(MySQLResultDoc metadataDoc) throws SQLException {
         columnInfo = metadataDoc.columns;
 
         columnPositions = new HashMap<>(columnInfo.size());
         int i = 0;
         for (MySQLColumnInfo c : columnInfo) {
+            c.init();
             columnPositions.put(c.columnAlias, i++);
         }
     }
