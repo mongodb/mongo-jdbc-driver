@@ -76,7 +76,8 @@ public abstract class MySQLMock {
         void test() throws SQLException;
     }
 
-    MySQLColumnInfo generateCol(String database, String table, String column, String bsonType) throws SQLException {
+    MySQLColumnInfo generateCol(String database, String table, String column, String bsonType)
+            throws SQLException {
         return new MySQLColumnInfo(database, table, table, column, column, bsonType);
     }
 

@@ -14,8 +14,6 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     public String column;
     public String columnAlias;
     public String bsonType;
-    private BsonType bsonTypeEnum;
-    private int jdbcType;
     private static Set<String> nullTypes;
 
     static {
@@ -38,15 +36,14 @@ public class MySQLColumnInfo implements MongoColumnInfo {
             String tableAlias,
             String column,
             String columnAlias,
-            String bsonType) throws SQLException {
+            String bsonType)
+            throws SQLException {
         this.database = database;
         this.table = table;
         this.tableAlias = tableAlias;
         this.column = column;
         this.columnAlias = columnAlias;
         this.bsonType = bsonType;
-        this.bsonTypeEnum = MongoColumnInfo.getBsonTypeHelper(bsonType);
-        this.jdbcType = convertToJDBCType(bsonTypeEnum);
     }
 
     private static int convertToJDBCType(BsonType bsonTypeEnum) throws SQLException {
@@ -121,58 +118,58 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-	public boolean isPolymorphic(){
+    public boolean isPolymorphic() {
         return false;
-	}
-
-    @Override
-	public BsonType getBsonType() throws SQLException {
-        return bsonTypeEnum;
-	}
-
-    @Override
-	public String getBsonTypeName(){
-        if(nullTypes.contains(bsonType)) {
-            return "null";
-        }
-        if("objectId".equals(bsonType)) {
-            return "string";
-        }
-        return bsonType;
-	}
-
-    @Override
-	public int getJDBCType(){
-        return jdbcType;
     }
 
     @Override
-	public int getNullability(){
-        return ResultSetMetaData.columnNullableUnknown;
-	}
+    public BsonType getBsonType() throws SQLException {
+        return MongoColumnInfo.getBsonTypeHelper(bsonType);
+    }
 
     @Override
-    public String getColumnName() {
+    public String getBsonTypeName() {
+        if (nullTypes.contains(bsonType)) {
+            return "null";
+        }
+        if ("objectId".equals(bsonType)) {
+            return "string";
+        }
+        return bsonType;
+    }
+
+    @Override
+    public int getJDBCType() throws SQLException {
+        return convertToJDBCType(getBsonType());
+    }
+
+    @Override
+    public int getNullability() throws SQLException {
+        return ResultSetMetaData.columnNullableUnknown;
+    }
+
+    @Override
+    public String getColumnName() throws SQLException {
         return column;
     }
 
     @Override
-    public String getColumnAlias() {
+    public String getColumnAlias() throws SQLException {
         return columnAlias;
     }
 
     @Override
-    public String getTableName() {
+    public String getTableName() throws SQLException {
         return table;
     }
 
     @Override
-    public String getTableAlias() {
+    public String getTableAlias() throws SQLException {
         return tableAlias;
     }
 
     @Override
-    public String getDatabase() {
+    public String getDatabase() throws SQLException {
         return database;
     }
 }

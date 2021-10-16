@@ -6,12 +6,9 @@ import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
-import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
-import org.bson.BsonString;
 import org.bson.BsonValue;
 
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {

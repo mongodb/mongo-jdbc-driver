@@ -16,7 +16,8 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private boolean isPolymorphic;
     private int nullable;
 
-    MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, int nullable) throws SQLException {
+    MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, int nullable)
+            throws SQLException {
         this.datasource = datasource;
         this.field = field;
         // All schemata except Any and AnyOf must have a bsonType.
@@ -119,52 +120,52 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public boolean isPolymorphic() {
+    public boolean isPolymorphic() throws SQLException {
         return isPolymorphic;
     }
 
     @Override
-    public BsonType getBsonType() {
+    public BsonType getBsonType() throws SQLException {
         return bsonType;
     }
 
     @Override
-    public String getBsonTypeName() {
+    public String getBsonTypeName() throws SQLException {
         return bsonTypeName;
     }
 
     @Override
-    public int getJDBCType() {
+    public int getJDBCType() throws SQLException {
         return jdbcType;
     }
 
     @Override
-    public int getNullability() {
+    public int getNullability() throws SQLException {
         return nullable;
     }
 
     @Override
-    public String getColumnName() {
+    public String getColumnName() throws SQLException {
         return field;
     }
 
     @Override
-    public String getColumnAlias() {
+    public String getColumnAlias() throws SQLException {
         return field;
     }
 
     @Override
-    public String getTableName() {
+    public String getTableName() throws SQLException {
         return datasource;
     }
 
     @Override
-    public String getTableAlias() {
+    public String getTableAlias() throws SQLException {
         return datasource;
     }
 
     @Override
-    public String getDatabase() {
+    public String getDatabase() throws SQLException {
         return "";
     }
 }

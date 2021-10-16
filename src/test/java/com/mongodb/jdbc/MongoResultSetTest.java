@@ -80,23 +80,36 @@ class MySQLResultSetTest extends MySQLMock {
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
         try {
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, "null"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, "double"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", STRING_COL_LABEL, STRING_COL_LABEL, "string"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", BINARY_COL_LABEL, BINARY_COL_LABEL, "binData"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", UUID_COL_LABEL, UUID_COL_LABEL, "binData"));
             metaDoc.columns.add(
-                    new MySQLColumnInfo("", "", "", OBJECTID_COL_LABEL, OBJECTID_COL_LABEL, "objectId"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, "bool"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATE_COL_LABEL, DATE_COL_LABEL, "date"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, "int"));
-            metaDoc.columns.add(new MySQLColumnInfo("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, "long"));
+                    new MySQLColumnInfo("", "", "", NULL_COL_LABEL, NULL_COL_LABEL, "null"));
             metaDoc.columns.add(
-                    new MySQLColumnInfo("", "", "", DECIMAL_COL_LABEL, DECIMAL_COL_LABEL, "decimal"));
+                    new MySQLColumnInfo("", "", "", DOUBLE_COL_LABEL, DOUBLE_COL_LABEL, "double"));
             metaDoc.columns.add(
-                    new MySQLColumnInfo("", "", "", UNDEFINED_COL_LABEL, UNDEFINED_COL_LABEL, "undefined"));
+                    new MySQLColumnInfo("", "", "", STRING_COL_LABEL, STRING_COL_LABEL, "string"));
             metaDoc.columns.add(
-                    new MySQLColumnInfo("", "", "", DBPOINTER_COL_LABEL, DBPOINTER_COL_LABEL, "dbPointer"));
+                    new MySQLColumnInfo("", "", "", BINARY_COL_LABEL, BINARY_COL_LABEL, "binData"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", UUID_COL_LABEL, UUID_COL_LABEL, "binData"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo(
+                            "", "", "", OBJECTID_COL_LABEL, OBJECTID_COL_LABEL, "objectId"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", BOOLEAN_COL_LABEL, BOOLEAN_COL_LABEL, "bool"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", DATE_COL_LABEL, DATE_COL_LABEL, "date"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", INTEGER_COL_LABEL, INTEGER_COL_LABEL, "int"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", LONG_COL_LABEL, LONG_COL_LABEL, "long"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo(
+                            "", "", "", DECIMAL_COL_LABEL, DECIMAL_COL_LABEL, "decimal"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo(
+                            "", "", "", UNDEFINED_COL_LABEL, UNDEFINED_COL_LABEL, "undefined"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo(
+                            "", "", "", DBPOINTER_COL_LABEL, DBPOINTER_COL_LABEL, "dbPointer"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

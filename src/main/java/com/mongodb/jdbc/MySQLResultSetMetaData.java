@@ -2,11 +2,9 @@ package com.mongodb.jdbc;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.bson.BsonType;
 
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     protected List<MySQLColumnInfo> columnInfo;
