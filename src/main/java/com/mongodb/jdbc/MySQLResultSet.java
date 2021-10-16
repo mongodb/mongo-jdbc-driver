@@ -17,8 +17,8 @@ import org.bson.types.Decimal128;
 public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(
-            Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed) throws SQLException {
+    public MySQLResultSet(Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);
         // iterate the cursor to get the metadata doc
