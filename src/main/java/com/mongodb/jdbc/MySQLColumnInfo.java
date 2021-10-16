@@ -49,14 +49,19 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     }
 
     public void init() throws SQLException {
+        // the BsonType depends on the original bsonType field sent
+        // over the wire. This matters for ObjectID, becuase it has
+        // a fixed length of 24 not an unknown length like other strings.
         bsonTypeEnum = MongoColumnInfo.getBsonTypeHelper(bsonType);
+        jdbcType = getJDBCTypeForBsonType(bsonTypeEnum);
         if (nullTypes.contains(bsonType)) {
             bsonType = "null";
         }
         if ("objectId".equals(bsonType)) {
+            // we will return string for objectIds, but the length is known
+            // to be 24, unlike all other strings.
             bsonType = "string";
         }
-        jdbcType = getJDBCTypeForBsonType(bsonTypeEnum);
     }
 
     private static int getJDBCTypeForBsonType(BsonType bsonTypeEnum) throws SQLException {
