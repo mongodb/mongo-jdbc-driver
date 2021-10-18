@@ -2,7 +2,9 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeAll;
@@ -199,5 +201,33 @@ class MongoDriverTest {
         res = d.getPropertyInfo(basicURL, p);
         assertEquals(res.length, 1);
         assertEquals(res[0].name, "user");
+    }
+
+    @Test
+    void testDialectProperty() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        Connection c;
+
+        // dialect set to "mysql" results in MySQLConnection
+        p.setProperty("dialect", "MySQL");
+        c = d.connect(basicURL, p);
+        assertNotNull(c);
+        assertTrue(c instanceof MySQLConnection);
+
+        // dialect set to "mongosql" results in MongoSQLConnection
+        p.setProperty("dialect", "MongoSQL");
+        c = d.connect(basicURL, p);
+        assertNotNull(c);
+        assertTrue(c instanceof MongoSQLConnection);
+
+        // dialect set to "mongosql" and conversionMode set results in SQLClientInfoException
+        p.setProperty("conversionMode", "relaxed");
+        assertThrows(SQLClientInfoException.class, () -> d.connect(basicURL, p));
+
+        // dialect set to invalid dialect results in SQLClientInfoException
+        p.remove("conversionMode");
+        p.setProperty("dialect", "invalid");
+        assertThrows(SQLClientInfoException.class, () -> d.connect(basicURL, p));
     }
 }
