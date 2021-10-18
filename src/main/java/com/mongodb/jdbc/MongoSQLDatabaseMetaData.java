@@ -39,7 +39,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        // TODO: create result set metadata that describes the columns of this result set
+        //  even though it is empty. This applies to all updated methods in this PR and is
+        //  blocked on SQL-513 and SQL-535.
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -104,19 +107,19 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -128,7 +131,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String foreignSchema,
             String foreignTable)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -153,19 +156,19 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -175,14 +178,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 
     @Override
@@ -211,6 +214,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
     }
 }
