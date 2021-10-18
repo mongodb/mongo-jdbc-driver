@@ -6,13 +6,18 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class MongoDatabaseMetaDataTest extends MySQLMock {
-    private static DatabaseMetaData databaseMetaData;
+abstract class MongoDatabaseMetaDataTest {
+    private DatabaseMetaData databaseMetaData;
 
-    static {
-        databaseMetaData = new MySQLDatabaseMetaData(null);
+    protected abstract DatabaseMetaData createDatabaseMetaData();
+
+    @BeforeEach
+    public void setUp() {
+        databaseMetaData = createDatabaseMetaData();
     }
 
     private int countRows(ResultSet rs) throws SQLException {
@@ -23,8 +28,11 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
         }
     }
 
-    // Most DatabaseMetaData tests require connection to an ADL
-    // cluster. These are just simple tests for things that return empty result sets.
+    // Most DatabaseMetaData tests require connection to an ADL cluster. These are
+    // just simple tests for things that return empty result sets.  Since they are
+    // the same tests for both MySQLDatabaseMetaData and MongoSQLDatabaseMetaData,
+    // these tests are implemented in this abstract class which has two concrete
+    // implementations at the end of the file.
     @Test
     void testGetProcedures() throws SQLException {
         // we will never have procedures.
@@ -388,5 +396,19 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
         assertFalse(rs.next());
+    }
+}
+
+class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
+    @Override
+    protected DatabaseMetaData createDatabaseMetaData() {
+        return new MySQLDatabaseMetaData(null);
+    }
+}
+
+class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
+    @Override
+    protected DatabaseMetaData createDatabaseMetaData() {
+        return new MongoSQLDatabaseMetaData(null);
     }
 }
