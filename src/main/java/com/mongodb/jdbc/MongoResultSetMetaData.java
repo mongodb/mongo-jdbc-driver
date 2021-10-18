@@ -92,14 +92,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        MongoColumnInfo ci = getColumnInfo(column);
-        return ci.getJDBCType();
+        return getColumnInfo(column).getJDBCType();
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        MongoColumnInfo ci = getColumnInfo(column);
-        return ci.getBsonTypeName();
+        return getColumnInfo(column).getBsonTypeName();
     }
 
     // java.sql.Wrapper impl

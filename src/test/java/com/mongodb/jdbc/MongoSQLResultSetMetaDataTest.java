@@ -26,7 +26,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     // foo.a
     private static int ANY_OF_INT_STRING_COL = 3;
     // foo.b
-    private static int INT_NULLABLE_COL = 4;
+    private static int INT_OR_NULL_COL = 4;
     // foo.c
     private static int INT_COL = 5;
     // foo.d
@@ -65,7 +65,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals("a", resultSetMetaData.getColumnName(DOUBLE_COL));
         assertEquals("str", resultSetMetaData.getColumnName(STRING_COL));
         assertEquals("a", resultSetMetaData.getColumnName(ANY_OF_INT_STRING_COL));
-        assertEquals("b", resultSetMetaData.getColumnName(INT_NULLABLE_COL));
+        assertEquals("b", resultSetMetaData.getColumnName(INT_OR_NULL_COL));
         assertEquals("c", resultSetMetaData.getColumnName(INT_COL));
         assertEquals("d", resultSetMetaData.getColumnName(ANY_COL));
         assertEquals("vec", resultSetMetaData.getColumnName(ARRAY_COL));
@@ -76,7 +76,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals("a", resultSetMetaData.getColumnLabel(DOUBLE_COL));
         assertEquals("str", resultSetMetaData.getColumnLabel(STRING_COL));
         assertEquals("a", resultSetMetaData.getColumnLabel(ANY_OF_INT_STRING_COL));
-        assertEquals("b", resultSetMetaData.getColumnLabel(INT_NULLABLE_COL));
+        assertEquals("b", resultSetMetaData.getColumnLabel(INT_OR_NULL_COL));
         assertEquals("c", resultSetMetaData.getColumnLabel(INT_COL));
         assertEquals("d", resultSetMetaData.getColumnLabel(ANY_COL));
         assertEquals("vec", resultSetMetaData.getColumnLabel(ARRAY_COL));
@@ -87,7 +87,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals("", resultSetMetaData.getTableName(DOUBLE_COL));
         assertEquals("", resultSetMetaData.getTableName(STRING_COL));
         assertEquals("foo", resultSetMetaData.getTableName(ANY_OF_INT_STRING_COL));
-        assertEquals("foo", resultSetMetaData.getTableName(INT_NULLABLE_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(INT_OR_NULL_COL));
         assertEquals("foo", resultSetMetaData.getTableName(INT_COL));
         assertEquals("foo", resultSetMetaData.getTableName(ANY_COL));
         assertEquals("foo", resultSetMetaData.getTableName(ARRAY_COL));
@@ -98,7 +98,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(false, resultSetMetaData.isCaseSensitive(DOUBLE_COL));
         assertEquals(true, resultSetMetaData.isCaseSensitive(STRING_COL));
         assertEquals(true, resultSetMetaData.isCaseSensitive(ANY_OF_INT_STRING_COL));
-        assertEquals(false, resultSetMetaData.isCaseSensitive(INT_NULLABLE_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(INT_OR_NULL_COL));
         assertEquals(false, resultSetMetaData.isCaseSensitive(INT_COL));
         assertEquals(true, resultSetMetaData.isCaseSensitive(ANY_COL));
         assertEquals(false, resultSetMetaData.isCaseSensitive(ARRAY_COL));
@@ -112,7 +112,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
                 ResultSetMetaData.columnNoNulls,
                 resultSetMetaData.isNullable(ANY_OF_INT_STRING_COL));
         assertEquals(
-                ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_NULLABLE_COL));
+                ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_OR_NULL_COL));
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(INT_COL));
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(ANY_COL));
         assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(ARRAY_COL));
@@ -123,7 +123,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(true, resultSetMetaData.isSigned(DOUBLE_COL));
         assertEquals(false, resultSetMetaData.isSigned(STRING_COL));
         assertEquals(true, resultSetMetaData.isSigned(ANY_OF_INT_STRING_COL));
-        assertEquals(true, resultSetMetaData.isSigned(INT_NULLABLE_COL));
+        assertEquals(true, resultSetMetaData.isSigned(INT_OR_NULL_COL));
         assertEquals(true, resultSetMetaData.isSigned(INT_COL));
         assertEquals(true, resultSetMetaData.isSigned(ANY_COL));
         assertEquals(false, resultSetMetaData.isSigned(ARRAY_COL));
@@ -134,7 +134,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(15, resultSetMetaData.getColumnDisplaySize(DOUBLE_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(STRING_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(ANY_OF_INT_STRING_COL));
-        assertEquals(10, resultSetMetaData.getColumnDisplaySize(INT_NULLABLE_COL));
+        assertEquals(10, resultSetMetaData.getColumnDisplaySize(INT_OR_NULL_COL));
         assertEquals(10, resultSetMetaData.getColumnDisplaySize(INT_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(ANY_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(ARRAY_COL));
@@ -145,7 +145,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(15, resultSetMetaData.getPrecision(DOUBLE_COL));
         assertEquals(0, resultSetMetaData.getPrecision(STRING_COL));
         assertEquals(0, resultSetMetaData.getPrecision(ANY_OF_INT_STRING_COL));
-        assertEquals(10, resultSetMetaData.getPrecision(INT_NULLABLE_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(INT_OR_NULL_COL));
         assertEquals(10, resultSetMetaData.getPrecision(INT_COL));
         assertEquals(0, resultSetMetaData.getPrecision(ANY_COL));
         assertEquals(0, resultSetMetaData.getPrecision(ARRAY_COL));
@@ -156,7 +156,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(15, resultSetMetaData.getScale(DOUBLE_COL));
         assertEquals(0, resultSetMetaData.getScale(STRING_COL));
         assertEquals(0, resultSetMetaData.getScale(ANY_OF_INT_STRING_COL));
-        assertEquals(0, resultSetMetaData.getScale(INT_NULLABLE_COL));
+        assertEquals(0, resultSetMetaData.getScale(INT_OR_NULL_COL));
         assertEquals(0, resultSetMetaData.getScale(INT_COL));
         assertEquals(0, resultSetMetaData.getScale(ANY_COL));
         assertEquals(0, resultSetMetaData.getScale(ARRAY_COL));
@@ -167,7 +167,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(Types.DOUBLE, resultSetMetaData.getColumnType(DOUBLE_COL));
         assertEquals(Types.LONGVARCHAR, resultSetMetaData.getColumnType(STRING_COL));
         assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ANY_OF_INT_STRING_COL));
-        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INT_NULLABLE_COL));
+        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INT_OR_NULL_COL));
         assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(INT_COL));
         assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ANY_COL));
         assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ARRAY_COL));
@@ -180,7 +180,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals(
                 BsonValue.class.getName(),
                 resultSetMetaData.getColumnClassName(ANY_OF_INT_STRING_COL));
-        assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(INT_NULLABLE_COL));
+        assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(INT_OR_NULL_COL));
         assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(INT_COL));
         assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnClassName(ANY_COL));
         assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnClassName(ARRAY_COL));
@@ -191,7 +191,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals("double", resultSetMetaData.getColumnTypeName(DOUBLE_COL));
         assertEquals("string", resultSetMetaData.getColumnTypeName(STRING_COL));
         assertEquals("bson", resultSetMetaData.getColumnTypeName(ANY_OF_INT_STRING_COL));
-        assertEquals("int", resultSetMetaData.getColumnTypeName(INT_NULLABLE_COL));
+        assertEquals("int", resultSetMetaData.getColumnTypeName(INT_OR_NULL_COL));
         assertEquals("int", resultSetMetaData.getColumnTypeName(INT_COL));
         assertEquals("bson", resultSetMetaData.getColumnTypeName(ANY_COL));
         assertEquals("array", resultSetMetaData.getColumnTypeName(ARRAY_COL));
