@@ -42,7 +42,9 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         return columnLabels.get(columnLabel).datasource;
     }
 
-    private void assertObjectSchema(MongoJsonSchema schema) throws SQLException {
+    private void assertDatasourceSchema(MongoJsonSchema schema) throws SQLException {
+        // A Datasource Schema must be an Object Schema, and unlike Object Schemata in general,
+        // the properties field cannot be null.
         if (!schema.isObject() || schema.properties == null) {
             throw new SQLException("ResultSetMetaData json schema must be object with properties");
         }
@@ -50,7 +52,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
 
     private void processDataSource(MongoJsonSchema schema, String datasource) throws SQLException {
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
-        assertObjectSchema(datasourceSchema);
+        assertDatasourceSchema(datasourceSchema);
 
         String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
         Arrays.sort(fields);
@@ -72,7 +74,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     };
 
     public MongoSQLResultSetMetaData(MongoJsonSchema schema) throws SQLException {
-        assertObjectSchema(schema);
+        assertDatasourceSchema(schema);
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();
         columnIndices = new ArrayList<NameSpace>();
