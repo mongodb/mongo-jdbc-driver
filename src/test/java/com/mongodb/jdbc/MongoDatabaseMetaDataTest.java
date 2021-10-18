@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 abstract class MongoDatabaseMetaDataTest {
-    private DatabaseMetaData databaseMetaData;
+    protected DatabaseMetaData databaseMetaData;
 
     protected abstract DatabaseMetaData createDatabaseMetaData();
 
@@ -20,7 +20,7 @@ abstract class MongoDatabaseMetaDataTest {
         databaseMetaData = createDatabaseMetaData();
     }
 
-    private int countRows(ResultSet rs) throws SQLException {
+    protected int countRows(ResultSet rs) throws SQLException {
         for (int i = 0; ; ++i) {
             if (!rs.next()) {
                 return i;
@@ -32,7 +32,8 @@ abstract class MongoDatabaseMetaDataTest {
     // just simple tests for things that return empty result sets.  Since they are
     // the same tests for both MySQLDatabaseMetaData and MongoSQLDatabaseMetaData,
     // these tests are implemented in this abstract class which has two concrete
-    // implementations at the end of the file.
+    // implementations at the end of the file. The concrete implementations have
+    // some additional tests of their own.
     @Test
     void testGetProcedures() throws SQLException {
         // we will never have procedures.
@@ -86,53 +87,6 @@ abstract class MongoDatabaseMetaDataTest {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
         assertFalse(rs.next());
-    }
-
-    @Test
-    void testGetTableTypes() throws SQLException {
-        ResultSet rs = databaseMetaData.getTableTypes();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "TABLE_TYPE",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 1);
-    }
-
-    @Test
-    void testGetTypeInfo() throws SQLException {
-        ResultSet rs = databaseMetaData.getTypeInfo();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "TYPE_NAME",
-                    "DATA_TYPE",
-                    "PRECISION",
-                    "LITERAL_PREFIX",
-                    "LITERAL_SUFFIX",
-                    "CREATE_PARAMS",
-                    "NULLABLE",
-                    "CASE_SENSITIVE",
-                    "SEARCHABLE",
-                    "UNSIGNED_ATTRIBUTE",
-                    "FIXED_PREC_SCALE",
-                    "AUTO_INCREMENT",
-                    "LOCAL_TYPE_NAME",
-                    "MINIMUM_SCALE",
-                    "MAXIMUM_SCALE",
-                    "SQL_DATA_TYPE",
-                    "SQL_DATETIME_SUB",
-                    "NUM_PREC_RADIX",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 8);
     }
 
     @Test
@@ -334,45 +288,6 @@ abstract class MongoDatabaseMetaDataTest {
     }
 
     @Test
-    void testGetClientInfoProperties() throws SQLException {
-        ResultSet rs = databaseMetaData.getClientInfoProperties();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "NAME", "MAX_LEN", "DEFAULT_VALUE", "DESCRIPTION",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 4);
-    }
-
-    @Test
-    void testGetFunctions() throws SQLException {
-        ResultSet rs = databaseMetaData.getFunctions(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "FUNCTION_CAT",
-                    "FUNCTION_SCHEM",
-                    "FUNCTION_NAME",
-                    "REMARKS",
-                    "FUNCTION_TYPE",
-                    "SPECIFIC_NAME",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 117);
-        rs = databaseMetaData.getFunctions(null, null, "%S%");
-        assertEquals(countRows(rs), 46);
-        rs = databaseMetaData.getFunctions(null, null, "%s%");
-        assertEquals(countRows(rs), 0);
-    }
-
-    @Test
     void testGetPseudoColumns() throws SQLException {
         ResultSet rs = databaseMetaData.getPseudoColumns(null, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -404,11 +319,123 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     protected DatabaseMetaData createDatabaseMetaData() {
         return new MySQLDatabaseMetaData(null);
     }
+
+    @Test
+    void testGetTableTypes() throws SQLException {
+        ResultSet rs = databaseMetaData.getTableTypes();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                        "TABLE_TYPE",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(countRows(rs), 1);
+    }
+
+    @Test
+    void testGetTypeInfo() throws SQLException {
+        ResultSet rs = databaseMetaData.getTypeInfo();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                        "TYPE_NAME",
+                        "DATA_TYPE",
+                        "PRECISION",
+                        "LITERAL_PREFIX",
+                        "LITERAL_SUFFIX",
+                        "CREATE_PARAMS",
+                        "NULLABLE",
+                        "CASE_SENSITIVE",
+                        "SEARCHABLE",
+                        "UNSIGNED_ATTRIBUTE",
+                        "FIXED_PREC_SCALE",
+                        "AUTO_INCREMENT",
+                        "LOCAL_TYPE_NAME",
+                        "MINIMUM_SCALE",
+                        "MAXIMUM_SCALE",
+                        "SQL_DATA_TYPE",
+                        "SQL_DATETIME_SUB",
+                        "NUM_PREC_RADIX",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(countRows(rs), 8);
+    }
+
+    @Test
+    void testGetClientInfoProperties() throws SQLException {
+        ResultSet rs = databaseMetaData.getClientInfoProperties();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                        "NAME", "MAX_LEN", "DEFAULT_VALUE", "DESCRIPTION",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(countRows(rs), 4);
+    }
+
+    @Test
+    void testGetFunctions() throws SQLException {
+        ResultSet rs = databaseMetaData.getFunctions(null, null, null);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                        "FUNCTION_CAT",
+                        "FUNCTION_SCHEM",
+                        "FUNCTION_NAME",
+                        "REMARKS",
+                        "FUNCTION_TYPE",
+                        "SPECIFIC_NAME",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertEquals(countRows(rs), 117);
+        rs = databaseMetaData.getFunctions(null, null, "%S%");
+        assertEquals(countRows(rs), 46);
+        rs = databaseMetaData.getFunctions(null, null, "%s%");
+        assertEquals(countRows(rs), 0);
+    }
 }
 
 class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
         return new MongoSQLDatabaseMetaData(null);
+    }
+
+    @Test
+    void testGetSchemas() throws SQLException {
+        // getSchemas()
+        ResultSet rs = databaseMetaData.getSchemas();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] columns =
+                new String[] {
+                        "TABLE_SCHEM",
+                        "TABLE_CATALOG",
+                };
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertFalse(rs.next());
+
+        // getSchemas(catalog, schemaPattern)
+        rs = databaseMetaData.getSchemas(null, null);
+        rsmd = rs.getMetaData();
+        for (int i = 0; i < columns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
+        }
+        assertFalse(rs.next());
     }
 }
