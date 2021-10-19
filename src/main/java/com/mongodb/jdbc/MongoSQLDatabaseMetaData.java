@@ -16,6 +16,9 @@ import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
+import java.util.stream.Collectors;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -184,7 +187,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        // TODO: create result set metadata that describes the columns of this result set.
+        //  This applies to all updated methods in this PR and is blocked on SQL-513 and
+        //  SQL-535.
+        BsonExplicitCursor c =
+                new BsonExplicitCursor(
+                        this.conn
+                                .mongoClient
+                                .listDatabaseNames()
+                                .into(new ArrayList<>())
+                                .stream()
+                                .sorted()
+                                .map(
+                                        dbName ->
+                                                new BsonDocument(
+                                                        "",
+                                                        new BsonDocument(
+                                                                "TABLE_CAT",
+                                                                new BsonString(dbName))))
+                                .collect(Collectors.toList()));
+
+        return new MongoSQLResultSet(null, c);
     }
 
     @Override
