@@ -21,13 +21,16 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import com.mongodb.ConnectionString;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.ClientInfoStatus;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -54,6 +57,9 @@ public class MongoDriver implements Driver {
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     static final String DATABASE = "database";
+    static final String DIALECT = "dialect";
+    static final String MYSQL_DIALECT = "mysql";
+    static final String MONGOSQL_DIALECT = "mongosql";
     static final String NAME;
     static final String VERSION;
     static final int MAJOR_VERSION;
@@ -120,8 +126,29 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return new MySQLConnection(
-                p.left(), info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
+        return createConnection(p.left(), info);
+    }
+
+    private MongoConnection createConnection(ConnectionString cs, Properties info) throws SQLException {
+        // attempt to get DIALECT property, and default to "mysql" if none is present
+        String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
+        switch (dialect.toLowerCase()) {
+            case MYSQL_DIALECT:
+                return new MySQLConnection(
+                        cs, info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
+            case MONGOSQL_DIALECT:
+                if (info.containsKey(CONVERSION_MODE)) {
+                    throw new SQLClientInfoException(
+                            String.format("must not set '%s' if '%s' is '%s'",
+                                    CONVERSION_MODE, DIALECT, MONGOSQL_DIALECT),
+                            Collections.singletonMap(CONVERSION_MODE, ClientInfoStatus.REASON_VALUE_INVALID));
+                }
+                return new MongoSQLConnection(cs, info.getProperty(DATABASE));
+            default:
+                throw new SQLClientInfoException(
+                        String.format("invalid dialect '%s'", dialect),
+                        Collections.singletonMap(DIALECT, ClientInfoStatus.REASON_VALUE_INVALID));
+        }
     }
 
     @Override
