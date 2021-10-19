@@ -507,4 +507,6 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return (T) this;
     }
+
+    public abstract String getDatasource(String columnLabel);
 }

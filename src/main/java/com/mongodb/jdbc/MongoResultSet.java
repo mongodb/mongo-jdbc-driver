@@ -1397,20 +1397,6 @@ public abstract class MongoResultSet<T> implements ResultSet {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    // ------------------------- JDBC 4.1 -----------------------------------
-
-    @Override
-    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
-    @Override
-    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
-    }
-
     // ------------------------- JDBC 4.2 -----------------------------------
 
     @Override

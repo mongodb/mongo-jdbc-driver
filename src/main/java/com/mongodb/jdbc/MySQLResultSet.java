@@ -682,4 +682,16 @@ public class MySQLResultSet extends MongoResultSet<MongoResultDoc> implements Re
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
     }
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        throw new SQLFeatureNotSupportedException(
+                Thread.currentThread().getStackTrace()[1].toString());
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+        throw new SQLFeatureNotSupportedException(
+                Thread.currentThread().getStackTrace()[1].toString());
+    }
 }

@@ -11,6 +11,10 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         super(metadataDoc);
     }
 
+    public String getDatasource(String columnLabel) {
+        throw new RuntimeException("TODO");
+    }
+
     @Override
     public int getColumnCount() throws SQLException {
         throw new SQLFeatureNotSupportedException("TODO");
