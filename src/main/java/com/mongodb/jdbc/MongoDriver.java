@@ -131,7 +131,8 @@ public class MongoDriver implements Driver {
 
     private MongoConnection createConnection(ConnectionString cs, Properties info) throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
-        switch (info.getProperty(DIALECT, MYSQL_DIALECT).toLowerCase()) {
+        String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
+        switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
                 return new MySQLConnection(
                         cs, info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
@@ -145,6 +146,7 @@ public class MongoDriver implements Driver {
                 return new MongoSQLConnection(cs, info.getProperty(DATABASE));
             default:
                 throw new SQLClientInfoException(
+                        String.format("invalid dialect '%s'", dialect),
                         Collections.singletonMap(DIALECT, ClientInfoStatus.REASON_VALUE_INVALID));
         }
     }
