@@ -7,15 +7,17 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class MongoDatabaseMetaDataTest {
     protected DatabaseMetaData databaseMetaData;
 
     protected abstract DatabaseMetaData createDatabaseMetaData();
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         databaseMetaData = createDatabaseMetaData();
     }
