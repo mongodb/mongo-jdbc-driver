@@ -1,16 +1,9 @@
 package com.mongodb.jdbc;
 
+import java.util.Map;
+
 public class MongoJsonSchemaResult {
-    public class VersionedSchema {
-        int version;
-        MongoJsonSchema jsonSchema;
-    }
-
-    public class Description {
-        String description;
-    }
-
     public int ok;
-    public Description metadata;
-    public VersionedSchema schema;
+    public Map<String, String> metadata;
+    public MongoVersionedJsonSchema schema;
 }
