@@ -31,15 +31,27 @@ public class MongoJsonSchema {
         return ret;
     }
 
+    /**
+     * Adds required scalar properties to a MongoJsonSchema, adding them as required and giving them
+     * the passed bsonType. If properties or required for `this` are null, this method creates them.
+     *
+     * <p>ex: addRequiredScalarKeys( new Pair<String, String>("foo", "int"), new Pair<String,
+     * String>("bar", "string"), new Pair<String, String>("baz", "objectId"), );
+     *
+     * @param scalarProperties are variadic pairs of (String property name, Strinmg property bson
+     *     type). Each property type is converted into a scalar MongoJsonSchema with the proper
+     *     bsonType
+     * @return void
+     */
     @SafeVarargs
-    public final void addRequiredScalarKeys(Pair<String, String>... values) {
+    public final void addRequiredScalarKeys(Pair<String, String>... scalarProperties) {
         if (properties == null) {
             properties = new HashMap<String, MongoJsonSchema>();
         }
         if (required == null) {
             required = new HashSet<String>();
         }
-        for (Pair<String, String> p : values) {
+        for (Pair<String, String> p : scalarProperties) {
             required.add(p.left());
             properties.put(p.left(), createScalarSchema(p.right()));
         }
