@@ -46,10 +46,10 @@ public class MongoJsonSchema {
     @SafeVarargs
     public final void addRequiredScalarKeys(Pair<String, String>... scalarProperties) {
         if (properties == null) {
-            properties = new HashMap<String, MongoJsonSchema>();
+            properties = new HashMap<>();
         }
         if (required == null) {
-            required = new HashSet<String>();
+            required = new HashSet<>();
         }
         for (Pair<String, String> p : scalarProperties) {
             required.add(p.left());
