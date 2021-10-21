@@ -916,7 +916,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         Pattern functionPatternRE = null;
         if (functionNamePattern != null) {
-            functionPatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+            functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
         }
 
         for (MongoFunction func : MongoFunction.mySQLFunctions) {
@@ -945,10 +945,10 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
         if (functionNamePattern != null) {
-            functionNamePatternRE = Pattern.compile(functionNamePattern.replaceAll("%", ".*"));
+            functionNamePatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
         }
         if (columnNamePattern != null) {
-            columnNamePatternRE = Pattern.compile(columnNamePattern.replaceAll("%", ".*"));
+            columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
         }
 
         for (MongoFunction func : MongoFunction.mySQLFunctions) {
