@@ -66,13 +66,23 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     protected BsonValue getBsonValue(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
-        String columnLabel = rsMetaData.getColumnLabel(columnIndex);
-        return getBsonValue(columnLabel);
+        MongoColumnInfo columnInfo = rsMetaData.getColumnInfo(columnIndex);
+        String dataSourceDotColumnLabel = String.format("%s.%s",
+                                                        columnInfo.getTableName(),
+                                                        columnInfo.getColumnName());
+        return getBsonValue(dataSourceDotColumnLabel);
     }
 
     @Override
     protected BsonValue getBsonValue(String columnLabel) throws SQLException {
-        return current.get(rsMetaData.getDatasource(columnLabel));
+        int columnIndex;
+        if (rsMetaData.hasColumnWithLabel(columnLabel)) {
+            columnIndex = rsMetaData.getColumnPositionFromLabel(columnLabel);
+        } else {
+
+            throw new SQLException(String.format("column label '%s' not found", columnLabel));
+        }
+        return getBsonValue(columnIndex+1);
     }
 
     @Override
@@ -147,6 +157,10 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                         return o.asObjectId();
                     case DB_POINTER:
                         return o.asDBPointer();
+                    case INT32:
+                        return o.asInt32();
+                    case INT64:
+                        return o.asInt64();
                     case JAVASCRIPT:
                         return o.asJavaScript();
                     case JAVASCRIPT_WITH_SCOPE:
