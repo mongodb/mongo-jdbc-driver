@@ -4,6 +4,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -20,22 +27,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return MongoFunction.mongoSQLNumericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return MongoFunction.mongoSQLStringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return "";
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        return MongoFunction.mongoSQLDateFunctionsString;
     }
 
     @Override
@@ -385,10 +392,110 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
+    private MongoJsonSchema getFunctionJsonSchema() {
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+        return schema;
+    }
+
+    private BsonDocument getFunctionValuesDoc(String functionName, String remarks) {
+        BsonDocument root = new BsonDocument();
+        BsonDocument bot = new BsonDocument();
+        root.put("", bot);
+        bot.put(FUNCTION_CAT, new BsonString("def"));
+        bot.put(FUNCTION_SCHEM, new BsonNull());
+        bot.put(FUNCTION_NAME, new BsonString(functionName));
+        bot.put(REMARKS, new BsonString(remarks));
+        bot.put(FUNCTION_TYPE, new BsonInt32(functionNoTable));
+        bot.put(SPECIFIC_NAME, new BsonString(functionName));
+        return root;
+    }
+
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        ArrayList<BsonDocument> docs = new ArrayList<>(MongoFunction.mongoSQLFunctionNames.length);
+        MongoJsonSchema schema = getFunctionJsonSchema();
+
+        Pattern functionPatternRE = null;
+        if (functionNamePattern != null) {
+            functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+        }
+
+        for (MongoFunction func : MongoFunction.mongoSQLFunctions) {
+            String functionName = func.name;
+            String remarks = func.comment;
+            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
+                continue;
+            }
+            BsonDocument doc = getFunctionValuesDoc(func.name, func.comment);
+            docs.add(doc);
+        }
+
+        return new MongoSQLResultSet(null, null);
+        // TODO: SQL-535 use commented return statement instead
+        // return MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+    }
+
+    private MongoJsonSchema getFunctionColumnJsonSchema() {
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
+                new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(SCALE, BSON_INT_TYPE_NAME),
+                new Pair<>(RADIX, BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+        return schema;
+    }
+
+    private BsonDocument getFunctionColumnValuesDoc(
+            MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+        BsonDocument root = new BsonDocument();
+        BsonDocument bot = new BsonDocument();
+        root.put("", bot);
+        BsonValue n = new BsonNull();
+        String functionName = func.name;
+        bot.put(FUNCTION_CAT, new BsonString("def"));
+        bot.put(FUNCTION_SCHEM, n);
+        bot.put(FUNCTION_NAME, new BsonString(functionName));
+
+        bot.put(COLUMN_NAME, new BsonString(argName));
+        bot.put(COLUMN_TYPE, new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
+        bot.put(DATA_TYPE, new BsonInt32(typeNum(argType)));
+        bot.put(TYPE_NAME, argType == null ? n : new BsonString(argType));
+
+        bot.put(PRECISION, new BsonInt32(typePrec(argType)));
+        bot.put(LENGTH, new BsonInt32(typeBytes(argType)));
+        bot.put(SCALE, new BsonInt32(typeScale(argType)));
+        bot.put(RADIX, new BsonInt32(typeBytes(argType)));
+
+        bot.put(NULLABLE, new BsonInt32(functionNullable));
+        bot.put(REMARKS, new BsonString(func.comment));
+        bot.put(CHAR_OCTET_LENGTH, bsonInt32(typeBytes(argType)));
+
+        bot.put(ORDINAL_POSITION, new BsonInt32(i));
+        bot.put(IS_NULLABLE, new BsonString("YES"));
+
+        bot.put(SPECIFIC_NAME, new BsonString(functionName));
+        return root;
     }
 
     @Override
@@ -398,7 +505,48 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+
+        ArrayList<BsonDocument> docs = new ArrayList<>(MongoFunction.mongoSQLFunctionNames.length);
+        MongoJsonSchema schema = getFunctionColumnJsonSchema();
+
+        Pattern functionNamePatternRE = null;
+        Pattern columnNamePatternRE = null;
+        if (functionNamePattern != null) {
+            functionNamePatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+        }
+        if (columnNamePattern != null) {
+            columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
+        }
+
+        for (MongoFunction func : MongoFunction.mongoSQLFunctions) {
+            String functionName = func.name;
+            if (functionNamePatternRE != null
+                    && !functionNamePatternRE.matcher(functionName).matches()) {
+                continue;
+            }
+            int i = 0;
+            for (String argType : func.argTypes) {
+                // We don't have better names for our arguments, for the most part.
+                ++i;
+                String columnName = "arg" + i;
+                if (columnNamePatternRE != null
+                        && !columnNamePatternRE.matcher(columnName).matches()) {
+                    continue;
+                }
+                BsonDocument doc = getFunctionColumnValuesDoc(func, i, columnName, argType, false);
+                docs.add(doc);
+            }
+            String columnName = "argReturn";
+            if (columnNamePatternRE == null || columnNamePatternRE.matcher(columnName).matches()) {
+                BsonDocument doc =
+                        getFunctionColumnValuesDoc(func, i, "argReturn", func.returnType, true);
+                docs.add(doc);
+            }
+        }
+
+        return new MongoSQLResultSet(null, null);
+        // TODO: SQL-535 use commented return statement instead
+        // return MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
     }
 
     //--------------------------JDBC 4.1 -----------------------------
