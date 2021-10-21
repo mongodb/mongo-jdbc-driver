@@ -20,8 +20,8 @@ public class MongoJsonSchema {
     public static MongoJsonSchema createEmptyObjectSchema() {
         MongoJsonSchema ret = new MongoJsonSchema();
         ret.bsonType = "object";
-        ret.properties = new HashMap<String, MongoJsonSchema>();
-        ret.required = new HashSet<String>();
+        ret.properties = new HashMap<>();
+        ret.required = new HashSet<>();
         return ret;
     }
 
