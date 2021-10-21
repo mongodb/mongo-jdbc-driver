@@ -58,7 +58,7 @@ abstract class MongoDatabaseMetaDataTest {
                 };
 
         // we will never have procedures.
-        ResultSet rs = databaseMetaData.getProcedures(null, null, null);
+        ResultSet rs = databaseMetaData.getProcedures(null, null, "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -88,7 +88,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "SPECIFIC_NAME",
                 };
 
-        ResultSet rs = databaseMetaData.getProcedureColumns(null, null, null, null);
+        ResultSet rs = databaseMetaData.getProcedureColumns(null, null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -106,7 +106,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "PSEUDO_COLUMN",
                 };
 
-        ResultSet rs = databaseMetaData.getVersionColumns(null, null, null);
+        ResultSet rs = databaseMetaData.getVersionColumns(null, null, "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -130,7 +130,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "DEFERRABILITY",
                 };
 
-        ResultSet rs = databaseMetaData.getImportedKeys(null, null, null);
+        ResultSet rs = databaseMetaData.getImportedKeys(null, null, "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -154,7 +154,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "DEFERRABILITY",
                 };
 
-        ResultSet rs = databaseMetaData.getExportedKeys(null, null, null);
+        ResultSet rs = databaseMetaData.getExportedKeys(null, null, "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -178,7 +178,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "DEFERRABILITY",
                 };
 
-        ResultSet rs = databaseMetaData.getCrossReference(null, null, null, null, null, null);
+        ResultSet rs = databaseMetaData.getCrossReference(null, null, "%", null, null, "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -195,7 +195,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "BASE_TYPE",
                 };
 
-        ResultSet rs = databaseMetaData.getUDTs(null, null, null, null);
+        ResultSet rs = databaseMetaData.getUDTs(null, null, "%", null);
         validateResultSet(rs, 0, columns);
     }
 
@@ -211,7 +211,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "SUPERTYPE_NAME",
                 };
 
-        ResultSet rs = databaseMetaData.getSuperTypes(null, null, null);
+        ResultSet rs = databaseMetaData.getSuperTypes(null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -222,7 +222,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "SUPERTABLE_NAME",
                 };
 
-        ResultSet rs = databaseMetaData.getSuperTables(null, null, null);
+        ResultSet rs = databaseMetaData.getSuperTables(null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -253,7 +253,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "SOURCE_DATA_TYPE",
                 };
 
-        ResultSet rs = databaseMetaData.getAttributes(null, null, null, null);
+        ResultSet rs = databaseMetaData.getAttributes(null, null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
 
@@ -275,7 +275,7 @@ abstract class MongoDatabaseMetaDataTest {
                     "IS_NULLABLE",
                 };
 
-        ResultSet rs = databaseMetaData.getPseudoColumns(null, null, null, null);
+        ResultSet rs = databaseMetaData.getPseudoColumns(null, null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
 }
@@ -348,7 +348,7 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
                     "SPECIFIC_NAME",
                 };
 
-        ResultSet rs = databaseMetaData.getFunctions(null, null, null);
+        ResultSet rs = databaseMetaData.getFunctions(null, null, "%");
         validateResultSet(rs, 117, columns);
 
         rs = databaseMetaData.getFunctions(null, null, "%S%");
