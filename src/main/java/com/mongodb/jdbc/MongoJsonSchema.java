@@ -32,7 +32,7 @@ public class MongoJsonSchema {
     }
 
     @SafeVarargs
-    public final void addRequiredKeys(Pair<String, String>... values) {
+    public final void addRequiredScalarKeys(Pair<String, String>... values) {
         if (properties == null) {
             properties = new HashMap<String, MongoJsonSchema>();
         }
