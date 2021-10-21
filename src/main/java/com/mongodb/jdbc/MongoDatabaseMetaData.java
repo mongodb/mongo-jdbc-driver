@@ -17,6 +17,7 @@ import org.bson.BsonValue;
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected MongoConnection conn;
     protected String serverVersion;
+    protected final int unknownLength = 0;
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
