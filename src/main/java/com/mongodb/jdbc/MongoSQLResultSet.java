@@ -16,20 +16,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.sql.Date;
 import java.text.ParseException;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor) {
-        super(statement);
-        Preconditions.checkNotNull(cursor);
-
-        // TODO: Get from sqlGetResultSchema when complete MHOUSE-3466
-        MongoJsonSchema schema = new MongoJsonSchema();
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema);
-        this.cursor = cursor;
-    }
-
-    // This is used for testing, passing in a generated MongoJsonSchema
     public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema) {
         super(statement);
         Preconditions.checkNotNull(cursor);
