@@ -1061,7 +1061,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MySQLResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
         docs.add(getFunctionMetaDoc());
 
         Pattern functionPatternRE = null;
@@ -1089,7 +1089,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MySQLResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
         docs.add(getFunctionColumnMetaDoc());
 
         Pattern functionNamePatternRE = null;
