@@ -65,20 +65,27 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         }
 
         BsonDocument document = new BsonDocument();
-        document.append("foo.a", new BsonInt32(3));
-        document.append("foo.b", new BsonNull());
-        document.append("foo.c", new BsonInt32(4));
-        document.append("foo.d", new BsonUndefined());
-        document.append("foo.null", new BsonNull());
+
+        BsonDocument bot = new BsonDocument();
+        BsonDocument foo = new BsonDocument();
+        document.put("", bot);
+        document.put("foo", foo);
+
+        bot.put("a", new BsonDouble(2.4));
+        bot.put("str", new BsonString("b"));
+
+        foo.put("a", new BsonInt32(3));
+        foo.put("b", new BsonNull());
+        foo.put("c", new BsonInt32(4));
+        foo.put("d", new BsonUndefined());
+        foo.put("null", new BsonNull());
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        document.append("foo.vec", array);
+        foo.put("vec", array);
 
-        document.append(".a", new BsonDouble(2.4));
-        document.append(".str", new BsonString("b"));
 
         List<BsonDocument> mongoResultDocs = new ArrayList<BsonDocument>();
         mongoResultDocs.add(document);

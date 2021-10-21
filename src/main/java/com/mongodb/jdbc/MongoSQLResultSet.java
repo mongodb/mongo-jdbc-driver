@@ -67,10 +67,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     protected BsonValue getBsonValue(int columnIndex) throws SQLException {
         checkBounds(columnIndex);
         MongoColumnInfo columnInfo = rsMetaData.getColumnInfo(columnIndex);
-        String dataSourceDotColumnLabel = String.format("%s.%s",
-                                                        columnInfo.getTableName(),
-                                                        columnInfo.getColumnName());
-        return getBsonValue(dataSourceDotColumnLabel);
+        BsonDocument datasource = this.current.get(columnInfo.getTableName()).asDocument();
+        return datasource.get(columnInfo.getColumnName());
     }
 
     @Override
