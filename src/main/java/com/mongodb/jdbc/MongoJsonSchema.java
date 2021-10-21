@@ -38,7 +38,7 @@ public class MongoJsonSchema {
      * <p>ex: addRequiredScalarKeys( new Pair<String, String>("foo", "int"), new Pair<String,
      * String>("bar", "string"), new Pair<String, String>("baz", "objectId"), );
      *
-     * @param scalarProperties are variadic pairs of (String property name, Strinmg property bson
+     * @param scalarProperties are variadic pairs of (String property name, String property bson
      *     type). Each property type is converted into a scalar MongoJsonSchema with the proper
      *     bsonType
      * @return void
