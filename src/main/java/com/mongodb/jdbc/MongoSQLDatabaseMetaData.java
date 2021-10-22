@@ -39,8 +39,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
                 new Pair<>(PROCEDURE_CAT, "string"),
                 new Pair<>(PROCEDURE_SCHEM, "string"),
                 new Pair<>(PROCEDURE_NAME, "string"),
@@ -61,8 +61,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
                 new Pair<>(PROCEDURE_CAT, "string"),
                 new Pair<>(PROCEDURE_SCHEM, "string"),
                 new Pair<>(PROCEDURE_NAME, "string"),
@@ -104,8 +104,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
                 new Pair<>(TABLE_SCHEM, "string"),
                 new Pair<>(TABLE_CATALOG, "string")
         );
@@ -150,7 +150,21 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(SCOPE, "string"),
+                new Pair<>(COLUMN_NAME, "string"),
+                new Pair<>(DATA_TYPE, "int"),
+                new Pair<>(TYPE_NAME, "string"),
+                new Pair<>(COLUMN_SIZE, "int"),
+                new Pair<>(BUFFER_LENGTH, "int"),
+                new Pair<>(DECIMAL_DIGITS, "int"),
+                new Pair<>(PSEUDO_COLUMN, "int")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override

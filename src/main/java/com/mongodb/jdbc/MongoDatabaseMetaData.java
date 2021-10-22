@@ -41,6 +41,12 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String TABLE_SCHEM = "TABLE_SCHEM";
     protected static final String TABLE_CATALOG = "TABLE_CATALOG";
 
+    protected static final String SCOPE = "SCOPE";
+    protected static final String COLUMN_SIZE = "COLUMN_SIZE";
+    protected static final String BUFFER_LENGTH = "BUFFER_LENGTH";
+    protected static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
+    protected static final String PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

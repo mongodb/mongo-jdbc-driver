@@ -444,18 +444,14 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "SCOPE", "SCOPE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "COLUMN_SIZE", "COLUMN_SIZE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "BUFFER_LENGTH", "BUFFER_LENGTH", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PSEUDO_COLUMN", "PSEUDO_COLUMN", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE, SCOPE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_NAME, COLUMN_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_SIZE, COLUMN_SIZE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", BUFFER_LENGTH, BUFFER_LENGTH, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PSEUDO_COLUMN, PSEUDO_COLUMN, "int"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
