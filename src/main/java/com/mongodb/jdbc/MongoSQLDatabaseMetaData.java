@@ -104,7 +104,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getSchemas() throws SQLException {
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>(TABLE_SCHEM, "string"),
+                new Pair<>(TABLE_CATALOG, "string")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override
@@ -220,7 +228,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+        return getSchemas();
     }
 
     @Override

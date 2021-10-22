@@ -38,6 +38,9 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
     protected static final String IS_NULLABLE = "IS_NULLABLE";
 
+    protected static final String TABLE_SCHEM = "TABLE_SCHEM";
+    protected static final String TABLE_CATALOG = "TABLE_CATALOG";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
