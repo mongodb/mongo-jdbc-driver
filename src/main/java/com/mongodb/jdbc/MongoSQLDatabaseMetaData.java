@@ -393,6 +393,24 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, "string"),
+                new Pair<>(TABLE_SCHEM, "string"),
+                new Pair<>(TABLE_NAME, "string"),
+                new Pair<>(COLUMN_NAME, "string"),
+                new Pair<>(DATA_TYPE, "int"),
+                new Pair<>(COLUMN_SIZE, "int"),
+                new Pair<>(DECIMAL_DIGITS, "int"),
+                new Pair<>(NUM_PREC_RADIX, "string"),
+                new Pair<>(COLUMN_USAGE, "string"),
+                new Pair<>(REMARKS, "string"),
+                new Pair<>(CHAR_OCTET_LENGTH, "int"),
+                new Pair<>(IS_NULLABLE, "string")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 }

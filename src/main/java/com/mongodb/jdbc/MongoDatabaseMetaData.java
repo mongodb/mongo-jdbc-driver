@@ -85,6 +85,8 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String SCOPE_TABLE = "SCOPE_TABLE";
     protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
 
+    protected static final String COLUMN_USAGE = "COLUMN_USAGE";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
