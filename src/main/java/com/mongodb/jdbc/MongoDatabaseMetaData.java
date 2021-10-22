@@ -15,6 +15,13 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected MongoConnection conn;
     protected String serverVersion;
 
+    protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
+    protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+    protected static final String PROCEDURE_NAME = "PROCEDURE_NAME";
+    protected static final String REMARKS = "REMARKS";
+    protected static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
+    protected static final String SPECIFIC_NAME = "SPECIFIC_NAME";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

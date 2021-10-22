@@ -182,17 +182,12 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_TYPE", "PROCEDURE_TYPE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_CAT, PROCEDURE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_NAME, PROCEDURE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_TYPE, PROCEDURE_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SPECIFIC_NAME, SPECIFIC_NAME, "string"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);

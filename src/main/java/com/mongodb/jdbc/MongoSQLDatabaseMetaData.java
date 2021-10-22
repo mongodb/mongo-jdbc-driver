@@ -39,10 +39,19 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        // TODO: create result set metadata that describes the columns of this result set
-        //  even though it is empty. This applies to all updated methods in this PR and is
-        //  blocked on SQL-513 and SQL-535.
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>(PROCEDURE_CAT, "string"),
+                new Pair<>(PROCEDURE_SCHEM, "string"),
+                new Pair<>(PROCEDURE_NAME, "string"),
+                new Pair<>(REMARKS, "string"),
+                new Pair<>(PROCEDURE_TYPE, "int"),
+                new Pair<>(SPECIFIC_NAME, "string")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override
