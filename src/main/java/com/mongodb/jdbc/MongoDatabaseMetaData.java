@@ -22,6 +22,22 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
     protected static final String SPECIFIC_NAME = "SPECIFIC_NAME";
 
+    protected static final String COLUMN_NAME = "COLUMN_NAME";
+    protected static final String COLUMN_TYPE = "COLUMN_TYPE";
+    protected static final String DATA_TYPE = "DATA_TYPE";
+    protected static final String TYPE_NAME = "TYPE_NAME";
+    protected static final String PRECISION = "PRECISION";
+    protected static final String LENGTH = "LENGTH";
+    protected static final String SCALE = "SCALE";
+    protected static final String RADIX = "RADIX";
+    protected static final String NULLABLE = "NULLABLE";
+    protected static final String COLUMN_DEF = "COLUMN_DEF";
+    protected static final String SQL_DATA_TYPE = "SQL_DATA_TYPE";
+    protected static final String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+    protected static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+    protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
+    protected static final String IS_NULLABLE = "IS_NULLABLE";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

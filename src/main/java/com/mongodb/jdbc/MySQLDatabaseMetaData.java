@@ -207,36 +207,27 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_CAT, PROCEDURE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_NAME, PROCEDURE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_NAME, COLUMN_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_TYPE, COLUMN_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PRECISION, PRECISION, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", LENGTH, LENGTH, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCALE, SCALE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", RADIX, RADIX, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_DEF, COLUMN_DEF, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_CAT", "PROCEDURE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_SCHEM", "PROCEDURE_SCHEM", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PROCEDURE_NAME", "PROCEDURE_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "PRECISION", "PRECISION", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "LENGTH", "LENGTH", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "SCALE", "SCALE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "RADIX", "RADIX", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "COLUMN_DEF", "COLUMN_DEF", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+                new MySQLColumnInfo("", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ORDINAL_POSITION, ORDINAL_POSITION, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", IS_NULLABLE, IS_NULLABLE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SPECIFIC_NAME, SPECIFIC_NAME, "string"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);

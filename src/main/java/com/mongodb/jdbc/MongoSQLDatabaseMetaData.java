@@ -61,7 +61,33 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>(PROCEDURE_CAT, "string"),
+                new Pair<>(PROCEDURE_SCHEM, "string"),
+                new Pair<>(PROCEDURE_NAME, "string"),
+                new Pair<>(COLUMN_NAME, "string"),
+                new Pair<>(COLUMN_TYPE, "int"),
+                new Pair<>(DATA_TYPE, "int"),
+                new Pair<>(TYPE_NAME, "string"),
+                new Pair<>(PRECISION, "int"),
+                new Pair<>(LENGTH, "int"),
+                new Pair<>(SCALE, "int"),
+                new Pair<>(RADIX, "int"),
+                new Pair<>(NULLABLE, "int"),
+                new Pair<>(REMARKS, "string"),
+                new Pair<>(COLUMN_DEF, "string"),
+                new Pair<>(SQL_DATA_TYPE, "int"),
+                new Pair<>(SQL_DATETIME_SUB, "int"),
+                new Pair<>(CHAR_OCTET_LENGTH, "int"),
+                new Pair<>(ORDINAL_POSITION, "int"),
+                new Pair<>(IS_NULLABLE, "string"),
+                new Pair<>(SPECIFIC_NAME, "string")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override
