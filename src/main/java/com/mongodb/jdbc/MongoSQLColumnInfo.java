@@ -16,15 +16,12 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private boolean isPolymorphic;
     private int nullable;
 
-    private static int requiredToNullability(boolean required) {
-        return required ? ResultSetMetaData.columnNoNulls : ResultSetMetaData.columnNullable;
-    }
-
     MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, boolean required)
             throws SQLException {
         this.datasource = datasource;
         this.field = field;
-        this.nullable = requiredToNullability(required);
+        this.nullable =
+                required ? ResultSetMetaData.columnNoNulls : ResultSetMetaData.columnNullable;
         // All schemata except Any and AnyOf must have a bsonType.
         if (schema.bsonType != null) {
             bsonTypeName = schema.bsonType;
