@@ -34,7 +34,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
             jdbcType = Types.OTHER;
             bsonType = null;
             isPolymorphic = true;
-            // This will take precedent over the nullability set by the required field.
+            // This will take precedent over the nullability set by the required argument.
             nullable = ResultSetMetaData.columnNullable;
             return;
         }
@@ -56,7 +56,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
             // Presense of null means this is nullable, whether or not the required keys
             // of the parent object schema indicate this is nullable.
             if (anyOfSchema.bsonType.equals("null")) {
-                // This will take precedent over the nullability set by the required field.
+                // This will take precedent over the nullability set by the required argument.
                 nullable = ResultSetMetaData.columnNullable;
             } else {
                 // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
