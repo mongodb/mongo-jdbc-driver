@@ -527,29 +527,20 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PKTABLE_CAT", "PKTABLE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PKTABLE_SCHEM", "PKTABLE_SCHEM", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PKTABLE_NAME", "PKTABLE_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "PKCOLUMN_NAME", "PKCOLUMN_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FKTABLE_CAT", "FKTABLE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FKTABLE_SCHEM", "FKTABLE_SCHEM", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FKTABLE_NAME", "FKTABLE_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FKCOLUMN_NAME", "FKCOLUMN_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "KEY_SEQ", "KEY_SEQ", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "UPDATE_RULE", "UPDATE_RULE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DELETE_RULE", "DELETE_RULE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "FK_NAME", "FK_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "PK_NAME", "PK_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DEFERRABILITY", "DEFERRABILITY", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_CAT, PKTABLE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_NAME, PKTABLE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_CAT, FKTABLE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_NAME, FKTABLE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DEFERRABILITY, DEFERRABILITY, "int"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
