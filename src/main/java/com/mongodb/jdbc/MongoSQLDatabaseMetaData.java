@@ -196,7 +196,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(PKTABLE_CAT, "string"),
+                new Pair<>(PKTABLE_SCHEM, "string"),
+                new Pair<>(PKTABLE_NAME, "string"),
+                new Pair<>(PKCOLUMN_NAME, "string"),
+                new Pair<>(FKTABLE_CAT, "string"),
+                new Pair<>(FKTABLE_SCHEM, "string"),
+                new Pair<>(FKTABLE_NAME, "string"),
+                new Pair<>(FKCOLUMN_NAME, "string"),
+                new Pair<>(KEY_SEQ, "int"),
+                new Pair<>(UPDATE_RULE, "int"),
+                new Pair<>(DELETE_RULE, "int"),
+                new Pair<>(FK_NAME, "string"),
+                new Pair<>(PK_NAME, "string"),
+                new Pair<>(DEFERRABILITY, "int")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override
