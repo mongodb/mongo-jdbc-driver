@@ -20,8 +20,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
             throws SQLException {
         this.datasource = datasource;
         this.field = field;
-        this.nullable =
-                required ? ResultSetMetaData.columnNoNulls : ResultSetMetaData.columnNullable;
+        nullable = required ? ResultSetMetaData.columnNoNulls : ResultSetMetaData.columnNullable;
         // All schemata except Any and AnyOf must have a bsonType.
         if (schema.bsonType != null) {
             bsonTypeName = schema.bsonType;
@@ -35,7 +34,8 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
             jdbcType = Types.OTHER;
             bsonType = null;
             isPolymorphic = true;
-            this.nullable = ResultSetMetaData.columnNullable;
+            // This will take precedent over the nullability set by the required field.
+            nullable = ResultSetMetaData.columnNullable;
             return;
         }
         // Otherwise, the schema must be an AnyOf.
@@ -56,6 +56,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
             // Presense of null means this is nullable, whether or not the required keys
             // of the parent object schema indicate this is nullable.
             if (anyOfSchema.bsonType.equals("null")) {
+                // This will take precedent over the nullability set by the required field.
                 nullable = ResultSetMetaData.columnNullable;
             } else {
                 // If bsonTypeName is not null, there must be more than one non-null anyOf type, so
