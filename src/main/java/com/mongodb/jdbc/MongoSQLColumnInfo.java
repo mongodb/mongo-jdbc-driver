@@ -16,32 +16,36 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private boolean isPolymorphic;
     private int nullable;
 
-    MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, int nullable)
+    private static int requiredToNullability(boolean required) {
+        return required ? ResultSetMetaData.columnNoNulls : ResultSetMetaData.columnNullable;
+    }
+
+    MongoSQLColumnInfo(String datasource, String field, MongoJsonSchema schema, boolean required)
             throws SQLException {
         this.datasource = datasource;
         this.field = field;
+        this.nullable = requiredToNullability(required);
         // All schemata except Any and AnyOf must have a bsonType.
         if (schema.bsonType != null) {
             bsonTypeName = schema.bsonType;
             bsonType = MongoColumnInfo.getBsonTypeHelper(schema.bsonType);
             jdbcType = getJDBCTypeForBsonType(this.bsonType);
             isPolymorphic = false;
-            this.nullable = nullable;
             return;
         }
         if (schema.isAny()) {
             bsonTypeName = "bson";
             jdbcType = Types.OTHER;
-            bsonType = BsonType.UNDEFINED;
+            bsonType = null;
             isPolymorphic = true;
             this.nullable = ResultSetMetaData.columnNullable;
             return;
         }
         // Otherwise, the schema must be an AnyOf.
-        constructFromAnyOf(schema, nullable);
+        constructFromAnyOf(schema);
     }
 
-    private void constructFromAnyOf(MongoJsonSchema schema, int nullable) throws SQLException {
+    private void constructFromAnyOf(MongoJsonSchema schema) throws SQLException {
         if (schema.anyOf == null) {
             throw new SQLException(
                     "invalid schema: both bsonType and anyOf are null and this is not ANY");
@@ -67,7 +71,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
                 }
             }
         }
-        this.nullable = nullable;
         if (isPolymorphic) {
             bsonType = BsonType.UNDEFINED;
             jdbcType = Types.OTHER;

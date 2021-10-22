@@ -60,12 +60,9 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         for (String field : fields) {
             MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
             columnIndices.add(new NameSpace(datasource, field));
-            int subNullability =
-                    (datasourceSchema.required == null
-                                    || !datasourceSchema.required.contains(field))
-                            ? ResultSetMetaData.columnNullable
-                            : ResultSetMetaData.columnNoNulls;
-            columnInfo.add(new MongoSQLColumnInfo(datasource, field, columnSchema, subNullability));
+            boolean required =
+                    datasourceSchema.required != null && datasourceSchema.required.contains(field);
+            columnInfo.add(new MongoSQLColumnInfo(datasource, field, columnSchema, required));
             if (!columnLabels.containsKey(field)) {
                 columnLabels.put(
                         field, new DatasourceAndIndex(datasource, columnIndices.size() - 1));

@@ -1,9 +1,58 @@
 package com.mongodb.jdbc;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.bson.BsonType;
 
 public interface MongoColumnInfo {
+    public static String BSON_ARRAY = "array";
+    public static String BSON_BOOL = "bool";
+    public static String BSON_BINDATA = "binData";
+    public static String BSON_DATE = "date";
+    public static String BSON_DBPOINTER = "dbPointer";
+    public static String BSON_DECIMAL = "decimal";
+    public static String BSON_DOUBLE = "double";
+    public static String BSON_INT = "int";
+    public static String BSON_JAVASCRIPT = "javascript";
+    public static String BSON_JAVASCRIPT_WITH_SCOPE = "javascriptWithScope";
+    public static String BSON_LONG = "long";
+    public static String BSON_MAXKEY = "maxKey";
+    public static String BSON_MINKEY = "minKey";
+    public static String BSON_NULL = "null";
+    public static String BSON_OBJECT = "object";
+    public static String BSON_OBJECTID = "objectId";
+    public static String BSON_REGEX = "regex";
+    public static String BSON_STRING = "string";
+    public static String BSON_SYMBOL = "symbol";
+    public static String BSON_TIMESTAMP = "timestamp";
+    public static String BSON_UNDEFINED = "undefined";
+    public static Set<String> bsonTypes =
+            new HashSet<>(
+                    Arrays.asList(
+                            BSON_ARRAY,
+                            BSON_BOOL,
+                            BSON_BINDATA,
+                            BSON_DATE,
+                            BSON_DBPOINTER,
+                            BSON_DECIMAL,
+                            BSON_DOUBLE,
+                            BSON_INT,
+                            BSON_JAVASCRIPT,
+                            BSON_JAVASCRIPT_WITH_SCOPE,
+                            BSON_LONG,
+                            BSON_MAXKEY,
+                            BSON_MINKEY,
+                            BSON_NULL,
+                            BSON_OBJECT,
+                            BSON_OBJECTID,
+                            BSON_REGEX,
+                            BSON_STRING,
+                            BSON_SYMBOL,
+                            BSON_TIMESTAMP,
+                            BSON_UNDEFINED));
+
     public boolean isPolymorphic();
 
     public BsonType getBsonType();
@@ -24,35 +73,19 @@ public interface MongoColumnInfo {
 
     public String getTableAlias();
 
+    /**
+     * Converts a bson type name to a BsonType
+     *
+     * @param typeName is the bson type string as returned from the mongodb aggregation $type
+     *     function, this list of viable inputs is in the bsonTypes static Set above.
+     * @return BsonType object corresponding to bson type name.
+     */
     public static BsonType getBsonTypeHelper(String typeName) throws SQLException {
-        // bsonType strings as represented by the $type function:
-        // "array"
-        // "bool"
-        // "binData"
-        // "date"
-        // "dbPointer"
-        // "decimal"
-        // "double"
-        // "int"
-        // "javascript"
-        // "javascriptWithScope"
-        // "long"
-        // "maxKey"
-        // "minKey"
-        // "null"
-        // "object"
-        // "objectId"
-        // "regex"
-        // "string"
-        // "symbol"
-        // "timestamp"
-        // "undefined"
-        //
-        // This function will not always throw an exception for an unknown type name. Type
-        // names returned from ADL are assumed correct.
-        // Fortunately all type names can be guessed uniquely off a combination of first letter
-        // and length except for "minKey" vs "maxKey" and "string" vs "symbol", again, assuming
-        // all returned names are correct.
+        if (!bsonTypes.contains(typeName)) {
+            throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
+        }
+        // All type names can be guessed uniquely off a combination of first letter
+        // and length except for "minKey" vs "maxKey" and "string" vs "symbol".
         switch (typeName.charAt(0)) {
             case 'a':
                 return BsonType.ARRAY;
@@ -121,6 +154,7 @@ public interface MongoColumnInfo {
             case 'u':
                 return BsonType.UNDEFINED;
         }
+        // This is unreachible.
         throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
     }
 }
