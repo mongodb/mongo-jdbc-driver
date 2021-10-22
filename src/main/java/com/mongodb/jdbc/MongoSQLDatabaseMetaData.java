@@ -273,7 +273,19 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TYPE_CAT, "string"),
+                new Pair<>(TYPE_SCHEM, "string"),
+                new Pair<>(TYPE_NAME, "string"),
+                new Pair<>(CLASS_NAME, "string"),
+                new Pair<>(DATA_TYPE, "int"),
+                new Pair<>(REMARKS, "string"),
+                new Pair<>(BASE_TYPE, "int")
+        );
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override

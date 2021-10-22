@@ -762,13 +762,13 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "CLASS_NAME", "CLASS_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "BASE_TYPE", "BASE_TYPE", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", CLASS_NAME, CLASS_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", BASE_TYPE, BASE_TYPE, "int"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);

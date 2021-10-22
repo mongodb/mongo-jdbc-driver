@@ -62,6 +62,11 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PK_NAME = "PK_NAME";
     protected static final String DEFERRABILITY = "DEFERRABILITY";
 
+    protected static final String TYPE_CAT = "TYPE_CAT";
+    protected static final String TYPE_SCHEM = "TYPE_SCHEM";
+    protected static final String CLASS_NAME = "CLASS_NAME";
+    protected static final String BASE_TYPE = "BASE_TYPE";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
