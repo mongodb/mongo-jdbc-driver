@@ -310,7 +310,17 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, "string"),
+                new Pair<>(TABLE_SCHEM, "string"),
+                new Pair<>(TABLE_NAME, "string"),
+                new Pair<>(SUPERTABLE_NAME, "string")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     @Override

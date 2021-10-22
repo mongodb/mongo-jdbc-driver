@@ -801,12 +801,10 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TABLE_CAT", "TABLE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "TABLE_SCHEM", "TABLE_SCHEM", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TABLE_NAME", "TABLE_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SUPERTABLE_NAME", "SUPERTABLE_NAME", "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_CAT, TABLE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_SCHEM, TABLE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_NAME, TABLE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SUPERTABLE_NAME, SUPERTABLE_NAME, "string"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
