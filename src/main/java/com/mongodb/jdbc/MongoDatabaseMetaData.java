@@ -75,6 +75,16 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String TABLE_NAME = "TABLE_NAME";
     protected static final String SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
+    protected static final String ATTR_NAME = "ATTR_NAME";
+    protected static final String ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
+    protected static final String ATTR_SIZE = "ATTR_SIZE";
+    protected static final String NUM_PREC_RADIX = "NUM_PREC_RADIX";
+    protected static final String ATTR_DEF = "ATTR_DEF";
+    protected static final String SCOPE_CATALOG = "SCOPE_CATALOG";
+    protected static final String SCOPE_SCHEMA = "SCOPE_SCHEMA";
+    protected static final String SCOPE_TABLE = "SCOPE_TABLE";
+    protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

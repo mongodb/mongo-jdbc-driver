@@ -330,7 +330,34 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TYPE_CAT, "string"),
+                new Pair<>(TYPE_SCHEM, "string"),
+                new Pair<>(TYPE_NAME, "string"),
+                new Pair<>(ATTR_NAME, "string"),
+                new Pair<>(DATA_TYPE, "int"),
+                new Pair<>(ATTR_TYPE_NAME, "string"),
+                new Pair<>(ATTR_SIZE, "int"),
+                new Pair<>(DECIMAL_DIGITS, "int"),
+                new Pair<>(NUM_PREC_RADIX, "int"),
+                new Pair<>(NULLABLE, "int"),
+                new Pair<>(REMARKS, "string"),
+                new Pair<>(ATTR_DEF, "string"),
+                new Pair<>(SQL_DATA_TYPE, "int"),
+                new Pair<>(SQL_DATETIME_SUB, "int"),
+                new Pair<>(CHAR_OCTET_LENGTH, "int"),
+                new Pair<>(ORDINAL_POSITION, "int"),
+                new Pair<>(IS_NULLABLE, "string"),
+                new Pair<>(SCOPE_CATALOG, "string"),
+                new Pair<>(SCOPE_SCHEMA, "string"),
+                new Pair<>(SCOPE_TABLE, "string"),
+                new Pair<>(SOURCE_DATA_TYPE, "int")
+        );
+
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
+//        TODO: SQL-535 use commented return statement instead
+//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------

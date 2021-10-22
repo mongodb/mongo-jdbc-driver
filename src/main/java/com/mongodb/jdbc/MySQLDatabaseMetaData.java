@@ -822,39 +822,28 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "ATTR_NAME", "ATTR_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_NAME, ATTR_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_TYPE_NAME, ATTR_TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_SIZE, ATTR_SIZE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_DEF, ATTR_DEF, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "ATTR_TYPE_NAME", "ATTR_TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "ATTR_SIZE", "ATTR_SIZE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DECIMAL_DIGITS", "DECIMAL_DIGITS", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "ATTR_DEF", "ATTR_DEF", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SCOPE_CATALOG", "SCOPE_CATALOG", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SCOPE_SCHEMA", "SCOPE_SCHEMA", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SCOPE_TABLE", "SCOPE_TABLE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SOURCE_DATA_TYPE", "SOURCE_DATA_TYPE", "int"));
+                new MySQLColumnInfo("", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ORDINAL_POSITION, ORDINAL_POSITION, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", IS_NULLABLE, IS_NULLABLE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE_CATALOG, SCOPE_CATALOG, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE_SCHEMA, SCOPE_SCHEMA, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE_TABLE, SCOPE_TABLE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SOURCE_DATA_TYPE, SOURCE_DATA_TYPE, "int"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
