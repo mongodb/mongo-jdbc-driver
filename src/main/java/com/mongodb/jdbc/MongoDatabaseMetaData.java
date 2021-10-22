@@ -47,6 +47,21 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
     protected static final String PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
+    protected static final String PKTABLE_CAT = "PKTABLE_CAT";
+    protected static final String PKTABLE_SCHEM = "PKTABLE_SCHEM";
+    protected static final String PKTABLE_NAME = "PKTABLE_NAME";
+    protected static final String PKCOLUMN_NAME = "PKCOLUMN_NAME";
+    protected static final String FKTABLE_CAT = "FKTABLE_CAT";
+    protected static final String FKTABLE_SCHEM = "FKTABLE_SCHEM";
+    protected static final String FKTABLE_NAME = "FKTABLE_NAME";
+    protected static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
+    protected static final String KEY_SEQ = "KEY_SEQ";
+    protected static final String UPDATE_RULE = "UPDATE_RULE";
+    protected static final String DELETE_RULE = "DELETE_RULE";
+    protected static final String FK_NAME = "FK_NAME";
+    protected static final String PK_NAME = "PK_NAME";
+    protected static final String DEFERRABILITY = "DEFERRABILITY";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
