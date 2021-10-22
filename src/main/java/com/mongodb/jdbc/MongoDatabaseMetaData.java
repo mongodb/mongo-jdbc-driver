@@ -67,6 +67,10 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String CLASS_NAME = "CLASS_NAME";
     protected static final String BASE_TYPE = "BASE_TYPE";
 
+    protected static final String SUPERTYPE_CAT = "SUPERTYPE_CAT";
+    protected static final String SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+    protected static final String SUPERTYPE_NAME = "SUPERTYPE_NAME";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

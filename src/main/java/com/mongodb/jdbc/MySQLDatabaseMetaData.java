@@ -782,15 +782,12 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_CAT", "TYPE_CAT", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_SCHEM", "TYPE_SCHEM", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SUPERTYPE_CAT", "SUPERTYPE_CAT", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SUPERTYPE_SCHEM", "SUPERTYPE_SCHEM", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SUPERTYPE_NAME", "SUPERTYPE_NAME", "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SUPERTYPE_CAT, SUPERTYPE_CAT, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SUPERTYPE_SCHEM, SUPERTYPE_SCHEM, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SUPERTYPE_NAME, SUPERTYPE_NAME, "string"));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
