@@ -1,8 +1,5 @@
 package com.mongodb.jdbc;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-
 public abstract class MongoFunctions {
     public enum FunctionCategory {
         STRING_FUNC,
@@ -20,7 +17,12 @@ public abstract class MongoFunctions {
         public String[] argTypes;
         public FunctionCategory functionCategory;
 
-        protected MongoFunction(String name, String returnType, String comment, String[] argTypes, FunctionCategory category) {
+        protected MongoFunction(
+                String name,
+                String returnType,
+                String comment,
+                String[] argTypes,
+                FunctionCategory category) {
             this.name = name;
             this.returnType = returnType;
             this.comment = comment;
@@ -43,60 +45,57 @@ public abstract class MongoFunctions {
     public String dateFunctionsString;
     public String systemFunctionsString;
 
-    protected MongoFunctions(MongoFunction[] functions)
-    {
+    protected MongoFunctions(MongoFunction[] functions) {
         this.functions = functions;
         initCategorizedFunctionsList();
     }
 
     // Build the list of numeric, string, dateTime and system functions.
-    private void initCategorizedFunctionsList()
-    {
+    private void initCategorizedFunctionsList() {
         StringBuilder numericFunctionBuilder = new StringBuilder();
         StringBuilder stringFunctionBuilder = new StringBuilder();
         StringBuilder dateTimeFunctionBuilder = new StringBuilder();
         StringBuilder systemFunctionBuilder = new StringBuilder();
 
         StringBuilder currBuilder = null;
-        for (MongoFunction currFunc :  functions) {
-            switch (currFunc.functionCategory)
-            {
+        for (MongoFunction currFunc : functions) {
+            switch (currFunc.functionCategory) {
                 case NUM_FUNC:
-                {
-                    currBuilder = numericFunctionBuilder;
-                    numericFunctionBuilder.append(currFunc.name);
-                    break;
-                }
+                    {
+                        currBuilder = numericFunctionBuilder;
+                        numericFunctionBuilder.append(currFunc.name);
+                        break;
+                    }
 
                 case STRING_FUNC:
-                {
-                    currBuilder = stringFunctionBuilder;
-                    stringFunctionBuilder.append(currFunc.name);
-                    break;
-                }
+                    {
+                        currBuilder = stringFunctionBuilder;
+                        stringFunctionBuilder.append(currFunc.name);
+                        break;
+                    }
 
                 case SYSTEM_FUNC:
-                {
-                    currBuilder = systemFunctionBuilder;
-                    systemFunctionBuilder.append(currFunc.name);
-                    break;
-                }
+                    {
+                        currBuilder = systemFunctionBuilder;
+                        systemFunctionBuilder.append(currFunc.name);
+                        break;
+                    }
 
                 case TIME_DATE_FUNC:
-                {
-                    currBuilder = dateTimeFunctionBuilder;
+                    {
+                        currBuilder = dateTimeFunctionBuilder;
 
-                    break;
-                }
+                        break;
+                    }
 
                 case CONV_FUNC:
                 case UNCATEGORIZED_FUNC:
                 default:
-                {
-                    currBuilder = null;
-                    // Nothing to do
-                    break;
-                }
+                    {
+                        currBuilder = null;
+                        // Nothing to do
+                        break;
+                    }
             }
 
             if (null != currBuilder) {
