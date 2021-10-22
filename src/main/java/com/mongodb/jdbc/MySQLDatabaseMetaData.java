@@ -15,6 +15,8 @@ import org.bson.BsonValue;
 
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
+    private static MySQLMongoFunctions MySQLFunctions = MySQLMongoFunctions.getInstance();
+
     public MySQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
@@ -153,22 +155,22 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        return MongoFunction.mySQLNumericFunctionsString;
+        return MySQLFunctions.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return MongoFunction.mySQLStringFunctionsString;
+        return MySQLFunctions.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
+        return MySQLFunctions.systemFunctionsString;
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return MongoFunction.mySQLDateFunctionsString;
+        return MySQLFunctions.dateFunctionsString;
     }
 
     @Override
@@ -911,7 +913,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(MySQLFunctions.functions.length);
         docs.add(getFunctionMetaDoc());
 
         Pattern functionPatternRE = null;
@@ -919,7 +921,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mySQLFunctions) {
+        for (MongoFunctions.MongoFunction func : MySQLFunctions.functions) {
             String functionName = func.name;
             String remarks = func.comment;
             if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
@@ -939,7 +941,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        ArrayList<MongoResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MongoResultDoc> docs = new ArrayList<>(MySQLFunctions.functions.length);
         docs.add(getFunctionColumnMetaDoc());
 
         Pattern functionNamePatternRE = null;
@@ -951,7 +953,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mySQLFunctions) {
+        for (MongoFunctions.MongoFunction func : MySQLFunctions.functions) {
             String functionName = func.name;
             if (functionNamePatternRE != null
                     && !functionNamePatternRE.matcher(functionName).matches()) {

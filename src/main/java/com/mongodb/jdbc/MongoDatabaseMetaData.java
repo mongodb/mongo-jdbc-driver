@@ -1129,7 +1129,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     protected MongoResultDoc getFunctionColumnValuesDoc(
-            MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+            MongoFunctions.MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
         BsonValue n = new BsonNull();
         String functionName = func.name;
         MongoResultDoc doc = new MongoResultDoc();
