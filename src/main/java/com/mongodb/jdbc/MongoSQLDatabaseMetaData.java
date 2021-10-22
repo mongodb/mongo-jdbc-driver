@@ -41,12 +41,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, "string"),
-                new Pair<>(PROCEDURE_SCHEM, "string"),
-                new Pair<>(PROCEDURE_NAME, "string"),
-                new Pair<>(REMARKS, "string"),
-                new Pair<>(PROCEDURE_TYPE, "int"),
-                new Pair<>(SPECIFIC_NAME, "string")
+                new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -63,26 +63,26 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, "string"),
-                new Pair<>(PROCEDURE_SCHEM, "string"),
-                new Pair<>(PROCEDURE_NAME, "string"),
-                new Pair<>(COLUMN_NAME, "string"),
-                new Pair<>(COLUMN_TYPE, "int"),
-                new Pair<>(DATA_TYPE, "int"),
-                new Pair<>(TYPE_NAME, "string"),
-                new Pair<>(PRECISION, "int"),
-                new Pair<>(LENGTH, "int"),
-                new Pair<>(SCALE, "int"),
-                new Pair<>(RADIX, "int"),
-                new Pair<>(NULLABLE, "int"),
-                new Pair<>(REMARKS, "string"),
-                new Pair<>(COLUMN_DEF, "string"),
-                new Pair<>(SQL_DATA_TYPE, "int"),
-                new Pair<>(SQL_DATETIME_SUB, "int"),
-                new Pair<>(CHAR_OCTET_LENGTH, "int"),
-                new Pair<>(ORDINAL_POSITION, "int"),
-                new Pair<>(IS_NULLABLE, "string"),
-                new Pair<>(SPECIFIC_NAME, "string")
+                new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
+                new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(SCALE, BSON_INT_TYPE_NAME),
+                new Pair<>(RADIX, BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_DEF, BSON_STRING_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -106,8 +106,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getSchemas() throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_SCHEM, "string"),
-                new Pair<>(TABLE_CATALOG, "string")
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_CATALOG, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -152,14 +152,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(SCOPE, "string"),
-                new Pair<>(COLUMN_NAME, "string"),
-                new Pair<>(DATA_TYPE, "int"),
-                new Pair<>(TYPE_NAME, "string"),
-                new Pair<>(COLUMN_SIZE, "int"),
-                new Pair<>(BUFFER_LENGTH, "int"),
-                new Pair<>(DECIMAL_DIGITS, "int"),
-                new Pair<>(PSEUDO_COLUMN, "int")
+                new Pair<>(SCOPE, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
+                new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
+                new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -172,20 +172,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, "string"),
-                new Pair<>(PKTABLE_SCHEM, "string"),
-                new Pair<>(PKTABLE_NAME, "string"),
-                new Pair<>(PKCOLUMN_NAME, "string"),
-                new Pair<>(FKTABLE_CAT, "string"),
-                new Pair<>(FKTABLE_SCHEM, "string"),
-                new Pair<>(FKTABLE_NAME, "string"),
-                new Pair<>(FKCOLUMN_NAME, "string"),
-                new Pair<>(KEY_SEQ, "int"),
-                new Pair<>(UPDATE_RULE, "int"),
-                new Pair<>(DELETE_RULE, "int"),
-                new Pair<>(FK_NAME, "string"),
-                new Pair<>(PK_NAME, "string"),
-                new Pair<>(DEFERRABILITY, "int")
+                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -198,20 +198,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, "string"),
-                new Pair<>(PKTABLE_SCHEM, "string"),
-                new Pair<>(PKTABLE_NAME, "string"),
-                new Pair<>(PKCOLUMN_NAME, "string"),
-                new Pair<>(FKTABLE_CAT, "string"),
-                new Pair<>(FKTABLE_SCHEM, "string"),
-                new Pair<>(FKTABLE_NAME, "string"),
-                new Pair<>(FKCOLUMN_NAME, "string"),
-                new Pair<>(KEY_SEQ, "int"),
-                new Pair<>(UPDATE_RULE, "int"),
-                new Pair<>(DELETE_RULE, "int"),
-                new Pair<>(FK_NAME, "string"),
-                new Pair<>(PK_NAME, "string"),
-                new Pair<>(DEFERRABILITY, "int")
+                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -230,20 +230,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, "string"),
-                new Pair<>(PKTABLE_SCHEM, "string"),
-                new Pair<>(PKTABLE_NAME, "string"),
-                new Pair<>(PKCOLUMN_NAME, "string"),
-                new Pair<>(FKTABLE_CAT, "string"),
-                new Pair<>(FKTABLE_SCHEM, "string"),
-                new Pair<>(FKTABLE_NAME, "string"),
-                new Pair<>(FKCOLUMN_NAME, "string"),
-                new Pair<>(KEY_SEQ, "int"),
-                new Pair<>(UPDATE_RULE, "int"),
-                new Pair<>(DELETE_RULE, "int"),
-                new Pair<>(FK_NAME, "string"),
-                new Pair<>(PK_NAME, "string"),
-                new Pair<>(DEFERRABILITY, "int")
+                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -275,13 +275,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, "string"),
-                new Pair<>(TYPE_SCHEM, "string"),
-                new Pair<>(TYPE_NAME, "string"),
-                new Pair<>(CLASS_NAME, "string"),
-                new Pair<>(DATA_TYPE, "int"),
-                new Pair<>(REMARKS, "string"),
-                new Pair<>(BASE_TYPE, "int")
+                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(CLASS_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(BASE_TYPE, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -294,12 +294,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, "string"),
-                new Pair<>(TYPE_SCHEM, "string"),
-                new Pair<>(TYPE_NAME, "string"),
-                new Pair<>(SUPERTYPE_CAT, "string"),
-                new Pair<>(SUPERTYPE_SCHEM, "string"),
-                new Pair<>(SUPERTYPE_NAME, "string")
+                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_NAME, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -312,10 +312,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, "string"),
-                new Pair<>(TABLE_SCHEM, "string"),
-                new Pair<>(TABLE_NAME, "string"),
-                new Pair<>(SUPERTABLE_NAME, "string")
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTABLE_NAME, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -332,27 +332,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, "string"),
-                new Pair<>(TYPE_SCHEM, "string"),
-                new Pair<>(TYPE_NAME, "string"),
-                new Pair<>(ATTR_NAME, "string"),
-                new Pair<>(DATA_TYPE, "int"),
-                new Pair<>(ATTR_TYPE_NAME, "string"),
-                new Pair<>(ATTR_SIZE, "int"),
-                new Pair<>(DECIMAL_DIGITS, "int"),
-                new Pair<>(NUM_PREC_RADIX, "int"),
-                new Pair<>(NULLABLE, "int"),
-                new Pair<>(REMARKS, "string"),
-                new Pair<>(ATTR_DEF, "string"),
-                new Pair<>(SQL_DATA_TYPE, "int"),
-                new Pair<>(SQL_DATETIME_SUB, "int"),
-                new Pair<>(CHAR_OCTET_LENGTH, "int"),
-                new Pair<>(ORDINAL_POSITION, "int"),
-                new Pair<>(IS_NULLABLE, "string"),
-                new Pair<>(SCOPE_CATALOG, "string"),
-                new Pair<>(SCOPE_SCHEMA, "string"),
-                new Pair<>(SCOPE_TABLE, "string"),
-                new Pair<>(SOURCE_DATA_TYPE, "int")
+                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(ATTR_TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_SIZE, BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_DEF, BSON_STRING_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
@@ -395,18 +395,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, "string"),
-                new Pair<>(TABLE_SCHEM, "string"),
-                new Pair<>(TABLE_NAME, "string"),
-                new Pair<>(COLUMN_NAME, "string"),
-                new Pair<>(DATA_TYPE, "int"),
-                new Pair<>(COLUMN_SIZE, "int"),
-                new Pair<>(DECIMAL_DIGITS, "int"),
-                new Pair<>(NUM_PREC_RADIX, "string"),
-                new Pair<>(COLUMN_USAGE, "string"),
-                new Pair<>(REMARKS, "string"),
-                new Pair<>(CHAR_OCTET_LENGTH, "int"),
-                new Pair<>(IS_NULLABLE, "string")
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_USAGE, BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME)
         );
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
