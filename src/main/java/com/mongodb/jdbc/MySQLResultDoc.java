@@ -5,11 +5,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonValue;
 
-public class MongoResultDoc {
-    public List<Column> columns;
+public class MySQLResultDoc {
+    public List<MySQLColumnInfo> columns;
     public List<BsonValue> values;
 
-    public MongoResultDoc() {}
+    public MySQLResultDoc() {}
 
     List<BsonValue> getValues() {
         return values;
