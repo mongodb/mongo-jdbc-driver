@@ -55,7 +55,7 @@ public interface MongoColumnInfo {
 
     public boolean isPolymorphic();
 
-    public BsonType getBsonType();
+    public BsonType getBsonTypeEnum();
 
     public String getBsonTypeName();
 

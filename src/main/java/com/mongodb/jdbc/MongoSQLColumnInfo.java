@@ -126,7 +126,7 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public BsonType getBsonType() {
+    public BsonType getBsonTypeEnum() {
         return bsonType;
     }
 

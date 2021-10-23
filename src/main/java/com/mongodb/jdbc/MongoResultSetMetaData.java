@@ -118,7 +118,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         if (ci.isPolymorphic()) {
             return true;
         }
-        BsonType t = ci.getBsonType();
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
             case BINARY:
@@ -153,7 +153,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         if (ci.isPolymorphic()) {
             return true;
         }
-        BsonType t = ci.getBsonType();
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case DOUBLE:
             case DECIMAL128:
@@ -188,7 +188,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         if (ci.isPolymorphic()) {
             return unknownLength;
         }
-        BsonType t = ci.getBsonType();
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
                 return unknownLength;
@@ -243,7 +243,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         if (ci.isPolymorphic()) {
             return unknownLength;
         }
-        BsonType t = ci.getBsonType();
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
                 return unknownLength;
@@ -297,7 +297,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         if (ci.isPolymorphic()) {
             return unknownLength;
         }
-        BsonType t = ci.getBsonType();
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
             case BINARY:

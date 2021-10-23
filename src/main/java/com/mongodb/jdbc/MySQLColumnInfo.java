@@ -32,6 +32,8 @@ public class MySQLColumnInfo implements MongoColumnInfo {
         nullTypes.add("undefined");
     }
 
+    public MySQLColumnInfo() {}
+
     public MySQLColumnInfo(
             String database,
             String table,
@@ -141,7 +143,7 @@ public class MySQLColumnInfo implements MongoColumnInfo {
     }
 
     @Override
-    public BsonType getBsonType() {
+    public BsonType getBsonTypeEnum() {
         return bsonTypeEnum;
     }
 
