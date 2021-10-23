@@ -96,21 +96,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getTableTypes() throws SQLException {
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
-        MongoJsonSchema schema = new MongoJsonSchema();
-        schema.bsonType = "object";
-        schema.required = new HashSet<String>();
-        schema.required.add("");
-
-        MongoJsonSchema botSchema = new MongoJsonSchema();
-        botSchema.bsonType = "object";
-        botSchema.properties = new HashMap<String, MongoJsonSchema>();
-        MongoJsonSchema strSchema = new MongoJsonSchema();
-        strSchema.bsonType = "string";
-        botSchema.properties.put("TABLE_TYPE", strSchema);
-
-        schema.properties = new HashMap<String, MongoJsonSchema>();
-        schema.properties.put("", botSchema);
-
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys( new Pair<>("TABLE_TYPE", BSON_STRING_TYPE_NAME));
 
         BsonDocument tableDoc = new BsonDocument();
         BsonDocument bot = new BsonDocument();
@@ -209,43 +196,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     private MongoJsonSchema getTypeInfoJsonSchema() {
 
-        MongoJsonSchema schema = new MongoJsonSchema();
-        schema.bsonType = "object";
-        schema.required = new HashSet<String>();
-        schema.required.add("");
-
-        MongoJsonSchema botSchema = new MongoJsonSchema();
-        botSchema.bsonType = "object";
-        botSchema.properties = new HashMap<String, MongoJsonSchema>();
-        MongoJsonSchema boolSchema = new MongoJsonSchema();
-        boolSchema.bsonType = "bool";
-        MongoJsonSchema strSchema = new MongoJsonSchema();
-        strSchema.bsonType = "string";
-        MongoJsonSchema intSchema = new MongoJsonSchema();
-        intSchema.bsonType = "int";
-
-        botSchema.properties.put("TYPE_NAME", strSchema);
-        botSchema.properties.put("DATA_TYPE", intSchema);
-        botSchema.properties.put("PRECISION", intSchema);
-        botSchema.properties.put("LITERAL_PREFIX", strSchema);
-        botSchema.properties.put("LITERAL_SUFFIX", strSchema);
-        botSchema.properties.put("CREATE_PARAMS", strSchema);
-        botSchema.properties.put("NULLABLE", intSchema);
-        botSchema.properties.put("CASE_SENSITIVE", boolSchema);
-        botSchema.properties.put("SEARCHABLE", intSchema);
-        botSchema.properties.put("UNSIGNED_ATTRIBUTE", boolSchema);
-        botSchema.properties.put("FIX_PREC_SCALE", boolSchema);
-        botSchema.properties.put("AUTO_INCREMENT", boolSchema);
-        botSchema.properties.put("LOCAL_TYPE_NAME", strSchema);
-        botSchema.properties.put("MINIMUM_SCALE", intSchema);
-        botSchema.properties.put("MAXIMUM_SCALE", intSchema);
-        botSchema.properties.put("SQL_DATA_TYPE", intSchema);
-        botSchema.properties.put("SQL_DATETIME_SUB", intSchema);
-        botSchema.properties.put("NUM_PREC_RADIX", intSchema);
-
-        schema.properties = new HashMap<String, MongoJsonSchema>();
-        schema.properties.put("", botSchema);
-
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+                new Pair<>("TYPE_NAME", BSON_STRING_TYPE_NAME),
+                new Pair<>("DATA_TYPE", BSON_INT_TYPE_NAME),
+                new Pair<>("PRECISION", BSON_INT_TYPE_NAME),
+                new Pair<>("LITERAL_PREFIX", BSON_STRING_TYPE_NAME),
+                new Pair<>("LITERAL_SUFFIX", BSON_STRING_TYPE_NAME),
+                new Pair<>("CREATE_PARAMS", BSON_STRING_TYPE_NAME),
+                new Pair<>("NULLABLE", BSON_INT_TYPE_NAME),
+                new Pair<>("CASE_SENSITIVE", BSON_BOOL_TYPE_NAME),
+                new Pair<>("SEARCHABLE", BSON_INT_TYPE_NAME),
+                new Pair<>("UNSIGNED_ATTRIBUTE", BSON_BOOL_TYPE_NAME),
+                new Pair<>("FIX_PREC_SCALE", BSON_BOOL_TYPE_NAME),
+                new Pair<>("AUTO_INCREMENT", BSON_BOOL_TYPE_NAME),
+                new Pair<>("LOCAL_TYPE_NAME", BSON_STRING_TYPE_NAME),
+                new Pair<>("MINIMUM_SCALE", BSON_INT_TYPE_NAME),
+                new Pair<>("MAXIMUM_SCALE", BSON_INT_TYPE_NAME),
+                new Pair<>("SQL_DATA_TYPE", BSON_INT_TYPE_NAME),
+                new Pair<>("SQL_DATETIME_SUB", BSON_INT_TYPE_NAME),
+                new Pair<>("NUM_PREC_RADIX", BSON_INT_TYPE_NAME)
+        );
         return schema;
     }
 
@@ -682,23 +653,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getClientInfoProperties() throws SQLException {
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
-        MongoJsonSchema schema = new MongoJsonSchema();
-        schema.bsonType = "object";
-        schema.required = new HashSet<String>();
-        schema.required.add("");
-
-        MongoJsonSchema botSchema = new MongoJsonSchema();
-        botSchema.bsonType = "object";
-        botSchema.properties = new HashMap<String, MongoJsonSchema>();
-        MongoJsonSchema strSchema = new MongoJsonSchema();
-        strSchema.bsonType = "string";
-        botSchema.properties.put("NAME", strSchema);
-        botSchema.properties.put("MAX_LEN", strSchema);
-        botSchema.properties.put("DEFAULT_VALUE", strSchema);
-        botSchema.properties.put("DESCRIPTION", strSchema);
-
-        schema.properties = new HashMap<String, MongoJsonSchema>();
-        schema.properties.put("", botSchema);
+        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
+        schema.addRequiredScalarKeys(
+            new Pair<>("NAME", BSON_STRING_TYPE_NAME),
+            new Pair<>("MAX_LEN", BSON_STRING_TYPE_NAME),
+            new Pair<>("DEFAULT_VALUE", BSON_STRING_TYPE_NAME),
+            new Pair<>("DESCRIPTION", BSON_STRING_TYPE_NAME)
+        );
 
         BsonDocument doc = new BsonDocument();
         BsonDocument bot = new BsonDocument();

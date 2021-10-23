@@ -19,6 +19,10 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected String serverVersion;
     protected final int unknownLength = 0;
 
+    protected static final String BSON_STRING_TYPE_NAME = "string";
+    protected static final String BSON_INT_TYPE_NAME = "int";
+    protected static final String BSON_BOOL_TYPE_NAME = "bool";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
