@@ -6,14 +6,14 @@ import com.mongodb.client.MongoCursor;
 import java.util.List;
 
 /**
- * MongoExplicitCursor allows for creating an instance of MongoCursor from an explicit list of
+ * MySQLExplicitCursor allows for creating an instance of MySQLCursor from an explicit list of
  * result docs. Useful for testing or for any place static results are necessary.
  */
-public class MongoExplicitCursor implements MongoCursor<MongoResultDoc> {
-    private List<MongoResultDoc> docs;
+public class MySQLExplicitCursor implements MongoCursor<MySQLResultDoc> {
+    private List<MySQLResultDoc> docs;
     private int rowNum = 0;
 
-    public MongoExplicitCursor(List<MongoResultDoc> docs) {
+    public MySQLExplicitCursor(List<MySQLResultDoc> docs) {
         this.docs = docs;
     }
 
@@ -36,12 +36,12 @@ public class MongoExplicitCursor implements MongoCursor<MongoResultDoc> {
     }
 
     @Override
-    public MongoResultDoc next() {
+    public MySQLResultDoc next() {
         return docs.get(rowNum++);
     }
 
     @Override
-    public MongoResultDoc tryNext() {
+    public MySQLResultDoc tryNext() {
         if (hasNext()) {
             return next();
         }

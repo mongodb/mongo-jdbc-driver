@@ -23,8 +23,8 @@ public abstract class MySQLMock {
     protected static String database = "test";
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
-    @Mock protected static AggregateIterable<MongoResultDoc> aggregateIterable;
-    @Mock protected static MongoCursor<MongoResultDoc> mongoCursor;
+    @Mock protected static AggregateIterable<MySQLResultDoc> aggregateIterable;
+    @Mock protected static MongoCursor<MySQLResultDoc> mongoCursor;
 
     @InjectMocks
     protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null);
@@ -61,7 +61,7 @@ public abstract class MySQLMock {
         // Mock mongoDatabase
         when(mongoConnection.getDatabase(anyString())).thenReturn(mongoDatabase);
         when(mongoDatabase.withCodecRegistry(any())).thenReturn(mongoDatabase);
-        when(mongoDatabase.aggregate(any(), eq(MongoResultDoc.class)))
+        when(mongoDatabase.aggregate(any(), eq(MySQLResultDoc.class)))
                 .thenReturn(aggregateIterable);
         // Mock aggregateIterable
         when(aggregateIterable.batchSize(anyInt())).thenReturn(aggregateIterable);
@@ -76,11 +76,12 @@ public abstract class MySQLMock {
         void test() throws SQLException;
     }
 
-    Column generateCol(String database, String table, String column, String bsonType) {
-        return new Column(database, table, table, column, column, bsonType);
+    MySQLColumnInfo generateCol(String database, String table, String column, String bsonType)
+            throws SQLException {
+        return new MySQLColumnInfo(database, table, table, column, column, bsonType);
     }
 
-    MongoResultDoc generateMetadataDoc() {
+    MySQLResultDoc generateMetadataDoc() {
         /*
         {
            values: [
@@ -104,15 +105,18 @@ public abstract class MySQLMock {
          }
          */
 
-        MongoResultDoc metaDoc = new MongoResultDoc();
+        MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(generateCol("myDB", "foo", "a", "int"));
-        metaDoc.columns.add(generateCol("myDB", "foo", "b", "string"));
-
+        try {
+            metaDoc.columns.add(generateCol("myDB", "foo", "a", "int"));
+            metaDoc.columns.add(generateCol("myDB", "foo", "b", "string"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return metaDoc;
     }
 
-    MongoResultDoc generateRow() {
+    MySQLResultDoc generateRow() {
         /*
         {
            values: [
@@ -135,7 +139,7 @@ public abstract class MySQLMock {
            ]
          }
          */
-        MongoResultDoc doc = new MongoResultDoc();
+        MySQLResultDoc doc = new MySQLResultDoc();
         doc.values = new ArrayList<>();
         doc.values.add(new BsonInt32(1));
         doc.values.add(new BsonString("test"));
