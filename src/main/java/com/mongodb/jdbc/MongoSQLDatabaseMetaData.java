@@ -1,12 +1,5 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonBoolean;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonNull;
-import org.bson.BsonString;
-import org.bson.BsonValue;
-
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -14,8 +7,12 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import org.bson.BsonBoolean;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -26,7 +23,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public String getSQLKeywords() throws SQLException {
         // These come from keywords from the mongosql parser, minus the keywords from SQL 2003.
-        return  "AGGREGATE,"
+        return "AGGREGATE,"
                 + "BINDATA,"
                 + "BIT,"
                 + "BOOL,"
@@ -97,7 +94,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys( new Pair<>("TABLE_TYPE", BSON_STRING_TYPE_NAME));
+        schema.addRequiredScalarKeys(new Pair<>("TABLE_TYPE", BSON_STRING_TYPE_NAME));
 
         BsonDocument tableDoc = new BsonDocument();
         BsonDocument bot = new BsonDocument();
@@ -215,8 +212,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>("MAXIMUM_SCALE", BSON_INT_TYPE_NAME),
                 new Pair<>("SQL_DATA_TYPE", BSON_INT_TYPE_NAME),
                 new Pair<>("SQL_DATETIME_SUB", BSON_INT_TYPE_NAME),
-                new Pair<>("NUM_PREC_RADIX", BSON_INT_TYPE_NAME)
-        );
+                new Pair<>("NUM_PREC_RADIX", BSON_INT_TYPE_NAME));
         return schema;
     }
 
@@ -242,8 +238,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put("TYPE_NAME", new BsonString(typeName));
         bot.put("DATA_TYPE", new BsonInt32(dataType));
         bot.put("PRECISION", new BsonInt32(precision));
-        bot.put("LITERAL_PREFIX", literalPrefix != null ? new BsonString(literalPrefix): n);
-        bot.put("LITERAL_SUFFIX", literalSuffix != null ? new BsonString(literalSuffix): n);
+        bot.put("LITERAL_PREFIX", literalPrefix != null ? new BsonString(literalPrefix) : n);
+        bot.put("LITERAL_SUFFIX", literalSuffix != null ? new BsonString(literalSuffix) : n);
         bot.put("CREATE_PARAMS", n);
         bot.put("NULLABLE", new BsonInt32(nullable));
         bot.put("CASE_SENSITIVE", new BsonBoolean(caseSensitive));
@@ -655,11 +651,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
         schema.addRequiredScalarKeys(
-            new Pair<>("NAME", BSON_STRING_TYPE_NAME),
-            new Pair<>("MAX_LEN", BSON_STRING_TYPE_NAME),
-            new Pair<>("DEFAULT_VALUE", BSON_STRING_TYPE_NAME),
-            new Pair<>("DESCRIPTION", BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>("NAME", BSON_STRING_TYPE_NAME),
+                new Pair<>("MAX_LEN", BSON_STRING_TYPE_NAME),
+                new Pair<>("DEFAULT_VALUE", BSON_STRING_TYPE_NAME),
+                new Pair<>("DESCRIPTION", BSON_STRING_TYPE_NAME));
 
         BsonDocument doc = new BsonDocument();
         BsonDocument bot = new BsonDocument();
@@ -695,7 +690,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put("NAME", new BsonString("dialect"));
         bot.put("MAX_LEN", new BsonInt32(0));
         bot.put("DEFAULT_VALUE", new BsonString("mysql"));
-        bot.put("DESCRIPTION", new BsonString("dialect to use, possible values are mysql or mongosql"));
+        bot.put(
+                "DESCRIPTION",
+                new BsonString("dialect to use, possible values are mysql or mongosql"));
         docs.add(doc);
 
         return new MongoSQLResultSet(null, null);
