@@ -5,37 +5,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
 import org.bson.BsonType;
+import org.bson.BsonValue;
 
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
-    protected List<Column> columns;
-    protected HashMap<String, Integer> columnPositions;
     protected final int unknownLength = 0;
-
-    public MongoResultSetMetaData(MongoResultDoc metadataDoc) {
-        columns = metadataDoc.columns;
-
-        columnPositions = new HashMap<>(columns.size());
-        int i = 0;
-        for (Column c : columns) {
-            columnPositions.put(c.columnAlias, i++);
-        }
-    }
 
     protected void checkBounds(int i) throws SQLException {
         if (i > getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
-    }
-
-    public int getColumnPositionFromLabel(String label) {
-        return columnPositions.get(label);
-    }
-
-    public boolean hasColumnWithLabel(String label) {
-        return columnPositions.containsKey(label);
     }
 
     @Override
@@ -45,8 +24,101 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
+    public boolean isSearchable(int column) throws SQLException {
+        checkBounds(column);
+        return true;
+    }
+
+    @Override
+    public boolean isCurrency(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public String getSchemaName(int column) throws SQLException {
+        checkBounds(column);
+        return "";
+    }
+
+    public abstract MongoColumnInfo getColumnInfo(int column) throws SQLException;
+
+    public abstract boolean hasColumnWithLabel(String label) throws SQLException;
+
+    public abstract int getColumnPositionFromLabel(String label) throws SQLException;
+
+    @Override
+    public boolean isReadOnly(int column) throws SQLException {
+        checkBounds(column);
+        return true;
+    }
+
+    @Override
+    public boolean isWritable(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public boolean isDefinitelyWritable(int column) throws SQLException {
+        checkBounds(column);
+        return false;
+    }
+
+    @Override
+    public int isNullable(int column) throws SQLException {
+        return getColumnInfo(column).getNullability();
+    }
+
+    @Override
+    public String getColumnLabel(int column) throws SQLException {
+        return getColumnInfo(column).getColumnAlias();
+    }
+
+    @Override
+    public String getColumnName(int column) throws SQLException {
+        return getColumnInfo(column).getColumnName();
+    }
+
+    @Override
+    public String getTableName(int column) throws SQLException {
+        return getColumnInfo(column).getTableAlias();
+    }
+
+    @Override
+    public String getCatalogName(int column) throws SQLException {
+        return getColumnInfo(column).getDatabase();
+    }
+
+    @Override
+    public int getColumnType(int column) throws SQLException {
+        return getColumnInfo(column).getJDBCType();
+    }
+
+    @Override
+    public String getColumnTypeName(int column) throws SQLException {
+        return getColumnInfo(column).getBsonTypeName();
+    }
+
+    // java.sql.Wrapper impl
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isInstance(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return (T) this;
+    }
+
+    @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return true;
+        }
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
             case BINARY:
@@ -76,20 +148,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public boolean isSearchable(int column) throws SQLException {
-        checkBounds(column);
-        return true;
-    }
-
-    @Override
-    public boolean isCurrency(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
-    @Override
     public boolean isSigned(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return true;
+        }
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case DOUBLE:
             case DECIMAL128:
@@ -120,7 +184,11 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
                 return unknownLength;
@@ -170,14 +238,12 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public String getSchemaName(int column) throws SQLException {
-        checkBounds(column);
-        return "";
-    }
-
-    @Override
     public int getPrecision(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
                 return unknownLength;
@@ -227,7 +293,11 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getScale(int column) throws SQLException {
-        BsonType t = getBsonType(column);
+        MongoColumnInfo ci = getColumnInfo(column);
+        if (ci.isPolymorphic()) {
+            return unknownLength;
+        }
+        BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
             case BINARY:
@@ -257,131 +327,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         throw new SQLException("unknown bson type: " + t);
     }
 
-    public abstract BsonType getBsonType(int column) throws SQLException;
-
-    static BsonType getBsonTypeHelper(String typeName) throws SQLException {
-        // bsonType strings as represented by the $type function:
-        // "array"
-        // "bool"
-        // "binData"
-        // "date"
-        // "dbPointer"
-        // "decimal"
-        // "double"
-        // "int"
-        // "javascript"
-        // "javascriptWithScope"
-        // "long"
-        // "maxKey"
-        // "minKey"
-        // "null"
-        // "object"
-        // "objectId"
-        // "regex"
-        // "string"
-        // "symbol"
-        // "timestamp"
-        // "undefined"
-        // This function will not always throw an exception for an unknown type name. Type
-        // names returned from ADL are assumed correct.
-        // Fortunately all type names can be guessed uniquely off a combination of first letter
-        // and length except for "minKey" vs "maxKey" and "string" vs "symbol", again, assuming
-        // all returned names are correct.
-        switch (typeName.charAt(0)) {
-            case 'a':
-                return BsonType.ARRAY;
-            case 'b':
-                switch (typeName.length()) {
-                    case 4:
-                        return BsonType.BOOLEAN;
-                    case 7:
-                        return BsonType.BINARY;
-                }
-                break;
-            case 'd':
-                switch (typeName.length()) {
-                    case 4:
-                        return BsonType.DATE_TIME;
-                    case 6:
-                        return BsonType.DOUBLE;
-                    case 7:
-                        return BsonType.DECIMAL128;
-                    case 9:
-                        return BsonType.DB_POINTER;
-                }
-                break;
-            case 'i':
-                return BsonType.INT32;
-            case 'j':
-                switch (typeName.length()) {
-                    case 10:
-                        return BsonType.JAVASCRIPT;
-                    case 19:
-                        return BsonType.JAVASCRIPT_WITH_SCOPE;
-                }
-                break;
-            case 'l':
-                return BsonType.INT64;
-            case 'm':
-                switch (typeName.charAt(1)) {
-                    case 'a':
-                        return BsonType.MAX_KEY;
-                    case 'i':
-                        return BsonType.MIN_KEY;
-                }
-                break;
-            case 'n':
-                return BsonType.NULL;
-            case 'o':
-                switch (typeName.length()) {
-                    case 6: // "object"
-                        return BsonType.DOCUMENT;
-                    case 8:
-                        return BsonType.OBJECT_ID;
-                }
-                break;
-            case 'r':
-                return BsonType.REGULAR_EXPRESSION;
-            case 's':
-                switch (typeName.charAt(1)) {
-                    case 't':
-                        return BsonType.STRING;
-                    case 'y':
-                        return BsonType.SYMBOL;
-                }
-                break;
-            case 't':
-                return BsonType.TIMESTAMP;
-            case 'u':
-                return BsonType.UNDEFINED;
-        }
-        throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
-    }
-
-    @Override
-    public boolean isReadOnly(int column) throws SQLException {
-        checkBounds(column);
-        return true;
-    }
-
-    @Override
-    public boolean isWritable(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
-    @Override
-    public boolean isDefinitelyWritable(int column) throws SQLException {
-        checkBounds(column);
-        return false;
-    }
-
     // --------------------------JDBC 2.0-----------------------------------
-
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        checkBounds(column);
-
         String intClassName = int.class.getName();
         String booleanClassName = boolean.class.getName();
         String stringClassName = String.class.getName();
@@ -389,6 +337,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         String doubleClassName = double.class.getName();
         String bigDecimalClassName = BigDecimal.class.getName();
         String timestampClassName = Timestamp.class.getName();
+        String bsonClassName = BsonValue.class.getName();
 
         int columnType = getColumnType(column);
         switch (columnType) {
@@ -452,8 +401,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case Types.NVARCHAR:
                 return stringClassName;
             case Types.OTHER:
-                // not supported
-                break;
+                return bsonClassName;
             case Types.REAL:
                 // not supported
                 break;
@@ -495,18 +443,4 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         }
         throw new SQLException("getObject not supported for column type " + columnType);
     }
-
-    // java.sql.Wrapper impl
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isInstance(this);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return (T) this;
-    }
-
-    public abstract String getDatasource(String columnLabel);
 }

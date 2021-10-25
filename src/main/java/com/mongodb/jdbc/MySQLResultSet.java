@@ -14,15 +14,15 @@ import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
-public class MySQLResultSet extends MongoResultSet<MongoResultDoc> implements ResultSet {
+public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(
-            Statement statement, MongoCursor<MongoResultDoc> cursor, boolean relaxed) {
+    public MySQLResultSet(Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);
         // iterate the cursor to get the metadata doc
-        MongoResultDoc metadataDoc = cursor.next();
+        MySQLResultDoc metadataDoc = cursor.next();
         rsMetaData = new MySQLResultSetMetaData(metadataDoc);
         this.cursor = cursor;
         this.relaxed = relaxed;

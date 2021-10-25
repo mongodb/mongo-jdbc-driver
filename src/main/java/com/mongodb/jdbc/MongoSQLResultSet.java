@@ -20,7 +20,15 @@ import java.sql.Date;
 import java.text.ParseException;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema) {
+    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema) throws SQLException {
+        super(statement);
+        Preconditions.checkNotNull(cursor);
+
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema);
+        this.cursor = cursor;
+    }
+
+    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor) {
         super(statement);
         Preconditions.checkNotNull(cursor);
 

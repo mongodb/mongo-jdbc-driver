@@ -33,9 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoResultSetMetaDataTest extends MySQLMock {
+class MySQLResultSetMetaDataTest extends MySQLMock {
     private static ResultSetMetaData resultSetMetaData;
-    private static MongoStatement mongoStatement;
+    private static MySQLStatement mongoStatement;
 
     static int NULL_COL = 1;
     static int DOUBLE_COL = 2;
@@ -50,21 +50,30 @@ class MongoResultSetMetaDataTest extends MySQLMock {
     static int DECIMAL_COL = 11;
 
     static {
-        MongoResultDoc metaDoc = new MongoResultDoc();
+        MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new Column("", "", "", "nullCol", "nullCol", "null"));
-        metaDoc.columns.add(new Column("", "", "", "doubleCol", "doubleCol", "double"));
-        metaDoc.columns.add(new Column("", "", "", "stringCol", "stringCol", "string"));
-        metaDoc.columns.add(new Column("", "", "", "binaryCol", "binaryCol", "binData"));
-        metaDoc.columns.add(new Column("", "", "", "uuidCol", "uuidCol", "binData"));
-        metaDoc.columns.add(new Column("", "", "", "objectIdCol", "objectIdCol", "objectId"));
-        metaDoc.columns.add(new Column("", "", "", "booleanCol", "booleanColAlias", "bool"));
-        metaDoc.columns.add(new Column("", "", "", "dateCol", "dateCol", "date"));
-        metaDoc.columns.add(new Column("", "", "", "integerCol", "integerCol", "int"));
-        metaDoc.columns.add(new Column("", "", "", "longCol", "longCol", "long"));
-        metaDoc.columns.add(new Column("foo", "", "", "decimalCol", "decimalCol", "decimal"));
-
-        MongoResultDoc valuesDoc = new MongoResultDoc();
+        try {
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", "nullCol", "nullCol", "null"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", "doubleCol", "doubleCol", "double"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", "stringCol", "stringCol", "string"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", "binaryCol", "binaryCol", "binData"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", "uuidCol", "uuidCol", "binData"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", "objectIdCol", "objectIdCol", "objectId"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("", "", "", "booleanCol", "booleanColAlias", "bool"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", "dateCol", "dateCol", "date"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", "integerCol", "integerCol", "int"));
+            metaDoc.columns.add(new MySQLColumnInfo("", "", "", "longCol", "longCol", "long"));
+            metaDoc.columns.add(
+                    new MySQLColumnInfo("foo", "", "", "decimalCol", "decimalCol", "decimal"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
         valuesDoc.values.add(new BsonNull());
         valuesDoc.values.add(new BsonDouble(1.1));
@@ -78,7 +87,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
         valuesDoc.values.add(new BsonInt64(100L));
         valuesDoc.values.add(new BsonDecimal128(new Decimal128(100L)));
 
-        List<MongoResultDoc> mongoResultDocs = new ArrayList<MongoResultDoc>();
+        List<MySQLResultDoc> mongoResultDocs = new ArrayList<MySQLResultDoc>();
         mongoResultDocs.add(metaDoc);
         mongoResultDocs.add(valuesDoc);
 
@@ -88,10 +97,10 @@ class MongoResultSetMetaDataTest extends MySQLMock {
             e.printStackTrace();
         }
 
-        MongoResultSet rs =
-                new MySQLResultSet(mongoStatement, new MongoExplicitCursor(mongoResultDocs), false);
-
         try {
+            MySQLResultSet rs =
+                    new MySQLResultSet(
+                            mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
             rs.next();
             resultSetMetaData = rs.getMetaData();
         } catch (SQLException e) {
@@ -99,7 +108,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
         }
     }
 
-    MongoResultSet mongoResultSet;
+    MySQLResultSet mongoResultSet;
 
     @BeforeAll
     void initMocks() {
@@ -108,7 +117,7 @@ class MongoResultSetMetaDataTest extends MySQLMock {
 
     @Test
     void testGetColumnCount() throws SQLException {
-        assertEquals(11, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+        assertEquals(11, MySQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
@@ -267,29 +276,28 @@ class MongoResultSetMetaDataTest extends MySQLMock {
 
     @Test
     void testGetBsonTypeHelper() throws SQLException {
-        assertEquals(BsonType.ARRAY, MongoResultSetMetaData.getBsonTypeHelper("array"));
-        assertEquals(BsonType.BOOLEAN, MongoResultSetMetaData.getBsonTypeHelper("bool"));
-        assertEquals(BsonType.BINARY, MongoResultSetMetaData.getBsonTypeHelper("binData"));
-        assertEquals(BsonType.DATE_TIME, MongoResultSetMetaData.getBsonTypeHelper("date"));
-        assertEquals(BsonType.DB_POINTER, MongoResultSetMetaData.getBsonTypeHelper("dbPointer"));
-        assertEquals(BsonType.DECIMAL128, MongoResultSetMetaData.getBsonTypeHelper("decimal"));
-        assertEquals(BsonType.DOUBLE, MongoResultSetMetaData.getBsonTypeHelper("double"));
-        assertEquals(BsonType.INT32, MongoResultSetMetaData.getBsonTypeHelper("int"));
-        assertEquals(BsonType.JAVASCRIPT, MongoResultSetMetaData.getBsonTypeHelper("javascript"));
+        assertEquals(BsonType.ARRAY, MongoColumnInfo.getBsonTypeHelper("array"));
+        assertEquals(BsonType.BOOLEAN, MongoColumnInfo.getBsonTypeHelper("bool"));
+        assertEquals(BsonType.BINARY, MongoColumnInfo.getBsonTypeHelper("binData"));
+        assertEquals(BsonType.DATE_TIME, MongoColumnInfo.getBsonTypeHelper("date"));
+        assertEquals(BsonType.DB_POINTER, MongoColumnInfo.getBsonTypeHelper("dbPointer"));
+        assertEquals(BsonType.DECIMAL128, MongoColumnInfo.getBsonTypeHelper("decimal"));
+        assertEquals(BsonType.DOUBLE, MongoColumnInfo.getBsonTypeHelper("double"));
+        assertEquals(BsonType.INT32, MongoColumnInfo.getBsonTypeHelper("int"));
+        assertEquals(BsonType.JAVASCRIPT, MongoColumnInfo.getBsonTypeHelper("javascript"));
         assertEquals(
                 BsonType.JAVASCRIPT_WITH_SCOPE,
-                MongoResultSetMetaData.getBsonTypeHelper("javascriptWithScope"));
-        assertEquals(BsonType.INT64, MongoResultSetMetaData.getBsonTypeHelper("long"));
-        assertEquals(BsonType.MAX_KEY, MongoResultSetMetaData.getBsonTypeHelper("maxKey"));
-        assertEquals(BsonType.MIN_KEY, MongoResultSetMetaData.getBsonTypeHelper("minKey"));
-        assertEquals(BsonType.NULL, MongoResultSetMetaData.getBsonTypeHelper("null"));
-        assertEquals(BsonType.DOCUMENT, MongoResultSetMetaData.getBsonTypeHelper("object"));
-        assertEquals(BsonType.OBJECT_ID, MongoResultSetMetaData.getBsonTypeHelper("objectId"));
-        assertEquals(
-                BsonType.REGULAR_EXPRESSION, MongoResultSetMetaData.getBsonTypeHelper("regex"));
-        assertEquals(BsonType.STRING, MongoResultSetMetaData.getBsonTypeHelper("string"));
-        assertEquals(BsonType.SYMBOL, MongoResultSetMetaData.getBsonTypeHelper("symbol"));
-        assertEquals(BsonType.TIMESTAMP, MongoResultSetMetaData.getBsonTypeHelper("timestamp"));
-        assertEquals(BsonType.UNDEFINED, MongoResultSetMetaData.getBsonTypeHelper("undefined"));
+                MongoColumnInfo.getBsonTypeHelper("javascriptWithScope"));
+        assertEquals(BsonType.INT64, MongoColumnInfo.getBsonTypeHelper("long"));
+        assertEquals(BsonType.MAX_KEY, MongoColumnInfo.getBsonTypeHelper("maxKey"));
+        assertEquals(BsonType.MIN_KEY, MongoColumnInfo.getBsonTypeHelper("minKey"));
+        assertEquals(BsonType.NULL, MongoColumnInfo.getBsonTypeHelper("null"));
+        assertEquals(BsonType.DOCUMENT, MongoColumnInfo.getBsonTypeHelper("object"));
+        assertEquals(BsonType.OBJECT_ID, MongoColumnInfo.getBsonTypeHelper("objectId"));
+        assertEquals(BsonType.REGULAR_EXPRESSION, MongoColumnInfo.getBsonTypeHelper("regex"));
+        assertEquals(BsonType.STRING, MongoColumnInfo.getBsonTypeHelper("string"));
+        assertEquals(BsonType.SYMBOL, MongoColumnInfo.getBsonTypeHelper("symbol"));
+        assertEquals(BsonType.TIMESTAMP, MongoColumnInfo.getBsonTypeHelper("timestamp"));
+        assertEquals(BsonType.UNDEFINED, MongoColumnInfo.getBsonTypeHelper("undefined"));
     }
 }

@@ -129,7 +129,8 @@ public class MongoDriver implements Driver {
         return createConnection(p.left(), info);
     }
 
-    private MongoConnection createConnection(ConnectionString cs, Properties info) throws SQLException {
+    private MongoConnection createConnection(ConnectionString cs, Properties info)
+            throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
         String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
         switch (dialect.toLowerCase()) {
@@ -139,9 +140,11 @@ public class MongoDriver implements Driver {
             case MONGOSQL_DIALECT:
                 if (info.containsKey(CONVERSION_MODE)) {
                     throw new SQLClientInfoException(
-                            String.format("must not set '%s' if '%s' is '%s'",
+                            String.format(
+                                    "must not set '%s' if '%s' is '%s'",
                                     CONVERSION_MODE, DIALECT, MONGOSQL_DIALECT),
-                            Collections.singletonMap(CONVERSION_MODE, ClientInfoStatus.REASON_VALUE_INVALID));
+                            Collections.singletonMap(
+                                    CONVERSION_MODE, ClientInfoStatus.REASON_VALUE_INVALID));
                 }
                 return new MongoSQLConnection(cs, info.getProperty(DATABASE));
             default:

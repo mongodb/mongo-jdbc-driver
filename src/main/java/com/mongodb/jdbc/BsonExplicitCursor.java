@@ -3,17 +3,21 @@ package com.mongodb.jdbc;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
+import java.util.ArrayList;
 import java.util.List;
+import org.bson.BsonDocument;
 
 /**
- * MongoExplicitCursor allows for creating an instance of MongoCursor from an explicit list of
- * result docs. Useful for testing or for any place static results are necessary.
+ * BsonExplicitCursor allows for creating an instance of MongoCursor from an explicit list of BSON
+ * docs. Useful for testing or for any place static results are necessary.
  */
-public class MongoExplicitCursor implements MongoCursor<MongoResultDoc> {
-    private List<MongoResultDoc> docs;
+public class BsonExplicitCursor implements MongoCursor<BsonDocument> {
+    private List<BsonDocument> docs;
     private int rowNum = 0;
 
-    public MongoExplicitCursor(List<MongoResultDoc> docs) {
+    public static final BsonExplicitCursor EMPTY_CURSOR = new BsonExplicitCursor(new ArrayList<>());
+
+    public BsonExplicitCursor(List<BsonDocument> docs) {
         this.docs = docs;
     }
 
@@ -36,12 +40,12 @@ public class MongoExplicitCursor implements MongoCursor<MongoResultDoc> {
     }
 
     @Override
-    public MongoResultDoc next() {
+    public BsonDocument next() {
         return docs.get(rowNum++);
     }
 
     @Override
-    public MongoResultDoc tryNext() {
+    public BsonDocument tryNext() {
         if (hasNext()) {
             return next();
         }
