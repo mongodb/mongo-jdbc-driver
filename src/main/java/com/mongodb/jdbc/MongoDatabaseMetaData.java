@@ -15,6 +15,81 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected MongoConnection conn;
     protected String serverVersion;
 
+    protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
+    protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+    protected static final String PROCEDURE_NAME = "PROCEDURE_NAME";
+    protected static final String REMARKS = "REMARKS";
+    protected static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
+    protected static final String SPECIFIC_NAME = "SPECIFIC_NAME";
+
+    protected static final String COLUMN_NAME = "COLUMN_NAME";
+    protected static final String COLUMN_TYPE = "COLUMN_TYPE";
+    protected static final String DATA_TYPE = "DATA_TYPE";
+    protected static final String TYPE_NAME = "TYPE_NAME";
+    protected static final String PRECISION = "PRECISION";
+    protected static final String LENGTH = "LENGTH";
+    protected static final String SCALE = "SCALE";
+    protected static final String RADIX = "RADIX";
+    protected static final String NULLABLE = "NULLABLE";
+    protected static final String COLUMN_DEF = "COLUMN_DEF";
+    protected static final String SQL_DATA_TYPE = "SQL_DATA_TYPE";
+    protected static final String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+    protected static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+    protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
+    protected static final String IS_NULLABLE = "IS_NULLABLE";
+
+    protected static final String TABLE_SCHEM = "TABLE_SCHEM";
+    protected static final String TABLE_CATALOG = "TABLE_CATALOG";
+
+    protected static final String SCOPE = "SCOPE";
+    protected static final String COLUMN_SIZE = "COLUMN_SIZE";
+    protected static final String BUFFER_LENGTH = "BUFFER_LENGTH";
+    protected static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
+    protected static final String PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    protected static final String PKTABLE_CAT = "PKTABLE_CAT";
+    protected static final String PKTABLE_SCHEM = "PKTABLE_SCHEM";
+    protected static final String PKTABLE_NAME = "PKTABLE_NAME";
+    protected static final String PKCOLUMN_NAME = "PKCOLUMN_NAME";
+    protected static final String FKTABLE_CAT = "FKTABLE_CAT";
+    protected static final String FKTABLE_SCHEM = "FKTABLE_SCHEM";
+    protected static final String FKTABLE_NAME = "FKTABLE_NAME";
+    protected static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
+    protected static final String KEY_SEQ = "KEY_SEQ";
+    protected static final String UPDATE_RULE = "UPDATE_RULE";
+    protected static final String DELETE_RULE = "DELETE_RULE";
+    protected static final String FK_NAME = "FK_NAME";
+    protected static final String PK_NAME = "PK_NAME";
+    protected static final String DEFERRABILITY = "DEFERRABILITY";
+
+    protected static final String TYPE_CAT = "TYPE_CAT";
+    protected static final String TYPE_SCHEM = "TYPE_SCHEM";
+    protected static final String CLASS_NAME = "CLASS_NAME";
+    protected static final String BASE_TYPE = "BASE_TYPE";
+
+    protected static final String SUPERTYPE_CAT = "SUPERTYPE_CAT";
+    protected static final String SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+    protected static final String SUPERTYPE_NAME = "SUPERTYPE_NAME";
+
+    protected static final String TABLE_CAT = "TABLE_CAT";
+    protected static final String TABLE_NAME = "TABLE_NAME";
+    protected static final String SUPERTABLE_NAME = "SUPERTABLE_NAME";
+
+    protected static final String ATTR_NAME = "ATTR_NAME";
+    protected static final String ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
+    protected static final String ATTR_SIZE = "ATTR_SIZE";
+    protected static final String NUM_PREC_RADIX = "NUM_PREC_RADIX";
+    protected static final String ATTR_DEF = "ATTR_DEF";
+    protected static final String SCOPE_CATALOG = "SCOPE_CATALOG";
+    protected static final String SCOPE_SCHEMA = "SCOPE_SCHEMA";
+    protected static final String SCOPE_TABLE = "SCOPE_TABLE";
+    protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+
+    protected static final String COLUMN_USAGE = "COLUMN_USAGE";
+
+    protected static final String BSON_STRING_TYPE_NAME = "string";
+    protected static final String BSON_INT_TYPE_NAME = "int";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

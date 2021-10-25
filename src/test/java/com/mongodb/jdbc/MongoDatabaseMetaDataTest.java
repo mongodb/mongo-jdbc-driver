@@ -6,16 +6,33 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-class MongoDatabaseMetaDataTest extends MySQLMock {
-    private static DatabaseMetaData databaseMetaData;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+abstract class MongoDatabaseMetaDataTest {
+    protected DatabaseMetaData databaseMetaData;
 
-    static {
-        databaseMetaData = new MySQLDatabaseMetaData(null);
+    protected abstract DatabaseMetaData createDatabaseMetaData();
+
+    /**
+     * sortColumns sorts expected column names according to implementation needs. Subclasses should
+     * implement this as necessary. For example, the common tests are written with the columns in
+     * MySQL expected order, so the MySQL subclass implementation of this method does nothing. The
+     * MongoSQL subclass needs to sort the columns alphabetically.
+     *
+     * @param columns the columns to sort
+     */
+    protected abstract void sortColumns(String[] columns);
+
+    @BeforeAll
+    public void setUp() {
+        databaseMetaData = createDatabaseMetaData();
     }
 
-    private int countRows(ResultSet rs) throws SQLException {
+    protected int countRows(ResultSet rs) throws SQLException {
         for (int i = 0; ; ++i) {
             if (!rs.next()) {
                 return i;
@@ -23,13 +40,25 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
         }
     }
 
-    // Most DatabaseMetaData tests require connection to an ADL
-    // cluster. These are just simple tests for things that return empty result sets.
+    void validateResultSet(ResultSet rs, int expectedNumRows, String[] expectedColumns)
+            throws SQLException {
+        sortColumns(expectedColumns);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        for (int i = 0; i < expectedColumns.length; ++i) {
+            assertEquals(rsmd.getColumnName(i + 1), expectedColumns[i]);
+            assertEquals(rsmd.getColumnLabel(i + 1), expectedColumns[i]);
+        }
+        assertEquals(countRows(rs), expectedNumRows);
+    }
+
+    // Most DatabaseMetaData tests require connection to an ADL cluster. These are
+    // just simple tests for things that return empty result sets.  Since they are
+    // the same tests for both MySQLDatabaseMetaData and MongoSQLDatabaseMetaData,
+    // these tests are implemented in this abstract class which has two concrete
+    // implementations at the end of the file. The concrete implementations have
+    // some additional tests of their own.
     @Test
     void testGetProcedures() throws SQLException {
-        // we will never have procedures.
-        ResultSet rs = databaseMetaData.getProcedures(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "PROCEDURE_CAT",
@@ -39,17 +68,14 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "PROCEDURE_TYPE",
                     "SPECIFIC_NAME",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        // we will never have procedures.
+        ResultSet rs = databaseMetaData.getProcedures(null, null, "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetProceduresColumns() throws SQLException {
-        ResultSet rs = databaseMetaData.getProcedureColumns(null, null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "PROCEDURE_CAT",
@@ -73,64 +99,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "IS_NULLABLE",
                     "SPECIFIC_NAME",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
-    }
 
-    @Test
-    void testGetTableTypes() throws SQLException {
-        ResultSet rs = databaseMetaData.getTableTypes();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "TABLE_TYPE",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 1);
-    }
-
-    @Test
-    void testGetTypeInfo() throws SQLException {
-        ResultSet rs = databaseMetaData.getTypeInfo();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "TYPE_NAME",
-                    "DATA_TYPE",
-                    "PRECISION",
-                    "LITERAL_PREFIX",
-                    "LITERAL_SUFFIX",
-                    "CREATE_PARAMS",
-                    "NULLABLE",
-                    "CASE_SENSITIVE",
-                    "SEARCHABLE",
-                    "UNSIGNED_ATTRIBUTE",
-                    "FIXED_PREC_SCALE",
-                    "AUTO_INCREMENT",
-                    "LOCAL_TYPE_NAME",
-                    "MINIMUM_SCALE",
-                    "MAXIMUM_SCALE",
-                    "SQL_DATA_TYPE",
-                    "SQL_DATETIME_SUB",
-                    "NUM_PREC_RADIX",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 8);
+        ResultSet rs = databaseMetaData.getProcedureColumns(null, null, "%", "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetVersionColumns() throws SQLException {
-        ResultSet rs = databaseMetaData.getVersionColumns(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "SCOPE",
@@ -142,17 +117,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "DECIMAL_DIGITS",
                     "PSEUDO_COLUMN",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getVersionColumns(null, null, "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetImportedKeys() throws SQLException {
-        ResultSet rs = databaseMetaData.getImportedKeys(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "PKTABLE_CAT",
@@ -170,18 +141,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "PK_NAME",
                     "DEFERRABILITY",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            System.out.println(i);
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getImportedKeys(null, null, "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetExportedKeys() throws SQLException {
-        ResultSet rs = databaseMetaData.getExportedKeys(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "PKTABLE_CAT",
@@ -199,17 +165,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "PK_NAME",
                     "DEFERRABILITY",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getExportedKeys(null, null, "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetCrossReference() throws SQLException {
-        ResultSet rs = databaseMetaData.getCrossReference(null, null, null, null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "PKTABLE_CAT",
@@ -227,17 +189,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "PK_NAME",
                     "DEFERRABILITY",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getCrossReference(null, null, "%", null, null, "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetUDTs() throws SQLException {
-        ResultSet rs = databaseMetaData.getUDTs(null, null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "TYPE_CAT",
@@ -248,17 +206,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "REMARKS",
                     "BASE_TYPE",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getUDTs(null, null, "%", null);
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetSuperTypes() throws SQLException {
-        ResultSet rs = databaseMetaData.getSuperTypes(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "TYPE_CAT",
@@ -268,32 +222,24 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "SUPERTYPE_SCHEM",
                     "SUPERTYPE_NAME",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getSuperTypes(null, "%", "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetSuperTables() throws SQLException {
-        ResultSet rs = databaseMetaData.getSuperTables(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "SUPERTABLE_NAME",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getSuperTables(null, "%", "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetAttributes() throws SQLException {
-        ResultSet rs = databaseMetaData.getAttributes(null, null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "TYPE_CAT",
@@ -318,56 +264,13 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "SCOPE_TABLE",
                     "SOURCE_DATA_TYPE",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
-    }
 
-    @Test
-    void testGetClientInfoProperties() throws SQLException {
-        ResultSet rs = databaseMetaData.getClientInfoProperties();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "NAME", "MAX_LEN", "DEFAULT_VALUE", "DESCRIPTION",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 4);
-    }
-
-    @Test
-    void testGetFunctions() throws SQLException {
-        ResultSet rs = databaseMetaData.getFunctions(null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] columns =
-                new String[] {
-                    "FUNCTION_CAT",
-                    "FUNCTION_SCHEM",
-                    "FUNCTION_NAME",
-                    "REMARKS",
-                    "FUNCTION_TYPE",
-                    "SPECIFIC_NAME",
-                };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertEquals(countRows(rs), 117);
-        rs = databaseMetaData.getFunctions(null, null, "%S%");
-        assertEquals(countRows(rs), 46);
-        rs = databaseMetaData.getFunctions(null, null, "%s%");
-        assertEquals(countRows(rs), 0);
+        ResultSet rs = databaseMetaData.getAttributes(null, null, "%", "%");
+        validateResultSet(rs, 0, columns);
     }
 
     @Test
     void testGetPseudoColumns() throws SQLException {
-        ResultSet rs = databaseMetaData.getPseudoColumns(null, null, null, null);
-        ResultSetMetaData rsmd = rs.getMetaData();
         String[] columns =
                 new String[] {
                     "TABLE_CAT",
@@ -383,10 +286,118 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
                     "CHAR_OCTET_LENGTH",
                     "IS_NULLABLE",
                 };
-        for (int i = 0; i < columns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), columns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
-        }
-        assertFalse(rs.next());
+
+        ResultSet rs = databaseMetaData.getPseudoColumns(null, null, "%", "%");
+        validateResultSet(rs, 0, columns);
+    }
+}
+
+class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
+    @Override
+    protected DatabaseMetaData createDatabaseMetaData() {
+        return new MySQLDatabaseMetaData(null);
+    }
+
+    @Override
+    protected void sortColumns(String[] columns) {}
+
+    @Test
+    void testGetTableTypes() throws SQLException {
+        String[] columns =
+                new String[] {
+                    "TABLE_TYPE",
+                };
+
+        ResultSet rs = databaseMetaData.getTableTypes();
+        validateResultSet(rs, 1, columns);
+    }
+
+    @Test
+    void testGetTypeInfo() throws SQLException {
+        String[] columns =
+                new String[] {
+                    "TYPE_NAME",
+                    "DATA_TYPE",
+                    "PRECISION",
+                    "LITERAL_PREFIX",
+                    "LITERAL_SUFFIX",
+                    "CREATE_PARAMS",
+                    "NULLABLE",
+                    "CASE_SENSITIVE",
+                    "SEARCHABLE",
+                    "UNSIGNED_ATTRIBUTE",
+                    "FIXED_PREC_SCALE",
+                    "AUTO_INCREMENT",
+                    "LOCAL_TYPE_NAME",
+                    "MINIMUM_SCALE",
+                    "MAXIMUM_SCALE",
+                    "SQL_DATA_TYPE",
+                    "SQL_DATETIME_SUB",
+                    "NUM_PREC_RADIX",
+                };
+
+        ResultSet rs = databaseMetaData.getTypeInfo();
+        validateResultSet(rs, 8, columns);
+    }
+
+    @Test
+    void testGetClientInfoProperties() throws SQLException {
+        String[] columns =
+                new String[] {
+                    "NAME", "MAX_LEN", "DEFAULT_VALUE", "DESCRIPTION",
+                };
+
+        ResultSet rs = databaseMetaData.getClientInfoProperties();
+        validateResultSet(rs, 4, columns);
+    }
+
+    @Test
+    void testGetFunctions() throws SQLException {
+        String[] columns =
+                new String[] {
+                    "FUNCTION_CAT",
+                    "FUNCTION_SCHEM",
+                    "FUNCTION_NAME",
+                    "REMARKS",
+                    "FUNCTION_TYPE",
+                    "SPECIFIC_NAME",
+                };
+
+        ResultSet rs = databaseMetaData.getFunctions(null, null, "%");
+        validateResultSet(rs, 117, columns);
+
+        rs = databaseMetaData.getFunctions(null, null, "%S%");
+        validateResultSet(rs, 46, columns);
+
+        rs = databaseMetaData.getFunctions(null, null, "%s%");
+        validateResultSet(rs, 0, columns);
+    }
+}
+
+class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
+    @Override
+    protected DatabaseMetaData createDatabaseMetaData() {
+        return new MongoSQLDatabaseMetaData(null);
+    }
+
+    @Override
+    protected void sortColumns(String[] columns) {
+        Arrays.sort(columns);
+    }
+
+    @Test
+    void testGetSchemas() throws SQLException {
+        String[] columns =
+                new String[] {
+                    "TABLE_SCHEM", "TABLE_CATALOG",
+                };
+
+        // getSchemas()
+        ResultSet rs = databaseMetaData.getSchemas();
+        validateResultSet(rs, 0, columns);
+
+        // getSchemas(catalog, schemaPattern)
+        rs = databaseMetaData.getSchemas(null, null);
+        validateResultSet(rs, 0, columns);
     }
 }
