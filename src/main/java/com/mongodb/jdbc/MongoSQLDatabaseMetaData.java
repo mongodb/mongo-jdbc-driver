@@ -149,8 +149,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put("TABLE_TYPE", new BsonString("VIEW"));
         docs.add(viewDoc);
 
-        return new MongoSQLResultSet(null, null);
-        // return new MongoSQLResultSet(null, new BSonExplicitCursor(docs), schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, schema);
+
+        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
     @Override
@@ -727,8 +730,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         0, //maxScale
                         0)); //numPrecRadix
 
-        return new MongoSQLResultSet(null, null);
-        // return new MongoSQLResultSet(null, new BSonExplicitCursor(docs), true);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, schema);
+        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
     @Override
@@ -890,8 +895,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonString("dialect to use, possible values are mysql or mongosql"));
         docs.add(doc);
 
-        return new MongoSQLResultSet(null, null);
-        //return new MongoSQLResultSet(null, new BSonExplicitCursor(docs), schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, schema);
+        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
     @Override
