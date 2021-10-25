@@ -6,6 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,6 +16,16 @@ abstract class MongoDatabaseMetaDataTest {
     protected DatabaseMetaData databaseMetaData;
 
     protected abstract DatabaseMetaData createDatabaseMetaData();
+
+    /**
+     * sortColumns sorts expected column names according to implementation needs. Subclasses should
+     * implement this as necessary. For example, the common tests are written with the columns in
+     * MySQL expected order, so the MySQL subclass implementation of this method does nothing. The
+     * MongoSQL subclass needs to sort the columns alphabetically.
+     *
+     * @param columns the columns to sort
+     */
+    protected abstract void sortColumns(String[] columns);
 
     @BeforeAll
     public void setUp() {
@@ -31,6 +42,7 @@ abstract class MongoDatabaseMetaDataTest {
 
     void validateResultSet(ResultSet rs, int expectedNumRows, String[] expectedColumns)
             throws SQLException {
+        sortColumns(expectedColumns);
         ResultSetMetaData rsmd = rs.getMetaData();
         for (int i = 0; i < expectedColumns.length; ++i) {
             assertEquals(rsmd.getColumnName(i + 1), expectedColumns[i]);
@@ -286,6 +298,9 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
         return new MySQLDatabaseMetaData(null);
     }
 
+    @Override
+    protected void sortColumns(String[] columns) {}
+
     @Test
     void testGetTableTypes() throws SQLException {
         String[] columns =
@@ -363,6 +378,11 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
         return new MongoSQLDatabaseMetaData(null);
+    }
+
+    @Override
+    protected void sortColumns(String[] columns) {
+        Arrays.sort(columns);
     }
 
     @Test

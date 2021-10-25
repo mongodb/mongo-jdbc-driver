@@ -7,6 +7,8 @@ import java.sql.SQLFeatureNotSupportedException;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
+    private static final String BOT_NAME = "";
+
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
@@ -46,12 +48,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
                 new Pair<>(PROCEDURE_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -82,12 +85,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
                 new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
                 new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -107,12 +111,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
                 new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_CATALOG, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(TABLE_CATALOG, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -159,12 +164,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
                 new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
                 new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -185,12 +191,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
                 new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -211,12 +218,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
                 new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -243,12 +251,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
                 new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -281,12 +290,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(CLASS_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
                 new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(BASE_TYPE, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(BASE_TYPE, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -299,12 +309,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(SUPERTYPE_CAT, BSON_STRING_TYPE_NAME),
                 new Pair<>(SUPERTYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_NAME, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(SUPERTYPE_NAME, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -315,12 +326,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
                 new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
                 new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTABLE_NAME, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(SUPERTABLE_NAME, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -352,12 +364,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
                 new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
                 new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME)
-        );
+                new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -406,11 +419,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(COLUMN_USAGE, BSON_STRING_TYPE_NAME),
                 new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
                 new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME)
-        );
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR);
-//        TODO: SQL-535 use commented return statement instead
-//        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, schema);
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 }
