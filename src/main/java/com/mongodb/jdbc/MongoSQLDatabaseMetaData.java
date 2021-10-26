@@ -187,9 +187,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        // TODO: create result set metadata that describes the columns of this result set.
-        //  This applies to all updated methods in this PR and is blocked on SQL-513 and
-        //  SQL-535.
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME));
+
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
         BsonExplicitCursor c =
                 new BsonExplicitCursor(
                         this.conn
@@ -207,7 +211,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                 new BsonString(dbName))))
                                 .collect(Collectors.toList()));
 
-        return new MongoSQLResultSet(null, c);
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
