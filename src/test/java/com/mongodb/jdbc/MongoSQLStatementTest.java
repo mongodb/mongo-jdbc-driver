@@ -1,5 +1,18 @@
 package com.mongodb.jdbc;
 
+import static java.sql.Statement.CLOSE_CURRENT_RESULT;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,18 +22,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -70,69 +71,66 @@ class MongoSQLStatementTest extends MongoSQLMock {
     void testExecuteQueryEmptyResult() throws SQLException {
         AtomicInteger rowCnt = new AtomicInteger();
 
-        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 1);
+        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 0);
 
         when(mongoCursor.next())
                 .thenAnswer(
                         invocation -> {
                             rowCnt.incrementAndGet();
-                            return generateMetadataDoc();
+                            return generateRow();
                         });
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         ResultSetMetaData metaData = rs.getMetaData();
-        assertEquals(2, metaData.getColumnCount());
-        // TODO: add metadata check after ResultSetMetaData code is merged
-        // need to call next() first
+        assertEquals(8, metaData.getColumnCount());
+
+        rs.next();
         assertThrows(
                 SQLException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        rs.getInt(1);
-                    }
+                () -> {
+                    rs.getInt(1);
                 });
         assertFalse(rs.next());
         assertThrows(
                 SQLException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        rs.getInt(1);
-                    }
+                () -> {
+                    rs.getInt(1);
                 });
+
         assertTrue(rs.isLast());
     }
 
     @Test
     void testExecuteQuery() throws SQLException {
         AtomicInteger rowCnt = new AtomicInteger();
-        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 2);
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
+        when(mongoCursor.hasNext()).thenAnswer(invocation -> rowCnt.get() < 1);
 
         when(mongoCursor.next())
                 .thenAnswer(
                         invocation -> {
                             if (rowCnt.incrementAndGet() == 1) {
-                                return generateMetadataDoc();
+                                return generateRow();
                             }
                             return generateRow();
                         });
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         ResultSetMetaData metaData = rs.getMetaData();
-        assertEquals(2, metaData.getColumnCount());
+        assertEquals(8, metaData.getColumnCount());
         // need to call next() first
         assertThrows(
                 SQLException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        rs.getInt(1);
-                    }
+                () -> {
+                    rs.getInt(1);
                 });
+
         assertTrue(rs.next());
         assertEquals(1, rs.getInt(1));
-        assertEquals("test", rs.getString(2));
+        assertEquals("a", rs.getString(2));
         assertFalse(rs.next());
         assertTrue(rs.isLast());
     }
@@ -150,9 +148,10 @@ class MongoSQLStatementTest extends MongoSQLMock {
 
     @Test
     void testCloseForExecutedStatement() throws SQLException {
-        // TODO: MongoSQLResultSet implementation
         when(mongoCursor.hasNext()).thenReturn(true);
-        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+        when(mongoCursor.next()).thenReturn(generateRow());
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
 
         assertFalse(mongoStatement.isClosed());
         ResultSet rs = mongoStatement.executeQuery("select * from test");
@@ -221,7 +220,9 @@ class MongoSQLStatementTest extends MongoSQLMock {
     @Test
     void testGetResultSet() throws SQLException {
         when(mongoCursor.hasNext()).thenReturn(true);
-        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+        when(mongoCursor.next()).thenReturn(generateRow());
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
 
         assertNull(mongoStatement.getResultSet());
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
@@ -272,7 +273,9 @@ class MongoSQLStatementTest extends MongoSQLMock {
     @Test
     void testGetMoreResultsWithInstructions() throws SQLException {
         when(mongoCursor.hasNext()).thenReturn(true);
-        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+        when(mongoCursor.next()).thenReturn(generateRow());
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         assertFalse(rs.isClosed());
@@ -297,7 +300,9 @@ class MongoSQLStatementTest extends MongoSQLMock {
     @Test
     void testSetGetCloseOnComplete() throws SQLException {
         when(mongoCursor.hasNext()).thenReturn(true);
-        when(mongoCursor.next()).thenReturn(generateMetadataDoc());
+        when(mongoCursor.next()).thenReturn(generateRow());
+        when(mongoSchemaCursor.hasNext()).thenReturn(true);
+        when(mongoSchemaCursor.next()).thenReturn(generateSchema());
 
         // When not close on complete
         assertFalse(mongoStatement.isCloseOnCompletion());

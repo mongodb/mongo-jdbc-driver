@@ -13,18 +13,26 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
+import org.bson.BsonDouble;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
+import org.bson.BsonString;
+import org.bson.BsonUndefined;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 
 public abstract class MongoSQLMock {
-    static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");;
+    static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
     protected static String database = "test";
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
-    @Mock protected static AggregateIterable<MySQLResultDoc> aggregateIterable;
-    @Mock protected static MongoCursor<MySQLResultDoc> mongoCursor;
+    @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;
+    @Mock protected static AggregateIterable<MongoJsonSchemaResult> jsonSchemaResultIterable;
+    @Mock protected static MongoCursor<BsonDocument> mongoCursor;
+    @Mock protected static MongoCursor<MongoJsonSchemaResult> mongoSchemaCursor;
 
     @InjectMocks
     protected static MongoConnection mongoConnection = new MongoSQLConnection(uri, database);
@@ -61,14 +69,22 @@ public abstract class MongoSQLMock {
         // Mock mongoDatabase
         when(mongoConnection.getDatabase(anyString())).thenReturn(mongoDatabase);
         when(mongoDatabase.withCodecRegistry(any())).thenReturn(mongoDatabase);
-        when(mongoDatabase.aggregate(any(), eq(MySQLResultDoc.class)))
-                .thenReturn(aggregateIterable);
+        //doReturn(jsonSchemaResultIterable)
+        when(mongoDatabase.aggregate(any(), eq(MongoJsonSchemaResult.class)))
+                .thenReturn(jsonSchemaResultIterable);
+        when(mongoDatabase.aggregate(any(), eq(BsonDocument.class))).thenReturn(aggregateIterable);
         // Mock aggregateIterable
         when(aggregateIterable.batchSize(anyInt())).thenReturn(aggregateIterable);
         when(aggregateIterable.maxTime(anyLong(), any())).thenReturn(aggregateIterable);
         when(aggregateIterable.cursor()).thenReturn(mongoCursor);
+        when(jsonSchemaResultIterable.batchSize(anyInt())).thenReturn(jsonSchemaResultIterable);
+        when(jsonSchemaResultIterable.maxTime(anyLong(), any()))
+                .thenReturn(jsonSchemaResultIterable);
+        when(jsonSchemaResultIterable.cursor()).thenReturn(mongoSchemaCursor);
+
         // Mock MongoCursor
         when(mongoCursor.hasNext()).thenReturn(false);
+        when(mongoSchemaCursor.hasNext()).thenReturn(false);
     }
 
     // to replace lambda as input in the testExceptionAfterConnectionClosed
@@ -105,6 +121,9 @@ public abstract class MongoSQLMock {
                            items: {
                                bsonType: int,
                            }
+                        },
+                        null: {
+                           bsonType: NULL
                         }
                     },
                     required: [a, b, vec],
@@ -162,6 +181,9 @@ public abstract class MongoSQLMock {
         vecSchema.items = new MongoJsonSchema();
         vecSchema.items.bsonType = "int";
 
+        MongoJsonSchema nullSchema = new MongoJsonSchema();
+        nullSchema.bsonType = "null";
+
         fooSchema.properties = new HashMap<String, MongoJsonSchema>();
         fooSchema.properties.put("c", cSchema);
         fooSchema.properties.put("a", aSchema);
@@ -169,6 +191,7 @@ public abstract class MongoSQLMock {
         fooSchema.properties.put("d", new MongoJsonSchema());
         fooSchema.properties.put("b", bSchema);
         fooSchema.properties.put("vec", vecSchema);
+        fooSchema.properties.put("null", nullSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
@@ -187,7 +210,53 @@ public abstract class MongoSQLMock {
     }
 
     BsonDocument generateRow() {
-        /**/
-        return null;
+        /*
+        {
+            "foo.a":1,
+            "foo.b":null,
+            "foo.c":2,
+            "foo.d":{
+                "$undefined":true
+            },
+             "foo.null: null
+             "foo.vec":[
+                1,
+                2,
+                3
+            ],
+            "__bot.a":1.2,
+            "__bot.str":"a"
+        }
+        */
+        BsonDocument document = new BsonDocument();
+        BsonDocument bot = new BsonDocument();
+        BsonDocument foo = new BsonDocument();
+
+        foo.put("a", new BsonInt32(1));
+        foo.put("b", new BsonNull());
+        foo.put("c", new BsonInt32(2));
+        foo.put("d", new BsonUndefined());
+        foo.put("null", new BsonNull());
+
+        BsonArray array = new BsonArray();
+        array.add(new BsonInt32(1));
+        array.add(new BsonInt32(2));
+        array.add(new BsonInt32(3));
+        foo.put("vec", array);
+
+        bot.put("a", new BsonDouble(1.2));
+        bot.put("str", new BsonString("a"));
+
+        document.put("", bot);
+        document.put("foo", foo);
+
+        return document;
+    }
+
+    MongoJsonSchemaResult generateSchema() {
+        MongoJsonSchemaResult schemaResult = new MongoJsonSchemaResult();
+        schemaResult.schema = new MongoVersionedJsonSchema();
+        schemaResult.schema.jsonSchema = generateMongoJsonSchema();
+        return schemaResult;
     }
 }

@@ -2,6 +2,13 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.text.ParseException;
 import org.bson.BsonDocument;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -11,24 +18,10 @@ import org.bson.BsonUndefined;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.sql.Date;
-import java.text.ParseException;
-
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema) throws SQLException {
-        super(statement);
-        Preconditions.checkNotNull(cursor);
-
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema);
-        this.cursor = cursor;
-    }
-
-    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor) {
+    public MongoSQLResultSet(
+            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);
 
@@ -78,7 +71,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
             throw new SQLException(String.format("column label '%s' not found", columnLabel));
         }
-        return getBsonValue(columnIndex+1);
+        return getBsonValue(columnIndex + 1);
     }
 
     @Override
@@ -241,7 +234,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (type == null) {
             return null;
         }
-        return type.cast(out) ;
+        return type.cast(out);
     }
 
     @Override
@@ -253,7 +246,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
         BsonValue out = getBsonValue(columnIndex);
-        return type.cast(out) ;
+        return type.cast(out);
     }
 
     @Override
@@ -407,10 +400,10 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DB_POINTER:
                 return handleBooleanConversionFailure(DB_POINTER);
             case DECIMAL128:
-            {
-                Decimal128 v = o.asDecimal128().getValue();
-                return v != Decimal128.POSITIVE_ZERO && v != Decimal128.NEGATIVE_ZERO;
-            }
+                {
+                    Decimal128 v = o.asDecimal128().getValue();
+                    return v != Decimal128.POSITIVE_ZERO && v != Decimal128.NEGATIVE_ZERO;
+                }
             case DOCUMENT:
                 return handleBooleanConversionFailure(DOCUMENT);
             case DOUBLE:

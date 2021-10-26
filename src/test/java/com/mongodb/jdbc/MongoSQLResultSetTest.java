@@ -1,9 +1,14 @@
 package com.mongodb.jdbc;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import com.mongodb.client.MongoCursor;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.bson.*;
-import org.bson.types.Decimal128;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,15 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.*;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -86,26 +82,22 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         array.add(new BsonInt32(7));
         foo.put("vec", array);
 
-
         List<BsonDocument> mongoResultDocs = new ArrayList<BsonDocument>();
         mongoResultDocs.add(document);
 
         try {
             mongoSQLResultSet =
-                new MongoSQLResultSet(
-                        mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema
-                );
+                    new MongoSQLResultSet(
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
             closedMongoSQLResultSet =
-                new MongoSQLResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema
-                );
+                    new MongoSQLResultSet(
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
             mongoSQLResultSet.next();
             closedMongoSQLResultSet.next();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
 
     @BeforeAll
     void initMocks() {
@@ -139,11 +131,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSet.getString(INT_NULLABLE_COL),
                 mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(INT_COL),
-                mongoSQLResultSet.getString(INT_COL_LABEL));
+                mongoSQLResultSet.getString(INT_COL), mongoSQLResultSet.getString(INT_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(ANY_COL),
-                mongoSQLResultSet.getString(ANY_COL_LABEL));
+                mongoSQLResultSet.getString(ANY_COL), mongoSQLResultSet.getString(ANY_COL_LABEL));
 
         // Test wasNull.
         mongoSQLResultSet.getString(INT_NULLABLE_COL);
@@ -244,15 +234,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // Actually check getAsciiStream and getUnicodeStream output. We just check
         // that the length is what is expected.
         assertEquals(
-                1,
-                mongoSQLResultSet
-                        .getAsciiStream(STRING_COL_LABEL)
-                        .read(new byte[100], 0, 100));
+                1, mongoSQLResultSet.getAsciiStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
         assertEquals(
                 1,
-                mongoSQLResultSet
-                        .getUnicodeStream(STRING_COL_LABEL)
-                        .read(new byte[100], 0, 100));
+                mongoSQLResultSet.getUnicodeStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
 
         // getClob just wraps getString, we can ignore it
 
@@ -367,11 +352,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSet.getObject(INT_NULLABLE_COL),
                 mongoSQLResultSet.getObject(INT_NULLABLE_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(INT_COL),
-                mongoSQLResultSet.getObject(INT_COL_LABEL));
+                mongoSQLResultSet.getObject(INT_COL), mongoSQLResultSet.getObject(INT_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(ANY_COL),
-                mongoSQLResultSet.getObject(ANY_COL_LABEL));
+                mongoSQLResultSet.getObject(ANY_COL), mongoSQLResultSet.getObject(ANY_COL_LABEL));
         assertEquals(
                 mongoSQLResultSet.getObject(ARRAY_COL),
                 mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
@@ -380,9 +363,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertNull(mongoSQLResultSet.getObject(NULL_COL_LABEL));
         assertEquals(2.4, mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getObject(STRING_COL_LABEL));
-        assertEquals(
-                new BsonInt32(3), mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
-
+        assertEquals(new BsonInt32(3), mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoSQLResultSet.getObject(NULL_COL));
         assertEquals(4, mongoSQLResultSet.getObject(INT_COL_LABEL));
@@ -787,7 +768,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         BsonDocument valuesDoc = new BsonDocument();
         BsonDocument valuesDoc2 = new BsonDocument();
         BsonDocument valuesDoc3 = new BsonDocument();
-
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));

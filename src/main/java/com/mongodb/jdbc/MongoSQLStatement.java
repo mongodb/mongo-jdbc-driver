@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
-import org.bson.conversions.Bson;
 
 public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
     public MongoSQLStatement(MongoConnection conn, String databaseName) throws SQLException {
@@ -38,9 +37,11 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
             MongoIterable<MongoJsonSchemaResult> schemaIterable =
                     currentDB
                             .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), MongoJsonSchemaResult.class)
+                            .aggregate(
+                                    Collections.singletonList(schemaStage),
+                                    MongoJsonSchemaResult.class)
                             .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            MongoJsonSchema schema = schemaIterable.cursor().next().schema;
+            MongoJsonSchema schema = schemaIterable.cursor().next().schema.jsonSchema;
             resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
@@ -56,10 +57,5 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
         sqlDoc.put("SchemaVersion", new BsonInt32(1));
         stage.put("$sql", sqlDoc);
         return stage;
-    }
-
-    class MongoJsonSchemaResult {
-        public int ok;
-        public MongoJsonSchema schema;
     }
 }
