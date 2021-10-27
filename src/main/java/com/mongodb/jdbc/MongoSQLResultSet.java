@@ -44,7 +44,6 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             return true;
         }
         BsonType ty = o.getBsonType();
-        // In strict mode, we only want to report undefined and null as null.
         switch (ty) {
             case NULL:
             case UNDEFINED:
