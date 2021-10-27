@@ -82,8 +82,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.BIGINT:
                 return getInt(o);
             case Types.BINARY:
-                // not supported
-                break;
+                return o.asBinary();
             case Types.BIT:
                 return getBoolean(o);
             case Types.BLOB:
@@ -92,8 +91,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.BOOLEAN:
                 return getBoolean(o);
             case Types.CHAR:
-                // not supported
-                break;
+                return getString(o);
             case Types.CLOB:
                 // not supported
                 break;

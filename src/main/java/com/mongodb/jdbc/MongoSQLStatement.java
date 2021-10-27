@@ -51,11 +51,9 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
 
     private BsonDocument constructSQLGetResultSchemaDocument(String sql) {
         BsonDocument stage = new BsonDocument();
-        BsonDocument sqlDoc = new BsonDocument();
-        sqlDoc.put("query", new BsonString(sql));
-        sqlDoc.put("sqlGetResultSchema", new BsonInt32(1));
-        sqlDoc.put("SchemaVersion", new BsonInt32(1));
-        stage.put("$sql", sqlDoc);
+        stage.put("query", new BsonString(sql));
+        stage.put("sqlGetResultSchema", new BsonInt32(1));
+        stage.put("schemaVersion", new BsonInt32(1));
         return stage;
     }
 }
