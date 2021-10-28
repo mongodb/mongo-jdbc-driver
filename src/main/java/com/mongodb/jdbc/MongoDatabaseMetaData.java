@@ -107,6 +107,12 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
     protected static final String COLUMN_USAGE = "COLUMN_USAGE";
 
+    protected static final String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+    protected static final String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    protected static final String BSON_STRING_TYPE_NAME = "string";
+    protected static final String BSON_INT_TYPE_NAME = "int";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

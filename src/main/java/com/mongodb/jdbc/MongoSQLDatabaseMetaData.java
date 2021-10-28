@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.client.MongoDatabase;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -16,8 +17,15 @@ import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonNull;
 import org.bson.BsonString;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
@@ -214,11 +222,234 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, c, botSchema);
     }
 
+    /**
+     * liftSQLException tries to execute a Supplier that may throw a RuntimeException that wraps a
+     * SQLException as the cause. If such an exception is encountered, the inner SQLException is
+     * thrown. Otherwise, the Supplier executes as expected.
+     *
+     * <p>This method is intended for use with Stream API methods that wrap SQLExceptions in
+     * RuntimeExceptions to appease the compiler. We want to propagate those SQLExceptions all the
+     * way out to the caller so this method is a way of recovering them.
+     *
+     * @param f The Supplier function to execute. This function may throw a RuntimeException that
+     *     wraps a SQLException.
+     * @param <T> The return type of the Supplier.
+     * @return The return value of the Supplier.
+     * @throws SQLException If a RuntimeException that wraps a SQLException is caught.
+     */
+    private static <T> T liftSQLException(Supplier<T> f) throws SQLException {
+        try {
+            return f.get();
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof SQLException) {
+                throw (SQLException) e.getCause();
+            }
+            throw e;
+        }
+    }
+
+    private BsonDocument toGetColumnsDoc(
+            String dbName,
+            String collName,
+            String columnName,
+            MongoJsonSchema columnSchema,
+            boolean isRequired)
+            throws SQLException {
+
+        MongoSQLColumnInfo info =
+                new MongoSQLColumnInfo(collName, columnName, columnSchema, isRequired);
+
+        int nullability = info.getNullability();
+        String isNullable =
+                nullability == ResultSetMetaData.columnNoNulls
+                        ? "NO"
+                        : nullability == ResultSetMetaData.columnNullable ? "YES" : "";
+
+        BsonDocument bot = new BsonDocument();
+        bot.put(TABLE_CAT, new BsonString(dbName));
+        bot.put(TABLE_SCHEM, new BsonString(""));
+        bot.put(TABLE_NAME, new BsonString(collName));
+        bot.put(COLUMN_NAME, new BsonString(columnName));
+        bot.put(DATA_TYPE, new BsonInt32(info.getJDBCType()));
+        bot.put(TYPE_NAME, new BsonString(info.getTableAlias()));
+        bot.put(COLUMN_SIZE, new BsonNull()); // TODO
+        bot.put(BUFFER_LENGTH, new BsonInt32(0));
+        bot.put(DECIMAL_DIGITS, new BsonNull()); // TODO
+        bot.put(NUM_PREC_RADIX, new BsonNull()); // TODO
+        bot.put(NULLABLE, new BsonInt32(nullability));
+        bot.put(REMARKS, new BsonString(""));
+        bot.put(COLUMN_DEF, new BsonNull());
+        bot.put(SQL_DATA_TYPE, new BsonInt32(0));
+        bot.put(SQL_DATETIME_SUB, new BsonInt32(0));
+        bot.put(CHAR_OCTET_LENGTH, new BsonNull()); // TODO
+        bot.put(ORDINAL_POSITION, new BsonNull()); // TODO
+        bot.put(IS_NULLABLE, new BsonString(isNullable));
+        bot.put(SCOPE_CATALOG, new BsonNull());
+        bot.put(SCOPE_SCHEMA, new BsonNull());
+        bot.put(SCOPE_TABLE, new BsonNull());
+        bot.put(SOURCE_DATA_TYPE, new BsonInt32(0));
+        bot.put(IS_AUTOINCREMENT, new BsonString(""));
+        bot.put(IS_GENERATEDCOLUMN, new BsonInt32(0));
+
+        BsonDocument res = new BsonDocument();
+        res.put(BOT_NAME, bot);
+
+        return res;
+    }
+
+    private Stream<BsonDocument> getColumnsFromDB(
+            String dbName, Pattern tableNamePatternRE, Pattern columnNamePatternRE)
+            throws SQLException {
+        MongoDatabase db = this.conn.getDatabase(dbName);
+
+        return liftSQLException(
+                () ->
+                        db.listCollectionNames()
+                                .into(new ArrayList<>())
+                                .stream()
+
+                                // filter only for collections matching the pattern
+                                .filter(collName -> tableNamePatternRE.matcher(collName).matches())
+
+                                // sort by collection name
+                                .sorted()
+
+                                // map the collection names into triples of (dbName, collName, collSchema)
+                                .map(
+                                        collName ->
+                                                new Pair<>(
+                                                        new Pair<>(dbName, collName),
+                                                        db.runCommand(
+                                                                new BsonDocument(
+                                                                        "sqlGetSchema",
+                                                                        new BsonString(collName)),
+                                                                MongoJsonSchemaResult.class)))
+
+                                // filter only for collections that have schemas
+                                .filter(
+                                        p ->
+                                                p.right().ok == 1
+                                                        && p.right().schema.jsonSchema.isObject())
+
+                                // flatMap the column data into a single stream of BSON docs
+                                .flatMap(
+                                        p -> {
+                                            Pair<String, String> ns = p.left();
+                                            MongoJsonSchemaResult res = p.right();
+                                            return res.schema
+                                                    .jsonSchema
+                                                    .properties
+                                                    .entrySet()
+                                                    .stream()
+
+                                                    // filter only for columns matching the pattern
+                                                    .filter(
+                                                            entry ->
+                                                                    columnNamePatternRE
+                                                                            .matcher(entry.getKey())
+                                                                            .matches())
+
+                                                    // sort by column name
+                                                    .sorted(
+                                                            Map.Entry
+                                                                    .comparingByKey())
+
+                                                    // map the (columnName, columnSchema) pairs into BSON docs
+                                                    .map(
+                                                            entry -> {
+                                                                try {
+                                                                    return toGetColumnsDoc(
+                                                                            ns.left(),
+                                                                            ns.right(),
+                                                                            entry.getKey(),
+                                                                            entry.getValue(),
+                                                                            res.schema.jsonSchema
+                                                                                    .required
+                                                                                    .contains(
+                                                                                            entry
+                                                                                                    .getKey()));
+                                                                } catch (SQLException e) {
+                                                                    throw new RuntimeException(e);
+                                                                }
+                                                            });
+                                        }));
+    }
+
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
+                new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_DEF, BSON_STRING_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
+                new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME),
+                new Pair<>(IS_AUTOINCREMENT, BSON_STRING_TYPE_NAME),
+                new Pair<>(IS_GENERATEDCOLUMN, BSON_STRING_TYPE_NAME));
+
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        Pattern tableNamePatternRE = Pattern.compile(toJavaPattern(tableNamePattern));
+        Pattern columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
+
+        List<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get columns for all databases.
+            docs =
+                    liftSQLException(
+                            () ->
+                                    this.conn
+                                            .mongoClient
+                                            .listDatabaseNames()
+                                            .into(new ArrayList<>())
+                                            .stream()
+                                            .flatMap(
+                                                    dbName -> {
+                                                        try {
+                                                            return getColumnsFromDB(
+                                                                    dbName,
+                                                                    tableNamePatternRE,
+                                                                    columnNamePatternRE);
+                                                        } catch (SQLException e) {
+                                                            throw new RuntimeException(e);
+                                                        }
+                                                    })
+                                            .collect(Collectors.toList()));
+
+        } else {
+            docs =
+                    getColumnsFromDB(catalog, tableNamePatternRE, columnNamePatternRE)
+                            .collect(Collectors.toList());
+        }
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
