@@ -410,7 +410,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private BsonDocument getFunctionValuesDoc(String functionName, String remarks) {
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
-        root.put("", bot);
+        root.put(BOT_NAME, bot);
         bot.put(FUNCTION_CAT, new BsonString("def"));
         bot.put(FUNCTION_SCHEM, new BsonNull());
         bot.put(FUNCTION_NAME, new BsonString(functionName));
@@ -474,7 +474,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
-        root.put("", bot);
+        root.put(BOT_NAME, bot);
         BsonValue n = new BsonNull();
         String functionName = func.name;
         bot.put(FUNCTION_CAT, new BsonString("def"));
