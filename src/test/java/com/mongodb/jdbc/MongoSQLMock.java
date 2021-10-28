@@ -218,7 +218,7 @@ public abstract class MongoSQLMock {
             "foo.d":{
                 "$undefined":true
             },
-             "foo.null: null
+             "foo.null": null
              "foo.vec":[
                 1,
                 2,
