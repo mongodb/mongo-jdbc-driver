@@ -11,7 +11,9 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema) throws SQLException {
+    public MongoSQLResultSet(
+            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);
 
