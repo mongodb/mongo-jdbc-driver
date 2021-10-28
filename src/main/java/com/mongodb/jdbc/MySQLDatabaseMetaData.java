@@ -250,7 +250,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TABLE_TYPE", "TABLE_TYPE", "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_TYPE, TABLE_TYPE, "string"));
 
         MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
@@ -893,12 +893,11 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NAME", "NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "MAX_LEN", "MAX_LEN", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NAME, NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAX_LEN, MAX_LEN, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DESCRIPTION", "DESCRIPTION", "string"));
+                new MySQLColumnInfo("", "", "", DEFAULT_VALUE, DEFAULT_VALUE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DESCRIPTION, DESCRIPTION, "string"));
         docs.add(metaDoc);
 
         MySQLResultDoc doc = new MySQLResultDoc();
@@ -1105,38 +1104,33 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "PRECISION", "PRECISION", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PRECISION, PRECISION, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LITERAL_PREFIX", "LITERAL_PREFIX", "string"));
+                new MySQLColumnInfo("", "", "", LITERAL_PREFIX, LITERAL_PREFIX, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LITERAL_SUFFIX", "LITERAL_SUFFIX", "string"));
+                new MySQLColumnInfo("", "", "", LITERAL_SUFFIX, LITERAL_SUFFIX, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CREATE_PARAMS", "CREATE_PARAMS", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", "int"));
+                new MySQLColumnInfo("", "", "", CREATE_PARAMS, CREATE_PARAMS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CASE_SENSITIVE", "CASE_SENSITIVE", "bool"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "SEARCHABLE", "SEARCHABLE", "int"));
+                new MySQLColumnInfo("", "", "", CASE_SENSITIVE, CASE_SENSITIVE, "bool"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SEARCHABLE, SEARCHABLE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo(
-                        "", "", "", "UNSIGNED_ATTRIBUTE", "UNSIGNED_ATTRIBUTE", "bool"));
+                new MySQLColumnInfo("", "", "", UNSIGNED_ATTRIBUTE, UNSIGNED_ATTRIBUTE, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FIXED_PREC_SCALE", "FIXED_PREC_SCALE", "bool"));
+                new MySQLColumnInfo("", "", "", FIXED_PREC_SCALE, FIXED_PREC_SCALE, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "AUTO_INCREMENT", "AUTO_INCREMENT", "bool"));
+                new MySQLColumnInfo("", "", "", AUTO_INCREMENT, AUTO_INCREMENT, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LOCAL_TYPE_NAME", "LOCAL_TYPE_NAME", "string"));
+                new MySQLColumnInfo("", "", "", LOCAL_TYPE_NAME, LOCAL_TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MINIMUM_SCALE, MINIMUM_SCALE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAXIMUM_SCALE, MAXIMUM_SCALE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "MINIMUM_SCALE", "MINIMUM_SCALE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "MAXIMUM_SCALE", "MAXIMUM_SCALE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "int"));
+                new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "int"));
 
         return metaDoc;
     }
