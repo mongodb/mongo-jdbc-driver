@@ -393,15 +393,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private MongoJsonSchema getFunctionJsonSchema() {
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.required.add(BOT_NAME);
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.addRequiredScalarKeys(
                 new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
                 new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
                 new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
                 new Pair<>(FUNCTION_TYPE, BSON_INT_TYPE_NAME),
                 new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
-        return schema;
+        resultSchema.properties.put(BOT_NAME, botSchema);
+        return resultSchema;
     }
 
     private BsonDocument getFunctionValuesDoc(String functionName, String remarks) {
@@ -438,14 +441,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs.add(doc);
         }
 
-        return new MongoSQLResultSet(null, null);
-        // TODO: SQL-535 use commented return statement instead
-        // return MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
     }
 
     private MongoJsonSchema getFunctionColumnJsonSchema() {
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.required.add(BOT_NAME);
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.addRequiredScalarKeys(
                 new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
                 new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
                 new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
@@ -463,7 +466,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
                 new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
                 new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
-        return schema;
+        resultSchema.properties.put(BOT_NAME, botSchema);
+        return resultSchema;
     }
 
     private BsonDocument getFunctionColumnValuesDoc(
@@ -544,9 +548,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             }
         }
 
-        return new MongoSQLResultSet(null, null);
-        // TODO: SQL-535 use commented return statement instead
-        // return MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
     }
 
     //--------------------------JDBC 4.1 -----------------------------
