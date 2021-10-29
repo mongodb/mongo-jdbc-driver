@@ -26,7 +26,8 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         "CHAR_LENGTH",
                                         "long",
                                         "returns length of string",
-                                        new String[] {"string"}),
+                                        new String[] {"string"},
+                                        FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "COALESCE",
                                         null,
@@ -36,12 +37,18 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         "CURRENT_TIMESTAMP",
                                         "date",
                                         "returns the current date and time.",
-                                        new String[] {"int"}),
+                                        new String[] {"int"},
+                                        FunctionCategory.TIME_DATE_FUNC),
+                                /**
+                                 * Note EXTRACT supports more than YEAR, MONTH, DAY, HOUR, MINUTE,
+                                 * SECOND for the unit. It also supports TIMEZONE_HOUR | TIMEZONE_MINUTE.ß
+                                */
                                 new MongoFunction(
                                         "EXTRACT",
                                         "long",
                                         "returns the value of the specified unit from the provided date.",
-                                        new String[] {"string", "date"}),
+                                        new String[] {"string", "date"},
+                                        FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "LOWER",
                                         "string",
@@ -56,12 +63,14 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         "OCTET_LENGTH",
                                         "long",
                                         "returns length of string in bytes",
-                                        new String[] {"string"}),
+                                        new String[] {"string"},
+                                        FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "POSITION",
                                         "long",
                                         "returns the position of the first occurrence of substring substr in string str.",
-                                        new String[] {"string", "string"}),
+                                        new String[] {"string", "string"},
+                                        FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "SLICE",
                                         null,
@@ -77,6 +86,12 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         "string",
                                         "takes a substring from a string",
                                         new String[] {"string", "long"}),
+                                    new MongoFunction(
+                                            "SUBSTRING",
+                                            "string",
+                                            "takes a substring from a string",
+                                            new String[] {"string", "long", "long"},
+                                            FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "TRIM",
                                         "string",

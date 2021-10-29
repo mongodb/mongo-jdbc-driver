@@ -16,6 +16,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     private static final String BOT_NAME = "";
 
+    private static MongoSQLMongoFunctions MongoSQLFunctions = MongoSQLMongoFunctions.getInstance();
+
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
@@ -27,22 +29,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        return MongoFunction.mongoSQLNumericFunctionsString;
+        return MongoSQLFunctions.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return MongoFunction.mongoSQLStringFunctionsString;
+        return MongoSQLFunctions.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return "";
+        return MongoSQLFunctions.systemFunctionsString;
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return MongoFunction.mongoSQLDateFunctionsString;
+        return MongoSQLFunctions.dateFunctionsString;
     }
 
     @Override
@@ -423,7 +425,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
-        ArrayList<BsonDocument> docs = new ArrayList<>(MongoFunction.mongoSQLFunctionNames.length);
+        ArrayList<BsonDocument> docs = new ArrayList<>(MongoSQLFunctions.functions.length);
         MongoJsonSchema schema = getFunctionJsonSchema();
 
         Pattern functionPatternRE = null;
@@ -431,7 +433,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mongoSQLFunctions) {
+        for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
             String functionName = func.name;
             String remarks = func.comment;
             if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
@@ -471,7 +473,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private BsonDocument getFunctionColumnValuesDoc(
-            MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+            MongoFunctions.MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
@@ -510,7 +512,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String columnNamePattern)
             throws SQLException {
 
-        ArrayList<BsonDocument> docs = new ArrayList<>(MongoFunction.mongoSQLFunctionNames.length);
+        ArrayList<BsonDocument> docs = new ArrayList<>(MongoSQLFunctions.functions.length);
         MongoJsonSchema schema = getFunctionColumnJsonSchema();
 
         Pattern functionNamePatternRE = null;
@@ -522,7 +524,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mongoSQLFunctions) {
+        for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
             String functionName = func.name;
             if (functionNamePatternRE != null
                     && !functionNamePatternRE.matcher(functionName).matches()) {
