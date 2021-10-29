@@ -19,23 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     private static MongoSQLResultSetMetaData resultSetMetaData;
 
-    // __bot.a
-    private static int DOUBLE_COL = 1;
-    // __bot.str
-    private static int STRING_COL = 2;
-    // foo.a
-    private static int ANY_OF_INT_STRING_COL = 3;
-    // foo.b
-    private static int INT_OR_NULL_COL = 4;
-    // foo.c
-    private static int INT_COL = 5;
-    // foo.d
-    private static int ANY_COL = 6;
-    // foo.null
-    private static int NULL_COL = 7;
-    // foo.vec
-    private static int ARRAY_COL = 8;
-
     static {
         try {
             resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema());
@@ -53,7 +36,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     @Test
     void testGetColumnCount() throws SQLException {
-        assertEquals(8, MongoSQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+        assertEquals(9, MongoSQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
@@ -64,26 +47,30 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     @Test
     void testGetColumnName() throws SQLException {
-        assertEquals("a", resultSetMetaData.getColumnName(DOUBLE_COL));
-        assertEquals("str", resultSetMetaData.getColumnName(STRING_COL));
-        assertEquals("a", resultSetMetaData.getColumnName(ANY_OF_INT_STRING_COL));
-        assertEquals("b", resultSetMetaData.getColumnName(INT_OR_NULL_COL));
-        assertEquals("c", resultSetMetaData.getColumnName(INT_COL));
-        assertEquals("d", resultSetMetaData.getColumnName(ANY_COL));
-        assertEquals("null", resultSetMetaData.getColumnName(NULL_COL));
-        assertEquals("vec", resultSetMetaData.getColumnName(ARRAY_COL));
+        assertEquals(DOUBLE_COL_LABEL, resultSetMetaData.getColumnName(DOUBLE_COL));
+        assertEquals(STRING_COL_LABEL, resultSetMetaData.getColumnName(STRING_COL));
+        assertEquals(
+                ANY_OF_INT_STRING_COL_LABEL,
+                resultSetMetaData.getColumnName(ANY_OF_INT_STRING_COL));
+        assertEquals(INT_NULLABLE_COL_LABEL, resultSetMetaData.getColumnName(INT_OR_NULL_COL));
+        assertEquals(INT_COL_LABEL, resultSetMetaData.getColumnName(INT_COL));
+        assertEquals(ANY_COL_LABEL, resultSetMetaData.getColumnName(ANY_COL));
+        assertEquals(NULL_COL_LABEL, resultSetMetaData.getColumnName(NULL_COL));
+        assertEquals(ARRAY_COL_LABEL, resultSetMetaData.getColumnName(ARRAY_COL));
     }
 
     @Test
     void testGetColumnLabel() throws SQLException {
-        assertEquals("a", resultSetMetaData.getColumnLabel(DOUBLE_COL));
-        assertEquals("str", resultSetMetaData.getColumnLabel(STRING_COL));
-        assertEquals("a", resultSetMetaData.getColumnLabel(ANY_OF_INT_STRING_COL));
-        assertEquals("b", resultSetMetaData.getColumnLabel(INT_OR_NULL_COL));
-        assertEquals("c", resultSetMetaData.getColumnLabel(INT_COL));
-        assertEquals("d", resultSetMetaData.getColumnLabel(ANY_COL));
-        assertEquals("null", resultSetMetaData.getColumnName(NULL_COL));
-        assertEquals("vec", resultSetMetaData.getColumnLabel(ARRAY_COL));
+        assertEquals(DOUBLE_COL_LABEL, resultSetMetaData.getColumnLabel(DOUBLE_COL));
+        assertEquals(STRING_COL_LABEL, resultSetMetaData.getColumnLabel(STRING_COL));
+        assertEquals(
+                ANY_OF_INT_STRING_COL_LABEL,
+                resultSetMetaData.getColumnLabel(ANY_OF_INT_STRING_COL));
+        assertEquals(INT_NULLABLE_COL_LABEL, resultSetMetaData.getColumnLabel(INT_OR_NULL_COL));
+        assertEquals(INT_COL_LABEL, resultSetMetaData.getColumnLabel(INT_COL));
+        assertEquals(ANY_COL_LABEL, resultSetMetaData.getColumnLabel(ANY_COL));
+        assertEquals(NULL_COL_LABEL, resultSetMetaData.getColumnName(NULL_COL));
+        assertEquals(ARRAY_COL_LABEL, resultSetMetaData.getColumnLabel(ARRAY_COL));
     }
 
     @Test

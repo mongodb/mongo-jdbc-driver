@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.bson.BsonArray;
+import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
 import org.bson.BsonInt32;
@@ -27,6 +28,36 @@ import org.mockito.internal.util.reflection.FieldSetter;
 public abstract class MongoSQLMock {
     static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
     protected static String database = "test";
+    // __bot.a
+    protected static int DOUBLE_COL = 1;
+    // __bot.binary
+    protected static int BINARY_COL = 2;
+    // __bot.str
+    protected static int STRING_COL = 3;
+    // foo.a
+    protected static int ANY_OF_INT_STRING_COL = 4;
+    // foo.b
+    protected static int INT_OR_NULL_COL = 5;
+    // foo.c
+    protected static int INT_COL = 6;
+    // foo.d
+    protected static int ANY_COL = 7;
+    // foo.null
+    protected static int NULL_COL = 8;
+    // foo.vec
+    protected static int ARRAY_COL = 9;
+
+    protected static String DOUBLE_COL_LABEL = "a";
+    protected static String BINARY_COL_LABEL = "binary";
+    protected static String STRING_COL_LABEL = "str";
+
+    protected static String ANY_OF_INT_STRING_COL_LABEL = "a";
+    protected static String INT_NULLABLE_COL_LABEL = "b";
+    protected static String INT_COL_LABEL = "c";
+    protected static String ANY_COL_LABEL = "d";
+    protected static String NULL_COL_LABEL = "null";
+    protected static String ARRAY_COL_LABEL = "vec";
+
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
     @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;
@@ -134,6 +165,9 @@ public abstract class MongoSQLMock {
                        a: {
                            bsonType: double
                        },
+                       binary: {
+                           bsonType: binary
+                       }
                        str: {
                            bsonType: string
                        }
@@ -199,6 +233,9 @@ public abstract class MongoSQLMock {
         aSchema = new MongoJsonSchema();
         aSchema.bsonType = "double";
         botSchema.properties.put("a", aSchema);
+        MongoJsonSchema binarySchema = new MongoJsonSchema();
+        binarySchema.bsonType = "binData";
+        botSchema.properties.put("binary", binarySchema);
         MongoJsonSchema strSchema = new MongoJsonSchema();
         strSchema.bsonType = "string";
         botSchema.properties.put("str", strSchema);
@@ -245,6 +282,8 @@ public abstract class MongoSQLMock {
         foo.put("vec", array);
 
         bot.put("a", new BsonDouble(1.2));
+        byte binary[] = {10, 20, 30};
+        bot.put("binary", new BsonBinary(binary));
         bot.put("str", new BsonString("a"));
 
         document.put("", bot);

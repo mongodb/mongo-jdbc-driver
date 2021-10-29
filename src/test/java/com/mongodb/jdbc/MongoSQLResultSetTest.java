@@ -17,8 +17,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.bson.BsonArray;
+import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
 import org.bson.BsonInt32;
@@ -49,24 +49,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     private static MongoSQLStatement mongoStatement;
     private static MongoJsonSchema schema;
 
-    private static int DOUBLE_COL = 1;
-    private static int STRING_COL = 2;
-    private static int ANY_OF_INT_STRING_COL = 3;
-    private static int INT_NULLABLE_COL = 4;
-    private static int INT_COL = 5;
-    private static int ANY_COL = 6;
-    private static int NULL_COL = 7;
-    private static int ARRAY_COL = 8;
-
-    private static String DOUBLE_COL_LABEL = "a";
-    private static String STRING_COL_LABEL = "str";
-
-    private static String INT_NULLABLE_COL_LABEL = "b";
-    private static String INT_COL_LABEL = "c";
-    private static String ANY_COL_LABEL = "d";
-    private static String NULL_COL_LABEL = "null";
-    private static String ARRAY_COL_LABEL = "vec";
-
     static {
         try {
             schema = generateMongoJsonSchema();
@@ -83,20 +65,22 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         document.put("", bot);
         document.put("foo", foo);
 
-        bot.put("a", new BsonDouble(2.4));
-        bot.put("str", new BsonString("b"));
+        bot.put(DOUBLE_COL_LABEL, new BsonDouble(2.4));
+        byte binary[] = {10, 20, 30};
+        bot.put(BINARY_COL_LABEL, new BsonBinary(binary));
+        bot.put(STRING_COL_LABEL, new BsonString("b"));
 
-        foo.put("a", new BsonInt32(3));
-        foo.put("b", new BsonNull());
-        foo.put("c", new BsonInt32(4));
-        foo.put("d", new BsonUndefined());
-        foo.put("null", new BsonNull());
+        foo.put(ANY_OF_INT_STRING_COL_LABEL, new BsonInt32(3));
+        foo.put(INT_NULLABLE_COL_LABEL, new BsonNull());
+        foo.put(INT_COL_LABEL, new BsonInt32(4));
+        foo.put(ANY_COL_LABEL, new BsonUndefined());
+        foo.put(NULL_COL_LABEL, new BsonNull());
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        foo.put("vec", array);
+        foo.put(ARRAY_COL_LABEL, array);
 
         List<BsonDocument> mongoResultDocs = new ArrayList<BsonDocument>();
         mongoResultDocs.add(document);
@@ -131,7 +115,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // Test findColumn.
         assertEquals(DOUBLE_COL, mongoSQLResultSet.findColumn(DOUBLE_COL_LABEL));
         assertEquals(STRING_COL, mongoSQLResultSet.findColumn(STRING_COL_LABEL));
-        assertEquals(INT_NULLABLE_COL, mongoSQLResultSet.findColumn(INT_NULLABLE_COL_LABEL));
+        assertEquals(INT_OR_NULL_COL, mongoSQLResultSet.findColumn(INT_NULLABLE_COL_LABEL));
         assertEquals(INT_COL, mongoSQLResultSet.findColumn(INT_COL_LABEL));
         assertEquals(ANY_COL, mongoSQLResultSet.findColumn(ANY_COL_LABEL));
         assertEquals(ARRAY_COL, mongoSQLResultSet.findColumn(ARRAY_COL_LABEL));
@@ -144,15 +128,50 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSet.getString(STRING_COL),
                 mongoSQLResultSet.getString(STRING_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(INT_NULLABLE_COL),
+                mongoSQLResultSet.getString(INT_OR_NULL_COL),
                 mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
         assertEquals(
                 mongoSQLResultSet.getString(INT_COL), mongoSQLResultSet.getString(INT_COL_LABEL));
         assertEquals(
                 mongoSQLResultSet.getString(ANY_COL), mongoSQLResultSet.getString(ANY_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getBytes(BINARY_COL),
+                mongoSQLResultSet.getBytes(BINARY_COL_LABEL));
+
+        // Binary cannot be gotten through anything other than getBlob and getBinaryStream, currently.
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getString(BINARY_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getBoolean(BINARY_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getLong(BINARY_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getDouble(BINARY_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getBigDecimal(BINARY_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoSQLResultSet.getTimestamp(BINARY_COL);
+                });
 
         // Test wasNull.
-        mongoSQLResultSet.getString(INT_NULLABLE_COL);
+        mongoSQLResultSet.getString(INT_OR_NULL_COL);
         assertTrue(mongoSQLResultSet.wasNull());
         mongoSQLResultSet.getString(DOUBLE_COL);
         assertFalse(mongoSQLResultSet.wasNull());
@@ -161,6 +180,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertTrue(mongoSQLResultSet.wasNull());
 
         // Only Binary and null values can be gotten from getBlob
+        assertNotNull(mongoSQLResultSet.getBlob(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
@@ -184,6 +204,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 });
 
         // Only Binary and null values can be gotten from getBinaryStream
+        assertNotNull(mongoSQLResultSet.getBinaryStream(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
@@ -213,6 +234,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 });
 
         // Only Binary and null values can be gotten from getBytes
+        assertNotNull(mongoSQLResultSet.getBinaryStream(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
@@ -232,8 +254,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         //	DOUBLE_COL 	        2.4
         //	STRING_COL	        "b"
+        //      BINARY_COL              [10, 20, 30]
         //	ANY_OF_INT_STRING_COL	3
-        //	INT_NULLABLE_COL        null
+        //	INT_OR_NULL_COL         null
         //	INT_COL                 4
         //	ANY_COL                 "{}"
         //	ARRAY_COL	        [5, 6, 7]
@@ -365,7 +388,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSet.getObject(STRING_COL),
                 mongoSQLResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(INT_NULLABLE_COL),
+                mongoSQLResultSet.getObject(INT_OR_NULL_COL),
                 mongoSQLResultSet.getObject(INT_NULLABLE_COL_LABEL));
         assertEquals(
                 mongoSQLResultSet.getObject(INT_COL), mongoSQLResultSet.getObject(INT_COL_LABEL));
@@ -391,6 +414,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
         assertEquals(array, mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
+
+        byte binary[] = {10, 20, 30};
+        assertEquals(new BsonBinary(binary), mongoSQLResultSet.getObject(BINARY_COL_LABEL));
     }
 
     @SuppressWarnings("deprecation")
@@ -833,7 +859,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // For empty result set, isFirst should always be false
         assertFalse(mockResultSet.isFirst());
         assertTrue(mockResultSet.isLast());
-        assertEquals(8, mockResultSet.getMetaData().getColumnCount());
+        assertEquals(9, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.next());
         // query value for existing column in empty result should result to exception
         assertThrows(
@@ -860,7 +886,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
 
-        assertEquals(8, mockResultSet.getMetaData().getColumnCount());
+        assertEquals(9, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
         assertTrue(mockResultSet.isLast());
         assertFalse(mockResultSet.next());
