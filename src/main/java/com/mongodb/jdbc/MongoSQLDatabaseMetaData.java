@@ -173,12 +173,17 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
-    private BsonDocument toGetTablesDoc(String dbName, String tableName, String tableType) {
+    // TODO: naming
+    private interface GetTablesSerializer {
+        BsonDocument serializeToBson(String dbName, MongoListCollectionsResult res);
+    }
+
+    private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
         BsonDocument bot = new BsonDocument();
         bot.put(TABLE_CAT, new BsonString(dbName));
         bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(tableName));
-        bot.put(TABLE_TYPE, new BsonString(tableType));
+        bot.put(TABLE_NAME, new BsonString(res.name));
+        bot.put(TABLE_TYPE, new BsonString(res.type));
         bot.put(REMARKS, new BsonNull());
         bot.put(TYPE_CAT, new BsonNull());
         bot.put(TYPE_SCHEM, new BsonNull());
@@ -189,8 +194,21 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
+        BsonDocument bot = new BsonDocument();
+        bot.put(TABLE_CAT, new BsonString(dbName));
+        bot.put(TABLE_SCHEM, new BsonString(""));
+        bot.put(TABLE_NAME, new BsonString(res.name));
+        bot.put(GRANTOR, new BsonNull());
+        bot.put(GRANTEE, new BsonNull());
+        bot.put(PRIVILEGE, new BsonString("SELECT"));
+        bot.put(IS_GRANTABLE, new BsonNull());
+
+        return new BsonDocument(BOT_NAME, bot);
+    }
+
     private Stream<BsonDocument> getTablesFromDB(
-            String dbName, Pattern tableNamePatternRE, List<String> types) {
+            String dbName, Pattern tableNamePatternRE, List<String> types, GetTablesSerializer s) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return db.listCollections(MongoListCollectionsResult.class)
@@ -199,8 +217,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .filter(
                         res ->
                                 tableNamePatternRE.matcher(res.name).matches()
-                                        && types.contains(res.type))
-                .map(res -> toGetTablesDoc(dbName, res.name, res.type));
+                                        && (types == null || types.contains(res.type)))
+                .map(res -> s.serializeToBson(dbName, res));
     }
 
     @Override
@@ -240,11 +258,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             .stream()
                             .flatMap(
                                     dbName ->
-                                            getTablesFromDB(dbName, tableNamePatternRE, typesList))
+                                            getTablesFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    typesList,
+                                                    this::toGetTablesDoc))
                             .collect(Collectors.toList());
         } else {
             docs =
-                    getTablesFromDB(catalog, tableNamePatternRE, typesList)
+                    getTablesFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc)
                             .collect(Collectors.toList());
         }
 
@@ -530,7 +552,54 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(GRANTOR, BSON_STRING_TYPE_NAME),
+                new Pair<>(GRANTEE, BSON_STRING_TYPE_NAME),
+                new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
+                new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
+
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
+
+        List<BsonDocument> docs;
+        if (catalog == null) {
+            docs =
+                    this.conn
+                            .mongoClient
+                            .listDatabaseNames()
+                            .into(new ArrayList<>())
+                            .stream()
+                            .flatMap(
+                                    dbName ->
+                                            getTablesFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    null,
+                                                    this::toGetTablePrivilegesDoc))
+                            .collect(Collectors.toList());
+        } else {
+            docs =
+                    getTablesFromDB(
+                                    catalog,
+                                    tableNamePatternRE,
+                                    null,
+                                    this::toGetTablePrivilegesDoc)
+                            .collect(Collectors.toList());
+        }
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override

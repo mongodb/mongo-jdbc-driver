@@ -114,6 +114,11 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
     protected static final String REF_GENERATION = "REF_GENERATION";
 
+    protected static final String GRANTOR = "GRANTOR";
+    protected static final String GRANTEE = "GRANTEE";
+    protected static final String PRIVILEGE = "PRIVILEGE";
+    protected static final String IS_GRANTABLE = "IS_GRANTABLE";
+
     protected static final String BSON_STRING_TYPE_NAME = "string";
     protected static final String BSON_INT_TYPE_NAME = "int";
 
