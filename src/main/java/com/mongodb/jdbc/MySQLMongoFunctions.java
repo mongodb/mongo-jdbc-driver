@@ -83,7 +83,7 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                         new String[] {"long"},
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
-                                        "CHARACTERLENGTH",
+                                        "CHARACTER_LENGTH",
                                         "long",
                                         "returns length of string",
                                         new String[] {"string"},
@@ -188,19 +188,19 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "DAYOFMONTH",
-                                        "int",
+                                        "long",
                                         "returns the day of the month for the provided date.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "DAYOFWEEK",
-                                        "int",
+                                        "long",
                                         "returns the weekday index (Sunday = 1 ... Saturday = 7) for the provided date.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "DAYOFYEAR",
-                                        "int",
+                                        "long",
                                         "returns the day of the year for the provided date.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
@@ -397,7 +397,7 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                  */
                                 new MongoFunction(
                                         "MINUTE",
-                                        "int",
+                                        "long",
                                         "returns the minute for the provided time.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
@@ -409,7 +409,7 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "MONTH",
-                                        "int",
+                                        "long",
                                         "returns the month for the provided date.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
@@ -441,7 +441,7 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                         new String[] {"numeric", "numeric"}),
                                 new MongoFunction(
                                         "QUARTER",
-                                        "int",
+                                        "long",
                                         "returns the quarter of the year for the provided date, from 1 to 4.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
@@ -652,13 +652,13 @@ public class MySQLMongoFunctions extends MongoFunctions {
                                         new String[] {}),
                                 new MongoFunction(
                                         "WEEK",
-                                        "int",
+                                        "long",
                                         "returns the week number for date.",
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "WEEKDAY",
-                                        "int",
+                                        "long",
                                         "returns the weekday index (Monday = 0 ... Sunday = 6) for the provided date.",
                                         new String[] {"date"}),
                                 new MongoFunction(
