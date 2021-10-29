@@ -63,21 +63,18 @@ public abstract class MongoFunctions {
                 case NUM_FUNC:
                     {
                         currBuilder = numericFunctionBuilder;
-                        numericFunctionBuilder.append(currFunc.name);
                         break;
                     }
 
                 case STRING_FUNC:
                     {
                         currBuilder = stringFunctionBuilder;
-                        stringFunctionBuilder.append(currFunc.name);
                         break;
                     }
 
                 case SYSTEM_FUNC:
                     {
                         currBuilder = systemFunctionBuilder;
-                        systemFunctionBuilder.append(currFunc.name);
                         break;
                     }
 
