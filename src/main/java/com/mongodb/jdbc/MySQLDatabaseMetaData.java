@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -18,7 +17,7 @@ import org.bson.BsonValue;
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static MySQLMongoFunctions MySQLFunctions = MySQLMongoFunctions.getInstance();
-    
+
     public MySQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
@@ -1005,7 +1004,11 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     }
 
     protected MySQLResultDoc getFunctionColumnValuesDoc(
-            MongoFunctions.MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+            MongoFunctions.MongoFunction func,
+            int i,
+            String argName,
+            String argType,
+            boolean isReturnColumn) {
         BsonValue n = new BsonNull();
         String functionName = func.name;
         MySQLResultDoc doc = new MySQLResultDoc();
@@ -1034,7 +1037,8 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MySQLResultDoc> docs = new ArrayList<MySQLResultDoc>(MySQLFunctions.functions.length);
+        ArrayList<MySQLResultDoc> docs =
+                new ArrayList<MySQLResultDoc>(MySQLFunctions.functions.length);
         docs.add(getFunctionMetaDoc());
 
         Pattern functionPatternRE = null;

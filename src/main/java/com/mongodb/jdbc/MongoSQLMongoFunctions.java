@@ -41,8 +41,9 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         FunctionCategory.TIME_DATE_FUNC),
                                 /**
                                  * Note EXTRACT supports more than YEAR, MONTH, DAY, HOUR, MINUTE,
-                                 * SECOND for the unit. It also supports TIMEZONE_HOUR | TIMEZONE_MINUTE.ß
-                                */
+                                 * SECOND for the unit. It also supports TIMEZONE_HOUR |
+                                 * TIMEZONE_MINUTE.ß
+                                 */
                                 new MongoFunction(
                                         "EXTRACT",
                                         "long",
@@ -86,12 +87,12 @@ public class MongoSQLMongoFunctions extends MongoFunctions {
                                         "string",
                                         "takes a substring from a string",
                                         new String[] {"string", "long"}),
-                                    new MongoFunction(
-                                            "SUBSTRING",
-                                            "string",
-                                            "takes a substring from a string",
-                                            new String[] {"string", "long", "long"},
-                                            FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        "SUBSTRING",
+                                        "string",
+                                        "takes a substring from a string",
+                                        new String[] {"string", "long", "long"},
+                                        FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "TRIM",
                                         "string",

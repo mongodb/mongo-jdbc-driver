@@ -473,7 +473,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private BsonDocument getFunctionColumnValuesDoc(
-            MongoFunctions.MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+            MongoFunctions.MongoFunction func,
+            int i,
+            String argName,
+            String argType,
+            boolean isReturnColumn) {
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
