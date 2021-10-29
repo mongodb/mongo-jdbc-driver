@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -10,6 +11,16 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+    public MongoSQLResultSet(
+            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
+        super(statement);
+        Preconditions.checkNotNull(cursor);
+
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema);
+        this.cursor = cursor;
+    }
+
     public MongoSQLResultSet(Statement statement, MongoCursor<BsonDocument> cursor) {
         super(statement);
         this.cursor = cursor;

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 
-public class MySQLStatement extends MongoStatement<MongoResultDoc> implements Statement {
+public class MySQLStatement extends MongoStatement<MySQLResultDoc> implements Statement {
     private boolean relaxed;
 
     public MySQLStatement(MongoConnection conn, String databaseName, boolean relaxed)
@@ -26,10 +26,10 @@ public class MySQLStatement extends MongoStatement<MongoResultDoc> implements St
 
         BsonDocument stage = constructQueryDocument(sql, "mysql");
         try {
-            MongoIterable<MongoResultDoc> iterable =
+            MongoIterable<MySQLResultDoc> iterable =
                     currentDB
                             .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), MongoResultDoc.class)
+                            .aggregate(Collections.singletonList(stage), MySQLResultDoc.class)
                             .maxTime(maxQuerySec, TimeUnit.SECONDS);
             if (fetchSize != 0) {
                 iterable = iterable.batchSize(fetchSize);
