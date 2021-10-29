@@ -252,16 +252,16 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                     mongoSQLResultSet.getBytes(INT_COL);
                 });
 
-        //	DOUBLE_COL 	        2.4
-        //	STRING_COL	        "b"
-        //      BINARY_COL              [10, 20, 30]
-        //	ANY_OF_INT_STRING_COL	3
-        //	INT_OR_NULL_COL         null
-        //	INT_COL                 4
-        //	ANY_COL                 "{}"
-        //	ARRAY_COL	        [5, 6, 7]
+        // DOUBLE_COL              2.4
+        // STRING_COL              "b"
+        // BINARY_COL              [10, 20, 30]
+        // ANY_OF_INT_STRING_COL   3
+        // INT_OR_NULL_COL         null
+        // INT_COL                 4
+        // ANY_COL                 "{}"
+        // ARRAY_COL               [5, 6, 7]
         //
-        //	Test String values are as expected
+        //Test String values are as expected
         assertEquals("2.4", mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getString(STRING_COL_LABEL));
         assertNull(mongoSQLResultSet.getString(NULL_COL));
