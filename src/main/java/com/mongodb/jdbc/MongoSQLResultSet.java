@@ -164,7 +164,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                     case UNDEFINED:
                         return (BsonUndefined) o;
                     default:
-                        return (BsonUndefined) o;
+                        return o;
                 }
             case Types.REAL:
                 // not supported

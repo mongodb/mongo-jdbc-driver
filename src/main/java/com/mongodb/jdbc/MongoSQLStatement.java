@@ -41,7 +41,11 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
                                     Collections.singletonList(schemaStage),
                                     MongoJsonSchemaResult.class)
                             .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            MongoJsonSchema schema = schemaIterable.cursor().next().schema.jsonSchema;
+            MongoJsonSchemaResult schemaResult = schemaIterable.cursor().next();
+            if (schemaResult.ok != 1) {
+                throw new SQLException("Invalid schema result from server");
+            }
+            MongoJsonSchema schema = schemaResult.schema.jsonSchema;
             resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {

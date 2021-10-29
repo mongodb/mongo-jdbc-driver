@@ -804,7 +804,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 });
     }
 
-    // unit test sample
     @Test
     void returnNextRowWhenAvailable() throws Exception {
         BsonDocument valuesDoc = new BsonDocument();

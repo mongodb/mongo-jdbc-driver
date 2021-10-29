@@ -1361,7 +1361,6 @@ class MySQLResultSetTest extends MySQLMock {
                 });
     }
 
-    // unit test sample
     @Test
     void returnNextRowWhenAvailable() throws Exception {
         MySQLResultDoc metaDoc = new MySQLResultDoc();

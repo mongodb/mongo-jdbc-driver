@@ -294,6 +294,7 @@ public abstract class MongoSQLMock {
 
     MongoJsonSchemaResult generateSchema() {
         MongoJsonSchemaResult schemaResult = new MongoJsonSchemaResult();
+        schemaResult.ok = 1;
         schemaResult.schema = new MongoVersionedJsonSchema();
         schemaResult.schema.jsonSchema = generateMongoJsonSchema();
         return schemaResult;
