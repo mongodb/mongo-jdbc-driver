@@ -482,7 +482,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         docs.add(
                 createBottomBson(
                         new BsonElement(TYPE_NAME, new BsonString("long")),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.INTEGER)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIGINT)),
                         new BsonElement(PRECISION, new BsonInt32(19)),
                         new BsonElement(LITERAL_PREFIX, n),
                         new BsonElement(LITERAL_SUFFIX, n),
