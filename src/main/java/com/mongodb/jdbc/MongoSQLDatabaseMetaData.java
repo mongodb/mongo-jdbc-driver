@@ -17,6 +17,7 @@ import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -172,11 +173,84 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    private BsonDocument toGetTablesDoc(String dbName, String tableName, String tableType) {
+        BsonDocument bot = new BsonDocument();
+        bot.put(TABLE_CAT, new BsonString(dbName));
+        bot.put(TABLE_SCHEM, new BsonString(""));
+        bot.put(TABLE_NAME, new BsonString(tableName));
+        bot.put(TABLE_TYPE, new BsonString(tableType));
+        bot.put(REMARKS, new BsonNull());
+        bot.put(TYPE_CAT, new BsonNull());
+        bot.put(TYPE_SCHEM, new BsonNull());
+        bot.put(TYPE_NAME, new BsonNull());
+        bot.put(SELF_REFERENCING_COL_NAME, new BsonNull());
+        bot.put(REF_GENERATION, new BsonNull());
+
+        return new BsonDocument(BOT_NAME, bot);
+    }
+
+    private Stream<BsonDocument> getTablesFromDB(
+            String dbName, Pattern tableNamePatternRE, List<String> types) {
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+
+        return db.listCollections(MongoListCollectionsResult.class)
+                .into(new ArrayList<>())
+                .stream()
+                .filter(
+                        res ->
+                                tableNamePatternRE.matcher(res.name).matches()
+                                        && types.contains(res.type))
+                .map(res -> toGetTablesDoc(dbName, res.name, res.type));
+    }
+
     @Override
     public ResultSet getTables(
-            String catalog, String schemaPattern, String tableNamePattern, String types[])
+            String catalog, String schemaPattern, String tableNamePattern, String[] types)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_TYPE, BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(SELF_REFERENCING_COL_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(REF_GENERATION, BSON_STRING_TYPE_NAME));
+
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
+        List<String> typesList = Arrays.asList(types);
+
+        List<BsonDocument> docs;
+        if (catalog == null) {
+            docs =
+                    this.conn
+                            .mongoClient
+                            .listDatabaseNames()
+                            .into(new ArrayList<>())
+                            .stream()
+                            .flatMap(
+                                    dbName ->
+                                            getTablesFromDB(dbName, tableNamePatternRE, typesList))
+                            .collect(Collectors.toList());
+        } else {
+            docs =
+                    getTablesFromDB(catalog, tableNamePatternRE, typesList)
+                            .collect(Collectors.toList());
+        }
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
@@ -291,16 +365,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put(IS_AUTOINCREMENT, new BsonString(""));
         bot.put(IS_GENERATEDCOLUMN, new BsonInt32(0));
 
-        BsonDocument res = new BsonDocument();
-        res.put(BOT_NAME, bot);
-
-        return res;
+        return new BsonDocument(BOT_NAME, bot);
     }
 
     private Stream<BsonDocument> getColumnsFromDB(
             String dbName, Pattern tableNamePatternRE, Pattern columnNamePatternRE)
             throws SQLException {
-        MongoDatabase db = this.conn.getDatabase(dbName);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return liftSQLException(
                 () ->
@@ -350,9 +421,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                             .matches())
 
                                                     // sort by column name
-                                                    .sorted(
-                                                            Map.Entry
-                                                                    .comparingByKey())
+                                                    .sorted(Map.Entry.comparingByKey())
 
                                                     // map the (columnName, columnSchema) pairs into BSON docs
                                                     .map(
@@ -379,10 +448,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
-        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
-        // schemaPattern argument.
-
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
                 new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
@@ -414,6 +479,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, resultSchema);
 
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
         Pattern tableNamePatternRE = Pattern.compile(toJavaPattern(tableNamePattern));
         Pattern columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
 

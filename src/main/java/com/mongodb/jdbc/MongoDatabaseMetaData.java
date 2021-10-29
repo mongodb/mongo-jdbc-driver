@@ -61,6 +61,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     protected static final String TABLE_SCHEM = "TABLE_SCHEM";
     protected static final String TABLE_CATALOG = "TABLE_CATALOG";
+    protected static final String TABLE_TYPE = "TABLE_TYPE";
 
     protected static final String SCOPE = "SCOPE";
     protected static final String COLUMN_SIZE = "COLUMN_SIZE";
@@ -109,6 +110,9 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     protected static final String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
     protected static final String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    protected static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
+    protected static final String REF_GENERATION = "REF_GENERATION";
 
     protected static final String BSON_STRING_TYPE_NAME = "string";
     protected static final String BSON_INT_TYPE_NAME = "int";
