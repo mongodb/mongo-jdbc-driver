@@ -357,11 +357,11 @@ class MongoDatabaseMetaDataTest extends MySQLMock {
             assertEquals(rsmd.getColumnName(i + 1), columns[i]);
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(countRows(rs), 117);
+        assertEquals(119, countRows(rs));
         rs = databaseMetaData.getFunctions(null, null, "%S%");
-        assertEquals(countRows(rs), 46);
+        assertEquals(47, countRows(rs));
         rs = databaseMetaData.getFunctions(null, null, "%s%");
-        assertEquals(countRows(rs), 0);
+        assertEquals(0, countRows(rs));
     }
 
     @Test
