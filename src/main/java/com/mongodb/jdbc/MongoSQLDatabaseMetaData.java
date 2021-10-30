@@ -18,8 +18,10 @@ import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -173,11 +175,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
-    // TODO: naming
-    private interface GetTablesSerializer {
-        BsonDocument serializeToBson(String dbName, MongoListCollectionsResult res);
-    }
-
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
         BsonDocument bot = new BsonDocument();
         bot.put(TABLE_CAT, new BsonString(dbName));
@@ -208,7 +205,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private Stream<BsonDocument> getTablesFromDB(
-            String dbName, Pattern tableNamePatternRE, List<String> types, GetTablesSerializer s) {
+            String dbName,
+            Pattern tableNamePatternRE,
+            List<String> types,
+            BiFunction<String, MongoListCollectionsResult, BsonDocument> bsonSerializer) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return db.listCollections(MongoListCollectionsResult.class)
@@ -218,7 +218,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         res ->
                                 tableNamePatternRE.matcher(res.name).matches()
                                         && (types == null || types.contains(res.type)))
-                .map(res -> s.serializeToBson(dbName, res));
+                .map(res -> bsonSerializer.apply(dbName, res));
     }
 
     @Override
@@ -248,7 +248,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
         List<String> typesList = Arrays.asList(types);
 
-        List<BsonDocument> docs;
+        Stream<BsonDocument> docs;
         if (catalog == null) {
             docs =
                     this.conn
@@ -262,15 +262,26 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                     dbName,
                                                     tableNamePatternRE,
                                                     typesList,
-                                                    this::toGetTablesDoc))
-                            .collect(Collectors.toList());
+                                                    this::toGetTablesDoc));
         } else {
-            docs =
-                    getTablesFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc)
-                            .collect(Collectors.toList());
+            docs = getTablesFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
         }
 
-        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+        // Collect to a sorted list
+        List<BsonDocument> docsList =
+                // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
+                // TABLE_NAME. Since we need to sort by TABLE_TYPE first, we do it after
+                // converting the MongoListCollectionResults to BSON documents.
+                docs.sorted(
+                                Comparator.comparing(
+                                                (BsonDocument doc) -> doc.getString(TABLE_TYPE))
+                                        .thenComparing(
+                                                (BsonDocument doc) -> doc.getString(TABLE_CAT))
+                                        .thenComparing(
+                                                (BsonDocument doc) -> doc.getString(TABLE_NAME)))
+                        .collect(Collectors.toList());
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
     }
@@ -518,6 +529,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                             .listDatabaseNames()
                                             .into(new ArrayList<>())
                                             .stream()
+                                            .sorted()
                                             .flatMap(
                                                     dbName -> {
                                                         try {
@@ -571,7 +583,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // schemaPattern argument.
         Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
 
-        List<BsonDocument> docs;
+        Stream<BsonDocument> docs;
         if (catalog == null) {
             docs =
                     this.conn
@@ -579,25 +591,28 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             .listDatabaseNames()
                             .into(new ArrayList<>())
                             .stream()
+                            .sorted()
                             .flatMap(
                                     dbName ->
                                             getTablesFromDB(
                                                     dbName,
                                                     tableNamePatternRE,
                                                     null,
-                                                    this::toGetTablePrivilegesDoc))
-                            .collect(Collectors.toList());
+                                                    this::toGetTablePrivilegesDoc));
         } else {
             docs =
                     getTablesFromDB(
-                                    catalog,
-                                    tableNamePatternRE,
-                                    null,
-                                    this::toGetTablePrivilegesDoc)
-                            .collect(Collectors.toList());
+                            catalog, tableNamePatternRE, null, this::toGetTablePrivilegesDoc);
         }
 
-        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+        // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
+        // PRIVILEGE. Since the stream is already sorted by TABLE_CAT at this point
+        // and all PRIVILEGEs are the same, we just sort by TABLE_NAME here.
+        List<BsonDocument> docsList =
+                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getString(TABLE_NAME)))
+                        .collect(Collectors.toList());
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
     }
