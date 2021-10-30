@@ -78,6 +78,7 @@ class MongoDriverTest {
     public void testDBNameInUrl() throws SQLException {
         Connection conn = DriverManager.getConnection(dbNameURL);
         conn.createStatement().close();
+        conn.close();
     }
 
     @Test
