@@ -597,131 +597,131 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "binData", //typeName
+                        BSON_BINDATA_TYPE_NAME, //typeName
                         Types.NULL, //dataType
-                        0, //precision
+                        getPrecision(BSON_BINDATA_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
                         false, //caseSensitive
                         typePredNone, //seachable
                         false, //unsigned
-                        false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        getFixedPrecScale(BSON_BINDATA_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_BINDATA_TYPE_NAME), //minScale
+                        getMaxScale(BSON_BINDATA_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_BINDATA_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "bool", //typeName
+                        BSON_BOOL_TYPE_NAME, //typeName
                         Types.BIT, //dataType
-                        1, //precision
+                        getPrecision(BSON_BOOL_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_BOOL_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         true, //unsigned
-                        false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        getFixedPrecScale(BSON_BOOL_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_BOOL_TYPE_NAME), //minScale
+                        getMaxScale(BSON_BOOL_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_BOOL_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "date", //typeName
+                        BSON_DATE_TYPE_NAME, //typeName
                         Types.TIMESTAMP, //dataType
-                        24, //precision
+                        getPrecision(BSON_DATE_TYPE_NAME), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_DATE_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        getFixedPrecScale(BSON_DATE_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_DATE_TYPE_NAME), //minScale
+                        getMaxScale(BSON_DATE_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_DATE_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "decimal", //typeName
+                        BSON_DECIMAL_TYPE_NAME, //typeName
                         Types.DECIMAL, //dataType
-                        34, //precision
+                        getPrecision(BSON_DECIMAL_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_DECIMAL_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        false, //fixedPrecScale
-                        34, //minScale
-                        34, //maxScale
-                        10)); //numPrecRadix
+                        getFixedPrecScale(BSON_DECIMAL_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_DECIMAL_TYPE_NAME), //minScale
+                        getMaxScale(BSON_DECIMAL_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_DECIMAL_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "double", //typeName
+                        BSON_DOUBLE_TYPE_NAME, //typeName
                         Types.DOUBLE, //dataType
-                        15, //precision
+                        getPrecision(BSON_DOUBLE_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_DOUBLE_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        false, //fixedPrecScale
-                        15, //minScale
-                        15, //maxScale
-                        2)); //numPrecRadix
+                        getFixedPrecScale(BSON_DOUBLE_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_DOUBLE_TYPE_NAME), //minScale
+                        getMaxScale(BSON_DOUBLE_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_DOUBLE_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "int", //typeName
+                        BSON_INT_TYPE_NAME, //typeName
                         Types.INTEGER, //dataType
-                        10, //precision
+                        getPrecision(BSON_INT_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_INT_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        true, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        2)); //numPrecRadix
+                        getFixedPrecScale(BSON_INT_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_INT_TYPE_NAME), //minScale
+                        getMaxScale(BSON_INT_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_INT_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "long", //typeName
+                        BSON_LONG_TYPE_NAME, //typeName
                         Types.INTEGER, //dataType
-                        19, //precision
+                        getPrecision(BSON_LONG_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
+                        getCaseSensitivity(BSON_LONG_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        true, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        2)); //numPrecRadix
+                        getFixedPrecScale(BSON_LONG_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_LONG_TYPE_NAME), //minScale
+                        getMaxScale(BSON_LONG_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_LONG_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "string", //typeName
+                        BSON_STRING_TYPE_NAME, //typeName
                         Types.LONGVARCHAR, //dataType
-                        0, //precision
+                        getPrecision(BSON_STRING_TYPE_NAME), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        true, //caseSensitive
+                        getCaseSensitivity(BSON_STRING_TYPE_NAME), //caseSensitive
                         typeSearchable, //seachable
                         false, //unsigned
-                        false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        getFixedPrecScale(BSON_STRING_TYPE_NAME), //fixedPrecScale
+                        getMinScale(BSON_STRING_TYPE_NAME), //minScale
+                        getMaxScale(BSON_STRING_TYPE_NAME), //maxScale
+                        getNumPrecRadix(BSON_STRING_TYPE_NAME))); //numPrecRadix
 
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
     }
