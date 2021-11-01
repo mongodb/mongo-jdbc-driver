@@ -40,15 +40,30 @@ abstract class MongoDatabaseMetaDataTest {
         }
     }
 
+    protected void testGetFunctionsHelper(String functionNamePattern, int expectedNumRows)
+            throws SQLException {
+        String[] getFunctionsColumns =
+                new String[] {
+                    "FUNCTION_CAT",
+                    "FUNCTION_SCHEM",
+                    "FUNCTION_NAME",
+                    "REMARKS",
+                    "FUNCTION_TYPE",
+                    "SPECIFIC_NAME",
+                };
+        ResultSet rs = databaseMetaData.getFunctions(null, null, functionNamePattern);
+        validateResultSet(rs, expectedNumRows, getFunctionsColumns);
+    }
+
     void validateResultSet(ResultSet rs, int expectedNumRows, String[] expectedColumns)
             throws SQLException {
         sortColumns(expectedColumns);
         ResultSetMetaData rsmd = rs.getMetaData();
         for (int i = 0; i < expectedColumns.length; ++i) {
-            assertEquals(rsmd.getColumnName(i + 1), expectedColumns[i]);
-            assertEquals(rsmd.getColumnLabel(i + 1), expectedColumns[i]);
+            assertEquals(expectedColumns[i], rsmd.getColumnName(i + 1));
+            assertEquals(expectedColumns[i], rsmd.getColumnLabel(i + 1));
         }
-        assertEquals(countRows(rs), expectedNumRows);
+        assertEquals(expectedNumRows, countRows(rs));
     }
 
     // Most DatabaseMetaData tests require connection to an ADL cluster. These are
@@ -290,6 +305,9 @@ abstract class MongoDatabaseMetaDataTest {
         ResultSet rs = databaseMetaData.getPseudoColumns(null, null, "%", "%");
         validateResultSet(rs, 0, columns);
     }
+
+    @Test
+    abstract void testGetFunctions() throws SQLException;
 }
 
 class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
@@ -352,25 +370,11 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     }
 
     @Test
+    @Override
     void testGetFunctions() throws SQLException {
-        String[] columns =
-                new String[] {
-                    "FUNCTION_CAT",
-                    "FUNCTION_SCHEM",
-                    "FUNCTION_NAME",
-                    "REMARKS",
-                    "FUNCTION_TYPE",
-                    "SPECIFIC_NAME",
-                };
-
-        ResultSet rs = databaseMetaData.getFunctions(null, null, "%");
-        validateResultSet(rs, 117, columns);
-
-        rs = databaseMetaData.getFunctions(null, null, "%S%");
-        validateResultSet(rs, 46, columns);
-
-        rs = databaseMetaData.getFunctions(null, null, "%s%");
-        validateResultSet(rs, 0, columns);
+        testGetFunctionsHelper("%", 119);
+        testGetFunctionsHelper("%S%", 47);
+        testGetFunctionsHelper("%s%", 0);
     }
 }
 
@@ -399,5 +403,13 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
         // getSchemas(catalog, schemaPattern)
         rs = databaseMetaData.getSchemas(null, null);
         validateResultSet(rs, 0, columns);
+    }
+
+    @Test
+    @Override
+    void testGetFunctions() throws SQLException {
+        testGetFunctionsHelper("%", 16);
+        testGetFunctionsHelper("%S%", 8);
+        testGetFunctionsHelper("%s%", 0);
     }
 }
