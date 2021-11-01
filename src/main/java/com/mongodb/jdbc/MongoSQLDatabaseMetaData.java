@@ -16,7 +16,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     private static final String BOT_NAME = "";
 
-    private static MongoSQLMongoFunctions MongoSQLFunctions = MongoSQLMongoFunctions.getInstance();
+    private static com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
+            com.mongodb.jdbc.MongoSQLFunctions.getInstance();
 
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
         super(conn);

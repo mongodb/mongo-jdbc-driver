@@ -16,7 +16,8 @@ import org.bson.BsonValue;
 
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
-    private static MySQLMongoFunctions MySQLFunctions = MySQLMongoFunctions.getInstance();
+    private static com.mongodb.jdbc.MySQLFunctions MySQLFunctions =
+            com.mongodb.jdbc.MySQLFunctions.getInstance();
 
     public MySQLDatabaseMetaData(MongoConnection conn) {
         super(conn);

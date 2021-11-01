@@ -4,18 +4,18 @@
 //     $ make
 package com.mongodb.jdbc;
 
-public class MySQLMongoFunctions extends MongoFunctions {
+public class MySQLFunctions extends MongoFunctions {
 
-    private static MySQLMongoFunctions instance;
+    private static MySQLFunctions instance;
 
-    private MySQLMongoFunctions(MongoFunction[] functions) {
+    private MySQLFunctions(MongoFunction[] functions) {
         super(functions);
     }
 
-    public static MySQLMongoFunctions getInstance() {
+    public static MySQLFunctions getInstance() {
         if (null == instance) {
             instance =
-                    new MySQLMongoFunctions(
+                    new MySQLFunctions(
                             new MongoFunction[] {
                                 new MongoFunction(
                                         "ABS",

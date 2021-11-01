@@ -1,16 +1,16 @@
 package com.mongodb.jdbc;
 
-public class MongoSQLMongoFunctions extends MongoFunctions {
-    private static MongoSQLMongoFunctions instance;
+public class MongoSQLFunctions extends MongoFunctions {
+    private static MongoSQLFunctions instance;
 
-    private MongoSQLMongoFunctions(MongoFunction[] functions) {
+    private MongoSQLFunctions(MongoFunction[] functions) {
         super(functions);
     }
 
-    public static MongoSQLMongoFunctions getInstance() {
+    public static MongoSQLFunctions getInstance() {
         if (null == instance) {
             instance =
-                    new MongoSQLMongoFunctions(
+                    new MongoSQLFunctions(
                             new MongoFunction[] {
                                 new MongoFunction(
                                         "BIT_LENGTH",
