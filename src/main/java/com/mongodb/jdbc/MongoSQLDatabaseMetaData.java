@@ -33,17 +33,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public String getSQLKeywords() throws SQLException {
         // These come from keywords from the mongosql parser, minus the keywords from SQL 2003.
         return "AGGREGATE,"
+                + "ASC,"
                 + "BINDATA,"
                 + "BIT,"
                 + "BOOL,"
                 + "BSON_DATE,"
                 + "BSON_TIMESTAMP,"
-                + "CHAR VARYING,"
                 + "DBPOINTER,"
+                + "DESC,"
                 + "DOCUMENT,"
                 + "ERROR,"
-                + "FETCH FIRST,"
-                + "FETCH NEXT,"
+                + "EXTRACT,"
+                + "FIRST,"
                 + "JAVASCRIPT,"
                 + "JAVASCRIPTWITHSCOPE,"
                 + "LIMIT,"
@@ -51,14 +52,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 + "MAXKEY,"
                 + "MINKEY,"
                 + "MISSING,"
-                + "NOT IN,"
-                + "NOT LIKE,"
+                + "NEXT,"
+                + "NUMBER,"
                 + "OBJECTID,"
                 + "OFFSET,"
+                + "POSITION,"
                 + "REGEX,"
-                + "ROWS ONLY,"
-                + "STRING,"
+                + "SUBSTRING,"
                 + "SYMBOL,"
+                + "TRIM,"
                 + "UNDEFINED";
     }
 
@@ -1123,43 +1125,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(DEFAULT_VALUE, BSON_STRING_TYPE_NAME),
                 new Pair<>(DESCRIPTION, BSON_STRING_TYPE_NAME));
 
-        docs.add(
-                createBottomBson(
-                        new BsonElement(NAME, new BsonString("user")),
-                        new BsonElement(MAX_LEN, new BsonInt32(0)),
-                        new BsonElement(DEFAULT_VALUE, new BsonString("")),
-                        new BsonElement(
-                                DESCRIPTION, new BsonString("database user for the connection"))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(NAME, new BsonString("password")),
-                        new BsonElement(MAX_LEN, new BsonInt32(0)),
-                        new BsonElement(DEFAULT_VALUE, new BsonString("")),
-                        new BsonElement(
-                                DESCRIPTION, new BsonString("user password for the connection"))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(NAME, new BsonString("database")),
-                        new BsonElement(MAX_LEN, new BsonInt32(0)),
-                        new BsonElement(DEFAULT_VALUE, new BsonString("")),
-                        new BsonElement(DESCRIPTION, new BsonString("database to connect to"))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(NAME, new BsonString("dialect")),
-                        new BsonElement(MAX_LEN, new BsonInt32(0)),
-                        new BsonElement(DEFAULT_VALUE, new BsonString("mysql")),
-                        new BsonElement(
-                                DESCRIPTION,
-                                new BsonString(
-                                        "dialect to use, possible values are mysql or mongosql"))));
-
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
+        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
