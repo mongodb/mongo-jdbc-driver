@@ -262,6 +262,7 @@ public abstract class MongoSQLMock {
                 3
             ],
             "__bot.a":1.2,
+            "__bot.binary": <binary data>
             "__bot.str":"a"
         }
         */
