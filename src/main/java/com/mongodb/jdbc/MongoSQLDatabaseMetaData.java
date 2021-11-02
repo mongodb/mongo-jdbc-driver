@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -197,7 +198,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put(TABLE_SCHEM, new BsonString(""));
         bot.put(TABLE_NAME, new BsonString(res.name));
         bot.put(GRANTOR, new BsonNull());
-        bot.put(GRANTEE, new BsonNull());
+        bot.put(GRANTEE, new BsonString(""));
         bot.put(PRIVILEGE, new BsonString("SELECT"));
         bot.put(IS_GRANTABLE, new BsonNull());
 
@@ -274,11 +275,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 // converting the MongoListCollectionResults to BSON documents.
                 docs.sorted(
                                 Comparator.comparing(
-                                                (BsonDocument doc) -> doc.getString(TABLE_TYPE))
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_TYPE))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getString(TABLE_CAT))
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_CAT))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getString(TABLE_NAME)))
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
@@ -355,16 +356,30 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         }
     }
 
-    private BsonDocument toGetColumnsDoc(
-            String dbName,
-            String collName,
-            String columnName,
-            MongoJsonSchema columnSchema,
-            boolean isRequired)
-            throws SQLException {
+    private class GetColumnsDocInfo {
+        String dbName;
+        String collName;
+        String columnName;
+        MongoJsonSchema columnSchema;
+        boolean isRequired;
 
-        MongoSQLColumnInfo info =
-                new MongoSQLColumnInfo(collName, columnName, columnSchema, isRequired);
+        GetColumnsDocInfo(String dbName, String collName, String columnName, MongoJsonSchema columnSchema, boolean isRequired) {
+            this.dbName = dbName;
+            this.collName = collName;
+            this.columnName = columnName;
+            this.columnSchema = columnSchema;
+            this.isRequired = isRequired;
+        }
+    }
+
+    private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
+
+        MongoSQLColumnInfo info;
+        try {
+            info = new MongoSQLColumnInfo(i.collName, i.columnName, i.columnSchema, i.isRequired);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         int nullability = info.getNullability();
         String isNullable =
@@ -373,10 +388,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         : nullability == ResultSetMetaData.columnNullable ? "YES" : "";
 
         BsonDocument bot = new BsonDocument();
-        bot.put(TABLE_CAT, new BsonString(dbName));
+        bot.put(TABLE_CAT, new BsonString(i.dbName));
         bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(collName));
-        bot.put(COLUMN_NAME, new BsonString(columnName));
+        bot.put(TABLE_NAME, new BsonString(i.collName));
+        bot.put(COLUMN_NAME, new BsonString(i.columnName));
         bot.put(DATA_TYPE, new BsonInt32(info.getJDBCType()));
         bot.put(TYPE_NAME, new BsonString(info.getTableAlias()));
         bot.put(COLUMN_SIZE, new BsonNull()); // TODO
@@ -401,22 +416,30 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
+        BsonDocument bot = new BsonDocument();
+        bot.put(TABLE_CAT, new BsonString(i.dbName));
+        bot.put(TABLE_SCHEM, new BsonString(""));
+        bot.put(TABLE_NAME, new BsonString(i.collName));
+        bot.put(COLUMN_NAME, new BsonString(i.columnName));
+        bot.put(GRANTOR, new BsonNull());
+        bot.put(GRANTEE, new BsonString(""));
+        bot.put(PRIVILEGE, new BsonString("SELECT"));
+        bot.put(IS_GRANTABLE, new BsonNull());
+
+        return new BsonDocument(BOT_NAME, bot);
+    }
+
     private Stream<BsonDocument> getColumnsFromDB(
-            String dbName, Pattern tableNamePatternRE, Pattern columnNamePatternRE)
-            throws SQLException {
+            String dbName, Pattern tableNamePatternRE, Pattern columnNamePatternRE, Function<GetColumnsDocInfo, BsonDocument> f) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
-        return liftSQLException(
-                () ->
-                        db.listCollectionNames()
+        return db.listCollectionNames()
                                 .into(new ArrayList<>())
                                 .stream()
 
                                 // filter only for collections matching the pattern
                                 .filter(collName -> tableNamePatternRE.matcher(collName).matches())
-
-                                // sort by collection name
-                                .sorted()
 
                                 // map the collection names into triples of (dbName, collName, collSchema)
                                 .map(
@@ -453,14 +476,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                             .matcher(entry.getKey())
                                                                             .matches())
 
-                                                    // sort by column name
-                                                    .sorted(Map.Entry.comparingByKey())
-
                                                     // map the (columnName, columnSchema) pairs into BSON docs
                                                     .map(
-                                                            entry -> {
-                                                                try {
-                                                                    return toGetColumnsDoc(
+                                                            entry -> f.apply(new GetColumnsDocInfo(
                                                                             ns.left(),
                                                                             ns.right(),
                                                                             entry.getKey(),
@@ -469,12 +487,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                                     .required
                                                                                     .contains(
                                                                                             entry
-                                                                                                    .getKey()));
-                                                                } catch (SQLException e) {
-                                                                    throw new RuntimeException(e);
-                                                                }
-                                                            });
-                                        }));
+                                                                                                    .getKey()))));
+                                        });
     }
 
     @Override
@@ -518,7 +532,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         Pattern tableNamePatternRE = Pattern.compile(toJavaPattern(tableNamePattern));
         Pattern columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
 
-        List<BsonDocument> docs;
+        Stream<BsonDocument> docs;
         if (catalog == null) {
             // If no catalog (database) is specified, get columns for all databases.
             docs =
@@ -529,27 +543,33 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                             .listDatabaseNames()
                                             .into(new ArrayList<>())
                                             .stream()
-                                            .sorted()
                                             .flatMap(
-                                                    dbName -> {
-                                                        try {
-                                                            return getColumnsFromDB(
+                                                    dbName -> getColumnsFromDB(
                                                                     dbName,
                                                                     tableNamePatternRE,
-                                                                    columnNamePatternRE);
-                                                        } catch (SQLException e) {
-                                                            throw new RuntimeException(e);
-                                                        }
-                                                    })
-                                            .collect(Collectors.toList()));
+                                                                    columnNamePatternRE,
+                                                                    this::toGetColumnsDoc)));
 
         } else {
-            docs =
-                    getColumnsFromDB(catalog, tableNamePatternRE, columnNamePatternRE)
-                            .collect(Collectors.toList());
+            docs = liftSQLException(() ->
+                    getColumnsFromDB(catalog, tableNamePatternRE, columnNamePatternRE, this::toGetColumnsDoc)
+                            );
         }
 
-        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+        // Collect to a sorted list
+        List<BsonDocument> docsList =
+                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
+                // ORDINAL_POSITION (column name sort order, for us).
+                docs.sorted(
+                                Comparator.comparing(
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_CAT))
+                                        .thenComparing(
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME))
+                                        .thenComparing(
+                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(COLUMN_NAME)))
+                        .collect(Collectors.toList());
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
     }
@@ -558,7 +578,57 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getColumnPrivileges(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(
+                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                new Pair<>(GRANTOR, BSON_STRING_TYPE_NAME),
+                new Pair<>(GRANTEE, BSON_STRING_TYPE_NAME),
+                new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
+                new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
+
+        // All fields in this result set are nested under the bottom namespace.
+        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
+        botSchema.properties.put(BOT_NAME, resultSchema);
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
+        Pattern columnNamePatternRE = Pattern.compile(columnNamePattern);
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            docs =
+                    this.conn
+                            .mongoClient
+                            .listDatabaseNames()
+                            .into(new ArrayList<>())
+                            .stream()
+                            .flatMap(
+                                    dbName ->
+                                            getColumnsFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    columnNamePatternRE,
+                                                    this::toGetColumnPrivilegesDoc));
+        } else {
+            docs =
+                    getColumnsFromDB(
+                            catalog, tableNamePatternRE, columnNamePatternRE, this::toGetColumnPrivilegesDoc);
+        }
+
+        // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
+        // we just sort by COLUMN_NAME here.
+        List<BsonDocument> docsList =
+                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getString(COLUMN_NAME)))
+                        .collect(Collectors.toList());
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
@@ -609,7 +679,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // PRIVILEGE. Since the stream is already sorted by TABLE_CAT at this point
         // and all PRIVILEGEs are the same, we just sort by TABLE_NAME here.
         List<BsonDocument> docsList =
-                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getString(TABLE_NAME)))
+                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
@@ -621,6 +691,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
+        // TODO
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
@@ -735,6 +806,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
+        // TODO
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
@@ -1606,6 +1678,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
+        // TODO
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
