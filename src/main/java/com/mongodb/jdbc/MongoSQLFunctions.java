@@ -29,12 +29,18 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         new String[] {"string"},
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
-                                        "COALESCE",
+                                        COALESCE,
                                         null,
                                         "returns the first non-null value in the list, or null if there are no non-null values.",
                                         new String[] {null}),
                                 new MongoFunction(
-                                        "CURRENT_TIMESTAMP",
+                                        CURRENT_TIMESTAMP,
+                                        "date",
+                                        "returns the current date and time.",
+                                        new String[] {""},
+                                        FunctionCategory.TIME_DATE_FUNC),
+                                new MongoFunction(
+                                        CURRENT_TIMESTAMP,
                                         "date",
                                         "returns the current date and time.",
                                         new String[] {"int"},
@@ -42,10 +48,10 @@ public class MongoSQLFunctions extends MongoFunctions {
                                 /**
                                  * Note EXTRACT supports more than YEAR, MONTH, DAY, HOUR, MINUTE,
                                  * SECOND for the unit. It also supports TIMEZONE_HOUR |
-                                 * TIMEZONE_MINUTE.ß
+                                 * TIMEZONE_MINUTE.
                                  */
                                 new MongoFunction(
-                                        "EXTRACT",
+                                        EXTRACT,
                                         "long",
                                         "returns the value of the specified unit from the provided date.",
                                         new String[] {"string", "date"},
@@ -56,7 +62,7 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         "returns the provided string with all characters changed to lowercase.",
                                         new String[] {"string"}),
                                 new MongoFunction(
-                                        "NULLIF",
+                                        NULLIF,
                                         null,
                                         "returns null if the two arguments are equal, and the first argument otherwise.",
                                         new String[] {null, null}),
@@ -83,12 +89,12 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         "returns the size of an array.",
                                         new String[] {"array"}),
                                 new MongoFunction(
-                                        "SUBSTRING",
+                                        SUBSTRING,
                                         "string",
                                         "takes a substring from a string",
                                         new String[] {"string", "long"}),
                                 new MongoFunction(
-                                        "SUBSTRING",
+                                        SUBSTRING,
                                         "string",
                                         "takes a substring from a string",
                                         new String[] {"string", "long", "long"},

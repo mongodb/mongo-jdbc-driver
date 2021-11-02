@@ -40,6 +40,15 @@ abstract class MongoDatabaseMetaDataTest {
         }
     }
 
+    /**
+     * Calls the databaseMetaData.getFunctions with the given function name pattern and the expected
+     * number of rows it should return and verifies that it matches the actual number of rows
+     * returned.
+     *
+     * @param functionNamePattern The function name pattern used to narrow the search.
+     * @param expectedNumRows The expected number of rows it should return.
+     * @throws SQLException If an error occurs when calling getFunctions.
+     */
     protected void testGetFunctionsHelper(String functionNamePattern, int expectedNumRows)
             throws SQLException {
         String[] getFunctionsColumns =
@@ -307,6 +316,7 @@ abstract class MongoDatabaseMetaDataTest {
     }
 
     @Test
+    /** Test the DatabaseMetadata.getFunctions method. */
     abstract void testGetFunctions() throws SQLException;
 }
 
@@ -372,9 +382,16 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Test
     @Override
     void testGetFunctions() throws SQLException {
-        testGetFunctionsHelper("%", 119);
-        testGetFunctionsHelper("%S%", 47);
+        // All function(s)
+        testGetFunctionsHelper("%", 120);
+        // All function(s) with a 'S'
+        testGetFunctionsHelper("%S%", 48);
+        // All function(s) with a 's'
         testGetFunctionsHelper("%s%", 0);
+        // The 'SUBSTRING' function(s)
+        testGetFunctionsHelper("SUBSTRING", 2);
+        // The 'SUBS(any character)RING' function(s)
+        testGetFunctionsHelper("SUBS_RING", 2);
     }
 }
 
@@ -408,8 +425,15 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Test
     @Override
     void testGetFunctions() throws SQLException {
-        testGetFunctionsHelper("%", 16);
-        testGetFunctionsHelper("%S%", 8);
+        // All function(s)
+        testGetFunctionsHelper("%", 17);
+        // All function(s) with a 'S'
+        testGetFunctionsHelper("%S%", 9);
+        // All function(s) with a 's'
         testGetFunctionsHelper("%s%", 0);
+        // The 'SUBSTRING' function(s)
+        testGetFunctionsHelper("SUBSTRING", 2);
+        // The 'SUBS(any character)RING' function(s)
+        testGetFunctionsHelper("SUBS_RING", 2);
     }
 }

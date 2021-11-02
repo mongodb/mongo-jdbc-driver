@@ -45,6 +45,13 @@ public abstract class MongoFunctions {
     public String dateFunctionsString;
     public String systemFunctionsString;
 
+    // Common and repeated function names.
+    protected static final String CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
+    protected static final String SUBSTRING = "SUBSTRING";
+    protected static final String COALESCE = "COALESCE";
+    protected static final String EXTRACT = "EXTRACT";
+    protected static final String NULLIF = "NULLIF";
+
     protected MongoFunctions(MongoFunction[] functions) {
         this.functions = functions;
         initCategorizedFunctionsList();

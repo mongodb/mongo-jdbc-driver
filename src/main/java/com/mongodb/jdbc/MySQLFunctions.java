@@ -2,6 +2,8 @@ package com.mongodb.jdbc;
 
 public class MySQLFunctions extends MongoFunctions {
 
+    private static final String ATAN = "ATAN";
+
     private static MySQLFunctions instance;
 
     private MySQLFunctions(MongoFunction[] functions) {
@@ -38,13 +40,13 @@ public class MySQLFunctions extends MongoFunctions {
                                         new String[] {"numeric"},
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
-                                        "ATAN",
+                                        ATAN,
                                         "double",
                                         "returns the arc tangent of the number provided.",
                                         new String[] {"numeric"},
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
-                                        "ATAN",
+                                        ATAN,
                                         "double",
                                         "returns the arc tangent of the number(s) provided.",
                                         new String[] {"numeric, numeric"},
@@ -85,7 +87,7 @@ public class MySQLFunctions extends MongoFunctions {
                                         new String[] {"string"},
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
-                                        "COALESCE",
+                                        COALESCE,
                                         null,
                                         "returns the first non-null value in the list, or null if there are no non-null values.",
                                         new String[] {null}),
@@ -134,10 +136,16 @@ public class MySQLFunctions extends MongoFunctions {
                                         new String[] {},
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
-                                        "CURRENT_TIMESTAMP",
+                                        CURRENT_TIMESTAMP,
                                         "date",
                                         "returns the current date and time.",
                                         new String[] {},
+                                        FunctionCategory.TIME_DATE_FUNC),
+                                new MongoFunction(
+                                        CURRENT_TIMESTAMP,
+                                        "date",
+                                        "returns the current date and time.",
+                                        new String[] {"int"}, // Timestamp precision
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "CURTIME",
@@ -222,7 +230,7 @@ public class MySQLFunctions extends MongoFunctions {
                                  * SECOND for the unit.
                                  */
                                 new MongoFunction(
-                                        "EXTRACT",
+                                        EXTRACT,
                                         "long",
                                         "returns the value of the specified unit from the provided date.",
                                         new String[] {"string", "date"},
@@ -416,7 +424,7 @@ public class MySQLFunctions extends MongoFunctions {
                                         new String[] {"date"},
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
-                                        "NULLIF",
+                                        NULLIF,
                                         null,
                                         "returns null if the two arguments are equal, and the first argument otherwise.",
                                         new String[] {null, null}),
@@ -539,12 +547,12 @@ public class MySQLFunctions extends MongoFunctions {
                                         "takes a string and a date format string, and attempts to parse a date from the string according to the provided format string.",
                                         new String[] {"string", "string"}),
                                 new MongoFunction(
-                                        "SUBSTRING",
+                                        SUBSTRING,
                                         "string",
                                         "takes a substring from a string starting at the given position",
                                         new String[] {"string", "long"}),
                                 new MongoFunction(
-                                        "SUBSTRING",
+                                        SUBSTRING,
                                         "string",
                                         "takes a substring from a string starting at the given position and with the given lenght",
                                         new String[] {"string", "long", "long"},
