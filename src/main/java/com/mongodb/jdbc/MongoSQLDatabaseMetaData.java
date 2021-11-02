@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bson.BsonDocument;
+import org.bson.BsonElement;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
@@ -179,35 +180,31 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getTablesFromDB helper method which is shared between getTables and
     // getTablePrivileges.
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
-        BsonDocument bot = new BsonDocument();
-        bot.put(TABLE_CAT, new BsonString(dbName));
-        bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(res.name));
-        bot.put(TABLE_TYPE, new BsonString(res.type));
-        bot.put(REMARKS, new BsonNull());
-        bot.put(TYPE_CAT, new BsonNull());
-        bot.put(TYPE_SCHEM, new BsonNull());
-        bot.put(TYPE_NAME, new BsonNull());
-        bot.put(SELF_REFERENCING_COL_NAME, new BsonNull());
-        bot.put(REF_GENERATION, new BsonNull());
-
-        return new BsonDocument(BOT_NAME, bot);
+        return createBottomBson(
+                new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_NAME, new BsonString(res.name)),
+                new BsonElement(TABLE_TYPE, new BsonString(res.type)),
+                new BsonElement(REMARKS, new BsonNull()),
+                new BsonElement(TYPE_CAT, new BsonNull()),
+                new BsonElement(TYPE_SCHEM, new BsonNull()),
+                new BsonElement(TYPE_NAME, new BsonNull()),
+                new BsonElement(SELF_REFERENCING_COL_NAME, new BsonNull()),
+                new BsonElement(REF_GENERATION, new BsonNull()));
     }
 
     // Helper for creating BSON documents for the getTablePrivileges method. Intended
     // for use with the getTablesFromDB helper method which is shared between getTables
     // and getTablePrivileges.
     private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
-        BsonDocument bot = new BsonDocument();
-        bot.put(TABLE_CAT, new BsonString(dbName));
-        bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(res.name));
-        bot.put(GRANTOR, new BsonNull());
-        bot.put(GRANTEE, new BsonString(""));
-        bot.put(PRIVILEGE, new BsonString("SELECT"));
-        bot.put(IS_GRANTABLE, new BsonNull());
-
-        return new BsonDocument(BOT_NAME, bot);
+        return createBottomBson(
+                new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_NAME, new BsonString(res.name)),
+                new BsonElement(GRANTOR, new BsonNull()),
+                new BsonElement(GRANTEE, new BsonString("")),
+                new BsonElement(PRIVILEGE, new BsonString("SELECT")),
+                new BsonElement(IS_GRANTABLE, new BsonNull()));
     }
 
     // Helper for getting table data for all tables from a specific database. Used by
@@ -334,11 +331,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                 .sorted()
                                 .map(
                                         dbName ->
-                                                new BsonDocument(
-                                                        "",
-                                                        new BsonDocument(
-                                                                "TABLE_CAT",
-                                                                new BsonString(dbName))))
+                                                createBottomBson(
+                                                        new BsonElement(
+                                                                TABLE_CAT, new BsonString(dbName))))
                                 .collect(Collectors.toList()));
 
         return new MongoSQLResultSet(null, c, botSchema);
@@ -411,50 +406,46 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         ? "NO"
                         : nullability == ResultSetMetaData.columnNullable ? "YES" : "";
 
-        BsonDocument bot = new BsonDocument();
-        bot.put(TABLE_CAT, new BsonString(i.dbName));
-        bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(i.collName));
-        bot.put(COLUMN_NAME, new BsonString(i.columnName));
-        bot.put(DATA_TYPE, new BsonInt32(info.getJDBCType()));
-        bot.put(TYPE_NAME, new BsonString(info.getTableAlias()));
-        bot.put(COLUMN_SIZE, new BsonNull()); // TODO
-        bot.put(BUFFER_LENGTH, new BsonInt32(0));
-        bot.put(DECIMAL_DIGITS, new BsonNull()); // TODO
-        bot.put(NUM_PREC_RADIX, new BsonNull()); // TODO
-        bot.put(NULLABLE, new BsonInt32(nullability));
-        bot.put(REMARKS, new BsonString(""));
-        bot.put(COLUMN_DEF, new BsonNull());
-        bot.put(SQL_DATA_TYPE, new BsonInt32(0));
-        bot.put(SQL_DATETIME_SUB, new BsonInt32(0));
-        bot.put(CHAR_OCTET_LENGTH, new BsonNull()); // TODO
-        bot.put(ORDINAL_POSITION, new BsonNull()); // TODO
-        bot.put(IS_NULLABLE, new BsonString(isNullable));
-        bot.put(SCOPE_CATALOG, new BsonNull());
-        bot.put(SCOPE_SCHEMA, new BsonNull());
-        bot.put(SCOPE_TABLE, new BsonNull());
-        bot.put(SOURCE_DATA_TYPE, new BsonInt32(0));
-        bot.put(IS_AUTOINCREMENT, new BsonString(""));
-        bot.put(IS_GENERATEDCOLUMN, new BsonInt32(0));
-
-        return new BsonDocument(BOT_NAME, bot);
+        return createBottomBson(
+                new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
+                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_NAME, new BsonString(i.collName)),
+                new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
+                new BsonElement(DATA_TYPE, new BsonInt32(info.getJDBCType())),
+                new BsonElement(TYPE_NAME, new BsonString(info.getTableAlias())),
+                new BsonElement(COLUMN_SIZE, new BsonNull()), // TODO
+                new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
+                new BsonElement(DECIMAL_DIGITS, new BsonNull()), // TODO
+                new BsonElement(NUM_PREC_RADIX, new BsonNull()), // TODO
+                new BsonElement(NULLABLE, new BsonInt32(nullability)),
+                new BsonElement(REMARKS, new BsonString("")),
+                new BsonElement(COLUMN_DEF, new BsonNull()),
+                new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                new BsonElement(CHAR_OCTET_LENGTH, new BsonNull()), // TODO
+                new BsonElement(ORDINAL_POSITION, new BsonNull()), // TODO
+                new BsonElement(IS_NULLABLE, new BsonString(isNullable)),
+                new BsonElement(SCOPE_CATALOG, new BsonNull()),
+                new BsonElement(SCOPE_SCHEMA, new BsonNull()),
+                new BsonElement(SCOPE_TABLE, new BsonNull()),
+                new BsonElement(SOURCE_DATA_TYPE, new BsonInt32(0)),
+                new BsonElement(IS_AUTOINCREMENT, new BsonString("")),
+                new BsonElement(IS_GENERATEDCOLUMN, new BsonInt32(0)));
     }
 
     // Helper for creating BSON documents for the getColumnPrivileges methods. Intended
     // for use with the getColumnsFromDB helper method which is shared between getColumns
     // and getColumnPrivileges.
     private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
-        BsonDocument bot = new BsonDocument();
-        bot.put(TABLE_CAT, new BsonString(i.dbName));
-        bot.put(TABLE_SCHEM, new BsonString(""));
-        bot.put(TABLE_NAME, new BsonString(i.collName));
-        bot.put(COLUMN_NAME, new BsonString(i.columnName));
-        bot.put(GRANTOR, new BsonNull());
-        bot.put(GRANTEE, new BsonString(""));
-        bot.put(PRIVILEGE, new BsonString("SELECT"));
-        bot.put(IS_GRANTABLE, new BsonNull());
-
-        return new BsonDocument(BOT_NAME, bot);
+        return createBottomBson(
+                new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
+                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_NAME, new BsonString(i.collName)),
+                new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
+                new BsonElement(GRANTOR, new BsonNull()),
+                new BsonElement(GRANTEE, new BsonString("")),
+                new BsonElement(PRIVILEGE, new BsonString("SELECT")),
+                new BsonElement(IS_GRANTABLE, new BsonNull()));
     }
 
     // Helper for getting column data for all columns from all tables from a specific
