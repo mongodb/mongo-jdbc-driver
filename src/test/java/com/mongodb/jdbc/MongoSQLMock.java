@@ -61,9 +61,7 @@ public abstract class MongoSQLMock {
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
     @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;
-    @Mock protected static AggregateIterable<MongoJsonSchemaResult> jsonSchemaResultIterable;
     @Mock protected static MongoCursor<BsonDocument> mongoCursor;
-    @Mock protected static MongoCursor<MongoJsonSchemaResult> mongoSchemaCursor;
 
     @InjectMocks
     protected static MongoConnection mongoConnection = new MongoSQLConnection(uri, database);
@@ -100,22 +98,14 @@ public abstract class MongoSQLMock {
         // Mock mongoDatabase
         when(mongoConnection.getDatabase(anyString())).thenReturn(mongoDatabase);
         when(mongoDatabase.withCodecRegistry(any())).thenReturn(mongoDatabase);
-        //doReturn(jsonSchemaResultIterable)
-        when(mongoDatabase.aggregate(any(), eq(MongoJsonSchemaResult.class)))
-                .thenReturn(jsonSchemaResultIterable);
         when(mongoDatabase.aggregate(any(), eq(BsonDocument.class))).thenReturn(aggregateIterable);
         // Mock aggregateIterable
         when(aggregateIterable.batchSize(anyInt())).thenReturn(aggregateIterable);
         when(aggregateIterable.maxTime(anyLong(), any())).thenReturn(aggregateIterable);
         when(aggregateIterable.cursor()).thenReturn(mongoCursor);
-        when(jsonSchemaResultIterable.batchSize(anyInt())).thenReturn(jsonSchemaResultIterable);
-        when(jsonSchemaResultIterable.maxTime(anyLong(), any()))
-                .thenReturn(jsonSchemaResultIterable);
-        when(jsonSchemaResultIterable.cursor()).thenReturn(mongoSchemaCursor);
 
         // Mock MongoCursor
         when(mongoCursor.hasNext()).thenReturn(false);
-        when(mongoSchemaCursor.hasNext()).thenReturn(false);
     }
 
     // to replace lambda as input in the testExceptionAfterConnectionClosed

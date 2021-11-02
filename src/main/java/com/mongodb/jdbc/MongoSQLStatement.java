@@ -23,7 +23,7 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
         closeExistingResultSet();
 
         BsonDocument stage = constructQueryDocument(sql, "mongosql");
-        BsonDocument schemaStage = constructSQLGetResultSchemaDocument(sql);
+        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
             MongoIterable<BsonDocument> iterable =
                     currentDB
@@ -34,17 +34,11 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
                 iterable = iterable.batchSize(fetchSize);
             }
 
-            MongoIterable<MongoJsonSchemaResult> schemaIterable =
+            MongoJsonSchemaResult schemaResult =
                     currentDB
                             .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(
-                                    Collections.singletonList(schemaStage),
-                                    MongoJsonSchemaResult.class)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            MongoJsonSchemaResult schemaResult = schemaIterable.cursor().next();
-            if (schemaResult.ok != 1) {
-                throw new SQLException("Invalid schema result from server");
-            }
+                            .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+
             MongoJsonSchema schema = schemaResult.schema.jsonSchema;
             resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
             return resultSet;
@@ -54,10 +48,10 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
     }
 
     private BsonDocument constructSQLGetResultSchemaDocument(String sql) {
-        BsonDocument stage = new BsonDocument();
-        stage.put("query", new BsonString(sql));
-        stage.put("sqlGetResultSchema", new BsonInt32(1));
-        stage.put("schemaVersion", new BsonInt32(1));
-        return stage;
+        BsonDocument command = new BsonDocument();
+        command.put("sqlGetResultSchema", new BsonInt32(1));
+        command.put("query", new BsonString(sql));
+        command.put("schemaVersion", new BsonInt32(1));
+        return command;
     }
 }
