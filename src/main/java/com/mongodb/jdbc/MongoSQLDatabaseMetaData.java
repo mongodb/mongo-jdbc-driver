@@ -20,7 +20,6 @@ import org.bson.BsonValue;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -176,6 +175,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    // Helper for creating BSON documents for the getTables method. Intended for use
+    // with the getTablesFromDB helper method which is shared between getTables and
+    // getTablePrivileges.
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
         BsonDocument bot = new BsonDocument();
         bot.put(TABLE_CAT, new BsonString(dbName));
@@ -192,6 +194,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    // Helper for creating BSON documents for the getTablePrivileges method. Intended
+    // for use with the getTablesFromDB helper method which is shared between getTables
+    // and getTablePrivileges.
     private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
         BsonDocument bot = new BsonDocument();
         bot.put(TABLE_CAT, new BsonString(dbName));
@@ -205,6 +210,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    // Helper for getting table data for all tables from a specific database. Used by
+    // getTables and getTablePrivileges. The caller specifies how to serialize the table
+    // info into BSON documents for the result set.
     private Stream<BsonDocument> getTablesFromDB(
             String dbName,
             Pattern tableNamePatternRE,
@@ -251,6 +259,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
+            // If no catalog (database) is specified, get tables for all databases.
             docs =
                     this.conn
                             .mongoClient
@@ -271,15 +280,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Collect to a sorted list
         List<BsonDocument> docsList =
                 // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
-                // TABLE_NAME. Since we need to sort by TABLE_TYPE first, we do it after
-                // converting the MongoListCollectionResults to BSON documents.
+                // TABLE_NAME.
                 docs.sorted(
                                 Comparator.comparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_TYPE))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(TABLE_TYPE))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_CAT))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(TABLE_CAT))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(TABLE_NAME)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
@@ -356,14 +370,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         }
     }
 
-    private class GetColumnsDocInfo {
+    // Helper class for representing all info needed to serialize column data for the
+    // getColumns and getColumnPrivileges methods. Intended for use with toGetColumnsDoc
+    // and toGetColumnPrivilegesDoc helpers.
+    private static class GetColumnsDocInfo {
         String dbName;
         String collName;
         String columnName;
         MongoJsonSchema columnSchema;
         boolean isRequired;
 
-        GetColumnsDocInfo(String dbName, String collName, String columnName, MongoJsonSchema columnSchema, boolean isRequired) {
+        GetColumnsDocInfo(
+                String dbName,
+                String collName,
+                String columnName,
+                MongoJsonSchema columnSchema,
+                boolean isRequired) {
             this.dbName = dbName;
             this.collName = collName;
             this.columnName = columnName;
@@ -372,8 +394,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         }
     }
 
+    // Helper for creating BSON documents for the getColumns method. Intended for use
+    // with the getColumnsFromDB helper method which is shared between getColumns and
+    // getColumnPrivileges.
     private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
-
         MongoSQLColumnInfo info;
         try {
             info = new MongoSQLColumnInfo(i.collName, i.columnName, i.columnSchema, i.isRequired);
@@ -416,6 +440,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    // Helper for creating BSON documents for the getColumnPrivileges methods. Intended
+    // for use with the getColumnsFromDB helper method which is shared between getColumns
+    // and getColumnPrivileges.
     private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
         BsonDocument bot = new BsonDocument();
         bot.put(TABLE_CAT, new BsonString(i.dbName));
@@ -430,65 +457,68 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new BsonDocument(BOT_NAME, bot);
     }
 
+    // Helper for getting column data for all columns from all tables from a specific
+    // database. Used by getColumns and getColumnPrivileges. The caller specifies how
+    // to serialize the column info into BSON documents for the result set.
     private Stream<BsonDocument> getColumnsFromDB(
-            String dbName, Pattern tableNamePatternRE, Pattern columnNamePatternRE, Function<GetColumnsDocInfo, BsonDocument> f) {
+            String dbName,
+            Pattern tableNamePatternRE,
+            Pattern columnNamePatternRE,
+            Function<GetColumnsDocInfo, BsonDocument> f) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return db.listCollectionNames()
-                                .into(new ArrayList<>())
-                                .stream()
+                .into(new ArrayList<>())
+                .stream()
 
-                                // filter only for collections matching the pattern
-                                .filter(collName -> tableNamePatternRE.matcher(collName).matches())
+                // filter only for collections matching the pattern
+                .filter(collName -> tableNamePatternRE.matcher(collName).matches())
 
-                                // map the collection names into triples of (dbName, collName, collSchema)
-                                .map(
-                                        collName ->
-                                                new Pair<>(
-                                                        new Pair<>(dbName, collName),
-                                                        db.runCommand(
-                                                                new BsonDocument(
-                                                                        "sqlGetSchema",
-                                                                        new BsonString(collName)),
-                                                                MongoJsonSchemaResult.class)))
+                // map the collection names into triples of (dbName, collName, collSchema)
+                .map(
+                        collName ->
+                                new Pair<>(
+                                        new Pair<>(dbName, collName),
+                                        db.runCommand(
+                                                new BsonDocument(
+                                                        "sqlGetSchema", new BsonString(collName)),
+                                                MongoJsonSchemaResult.class)))
 
-                                // filter only for collections that have schemas
-                                .filter(
-                                        p ->
-                                                p.right().ok == 1
-                                                        && p.right().schema.jsonSchema.isObject())
+                // filter only for collections that have schemas
+                .filter(p -> p.right().ok == 1 && p.right().schema.jsonSchema.isObject())
 
-                                // flatMap the column data into a single stream of BSON docs
-                                .flatMap(
-                                        p -> {
-                                            Pair<String, String> ns = p.left();
-                                            MongoJsonSchemaResult res = p.right();
-                                            return res.schema
-                                                    .jsonSchema
-                                                    .properties
-                                                    .entrySet()
-                                                    .stream()
+                // flatMap the column data into a single stream of BSON docs
+                .flatMap(
+                        p -> {
+                            Pair<String, String> ns = p.left();
+                            MongoJsonSchemaResult res = p.right();
+                            return res.schema
+                                    .jsonSchema
+                                    .properties
+                                    .entrySet()
+                                    .stream()
 
-                                                    // filter only for columns matching the pattern
-                                                    .filter(
-                                                            entry ->
-                                                                    columnNamePatternRE
-                                                                            .matcher(entry.getKey())
-                                                                            .matches())
+                                    // filter only for columns matching the pattern
+                                    .filter(
+                                            entry ->
+                                                    columnNamePatternRE
+                                                            .matcher(entry.getKey())
+                                                            .matches())
 
-                                                    // map the (columnName, columnSchema) pairs into BSON docs
-                                                    .map(
-                                                            entry -> f.apply(new GetColumnsDocInfo(
-                                                                            ns.left(),
-                                                                            ns.right(),
-                                                                            entry.getKey(),
-                                                                            entry.getValue(),
-                                                                            res.schema.jsonSchema
-                                                                                    .required
-                                                                                    .contains(
-                                                                                            entry
-                                                                                                    .getKey()))));
-                                        });
+                                    // map the (columnName, columnSchema) pairs into BSON docs
+                                    .map(
+                                            entry ->
+                                                    f.apply(
+                                                            new GetColumnsDocInfo(
+                                                                    ns.left(),
+                                                                    ns.right(),
+                                                                    entry.getKey(),
+                                                                    entry.getValue(),
+                                                                    res.schema.jsonSchema.required
+                                                                            .contains(
+                                                                                    entry
+                                                                                            .getKey()))));
+                        });
     }
 
     @Override
@@ -544,29 +574,41 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                             .into(new ArrayList<>())
                                             .stream()
                                             .flatMap(
-                                                    dbName -> getColumnsFromDB(
+                                                    dbName ->
+                                                            getColumnsFromDB(
                                                                     dbName,
                                                                     tableNamePatternRE,
                                                                     columnNamePatternRE,
                                                                     this::toGetColumnsDoc)));
 
         } else {
-            docs = liftSQLException(() ->
-                    getColumnsFromDB(catalog, tableNamePatternRE, columnNamePatternRE, this::toGetColumnsDoc)
-                            );
+            docs =
+                    liftSQLException(
+                            () ->
+                                    getColumnsFromDB(
+                                            catalog,
+                                            tableNamePatternRE,
+                                            columnNamePatternRE,
+                                            this::toGetColumnsDoc));
         }
 
         // Collect to a sorted list
         List<BsonDocument> docsList =
                 // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
-                // ORDINAL_POSITION (column name sort order, for us).
+                // ORDINAL_POSITION (ordinal position is same as column name sort order for us).
                 docs.sorted(
                                 Comparator.comparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_CAT))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(TABLE_CAT))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(TABLE_NAME))
                                         .thenComparing(
-                                                (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(COLUMN_NAME)))
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(COLUMN_NAME)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
@@ -601,6 +643,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
+            // If no catalog (database) is specified, get column privileges for all databases.
             docs =
                     this.conn
                             .mongoClient
@@ -617,7 +660,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         } else {
             docs =
                     getColumnsFromDB(
-                            catalog, tableNamePatternRE, columnNamePatternRE, this::toGetColumnPrivilegesDoc);
+                            catalog,
+                            tableNamePatternRE,
+                            columnNamePatternRE,
+                            this::toGetColumnPrivilegesDoc);
         }
 
         // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
@@ -655,6 +701,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
+            // If no catalog (database) is specified, get table privileges for all databases.
             docs =
                     this.conn
                             .mongoClient
@@ -679,7 +726,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // PRIVILEGE. Since the stream is already sorted by TABLE_CAT at this point
         // and all PRIVILEGEs are the same, we just sort by TABLE_NAME here.
         List<BsonDocument> docsList =
-                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
+                docs.sorted(
+                                Comparator.comparing(
+                                        (BsonDocument doc) ->
+                                                doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
