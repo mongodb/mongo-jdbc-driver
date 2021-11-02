@@ -465,7 +465,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String dbName,
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
-            Function<GetColumnsDocInfo, BsonDocument> f) {
+            Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return db.listCollectionNames()
@@ -513,7 +513,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                     // map the (columnName, columnSchema) pairs into BSON docs
                                     .map(
                                             entry ->
-                                                    f.apply(
+                                                    bsonSerializer.apply(
                                                             new GetColumnsDocInfo(
                                                                     ns.left(),
                                                                     ns.right(),
