@@ -52,35 +52,35 @@ public abstract class MongoFunctions {
 
     // Build the list of numeric, string, dateTime and system functions.
     private void initCategorizedFunctionsList() {
-        StringBuilder numericFunctionBuilder = new StringBuilder();
-        StringBuilder stringFunctionBuilder = new StringBuilder();
-        StringBuilder dateTimeFunctionBuilder = new StringBuilder();
-        StringBuilder systemFunctionBuilder = new StringBuilder();
+        StringBuilder numericFunctionsBuilder = new StringBuilder();
+        StringBuilder stringFunctionsBuilder = new StringBuilder();
+        StringBuilder dateTimeFunctionsBuilder = new StringBuilder();
+        StringBuilder systemFunctionsBuilder = new StringBuilder();
 
         StringBuilder currBuilder = null;
         for (MongoFunction currFunc : functions) {
             switch (currFunc.functionCategory) {
                 case NUM_FUNC:
                     {
-                        currBuilder = numericFunctionBuilder;
+                        currBuilder = numericFunctionsBuilder;
                         break;
                     }
 
                 case STRING_FUNC:
                     {
-                        currBuilder = stringFunctionBuilder;
+                        currBuilder = stringFunctionsBuilder;
                         break;
                     }
 
                 case SYSTEM_FUNC:
                     {
-                        currBuilder = systemFunctionBuilder;
+                        currBuilder = systemFunctionsBuilder;
                         break;
                     }
 
                 case TIME_DATE_FUNC:
                     {
-                        currBuilder = dateTimeFunctionBuilder;
+                        currBuilder = dateTimeFunctionsBuilder;
 
                         break;
                     }
@@ -96,15 +96,15 @@ public abstract class MongoFunctions {
             }
 
             if (null != currBuilder) {
-                if (0 < currBuilder.length()) {
+                if (currBuilder.length() > 0) {
                     currBuilder.append(',');
                 }
                 currBuilder.append(currFunc.name);
             }
         }
-        numericFunctionsString = numericFunctionBuilder.toString();
-        stringFunctionsString = stringFunctionBuilder.toString();
-        dateFunctionsString = dateTimeFunctionBuilder.toString();
-        systemFunctionsString = systemFunctionBuilder.toString();
+        numericFunctionsString = numericFunctionsBuilder.toString();
+        stringFunctionsString = stringFunctionsBuilder.toString();
+        dateFunctionsString = dateTimeFunctionsBuilder.toString();
+        systemFunctionsString = systemFunctionsBuilder.toString();
     }
 }

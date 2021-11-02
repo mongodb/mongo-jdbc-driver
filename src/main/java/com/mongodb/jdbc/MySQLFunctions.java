@@ -1,7 +1,3 @@
-// This is generated code. To regenerate go to the resources directory:
-//     $ cd adl-jdbc-driver/resources
-// and run:
-//     $ make
 package com.mongodb.jdbc;
 
 public class MySQLFunctions extends MongoFunctions {
