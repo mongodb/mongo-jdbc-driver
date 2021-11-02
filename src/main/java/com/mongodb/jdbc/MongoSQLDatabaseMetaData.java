@@ -20,6 +20,8 @@ import org.bson.BsonValue;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -374,18 +376,21 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         String columnName;
         MongoJsonSchema columnSchema;
         boolean isRequired;
+        int idx;
 
         GetColumnsDocInfo(
                 String dbName,
                 String collName,
                 String columnName,
                 MongoJsonSchema columnSchema,
-                boolean isRequired) {
+                boolean isRequired,
+                int idx) {
             this.dbName = dbName;
             this.collName = collName;
             this.columnName = columnName;
             this.columnSchema = columnSchema;
             this.isRequired = isRequired;
+            this.idx = idx;
         }
     }
 
@@ -413,17 +418,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(DATA_TYPE, new BsonInt32(info.getJDBCType())),
                 new BsonElement(TYPE_NAME, new BsonString(info.getTableAlias())),
-                new BsonElement(COLUMN_SIZE, new BsonNull()), // TODO
+                new BsonElement(COLUMN_SIZE, new BsonNull()),
                 new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
-                new BsonElement(DECIMAL_DIGITS, new BsonNull()), // TODO
-                new BsonElement(NUM_PREC_RADIX, new BsonNull()), // TODO
+                new BsonElement(
+                        DECIMAL_DIGITS,
+                        new BsonNull()), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
+                new BsonElement(
+                        NUM_PREC_RADIX, new BsonNull()), // TODO NUM_PREC_RADIX -> Oliver's helper
                 new BsonElement(NULLABLE, new BsonInt32(nullability)),
                 new BsonElement(REMARKS, new BsonString("")),
                 new BsonElement(COLUMN_DEF, new BsonNull()),
                 new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                 new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                new BsonElement(CHAR_OCTET_LENGTH, new BsonNull()), // TODO
-                new BsonElement(ORDINAL_POSITION, new BsonNull()), // TODO
+                new BsonElement(
+                        CHAR_OCTET_LENGTH,
+                        new BsonNull()), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
+                new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
                 new BsonElement(IS_NULLABLE, new BsonString(isNullable)),
                 new BsonElement(SCOPE_CATALOG, new BsonNull()),
                 new BsonElement(SCOPE_SCHEMA, new BsonNull()),
@@ -483,6 +493,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         p -> {
                             Pair<String, String> ns = p.left();
                             MongoJsonSchemaResult res = p.right();
+                            AtomicInteger idx = new AtomicInteger();
                             return res.schema
                                     .jsonSchema
                                     .properties
@@ -496,6 +507,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                             .matcher(entry.getKey())
                                                             .matches())
 
+                                    // sort by column name
+                                    .sorted(Map.Entry.comparingByKey())
+
                                     // map the (columnName, columnSchema) pairs into BSON docs
                                     .map(
                                             entry ->
@@ -507,8 +521,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                     entry.getValue(),
                                                                     res.schema.jsonSchema.required
                                                                             .contains(
-                                                                                    entry
-                                                                                            .getKey()))));
+                                                                                    entry.getKey()),
+                                                                    idx.getAndIncrement())));
                         });
     }
 
