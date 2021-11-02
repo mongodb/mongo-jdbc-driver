@@ -1269,12 +1269,13 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
                 return 34;
             case BSON_DOUBLE_TYPE_NAME:
                 return 15;
+            case BSON_DATE_TYPE_NAME:
+                return 3;
 
             case BSON_BINDATA_TYPE_NAME:
             case BSON_STRING_TYPE_NAME:
             case BSON_INT_TYPE_NAME:
             case BSON_BOOL_TYPE_NAME:
-            case BSON_DATE_TYPE_NAME:
             case BSON_LONG_TYPE_NAME:
             case BSON_ARRAY_TYPE_NAME:
             case BSON_OBJECT_TYPE_NAME:
