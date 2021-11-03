@@ -5,27 +5,27 @@ import java.sql.SQLException;
 public class BsonTypeInfo {
     static final int unknownLength = 0;
 
-    static final String BSON_BINDATA_TYPE_NAME = "binData";
-    static final String BSON_STRING_TYPE_NAME = "string";
-    static final String BSON_INT_TYPE_NAME = "int";
-    static final String BSON_BOOL_TYPE_NAME = "bool";
-    static final String BSON_DATE_TYPE_NAME = "date";
-    static final String BSON_DECIMAL_TYPE_NAME = "decimal";
-    static final String BSON_DOUBLE_TYPE_NAME = "double";
-    static final String BSON_LONG_TYPE_NAME = "long";
-    static final String BSON_ARRAY_TYPE_NAME = "array";
-    static final String BSON_OBJECT_TYPE_NAME = "object";
-    static final String BSON_OBJECTID_TYPE_NAME = "objectId";
-    static final String BSON_DBPOINTER_TYPE_NAME = "dbPointer";
-    static final String BSON_JAVASCRIPT_TYPE_NAME = "javascript";
-    static final String BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME = "javascriptWithScope";
-    static final String BSON_MAXKEY_TYPE_NAME = "maxKey";
-    static final String BSON_MINKEY_TYPE_NAME = "minKey";
-    static final String BSON_REGEX_TYPE_NAME = "regex";
-    static final String BSON_SYMBOL_TYPE_NAME = "symbol";
-    static final String BSON_TIMESTAMP_TYPE_NAME = "timestamp";
-    static final String BSON_UNDEFINED_TYPE_NAME = "undefined";
-    static final String BSON_BSON_TYPE_NAME = "bson";
+    public static final String BSON_BINDATA_TYPE_NAME = "binData";
+    public static final String BSON_STRING_TYPE_NAME = "string";
+    public static final String BSON_INT_TYPE_NAME = "int";
+    public static final String BSON_BOOL_TYPE_NAME = "bool";
+    public static final String BSON_DATE_TYPE_NAME = "date";
+    public static final String BSON_DECIMAL_TYPE_NAME = "decimal";
+    public static final String BSON_DOUBLE_TYPE_NAME = "double";
+    public static final String BSON_LONG_TYPE_NAME = "long";
+    public static final String BSON_ARRAY_TYPE_NAME = "array";
+    public static final String BSON_OBJECT_TYPE_NAME = "object";
+    public static final String BSON_OBJECTID_TYPE_NAME = "objectId";
+    public static final String BSON_DBPOINTER_TYPE_NAME = "dbPointer";
+    public static final String BSON_JAVASCRIPT_TYPE_NAME = "javascript";
+    public static final String BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME = "javascriptWithScope";
+    public static final String BSON_MAXKEY_TYPE_NAME = "maxKey";
+    public static final String BSON_MINKEY_TYPE_NAME = "minKey";
+    public static final String BSON_REGEX_TYPE_NAME = "regex";
+    public static final String BSON_SYMBOL_TYPE_NAME = "symbol";
+    public static final String BSON_TIMESTAMP_TYPE_NAME = "timestamp";
+    public static final String BSON_UNDEFINED_TYPE_NAME = "undefined";
+    public static final String BSON_BSON_TYPE_NAME = "bson";
 
     // Helper functions for getTypeInfo
     public static int getPrecision(String typeName) throws SQLException {
