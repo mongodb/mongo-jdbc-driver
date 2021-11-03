@@ -1048,9 +1048,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         }
 
         for (MongoFunctions.MongoFunction func : MySQLFunctions.functions) {
-            String functionName = func.name;
-            String remarks = func.comment;
-            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
+            if (functionPatternRE != null && !functionPatternRE.matcher(func.name).matches()) {
                 continue;
             }
             MySQLResultDoc doc = getFunctionValuesDoc(func.name, func.comment);
