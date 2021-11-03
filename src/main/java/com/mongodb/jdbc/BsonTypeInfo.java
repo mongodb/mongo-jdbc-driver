@@ -3,8 +3,6 @@ package com.mongodb.jdbc;
 import java.sql.SQLException;
 
 public class BsonTypeInfo {
-    static final int unknownLength = 0;
-
     public static final String BSON_BINDATA_TYPE_NAME = "binData";
     public static final String BSON_STRING_TYPE_NAME = "string";
     public static final String BSON_INT_TYPE_NAME = "int";
@@ -28,7 +26,7 @@ public class BsonTypeInfo {
     public static final String BSON_BSON_TYPE_NAME = "bson";
 
     // Helper functions for getTypeInfo
-    public static int getPrecision(String typeName) throws SQLException {
+    public static Integer getPrecision(String typeName) throws SQLException {
         switch (typeName) {
             case BSON_BINDATA_TYPE_NAME:
             case BSON_STRING_TYPE_NAME:
@@ -39,13 +37,12 @@ public class BsonTypeInfo {
             case BSON_TIMESTAMP_TYPE_NAME:
             case BSON_UNDEFINED_TYPE_NAME:
             case BSON_BSON_TYPE_NAME:
-                return 0;
             case BSON_JAVASCRIPT_TYPE_NAME:
             case BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME:
             case BSON_REGEX_TYPE_NAME:
             case BSON_SYMBOL_TYPE_NAME:
             case BSON_ARRAY_TYPE_NAME:
-                return unknownLength;
+                return null;
             case BSON_OBJECTID_TYPE_NAME:
             case BSON_DATE_TYPE_NAME:
                 return 24;
@@ -84,35 +81,6 @@ public class BsonTypeInfo {
             case BSON_DBPOINTER_TYPE_NAME:
             case BSON_MAXKEY_TYPE_NAME:
             case BSON_MINKEY_TYPE_NAME:
-            case BSON_TIMESTAMP_TYPE_NAME:
-            case BSON_UNDEFINED_TYPE_NAME:
-            case BSON_BSON_TYPE_NAME:
-                return false;
-        }
-        throw new SQLException("unknown bson typeName: " + typeName);
-    }
-
-    public static boolean getFixedPrecScale(String typeName) throws SQLException {
-        switch (typeName) {
-            case BSON_INT_TYPE_NAME:
-            case BSON_LONG_TYPE_NAME:
-                return true;
-            case BSON_BINDATA_TYPE_NAME:
-            case BSON_STRING_TYPE_NAME:
-            case BSON_BOOL_TYPE_NAME:
-            case BSON_DATE_TYPE_NAME:
-            case BSON_DECIMAL_TYPE_NAME:
-            case BSON_DOUBLE_TYPE_NAME:
-            case BSON_ARRAY_TYPE_NAME:
-            case BSON_OBJECT_TYPE_NAME:
-            case BSON_OBJECTID_TYPE_NAME:
-            case BSON_DBPOINTER_TYPE_NAME:
-            case BSON_JAVASCRIPT_TYPE_NAME:
-            case BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME:
-            case BSON_MAXKEY_TYPE_NAME:
-            case BSON_MINKEY_TYPE_NAME:
-            case BSON_REGEX_TYPE_NAME:
-            case BSON_SYMBOL_TYPE_NAME:
             case BSON_TIMESTAMP_TYPE_NAME:
             case BSON_UNDEFINED_TYPE_NAME:
             case BSON_BSON_TYPE_NAME:

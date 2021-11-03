@@ -349,6 +349,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return schema;
     }
 
+    private BsonValue asBsonIntOrNull(Integer value) {
+        if (value == null) {
+            return new BsonNull();
+        }
+        return new BsonInt32(value);
+    }
+
     @Override
     public ResultSet getTypeInfo() throws SQLException {
         BsonValue n = new BsonNull();
@@ -362,7 +369,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.BINARY)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -376,11 +383,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typePredNone)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -408,7 +411,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.BIT)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -422,11 +425,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -454,7 +453,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.TIMESTAMP)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, new BsonString("'")),
@@ -468,11 +467,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -500,7 +495,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.DECIMAL)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -514,11 +509,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -546,7 +537,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.DOUBLE)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -560,11 +551,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -591,7 +578,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.INTEGER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_INT_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -605,11 +592,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_INT_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -635,7 +618,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.BIGINT)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_LONG_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -649,11 +632,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_LONG_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -681,7 +660,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.LONGVARCHAR)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_STRING_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, new BsonString("'")),
@@ -695,11 +674,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_STRING_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -727,7 +702,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -741,11 +716,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -773,7 +744,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -787,11 +758,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -819,7 +786,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -833,11 +800,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -865,7 +828,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -879,11 +842,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -911,7 +870,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -925,11 +884,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -958,7 +913,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -972,11 +927,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1005,7 +956,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1019,11 +970,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1051,7 +998,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1065,11 +1012,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1097,7 +1040,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1111,11 +1054,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1143,7 +1082,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1157,11 +1096,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1189,7 +1124,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1203,11 +1138,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1235,7 +1166,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1249,11 +1180,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
@@ -1281,7 +1208,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
                                 PRECISION,
-                                new BsonInt32(
+                                asBsonIntOrNull(
                                         BsonTypeInfo.getPrecision(
                                                 BsonTypeInfo.BSON_BSON_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
@@ -1295,11 +1222,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 BsonTypeInfo.BSON_BSON_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        BsonTypeInfo.getFixedPrecScale(
-                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(FIXED_PREC_SCALE, new BsonBoolean(false)),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(

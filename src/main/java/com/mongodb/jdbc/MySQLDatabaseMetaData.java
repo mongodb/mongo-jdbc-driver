@@ -607,8 +607,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_BINDATA_TYPE_NAME), //caseSensitive
                         typePredNone, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_BINDATA_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_BINDATA_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -626,8 +625,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_BOOL_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         true, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_BOOL_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_BOOL_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_BOOL_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -645,8 +643,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_DATE_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_DATE_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_DATE_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_DATE_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -664,8 +661,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_DECIMAL_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_DECIMAL_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_DECIMAL_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -683,8 +679,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_DOUBLE_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_DOUBLE_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_DOUBLE_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -702,8 +697,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_INT_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_INT_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_INT_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_INT_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -721,8 +715,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_LONG_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_LONG_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_LONG_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_LONG_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -740,8 +733,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                                 BsonTypeInfo.BSON_STRING_TYPE_NAME), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
-                        BsonTypeInfo.getFixedPrecScale(
-                                BsonTypeInfo.BSON_STRING_TYPE_NAME), //fixedPrecScale
+                        false, //fixedPrecScale
                         BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_STRING_TYPE_NAME), //minScale
                         BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_STRING_TYPE_NAME), //maxScale
                         BsonTypeInfo.getNumPrecRadix(
@@ -1162,7 +1154,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     private MySQLResultDoc getTypeInfoValuesDoc(
             String typeName,
             int dataType,
-            int precision,
+            Integer precision,
             String literalPrefix,
             String literalSuffix,
             int nullable,
@@ -1179,7 +1171,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         doc.values = new ArrayList<>();
         doc.values.add(new BsonString(typeName));
         doc.values.add(new BsonInt32(dataType));
-        doc.values.add(new BsonInt32(precision));
+        doc.values.add(precision != null ? new BsonInt32(precision) : new BsonInt32(0));
         doc.values.add(literalPrefix != null ? new BsonString(literalPrefix) : n);
         doc.values.add(literalSuffix != null ? new BsonString(literalSuffix) : n);
         doc.values.add(n);
