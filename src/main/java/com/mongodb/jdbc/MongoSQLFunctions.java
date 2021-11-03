@@ -104,6 +104,16 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         "string",
                                         "returns the string str with all remstr prefixes and/or suffixes removed.",
                                         new String[] {"string"}),
+                                    new MongoFunction(
+                                            "TRIM",
+                                            "string",
+                                            "returns the string str with all remstr prefixes and/or suffixes removed.",
+                                            new String[] {"string", "string"}),
+                                    new MongoFunction(
+                                            "TRIM",
+                                            "string",
+                                            "returns the string str with all remstr prefixes and/or suffixes removed.",
+                                            new String[] {"string", "string", "string"}),
                                 new MongoFunction(
                                         "UPPER",
                                         "string",

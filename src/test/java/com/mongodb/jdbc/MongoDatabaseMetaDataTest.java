@@ -426,7 +426,7 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     void testGetFunctions() throws SQLException {
         // All function(s)
-        testGetFunctionsHelper("%", 17);
+        testGetFunctionsHelper("%", 19);
         // All function(s) with a 'S'
         testGetFunctionsHelper("%S%", 9);
         // All function(s) with a 's'
