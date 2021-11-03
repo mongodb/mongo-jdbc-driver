@@ -31,7 +31,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        // These come from keywords from the mongosql parser, minus the keywords from SQL 2003.
+        // These come from keywords from the mongosql-rs parser, minus the Standard SQL-2003 Reserved keywords
         return "AGGREGATE,"
                 + "ASC,"
                 + "BINDATA,"
@@ -89,12 +89,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(PROCEDURE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -112,26 +112,26 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
-                new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(SCALE, BSON_INT_TYPE_NAME),
-                new Pair<>(RADIX, BSON_INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_DEF, BSON_STRING_TYPE_NAME),
-                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(PROCEDURE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PROCEDURE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PRECISION, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(LENGTH, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SCALE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(RADIX, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_DEF, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -145,7 +145,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(new Pair<>(TABLE_TYPE, BSON_STRING_TYPE_NAME));
+        schema.addRequiredScalarKeys(new Pair<>(TABLE_TYPE, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         docs.add(createBottomBson(new BsonElement(TABLE_TYPE, new BsonString("TABLE"))));
         docs.add(createBottomBson(new BsonElement(TABLE_TYPE, new BsonString("VIEW"))));
@@ -168,8 +168,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getSchemas() throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_CATALOG, BSON_STRING_TYPE_NAME));
+                new Pair<>(TABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_CATALOG, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -215,14 +215,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(SCOPE, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
+                new Pair<>(SCOPE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_SIZE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(BUFFER_LENGTH, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -236,20 +236,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                new Pair<>(PKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -263,20 +263,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                new Pair<>(PKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -296,20 +296,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                new Pair<>(PKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(KEY_SEQ, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(UPDATE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DELETE_RULE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(FK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(PK_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFERRABILITY, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -328,24 +328,24 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
         schema.addRequiredScalarKeys(
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
-                new Pair<>(LITERAL_PREFIX, BSON_STRING_TYPE_NAME),
-                new Pair<>(LITERAL_SUFFIX, BSON_STRING_TYPE_NAME),
-                new Pair<>(CREATE_PARAMS, BSON_STRING_TYPE_NAME),
-                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                new Pair<>(CASE_SENSITIVE, BSON_BOOL_TYPE_NAME),
-                new Pair<>(SEARCHABLE, BSON_INT_TYPE_NAME),
-                new Pair<>(UNSIGNED_ATTRIBUTE, BSON_BOOL_TYPE_NAME),
-                new Pair<>(FIX_PREC_SCALE, BSON_BOOL_TYPE_NAME),
-                new Pair<>(AUTO_INCREMENT, BSON_BOOL_TYPE_NAME),
-                new Pair<>(LOCAL_TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(MINIMUM_SCALE, BSON_INT_TYPE_NAME),
-                new Pair<>(MAXIMUM_SCALE, BSON_INT_TYPE_NAME),
-                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME));
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(PRECISION, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(LITERAL_PREFIX, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(LITERAL_SUFFIX, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(CREATE_PARAMS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(NULLABLE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(CASE_SENSITIVE, BsonTypeInfo.BSON_BOOL_TYPE_NAME),
+                new Pair<>(SEARCHABLE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(UNSIGNED_ATTRIBUTE, BsonTypeInfo.BSON_BOOL_TYPE_NAME),
+                new Pair<>(FIX_PREC_SCALE, BsonTypeInfo.BSON_BOOL_TYPE_NAME),
+                new Pair<>(AUTO_INCREMENT, BsonTypeInfo.BSON_BOOL_TYPE_NAME),
+                new Pair<>(LOCAL_TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(MINIMUM_SCALE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(MAXIMUM_SCALE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.BSON_INT_TYPE_NAME));
         return schema;
     }
 
@@ -357,647 +357,968 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         docs.add(
                 createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_BINDATA_TYPE_NAME)),
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_BINDATA_TYPE_NAME)),
                         new BsonElement(DATA_TYPE, new BsonInt32(Types.BINARY)),
                         new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_BINDATA_TYPE_NAME))),
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
                         new BsonElement(LITERAL_SUFFIX, n),
                         new BsonElement(CREATE_PARAMS, n),
                         new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
                         new BsonElement(
                                 CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_BINDATA_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typePredNone)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
                         new BsonElement(
                                 FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_BINDATA_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_BINDATA_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_BINDATA_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_BINDATA_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_BOOL_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIT)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_BOOL_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_BOOL_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_BOOL_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_BOOL_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_BOOL_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_BOOL_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_DATE_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.TIMESTAMP)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_DATE_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, new BsonString("'")),
-                        new BsonElement(LITERAL_SUFFIX, new BsonString("'")),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_DATE_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_DATE_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_DATE_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_DATE_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_DATE_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_DECIMAL_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.DECIMAL)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_DECIMAL_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_DECIMAL_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_DECIMAL_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_DECIMAL_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_DECIMAL_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_DECIMAL_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_DOUBLE_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.DOUBLE)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_DOUBLE_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_DOUBLE_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_DOUBLE_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_DOUBLE_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_DOUBLE_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_DOUBLE_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_INT_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.INTEGER)),
-                        new BsonElement(PRECISION, new BsonInt32(getPrecision(BSON_INT_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_INT_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_INT_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_INT_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_INT_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_INT_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_LONG_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIGINT)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_LONG_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_LONG_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_LONG_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_LONG_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_LONG_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_LONG_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_STRING_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.LONGVARCHAR)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_STRING_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, new BsonString("'")),
-                        new BsonElement(LITERAL_SUFFIX, new BsonString("'")),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_STRING_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_STRING_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_STRING_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_STRING_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_STRING_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_ARRAY_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_ARRAY_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_ARRAY_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_ARRAY_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_ARRAY_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_ARRAY_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_ARRAY_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_OBJECT_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_OBJECT_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_OBJECT_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_OBJECT_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_OBJECT_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_OBJECT_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_OBJECT_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_OBJECTID_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_OBJECTID_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_OBJECTID_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_OBJECTID_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_OBJECTID_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_OBJECTID_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_OBJECTID_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_DBPOINTER_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_DBPOINTER_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_DBPOINTER_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_DBPOINTER_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE,
-                                new BsonInt32(getMinScale(BSON_DBPOINTER_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE,
-                                new BsonInt32(getMaxScale(BSON_DBPOINTER_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_DBPOINTER_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_JAVASCRIPT_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_JAVASCRIPT_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_JAVASCRIPT_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_JAVASCRIPT_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE,
-                                new BsonInt32(getMinScale(BSON_JAVASCRIPT_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE,
-                                new BsonInt32(getMaxScale(BSON_JAVASCRIPT_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_JAVASCRIPT_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(
-                                TYPE_NAME, new BsonString(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION,
-                                new BsonInt32(getPrecision(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
                                 new BsonBoolean(
-                                        getCaseSensitivity(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(
-                                        getFixedPrecScale(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
                                 MINIMUM_SCALE,
-                                new BsonInt32(getMinScale(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(
                                 MAXIMUM_SCALE,
-                                new BsonInt32(getMaxScale(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME))),
                         new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                         new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                         new BsonElement(
                                 NUM_PREC_RADIX,
                                 new BsonInt32(
-                                        getNumPrecRadix(BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME)))));
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_BINDATA_TYPE_NAME)))));
 
         docs.add(
                 createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_MAXKEY_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_MAXKEY_TYPE_NAME))),
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_BOOL_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIT)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
                         new BsonElement(LITERAL_SUFFIX, n),
                         new BsonElement(CREATE_PARAMS, n),
                         new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
                         new BsonElement(
                                 CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_MAXKEY_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
                         new BsonElement(
                                 FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_MAXKEY_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_MAXKEY_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_MAXKEY_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_MAXKEY_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_MINKEY_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_MINKEY_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_MINKEY_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_MINKEY_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_MINKEY_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_MINKEY_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_MINKEY_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_REGEX_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_REGEX_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_REGEX_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_REGEX_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_REGEX_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_REGEX_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_REGEX_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_SYMBOL_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_SYMBOL_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_SYMBOL_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_SYMBOL_TYPE_NAME))),
-                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
-                        new BsonElement(LOCAL_TYPE_NAME, n),
-                        new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_SYMBOL_TYPE_NAME))),
-                        new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_SYMBOL_TYPE_NAME))),
-                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
-                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                        new BsonElement(
-                                NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_SYMBOL_TYPE_NAME)))));
-
-        docs.add(
-                createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_TIMESTAMP_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
-                        new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_TIMESTAMP_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
-                        new BsonElement(CREATE_PARAMS, n),
-                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
-                        new BsonElement(
-                                CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_TIMESTAMP_TYPE_NAME))),
-                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
-                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
-                        new BsonElement(
-                                FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_TIMESTAMP_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
                                 MINIMUM_SCALE,
-                                new BsonInt32(getMinScale(BSON_TIMESTAMP_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(
                                 MAXIMUM_SCALE,
-                                new BsonInt32(getMaxScale(BSON_TIMESTAMP_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME))),
                         new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                         new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                         new BsonElement(
                                 NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_TIMESTAMP_TYPE_NAME)))));
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_BOOL_TYPE_NAME)))));
 
         docs.add(
                 createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_UNDEFINED_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_UNDEFINED_TYPE_NAME))),
-                        new BsonElement(LITERAL_PREFIX, n),
-                        new BsonElement(LITERAL_SUFFIX, n),
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_DATE_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.TIMESTAMP)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, new BsonString("'")),
+                        new BsonElement(LITERAL_SUFFIX, new BsonString("'")),
                         new BsonElement(CREATE_PARAMS, n),
                         new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
                         new BsonElement(
                                 CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_UNDEFINED_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
                         new BsonElement(
                                 FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_UNDEFINED_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
                                 MINIMUM_SCALE,
-                                new BsonInt32(getMinScale(BSON_UNDEFINED_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(
                                 MAXIMUM_SCALE,
-                                new BsonInt32(getMaxScale(BSON_UNDEFINED_TYPE_NAME))),
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME))),
                         new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                         new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                         new BsonElement(
                                 NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_UNDEFINED_TYPE_NAME)))));
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_DATE_TYPE_NAME)))));
 
         docs.add(
                 createBottomBson(
-                        new BsonElement(TYPE_NAME, new BsonString(BSON_BSON_TYPE_NAME)),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
                         new BsonElement(
-                                PRECISION, new BsonInt32(getPrecision(BSON_BSON_TYPE_NAME))),
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_DECIMAL_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.DECIMAL)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(LITERAL_PREFIX, n),
                         new BsonElement(LITERAL_SUFFIX, n),
                         new BsonElement(CREATE_PARAMS, n),
                         new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
                         new BsonElement(
                                 CASE_SENSITIVE,
-                                new BsonBoolean(getCaseSensitivity(BSON_BSON_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
                         new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
                         new BsonElement(
                                 FIXED_PREC_SCALE,
-                                new BsonBoolean(getFixedPrecScale(BSON_BSON_TYPE_NAME))),
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
                         new BsonElement(LOCAL_TYPE_NAME, n),
                         new BsonElement(
-                                MINIMUM_SCALE, new BsonInt32(getMinScale(BSON_BSON_TYPE_NAME))),
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(
-                                MAXIMUM_SCALE, new BsonInt32(getMaxScale(BSON_BSON_TYPE_NAME))),
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME))),
                         new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                         new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                         new BsonElement(
                                 NUM_PREC_RADIX,
-                                new BsonInt32(getNumPrecRadix(BSON_BSON_TYPE_NAME)))));
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_DECIMAL_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_DOUBLE_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.DOUBLE)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_DOUBLE_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(TYPE_NAME, new BsonString(BsonTypeInfo.BSON_INT_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.INTEGER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(BsonTypeInfo.BSON_INT_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_INT_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_LONG_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIGINT)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_LONG_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_STRING_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.LONGVARCHAR)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, new BsonString("'")),
+                        new BsonElement(LITERAL_SUFFIX, new BsonString("'")),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_STRING_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_ARRAY_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_ARRAY_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_OBJECT_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_OBJECT_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_OBJECTID_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_OBJECTID_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_DBPOINTER_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_JAVASCRIPT_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME,
+                                new BsonString(BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo
+                                                        .BSON_JAVASCRIPTWITHSCOPE_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_MAXKEY_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_MAXKEY_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_MINKEY_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_MINKEY_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_REGEX_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_REGEX_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_SYMBOL_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_SYMBOL_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_TIMESTAMP_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_UNDEFINED_TYPE_NAME)))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(
+                                TYPE_NAME, new BsonString(BsonTypeInfo.BSON_BSON_TYPE_NAME)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(Types.OTHER)),
+                        new BsonElement(
+                                PRECISION,
+                                new BsonInt32(
+                                        BsonTypeInfo.getPrecision(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(LITERAL_PREFIX, n),
+                        new BsonElement(LITERAL_SUFFIX, n),
+                        new BsonElement(CREATE_PARAMS, n),
+                        new BsonElement(NULLABLE, new BsonInt32(ResultSetMetaData.columnNullable)),
+                        new BsonElement(
+                                CASE_SENSITIVE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getCaseSensitivity(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(SEARCHABLE, new BsonInt32(typeSearchable)),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, new BsonBoolean(false)),
+                        new BsonElement(
+                                FIXED_PREC_SCALE,
+                                new BsonBoolean(
+                                        BsonTypeInfo.getFixedPrecScale(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(AUTO_INCREMENT, new BsonBoolean(false)),
+                        new BsonElement(LOCAL_TYPE_NAME, n),
+                        new BsonElement(
+                                MINIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMinScale(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(
+                                MAXIMUM_SCALE,
+                                new BsonInt32(
+                                        BsonTypeInfo.getMaxScale(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME))),
+                        new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                        new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                        new BsonElement(
+                                NUM_PREC_RADIX,
+                                new BsonInt32(
+                                        BsonTypeInfo.getNumPrecRadix(
+                                                BsonTypeInfo.BSON_BSON_TYPE_NAME)))));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1018,13 +1339,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(CLASS_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(BASE_TYPE, BSON_INT_TYPE_NAME));
+                new Pair<>(TYPE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(CLASS_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(BASE_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1038,12 +1359,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(TYPE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1057,10 +1378,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(SUPERTABLE_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(TABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SUPERTABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1078,27 +1399,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(ATTR_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(ATTR_TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(ATTR_SIZE, BSON_INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(ATTR_DEF, BSON_STRING_TYPE_NAME),
-                new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
-                new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
-                new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME));
+                new Pair<>(TYPE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(ATTR_TYPE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_SIZE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(ATTR_DEF, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_CATALOG, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SCOPE_TABLE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1120,10 +1441,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
         schema.addRequiredScalarKeys(
-                new Pair<>(NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(MAX_LEN, BSON_STRING_TYPE_NAME),
-                new Pair<>(DEFAULT_VALUE, BSON_STRING_TYPE_NAME),
-                new Pair<>(DESCRIPTION, BSON_STRING_TYPE_NAME));
+                new Pair<>(NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(MAX_LEN, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DEFAULT_VALUE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DESCRIPTION, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1154,18 +1475,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                new Pair<>(NUM_PREC_RADIX, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_USAGE, BSON_STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME));
+                new Pair<>(TABLE_CAT, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_SCHEM, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(TABLE_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(COLUMN_SIZE, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(COLUMN_USAGE, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.BSON_STRING_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.BSON_INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BsonTypeInfo.BSON_STRING_TYPE_NAME));
 
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
