@@ -435,9 +435,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
-            String functionName = func.name;
-            String remarks = func.comment;
-            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
+            if (functionPatternRE != null && !functionPatternRE.matcher(func.name).matches()) {
                 continue;
             }
             BsonDocument doc = getFunctionValuesDoc(func.name, func.comment);
