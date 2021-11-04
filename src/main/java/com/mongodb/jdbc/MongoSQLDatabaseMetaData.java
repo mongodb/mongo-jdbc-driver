@@ -372,7 +372,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // and toGetColumnPrivilegesDoc helpers.
     private static class GetColumnsDocInfo {
         String dbName;
-        String collName;
+        String tableName;
         String columnName;
         MongoJsonSchema columnSchema;
         boolean isRequired;
@@ -380,13 +380,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         GetColumnsDocInfo(
                 String dbName,
-                String collName,
+                String tableName,
                 String columnName,
                 MongoJsonSchema columnSchema,
                 boolean isRequired,
                 int idx) {
             this.dbName = dbName;
-            this.collName = collName;
+            this.tableName = tableName;
             this.columnName = columnName;
             this.columnSchema = columnSchema;
             this.isRequired = isRequired;
@@ -400,7 +400,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
         MongoSQLColumnInfo info;
         try {
-            info = new MongoSQLColumnInfo(i.collName, i.columnName, i.columnSchema, i.isRequired);
+            info = new MongoSQLColumnInfo(i.tableName, i.columnName, i.columnSchema, i.isRequired);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -414,7 +414,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return createBottomBson(
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
-                new BsonElement(TABLE_NAME, new BsonString(i.collName)),
+                new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(DATA_TYPE, new BsonInt32(info.getJDBCType())),
                 new BsonElement(TYPE_NAME, new BsonString(info.getTableAlias())),
@@ -452,7 +452,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return createBottomBson(
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
-                new BsonElement(TABLE_NAME, new BsonString(i.collName)),
+                new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(GRANTOR, BsonNull.VALUE),
                 new BsonElement(GRANTEE, new BsonString("")),
@@ -475,16 +475,16 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .stream()
 
                 // filter only for collections matching the pattern
-                .filter(collName -> tableNamePatternRE.matcher(collName).matches())
+                .filter(tableName -> tableNamePatternRE.matcher(tableName).matches())
 
-                // map the collection names into triples of (dbName, collName, collSchema)
+                // map the collection names into triples of (dbName, tableName, tableSchema)
                 .map(
-                        collName ->
+                        tableName ->
                                 new Pair<>(
-                                        new Pair<>(dbName, collName),
+                                        new Pair<>(dbName, tableName),
                                         db.runCommand(
                                                 new BsonDocument(
-                                                        "sqlGetSchema", new BsonString(collName)),
+                                                        "sqlGetSchema", new BsonString(tableName)),
                                                 MongoJsonSchemaResult.class)))
 
                 // filter only for collections that have schemas
