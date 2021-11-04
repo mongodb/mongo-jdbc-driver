@@ -187,12 +187,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
                 new BsonElement(TABLE_TYPE, new BsonString(res.type)),
-                new BsonElement(REMARKS, new BsonNull()),
-                new BsonElement(TYPE_CAT, new BsonNull()),
-                new BsonElement(TYPE_SCHEM, new BsonNull()),
-                new BsonElement(TYPE_NAME, new BsonNull()),
-                new BsonElement(SELF_REFERENCING_COL_NAME, new BsonNull()),
-                new BsonElement(REF_GENERATION, new BsonNull()));
+                new BsonElement(REMARKS, BsonNull.VALUE),
+                new BsonElement(TYPE_CAT, BsonNull.VALUE),
+                new BsonElement(TYPE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TYPE_NAME, BsonNull.VALUE),
+                new BsonElement(SELF_REFERENCING_COL_NAME, BsonNull.VALUE),
+                new BsonElement(REF_GENERATION, BsonNull.VALUE));
     }
 
     // Helper for creating BSON documents for the getTablePrivileges method. Intended
@@ -203,10 +203,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(TABLE_CAT, new BsonString(dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
-                new BsonElement(GRANTOR, new BsonNull()),
+                new BsonElement(GRANTOR, BsonNull.VALUE),
                 new BsonElement(GRANTEE, new BsonString("")),
                 new BsonElement(PRIVILEGE, new BsonString("SELECT")),
-                new BsonElement(IS_GRANTABLE, new BsonNull()));
+                new BsonElement(IS_GRANTABLE, BsonNull.VALUE));
     }
 
     // Helper for getting table data for all tables from a specific database. Used by
@@ -418,26 +418,26 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(DATA_TYPE, new BsonInt32(info.getJDBCType())),
                 new BsonElement(TYPE_NAME, new BsonString(info.getTableAlias())),
-                new BsonElement(COLUMN_SIZE, new BsonNull()),
+                new BsonElement(COLUMN_SIZE, BsonNull.VALUE),
                 new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
                 new BsonElement(
                         DECIMAL_DIGITS,
-                        new BsonNull()), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
+                        BsonNull.VALUE), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
                 new BsonElement(
-                        NUM_PREC_RADIX, new BsonNull()), // TODO NUM_PREC_RADIX -> Oliver's helper
+                        NUM_PREC_RADIX, BsonNull.VALUE), // TODO NUM_PREC_RADIX -> Oliver's helper
                 new BsonElement(NULLABLE, new BsonInt32(nullability)),
                 new BsonElement(REMARKS, new BsonString("")),
-                new BsonElement(COLUMN_DEF, new BsonNull()),
+                new BsonElement(COLUMN_DEF, BsonNull.VALUE),
                 new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                 new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                 new BsonElement(
                         CHAR_OCTET_LENGTH,
-                        new BsonNull()), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
+                        BsonNull.VALUE), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
                 new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
                 new BsonElement(IS_NULLABLE, new BsonString(isNullable)),
-                new BsonElement(SCOPE_CATALOG, new BsonNull()),
-                new BsonElement(SCOPE_SCHEMA, new BsonNull()),
-                new BsonElement(SCOPE_TABLE, new BsonNull()),
+                new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
+                new BsonElement(SCOPE_SCHEMA, BsonNull.VALUE),
+                new BsonElement(SCOPE_TABLE, BsonNull.VALUE),
                 new BsonElement(SOURCE_DATA_TYPE, new BsonInt32(0)),
                 new BsonElement(IS_AUTOINCREMENT, new BsonString("")),
                 new BsonElement(IS_GENERATEDCOLUMN, new BsonInt32(0)));
@@ -452,10 +452,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(i.collName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
-                new BsonElement(GRANTOR, new BsonNull()),
+                new BsonElement(GRANTOR, BsonNull.VALUE),
                 new BsonElement(GRANTEE, new BsonString("")),
                 new BsonElement(PRIVILEGE, new BsonString("SELECT")),
-                new BsonElement(IS_GRANTABLE, new BsonNull()));
+                new BsonElement(IS_GRANTABLE, BsonNull.VALUE));
     }
 
     // Helper for getting column data for all columns from all tables from a specific
@@ -1876,7 +1876,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
         bot.put(FUNCTION_CAT, new BsonString("def"));
-        bot.put(FUNCTION_SCHEM, new BsonNull());
+        bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
         bot.put(FUNCTION_NAME, new BsonString(functionName));
         bot.put(REMARKS, new BsonString(remarks));
         bot.put(FUNCTION_TYPE, new BsonInt32(functionNoTable));
@@ -1941,7 +1941,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        BsonValue n = new BsonNull();
+        BsonValue n = BsonNull.VALUE;
         String functionName = func.name;
         bot.put(FUNCTION_CAT, new BsonString("def"));
         bot.put(FUNCTION_SCHEM, n);
