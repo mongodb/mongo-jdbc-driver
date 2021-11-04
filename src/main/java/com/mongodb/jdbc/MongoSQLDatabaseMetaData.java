@@ -441,8 +441,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(SCOPE_SCHEMA, BsonNull.VALUE),
                 new BsonElement(SCOPE_TABLE, BsonNull.VALUE),
                 new BsonElement(SOURCE_DATA_TYPE, new BsonInt32(0)),
-                new BsonElement(IS_AUTOINCREMENT, new BsonString("")),
-                new BsonElement(IS_GENERATEDCOLUMN, new BsonInt32(0)));
+                new BsonElement(IS_AUTOINCREMENT, new BsonString("NO")),
+                new BsonElement(IS_GENERATEDCOLUMN, new BsonString("")));
     }
 
     // Helper for creating BSON documents for the getColumnPrivileges methods. Intended
