@@ -18,9 +18,13 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
     protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
     protected static final String PROCEDURE_NAME = "PROCEDURE_NAME";
-    protected static final String REMARKS = "REMARKS";
     protected static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
+    protected static final String REMARKS = "REMARKS";
     protected static final String SPECIFIC_NAME = "SPECIFIC_NAME";
+    protected static final String FUNCTION_CAT = "FUNCTION_CAT";
+    protected static final String FUNCTION_SCHEM = "FUNCTION_SCHEM";
+    protected static final String FUNCTION_NAME = "FUNCTION_NAME";
+    protected static final String FUNCTION_TYPE = "FUNCTION_TYPE";
 
     protected static final String AUTO_INCREMENT = "AUTO_INCREMENT";
     protected static final String CASE_SENSITIVE = "CASE_SENSITIVE";
