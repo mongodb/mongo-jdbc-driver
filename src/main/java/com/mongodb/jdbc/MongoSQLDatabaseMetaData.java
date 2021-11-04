@@ -236,6 +236,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .map(res -> bsonSerializer.apply(dbName, res));
     }
 
+    private List<String> toTableTypeList(String[] types) {
+        List<String> l = null;
+        if (types != null) {
+            l = Arrays.asList(types);
+            l.replaceAll(String::toLowerCase);
+        }
+        return l;
+    }
+
     @Override
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String[] types)
@@ -261,8 +270,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
         Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
-        List<String> typesList = Arrays.asList(types);
-        typesList.replaceAll(String::toLowerCase);
+        List<String> typesList = toTableTypeList(types);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
