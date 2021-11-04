@@ -46,9 +46,21 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         super(conn);
     }
 
+    // For all methods in this class, the fields in the result set are nested
+    // under the bottom namespace. This helper method takes result set fields
+    // and nests them appropriately.
     private BsonDocument createBottomBson(BsonElement... elements) {
         BsonDocument bot = new BsonDocument(Arrays.asList(elements));
         return new BsonDocument(BOT_NAME, bot);
+    }
+
+    // For all methods in this class, the fields in the result set are nested
+    // under the bottom namespace. This helper method takes a result schema
+    // and nests it appropriately.
+    private MongoJsonSchema createBottomSchema(MongoJsonSchema schema) {
+        MongoJsonSchema bot = MongoJsonSchema.createEmptyObjectSchema();
+        bot.properties.put(BOT_NAME, schema);
+        return bot;
     }
 
     @Override
@@ -118,9 +130,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PROCEDURE_TYPE, BsonTypeInfo.INT_TYPE_NAME),
                 new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -155,9 +165,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -262,9 +270,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(SELF_REFERENCING_COL_NAME, BSON_STRING_TYPE_NAME),
                 new Pair<>(REF_GENERATION, BSON_STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -319,9 +325,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(TABLE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -331,9 +335,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         BsonExplicitCursor c =
                 new BsonExplicitCursor(
@@ -567,9 +569,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(IS_AUTOINCREMENT, BSON_STRING_TYPE_NAME),
                 new Pair<>(IS_GENERATEDCOLUMN, BSON_STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -642,9 +642,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
                 new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -697,9 +695,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
                 new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -762,9 +758,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
                 new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -789,9 +783,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -816,9 +808,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -849,9 +839,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1749,9 +1737,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(BASE_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1768,9 +1754,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(SUPERTYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(SUPERTYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1785,9 +1769,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(SUPERTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1823,9 +1805,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
                 new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -2034,9 +2014,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
                 new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME));
 
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema = createBottomSchema(resultSchema);
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
