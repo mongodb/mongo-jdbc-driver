@@ -16,6 +16,9 @@ import org.bson.BsonValue;
 
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
+    private static com.mongodb.jdbc.MySQLFunctions MySQLFunctions =
+            com.mongodb.jdbc.MySQLFunctions.getInstance();
+
     public MySQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
@@ -154,22 +157,22 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        return MongoFunction.mySQLNumericFunctionsString;
+        return MySQLFunctions.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return MongoFunction.mySQLStringFunctionsString;
+        return MySQLFunctions.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return "DATABASE,USER,SYSTEM_USER,SESSION_USER,VERSION";
+        return MySQLFunctions.systemFunctionsString;
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return MongoFunction.mySQLDateFunctionsString;
+        return MySQLFunctions.dateFunctionsString;
     }
 
     @Override
@@ -1002,7 +1005,11 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     }
 
     protected MySQLResultDoc getFunctionColumnValuesDoc(
-            MongoFunction func, int i, String argName, String argType, boolean isReturnColumn) {
+            MongoFunctions.MongoFunction func,
+            int i,
+            String argName,
+            String argType,
+            boolean isReturnColumn) {
         BsonValue n = new BsonNull();
         String functionName = func.name;
         MySQLResultDoc doc = new MySQLResultDoc();
@@ -1031,7 +1038,8 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
 
-        ArrayList<MySQLResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MySQLResultDoc> docs =
+                new ArrayList<MySQLResultDoc>(MySQLFunctions.functions.length);
         docs.add(getFunctionMetaDoc());
 
         Pattern functionPatternRE = null;
@@ -1039,10 +1047,8 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mySQLFunctions) {
-            String functionName = func.name;
-            String remarks = func.comment;
-            if (functionPatternRE != null && !functionPatternRE.matcher(functionName).matches()) {
+        for (MongoFunctions.MongoFunction func : MySQLFunctions.functions) {
+            if (functionPatternRE != null && !functionPatternRE.matcher(func.name).matches()) {
                 continue;
             }
             MySQLResultDoc doc = getFunctionValuesDoc(func.name, func.comment);
@@ -1059,7 +1065,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
-        ArrayList<MySQLResultDoc> docs = new ArrayList<>(MongoFunction.mySQLFunctionNames.length);
+        ArrayList<MySQLResultDoc> docs = new ArrayList<>(MySQLFunctions.functions.length);
         docs.add(getFunctionColumnMetaDoc());
 
         Pattern functionNamePatternRE = null;
@@ -1071,10 +1077,9 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
         }
 
-        for (MongoFunction func : MongoFunction.mySQLFunctions) {
-            String functionName = func.name;
+        for (MongoFunctions.MongoFunction func : MySQLFunctions.functions) {
             if (functionNamePatternRE != null
-                    && !functionNamePatternRE.matcher(functionName).matches()) {
+                    && !functionNamePatternRE.matcher(func.name).matches()) {
                 continue;
             }
             int i = 0;
