@@ -33,6 +33,7 @@ import org.bson.BsonElement;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
+import org.bson.BsonValue;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -178,6 +179,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    // Helper for getting a stream of all database names.
+    private Stream<String> getDatabaseNames() {
+        return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
+    }
+
     // Helper for creating BSON documents for the getTables method. Intended for use
     // with the getTablesFromDB helper method which is shared between getTables and
     // getTablePrivileges.
@@ -225,7 +231,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .filter(
                         res ->
                                 tableNamePatternRE.matcher(res.name).matches()
-                                        && (types == null || types.contains(res.type.toLowerCase())))
+                                        && (types == null
+                                                || types.contains(res.type.toLowerCase())))
                 .map(res -> bsonSerializer.apply(dbName, res));
     }
 
@@ -261,11 +268,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         if (catalog == null) {
             // If no catalog (database) is specified, get tables for all databases.
             docs =
-                    this.conn
-                            .mongoClient
-                            .listDatabaseNames()
-                            .into(new ArrayList<>())
-                            .stream()
+                    this.getDatabaseNames()
                             .flatMap(
                                     dbName ->
                                             getTablesFromDB(
@@ -326,11 +329,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         BsonExplicitCursor c =
                 new BsonExplicitCursor(
-                        this.conn
-                                .mongoClient
-                                .listDatabaseNames()
-                                .into(new ArrayList<>())
-                                .stream()
+                        this.getDatabaseNames()
                                 .sorted()
                                 .map(
                                         dbName ->
@@ -423,7 +422,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
                 new BsonElement(
                         DECIMAL_DIGITS,
-                        BsonNull.VALUE), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
+                        BsonNull
+                                .VALUE), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
                 new BsonElement(
                         NUM_PREC_RADIX, BsonNull.VALUE), // TODO NUM_PREC_RADIX -> Oliver's helper
                 new BsonElement(NULLABLE, new BsonInt32(nullability)),
@@ -433,7 +433,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
                 new BsonElement(
                         CHAR_OCTET_LENGTH,
-                        BsonNull.VALUE), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
+                        BsonNull
+                                .VALUE), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
                 new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
                 new BsonElement(IS_NULLABLE, new BsonString(isNullable)),
                 new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
@@ -574,11 +575,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs =
                     liftSQLException(
                             () ->
-                                    this.conn
-                                            .mongoClient
-                                            .listDatabaseNames()
-                                            .into(new ArrayList<>())
-                                            .stream()
+                                    this.getDatabaseNames()
                                             .flatMap(
                                                     dbName ->
                                                             getColumnsFromDB(
@@ -651,11 +648,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         if (catalog == null) {
             // If no catalog (database) is specified, get column privileges for all databases.
             docs =
-                    this.conn
-                            .mongoClient
-                            .listDatabaseNames()
-                            .into(new ArrayList<>())
-                            .stream()
+                    this.getDatabaseNames()
                             .flatMap(
                                     dbName ->
                                             getColumnsFromDB(
@@ -709,11 +702,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         if (catalog == null) {
             // If no catalog (database) is specified, get table privileges for all databases.
             docs =
-                    this.conn
-                            .mongoClient
-                            .listDatabaseNames()
-                            .into(new ArrayList<>())
-                            .stream()
+                    this.getDatabaseNames()
                             .sorted()
                             .flatMap(
                                     dbName ->
