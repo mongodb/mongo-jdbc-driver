@@ -225,7 +225,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .filter(
                         res ->
                                 tableNamePatternRE.matcher(res.name).matches()
-                                        && (types == null || types.contains(res.type)))
+                                        && (types == null || types.contains(res.type.toLowerCase())))
                 .map(res -> bsonSerializer.apply(dbName, res));
     }
 
@@ -255,6 +255,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // schemaPattern argument.
         Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
         List<String> typesList = Arrays.asList(types);
+        typesList.replaceAll(String::toLowerCase);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
