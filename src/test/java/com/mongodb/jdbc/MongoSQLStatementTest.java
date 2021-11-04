@@ -115,9 +115,7 @@ class MongoSQLStatementTest extends MongoSQLMock {
         when(mongoCursor.next())
                 .thenAnswer(
                         invocation -> {
-                            if (rowCnt.incrementAndGet() == 1) {
-                                return generateRow();
-                            }
+                            rowCnt.incrementAndGet();
                             return generateRow();
                         });
 

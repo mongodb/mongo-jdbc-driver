@@ -175,9 +175,9 @@ public abstract class MongoSQLMock {
         MongoJsonSchema fooSchema = new MongoJsonSchema();
         fooSchema.bsonType = "object";
         fooSchema.required = new HashSet<String>();
-        fooSchema.required.add("a");
-        fooSchema.required.add("b");
-        fooSchema.required.add("vec");
+        fooSchema.required.add(ANY_OF_INT_STRING_COL_LABEL);
+        fooSchema.required.add(INT_NULLABLE_COL_LABEL);
+        fooSchema.required.add(ARRAY_COL_LABEL);
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
@@ -209,20 +209,20 @@ public abstract class MongoSQLMock {
         nullSchema.bsonType = "null";
 
         fooSchema.properties = new HashMap<String, MongoJsonSchema>();
-        fooSchema.properties.put("c", cSchema);
-        fooSchema.properties.put("a", aSchema);
+        fooSchema.properties.put(INT_COL_LABEL, cSchema);
+        fooSchema.properties.put(ANY_OF_INT_STRING_COL_LABEL, aSchema);
         // new MongoJsonSchema() is the ANY schema
-        fooSchema.properties.put("d", new MongoJsonSchema());
-        fooSchema.properties.put("b", bSchema);
-        fooSchema.properties.put("vec", vecSchema);
-        fooSchema.properties.put("null", nullSchema);
+        fooSchema.properties.put(ANY_COL_LABEL, new MongoJsonSchema());
+        fooSchema.properties.put(INT_NULLABLE_COL_LABEL, bSchema);
+        fooSchema.properties.put(ARRAY_COL_LABEL, vecSchema);
+        fooSchema.properties.put(NULL_COL_LABEL, nullSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
         botSchema.properties = new HashMap<String, MongoJsonSchema>();
         aSchema = new MongoJsonSchema();
         aSchema.bsonType = "double";
-        botSchema.properties.put("a", aSchema);
+        botSchema.properties.put(DOUBLE_COL_LABEL, aSchema);
         MongoJsonSchema binarySchema = new MongoJsonSchema();
         binarySchema.bsonType = "binData";
         botSchema.properties.put("binary", binarySchema);
@@ -260,22 +260,22 @@ public abstract class MongoSQLMock {
         BsonDocument bot = new BsonDocument();
         BsonDocument foo = new BsonDocument();
 
-        foo.put("a", new BsonInt32(1));
-        foo.put("b", new BsonNull());
-        foo.put("c", new BsonInt32(2));
-        foo.put("d", new BsonUndefined());
-        foo.put("null", new BsonNull());
+        foo.put(ANY_OF_INT_STRING_COL_LABEL, new BsonInt32(1));
+        foo.put(INT_NULLABLE_COL_LABEL, new BsonNull());
+        foo.put(INT_COL_LABEL, new BsonInt32(2));
+        foo.put(ANY_COL_LABEL, new BsonUndefined());
+        foo.put(NULL_COL_LABEL, new BsonNull());
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(1));
         array.add(new BsonInt32(2));
         array.add(new BsonInt32(3));
-        foo.put("vec", array);
+        foo.put(ARRAY_COL_LABEL, array);
 
-        bot.put("a", new BsonDouble(1.2));
+        bot.put(DOUBLE_COL_LABEL, new BsonDouble(1.2));
         byte binary[] = {10, 20, 30};
-        bot.put("binary", new BsonBinary(binary));
-        bot.put("str", new BsonString("a"));
+        bot.put(BINARY_COL_LABEL, new BsonBinary(binary));
+        bot.put(STRING_COL_LABEL, new BsonString("a"));
 
         document.put("", bot);
         document.put("foo", foo);

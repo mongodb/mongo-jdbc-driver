@@ -109,35 +109,8 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         MongoSQLMock.resetMockObjs();
     }
 
-    @SuppressWarnings("deprecation")
     @Test
-    void testStrictGetters() throws Exception {
-        // Test findColumn.
-        assertEquals(DOUBLE_COL, mongoSQLResultSet.findColumn(DOUBLE_COL_LABEL));
-        assertEquals(STRING_COL, mongoSQLResultSet.findColumn(STRING_COL_LABEL));
-        assertEquals(INT_OR_NULL_COL, mongoSQLResultSet.findColumn(INT_NULLABLE_COL_LABEL));
-        assertEquals(INT_COL, mongoSQLResultSet.findColumn(INT_COL_LABEL));
-        assertEquals(ANY_COL, mongoSQLResultSet.findColumn(ANY_COL_LABEL));
-        assertEquals(ARRAY_COL, mongoSQLResultSet.findColumn(ARRAY_COL_LABEL));
-
-        // Test that the IDX and LABELS are working together correctly.
-        assertEquals(
-                mongoSQLResultSet.getString(DOUBLE_COL),
-                mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getString(STRING_COL),
-                mongoSQLResultSet.getString(STRING_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getString(INT_OR_NULL_COL),
-                mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getString(INT_COL), mongoSQLResultSet.getString(INT_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getString(ANY_COL), mongoSQLResultSet.getString(ANY_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getBytes(BINARY_COL),
-                mongoSQLResultSet.getBytes(BINARY_COL_LABEL));
-
+    void testBinaryGetters() throws Exception {
         // Binary cannot be gotten through anything other than getBlob and getBinaryStream, currently.
         assertThrows(
                 SQLException.class,
@@ -251,7 +224,38 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 () -> {
                     mongoSQLResultSet.getBytes(INT_COL);
                 });
+    }
 
+    @Test
+    void testGetColumnByIdAndName() throws Exception {
+        assertEquals(DOUBLE_COL, mongoSQLResultSet.findColumn(DOUBLE_COL_LABEL));
+        assertEquals(STRING_COL, mongoSQLResultSet.findColumn(STRING_COL_LABEL));
+        assertEquals(INT_OR_NULL_COL, mongoSQLResultSet.findColumn(INT_NULLABLE_COL_LABEL));
+        assertEquals(INT_COL, mongoSQLResultSet.findColumn(INT_COL_LABEL));
+        assertEquals(ANY_COL, mongoSQLResultSet.findColumn(ANY_COL_LABEL));
+        assertEquals(ARRAY_COL, mongoSQLResultSet.findColumn(ARRAY_COL_LABEL));
+
+        // Test that the IDX and LABELS are working together correctly.
+        assertEquals(
+                mongoSQLResultSet.getString(DOUBLE_COL),
+                mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getString(STRING_COL),
+                mongoSQLResultSet.getString(STRING_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getString(INT_OR_NULL_COL),
+                mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getString(INT_COL), mongoSQLResultSet.getString(INT_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getString(ANY_COL), mongoSQLResultSet.getString(ANY_COL_LABEL));
+        assertEquals(
+                mongoSQLResultSet.getBytes(BINARY_COL),
+                mongoSQLResultSet.getBytes(BINARY_COL_LABEL));
+    }
+
+    @Test
+    void testGetStringValues() throws Exception {
         // DOUBLE_COL              2.4
         // STRING_COL              "b"
         // BINARY_COL              [10, 20, 30]
@@ -261,6 +265,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // ANY_COL                 "{}"
         // ARRAY_COL               [5, 6, 7]
         //
+
         //Test String values are as expected
         assertEquals("2.4", mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getString(STRING_COL_LABEL));
@@ -277,9 +282,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 1,
                 mongoSQLResultSet.getUnicodeStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
+    }
 
-        // getClob just wraps getString, we can ignore it
-
+    @Test
+    void testGetArithmeticValues() throws Exception {
         // Test Double values are as expected
         assertEquals(0.0, mongoSQLResultSet.getDouble(INT_NULLABLE_COL_LABEL));
         assertEquals(2.4, mongoSQLResultSet.getDouble(DOUBLE_COL_LABEL));
@@ -323,9 +329,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 });
         assertEquals(4, mongoSQLResultSet.getInt(INT_COL_LABEL));
         assertEquals(3, mongoSQLResultSet.getInt(ANY_OF_INT_STRING_COL));
+    }
 
-        // We test Long, Int, and Byte, we can safely skip getShort tests
-
+    @Test
+    void testGetByteValues() throws Exception {
         // Test Byte values are as expected
         assertEquals(0, mongoSQLResultSet.getByte(INT_NULLABLE_COL_LABEL));
         assertEquals(2, mongoSQLResultSet.getByte(DOUBLE_COL_LABEL));
@@ -337,7 +344,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         assertEquals(4, mongoSQLResultSet.getByte(INT_COL_LABEL));
         assertEquals(3, mongoSQLResultSet.getByte(ANY_OF_INT_STRING_COL));
+    }
 
+    @Test
+    void testGetBooleanValues() throws Exception {
         // Test Boolean values are as expected
         assertEquals(false, mongoSQLResultSet.getBoolean(INT_NULLABLE_COL_LABEL));
         assertEquals(true, mongoSQLResultSet.getBoolean(DOUBLE_COL_LABEL));
@@ -345,8 +355,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(true, mongoSQLResultSet.getBoolean(STRING_COL_LABEL));
         assertEquals(true, mongoSQLResultSet.getBoolean(INT_COL_LABEL));
         assertEquals(true, mongoSQLResultSet.getBoolean(ANY_OF_INT_STRING_COL));
+    }
 
-        // Test getTimestamp
+    @Test
+    void testGetTimestampValues() throws Exception {
+
         assertNull(mongoSQLResultSet.getTimestamp(NULL_COL_LABEL));
         assertEquals(new Timestamp(2), mongoSQLResultSet.getTimestamp(DOUBLE_COL_LABEL));
         assertThrows(
