@@ -7,6 +7,7 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
@@ -131,8 +132,8 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return escaped.replace("\\", "\\\\");
     }
 
-    public static String toJavaPattern(String sqlPattern) {
-        return sqlPattern.replaceAll("%", ".*").replaceAll("_", ".");
+    public static Pattern toJavaPattern(String sqlPattern) {
+        return Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
     }
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,

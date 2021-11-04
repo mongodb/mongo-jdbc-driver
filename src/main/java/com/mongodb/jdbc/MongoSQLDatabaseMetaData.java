@@ -260,7 +260,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
         List<String> typesList = Arrays.asList(types);
         typesList.replaceAll(String::toLowerCase);
 
@@ -566,8 +566,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = Pattern.compile(toJavaPattern(tableNamePattern));
-        Pattern columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -641,8 +641,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
-        Pattern columnNamePatternRE = Pattern.compile(columnNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -696,7 +696,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = Pattern.compile(tableNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -1882,7 +1882,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         Pattern functionPatternRE = null;
         if (functionNamePattern != null) {
-            functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+            functionPatternRE = toJavaPattern(functionNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
@@ -1972,10 +1972,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
         if (functionNamePattern != null) {
-            functionNamePatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+            functionNamePatternRE = toJavaPattern(functionNamePattern);
         }
         if (columnNamePattern != null) {
-            columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
+            columnNamePatternRE = toJavaPattern(columnNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
