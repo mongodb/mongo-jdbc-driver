@@ -1323,12 +1323,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         resultSchema.required.add(BOT_NAME);
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.addRequiredScalarKeys(
-                new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
         resultSchema.properties.put(BOT_NAME, botSchema);
         return resultSchema;
     }
@@ -1373,23 +1373,23 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         resultSchema.required.add(BOT_NAME);
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.addRequiredScalarKeys(
-                new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
-                new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(SCALE, BSON_INT_TYPE_NAME),
-                new Pair<>(RADIX, BSON_INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
         resultSchema.properties.put(BOT_NAME, botSchema);
         return resultSchema;
     }
