@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
 
 public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
     public MongoSQLStatement(MongoConnection conn, String databaseName) throws SQLException {
@@ -21,6 +23,7 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
         closeExistingResultSet();
 
         BsonDocument stage = constructQueryDocument(sql, "mongosql");
+        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
             MongoIterable<BsonDocument> iterable =
                     currentDB
@@ -31,10 +34,24 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
                 iterable = iterable.batchSize(fetchSize);
             }
 
-            resultSet = new MongoSQLResultSet(this, iterable.cursor());
+            MongoJsonSchemaResult schemaResult =
+                    currentDB
+                            .withCodecRegistry(MongoDriver.registry)
+                            .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+
+            MongoJsonSchema schema = schemaResult.schema.jsonSchema;
+            resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
         }
+    }
+
+    private BsonDocument constructSQLGetResultSchemaDocument(String sql) {
+        BsonDocument command = new BsonDocument();
+        command.put("sqlGetResultSchema", new BsonInt32(1));
+        command.put("query", new BsonString(sql));
+        command.put("schemaVersion", new BsonInt32(1));
+        return command;
     }
 }
