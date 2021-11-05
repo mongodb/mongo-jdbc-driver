@@ -253,7 +253,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TABLE_TYPE", "TABLE_TYPE", "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_TYPE, TABLE_TYPE, "string"));
 
         MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
@@ -600,131 +600,142 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "binData", //typeName
+                        BsonTypeInfo.BINDATA_TYPE_NAME, //typeName
                         Types.NULL, //dataType
-                        0, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.BINDATA_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typePredNone, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.BINDATA_TYPE_NAME), //caseSensitive
+                        typePredNone, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.BINDATA_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.BINDATA_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(
+                                BsonTypeInfo.BINDATA_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "bool", //typeName
+                        BsonTypeInfo.BOOL_TYPE_NAME, //typeName
                         Types.BIT, //dataType
-                        1, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.BOOL_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.BOOL_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         true, //unsigned
                         false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.BOOL_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.BOOL_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.BOOL_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "date", //typeName
+                        BsonTypeInfo.DATE_TYPE_NAME, //typeName
                         Types.TIMESTAMP, //dataType
-                        24, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.DATE_TYPE_NAME), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.DATE_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.DATE_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DATE_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.DATE_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "decimal", //typeName
+                        BsonTypeInfo.DECIMAL_TYPE_NAME, //typeName
                         Types.DECIMAL, //dataType
-                        34, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.DECIMAL_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.DECIMAL_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        34, //minScale
-                        34, //maxScale
-                        10)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.DECIMAL_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DECIMAL_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(
+                                BsonTypeInfo.DECIMAL_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "double", //typeName
+                        BsonTypeInfo.DOUBLE_TYPE_NAME, //typeName
                         Types.DOUBLE, //dataType
-                        15, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.DOUBLE_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.DOUBLE_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        15, //minScale
-                        15, //maxScale
-                        2)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.DOUBLE_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DOUBLE_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(
+                                BsonTypeInfo.DOUBLE_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "int", //typeName
+                        BsonTypeInfo.INT_TYPE_NAME, //typeName
                         Types.INTEGER, //dataType
-                        10, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.INT_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(BsonTypeInfo.INT_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
-                        true, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        2)); //numPrecRadix
+                        false, //fixedPrecScale
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.INT_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.INT_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.INT_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "long", //typeName
+                        BsonTypeInfo.LONG_TYPE_NAME, //typeName
                         Types.INTEGER, //dataType
-                        19, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.LONG_TYPE_NAME), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        false, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.LONG_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
-                        true, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        2)); //numPrecRadix
+                        false, //fixedPrecScale
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.LONG_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.LONG_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.LONG_TYPE_NAME))); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        "string", //typeName
+                        BsonTypeInfo.STRING_TYPE_NAME, //typeName
                         Types.LONGVARCHAR, //dataType
-                        0, //precision
+                        BsonTypeInfo.getPrecision(BsonTypeInfo.STRING_TYPE_NAME), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        true, //caseSensitive
-                        typeSearchable, //seachable
+                        BsonTypeInfo.getCaseSensitivity(
+                                BsonTypeInfo.STRING_TYPE_NAME), //caseSensitive
+                        typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        0, //minScale
-                        0, //maxScale
-                        0)); //numPrecRadix
+                        BsonTypeInfo.getMinScale(BsonTypeInfo.STRING_TYPE_NAME), //minScale
+                        BsonTypeInfo.getMaxScale(BsonTypeInfo.STRING_TYPE_NAME), //maxScale
+                        BsonTypeInfo.getNumPrecRadix(
+                                BsonTypeInfo.STRING_TYPE_NAME))); //numPrecRadix
 
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
     }
@@ -896,12 +907,11 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NAME", "NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "MAX_LEN", "MAX_LEN", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NAME, NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAX_LEN, MAX_LEN, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DEFAULT_VALUE", "DEFAULT_VALUE", "string"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "DESCRIPTION", "DESCRIPTION", "string"));
+                new MySQLColumnInfo("", "", "", DEFAULT_VALUE, DEFAULT_VALUE, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DESCRIPTION, DESCRIPTION, "string"));
         docs.add(metaDoc);
 
         MySQLResultDoc doc = new MySQLResultDoc();
@@ -1110,38 +1120,33 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "PRECISION", "PRECISION", "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PRECISION, PRECISION, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LITERAL_PREFIX", "LITERAL_PREFIX", "string"));
+                new MySQLColumnInfo("", "", "", LITERAL_PREFIX, LITERAL_PREFIX, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LITERAL_SUFFIX", "LITERAL_SUFFIX", "string"));
+                new MySQLColumnInfo("", "", "", LITERAL_SUFFIX, LITERAL_SUFFIX, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CREATE_PARAMS", "CREATE_PARAMS", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", "int"));
+                new MySQLColumnInfo("", "", "", CREATE_PARAMS, CREATE_PARAMS, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CASE_SENSITIVE", "CASE_SENSITIVE", "bool"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "SEARCHABLE", "SEARCHABLE", "int"));
+                new MySQLColumnInfo("", "", "", CASE_SENSITIVE, CASE_SENSITIVE, "bool"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SEARCHABLE, SEARCHABLE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo(
-                        "", "", "", "UNSIGNED_ATTRIBUTE", "UNSIGNED_ATTRIBUTE", "bool"));
+                new MySQLColumnInfo("", "", "", UNSIGNED_ATTRIBUTE, UNSIGNED_ATTRIBUTE, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FIXED_PREC_SCALE", "FIXED_PREC_SCALE", "bool"));
+                new MySQLColumnInfo("", "", "", FIXED_PREC_SCALE, FIXED_PREC_SCALE, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "AUTO_INCREMENT", "AUTO_INCREMENT", "bool"));
+                new MySQLColumnInfo("", "", "", AUTO_INCREMENT, AUTO_INCREMENT, "bool"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "LOCAL_TYPE_NAME", "LOCAL_TYPE_NAME", "string"));
+                new MySQLColumnInfo("", "", "", LOCAL_TYPE_NAME, LOCAL_TYPE_NAME, "string"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MINIMUM_SCALE, MINIMUM_SCALE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAXIMUM_SCALE, MAXIMUM_SCALE, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "MINIMUM_SCALE", "MINIMUM_SCALE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "MAXIMUM_SCALE", "MAXIMUM_SCALE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATA_TYPE", "SQL_DATA_TYPE", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SQL_DATETIME_SUB", "SQL_DATETIME_SUB", "int"));
-        metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "NUM_PREC_RADIX", "NUM_PREC_RADIX", "int"));
+                new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "int"));
 
         return metaDoc;
     }
@@ -1149,7 +1154,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
     private MySQLResultDoc getTypeInfoValuesDoc(
             String typeName,
             int dataType,
-            int precision,
+            Integer precision,
             String literalPrefix,
             String literalSuffix,
             int nullable,
@@ -1166,7 +1171,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         doc.values = new ArrayList<>();
         doc.values.add(new BsonString(typeName));
         doc.values.add(new BsonInt32(dataType));
-        doc.values.add(new BsonInt32(precision));
+        doc.values.add(precision != null ? new BsonInt32(precision) : new BsonInt32(0));
         doc.values.add(literalPrefix != null ? new BsonString(literalPrefix) : n);
         doc.values.add(literalSuffix != null ? new BsonString(literalSuffix) : n);
         doc.values.add(n);

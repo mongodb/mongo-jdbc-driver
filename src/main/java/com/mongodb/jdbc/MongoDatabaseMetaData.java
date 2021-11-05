@@ -26,21 +26,38 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String FUNCTION_NAME = "FUNCTION_NAME";
     protected static final String FUNCTION_TYPE = "FUNCTION_TYPE";
 
+    protected static final String AUTO_INCREMENT = "AUTO_INCREMENT";
+    protected static final String CASE_SENSITIVE = "CASE_SENSITIVE";
+    protected static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+    protected static final String COLUMN_DEF = "COLUMN_DEF";
     protected static final String COLUMN_NAME = "COLUMN_NAME";
     protected static final String COLUMN_TYPE = "COLUMN_TYPE";
+    protected static final String CREATE_PARAMS = "CREATE_PARAMS";
     protected static final String DATA_TYPE = "DATA_TYPE";
-    protected static final String TYPE_NAME = "TYPE_NAME";
-    protected static final String PRECISION = "PRECISION";
+    protected static final String DEFAULT_VALUE = "DEFAULT_VALUE";
+    protected static final String DESCRIPTION = "DESCRIPTION";
+    protected static final String FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
+    protected static final String FIX_PREC_SCALE = "FIX_PREC_SCALE";
+    protected static final String IS_NULLABLE = "IS_NULLABLE";
     protected static final String LENGTH = "LENGTH";
-    protected static final String SCALE = "SCALE";
-    protected static final String RADIX = "RADIX";
+    protected static final String LITERAL_PREFIX = "LITERAL_PREFIX";
+    protected static final String LITERAL_SUFFIX = "LITERAL_SUFFIX";
+    protected static final String LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
+    protected static final String MAXIMUM_SCALE = "MAXIMUM_SCALE";
+    protected static final String MAX_LEN = "MAX_LEN";
+    protected static final String MINIMUM_SCALE = "MINIMUM_SCALE";
+    protected static final String NAME = "NAME";
     protected static final String NULLABLE = "NULLABLE";
-    protected static final String COLUMN_DEF = "COLUMN_DEF";
+    protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
+    protected static final String PRECISION = "PRECISION";
+    protected static final String RADIX = "RADIX";
+    protected static final String SCALE = "SCALE";
+    protected static final String SEARCHABLE = "SEARCHABLE";
     protected static final String SQL_DATA_TYPE = "SQL_DATA_TYPE";
     protected static final String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
-    protected static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
-    protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
-    protected static final String IS_NULLABLE = "IS_NULLABLE";
+    protected static final String TABLE_TYPE = "TABLE_TYPE";
+    protected static final String TYPE_NAME = "TYPE_NAME";
+    protected static final String UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
 
     protected static final String TABLE_SCHEM = "TABLE_SCHEM";
     protected static final String TABLE_CATALOG = "TABLE_CATALOG";
@@ -88,11 +105,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String SCOPE_SCHEMA = "SCOPE_SCHEMA";
     protected static final String SCOPE_TABLE = "SCOPE_TABLE";
     protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
-
     protected static final String COLUMN_USAGE = "COLUMN_USAGE";
-
-    protected static final String BSON_STRING_TYPE_NAME = "string";
-    protected static final String BSON_INT_TYPE_NAME = "int";
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
