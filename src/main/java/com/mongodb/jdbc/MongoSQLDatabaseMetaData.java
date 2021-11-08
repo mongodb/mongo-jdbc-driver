@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -34,10 +35,13 @@ import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
+import org.bson.Document;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final String BOT_NAME = "";
+
+    private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
 
     private static com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
             com.mongodb.jdbc.MongoSQLFunctions.getInstance();
@@ -465,6 +469,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(IS_GRANTABLE, BsonNull.VALUE));
     }
 
+    // Helper for ensuring a sqlGetSchema result is a valid collection schema. As in,
+    // it has ok: 1, has a jsonSchema, and the jsonSchema is an object schema.
+    private boolean isValidSchema(MongoJsonSchemaResult res) {
+        return res.ok == 1 && res.schema.jsonSchema != null && res.schema.jsonSchema.isObject();
+    }
+
     // Helper for getting column data for all columns from all tables from a specific
     // database. Used by getColumns and getColumnPrivileges. The caller specifies how
     // to serialize the column info into BSON documents for the result set.
@@ -493,7 +503,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 MongoJsonSchemaResult.class)))
 
                 // filter only for collections that have schemas
-                .filter(p -> p.right().ok == 1 && p.right().schema.jsonSchema.isObject())
+                .filter(p -> isValidSchema(p.right()))
 
                 // flatMap the column data into a single stream of BSON docs
                 .flatMap(
@@ -725,12 +735,87 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, c, botSchema);
     }
 
+    private BsonDocument toGetBestRowIdentifierDoc(String columnName, String columnType) {
+        BsonValue dataType, typeName, columnSize, decimalDigits;
+        if (columnType == null) {
+            dataType = BsonNull.VALUE;
+            typeName = BsonNull.VALUE;
+            columnSize = BsonNull.VALUE;
+            decimalDigits = BsonNull.VALUE;
+        } else {
+            // TODO initialize
+            dataType = null;
+            typeName = null;
+            columnSize = null;
+            decimalDigits = null;
+        }
+
+        return createBottomBson(
+                new BsonElement(SCOPE, BsonNull.VALUE),
+                new BsonElement(COLUMN_NAME, new BsonString(columnName)),
+                new BsonElement(DATA_TYPE, dataType),
+                new BsonElement(TYPE_NAME, typeName),
+                new BsonElement(COLUMN_SIZE, columnSize),
+                new BsonElement(BUFFER_LENGTH, BsonNull.VALUE),
+                new BsonElement(DECIMAL_DIGITS, decimalDigits),
+                new BsonElement(PSEUDO_COLUMN, new BsonInt32(bestRowNotPseudo)));
+    }
+
     @Override
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-        // TODO
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(SCOPE, BSON_INT_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
+                        new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
+
+        if (catalog == null) {
+            // MongoDB does not have collections with no database.
+            return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        }
+
+        // As in other methods, we ignore the schema argument. Here, we also ignore the
+        // scope and nullable arguments.
+        MongoDatabase db = this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
+        ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
+        List<BsonDocument> docs = new ArrayList<>();
+
+        for (Document d : i) {
+            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+            if (isUnique == null || !isUnique) {
+                continue;
+            }
+
+            // We've found the first unique index. At this point, we get the schema for this
+            // collection and create a result set based on this index's keys.
+            MongoJsonSchemaResult r =
+                    db.runCommand(
+                            new BsonDocument("sqlGetSchema", new BsonString(table)),
+                            MongoJsonSchemaResult.class);
+
+            boolean isValidSchema = isValidSchema(r);
+
+            Document keys = d.get("keys", Document.class);
+            for (String key : keys.keySet()) {
+                String keyType =
+                        isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
+                docs.add(toGetBestRowIdentifierDoc(key, keyType));
+            }
+
+            // Break after we find the first unique index
+            break;
+        }
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
@@ -828,7 +913,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        // TODO
+        // TODO - "use first unique index"
+        //   - how to get first unique index from mongodb?
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
@@ -1700,7 +1786,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        // TODO
+        // TODO - "use index information from listCollections"
+        //   - what does that info look like?
         throw new SQLFeatureNotSupportedException("TODO");
     }
 
