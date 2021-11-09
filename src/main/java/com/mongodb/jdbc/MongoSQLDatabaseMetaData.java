@@ -735,6 +735,77 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, c, botSchema);
     }
 
+    // Helper for getting a ResultSet based on the first unique index for the argued table. The
+    // result set documents are produced by the serializer function. Given a (dbName, tableName)
+    // pair and a Document representing the first unique index, the serializer function creates
+    // a list of BsonDocuments corresponding to the rows of the result set. This method is shared
+    // between getBestRowIdentifier and getPrimaryKeys, which both return data based on the first
+    // unique index.
+    private ResultSet getFirstUniqueIndexResultSet(
+            String catalog,
+            String table,
+            MongoJsonSchema botSchema,
+            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer)
+            throws SQLException {
+        if (catalog == null) {
+            // MongoDB does not have collections with no database.
+            return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        }
+
+        MongoDatabase db = this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
+        ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
+        List<BsonDocument> docs = new ArrayList<>();
+
+        for (Document d : i) {
+            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+            if (isUnique == null || !isUnique) {
+                continue;
+            }
+
+            // Get result set rows from first unique index
+            docs.addAll(serializer.apply(new Pair<>(catalog, table), d));
+
+            // Break after we find the first unique index
+            break;
+        }
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+        return new MongoSQLResultSet(null, c, botSchema);
+    }
+
+    // Helper for getting the rows for the getBestRowIdentifier result set. Given a
+    // (dbName, tableName) and an index doc, it produces a list of BsonDocuments where
+    // each document corresponds to a row in the result set representing a column in
+    // the index. This method is intended for use with the getFirstUniqueIndexResultSet
+    // method.
+    private List<BsonDocument> toGetBestRowIdentifierDocs(
+            Pair<String, String> namespace, Document indexInfo) {
+        List<BsonDocument> docs = new ArrayList<>();
+
+        // We've found the first unique index. At this point, we get the schema for this
+        // collection and create a result set based on this index's keys.
+        MongoJsonSchemaResult r =
+                this.conn
+                        .getDatabase(namespace.left())
+                        .runCommand(
+                                new BsonDocument("sqlGetSchema", new BsonString(namespace.right())),
+                                MongoJsonSchemaResult.class);
+
+        boolean isValidSchema = isValidSchema(r);
+
+        Document keys = indexInfo.get("key", Document.class);
+        for (String key : keys.keySet()) {
+            String keyType =
+                    isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
+            docs.add(toGetBestRowIdentifierDoc(key, keyType));
+        }
+
+        return docs;
+    }
+
+    // Helper for creating a result set BsonDocument for an index column for the
+    // getBestRowIdentifier method.
     private BsonDocument toGetBestRowIdentifierDoc(String columnName, String columnType) {
         BsonValue dataType, typeName, columnSize, decimalDigits;
         if (columnType == null) {
@@ -776,46 +847,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
                         new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
 
-        if (catalog == null) {
-            // MongoDB does not have collections with no database.
-            return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
-        }
-
         // As in other methods, we ignore the schema argument. Here, we also ignore the
         // scope and nullable arguments.
-        MongoDatabase db = this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
-        ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
-        List<BsonDocument> docs = new ArrayList<>();
-
-        for (Document d : i) {
-            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
-            if (isUnique == null || !isUnique) {
-                continue;
-            }
-
-            // We've found the first unique index. At this point, we get the schema for this
-            // collection and create a result set based on this index's keys.
-            MongoJsonSchemaResult r =
-                    db.runCommand(
-                            new BsonDocument("sqlGetSchema", new BsonString(table)),
-                            MongoJsonSchemaResult.class);
-
-            boolean isValidSchema = isValidSchema(r);
-
-            Document keys = d.get("keys", Document.class);
-            for (String key : keys.keySet()) {
-                String keyType =
-                        isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
-                docs.add(toGetBestRowIdentifierDoc(key, keyType));
-            }
-
-            // Break after we find the first unique index
-            break;
-        }
-
-        BsonExplicitCursor c = new BsonExplicitCursor(docs);
-
-        return new MongoSQLResultSet(null, c, botSchema);
+        return getFirstUniqueIndexResultSet(
+                catalog, table, botSchema, this::toGetBestRowIdentifierDocs);
     }
 
     @Override
@@ -910,12 +945,50 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
+    // Helper for getting the rows for the getPrimaryKeys result set. Given a (dbName, tableName)
+    // and an index doc, it produces a list of BsonDocuments where each document corresponds to a
+    // row in the result set representing a column in the index. This method is intended for use
+    // with the getFirstUniqueIndexResultSet method.
+    private List<BsonDocument> toGetPrimaryKeysDocs(
+            Pair<String, String> namespace, Document indexInfo) {
+        List<BsonDocument> docs = new ArrayList<>();
+
+        Document keys = indexInfo.get("key", Document.class);
+        String indexName = indexInfo.getString("name");
+        int pos = 0;
+        for (String key : keys.keySet()) {
+            docs.add(
+                    createBottomBson(
+                            new BsonElement(TABLE_CAT, new BsonString(namespace.left())),
+                            new BsonElement(TABLE_SCHEM, new BsonString("")),
+                            new BsonElement(TABLE_NAME, new BsonString(namespace.right())),
+                            new BsonElement(COLUMN_NAME, new BsonString(key)),
+                            new BsonElement(KEY_SEQ, new BsonInt32(pos++)),
+                            new BsonElement(PK_NAME, new BsonString(indexName))));
+        }
+
+        // Per JDBC spec, sort by COLUMN_NAME.
+        docs.sort(
+                Comparator.comparing(
+                        (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(COLUMN_NAME)));
+
+        return docs;
+    }
+
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        // TODO - "use first unique index"
-        //   - how to get first unique index from mongodb?
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
+                        new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME));
+
+        // As in other methods, we ignore the schema argument.
+        return getFirstUniqueIndexResultSet(catalog, table, botSchema, this::toGetPrimaryKeysDocs);
     }
 
     private MongoJsonSchema getTypeInfoJsonSchema() {
