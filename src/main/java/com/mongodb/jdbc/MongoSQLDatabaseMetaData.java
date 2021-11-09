@@ -347,7 +347,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
      * SQLException as the cause. If such an exception is encountered, the inner SQLException is
      * thrown. Otherwise, the Supplier executes as expected.
      *
-     * <p>This method is intended for use with Stream API methods that wrap SQLExceptions in
+     * <p>This method is intended for use with higher order functions that wrap SQLExceptions in
      * RuntimeExceptions to appease the compiler. We want to propagate those SQLExceptions all the
      * way out to the caller so this method is a way of recovering them.
      *
@@ -399,45 +399,62 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getColumnsFromDB helper method which is shared between getColumns and
     // getColumnPrivileges.
     private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
-        MongoSQLColumnInfo info;
+        String bsonType;
+        int nullability;
+        BsonValue dataType;
+        BsonValue decimalDigits = BsonNull.VALUE;
+        BsonValue numPrecRadix;
+        BsonValue charOctetLength = BsonNull.VALUE;
+
         try {
-            info = new MongoSQLColumnInfo(i.tableName, i.columnName, i.columnSchema, i.isRequired);
+            Pair<String, Integer> typeAndNullability =
+                    BsonTypeInfo.getBsonTypeNameAndNullability(i.columnSchema, i.isRequired);
+            bsonType = typeAndNullability.left();
+            nullability = typeAndNullability.right();
+
+            dataType = new BsonInt32(BsonTypeInfo.getJDBCType(bsonType));
+
+            Integer d = BsonTypeInfo.getDecimalDigits(bsonType);
+            if (d != null) {
+                decimalDigits = new BsonInt32(d);
+            }
+
+            numPrecRadix = new BsonInt32(BsonTypeInfo.getNumPrecRadix(bsonType));
+
+            Integer c = BsonTypeInfo.getCharOctetLength(bsonType);
+            if (c != null) {
+                charOctetLength = new BsonInt32(c);
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        int nullability = info.getNullability();
-        String isNullable =
-                nullability == ResultSetMetaData.columnNoNulls
-                        ? "NO"
-                        : nullability == ResultSetMetaData.columnNullable ? "YES" : "";
+        BsonValue isNullable =
+                new BsonString(
+                        nullability == columnNoNulls
+                                ? "NO"
+                                : nullability == columnNullable ? "YES" : "");
 
         return createBottomBson(
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
-                new BsonElement(DATA_TYPE, new BsonInt32(info.getJDBCType())),
-                new BsonElement(TYPE_NAME, new BsonString(info.getTableAlias())),
+                new BsonElement(DATA_TYPE, dataType),
+                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
                 new BsonElement(COLUMN_SIZE, BsonNull.VALUE),
                 new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
-                new BsonElement(
-                        DECIMAL_DIGITS,
-                        BsonNull
-                                .VALUE), // TODO DECIMAL_DIGITS -> Oliver's helper (may need to add new method)
-                new BsonElement(
-                        NUM_PREC_RADIX, BsonNull.VALUE), // TODO NUM_PREC_RADIX -> Oliver's helper
+                new BsonElement(DECIMAL_DIGITS, decimalDigits),
+                new BsonElement(NUM_PREC_RADIX, numPrecRadix),
                 new BsonElement(NULLABLE, new BsonInt32(nullability)),
                 new BsonElement(REMARKS, new BsonString("")),
                 new BsonElement(COLUMN_DEF, BsonNull.VALUE),
                 new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                 new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                new BsonElement(
-                        CHAR_OCTET_LENGTH,
-                        BsonNull
-                                .VALUE), // TODO CHAR_OCTET_LENGTH -> Oliver's helper (may need to add new method)
+                new BsonElement(CHAR_OCTET_LENGTH, charOctetLength),
                 new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
-                new BsonElement(IS_NULLABLE, new BsonString(isNullable)),
+                new BsonElement(IS_NULLABLE, isNullable),
                 new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
                 new BsonElement(SCOPE_SCHEMA, BsonNull.VALUE),
                 new BsonElement(SCOPE_TABLE, BsonNull.VALUE),
@@ -737,33 +754,37 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String catalog,
             String table,
             MongoJsonSchema botSchema,
-            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer)
-            throws SQLException {
-        if (catalog == null) {
-            // MongoDB does not have collections with no database.
-            return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
-        }
-
-        MongoDatabase db = this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
-        ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
-        List<BsonDocument> docs = new ArrayList<>();
-
-        for (Document d : i) {
-            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
-            if (isUnique == null || !isUnique) {
-                continue;
+            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        try {
+            if (catalog == null) {
+                // MongoDB does not have collections with no database.
+                return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
             }
 
-            // Get result set rows from first unique index
-            docs.addAll(serializer.apply(new Pair<>(catalog, table), d));
+            MongoDatabase db =
+                    this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
+            ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
+            List<BsonDocument> docs = new ArrayList<>();
 
-            // Break after we find the first unique index
-            break;
+            for (Document d : i) {
+                Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+                if (isUnique == null || !isUnique) {
+                    continue;
+                }
+
+                // Get result set rows from first unique index
+                docs.addAll(serializer.apply(new Pair<>(catalog, table), d));
+
+                // Break after we find the first unique index
+                break;
+            }
+
+            BsonExplicitCursor c = new BsonExplicitCursor(docs);
+
+            return new MongoSQLResultSet(null, c, botSchema);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        BsonExplicitCursor c = new BsonExplicitCursor(docs);
-
-        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     // Helper for getting the rows for the getBestRowIdentifier result set. Given a
@@ -790,7 +811,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         for (String key : keys.keySet()) {
             String keyType =
                     isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
-            docs.add(toGetBestRowIdentifierDoc(key, keyType));
+            docs.add(
+                    toGetBestRowIdentifierDoc(
+                            key,
+                            r.schema.jsonSchema.properties.get(key),
+                            r.schema.jsonSchema.required.contains(key)));
         }
 
         return docs;
@@ -798,26 +823,41 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     // Helper for creating a result set BsonDocument for an index column for the
     // getBestRowIdentifier method.
-    private BsonDocument toGetBestRowIdentifierDoc(String columnName, String columnType) {
-        BsonValue dataType, typeName, columnSize, decimalDigits;
-        if (columnType == null) {
-            dataType = BsonNull.VALUE;
-            typeName = BsonNull.VALUE;
-            columnSize = BsonNull.VALUE;
-            decimalDigits = BsonNull.VALUE;
-        } else {
-            // TODO initialize
-            dataType = null;
-            typeName = null;
-            columnSize = null;
-            decimalDigits = null;
+    private BsonDocument toGetBestRowIdentifierDoc(
+            String columnName, MongoJsonSchema columnSchema, boolean isRequired) {
+        Pair<String, Integer> typeAndNullability;
+        String bsonType;
+        BsonValue dataType;
+        BsonValue columnSize = BsonNull.VALUE;
+        BsonValue decimalDigits = BsonNull.VALUE;
+
+        try {
+            typeAndNullability =
+                    BsonTypeInfo.getBsonTypeNameAndNullability(columnSchema, isRequired);
+
+            bsonType = typeAndNullability.left();
+
+            dataType = new BsonInt32(BsonTypeInfo.getJDBCType(bsonType));
+
+            Integer s = BsonTypeInfo.getPrecision(bsonType);
+            if (s != null) {
+                columnSize = new BsonInt32(s);
+            }
+
+            Integer d = BsonTypeInfo.getDecimalDigits(bsonType);
+            if (d != null) {
+                decimalDigits = new BsonInt32(d);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return createBottomBson(
                 new BsonElement(SCOPE, BsonNull.VALUE),
                 new BsonElement(COLUMN_NAME, new BsonString(columnName)),
                 new BsonElement(DATA_TYPE, dataType),
-                new BsonElement(TYPE_NAME, typeName),
+                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
                 new BsonElement(COLUMN_SIZE, columnSize),
                 new BsonElement(BUFFER_LENGTH, BsonNull.VALUE),
                 new BsonElement(DECIMAL_DIGITS, decimalDigits),
@@ -841,8 +881,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         // As in other methods, we ignore the schema argument. Here, we also ignore the
         // scope and nullable arguments.
-        return getFirstUniqueIndexResultSet(
-                catalog, table, botSchema, this::toGetBestRowIdentifierDocs);
+        return liftSQLException(
+                () ->
+                        getFirstUniqueIndexResultSet(
+                                catalog, table, botSchema, this::toGetBestRowIdentifierDocs));
     }
 
     @Override
@@ -980,7 +1022,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         // As in other methods, we ignore the schema argument.
-        return getFirstUniqueIndexResultSet(catalog, table, botSchema, this::toGetPrimaryKeysDocs);
+        return liftSQLException(
+                () ->
+                        getFirstUniqueIndexResultSet(
+                                catalog, table, botSchema, this::toGetPrimaryKeysDocs));
     }
 
     private MongoJsonSchema getTypeInfoJsonSchema() {
