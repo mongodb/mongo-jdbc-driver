@@ -124,12 +124,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PROCEDURE_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -143,26 +143,26 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(PROCEDURE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PROCEDURE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PROCEDURE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
-                        new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(SCALE, BSON_INT_TYPE_NAME),
-                        new Pair<>(RADIX, BSON_INT_TYPE_NAME),
-                        new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_DEF, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                        new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -256,16 +256,16 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_TYPE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SELF_REFERENCING_COL_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(REF_GENERATION, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_TYPE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SELF_REFERENCING_COL_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REF_GENERATION, BsonTypeInfo.STRING_TYPE_NAME));
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -317,8 +317,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getSchemas() throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_CATALOG, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -326,7 +326,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getCatalogs() throws SQLException {
         MongoJsonSchema botSchema =
-                createBottomSchema(new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME));
+                createBottomSchema(new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME));
 
         BsonExplicitCursor c =
                 new BsonExplicitCursor(
@@ -541,30 +541,30 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                        new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                        new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME),
-                        new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_DEF, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                        new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_AUTOINCREMENT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(IS_GENERATEDCOLUMN, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_AUTOINCREMENT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GENERATEDCOLUMN, BsonTypeInfo.STRING_TYPE_NAME));
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -628,14 +628,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(GRANTOR, BSON_STRING_TYPE_NAME),
-                        new Pair<>(GRANTEE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTOR, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTEE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRIVILEGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GRANTABLE, BsonTypeInfo.STRING_TYPE_NAME));
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -680,13 +680,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(GRANTOR, BSON_STRING_TYPE_NAME),
-                        new Pair<>(GRANTEE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PRIVILEGE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(IS_GRANTABLE, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTOR, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTEE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRIVILEGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GRANTABLE, BsonTypeInfo.STRING_TYPE_NAME));
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
@@ -830,14 +830,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(SCOPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                        new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                        new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
+                        new Pair<>(SCOPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
 
         // As in other methods, we ignore the schema argument. Here, we also ignore the
         // scope and nullable arguments.
@@ -850,14 +850,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(SCOPE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                        new Pair<>(BUFFER_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                        new Pair<>(PSEUDO_COLUMN, BSON_INT_TYPE_NAME));
+                        new Pair<>(SCOPE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -867,20 +867,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                        new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -890,20 +890,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                        new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -919,20 +919,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(PKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKTABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FKCOLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                        new Pair<>(UPDATE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DELETE_RULE, BSON_INT_TYPE_NAME),
-                        new Pair<>(FK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DEFERRABILITY, BSON_INT_TYPE_NAME));
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -972,12 +972,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(KEY_SEQ, BSON_INT_TYPE_NAME),
-                        new Pair<>(PK_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         // As in other methods, we ignore the schema argument.
         return getFirstUniqueIndexResultSet(catalog, table, botSchema, this::toGetPrimaryKeysDocs);
@@ -1862,13 +1862,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(CLASS_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(BASE_TYPE, BSON_INT_TYPE_NAME));
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CLASS_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(BASE_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1878,12 +1878,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SUPERTYPE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SUPERTYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SUPERTYPE_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1893,10 +1893,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SUPERTABLE_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1910,27 +1910,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TYPE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(ATTR_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(ATTR_TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(ATTR_SIZE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                        new Pair<>(NUM_PREC_RADIX, BSON_INT_TYPE_NAME),
-                        new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(ATTR_DEF, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SQL_DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(SQL_DATETIME_SUB, BSON_INT_TYPE_NAME),
-                        new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_CATALOG, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_SCHEMA, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SCOPE_TABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SOURCE_DATA_TYPE, BSON_INT_TYPE_NAME));
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ATTR_TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1962,12 +1962,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private MongoJsonSchema getFunctionJsonSchema() {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FUNCTION_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return botSchema;
     }
@@ -2010,23 +2010,23 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private MongoJsonSchema getFunctionColumnJsonSchema() {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(FUNCTION_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FUNCTION_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(FUNCTION_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(TYPE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(PRECISION, BSON_INT_TYPE_NAME),
-                        new Pair<>(LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(SCALE, BSON_INT_TYPE_NAME),
-                        new Pair<>(RADIX, BSON_INT_TYPE_NAME),
-                        new Pair<>(NULLABLE, BSON_INT_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(ORDINAL_POSITION, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(SPECIFIC_NAME, BSON_STRING_TYPE_NAME));
+                        new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return botSchema;
     }
@@ -2122,18 +2122,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new Pair<>(TABLE_CAT, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_SCHEM, BSON_STRING_TYPE_NAME),
-                        new Pair<>(TABLE_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_NAME, BSON_STRING_TYPE_NAME),
-                        new Pair<>(DATA_TYPE, BSON_INT_TYPE_NAME),
-                        new Pair<>(COLUMN_SIZE, BSON_INT_TYPE_NAME),
-                        new Pair<>(DECIMAL_DIGITS, BSON_INT_TYPE_NAME),
-                        new Pair<>(NUM_PREC_RADIX, BSON_STRING_TYPE_NAME),
-                        new Pair<>(COLUMN_USAGE, BSON_STRING_TYPE_NAME),
-                        new Pair<>(REMARKS, BSON_STRING_TYPE_NAME),
-                        new Pair<>(CHAR_OCTET_LENGTH, BSON_INT_TYPE_NAME),
-                        new Pair<>(IS_NULLABLE, BSON_STRING_TYPE_NAME));
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_USAGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
