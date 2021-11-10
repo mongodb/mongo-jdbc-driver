@@ -119,6 +119,15 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PRIVILEGE = "PRIVILEGE";
     protected static final String IS_GRANTABLE = "IS_GRANTABLE";
 
+    protected static final String NON_UNIQUE = "NON_UNIQUE";
+    protected static final String INDEX_QUALIFIER = "INDEX_QUALIFIER";
+    protected static final String INDEX_NAME = "INDEX_NAME";
+    protected static final String TYPE = "TYPE";
+    protected static final String ASC_OR_DESC = "ASC_OR_DESC";
+    protected static final String CARDINALITY = "CARDINALITY";
+    protected static final String PAGES = "PAGES";
+    protected static final String FILTER_CONDITION = "FILTER_CONDITION";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }

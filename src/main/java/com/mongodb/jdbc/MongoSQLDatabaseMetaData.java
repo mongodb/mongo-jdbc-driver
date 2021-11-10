@@ -6,7 +6,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +31,12 @@ import org.bson.Document;
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final String BOT_NAME = "";
+    private static final String INDEX_KEY_KEY = "key";
+    private static final String INDEX_NAME_KEY = "name";
 
     private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
 
-    private static com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
+    private static final com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
             com.mongodb.jdbc.MongoSQLFunctions.getInstance();
 
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
@@ -189,6 +190,19 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
     }
 
+    // Helper for getting a stream of MongoListCollectionsResults from the argued db that match
+    // the argued filter.
+    private Stream<MongoListCollectionsResult> getTableDataFromDB(
+            String dbName, Function<MongoListCollectionsResult, Boolean> filter) {
+        return this.conn
+                .getDatabase(dbName)
+                .withCodecRegistry(MongoDriver.registry)
+                .listCollections(MongoListCollectionsResult.class)
+                .into(new ArrayList<>())
+                .stream()
+                .filter(filter::apply);
+    }
+
     // Helper for creating BSON documents for the getTables method. Intended for use
     // with the getTablesFromDB helper method which is shared between getTables and
     // getTablePrivileges.
@@ -223,17 +237,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for getting table data for all tables from a specific database. Used by
     // getTables and getTablePrivileges. The caller specifies how to serialize the table
     // info into BSON documents for the result set.
-    private Stream<BsonDocument> getTablesFromDB(
+    private Stream<BsonDocument> getTableDataFromDB(
             String dbName,
             Pattern tableNamePatternRE,
             List<String> types,
             BiFunction<String, MongoListCollectionsResult, BsonDocument> bsonSerializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
-        return db.listCollections(MongoListCollectionsResult.class)
-                .into(new ArrayList<>())
-                .stream()
-                .filter(
+        return this.getTableDataFromDB(
+                        dbName,
                         res ->
                                 tableNamePatternRE.matcher(res.name).matches()
                                         && (types == null
@@ -280,19 +291,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                     this.getDatabaseNames()
                             .flatMap(
                                     dbName ->
-                                            getTablesFromDB(
+                                            getTableDataFromDB(
                                                     dbName,
                                                     tableNamePatternRE,
                                                     typesList,
                                                     this::toGetTablesDoc));
         } else {
-            docs = getTablesFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
+            docs = getTableDataFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
         }
 
-        // Collect to a sorted list
+        // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
+        // TABLE_NAME.
         List<BsonDocument> docsList =
-                // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
-                // TABLE_NAME.
                 docs.sorted(
                                 Comparator.comparing(
                                                 (BsonDocument doc) ->
@@ -615,10 +625,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                             this::toGetColumnsDoc));
         }
 
-        // Collect to a sorted list
+        // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
+        // ORDINAL_POSITION.
         List<BsonDocument> docsList =
-                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
-                // ORDINAL_POSITION (ordinal position is same as column name sort order for us).
                 docs.sorted(
                                 Comparator.comparing(
                                                 (BsonDocument doc) ->
@@ -631,7 +640,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                         .thenComparing(
                                                 (BsonDocument doc) ->
                                                         doc.getDocument(BOT_NAME)
-                                                                .getString(COLUMN_NAME)))
+                                                                .getInt32(ORDINAL_POSITION)))
                         .collect(Collectors.toList());
 
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
@@ -718,14 +727,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             .sorted()
                             .flatMap(
                                     dbName ->
-                                            getTablesFromDB(
+                                            getTableDataFromDB(
                                                     dbName,
                                                     tableNamePatternRE,
                                                     null,
                                                     this::toGetTablePrivilegesDoc));
         } else {
             docs =
-                    getTablesFromDB(
+                    getTableDataFromDB(
                             catalog, tableNamePatternRE, null, this::toGetTablePrivilegesDoc);
         }
 
@@ -758,6 +767,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         try {
             if (catalog == null) {
                 // MongoDB does not have collections with no database.
+                // TODO: actually, shoudl do this for all databases that have this table..........
                 return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
             }
 
@@ -807,7 +817,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         boolean isValidSchema = isValidSchema(r);
 
-        Document keys = indexInfo.get("key", Document.class);
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
         for (String key : keys.keySet()) {
             String keyType =
                     isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
@@ -987,8 +997,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             Pair<String, String> namespace, Document indexInfo) {
         List<BsonDocument> docs = new ArrayList<>();
 
-        Document keys = indexInfo.get("key", Document.class);
-        String indexName = indexInfo.getString("name");
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
+        String indexName = indexInfo.getString(INDEX_NAME_KEY);
         int pos = 0;
         for (String key : keys.keySet()) {
             docs.add(
@@ -1892,13 +1902,121 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    // Helper for creating stream of bson documents from the columns in the indexInfo doc.
+    private Stream<BsonDocument> toGetIndexInfoDocs(
+            String dbName, String tableName, Document indexInfo) {
+        List<BsonDocument> docs = new ArrayList<>();
+
+        Boolean isUnique = indexInfo.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+        BsonValue nonUnique = new BsonBoolean(isUnique == null || !isUnique);
+        BsonValue indexName = new BsonString(indexInfo.getString(INDEX_NAME_KEY));
+
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
+        int i = 0;
+        for (String key : keys.keySet()) {
+            BsonValue ascOrDesc = new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+
+            docs.add(
+                    createBottomBson(
+                            new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                            new BsonElement(TABLE_SCHEM, new BsonString("")),
+                            new BsonElement(TABLE_NAME, new BsonString(tableName)),
+                            new BsonElement(NON_UNIQUE, nonUnique),
+                            new BsonElement(INDEX_QUALIFIER, BsonNull.VALUE),
+                            new BsonElement(INDEX_NAME, indexName),
+                            new BsonElement(TYPE, new BsonInt32(tableIndexOther)),
+                            new BsonElement(ORDINAL_POSITION, new BsonInt32(i++)),
+                            new BsonElement(COLUMN_NAME, new BsonString(key)),
+                            new BsonElement(ASC_OR_DESC, ascOrDesc),
+                            new BsonElement(CARDINALITY, BsonNull.VALUE),
+                            new BsonElement(PAGES, BsonNull.VALUE),
+                            new BsonElement(FILTER_CONDITION, BsonNull.VALUE)));
+        }
+
+        return docs.stream();
+    }
+
+    // Helper for getting stream of bson documents for indexes in the argued table. This is
+    // used for creating the result set for getIndexInfo method.
+    private Stream<BsonDocument> getIndexesFromTable(
+            String dbName, String tableName, boolean unique) {
+        return this.conn
+                .getDatabase(dbName)
+                .getCollection(tableName)
+                .listIndexes()
+                .into(new ArrayList<>())
+                .stream()
+                .filter(
+                        d -> {
+                            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+
+                            // If unique is false, include all indexes. If it is true, include
+                            // only indexes that are marked as unique.
+                            return !unique || (isUnique != null && isUnique);
+                        })
+                .flatMap(d -> toGetIndexInfoDocs(dbName, tableName, d));
+    }
+
     @Override
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        // TODO - "use index information from listCollections"
-        //   - what does that info look like?
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(NON_UNIQUE, BsonTypeInfo.BOOL_TYPE_NAME),
+                        new Pair<>(INDEX_QUALIFIER, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(INDEX_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ASC_OR_DESC, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CARDINALITY, BsonTypeInfo.LONG_TYPE_NAME),
+                        new Pair<>(PAGES, BsonTypeInfo.LONG_TYPE_NAME),
+                        new Pair<>(FILTER_CONDITION, BsonTypeInfo.LONG_TYPE_NAME));
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get indexes for all databases that have a
+            // collection with the argued table name.
+            docs =
+                    this.getDatabaseNames()
+                            .flatMap(
+                                    dbName ->
+                                            this.getTableDataFromDB(
+                                                            dbName, res -> res.name.equals(table))
+                                                    .flatMap(
+                                                            r ->
+                                                                    getIndexesFromTable(
+                                                                            dbName, r.name,
+                                                                            unique)));
+        } else {
+            docs = getIndexesFromTable(catalog, table, unique);
+        }
+
+        // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+        // Since TYPE is the same for every index, we omit it here.
+        List<BsonDocument> docsList =
+                docs.sorted(
+                                Comparator.comparing(
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(NON_UNIQUE))
+                                        .thenComparing(
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(INDEX_NAME))
+                                        .thenComparing(
+                                                (BsonDocument doc) ->
+                                                        doc.getDocument(BOT_NAME)
+                                                                .getString(ORDINAL_POSITION)))
+                        .collect(Collectors.toList());
+
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
