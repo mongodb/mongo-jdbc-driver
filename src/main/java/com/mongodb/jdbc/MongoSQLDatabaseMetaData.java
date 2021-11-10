@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +36,50 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
 
+    private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_TYPE, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_TABLE_PRIVILEGES_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_COLUMNS_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            ORDINAL_POSITION, SortableBsonDocument.ValueType.Int));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_COLUMN_PRIVILEGES_SORT_SPECS =
+            Collections.singletonList(
+                    new SortableBsonDocument.SortSpec(
+                            COLUMN_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_PRIMARY_KEYS_SORT_SPECS =
+            Collections.singletonList(
+                    new SortableBsonDocument.SortSpec(
+                            COLUMN_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_INDEX_INFO_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            NON_UNIQUE, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            INDEX_NAME, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            ORDINAL_POSITION, SortableBsonDocument.ValueType.Int));
+
     private static final com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
             com.mongodb.jdbc.MongoSQLFunctions.getInstance();
 
@@ -49,6 +93,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private BsonDocument createBottomBson(BsonElement... elements) {
         BsonDocument bot = new BsonDocument(Arrays.asList(elements));
         return new BsonDocument(BOT_NAME, bot);
+    }
+
+    // This helper method nests result fields under the bottom namespace, and also
+    // ensures the BsonDocument returned is sortable based on argued criteria.
+    private SortableBsonDocument createSortableBottomBson(
+            List<SortableBsonDocument.SortSpec> sortSpecs, BsonElement... elements) {
+        BsonDocument bot = new BsonDocument(Arrays.asList(elements));
+        return new SortableBsonDocument(sortSpecs, BOT_NAME, bot);
     }
 
     // For all methods in this class, the fields in the result set are nested
@@ -207,7 +259,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getTablesFromDB helper method which is shared between getTables and
     // getTablePrivileges.
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
-        return createBottomBson(
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
+                // TABLE_NAME.
+                GET_TABLES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
@@ -224,7 +279,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // for use with the getTablesFromDB helper method which is shared between getTables
     // and getTablePrivileges.
     private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
-        return createBottomBson(
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
+                // PRIVILEGE. Since all PRIVILEGEs are the same, we also omit that.
+                GET_TABLE_PRIVILEGES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
@@ -300,24 +358,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs = getTableDataFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
         }
 
-        // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
-        // TABLE_NAME.
-        List<BsonDocument> docsList =
-                docs.sorted(
-                                Comparator.comparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(TABLE_TYPE))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(TABLE_CAT))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(TABLE_NAME)))
-                        .collect(Collectors.toList());
-
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
@@ -446,7 +488,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                 ? "NO"
                                 : nullability == columnNullable ? "YES" : "");
 
-        return createBottomBson(
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
+                // ORDINAL_POSITION.
+                GET_COLUMNS_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
@@ -477,7 +522,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // for use with the getColumnsFromDB helper method which is shared between getColumns
     // and getColumnPrivileges.
     private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
-        return createBottomBson(
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
+                // we just sort by COLUMN_NAME here.
+                GET_COLUMN_PRIVILEGES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
                 new BsonElement(TABLE_SCHEM, new BsonString("")),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
@@ -543,7 +591,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                             .matcher(entry.getKey())
                                                             .matches())
 
-                                    // sort by column name
+                                    // sort by column name since ordinal position is
+                                    // based on column sort order
                                     .sorted(Map.Entry.comparingByKey())
 
                                     // map the (columnName, columnSchema) pairs into BSON docs
@@ -625,24 +674,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                             this::toGetColumnsDoc));
         }
 
-        // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
-        // ORDINAL_POSITION.
-        List<BsonDocument> docsList =
-                docs.sorted(
-                                Comparator.comparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(TABLE_CAT))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(TABLE_NAME))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getInt32(ORDINAL_POSITION)))
-                        .collect(Collectors.toList());
-
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
@@ -690,12 +723,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             this::toGetColumnPrivilegesDoc);
         }
 
-        // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
-        // we just sort by COLUMN_NAME here.
-        List<BsonDocument> docsList =
-                docs.sorted(Comparator.comparing((BsonDocument doc) -> doc.getString(COLUMN_NAME)))
-                        .collect(Collectors.toList());
-
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
@@ -724,7 +753,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             // If no catalog (database) is specified, get table privileges for all databases.
             docs =
                     this.getDatabaseNames()
-                            .sorted()
                             .flatMap(
                                     dbName ->
                                             getTableDataFromDB(
@@ -738,16 +766,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             catalog, tableNamePatternRE, null, this::toGetTablePrivilegesDoc);
         }
 
-        // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
-        // PRIVILEGE. Since the stream is already sorted by TABLE_CAT at this point
-        // and all PRIVILEGEs are the same, we just sort by TABLE_NAME here.
-        List<BsonDocument> docsList =
-                docs.sorted(
-                                Comparator.comparing(
-                                        (BsonDocument doc) ->
-                                                doc.getDocument(BOT_NAME).getString(TABLE_NAME)))
-                        .collect(Collectors.toList());
-
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
@@ -767,7 +787,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         try {
             if (catalog == null) {
                 // MongoDB does not have collections with no database.
-                // TODO: actually, shoudl do this for all databases that have this table..........
+                // TODO: actually, should do this for all databases that have this table..........
                 return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
             }
 
@@ -815,12 +835,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                 new BsonDocument("sqlGetSchema", new BsonString(namespace.right())),
                                 MongoJsonSchemaResult.class);
 
-        boolean isValidSchema = isValidSchema(r);
-
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
         for (String key : keys.keySet()) {
-            String keyType =
-                    isValidSchema ? r.schema.jsonSchema.properties.get(key).bsonType : null;
             docs.add(
                     toGetBestRowIdentifierDoc(
                             key,
@@ -995,28 +1011,28 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getFirstUniqueIndexResultSet method.
     private List<BsonDocument> toGetPrimaryKeysDocs(
             Pair<String, String> namespace, Document indexInfo) {
-        List<BsonDocument> docs = new ArrayList<>();
-
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
         String indexName = indexInfo.getString(INDEX_NAME_KEY);
-        int pos = 0;
-        for (String key : keys.keySet()) {
-            docs.add(
-                    createBottomBson(
-                            new BsonElement(TABLE_CAT, new BsonString(namespace.left())),
-                            new BsonElement(TABLE_SCHEM, new BsonString("")),
-                            new BsonElement(TABLE_NAME, new BsonString(namespace.right())),
-                            new BsonElement(COLUMN_NAME, new BsonString(key)),
-                            new BsonElement(KEY_SEQ, new BsonInt32(pos++)),
-                            new BsonElement(PK_NAME, new BsonString(indexName))));
-        }
+        AtomicInteger pos = new AtomicInteger();
 
-        // Per JDBC spec, sort by COLUMN_NAME.
-        docs.sort(
-                Comparator.comparing(
-                        (BsonDocument doc) -> doc.getDocument(BOT_NAME).getString(COLUMN_NAME)));
-
-        return docs;
+        return keys.keySet()
+                .stream()
+                .map(
+                        key ->
+                                createSortableBottomBson(
+                                        // Per JDBC spec, sort by COLUMN_NAME.
+                                        GET_PRIMARY_KEYS_SORT_SPECS,
+                                        new BsonElement(
+                                                TABLE_CAT, new BsonString(namespace.left())),
+                                        new BsonElement(TABLE_SCHEM, new BsonString("")),
+                                        new BsonElement(
+                                                TABLE_NAME, new BsonString(namespace.right())),
+                                        new BsonElement(COLUMN_NAME, new BsonString(key)),
+                                        new BsonElement(
+                                                KEY_SEQ, new BsonInt32(pos.getAndIncrement())),
+                                        new BsonElement(PK_NAME, new BsonString(indexName))))
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -1905,35 +1921,39 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for creating stream of bson documents from the columns in the indexInfo doc.
     private Stream<BsonDocument> toGetIndexInfoDocs(
             String dbName, String tableName, Document indexInfo) {
-        List<BsonDocument> docs = new ArrayList<>();
-
         Boolean isUnique = indexInfo.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
         BsonValue nonUnique = new BsonBoolean(isUnique == null || !isUnique);
         BsonValue indexName = new BsonString(indexInfo.getString(INDEX_NAME_KEY));
 
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
-        int i = 0;
-        for (String key : keys.keySet()) {
-            BsonValue ascOrDesc = new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+        AtomicInteger pos = new AtomicInteger();
 
-            docs.add(
-                    createBottomBson(
-                            new BsonElement(TABLE_CAT, new BsonString(dbName)),
-                            new BsonElement(TABLE_SCHEM, new BsonString("")),
-                            new BsonElement(TABLE_NAME, new BsonString(tableName)),
-                            new BsonElement(NON_UNIQUE, nonUnique),
-                            new BsonElement(INDEX_QUALIFIER, BsonNull.VALUE),
-                            new BsonElement(INDEX_NAME, indexName),
-                            new BsonElement(TYPE, new BsonInt32(tableIndexOther)),
-                            new BsonElement(ORDINAL_POSITION, new BsonInt32(i++)),
-                            new BsonElement(COLUMN_NAME, new BsonString(key)),
-                            new BsonElement(ASC_OR_DESC, ascOrDesc),
-                            new BsonElement(CARDINALITY, BsonNull.VALUE),
-                            new BsonElement(PAGES, BsonNull.VALUE),
-                            new BsonElement(FILTER_CONDITION, BsonNull.VALUE)));
-        }
+        return keys.keySet()
+                .stream()
+                .map(
+                        key -> {
+                            BsonValue ascOrDesc =
+                                    new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
 
-        return docs.stream();
+                            return createSortableBottomBson(
+                                    // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+                                    // Since TYPE is the same for every index, we omit it here.
+                                    GET_INDEX_INFO_SORT_SPECS,
+                                    new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                                    new BsonElement(TABLE_SCHEM, new BsonString("")),
+                                    new BsonElement(TABLE_NAME, new BsonString(tableName)),
+                                    new BsonElement(NON_UNIQUE, nonUnique),
+                                    new BsonElement(INDEX_QUALIFIER, BsonNull.VALUE),
+                                    new BsonElement(INDEX_NAME, indexName),
+                                    new BsonElement(TYPE, new BsonInt32(tableIndexOther)),
+                                    new BsonElement(
+                                            ORDINAL_POSITION, new BsonInt32(pos.getAndIncrement())),
+                                    new BsonElement(COLUMN_NAME, new BsonString(key)),
+                                    new BsonElement(ASC_OR_DESC, ascOrDesc),
+                                    new BsonElement(CARDINALITY, BsonNull.VALUE),
+                                    new BsonElement(PAGES, BsonNull.VALUE),
+                                    new BsonElement(FILTER_CONDITION, BsonNull.VALUE));
+                        });
     }
 
     // Helper for getting stream of bson documents for indexes in the argued table. This is
@@ -1996,24 +2016,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs = getIndexesFromTable(catalog, table, unique);
         }
 
-        // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-        // Since TYPE is the same for every index, we omit it here.
-        List<BsonDocument> docsList =
-                docs.sorted(
-                                Comparator.comparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(NON_UNIQUE))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(INDEX_NAME))
-                                        .thenComparing(
-                                                (BsonDocument doc) ->
-                                                        doc.getDocument(BOT_NAME)
-                                                                .getString(ORDINAL_POSITION)))
-                        .collect(Collectors.toList());
-
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
         return new MongoSQLResultSet(null, c, botSchema);
