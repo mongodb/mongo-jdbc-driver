@@ -256,7 +256,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     // Helper for creating BSON documents for the getTables method. Intended for use
-    // with the getTablesFromDB helper method which is shared between getTables and
+    // with the getTableDataFromDB helper method which is shared between getTables and
     // getTablePrivileges.
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
         return createSortableBottomBson(
@@ -276,7 +276,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     // Helper for creating BSON documents for the getTablePrivileges method. Intended
-    // for use with the getTablesFromDB helper method which is shared between getTables
+    // for use with the getTableDataFromDB helper method which is shared between getTables
     // and getTablePrivileges.
     private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
         return createSortableBottomBson(
@@ -773,6 +773,30 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, c, botSchema);
     }
 
+    private Stream<BsonDocument> getFirstUniqueIndexDocsForTable(
+            String dbName,
+            String tableName,
+            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        ListIndexesIterable<Document> i = db.getCollection(tableName).listIndexes();
+        List<BsonDocument> docs = new ArrayList<>();
+
+        for (Document d : i) {
+            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+            if (isUnique == null || !isUnique) {
+                continue;
+            }
+
+            // Get result set rows from first unique index
+            docs.addAll(serializer.apply(new Pair<>(dbName, tableName), d));
+
+            // Break after we find the first unique index
+            break;
+        }
+
+        return docs.stream();
+    }
+
     // Helper for getting a ResultSet based on the first unique index for the argued table. The
     // result set documents are produced by the serializer function. Given a (dbName, tableName)
     // pair and a Document representing the first unique index, the serializer function creates
@@ -785,31 +809,32 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             MongoJsonSchema botSchema,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
         try {
+
+            Stream<BsonDocument> docs;
+
             if (catalog == null) {
-                // MongoDB does not have collections with no database.
-                // TODO: actually, should do this for all databases that have this table..........
-                return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+                // If no catalog (database) is specified, get first unique index for all databases that have a
+                // collection with the argued table name.
+                docs =
+                        this.getDatabaseNames()
+                                .flatMap(
+                                        dbName ->
+                                                getTableDataFromDB(
+                                                                dbName,
+                                                                res -> res.name.equals(table))
+                                                        .flatMap(
+                                                                r ->
+                                                                        getFirstUniqueIndexDocsForTable(
+                                                                                dbName,
+                                                                                r.name,
+                                                                                serializer)));
+            } else {
+                docs = getFirstUniqueIndexDocsForTable(catalog, table, serializer);
             }
 
-            MongoDatabase db =
-                    this.conn.getDatabase(catalog).withCodecRegistry(MongoDriver.registry);
-            ListIndexesIterable<Document> i = db.getCollection(table).listIndexes();
-            List<BsonDocument> docs = new ArrayList<>();
-
-            for (Document d : i) {
-                Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
-                if (isUnique == null || !isUnique) {
-                    continue;
-                }
-
-                // Get result set rows from first unique index
-                docs.addAll(serializer.apply(new Pair<>(catalog, table), d));
-
-                // Break after we find the first unique index
-                break;
-            }
-
-            BsonExplicitCursor c = new BsonExplicitCursor(docs);
+            // Collect to list.
+            List<BsonDocument> docsList = docs.collect(Collectors.toList());
+            BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
             return new MongoSQLResultSet(null, c, botSchema);
         } catch (SQLException e) {
