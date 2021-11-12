@@ -264,7 +264,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 // TABLE_NAME.
                 GET_TABLES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(dbName)),
-                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
                 new BsonElement(TABLE_TYPE, new BsonString(res.type)),
                 new BsonElement(REMARKS, BsonNull.VALUE),
@@ -284,7 +284,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 // PRIVILEGE. Since all PRIVILEGEs are the same, we also omit that.
                 GET_TABLE_PRIVILEGES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(dbName)),
-                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                 new BsonElement(TABLE_NAME, new BsonString(res.name)),
                 new BsonElement(GRANTOR, BsonNull.VALUE),
                 new BsonElement(GRANTEE, new BsonString("")),
@@ -497,7 +497,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 // ORDINAL_POSITION.
                 GET_COLUMNS_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
-                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(DATA_TYPE, dataType),
@@ -531,7 +531,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 // we just sort by COLUMN_NAME here.
                 GET_COLUMN_PRIVILEGES_SORT_SPECS,
                 new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
-                new BsonElement(TABLE_SCHEM, new BsonString("")),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
                 new BsonElement(GRANTOR, BsonNull.VALUE),
@@ -1067,7 +1067,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                         GET_PRIMARY_KEYS_SORT_SPECS,
                                         new BsonElement(
                                                 TABLE_CAT, new BsonString(namespace.left())),
-                                        new BsonElement(TABLE_SCHEM, new BsonString("")),
+                                        new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                                         new BsonElement(
                                                 TABLE_NAME, new BsonString(namespace.right())),
                                         new BsonElement(COLUMN_NAME, new BsonString(key)),
@@ -1983,7 +1983,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                     // Since TYPE is the same for every index, we omit it here.
                                     GET_INDEX_INFO_SORT_SPECS,
                                     new BsonElement(TABLE_CAT, new BsonString(dbName)),
-                                    new BsonElement(TABLE_SCHEM, new BsonString("")),
+                                    new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                                     new BsonElement(TABLE_NAME, new BsonString(tableName)),
                                     new BsonElement(NON_UNIQUE, nonUnique),
                                     new BsonElement(INDEX_QUALIFIER, BsonNull.VALUE),
