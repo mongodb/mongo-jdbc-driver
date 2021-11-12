@@ -47,8 +47,6 @@ public class SortableBsonDocument extends BsonDocument implements Comparable<Sor
                                     .getInt32(sortSpec.key)
                                     .compareTo(o.nestedDocValue.getInt32(sortSpec.key));
                     break;
-                default:
-                    throw new IllegalArgumentException("unreachable");
             }
 
             if (r != 0) {
