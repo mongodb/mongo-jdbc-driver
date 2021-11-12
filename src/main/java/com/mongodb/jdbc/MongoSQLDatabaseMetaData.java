@@ -354,6 +354,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                     tableNamePatternRE,
                                                     typesList,
                                                     this::toGetTablesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
         } else {
             docs = getTableDataFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
         }
@@ -663,6 +667,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                     columnNamePatternRE,
                                                                     this::toGetColumnsDoc)));
 
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
         } else {
             docs =
                     liftSQLException(
@@ -714,6 +722,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                     tableNamePatternRE,
                                                     columnNamePatternRE,
                                                     this::toGetColumnPrivilegesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
         } else {
             docs =
                     getColumnsFromDB(
@@ -760,6 +772,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                     tableNamePatternRE,
                                                     null,
                                                     this::toGetTablePrivilegesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
         } else {
             docs =
                     getTableDataFromDB(
@@ -809,9 +825,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             MongoJsonSchema botSchema,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
         try {
-
             Stream<BsonDocument> docs;
-
             if (catalog == null) {
                 // If no catalog (database) is specified, get first unique index for all databases that have a
                 // collection with the argued table name.
@@ -828,6 +842,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                                 dbName,
                                                                                 r.name,
                                                                                 serializer)));
+            } else if (catalog.isEmpty()) {
+                // If catalog (database) is empty, we will return an empty result set because
+                // MongoDB does not support tables (collections) without databases.
+                docs = Stream.empty();
             } else {
                 docs = getFirstUniqueIndexDocsForTable(catalog, table, serializer);
             }
@@ -2037,6 +2055,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                     getIndexesFromTable(
                                                                             dbName, r.name,
                                                                             unique)));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
         } else {
             docs = getIndexesFromTable(catalog, table, unique);
         }
