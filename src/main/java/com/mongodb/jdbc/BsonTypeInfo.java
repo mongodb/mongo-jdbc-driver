@@ -244,12 +244,13 @@ public class BsonTypeInfo {
                 return 34;
             case DOUBLE_TYPE_NAME:
                 return 15;
+            case DATE_TYPE_NAME:
+                return 3;
             case INT_TYPE_NAME:
             case LONG_TYPE_NAME:
             case BINDATA_TYPE_NAME:
             case STRING_TYPE_NAME:
             case BOOL_TYPE_NAME:
-            case DATE_TYPE_NAME:
             case ARRAY_TYPE_NAME:
             case OBJECT_TYPE_NAME:
             case OBJECTID_TYPE_NAME:
