@@ -7,6 +7,7 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
@@ -107,6 +108,26 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
     protected static final String COLUMN_USAGE = "COLUMN_USAGE";
 
+    protected static final String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+    protected static final String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    protected static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
+    protected static final String REF_GENERATION = "REF_GENERATION";
+
+    protected static final String GRANTOR = "GRANTOR";
+    protected static final String GRANTEE = "GRANTEE";
+    protected static final String PRIVILEGE = "PRIVILEGE";
+    protected static final String IS_GRANTABLE = "IS_GRANTABLE";
+
+    protected static final String NON_UNIQUE = "NON_UNIQUE";
+    protected static final String INDEX_QUALIFIER = "INDEX_QUALIFIER";
+    protected static final String INDEX_NAME = "INDEX_NAME";
+    protected static final String TYPE = "TYPE";
+    protected static final String ASC_OR_DESC = "ASC_OR_DESC";
+    protected static final String CARDINALITY = "CARDINALITY";
+    protected static final String PAGES = "PAGES";
+    protected static final String FILTER_CONDITION = "FILTER_CONDITION";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
@@ -116,8 +137,8 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return escaped.replace("\\", "\\\\");
     }
 
-    public static String toJavaPattern(String sqlPattern) {
-        return sqlPattern.replaceAll("%", ".*").replaceAll("_", ".");
+    public static Pattern toJavaPattern(String sqlPattern) {
+        return Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
     }
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,

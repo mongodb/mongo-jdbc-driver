@@ -1,36 +1,120 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.client.ListIndexesIterable;
+import com.mongodb.client.MongoDatabase;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonElement;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
+import org.bson.Document;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final String BOT_NAME = "";
+    private static final String INDEX_KEY_KEY = "key";
+    private static final String INDEX_NAME_KEY = "name";
 
-    private static com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
+    private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
+
+    private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_TYPE, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_TABLE_PRIVILEGES_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_COLUMNS_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_CAT, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            TABLE_NAME, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            ORDINAL_POSITION, SortableBsonDocument.ValueType.Int));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_COLUMN_PRIVILEGES_SORT_SPECS =
+            Collections.singletonList(
+                    new SortableBsonDocument.SortSpec(
+                            COLUMN_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_PRIMARY_KEYS_SORT_SPECS =
+            Collections.singletonList(
+                    new SortableBsonDocument.SortSpec(
+                            COLUMN_NAME, SortableBsonDocument.ValueType.String));
+
+    private static final List<SortableBsonDocument.SortSpec> GET_INDEX_INFO_SORT_SPECS =
+            Arrays.asList(
+                    new SortableBsonDocument.SortSpec(
+                            NON_UNIQUE, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            INDEX_NAME, SortableBsonDocument.ValueType.String),
+                    new SortableBsonDocument.SortSpec(
+                            ORDINAL_POSITION, SortableBsonDocument.ValueType.Int));
+
+    private static final com.mongodb.jdbc.MongoSQLFunctions MongoSQLFunctions =
             com.mongodb.jdbc.MongoSQLFunctions.getInstance();
 
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
     }
 
+    // For all methods in this class, the fields in the result set are nested
+    // under the bottom namespace. This helper method takes result set fields
+    // and nests them appropriately.
     private BsonDocument createBottomBson(BsonElement... elements) {
         BsonDocument bot = new BsonDocument(Arrays.asList(elements));
         return new BsonDocument(BOT_NAME, bot);
+    }
+
+    // This helper method nests result fields under the bottom namespace, and also
+    // ensures the BsonDocument returned is sortable based on argued criteria.
+    private SortableBsonDocument createSortableBottomBson(
+            List<SortableBsonDocument.SortSpec> sortSpecs, BsonElement... elements) {
+        BsonDocument bot = new BsonDocument(Arrays.asList(elements));
+        return new SortableBsonDocument(sortSpecs, BOT_NAME, bot);
+    }
+
+    // For all methods in this class, the fields in the result set are nested
+    // under the bottom namespace. This helper method takes result schema fields
+    // and nests them appropriately.
+    @SafeVarargs
+    private final MongoJsonSchema createBottomSchema(Pair<String, String>... resultSchemaFields) {
+        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
+        resultSchema.addRequiredScalarKeys(resultSchemaFields);
+
+        MongoJsonSchema bot = MongoJsonSchema.createEmptyObjectSchema();
+        bot.required.add(BOT_NAME);
+        bot.properties.put(BOT_NAME, resultSchema);
+        return bot;
     }
 
     @Override
@@ -91,18 +175,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -114,32 +194,28 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_DEF, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(PROCEDURE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PROCEDURE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -161,76 +237,738 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    // Helper for getting a stream of all database names.
+    private Stream<String> getDatabaseNames() {
+        return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
+    }
+
+    // Helper for getting a stream of MongoListCollectionsResults from the argued db that match
+    // the argued filter.
+    private Stream<MongoListCollectionsResult> getTableDataFromDB(
+            String dbName, Function<MongoListCollectionsResult, Boolean> filter) {
+        return this.conn
+                .getDatabase(dbName)
+                .withCodecRegistry(MongoDriver.registry)
+                .listCollections(MongoListCollectionsResult.class)
+                .into(new ArrayList<>())
+                .stream()
+                .filter(filter::apply);
+    }
+
+    // Helper for creating BSON documents for the getTables method. Intended for use
+    // with the getTableDataFromDB helper method which is shared between getTables and
+    // getTablePrivileges.
+    private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
+                // TABLE_NAME.
+                GET_TABLES_SORT_SPECS,
+                new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TABLE_NAME, new BsonString(res.name)),
+                new BsonElement(TABLE_TYPE, new BsonString(res.type)),
+                new BsonElement(REMARKS, BsonNull.VALUE),
+                new BsonElement(TYPE_CAT, BsonNull.VALUE),
+                new BsonElement(TYPE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TYPE_NAME, BsonNull.VALUE),
+                new BsonElement(SELF_REFERENCING_COL_NAME, BsonNull.VALUE),
+                new BsonElement(REF_GENERATION, BsonNull.VALUE));
+    }
+
+    // Helper for creating BSON documents for the getTablePrivileges method. Intended
+    // for use with the getTableDataFromDB helper method which is shared between getTables
+    // and getTablePrivileges.
+    private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
+                // PRIVILEGE. Since all PRIVILEGEs are the same, we also omit that.
+                GET_TABLE_PRIVILEGES_SORT_SPECS,
+                new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TABLE_NAME, new BsonString(res.name)),
+                new BsonElement(GRANTOR, BsonNull.VALUE),
+                new BsonElement(GRANTEE, new BsonString("")),
+                new BsonElement(PRIVILEGE, new BsonString("SELECT")),
+                new BsonElement(IS_GRANTABLE, BsonNull.VALUE));
+    }
+
+    // Helper for getting table data for all tables from a specific database. Used by
+    // getTables and getTablePrivileges. The caller specifies how to serialize the table
+    // info into BSON documents for the result set.
+    private Stream<BsonDocument> getTableDataFromDB(
+            String dbName,
+            Pattern tableNamePatternRE,
+            List<String> types,
+            BiFunction<String, MongoListCollectionsResult, BsonDocument> bsonSerializer) {
+
+        return this.getTableDataFromDB(
+                        dbName,
+                        res ->
+                                tableNamePatternRE.matcher(res.name).matches()
+                                        && (types == null
+                                                || types.contains(res.type.toLowerCase())))
+                .map(res -> bsonSerializer.apply(dbName, res));
+    }
+
+    private List<String> toTableTypeList(String[] types) {
+        List<String> l = null;
+        if (types != null) {
+            l = Arrays.asList(types);
+            l.replaceAll(String::toLowerCase);
+        }
+        return l;
+    }
+
     @Override
     public ResultSet getTables(
-            String catalog, String schemaPattern, String tableNamePattern, String types[])
+            String catalog, String schemaPattern, String tableNamePattern, String[] types)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_TYPE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SELF_REFERENCING_COL_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REF_GENERATION, BsonTypeInfo.STRING_TYPE_NAME));
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        List<String> typesList = toTableTypeList(types);
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get tables for all databases.
+            docs =
+                    this.getDatabaseNames()
+                            .flatMap(
+                                    dbName ->
+                                            getTableDataFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    typesList,
+                                                    this::toGetTablesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
+        } else {
+            docs = getTableDataFromDB(catalog, tableNamePatternRE, typesList, this::toGetTablesDoc);
+        }
+
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TABLE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME));
+
+        BsonExplicitCursor c =
+                new BsonExplicitCursor(
+                        this.getDatabaseNames()
+                                .sorted()
+                                .map(
+                                        dbName ->
+                                                createBottomBson(
+                                                        new BsonElement(
+                                                                TABLE_CAT, new BsonString(dbName))))
+                                .collect(Collectors.toList()));
+
+        return new MongoSQLResultSet(null, c, botSchema);
+    }
+
+    /**
+     * liftSQLException tries to execute a Supplier that may throw a RuntimeException that wraps a
+     * SQLException as the cause. If such an exception is encountered, the inner SQLException is
+     * thrown. Otherwise, the Supplier executes as expected.
+     *
+     * <p>This method is intended for use with higher order functions that wrap SQLExceptions in
+     * RuntimeExceptions to appease the compiler. We want to propagate those SQLExceptions all the
+     * way out to the caller so this method is a way of recovering them.
+     *
+     * @param f The Supplier function to execute. This function may throw a RuntimeException that
+     *     wraps a SQLException.
+     * @param <T> The return type of the Supplier.
+     * @return The return value of the Supplier.
+     * @throws SQLException If a RuntimeException that wraps a SQLException is caught.
+     */
+    private static <T> T liftSQLException(Supplier<T> f) throws SQLException {
+        try {
+            return f.get();
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof SQLException) {
+                throw (SQLException) e.getCause();
+            }
+            throw e;
+        }
+    }
+
+    // Helper class for representing all info needed to serialize column data for the
+    // getColumns and getColumnPrivileges methods. Intended for use with toGetColumnsDoc
+    // and toGetColumnPrivilegesDoc helpers.
+    private static class GetColumnsDocInfo {
+        String dbName;
+        String tableName;
+        String columnName;
+        MongoJsonSchema columnSchema;
+        boolean isRequired;
+        int idx;
+
+        GetColumnsDocInfo(
+                String dbName,
+                String tableName,
+                String columnName,
+                MongoJsonSchema columnSchema,
+                boolean isRequired,
+                int idx) {
+            this.dbName = dbName;
+            this.tableName = tableName;
+            this.columnName = columnName;
+            this.columnSchema = columnSchema;
+            this.isRequired = isRequired;
+            this.idx = idx;
+        }
+    }
+
+    // Helper for creating BSON documents for the getColumns method. Intended for use
+    // with the getColumnsFromDB helper method which is shared between getColumns and
+    // getColumnPrivileges.
+    private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
+        String bsonType;
+        int nullability;
+        BsonValue dataType;
+        BsonValue decimalDigits = BsonNull.VALUE;
+        BsonValue numPrecRadix;
+        BsonValue charOctetLength = BsonNull.VALUE;
+
+        try {
+            Pair<String, Integer> typeAndNullability =
+                    BsonTypeInfo.getBsonTypeNameAndNullability(i.columnSchema, i.isRequired);
+            bsonType = typeAndNullability.left();
+            nullability = typeAndNullability.right();
+
+            dataType = new BsonInt32(BsonTypeInfo.getJDBCType(bsonType));
+
+            Integer d = BsonTypeInfo.getDecimalDigits(bsonType);
+            if (d != null) {
+                decimalDigits = new BsonInt32(d);
+            }
+
+            numPrecRadix = new BsonInt32(BsonTypeInfo.getNumPrecRadix(bsonType));
+
+            Integer c = BsonTypeInfo.getCharOctetLength(bsonType);
+            if (c != null) {
+                charOctetLength = new BsonInt32(c);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        BsonValue isNullable =
+                new BsonString(
+                        nullability == columnNoNulls
+                                ? "NO"
+                                : nullability == columnNullable ? "YES" : "");
+
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
+                // ORDINAL_POSITION.
+                GET_COLUMNS_SORT_SPECS,
+                new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
+                new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
+                new BsonElement(DATA_TYPE, dataType),
+                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
+                new BsonElement(COLUMN_SIZE, BsonNull.VALUE),
+                new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
+                new BsonElement(DECIMAL_DIGITS, decimalDigits),
+                new BsonElement(NUM_PREC_RADIX, numPrecRadix),
+                new BsonElement(NULLABLE, new BsonInt32(nullability)),
+                new BsonElement(REMARKS, new BsonString("")),
+                new BsonElement(COLUMN_DEF, BsonNull.VALUE),
+                new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
+                new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
+                new BsonElement(CHAR_OCTET_LENGTH, charOctetLength),
+                new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
+                new BsonElement(IS_NULLABLE, isNullable),
+                new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
+                new BsonElement(SCOPE_SCHEMA, BsonNull.VALUE),
+                new BsonElement(SCOPE_TABLE, BsonNull.VALUE),
+                new BsonElement(SOURCE_DATA_TYPE, new BsonInt32(0)),
+                new BsonElement(IS_AUTOINCREMENT, new BsonString("NO")),
+                new BsonElement(IS_GENERATEDCOLUMN, new BsonString("")));
+    }
+
+    // Helper for creating BSON documents for the getColumnPrivileges methods. Intended
+    // for use with the getColumnsFromDB helper method which is shared between getColumns
+    // and getColumnPrivileges.
+    private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
+        return createSortableBottomBson(
+                // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
+                // we just sort by COLUMN_NAME here.
+                GET_COLUMN_PRIVILEGES_SORT_SPECS,
+                new BsonElement(TABLE_CAT, new BsonString(i.dbName)),
+                new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
+                new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
+                new BsonElement(GRANTOR, BsonNull.VALUE),
+                new BsonElement(GRANTEE, new BsonString("")),
+                new BsonElement(PRIVILEGE, new BsonString("SELECT")),
+                new BsonElement(IS_GRANTABLE, BsonNull.VALUE));
+    }
+
+    // Helper for ensuring a sqlGetSchema result is a valid collection schema. As in,
+    // it has ok: 1, has a jsonSchema, and the jsonSchema is an object schema.
+    private boolean isValidSchema(MongoJsonSchemaResult res) {
+        return res.ok == 1 && res.schema.jsonSchema != null && res.schema.jsonSchema.isObject();
+    }
+
+    // Helper for getting column data for all columns from all tables from a specific
+    // database. Used by getColumns and getColumnPrivileges. The caller specifies how
+    // to serialize the column info into BSON documents for the result set.
+    private Stream<BsonDocument> getColumnsFromDB(
+            String dbName,
+            Pattern tableNamePatternRE,
+            Pattern columnNamePatternRE,
+            Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+
+        return db.listCollectionNames()
+                .into(new ArrayList<>())
+                .stream()
+
+                // filter only for collections matching the pattern
+                .filter(tableName -> tableNamePatternRE.matcher(tableName).matches())
+
+                // map the collection names into triples of (dbName, tableName, tableSchema)
+                .map(
+                        tableName ->
+                                new Pair<>(
+                                        new Pair<>(dbName, tableName),
+                                        db.runCommand(
+                                                new BsonDocument(
+                                                        "sqlGetSchema", new BsonString(tableName)),
+                                                MongoJsonSchemaResult.class)))
+
+                // filter only for collections that have schemas
+                .filter(p -> isValidSchema(p.right()))
+
+                // flatMap the column data into a single stream of BSON docs
+                .flatMap(
+                        p -> {
+                            Pair<String, String> ns = p.left();
+                            MongoJsonSchemaResult res = p.right();
+                            AtomicInteger idx = new AtomicInteger();
+                            return res.schema
+                                    .jsonSchema
+                                    .properties
+                                    .entrySet()
+                                    .stream()
+
+                                    // filter only for columns matching the pattern
+                                    .filter(
+                                            entry ->
+                                                    columnNamePatternRE
+                                                            .matcher(entry.getKey())
+                                                            .matches())
+
+                                    // sort by column name since ordinal position is
+                                    // based on column sort order
+                                    .sorted(Map.Entry.comparingByKey())
+
+                                    // map the (columnName, columnSchema) pairs into BSON docs
+                                    .map(
+                                            entry ->
+                                                    bsonSerializer.apply(
+                                                            new GetColumnsDocInfo(
+                                                                    ns.left(),
+                                                                    ns.right(),
+                                                                    entry.getKey(),
+                                                                    entry.getValue(),
+                                                                    res.schema.jsonSchema.required
+                                                                            .contains(
+                                                                                    entry.getKey()),
+                                                                    idx.getAndIncrement())));
+                        });
     }
 
     @Override
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_AUTOINCREMENT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GENERATEDCOLUMN, BsonTypeInfo.STRING_TYPE_NAME));
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get columns for all databases.
+            docs =
+                    liftSQLException(
+                            () ->
+                                    this.getDatabaseNames()
+                                            .flatMap(
+                                                    dbName ->
+                                                            getColumnsFromDB(
+                                                                    dbName,
+                                                                    tableNamePatternRE,
+                                                                    columnNamePatternRE,
+                                                                    this::toGetColumnsDoc)));
+
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
+        } else {
+            docs =
+                    liftSQLException(
+                            () ->
+                                    getColumnsFromDB(
+                                            catalog,
+                                            tableNamePatternRE,
+                                            columnNamePatternRE,
+                                            this::toGetColumnsDoc));
+        }
+
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
     public ResultSet getColumnPrivileges(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTOR, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTEE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRIVILEGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GRANTABLE, BsonTypeInfo.STRING_TYPE_NAME));
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get column privileges for all databases.
+            docs =
+                    this.getDatabaseNames()
+                            .flatMap(
+                                    dbName ->
+                                            getColumnsFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    columnNamePatternRE,
+                                                    this::toGetColumnPrivilegesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
+        } else {
+            docs =
+                    getColumnsFromDB(
+                            catalog,
+                            tableNamePatternRE,
+                            columnNamePatternRE,
+                            this::toGetColumnPrivilegesDoc);
+        }
+
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTOR, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(GRANTEE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRIVILEGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(IS_GRANTABLE, BsonTypeInfo.STRING_TYPE_NAME));
+
+        // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
+        // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
+        // schemaPattern argument.
+        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get table privileges for all databases.
+            docs =
+                    this.getDatabaseNames()
+                            .flatMap(
+                                    dbName ->
+                                            getTableDataFromDB(
+                                                    dbName,
+                                                    tableNamePatternRE,
+                                                    null,
+                                                    this::toGetTablePrivilegesDoc));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
+        } else {
+            docs =
+                    getTableDataFromDB(
+                            catalog, tableNamePatternRE, null, this::toGetTablePrivilegesDoc);
+        }
+
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
+    }
+
+    private Stream<BsonDocument> getFirstUniqueIndexDocsForTable(
+            String dbName,
+            String tableName,
+            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        ListIndexesIterable<Document> i = db.getCollection(tableName).listIndexes();
+        List<BsonDocument> docs = new ArrayList<>();
+
+        for (Document d : i) {
+            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+            if (isUnique == null || !isUnique) {
+                continue;
+            }
+
+            // Get result set rows from first unique index
+            docs.addAll(serializer.apply(new Pair<>(dbName, tableName), d));
+
+            // Break after we find the first unique index
+            break;
+        }
+
+        return docs.stream();
+    }
+
+    // Helper for getting a ResultSet based on the first unique index for the argued table. The
+    // result set documents are produced by the serializer function. Given a (dbName, tableName)
+    // pair and a Document representing the first unique index, the serializer function creates
+    // a list of BsonDocuments corresponding to the rows of the result set. This method is shared
+    // between getBestRowIdentifier and getPrimaryKeys, which both return data based on the first
+    // unique index.
+    private ResultSet getFirstUniqueIndexResultSet(
+            String catalog,
+            String table,
+            MongoJsonSchema botSchema,
+            BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        try {
+            Stream<BsonDocument> docs;
+            if (catalog == null) {
+                // If no catalog (database) is specified, get first unique index for all databases that have a
+                // collection with the argued table name.
+                docs =
+                        this.getDatabaseNames()
+                                .flatMap(
+                                        dbName ->
+                                                getTableDataFromDB(
+                                                                dbName,
+                                                                res -> res.name.equals(table))
+                                                        .flatMap(
+                                                                r ->
+                                                                        getFirstUniqueIndexDocsForTable(
+                                                                                dbName,
+                                                                                r.name,
+                                                                                serializer)));
+            } else if (catalog.isEmpty()) {
+                // If catalog (database) is empty, we will return an empty result set because
+                // MongoDB does not support tables (collections) without databases.
+                docs = Stream.empty();
+            } else {
+                docs = getFirstUniqueIndexDocsForTable(catalog, table, serializer);
+            }
+
+            // Collect to list.
+            List<BsonDocument> docsList = docs.collect(Collectors.toList());
+            BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+            return new MongoSQLResultSet(null, c, botSchema);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Helper for getting the rows for the getBestRowIdentifier result set. Given a
+    // (dbName, tableName) and an index doc, it produces a list of BsonDocuments where
+    // each document corresponds to a row in the result set representing a column in
+    // the index. This method is intended for use with the getFirstUniqueIndexResultSet
+    // method.
+    private List<BsonDocument> toGetBestRowIdentifierDocs(
+            Pair<String, String> namespace, Document indexInfo) {
+        List<BsonDocument> docs = new ArrayList<>();
+
+        // We've found the first unique index. At this point, we get the schema for this
+        // collection and create a result set based on this index's keys.
+        MongoJsonSchemaResult r =
+                this.conn
+                        .getDatabase(namespace.left())
+                        .runCommand(
+                                new BsonDocument("sqlGetSchema", new BsonString(namespace.right())),
+                                MongoJsonSchemaResult.class);
+
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
+        for (String key : keys.keySet()) {
+            docs.add(
+                    toGetBestRowIdentifierDoc(
+                            key,
+                            r.schema.jsonSchema.properties.get(key),
+                            r.schema.jsonSchema.required.contains(key)));
+        }
+
+        return docs;
+    }
+
+    // Helper for creating a result set BsonDocument for an index column for the
+    // getBestRowIdentifier method.
+    private BsonDocument toGetBestRowIdentifierDoc(
+            String columnName, MongoJsonSchema columnSchema, boolean isRequired) {
+        Pair<String, Integer> typeAndNullability;
+        String bsonType;
+        BsonValue dataType;
+        BsonValue columnSize = BsonNull.VALUE;
+        BsonValue decimalDigits = BsonNull.VALUE;
+
+        try {
+            typeAndNullability =
+                    BsonTypeInfo.getBsonTypeNameAndNullability(columnSchema, isRequired);
+
+            bsonType = typeAndNullability.left();
+
+            dataType = new BsonInt32(BsonTypeInfo.getJDBCType(bsonType));
+
+            Integer s = BsonTypeInfo.getPrecision(bsonType);
+            if (s != null) {
+                columnSize = new BsonInt32(s);
+            }
+
+            Integer d = BsonTypeInfo.getDecimalDigits(bsonType);
+            if (d != null) {
+                decimalDigits = new BsonInt32(d);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return createBottomBson(
+                new BsonElement(SCOPE, BsonNull.VALUE),
+                new BsonElement(COLUMN_NAME, new BsonString(columnName)),
+                new BsonElement(DATA_TYPE, dataType),
+                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
+                new BsonElement(COLUMN_SIZE, columnSize),
+                new BsonElement(BUFFER_LENGTH, BsonNull.VALUE),
+                new BsonElement(DECIMAL_DIGITS, decimalDigits),
+                new BsonElement(PSEUDO_COLUMN, new BsonInt32(bestRowNotPseudo)));
     }
 
     @Override
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(SCOPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
+
+        // As in other methods, we ignore the schema argument. Here, we also ignore the
+        // scope and nullable arguments.
+        return liftSQLException(
+                () ->
+                        getFirstUniqueIndexResultSet(
+                                catalog, table, botSchema, this::toGetBestRowIdentifierDocs));
     }
 
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(SCOPE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(SCOPE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(BUFFER_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PSEUDO_COLUMN, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -238,26 +976,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -265,26 +999,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -298,34 +1028,73 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String foreignSchema,
             String foreignTable)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(PKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FKCOLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(UPDATE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DELETE_RULE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(FK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DEFERRABILITY, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+    }
+
+    // Helper for getting the rows for the getPrimaryKeys result set. Given a (dbName, tableName)
+    // and an index doc, it produces a list of BsonDocuments where each document corresponds to a
+    // row in the result set representing a column in the index. This method is intended for use
+    // with the getFirstUniqueIndexResultSet method.
+    private List<BsonDocument> toGetPrimaryKeysDocs(
+            Pair<String, String> namespace, Document indexInfo) {
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
+        String indexName = indexInfo.getString(INDEX_NAME_KEY);
+        AtomicInteger pos = new AtomicInteger();
+
+        return keys.keySet()
+                .stream()
+                .map(
+                        key ->
+                                createSortableBottomBson(
+                                        // Per JDBC spec, sort by COLUMN_NAME.
+                                        GET_PRIMARY_KEYS_SORT_SPECS,
+                                        new BsonElement(
+                                                TABLE_CAT, new BsonString(namespace.left())),
+                                        new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                                        new BsonElement(
+                                                TABLE_NAME, new BsonString(namespace.right())),
+                                        new BsonElement(COLUMN_NAME, new BsonString(key)),
+                                        new BsonElement(
+                                                KEY_SEQ, new BsonInt32(pos.getAndIncrement())),
+                                        new BsonElement(PK_NAME, new BsonString(indexName))))
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(KEY_SEQ, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(PK_NAME, BsonTypeInfo.STRING_TYPE_NAME));
+
+        // As in other methods, we ignore the schema argument.
+        return liftSQLException(
+                () ->
+                        getFirstUniqueIndexResultSet(
+                                catalog, table, botSchema, this::toGetPrimaryKeysDocs));
     }
 
     private MongoJsonSchema getTypeInfoJsonSchema() {
@@ -1192,30 +1961,128 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
     }
 
+    // Helper for creating stream of bson documents from the columns in the indexInfo doc.
+    private Stream<BsonDocument> toGetIndexInfoDocs(
+            String dbName, String tableName, Document indexInfo) {
+        Boolean isUnique = indexInfo.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+        BsonValue nonUnique = new BsonBoolean(isUnique == null || !isUnique);
+        BsonValue indexName = new BsonString(indexInfo.getString(INDEX_NAME_KEY));
+
+        Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
+        AtomicInteger pos = new AtomicInteger();
+
+        return keys.keySet()
+                .stream()
+                .map(
+                        key -> {
+                            BsonValue ascOrDesc =
+                                    new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+
+                            return createSortableBottomBson(
+                                    // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+                                    // Since TYPE is the same for every index, we omit it here.
+                                    GET_INDEX_INFO_SORT_SPECS,
+                                    new BsonElement(TABLE_CAT, new BsonString(dbName)),
+                                    new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
+                                    new BsonElement(TABLE_NAME, new BsonString(tableName)),
+                                    new BsonElement(NON_UNIQUE, nonUnique),
+                                    new BsonElement(INDEX_QUALIFIER, BsonNull.VALUE),
+                                    new BsonElement(INDEX_NAME, indexName),
+                                    new BsonElement(TYPE, new BsonInt32(tableIndexOther)),
+                                    new BsonElement(
+                                            ORDINAL_POSITION, new BsonInt32(pos.getAndIncrement())),
+                                    new BsonElement(COLUMN_NAME, new BsonString(key)),
+                                    new BsonElement(ASC_OR_DESC, ascOrDesc),
+                                    new BsonElement(CARDINALITY, BsonNull.VALUE),
+                                    new BsonElement(PAGES, BsonNull.VALUE),
+                                    new BsonElement(FILTER_CONDITION, BsonNull.VALUE));
+                        });
+    }
+
+    // Helper for getting stream of bson documents for indexes in the argued table. This is
+    // used for creating the result set for getIndexInfo method.
+    private Stream<BsonDocument> getIndexesFromTable(
+            String dbName, String tableName, boolean unique) {
+        return this.conn
+                .getDatabase(dbName)
+                .getCollection(tableName)
+                .listIndexes()
+                .into(new ArrayList<>())
+                .stream()
+                .filter(
+                        d -> {
+                            Boolean isUnique = d.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
+
+                            // If unique is false, include all indexes. If it is true, include
+                            // only indexes that are marked as unique.
+                            return !unique || (isUnique != null && isUnique);
+                        })
+                .flatMap(d -> toGetIndexInfoDocs(dbName, tableName, d));
+    }
+
     @Override
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
-        throw new SQLFeatureNotSupportedException("TODO");
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(NON_UNIQUE, BsonTypeInfo.BOOL_TYPE_NAME),
+                        new Pair<>(INDEX_QUALIFIER, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(INDEX_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ASC_OR_DESC, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CARDINALITY, BsonTypeInfo.LONG_TYPE_NAME),
+                        new Pair<>(PAGES, BsonTypeInfo.LONG_TYPE_NAME),
+                        new Pair<>(FILTER_CONDITION, BsonTypeInfo.LONG_TYPE_NAME));
+
+        Stream<BsonDocument> docs;
+        if (catalog == null) {
+            // If no catalog (database) is specified, get indexes for all databases that have a
+            // collection with the argued table name.
+            docs =
+                    this.getDatabaseNames()
+                            .flatMap(
+                                    dbName ->
+                                            this.getTableDataFromDB(
+                                                            dbName, res -> res.name.equals(table))
+                                                    .flatMap(
+                                                            r ->
+                                                                    getIndexesFromTable(
+                                                                            dbName, r.name,
+                                                                            unique)));
+        } else if (catalog.isEmpty()) {
+            // If catalog (database) is empty, we will return an empty result set because
+            // MongoDB does not support tables (collections) without databases.
+            docs = Stream.empty();
+        } else {
+            docs = getIndexesFromTable(catalog, table, unique);
+        }
+
+        // Collect to sorted list.
+        List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
+        BsonExplicitCursor c = new BsonExplicitCursor(docsList);
+
+        return new MongoSQLResultSet(null, c, botSchema);
     }
 
     @Override
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(CLASS_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(BASE_TYPE, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CLASS_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(BASE_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1223,18 +2090,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SUPERTYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1242,16 +2105,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SUPERTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SUPERTABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1263,33 +2122,29 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(ATTR_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(ATTR_TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(ATTR_SIZE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(ATTR_DEF, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SCOPE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TYPE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ATTR_TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(ATTR_DEF, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SQL_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SQL_DATETIME_SUB, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_CATALOG, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_SCHEMA, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SCOPE_TABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SOURCE_DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1319,18 +2174,16 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private MongoJsonSchema getFunctionJsonSchema() {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.required.add(BOT_NAME);
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.addRequiredScalarKeys(
-                new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-        resultSchema.properties.put(BOT_NAME, botSchema);
-        return resultSchema;
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
+
+        return botSchema;
     }
 
     private BsonDocument getFunctionValuesDoc(String functionName, String remarks) {
@@ -1338,7 +2191,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
         bot.put(FUNCTION_CAT, new BsonString("def"));
-        bot.put(FUNCTION_SCHEM, new BsonNull());
+        bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
         bot.put(FUNCTION_NAME, new BsonString(functionName));
         bot.put(REMARKS, new BsonString(remarks));
         bot.put(FUNCTION_TYPE, new BsonInt32(functionNoTable));
@@ -1354,7 +2207,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
         Pattern functionPatternRE = null;
         if (functionNamePattern != null) {
-            functionPatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+            functionPatternRE = toJavaPattern(functionNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
@@ -1369,29 +2222,27 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private MongoJsonSchema getFunctionColumnJsonSchema() {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.required.add(BOT_NAME);
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.addRequiredScalarKeys(
-                new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
-        resultSchema.properties.put(BOT_NAME, botSchema);
-        return resultSchema;
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(FUNCTION_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(FUNCTION_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(TYPE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(PRECISION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(SCALE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(RADIX, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NULLABLE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(ORDINAL_POSITION, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(SPECIFIC_NAME, BsonTypeInfo.STRING_TYPE_NAME));
+
+        return botSchema;
     }
 
     private BsonDocument getFunctionColumnValuesDoc(
@@ -1403,7 +2254,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        BsonValue n = new BsonNull();
+        BsonValue n = BsonNull.VALUE;
         String functionName = func.name;
         bot.put(FUNCTION_CAT, new BsonString("def"));
         bot.put(FUNCTION_SCHEM, n);
@@ -1444,10 +2295,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
         if (functionNamePattern != null) {
-            functionNamePatternRE = Pattern.compile(toJavaPattern(functionNamePattern));
+            functionNamePatternRE = toJavaPattern(functionNamePattern);
         }
         if (columnNamePattern != null) {
-            columnNamePatternRE = Pattern.compile(toJavaPattern(columnNamePattern));
+            columnNamePatternRE = toJavaPattern(columnNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
@@ -1483,24 +2334,20 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
-        MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(
-                new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(COLUMN_USAGE, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
-                new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
-                new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME));
-
-        // All fields in this result set are nested under the bottom namespace.
-        MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
-        botSchema.properties.put(BOT_NAME, resultSchema);
+        MongoJsonSchema botSchema =
+                createBottomSchema(
+                        new Pair<>(TABLE_CAT, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_SCHEM, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(TABLE_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_NAME, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(DATA_TYPE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(COLUMN_SIZE, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(DECIMAL_DIGITS, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(NUM_PREC_RADIX, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(COLUMN_USAGE, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(REMARKS, BsonTypeInfo.STRING_TYPE_NAME),
+                        new Pair<>(CHAR_OCTET_LENGTH, BsonTypeInfo.INT_TYPE_NAME),
+                        new Pair<>(IS_NULLABLE, BsonTypeInfo.STRING_TYPE_NAME));
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
