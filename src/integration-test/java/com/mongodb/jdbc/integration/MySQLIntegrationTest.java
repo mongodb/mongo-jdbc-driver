@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.sql.*;
 import java.util.HashSet;
 import org.junit.experimental.categories.Category;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 @Category(MySQLIntegrationTest.class)
 public class MySQLIntegrationTest extends MongoIntegrationTest {
@@ -19,6 +19,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         // different order, so we check them for set equality instead
         // of linear equality.
         HashSet<String> args = new HashSet<>();
+        args.add("dialect=mysql");
         args.add("authsource=admin");
         args.add("ssl=true");
         String[] urlSp = dbmd.getURL().split("[?]");
