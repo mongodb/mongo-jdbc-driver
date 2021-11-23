@@ -4,38 +4,11 @@ import static org.junit.Assert.*;
 
 import java.sql.*;
 import java.util.HashSet;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
-@Category(IntegrationTest.class)
-public class IntegrationTest {
-    static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
-    static final String URL_WITH_USER_AND_PW =
-            "jdbc:mongodb://"
-                    + System.getenv("ADL_TEST_USER")
-                    + ":"
-                    + System.getenv("ADL_TEST_PWD")
-                    + "@"
-                    + System.getenv("ADL_TEST_HOST")
-                    + "/test";
-
-    private int countRows(ResultSet rs) throws SQLException {
-        for (int i = 0; ; ++i) {
-            if (!rs.next()) {
-                return i;
-            }
-        }
-    }
-
-    static Connection getBasicConnection() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
-        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("ssl", "true");
-        return DriverManager.getConnection(URL, p);
-    }
+@Category(MySQLIntegrationTest.class)
+public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void basicDatabaseMetaDataTest() throws SQLException {
