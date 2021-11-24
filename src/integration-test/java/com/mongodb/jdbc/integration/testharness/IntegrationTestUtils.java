@@ -97,7 +97,7 @@ public class IntegrationTestUtils {
                 if (generate) {
                     TestGenerator.generateBaselineTestFiles(testEntry.description, rs);
                 } else {
-                    if (testEntry.ordered) {
+                    if (testEntry.ordered != null && testEntry.ordered) {
                         validateResultsOrdered(testEntry, rs);
                     } else {
                         validateResultsUnordered(testEntry, rs);
