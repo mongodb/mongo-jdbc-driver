@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.sql.*;
 import java.util.HashSet;
-import org.junit.experimental.categories.Category;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 @Category(MySQLIntegrationTest.class)
 public class MySQLIntegrationTest extends MongoIntegrationTest {
