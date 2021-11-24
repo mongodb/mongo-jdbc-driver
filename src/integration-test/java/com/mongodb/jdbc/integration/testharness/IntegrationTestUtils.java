@@ -48,6 +48,8 @@ public class IntegrationTestUtils {
         return tests;
     }
 
+    // processDirectory will traverse the subdirectories of 'folder'.
+    // Useful to group related test files in a directory
     private void processDirectory(final File folder, List<Tests> tests)
             throws FileNotFoundException {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
