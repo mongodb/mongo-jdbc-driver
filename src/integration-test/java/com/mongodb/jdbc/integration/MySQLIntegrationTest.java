@@ -1,13 +1,14 @@
 package com.mongodb.jdbc.integration;
 
-import static org.junit.Assert.*;
-
 import java.sql.*;
 import java.util.HashSet;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
-@Category(MySQLIntegrationTest.class)
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test

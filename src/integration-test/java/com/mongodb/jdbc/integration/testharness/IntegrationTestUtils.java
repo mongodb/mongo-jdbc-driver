@@ -1,9 +1,5 @@
 package com.mongodb.jdbc.integration.testharness;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import com.mongodb.jdbc.integration.MongoIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
@@ -28,6 +24,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IntegrationTestUtils {
 
@@ -90,6 +90,7 @@ public class IntegrationTestUtils {
                 }
                 ResultSet rs = null;
                 // Run DatabaseMetadata function if it exists, takes precedence over query
+                System.out.println("Running test: " + testEntry.description);
                 if (testEntry.meta_function == null) {
                     rs = executeQuery(testEntry, conn);
                 } else {
@@ -436,9 +437,19 @@ public class IntegrationTestUtils {
 
     private boolean compareRow(List<Object> expectedRow, ResultSet actualRow) throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
-        assertNotEquals(expectedRow.size(), rsMetadata.getColumnCount());
+        assertEquals(expectedRow.size(), rsMetadata.getColumnCount());
 
         for (int i = 0; i < expectedRow.size(); i++) {
+            // Handle expected field being null
+            if (expectedRow.get(i) == null) {
+                if(actualRow.getObject(i + 1) == null) {
+                    break;
+                }
+                else {
+                    return false;
+                }
+            }
+
             int columnType = rsMetadata.getColumnType(i + 1);
             switch (columnType) {
                 case Types.BIGINT:

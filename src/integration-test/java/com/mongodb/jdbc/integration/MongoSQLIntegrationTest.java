@@ -7,10 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
-@Category(MongoSQLIntegrationTest.class)
 public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     public static final String MONGOSQL = "mongosql";
     public static final String testDirectory = "resources/integration_test/tests";
