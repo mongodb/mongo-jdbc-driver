@@ -44,7 +44,7 @@ public class TestGenerator {
         List<Boolean> expectedIsSigned = new ArrayList<>();
         List<Boolean> expectedIsWritable = new ArrayList<>();
 
-        File directory = new File(generatedTestDirectory);
+        File directory = new File(GENERATED_TEST_DIR);
         ResultSetMetaData resultSetMetadata = rs.getMetaData();
         Map<String, Object> tests = new LinkedHashMap<String, Object>();
         List<Map<String, Object>> testCases = new ArrayList<>();
@@ -116,7 +116,7 @@ public class TestGenerator {
         options.setIndicatorIndent(2);
         options.setIndentWithIndicator(true);
         Yaml yaml = new Yaml(options);
-        FileWriter writer = new FileWriter(generatedTestDirectory + "/" + fileName);
+        FileWriter writer = new FileWriter(GENERATED_TEST_DIR + "/" + fileName);
         yaml.dump(tests, writer);
     }
 
@@ -130,7 +130,7 @@ public class TestGenerator {
         if (args.length > 0) {
             testPattern = args[0];
         }
-        List<Tests> tests = utils.loadTestConfigs(MongoSQLIntegrationTest.testDirectory);
+        List<Tests> tests = utils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
         utils.runTests(tests, conn, true, testPattern);
     }
 }

@@ -23,7 +23,7 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
 
     @BeforeAll
     public void loadTestConfigs() throws IOException {
-        tests = utils.loadTestConfigs(testDirectory);
+        tests = utils.loadTestConfigs(TEST_DIRECTORY);
     }
 
     @BeforeEach
