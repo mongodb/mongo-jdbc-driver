@@ -19,7 +19,6 @@ public class TestTypeInfo {
     }
 
     public static String typesIntToString(int type) throws IllegalAccessException {
-
         for (Field field : Types.class.getFields()) {
             if (type == field.getInt(new Object())) {
                 return (field.getName());
