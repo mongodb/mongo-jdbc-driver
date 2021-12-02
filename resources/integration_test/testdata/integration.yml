@@ -6,6 +6,7 @@ dataset:
       - {studentid: 342,  name: "Jane", enrolled: false}
       - {studentid: 303,  name: "Mike", enrolled: true}
       - {studentid: 204323,  name: "Mary", enrolled: false}
+
   - db: integration_test
     collection: grades
     docs:
