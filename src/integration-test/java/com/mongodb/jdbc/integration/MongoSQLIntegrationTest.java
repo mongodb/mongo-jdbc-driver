@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     public static final String MONGOSQL = "mongosql";
-    public static final String testDirectory = "resources/integration_test/tests";
+    public static final String TEST_DIRECTORY = "resources/integration_test/tests";
     private final IntegrationTestUtils utils = new IntegrationTestUtils();
     private Connection conn;
     List<Tests> tests;
