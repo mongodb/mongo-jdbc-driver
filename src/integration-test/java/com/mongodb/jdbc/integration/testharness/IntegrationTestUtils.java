@@ -31,6 +31,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 public class IntegrationTestUtils {
 
+    private static Yaml yaml = new Yaml(new Constructor(Tests.class));
+
     /**
      * loadTestConfigs will process all test yaml files in provided directory.
      *
@@ -38,11 +40,11 @@ public class IntegrationTestUtils {
      * @return A List of Tests
      * @throws FileNotFoundException
      */
-    public List<Tests> loadTestConfigs(String directory) throws FileNotFoundException {
+    public List<Tests> loadTestConfigs(String directory) throws IOException {
         List<Tests> tests = new ArrayList<>();
         final File folder = new File(directory);
         if (!folder.exists()) {
-            return new ArrayList<>();
+            return tests;
         }
         processDirectory(folder, tests);
         return tests;
@@ -50,8 +52,7 @@ public class IntegrationTestUtils {
 
     // processDirectory will traverse the subdirectories of 'folder'.
     // Useful to group related test files in a directory
-    private void processDirectory(final File folder, List<Tests> tests)
-            throws FileNotFoundException {
+    private void processDirectory(final File folder, List<Tests> tests) throws IOException {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 processDirectory(fileEntry, tests);
@@ -61,10 +62,10 @@ public class IntegrationTestUtils {
         }
     }
 
-    private Tests processTestFile(String filename) throws FileNotFoundException {
-        Yaml yaml = new Yaml(new Constructor(Tests.class));
-        InputStream is = new FileInputStream(filename);
-        return yaml.load(is);
+    private Tests processTestFile(String filename) throws IOException {
+        try (InputStream is = new FileInputStream(filename)) {
+            return yaml.load(is);
+        }
     }
 
     /**

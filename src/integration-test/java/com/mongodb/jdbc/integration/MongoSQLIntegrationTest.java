@@ -2,7 +2,6 @@ package com.mongodb.jdbc.integration;
 
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -23,7 +22,7 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     List<Tests> tests;
 
     @BeforeAll
-    public void loadTestConfigs() throws FileNotFoundException {
+    public void loadTestConfigs() throws IOException {
         tests = utils.loadTestConfigs(testDirectory);
     }
 
