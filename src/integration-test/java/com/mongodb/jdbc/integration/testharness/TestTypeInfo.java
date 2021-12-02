@@ -11,7 +11,7 @@ public class TestTypeInfo {
 
     public static int typesStringToInt(String type) throws IllegalAccessException {
         for (Field field : Types.class.getFields()) {
-            if (field.getName().equals(type)) {
+            if (field.getName().equalsIgnoreCase(type)) {
                 return (field.getInt(new Object()));
             }
         }
@@ -29,13 +29,13 @@ public class TestTypeInfo {
     }
 
     public static int nullableStringToInt(String type) {
-        switch (type) {
-            case COLUMN_NO_NULLS:
-                return DatabaseMetaData.columnNoNulls;
-            case COLUMN_NULLABLE:
-                return DatabaseMetaData.columnNullable;
-            case COLUMN_NULLABLE_UNKNOWN:
-                return DatabaseMetaData.columnNullableUnknown;
+
+        if (type.toUpperCase().equals(COLUMN_NO_NULLS.toUpperCase())) {
+            return DatabaseMetaData.columnNoNulls;
+        } else if (type.toUpperCase().equals(COLUMN_NULLABLE.toUpperCase())) {
+            return DatabaseMetaData.columnNullable;
+        } else if (type.toUpperCase().equals(COLUMN_NULLABLE_UNKNOWN.toUpperCase())) {
+            return DatabaseMetaData.columnNullableUnknown;
         }
         throw new IllegalArgumentException("unknown nullable type: " + type);
     }

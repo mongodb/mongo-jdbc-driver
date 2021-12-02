@@ -123,14 +123,14 @@ public class IntegrationTestUtils {
         List<Object> metadataFunction = entry.meta_function;
         assertTrue(metadataFunction != null && metadataFunction.size() > 0);
         String functionName = (String) metadataFunction.remove(0);
-        switch (functionName) {
-            case "getIndexInfo":
+        switch (functionName.toUpperCase()) {
+            case "GETINDEXINFO":
                 return executeGetIndexInfo(metadataFunction, databaseMetaData);
-            case "getBestRowIdentifier":
+            case "GETBESTROWIDENTIFIER":
                 return executeGetBestRowIdentifier(metadataFunction, databaseMetaData);
-            case "getTables":
+            case "GETTABLES":
                 return executeGetTables(metadataFunction, databaseMetaData);
-            case "getUDTs":
+            case "GETUDTS":
                 return executeGetUDTs(metadataFunction, databaseMetaData);
             default:
                 return executeDBMetadataHelper(functionName, metadataFunction, databaseMetaData);
@@ -143,7 +143,7 @@ public class IntegrationTestUtils {
             throws SQLException, InvocationTargetException, IllegalAccessException {
         Method[] m = DatabaseMetaData.class.getMethods();
         for (Method method : m) {
-            if (method.getName().equals(functionName)) {
+            if (method.getName().equalsIgnoreCase(functionName)) {
                 Class<?>[] types = method.getParameterTypes();
                 // Verifying all String types
                 for (Class<?> type : types) {
