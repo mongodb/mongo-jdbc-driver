@@ -21,7 +21,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 public class TestGenerator {
-    private static final String generatedTestDirectory = "resources/generated_test";
+    private static final String GENERATED_TEST_DIR = "resources/generated_test";
 
     public static void generateBaselineTestFiles(String description, ResultSet rs)
             throws IOException, SQLException, IllegalAccessException {
