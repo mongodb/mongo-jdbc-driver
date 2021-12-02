@@ -28,7 +28,6 @@ public class TestTypeInfo {
     }
 
     public static int nullableStringToInt(String type) {
-
         if (type.toUpperCase().equals(COLUMN_NO_NULLS.toUpperCase())) {
             return DatabaseMetaData.columnNoNulls;
         } else if (type.toUpperCase().equals(COLUMN_NULLABLE.toUpperCase())) {
