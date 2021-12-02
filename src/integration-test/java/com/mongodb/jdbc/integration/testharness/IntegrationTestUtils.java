@@ -1,5 +1,9 @@
 package com.mongodb.jdbc.integration.testharness;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.mongodb.jdbc.integration.MongoIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
@@ -24,10 +28,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IntegrationTestUtils {
 
@@ -442,10 +442,9 @@ public class IntegrationTestUtils {
         for (int i = 0; i < expectedRow.size(); i++) {
             // Handle expected field being null
             if (expectedRow.get(i) == null) {
-                if(actualRow.getObject(i + 1) == null) {
+                if (actualRow.getObject(i + 1) == null) {
                     break;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
