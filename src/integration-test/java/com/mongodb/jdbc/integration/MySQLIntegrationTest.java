@@ -6,13 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.*;
 import java.util.HashSet;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MySQLIntegrationTest extends MongoIntegrationTest {
+    public static final String MYSQL = "mysql";
+
+    @Override
+    @BeforeEach
+    public void setupConnection() throws SQLException {
+        conn = getBasicConnection(MYSQL);
+    }
 
     @Test
     public void basicDatabaseMetaDataTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         assertEquals(System.getenv("ADL_TEST_USER"), dbmd.getUserName());
         // It appears that the url arguments are, in some cases, put in
@@ -48,7 +55,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseASSERTIONS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.ASSERTIONS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -68,7 +74,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCHARACTER_SETS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHARACTER_SETS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -91,7 +96,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCHECK_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHECK_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -107,7 +111,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCOLUMNS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMNS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -146,7 +149,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCOLUMN_DOMAIN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_DOMAIN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -168,7 +170,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCOLUMN_PRVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -191,7 +192,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCONSTRAINT_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery("select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE");
@@ -214,7 +214,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseCONSTRAINT_TABLE_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -235,7 +234,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseDOMAINS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAINS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -267,7 +265,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseDOMAIN_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAIN_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -290,7 +287,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseKEY_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -314,7 +310,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseREFERENTIAL_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery("select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS");
@@ -340,7 +335,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseSCHEMATA_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SCHEMATA");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -361,7 +355,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseSQL_LANGUAGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SQL_LANGUAGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -383,7 +376,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseTABLES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -400,7 +392,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseTABLE_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -424,7 +415,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseTABLE_PRIVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -446,7 +436,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseTRANSLATIONS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TRANSLATIONS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -470,7 +459,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseUSAGE_PRIVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.USAGE_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -493,7 +481,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseVIEWS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEWS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -514,7 +501,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseVIEW_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_COLUMN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -536,7 +522,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseVIEW_TABLE_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_TABLE_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -557,7 +542,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseHeterogeneousDataTABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select num4 from tdvt.Calcs");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -585,7 +569,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTables(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -613,7 +596,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetCatalogsTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getCatalogs();
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -630,7 +612,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetColumnsTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumns(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -676,7 +657,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetColumnsPrivilegesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumnPrivileges(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -705,7 +685,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetTablePrivilegesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTablePrivileges(catalogPattern, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -732,7 +711,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetBestRowIdentifierTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getBestRowIdentifier(null, schema, table, 0, true);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -755,7 +733,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetPrimaryKeysTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getPrimaryKeys(null, schema, table);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -771,7 +748,6 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
 
     @Test
     public void databaseMetaDataGetIndexInfoTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getIndexInfo(null, schema, table, false, false);
         ResultSetMetaData rsmd = rs.getMetaData();

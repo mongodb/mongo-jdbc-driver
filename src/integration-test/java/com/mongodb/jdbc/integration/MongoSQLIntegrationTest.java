@@ -4,10 +4,8 @@ import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,22 +16,18 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     public static final String MONGOSQL = "mongosql";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
     private final IntegrationTestUtils utils = new IntegrationTestUtils();
-    private Connection conn;
+
     List<Tests> tests;
 
-    @BeforeAll
-    public void loadTestConfigs() throws IOException {
-        tests = utils.loadTestConfigs(TEST_DIRECTORY);
-    }
-
+    @Override
     @BeforeEach
     public void setupConnection() throws SQLException {
         conn = getBasicConnection(MONGOSQL);
     }
 
-    @AfterEach
-    public void cleanupTest() throws SQLException {
-        conn.close();
+    @BeforeAll
+    public void loadTestConfigs() throws IOException {
+        tests = utils.loadTestConfigs(TEST_DIRECTORY);
     }
 
     @Test

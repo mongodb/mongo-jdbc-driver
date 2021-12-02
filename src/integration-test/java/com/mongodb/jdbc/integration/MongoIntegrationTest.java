@@ -4,10 +4,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
-public class MongoIntegrationTest {
+public abstract class MongoIntegrationTest {
     public static final String LOCAL_URL = "mongodb://localhost:28017";
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
+    protected Connection conn;
+
+    @BeforeEach
+    protected abstract void setupConnection() throws SQLException;
+
+    @AfterEach
+    protected void cleanupTest() throws SQLException {
+        conn.close();
+    }
+
     public static final String URL_WITH_USER_AND_PW =
             "jdbc:mongodb://"
                     + System.getenv("ADL_TEST_USER")
@@ -23,10 +35,6 @@ public class MongoIntegrationTest {
                 return i;
             }
         }
-    }
-
-    static Connection getBasicConnection() throws SQLException {
-        return getBasicConnection("mysql");
     }
 
     public static Connection getBasicConnection(String dialect) throws SQLException {
