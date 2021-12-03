@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -93,21 +92,30 @@ public class IntegrationTestUtils {
                 ResultSet rs = null;
                 // Run DatabaseMetadata function if it exists, takes precedence over query
                 System.out.println("Running test: " + testEntry.description);
-                if (testEntry.meta_function == null) {
-                    rs = executeQuery(testEntry, conn);
-                } else {
-                    rs = executeDBMetadataCommand(testEntry, conn.getMetaData());
-                }
-                assertNotEquals(rs, null);
-                if (generate) {
-                    TestGenerator.generateBaselineTestFiles(testEntry.description, rs);
-                } else {
-                    if (testEntry.ordered != null && testEntry.ordered) {
-                        validateResultsOrdered(testEntry, rs);
+                try {
+                    if (testEntry.meta_function == null) {
+                        rs = executeQuery(testEntry, conn);
                     } else {
-                        validateResultsUnordered(testEntry, rs);
+                        rs = executeDBMetadataCommand(testEntry, conn.getMetaData());
                     }
-                    validateResultSetMetadata(testEntry, rs.getMetaData());
+                    assertNotEquals(rs, null);
+                    if (generate) {
+                        TestGenerator.generateBaselineTestFiles(testEntry.description, rs);
+                    } else {
+                        if (testEntry.ordered != null && testEntry.ordered) {
+                            validateResultsOrdered(testEntry, rs);
+                        } else {
+                            validateResultsUnordered(testEntry, rs);
+                        }
+                        validateResultSetMetadata(testEntry, rs.getMetaData());
+                    }
+                } finally {
+                    if (rs != null) {
+                        Statement statement = rs.getStatement();
+                        if (statement != null) {
+                            statement.close();
+                        }
+                    }
                 }
             }
         }
@@ -118,44 +126,18 @@ public class IntegrationTestUtils {
         return stmt.executeQuery(entry.sql);
     }
 
+    @SuppressWarnings("unchecked")
     private ResultSet executeDBMetadataCommand(TestEntry entry, DatabaseMetaData databaseMetaData)
             throws SQLException, InvocationTargetException, IllegalAccessException {
 
         List<Object> metadataFunction = entry.meta_function;
         assertTrue(metadataFunction != null && metadataFunction.size() > 0);
         String functionName = (String) metadataFunction.remove(0);
-        switch (functionName.toUpperCase()) {
-            case "GETINDEXINFO":
-                return executeGetIndexInfo(metadataFunction, databaseMetaData);
-            case "GETBESTROWIDENTIFIER":
-                return executeGetBestRowIdentifier(metadataFunction, databaseMetaData);
-            case "GETTABLES":
-                return executeGetTables(metadataFunction, databaseMetaData);
-            case "GETUDTS":
-                return executeGetUDTs(metadataFunction, databaseMetaData);
-            default:
-                return executeDBMetadataHelper(functionName, metadataFunction, databaseMetaData);
-        }
-    }
-
-    // Can process methods that have String only arguments or no arguments
-    private ResultSet executeDBMetadataHelper(
-            String functionName, List<Object> functionArgs, DatabaseMetaData databaseMetaData)
-            throws SQLException, InvocationTargetException, IllegalAccessException {
         Method[] m = DatabaseMetaData.class.getMethods();
+
         for (Method method : m) {
             if (method.getName().equalsIgnoreCase(functionName)) {
                 Class<?>[] types = method.getParameterTypes();
-                // Verifying all String types
-                for (Class<?> type : types) {
-                    if (type != String.class) {
-                        throw new IllegalArgumentException(
-                                "expected: "
-                                        + String.class.getName()
-                                        + " found: "
-                                        + type.getName());
-                    }
-                }
                 if (method.getReturnType() != ResultSet.class) {
                     throw new IllegalArgumentException(
                             "expected: "
@@ -163,102 +145,53 @@ public class IntegrationTestUtils {
                                     + " found: "
                                     + method.getReturnType());
                 }
+                if (method.getParameterCount() != metadataFunction.size()) {
+                    throw new IllegalArgumentException(
+                            "expected parameter count: "
+                                    + method.getParameterCount()
+                                    + " found: "
+                                    + metadataFunction.size());
+                }
                 if (method.getParameterCount() == 0) {
                     return (ResultSet) method.invoke(databaseMetaData);
 
                 } else {
-                    List<String> stringFunctionArgs =
-                            functionArgs
-                                    .stream()
-                                    .map(object -> Objects.toString(object, null))
-                                    .collect(Collectors.toList());
+                    Object[] parameters = new Object[method.getParameterCount()];
 
-                    return (ResultSet)
-                            method.invoke(
-                                    databaseMetaData,
-                                    (Object[]) stringFunctionArgs.toArray(new String[0]));
+                    for (int i = 0; i < parameters.length; i++) {
+                        Object currentMetaInput = metadataFunction.get(i);
+                        if (currentMetaInput == null) {
+                            parameters[i] = null;
+                            continue;
+                        }
+                        Class<?> parameterType = types[i];
+                        if (parameterType.isArray()) {
+                            if (parameterType.getComponentType() == String.class) {
+                                parameters[i] =
+                                        ((List<String>) currentMetaInput)
+                                                .stream()
+                                                .map(object -> Objects.toString(object, null))
+                                                .toArray(String[]::new);
+                            } else if (parameterType.getComponentType() == int.class) {
+                                parameters[i] =
+                                        ((List<Integer>) currentMetaInput)
+                                                .stream()
+                                                .mapToInt(j -> j)
+                                                .toArray();
+                            }
+                        } else if (parameterType == String.class) {
+                            parameters[i] = (String) currentMetaInput;
+                        } else if (parameterType == int.class) {
+                            parameters[i] = (Integer) currentMetaInput;
+                        } else if (parameterType == boolean.class) {
+                            parameters[i] = (Boolean) currentMetaInput;
+                        }
+                    }
+                    return (ResultSet) method.invoke(databaseMetaData, parameters);
                 }
             }
         }
         throw new IllegalArgumentException("function '" + functionName + "' not found");
-    }
-
-    private ResultSet executeGetIndexInfo(
-            List<Object> functionArgs, DatabaseMetaData databaseMetaData) throws SQLException {
-        int expectedColumnCount = 5;
-        if (functionArgs.size() != expectedColumnCount) {
-            throw new IllegalArgumentException(
-                    "incorrect argument size, expected: "
-                            + expectedColumnCount
-                            + " found: "
-                            + functionArgs.size());
-        }
-        return databaseMetaData.getIndexInfo(
-                (String) functionArgs.get(0),
-                (String) functionArgs.get(1),
-                (String) functionArgs.get(2),
-                ((Boolean) functionArgs.get(3)),
-                ((Boolean) functionArgs.get(4)));
-    }
-
-    private ResultSet executeGetBestRowIdentifier(
-            List<Object> functionArgs, DatabaseMetaData databaseMetaData) throws SQLException {
-        int expectedColumnCount = 5;
-        if (functionArgs.size() != expectedColumnCount) {
-            throw new IllegalArgumentException(
-                    "incorrect argument size, expected: "
-                            + expectedColumnCount
-                            + " found: "
-                            + functionArgs.size());
-        }
-        return databaseMetaData.getBestRowIdentifier(
-                (String) functionArgs.get(0),
-                (String) functionArgs.get(1),
-                (String) functionArgs.get(2),
-                ((Integer) functionArgs.get(3)),
-                ((Boolean) functionArgs.get(4)));
-    }
-
-    @SuppressWarnings("unchecked")
-    private ResultSet executeGetTables(List<Object> functionArgs, DatabaseMetaData databaseMetaData)
-            throws SQLException {
-        int expectedColumnCount = 4;
-        if (functionArgs.size() != expectedColumnCount) {
-            throw new IllegalArgumentException(
-                    "incorrect argument size, expected: "
-                            + expectedColumnCount
-                            + " found: "
-                            + functionArgs.size());
-        }
-        return databaseMetaData.getTables(
-                (String) functionArgs.get(0),
-                (String) functionArgs.get(1),
-                (String) functionArgs.get(2),
-                functionArgs.get(3) == null
-                        ? null
-                        : ((List<String>) functionArgs.get(3)).toArray(new String[0]));
-    }
-
-    @SuppressWarnings("unchecked")
-    private ResultSet executeGetUDTs(List<Object> functionArgs, DatabaseMetaData databaseMetaData)
-            throws SQLException {
-        int expectedColumnCount = 5;
-        if (functionArgs.size() != expectedColumnCount) {
-            throw new IllegalArgumentException(
-                    "incorrect argument size, expected: "
-                            + expectedColumnCount
-                            + " found: "
-                            + functionArgs.size());
-        }
-        int[] types =
-                functionArgs.get(3) == null
-                        ? null
-                        : ((List<Integer>) functionArgs.get(3)).stream().mapToInt(i -> i).toArray();
-        return databaseMetaData.getUDTs(
-                (String) functionArgs.get(0),
-                (String) functionArgs.get(1),
-                (String) functionArgs.get(2),
-                types);
     }
 
     private void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
