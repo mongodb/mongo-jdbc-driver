@@ -83,10 +83,11 @@ public class IntegrationTestUtils {
      */
     public void runTests(List<Tests> testLists, Connection conn, Boolean generate, String pattern)
             throws IOException, SQLException, IllegalAccessException, InvocationTargetException {
-        Pattern p = Pattern.compile(pattern);
+        Pattern p = Pattern.compile(pattern.toUpperCase());
         for (Tests tests : testLists) {
             for (TestEntry testEntry : tests.tests) {
-                if (testEntry.skip_reason != null || !p.matcher(testEntry.description).matches()) {
+                if (testEntry.skip_reason != null
+                        || !p.matcher(testEntry.description.toUpperCase()).matches()) {
                     continue;
                 }
                 ResultSet rs = null;
