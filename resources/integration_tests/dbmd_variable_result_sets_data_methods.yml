@@ -1,0 +1,77 @@
+tests:
+  # getCatalogs()
+  - description: getCatalogs returns all databases
+    db: integration_test
+    meta_function: ["getCatalogs"]
+
+  # getTables(catalog, schemaPattern, tableNamePattern, types)
+  - description: getTables no filters returns all tables
+    db: integration_test
+    meta_function: ["getTables", null, null, "%", null]
+
+  - description: getTables catalog filter only returns matching tables
+    db: integration_test
+    meta_function: ["getTables", "integration_test", null, "%", null]
+
+  - description: getTables catalog and table filters only returns matching tables
+    db: integration_test
+    meta_function: ["getTables", "integration_test", null, "b%", null]
+
+  - description: getTables catalog, table, and type filters only returns matching tables (views)
+    db: integration_test
+    meta_function: ["getTables", "integration_test", null, "b%", ["view"]]
+
+  - description: getTables catalog, table, and type filters only returns matching tables (tables)
+    db: integration_test
+    meta_function: ["getTables", "integration_test", null, "b%", ["table"]]
+
+  - description: getTables catalog, table, and type filters only returns matching tables (both)
+    db: integration_test
+    meta_function: ["getTables", "integration_test", null, "b%", ["view", "table"]]
+
+  # getTablePrivileges(catalog, schemaPattern, tableNamePattern)
+  - description: getTablePrivileges no filters returns all tables
+    db: integration_test
+    meta_function: ["getTablePrivileges", null, null, "%"]
+
+  - description: getTablePrivileges catalog filter only returns matching tables
+    db: integration_test
+    meta_function: ["getTablePrivileges", "integration_test", null, "%"]
+
+  - description: getTablePrivileges catalog and table filters returns matching tables
+    db: integration_test
+    meta_function: ["getTablePrivileges", "integration_test", null, "b%"]
+
+  # getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
+  - description: getColumns no filters returns all columns
+    db: integration_test
+    meta_function: ["getColumns", null, null, "%", "%"]
+
+  - description: getColumns catalog filter only returns all columns in database
+    db: integration_test
+    meta_function: ["getColumns", "integration_test", null, "%", "%"]
+
+  - description: getColumns catalog and table filters only returns matching columns
+    db: integration_test
+    meta_function: ["getColumns", "integration_test", null, "foo", "%"]
+
+  - description: getColumns catalog, table, and columns filters returns matching columns
+    db: integration_test
+    meta_function: ["getColumns", "integration_test", null, "b%", "_"]
+
+  # getColumnPrivileges(catalog, schemaPattern, tableNamePattern, columnNamePattern)
+  - description: getColumnPrivileges no filters returns all columns
+    db: integration_test
+    meta_function: ["getColumnPrivileges", null, null, "%", "%"]
+
+  - description: getColumnPrivileges catalog filter only returns all columns in database
+    db: integration_test
+    meta_function: ["getColumnPrivileges", "integration_test", null, "%", "%"]
+
+  - description: getColumnPrivileges catalog and table filters only returns matching columns
+    db: integration_test
+    meta_function: ["getColumnPrivileges", "integration_test", null, "foo", "%"]
+
+  - description: getColumnPrivileges catalog, table, and columns filters returns matching columns
+    db: integration_test
+    meta_function: ["getColumnPrivileges", "integration_test", null, "b%", "_"]
