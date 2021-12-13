@@ -1,0 +1,33 @@
+tests:
+  # getBestRowIdentifier(catalog, schema, table, scope, nullable)
+  # note: the MongoSQLDatabaseMetaData implementation ignores schema, scope, and nullable
+  - description: getBestRowIdentifier no catalog filter returns results for all matching tables
+    db: integration_test
+    meta_function: ["getBestRowIdentifier", null, null, "foo", 0, false]
+
+  - description: getBestRowIdentifier exact catalog and table filter
+    db: integration_test
+    meta_function: ["getBestRowIdentifier", "integration_test", null, "foo", 0, false]
+
+  # getPrimaryKeys(catalog, schema, table)
+  - description: getPrimaryKeys no catalog filter returns results for all matching tables
+    db: integration_test
+    meta_function: ["getPrimaryKeys", null, null, "foo"]
+
+  - description: getPrimaryKeys exact catalog and table filter
+    db: integration_test
+    meta_function: ["getPrimaryKeys", "integration_test", null, "foo"]
+
+  # getIndexInfo(catalog, schema, table, unique, approximate)
+  # note: the MongoSQLDatabaseMetaData implementation ignores schema and approximate
+  - description: getIndexInfo no catalog filter returns results for all matching tables
+    db: integration_test
+    meta_function: ["getIndexInfo", null, null, "foo", true, false]
+
+  - description: getIndexInfo exact catalog and table filter with unique true
+    db: integration_test
+    meta_function: ["getIndexInfo", "integration_test", null, "foo", true, false]
+
+  - description: getIndexInfo exact catalog and table filter with unique false
+    db: integration_test
+    meta_function: ["getIndexInfo", "integration_test", null, "foo", false, false]
