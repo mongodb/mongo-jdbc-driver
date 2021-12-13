@@ -1,0 +1,30 @@
+tests:
+  # getFunctions(catalog, schemaPattern, functionNamePattern)
+  - description: getFunctions no filter returns all functions
+    db: integration_test
+    meta_function: ["getFunctions", "integration_test", null, "%"]
+
+  - description: getFunctions partial filter with wildcard substrings returns matching functions
+    db: integration_test
+    meta_function: ["getFunctions", "integration_test", null, "%S%"]
+
+  - description: getFunctions partial filter with wildcard characters returns matching functions
+    db: integration_test
+    meta_function: ["getFunctions", "integration_test", null, "SUBS_RIN_"]
+
+  - description: getFunctions exact filter returns matching functions
+    db: integration_test
+    meta_function: ["getFunctions", "integration_test", null, "SUBSTRING"]
+
+  # getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
+  - description: getFunctionColumns no function or column filters returns all args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "%", "%"]
+
+  - description: getFunctionColumns partial function and column filters returns matching args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "%S%", "arg_"]
+
+  - description: getFunctionColumns exact function and column filters returns matching args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "SUBSTRING", "arg1"]
