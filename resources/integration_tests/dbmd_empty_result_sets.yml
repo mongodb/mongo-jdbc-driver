@@ -1,0 +1,70 @@
+tests:
+  # getProcedures(catalog, schemaPattern, procedureNamePattern)
+  - description: getProcedures returns empty result set
+    db: integration_test
+    meta_function: ["getProcedures", "integration_test", null, "%"]
+
+  # getProceduresColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
+  - description: getProceduresColumns returns empty result set
+    db: integration_test
+    meta_function: ["getProceduresColumns", "integration_test", null, "%", "%"]
+
+  # getSchemas()
+  - description: getSchemas returns empty result set
+    db: integration_test
+    meta_function: ["getSchemas"]
+
+  # getSchemas(catalog, schemaPattern)
+  - description: getSchemas returns empty result set
+    db: integration_test
+    meta_function: ["getSchemas", "integration_test", null]
+
+  # getVersionColumns(catalog, schema, table)
+  - description: getVersionColumns returns empty result set
+    db: integration_test
+    meta_function: ["getVersionColumns", "integration_test", null, "foo"]
+
+  # getImportedKeys(catalog, schema, table)
+  - description: getImportedKeys returns empty result set
+    db: integration_test
+    meta_function: ["getImportedKeys", "integration_test", null, "foo"]
+
+  # getExportedKeys(catalog, schema, table)
+  - description: getExportedKeys returns empty result set
+    db: integration_test
+    meta_function: ["getExportedKeys", "integration_test", null, "foo"]
+
+  # getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)
+  - description: getCrossReference returns empty result set
+    db: integration_test
+    meta_function: ["getCrossReference", "integration_test", null, "foo", "integration_test", null, "bar"]
+
+  # getUDTs(catalog, schemaPattern, typeNamePattern, types)
+  - description: getUDTs returns empty result set
+    db: integration_test
+    meta_function: ["getUDTs", "integration_test", null, "%", null]
+
+  # getSuperTypes(catalog, schemaPattern, typeNamePattern)
+  - description: getSuperTypes returns empty result set
+    db: integration_test
+    meta_function: ["getSuperTypes", "integration_test", null, "%"]
+
+  # getSuperTables(catalog, schemaPattern, tableNamePattern)
+  - description: getSuperTables returns empty result set
+    db: integration_test
+    meta_function: ["getSuperTables", "integration_test", null, "%"]
+
+  # getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern)
+  - description: getAttributes returns empty result set
+    db: integration_test
+    meta_function: ["getAttributes", "integration_test", null, "%", "%"]
+
+  # getClientInfoProperties()
+  - description: getClientInfoProperties returns empty result set
+    db: integration_test
+    meta_function: ["getClientInfoProperties"]
+
+  # getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
+  - description: getPseudoColumns returns empty result set
+    db: integration_test
+    meta_function: ["getPseudoColumns", "integration_test", null, "%", "%"]
