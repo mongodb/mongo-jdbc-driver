@@ -53,9 +53,9 @@ Make sure the following environment variables set:
 ### mongosql
 Integration testing for mongosql requires a local MongoDB and Atlas Data Lake instance to be running
 #### Environment Variables
-**ADL_TEST_LOCAL_USER**: Local ADL username
-**ADL_TEST_LOCAL_PWD**: Local ADL password
-**ADL_TEST_LOCAL_AUTH_DB**: Local ADL authentication database
+**ADL_TEST_LOCAL_USER**: Local ADL username  
+**ADL_TEST_LOCAL_PWD**: Local ADL password  
+**ADL_TEST_LOCAL_AUTH_DB**: Local ADL authentication database  
 
 **MDB_TEST_LOCAL_PORT**: Local MongoDB port
 #### To load integration test data
