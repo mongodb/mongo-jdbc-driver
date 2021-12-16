@@ -89,7 +89,7 @@ public class DataLoader {
                     System.out.println(
                             "Inserted "
                                     + count
-                                    + " documents into "
+                                    + " rows into "
                                     + entry.db
                                     + "."
                                     + entry.collection);
