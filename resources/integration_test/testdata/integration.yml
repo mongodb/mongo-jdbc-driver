@@ -2,19 +2,19 @@ dataset:
   - db: integration_test
     collection: class
     docs:
-      - {studentid: 10329,  name: "John", enrolled: true}
-      - {studentid: 342,  name: "Jane", enrolled: false}
-      - {studentid: 303,  name: "Mike", enrolled: true}
-      - {studentid: 204323,  name: "Mary", enrolled: false}
+      - {_id: 0, studentid: 10329,  name: "John", enrolled: true}
+      - {_id: 1, studentid: 342,  name: "Jane", enrolled: false}
+      - {_id: 2, studentid: 303,  name: "Mike", enrolled: true}
+      - {_id: 3, studentid: 204323,  name: "Mary", enrolled: false}
 
   - db: integration_test
     collection: grades
     docs:
-      - {studentid: 303, testid: 3, score: 84.5}
-      - {studentid: 10329, testid: 3,  score: 97.4}
-      - {studentid: 342, testid: 3,  score: 89.3}
-      - {studentid: 204323, testid: 3, score: 91.9}
-      - {studentid: 303, testid: 5, score: 87.5}
-      - {studentid: 10329, testid: 5,  score: 74.4}
-      - {studentid: 342, testid: 5,  score: 80.1}
-      - {studentid: 204323, testid: 5, score: 83.3}
+      - {_id: 0, studentid: 303, testid: 3, score: 84.5}
+      - {_id: 1, studentid: 10329, testid: 3,  score: 97.4}
+      - {_id: 2, studentid: 342, testid: 3,  score: 89.3}
+      - {_id: 3, studentid: 204323, testid: 3, score: 91.9}
+      - {_id: 4, studentid: 303, testid: 5, score: 87.5}
+      - {_id: 5, studentid: 10329, testid: 5,  score: 74.4}
+      - {_id: 6, studentid: 342, testid: 5,  score: 80.1}
+      - {_id: 7, studentid: 204323, testid: 5, score: 83.3}

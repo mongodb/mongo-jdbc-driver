@@ -1,8 +1,7 @@
 package com.mongodb.jdbc.integration.testharness;
 
-import com.mongodb.jdbc.integration.MongoIntegrationTest;
 import com.mongodb.jdbc.integration.MongoSQLIntegrationTest;
-import com.mongodb.jdbc.integration.testharness.models.Tests;
+import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +22,7 @@ import org.yaml.snakeyaml.Yaml;
 public class TestGenerator {
     private static final String GENERATED_TEST_DIR = "resources/generated_test";
 
-    public static void generateBaselineTestFiles(String description, ResultSet rs)
+    public static void generateBaselineTestFiles(TestEntry testEntry, ResultSet rs)
             throws IOException, SQLException, IllegalAccessException {
 
         List<String> expectedSqlType = new ArrayList<>();
@@ -57,7 +56,8 @@ public class TestGenerator {
         }
 
         String fileName =
-                new SimpleDateFormat("'" + description + "'MMddHHmmss'.yaml'").format(new Date());
+                new SimpleDateFormat("'" + testEntry.description + "'MMddHHmmss'.yaml'")
+                        .format(new Date());
 
         // generating 'expected_result'
         ArrayList<List<Object>> result = new ArrayList<>();
@@ -91,8 +91,17 @@ public class TestGenerator {
             expectedIsWritable.add(resultSetMetadata.isWritable(i));
         }
 
-        testCase.put("description", description);
+        testCase.put("description", testEntry.description);
+        if (testEntry.meta_function != null) {
+            testCase.put("meta_function", testEntry.meta_function);
+        } else {
+            testCase.put("sql", testEntry.sql);
+        }
         testCase.put("expected_result", result);
+        testCase.put("row_count", testEntry.row_count);
+        testCase.put("row_count_gte", testEntry.row_count_gte);
+        testCase.put("ordered", testEntry.ordered);
+
         testCase.put("expected_sql_type", expectedSqlType);
         testCase.put("expected_catalog_name", expectedCatalogName);
         testCase.put("expected_column_class_name", expectedColumnClassName);
@@ -122,15 +131,15 @@ public class TestGenerator {
 
     public static void main(String[] args)
             throws SQLException, IOException, InvocationTargetException, IllegalAccessException {
-        IntegrationTestUtils utils = new IntegrationTestUtils();
-
-        // Pattern to generate all tests if argument not provided
-        String testPattern = ".*";
-        Connection conn = MongoIntegrationTest.getBasicConnection(MongoSQLIntegrationTest.MONGOSQL);
-        if (args.length > 0) {
-            testPattern = args[0];
+        MongoSQLIntegrationTest integrationTest = new MongoSQLIntegrationTest();
+        Connection conn = integrationTest.getBasicConnection();
+        List<TestEntry> tests =
+                IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
+        for (TestEntry testEntry : tests) {
+            if (testEntry.skip_reason != null) {
+                continue;
+            }
+            IntegrationTestUtils.runTest(testEntry, conn, true);
         }
-        List<Tests> tests = utils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
-        utils.runTests(tests, conn, true, testPattern);
     }
 }

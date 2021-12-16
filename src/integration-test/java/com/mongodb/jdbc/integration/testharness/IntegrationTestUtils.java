@@ -24,7 +24,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -36,22 +35,26 @@ public class IntegrationTestUtils {
      * loadTestConfigs will process all test yaml files in provided directory.
      *
      * @param directory The directory with test files to traverse
-     * @return A List of Tests
+     * @return A List of TestEntry
      * @throws FileNotFoundException
      */
-    public List<Tests> loadTestConfigs(String directory) throws IOException {
+    public static List<TestEntry> loadTestConfigs(String directory) throws IOException {
         List<Tests> tests = new ArrayList<>();
+        List<TestEntry> testEntries = new ArrayList<>();
         final File folder = new File(directory);
         if (!folder.exists()) {
-            return tests;
+            return testEntries;
         }
         processDirectory(folder, tests);
-        return tests;
+        for (Tests testList : tests) {
+            testEntries.addAll(testList.tests);
+        }
+        return testEntries;
     }
 
     // processDirectory will traverse the subdirectories of 'folder'.
     // Useful to group related test files in a directory
-    private void processDirectory(final File folder, List<Tests> tests) throws IOException {
+    private static void processDirectory(final File folder, List<Tests> tests) throws IOException {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 processDirectory(fileEntry, tests);
@@ -61,73 +64,64 @@ public class IntegrationTestUtils {
         }
     }
 
-    private Tests processTestFile(String filename) throws IOException {
+    private static Tests processTestFile(String filename) throws IOException {
         try (InputStream is = new FileInputStream(filename)) {
             return yaml.load(is);
         }
     }
 
     /**
-     * runTests will execute the tests that match the pattern. If generate is 'true' then baseline
-     * files will be generated from the test configurations
+     * runTest will execute the passed in testEntry. If generate is 'true' then baseline files will
+     * be generated from the test configuration
      *
-     * @param testLists List of tests to run
+     * @param testEntry Test to run
      * @param conn Database connection
      * @param generate Generate Baseline test files instead of running test
-     * @param pattern Pattern to match on the test description, matching tests will be run
      * @throws IOException
      * @throws SQLException
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public void runTests(List<Tests> testLists, Connection conn, Boolean generate, String pattern)
+    public static void runTest(TestEntry testEntry, Connection conn, Boolean generate)
             throws IOException, SQLException, IllegalAccessException, InvocationTargetException {
-        Pattern p = Pattern.compile(pattern.toUpperCase());
-        for (Tests tests : testLists) {
-            for (TestEntry testEntry : tests.tests) {
-                if (testEntry.skip_reason != null
-                        || !p.matcher(testEntry.description.toUpperCase()).matches()) {
-                    continue;
+        ResultSet rs = null;
+        // Run DatabaseMetadata function if it exists, takes precedence over query
+        System.out.println("Running test: " + testEntry.description);
+        try {
+            if (testEntry.meta_function == null) {
+                rs = executeQuery(testEntry, conn);
+            } else {
+                rs = executeDBMetadataCommand(testEntry, conn.getMetaData());
+            }
+            assertNotEquals(rs, null);
+            if (generate) {
+                TestGenerator.generateBaselineTestFiles(testEntry, rs);
+            } else {
+                if (testEntry.ordered != null && testEntry.ordered) {
+                    validateResultsOrdered(testEntry, rs);
+                } else {
+                    validateResultsUnordered(testEntry, rs);
                 }
-                ResultSet rs = null;
-                // Run DatabaseMetadata function if it exists, takes precedence over query
-                System.out.println("Running test: " + testEntry.description);
-                try {
-                    if (testEntry.meta_function == null) {
-                        rs = executeQuery(testEntry, conn);
-                    } else {
-                        rs = executeDBMetadataCommand(testEntry, conn.getMetaData());
-                    }
-                    assertNotEquals(rs, null);
-                    if (generate) {
-                        TestGenerator.generateBaselineTestFiles(testEntry.description, rs);
-                    } else {
-                        if (testEntry.ordered != null && testEntry.ordered) {
-                            validateResultsOrdered(testEntry, rs);
-                        } else {
-                            validateResultsUnordered(testEntry, rs);
-                        }
-                        validateResultSetMetadata(testEntry, rs.getMetaData());
-                    }
-                } finally {
-                    if (rs != null) {
-                        Statement statement = rs.getStatement();
-                        if (statement != null) {
-                            statement.close();
-                        }
-                    }
+                validateResultSetMetadata(testEntry, rs.getMetaData());
+            }
+        } finally {
+            if (rs != null) {
+                Statement statement = rs.getStatement();
+                if (statement != null) {
+                    statement.close();
                 }
             }
         }
     }
 
-    private ResultSet executeQuery(TestEntry entry, Connection conn) throws SQLException {
+    private static ResultSet executeQuery(TestEntry entry, Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(entry.sql);
     }
 
     @SuppressWarnings("unchecked")
-    private ResultSet executeDBMetadataCommand(TestEntry entry, DatabaseMetaData databaseMetaData)
+    private static ResultSet executeDBMetadataCommand(
+            TestEntry entry, DatabaseMetaData databaseMetaData)
             throws SQLException, InvocationTargetException, IllegalAccessException {
 
         List<Object> metadataFunction = entry.meta_function;
@@ -194,7 +188,7 @@ public class IntegrationTestUtils {
         throw new IllegalArgumentException("function '" + functionName + "' not found");
     }
 
-    private void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
+    private static void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
             throws SQLException, IllegalAccessException {
         int columnCount = rsMetaData.getColumnCount();
         if (test.expected_sql_type != null) {
@@ -314,7 +308,8 @@ public class IntegrationTestUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private void validateResultsOrdered(TestEntry testEntry, ResultSet rs) throws SQLException {
+    private static void validateResultsOrdered(TestEntry testEntry, ResultSet rs)
+            throws SQLException {
         Integer actualRowCounter = null;
         if (testEntry.expected_result != null) {
             while (rs.next()) {
@@ -334,7 +329,8 @@ public class IntegrationTestUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private void validateResultsUnordered(TestEntry testEntry, ResultSet rs) throws SQLException {
+    private static void validateResultsUnordered(TestEntry testEntry, ResultSet rs)
+            throws SQLException {
         Integer actualRowCounter = null;
         if (testEntry.expected_result != null) {
             while (rs.next()) {
@@ -357,20 +353,21 @@ public class IntegrationTestUtils {
         }
     }
 
-    private void validateRowCount(
+    private static void validateRowCount(
             int expectedRowCount, TestEntry testEntry, Integer actualRowCounter, ResultSet rs)
             throws SQLException {
         if (actualRowCounter == null) {
             actualRowCounter = MongoIntegrationTest.countRows(rs);
         }
-        if (testEntry.rowcount_gte != null && testEntry.rowcount_gte) {
+        if (testEntry.row_count_gte != null && testEntry.row_count_gte) {
             assertTrue(actualRowCounter >= expectedRowCount);
         } else {
             assertEquals(java.util.Optional.ofNullable(actualRowCounter), expectedRowCount);
         }
     }
 
-    private boolean compareRow(List<Object> expectedRow, ResultSet actualRow) throws SQLException {
+    private static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
+            throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
         assertEquals(expectedRow.size(), rsMetadata.getColumnCount());
 
@@ -419,6 +416,10 @@ public class IntegrationTestUtils {
                         return false;
                     }
                     break;
+                case Types.OTHER:
+                    if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
+                        return false;
+                    }
                 default:
                     throw new IllegalArgumentException("unsupported column type:" + columnType);
             }

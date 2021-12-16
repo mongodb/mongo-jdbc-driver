@@ -6,16 +6,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.*;
 import java.util.HashSet;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MySQLIntegrationTest extends MongoIntegrationTest {
+    static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
     public static final String MYSQL = "mysql";
 
+    private Connection conn;
+
     @Override
+    public Connection getBasicConnection() throws SQLException {
+        java.util.Properties p = new java.util.Properties();
+        p.setProperty("dialect", MYSQL);
+        p.setProperty("user", System.getenv("ADL_TEST_USER"));
+        p.setProperty("password", System.getenv("ADL_TEST_PWD"));
+        p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
+        p.setProperty("database", "looker");
+        p.setProperty("ssl", "true");
+        return DriverManager.getConnection(URL, p);
+    }
+
     @BeforeEach
     public void setupConnection() throws SQLException {
-        conn = getBasicConnection(MYSQL);
+        conn = getBasicConnection();
+    }
+
+    @AfterEach
+    protected void cleanupTest() throws SQLException {
+        conn.close();
     }
 
     @Test
