@@ -4,7 +4,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public class BsonTypeInfo {
+public class BsonTypeInfoOld {
     public static final String BINDATA_TYPE_NAME = "binData";
     public static final String STRING_TYPE_NAME = "string";
     public static final String INT_TYPE_NAME = "int";
