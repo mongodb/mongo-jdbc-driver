@@ -12,6 +12,7 @@ MONGO_DOWNLOAD_BASE=https://fastdl.mongodb.org
 MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu1804-5.0.4.tgz
 # RedHat 7
 MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-5.0.4.tgz
+# macOS
 MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-5.0.4.tgz
 
 MONGOD_PORT=28017
