@@ -27,6 +27,7 @@ import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -431,23 +432,28 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         String dbName;
         String tableName;
         String columnName;
-        MongoJsonSchema columnSchema;
-        boolean isRequired;
+        BsonTypeInfo columnBsonTypeInfo;
+        int nullability;
         int idx;
 
         GetColumnsDocInfo(
                 String dbName,
                 String tableName,
                 String columnName,
+                MongoJsonSchema parentSchema,
                 MongoJsonSchema columnSchema,
-                boolean isRequired,
                 int idx) {
             this.dbName = dbName;
             this.tableName = tableName;
             this.columnName = columnName;
-            this.columnSchema = columnSchema;
-            this.isRequired = isRequired;
             this.idx = idx;
+
+            try {
+                this.columnBsonTypeInfo = columnSchema.getBsonTypeInfo();
+                this.nullability = parentSchema.getColumnNullability(columnName);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -455,42 +461,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getColumnsFromDB helper method which is shared between getColumns and
     // getColumnPrivileges.
     private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
-        String bsonType;
-        int nullability;
-        BsonValue dataType;
-        BsonValue decimalDigits = BsonNull.VALUE;
-        BsonValue numPrecRadix;
-        BsonValue charOctetLength = BsonNull.VALUE;
-
-        try {
-            Pair<String, Integer> typeAndNullability =
-                    BsonTypeInfoOld.getBsonTypeNameAndNullability(i.columnSchema, i.isRequired);
-            bsonType = typeAndNullability.left();
-            nullability = typeAndNullability.right();
-
-            dataType = new BsonInt32(BsonTypeInfoOld.getJDBCType(bsonType));
-
-            Integer d = BsonTypeInfoOld.getDecimalDigits(bsonType);
-            if (d != null) {
-                decimalDigits = new BsonInt32(d);
-            }
-
-            numPrecRadix = new BsonInt32(BsonTypeInfoOld.getNumPrecRadix(bsonType));
-
-            Integer c = BsonTypeInfoOld.getCharOctetLength(bsonType);
-            if (c != null) {
-                charOctetLength = new BsonInt32(c);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
         BsonValue isNullable =
                 new BsonString(
-                        nullability == columnNoNulls
+                        i.nullability == columnNoNulls
                                 ? "NO"
-                                : nullability == columnNullable ? "YES" : "");
+                                : i.nullability == columnNullable ? "YES" : "");
 
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
@@ -500,18 +475,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(TABLE_SCHEM, BsonNull.VALUE),
                 new BsonElement(TABLE_NAME, new BsonString(i.tableName)),
                 new BsonElement(COLUMN_NAME, new BsonString(i.columnName)),
-                new BsonElement(DATA_TYPE, dataType),
-                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
+                new BsonElement(DATA_TYPE, new BsonInt32(i.columnBsonTypeInfo.getJdbcType())),
+                new BsonElement(TYPE_NAME, new BsonString(i.columnBsonTypeInfo.getBsonName())),
                 new BsonElement(COLUMN_SIZE, BsonNull.VALUE),
                 new BsonElement(BUFFER_LENGTH, new BsonInt32(0)),
-                new BsonElement(DECIMAL_DIGITS, decimalDigits),
-                new BsonElement(NUM_PREC_RADIX, numPrecRadix),
-                new BsonElement(NULLABLE, new BsonInt32(nullability)),
+                new BsonElement(DECIMAL_DIGITS,  asBsonIntOrNull(i.columnBsonTypeInfo.getDecimalDigits())),
+                new BsonElement(NUM_PREC_RADIX, new BsonInt32(i.columnBsonTypeInfo.getNumPrecRadix())),
+                new BsonElement(NULLABLE, new BsonInt32(i.nullability)),
                 new BsonElement(REMARKS, new BsonString("")),
                 new BsonElement(COLUMN_DEF, BsonNull.VALUE),
                 new BsonElement(SQL_DATA_TYPE, new BsonInt32(0)),
                 new BsonElement(SQL_DATETIME_SUB, new BsonInt32(0)),
-                new BsonElement(CHAR_OCTET_LENGTH, charOctetLength),
+                new BsonElement(CHAR_OCTET_LENGTH, asBsonIntOrNull(i.columnBsonTypeInfo.getCharOctetLength())),
                 new BsonElement(ORDINAL_POSITION, new BsonInt32(i.idx)),
                 new BsonElement(IS_NULLABLE, isNullable),
                 new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
@@ -607,10 +582,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                     ns.left(),
                                                                     ns.right(),
                                                                     entry.getKey(),
+                                                                    res.schema.jsonSchema,
                                                                     entry.getValue(),
-                                                                    res.schema.jsonSchema.required
-                                                                            .contains(
-                                                                                    entry.getKey()),
                                                                     idx.getAndIncrement())));
                         });
     }
@@ -714,6 +687,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         if (catalog == null) {
             // If no catalog (database) is specified, get column privileges for all databases.
             docs =
+                    liftSQLException(() ->
                     this.getDatabaseNames()
                             .flatMap(
                                     dbName ->
@@ -721,18 +695,18 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                     dbName,
                                                     tableNamePatternRE,
                                                     columnNamePatternRE,
-                                                    this::toGetColumnPrivilegesDoc));
+                                                    this::toGetColumnPrivilegesDoc)));
         } else if (catalog.isEmpty()) {
             // If catalog (database) is empty, we will return an empty result set because
             // MongoDB does not support tables (collections) without databases.
             docs = Stream.empty();
         } else {
-            docs =
+            docs = liftSQLException(() ->
                     getColumnsFromDB(
                             catalog,
                             tableNamePatternRE,
                             columnNamePatternRE,
-                            this::toGetColumnPrivilegesDoc);
+                            this::toGetColumnPrivilegesDoc));
         }
 
         // Collect to sorted list.
@@ -879,12 +853,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                 MongoJsonSchemaResult.class);
 
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
-        for (String key : keys.keySet()) {
-            docs.add(
-                    toGetBestRowIdentifierDoc(
-                            key,
-                            r.schema.jsonSchema.properties.get(key),
-                            r.schema.jsonSchema.required.contains(key)));
+        try {
+            for (String key : keys.keySet()) {
+                docs.add(
+                        toGetBestRowIdentifierDoc(
+                                key,
+                                r.schema.jsonSchema.properties.get(key).getBsonTypeInfo()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return docs;
@@ -893,43 +870,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for creating a result set BsonDocument for an index column for the
     // getBestRowIdentifier method.
     private BsonDocument toGetBestRowIdentifierDoc(
-            String columnName, MongoJsonSchema columnSchema, boolean isRequired) {
-        Pair<String, Integer> typeAndNullability;
-        String bsonType;
-        BsonValue dataType;
-        BsonValue columnSize = BsonNull.VALUE;
-        BsonValue decimalDigits = BsonNull.VALUE;
-
-        try {
-            typeAndNullability =
-                    BsonTypeInfoOld.getBsonTypeNameAndNullability(columnSchema, isRequired);
-
-            bsonType = typeAndNullability.left();
-
-            dataType = new BsonInt32(BsonTypeInfoOld.getJDBCType(bsonType));
-
-            Integer s = BsonTypeInfoOld.getPrecision(bsonType);
-            if (s != null) {
-                columnSize = new BsonInt32(s);
-            }
-
-            Integer d = BsonTypeInfoOld.getDecimalDigits(bsonType);
-            if (d != null) {
-                decimalDigits = new BsonInt32(d);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+            String columnName, BsonTypeInfo columnBsonTypeInfo) {
         return createBottomBson(
                 new BsonElement(SCOPE, BsonNull.VALUE),
                 new BsonElement(COLUMN_NAME, new BsonString(columnName)),
-                new BsonElement(DATA_TYPE, dataType),
-                new BsonElement(TYPE_NAME, new BsonString(bsonType)),
-                new BsonElement(COLUMN_SIZE, columnSize),
+                new BsonElement(DATA_TYPE, new BsonInt32(columnBsonTypeInfo.getJdbcType())),
+                new BsonElement(TYPE_NAME, new BsonString(columnBsonTypeInfo.getBsonName())),
+                new BsonElement(COLUMN_SIZE, asBsonIntOrNull(columnBsonTypeInfo.getPrecision())),
                 new BsonElement(BUFFER_LENGTH, BsonNull.VALUE),
-                new BsonElement(DECIMAL_DIGITS, decimalDigits),
+                new BsonElement(DECIMAL_DIGITS, asBsonIntOrNull(columnBsonTypeInfo.getDecimalDigits())),
                 new BsonElement(PSEUDO_COLUMN, new BsonInt32(bestRowNotPseudo)));
     }
 
@@ -1124,7 +1073,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     private BsonValue asBsonIntOrNull(Integer value) {
         if (value == null) {
-            return new BsonNull();
+            return BsonNull.VALUE;
         }
         return new BsonInt32(value);
     }
