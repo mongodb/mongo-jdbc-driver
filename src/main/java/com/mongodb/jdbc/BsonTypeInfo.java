@@ -17,7 +17,7 @@ public enum BsonTypeInfo {
     BSON_BINDATA("binData", BsonType.BINARY, Types.BINARY, false, 0, 0, 0, null, null, null),
     BSON_UNDEFINED("undefined", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_OBJECTID("objectId", BsonType.OBJECT_ID, Types.OTHER, false, 0, 0, 0, 24, null, null),
-    BSON_BOOLEAN("boolean", BsonType.BOOLEAN, Types.BIT, false, 0, 0, 0, 1, null, 1),
+    BSON_BOOL("boolean", BsonType.BOOLEAN, Types.BIT, false, 0, 0, 0, 1, null, 1),
     BSON_DATE("date", BsonType.DATE_TIME, Types.TIMESTAMP, false, 0, 3, 0, 24, 3, 8),
     BSON_NULL("null", BsonType.NULL, Types.NULL, false, 0, 0, 0, null, null, null),
     BSON_REGEX("regex", BsonType.REGULAR_EXPRESSION, Types.OTHER, true, 0, 0, 0, null, null, null),
@@ -41,7 +41,7 @@ public enum BsonTypeInfo {
             BSON_BINDATA.bsonName,
             BSON_UNDEFINED.bsonName,
             BSON_OBJECTID.bsonName,
-            BSON_BOOLEAN.bsonName,
+            BSON_BOOL.bsonName,
             BSON_DATE.bsonName,
             BSON_NULL.bsonName,
             BSON_REGEX.bsonName,
@@ -92,7 +92,7 @@ public enum BsonTypeInfo {
         return jdbcType;
     }
 
-    public boolean isCaseSensitivity() {
+    public boolean getCaseSensitivity() {
         return caseSensitivity;
     }
 
@@ -201,7 +201,7 @@ public enum BsonTypeInfo {
             case 'b':
                 switch (typeName.length()) {
                     case 4:
-                        return BSON_BOOLEAN;
+                        return BSON_BOOL;
                     case 7:
                         return BSON_BINDATA;
                 }
