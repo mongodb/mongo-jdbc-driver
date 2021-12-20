@@ -145,4 +145,47 @@ public class MongoJsonSchema {
 
         return nullable;
     }
+
+    /**
+     * Gets the bson type for this schema as a BsonTypeInfo enum value.
+     *
+     * @return The relevant BsonTypeInfo value
+     * @throws SQLException If this schema is invalid
+     */
+    public BsonTypeInfo getBsonTypeInfo() throws SQLException {
+        if (this.bsonType != null) {
+            return BsonTypeInfo.getBsonTypeInfoByName(this.bsonType);
+        }
+
+        if (this.isAny()) {
+            return BsonTypeInfo.BSON_BSON;
+        }
+
+        // Otherwise, the schema must be an AnyOf
+        if (this.anyOf == null) {
+            throw new SQLException(
+                    "invalid schema: both bsonType and anyOf are null and this is not ANY");
+        }
+
+        BsonTypeInfo info = null;
+        for (MongoJsonSchema anyOfSchema : this.anyOf) {
+            if (anyOfSchema.bsonType == null) {
+                // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
+                throw new SQLException(
+                        "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
+            }
+
+            if (!anyOfSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName())) {
+                // If info is not null, there must be more than one non-"null" anyOf type, so
+                // we default to "bson".
+                if (info != null) {
+                    info = BsonTypeInfo.BSON_BSON;
+                } else {
+                    info = BsonTypeInfo.getBsonTypeInfoByName(anyOfSchema.bsonType);
+                }
+            }
+        }
+
+        return info;
+    }
 }
