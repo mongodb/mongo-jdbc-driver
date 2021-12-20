@@ -121,67 +121,6 @@ public enum BsonTypeInfo {
     }
 
     /**
-     * Gets the BsonTypeInfo and nullability based on a MongoJsonSchema. The
-     * selected BsonTypeInfo is based on the contents of the schema; the nullability
-     * is based on both the contents of the schema and the boolean argument that
-     * indicates whether this schema is required in a parent schema.
-     *
-     * @param schema The MongoJsonSchema for which to return BsonTypeInfo and nullability
-     * @param required A flag indicating if this schema is required in a parent schema
-     * @return The BsonTypeInfo and nullability info for the argued schema
-     * @throws SQLException If there is an invalid schema provided
-     */
-    public Pair<BsonTypeInfo, Integer> getBsonTypeInfoAndNullabilityFromMongoSchema(MongoJsonSchema schema, boolean required) throws SQLException {
-        int nullable = required ? DatabaseMetaData.columnNoNulls : DatabaseMetaData.columnNullable;
-
-        // If the schema has a bson type, return it
-        if (schema.bsonType != null) {
-            nullable =
-                    schema.bsonType.equals(BSON_NULL.bsonName)
-                            ? DatabaseMetaData.columnNullable
-                            : nullable;
-            return new Pair<>(getBsonTypeInfoByName(schema.bsonType), nullable);
-        }
-
-        // If the schema is any, use the type "bson"
-        if (schema.isAny()) {
-            return new Pair<>(BSON_BSON, DatabaseMetaData.columnNullable);
-        }
-
-        // Otherwise, the schema must be an AnyOf
-        if (schema.anyOf == null) {
-            throw new SQLException(
-                    "invalid schema: both bsonType and anyOf are null and this is not ANY");
-        }
-
-        BsonTypeInfo bsonTypeInfo = null;
-
-        for (MongoJsonSchema anyOfSchema : schema.anyOf) {
-            if (anyOfSchema.bsonType == null) {
-                // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
-                throw new SQLException(
-                        "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
-            }
-            // Presence of null means this is nullable, regardless of whether the required keys
-            // of the parent object schema indicate this is nullable.
-            if (anyOfSchema.bsonType.equals(BSON_NULL.bsonName)) {
-                // This takes precedence over the nullability set by the required argument.
-                nullable = DatabaseMetaData.columnNullable;
-            } else {
-                // If bsonTypeInfo is not null, there must be more than one non-null anyOf type, so
-                // we default to "bson".
-                if (bsonTypeInfo != null) {
-                    bsonTypeInfo = BSON_BSON;
-                } else {
-                    bsonTypeInfo = getBsonTypeInfoByName(anyOfSchema.bsonType);
-                }
-            }
-        }
-
-        return new Pair<>(bsonTypeInfo, nullable);
-    }
-
-    /**
      * Converts a bson type name to a BsonTypeInfo
      *
      * @param typeName is the bson type string as returned from the mongodb aggregation $type
