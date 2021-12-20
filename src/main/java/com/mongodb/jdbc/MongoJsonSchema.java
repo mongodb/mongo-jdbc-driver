@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -75,5 +77,72 @@ public class MongoJsonSchema {
 
     public boolean isObject() {
         return bsonType != null && bsonType.equals("object");
+    }
+
+    /**
+     * Gets the nullability of a column (field) in this schemas list of properties. Its
+     * nullability is determined as follows:
+     *   - If it is not present in this schema's list of properties:
+     *     - If it is required or this schema allows additional properties,
+     *       it is considered unknown nullability
+     *     - Otherwise, an exception is thrown
+     *   - If it is a scalar schema (i.e. not Any or AnyOf):
+     *     - If its bson type is Null, it is considered nullable
+     *     - If its bson type is non-Null, its nullability depends on
+     *       whether it is required
+     *   - If it is an Any schema, it is considered nullable
+     *   - If it is an AnyOf schema, it is considered nullable if one
+     *     of the component schemas in the AnyOf list is Null.
+     *     - This relies on the assumption that schemata returned by
+     *       MongoSQL are simplified.
+     *
+     * @param columnName The name of the column (or "field") for which to return
+     *                   nullability information
+     * @return The nullability of the argument
+     * @throws SQLException If the argued column is not in this schema, or if
+     *                      this schema is invalid
+     */
+    public int getColumnNullability(String columnName) throws SQLException {
+        boolean required = this.required != null && this.required.contains(columnName);
+
+        MongoJsonSchema columnSchema = this.properties.get(columnName);
+        if (columnSchema == null) {
+            if (required || this.additionalProperties) {
+                // Even if it is required, we do not know the schema of the field.
+                // If it has bson type Null, it would be nullable; otherwise it would
+                // not be nullable. Therefore, we indicate it is unknown nullability.
+                return DatabaseMetaData.columnNullableUnknown;
+            }
+            throw new SQLException("nullability info requested for invalid column '" + columnName + "'");
+        }
+
+        if (columnSchema.isAny()) {
+            return DatabaseMetaData.columnNullable;
+        }
+
+        int nullable = required ? DatabaseMetaData.columnNoNulls : DatabaseMetaData.columnNullable;
+        if (columnSchema.bsonType != null) {
+            return columnSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName()) ? DatabaseMetaData.columnNullable : nullable;
+        }
+
+        // Otherwise, the schema must be an AnyOf
+        if (columnSchema.anyOf == null) {
+            throw new SQLException(
+                    "invalid schema: both bsonType and anyOf are null and this is not ANY");
+        }
+
+        for (MongoJsonSchema anyOfSchema : columnSchema.anyOf) {
+            if (anyOfSchema.bsonType == null) {
+                // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
+                throw new SQLException(
+                        "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
+            }
+
+            if (anyOfSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName())) {
+                return DatabaseMetaData.columnNullable;
+            }
+        }
+
+        return nullable;
     }
 }
