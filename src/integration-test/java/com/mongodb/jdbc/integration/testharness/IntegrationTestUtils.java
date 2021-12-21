@@ -360,8 +360,7 @@ public class IntegrationTestUtils {
     }
 
     private static void validateRowCount(
-            TestEntry testEntry, Integer actualRowCounter, ResultSet rs)
-            throws SQLException {
+            TestEntry testEntry, Integer actualRowCounter, ResultSet rs) throws SQLException {
         if (actualRowCounter == null) {
             actualRowCounter = IntegrationTestUtils.countRows(rs);
         }
