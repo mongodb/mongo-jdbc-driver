@@ -4,19 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import java.sql.*;
 import java.util.HashSet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MySQLIntegrationTest extends MongoIntegrationTest {
+public class MySQLIntegrationTest {
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
     public static final String MYSQL = "mysql";
 
     private Connection conn;
 
-    @Override
     public Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
         p.setProperty("dialect", MYSQL);
@@ -89,7 +89,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 31);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 31);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -185,7 +185,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -229,7 +229,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -249,7 +249,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -280,7 +280,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -302,7 +302,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -370,7 +370,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 3);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 3);
     }
 
     @Test
@@ -391,7 +391,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -430,7 +430,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 6);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 6);
     }
 
     @Test
@@ -451,7 +451,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -474,7 +474,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -496,7 +496,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -516,7 +516,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -537,7 +537,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -557,7 +557,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -627,7 +627,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
         // We should have at least INFORMATION_SCHEMA.
-        assertTrue(countRows(rs) > 1);
+        assertTrue(IntegrationTestUtils.countRows(rs) > 1);
     }
 
     @Test
@@ -672,7 +672,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         // rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern);
         // assertEquals(1, countRows(rs));
         rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern2);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -694,13 +694,13 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, null);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern2);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -721,9 +721,9 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getTablePrivileges(catalogPattern, null, tableNamePattern);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     String schema = "INFORMATION_SCHEMA";
@@ -748,7 +748,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -763,7 +763,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
@@ -790,7 +790,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test

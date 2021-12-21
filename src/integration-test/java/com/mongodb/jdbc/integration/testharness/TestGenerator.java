@@ -60,6 +60,8 @@ public class TestGenerator {
                         .format(new Date());
 
         // generating 'expected_result'
+        // TODO: SQL-632 Support Types.OTHER
+        // Investigate whether the Types.OTHER can be serialized to yaml, if not specify test values in JUnit test case
         ArrayList<List<Object>> result = new ArrayList<>();
         while (rs.next()) {
             List<Object> row = new ArrayList<>();

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.mongodb.jdbc.integration.MongoIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -28,6 +27,13 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 public class IntegrationTestUtils {
+    public static int countRows(ResultSet rs) throws SQLException {
+        for (int i = 0; ; ++i) {
+            if (!rs.next()) {
+                return i;
+            }
+        }
+    }
 
     private static Yaml yaml = new Yaml(new Constructor(Tests.class));
 
@@ -125,8 +131,10 @@ public class IntegrationTestUtils {
             throws SQLException, InvocationTargetException, IllegalAccessException {
 
         List<Object> metadataFunction = entry.meta_function;
-        assertTrue(metadataFunction != null && metadataFunction.size() > 0, "expected a DatabaseMetaData method but found none");
-        String functionName = (String) metadataFunction.remove(0);
+        assertTrue(
+                metadataFunction != null && metadataFunction.size() > 0,
+                "expected a DatabaseMetaData method but found none");
+        String functionName = (String) metadataFunction.get(0);
         Method[] m = DatabaseMetaData.class.getMethods();
 
         for (Method method : m) {
@@ -139,49 +147,48 @@ public class IntegrationTestUtils {
                                     + " found: "
                                     + method.getReturnType());
                 }
-                if (method.getParameterCount() != metadataFunction.size()) {
+                if (method.getParameterCount() != metadataFunction.size() - 1) {
                     throw new IllegalArgumentException(
                             "expected parameter count: "
                                     + method.getParameterCount()
                                     + " found: "
-                                    + metadataFunction.size());
+                                    + (metadataFunction.size() - 1));
                 }
                 if (method.getParameterCount() == 0) {
                     return (ResultSet) method.invoke(databaseMetaData);
                 }
-                    Object[] parameters = new Object[method.getParameterCount()];
+                Object[] parameters = new Object[method.getParameterCount()];
 
-                    for (int i = 0; i < parameters.length; i++) {
-                        Object currentMetaInput = metadataFunction.get(i);
-                        if (currentMetaInput == null) {
-                            parameters[i] = null;
-                            continue;
-                        }
-                        Class<?> parameterType = types[i];
-                        if (parameterType.isArray()) {
-                            if (parameterType.getComponentType() == String.class) {
-                                parameters[i] =
-                                        ((List<String>) currentMetaInput)
-                                                .stream()
-                                                .map(object -> Objects.toString(object, null))
-                                                .toArray(String[]::new);
-                            } else if (parameterType.getComponentType() == int.class) {
-                                parameters[i] =
-                                        ((List<Integer>) currentMetaInput)
-                                                .stream()
-                                                .mapToInt(j -> j)
-                                                .toArray();
-                            }
-                        } else if (parameterType == String.class) {
-                            parameters[i] = (String) currentMetaInput;
-                        } else if (parameterType == int.class) {
-                            parameters[i] = (Integer) currentMetaInput;
-                        } else if (parameterType == boolean.class) {
-                            parameters[i] = (Boolean) currentMetaInput;
-                        }
+                for (int i = 0; i < parameters.length; i++) {
+                    Object currentMetaInput = metadataFunction.get(i + 1);
+                    if (currentMetaInput == null) {
+                        parameters[i] = null;
+                        continue;
                     }
-                    return (ResultSet) method.invoke(databaseMetaData, parameters);
+                    Class<?> parameterType = types[i];
+                    if (parameterType.isArray()) {
+                        if (parameterType.getComponentType() == String.class) {
+                            parameters[i] =
+                                    ((List<String>) currentMetaInput)
+                                            .stream()
+                                            .map(object -> Objects.toString(object, null))
+                                            .toArray(String[]::new);
+                        } else if (parameterType.getComponentType() == int.class) {
+                            parameters[i] =
+                                    ((List<Integer>) currentMetaInput)
+                                            .stream()
+                                            .mapToInt(j -> j)
+                                            .toArray();
+                        }
+                    } else if (parameterType == String.class) {
+                        parameters[i] = (String) currentMetaInput;
+                    } else if (parameterType == int.class) {
+                        parameters[i] = (Integer) currentMetaInput;
+                    } else if (parameterType == boolean.class) {
+                        parameters[i] = (Boolean) currentMetaInput;
+                    }
                 }
+                return (ResultSet) method.invoke(databaseMetaData, parameters);
             }
         }
         throw new IllegalArgumentException("function '" + functionName + "' not found");
@@ -356,7 +363,7 @@ public class IntegrationTestUtils {
             int expectedRowCount, TestEntry testEntry, Integer actualRowCounter, ResultSet rs)
             throws SQLException {
         if (actualRowCounter == null) {
-            actualRowCounter = MongoIntegrationTest.countRows(rs);
+            actualRowCounter = IntegrationTestUtils.countRows(rs);
         }
         if (testEntry.row_count_gte != null && testEntry.row_count_gte) {
             assertTrue(actualRowCounter >= expectedRowCount);
@@ -415,10 +422,14 @@ public class IntegrationTestUtils {
                         return false;
                     }
                     break;
-                case Types.OTHER:
-                    if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
-                        return false;
-                    }
+                    // TODO: SQL-632 Support Types.OTHER
+                    // This comparison needs to be improved to correctly handle Types.OTHER
+                    /*
+                    case Types.OTHER:
+                        if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
+                            return false;
+                        }
+                     */
                 default:
                     throw new IllegalArgumentException("unsupported column type:" + columnType);
             }

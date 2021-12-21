@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MongoSQLIntegrationTest extends MongoIntegrationTest {
+public class MongoSQLIntegrationTest {
     static final String URL = "jdbc:mongodb://localhost";
     public static final String LOCAL_MDB_URL =
             "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
@@ -23,7 +23,6 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
     private List<TestEntry> testEntries;
 
-    @Override
     public Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
         p.setProperty("dialect", MONGOSQL);

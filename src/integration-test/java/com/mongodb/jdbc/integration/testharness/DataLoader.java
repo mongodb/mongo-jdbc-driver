@@ -79,16 +79,14 @@ public class DataLoader {
             MongoClientURI uri = new MongoClientURI(this.url);
             try (MongoClient mongoClient = new MongoClient(uri)) {
                 for (TestDataEntry entry : datasets) {
-                    int count = 0;
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     MongoCollection<Document> collection = database.getCollection(entry.collection);
                     for (Map<String, Object> row : entry.docs) {
                         collection.insertOne(new Document(row));
-                        count++;
                     }
                     System.out.println(
                             "Inserted "
-                                    + count
+                                    + entry.docs.size()
                                     + " rows into "
                                     + entry.db
                                     + "."
