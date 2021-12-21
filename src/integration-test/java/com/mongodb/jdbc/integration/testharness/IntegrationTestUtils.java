@@ -148,8 +148,7 @@ public class IntegrationTestUtils {
                 }
                 if (method.getParameterCount() == 0) {
                     return (ResultSet) method.invoke(databaseMetaData);
-
-                } else {
+                }
                     Object[] parameters = new Object[method.getParameterCount()];
 
                     for (int i = 0; i < parameters.length; i++) {
