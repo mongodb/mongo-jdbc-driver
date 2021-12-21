@@ -100,7 +100,7 @@ public class TestGenerator {
             testCase.put("sql", testEntry.sql);
         }
         testCase.put("expected_result", result);
-        testCase.put("row_count", testEntry.row_count);
+        testCase.put("row_count", result.size());
         testCase.put("row_count_gte", testEntry.row_count_gte);
         testCase.put("ordered", testEntry.ordered);
 
@@ -134,14 +134,15 @@ public class TestGenerator {
     public static void main(String[] args)
             throws SQLException, IOException, InvocationTargetException, IllegalAccessException {
         MongoSQLIntegrationTest integrationTest = new MongoSQLIntegrationTest();
-        Connection conn = integrationTest.getBasicConnection();
-        List<TestEntry> tests =
-                IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
-        for (TestEntry testEntry : tests) {
-            if (testEntry.skip_reason != null) {
-                continue;
+        try (Connection conn = integrationTest.getBasicConnection()) {
+            List<TestEntry> tests =
+                    IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
+            for (TestEntry testEntry : tests) {
+                if (testEntry.skip_reason != null) {
+                    continue;
+                }
+                IntegrationTestUtils.runTest(testEntry, conn, true);
             }
-            IntegrationTestUtils.runTest(testEntry, conn, true);
         }
     }
 }

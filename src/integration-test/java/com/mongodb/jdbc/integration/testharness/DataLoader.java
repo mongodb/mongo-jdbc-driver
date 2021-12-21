@@ -30,12 +30,12 @@ public class DataLoader {
 
     private List<TestDataEntry> datasets;
     private Set<Pair<String, String>> collections;
-    private String url;
+    private MongoClientURI uri;
 
     public DataLoader(String dataDirectory, String url) throws IOException {
         this.datasets = new ArrayList<>();
         this.collections = new HashSet<>();
-        this.url = url;
+        this.uri = new MongoClientURI(url);
 
         readDataFiles(dataDirectory);
     }
@@ -57,7 +57,6 @@ public class DataLoader {
 
     /** Drops collections specified in test data files */
     public void dropCollections() {
-        MongoClientURI uri = new MongoClientURI(this.url);
         try (MongoClient mongoClient = new MongoClient(uri)) {
             for (Pair<String, String> collection : collections) {
                 MongoDatabase database = mongoClient.getDatabase(collection.left());
@@ -76,7 +75,6 @@ public class DataLoader {
     @SuppressWarnings("unchecked")
     public void loadTestData() throws IOException {
         try {
-            MongoClientURI uri = new MongoClientURI(this.url);
             try (MongoClient mongoClient = new MongoClient(uri)) {
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
@@ -93,9 +91,9 @@ public class DataLoader {
                                     + entry.collection);
                 }
             }
-        } catch (MongoException ex) {
+        } catch (MongoException e) {
             dropCollections();
-            ex.printStackTrace();
+            throw e;
         }
     }
 

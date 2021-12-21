@@ -330,7 +330,7 @@ public class IntegrationTestUtils {
             }
         }
         if (testEntry.row_count != null) {
-            validateRowCount(testEntry.row_count, testEntry, actualRowCounter, rs);
+            validateRowCount(testEntry, actualRowCounter, rs);
         }
     }
 
@@ -355,20 +355,20 @@ public class IntegrationTestUtils {
             }
         }
         if (testEntry.row_count != null) {
-            validateRowCount(testEntry.row_count, testEntry, actualRowCounter, rs);
+            validateRowCount(testEntry, actualRowCounter, rs);
         }
     }
 
     private static void validateRowCount(
-            int expectedRowCount, TestEntry testEntry, Integer actualRowCounter, ResultSet rs)
+            TestEntry testEntry, Integer actualRowCounter, ResultSet rs)
             throws SQLException {
         if (actualRowCounter == null) {
             actualRowCounter = IntegrationTestUtils.countRows(rs);
         }
         if (testEntry.row_count_gte != null && testEntry.row_count_gte) {
-            assertTrue(actualRowCounter >= expectedRowCount);
+            assertTrue(actualRowCounter >= testEntry.row_count);
         } else {
-            assertEquals(java.util.Optional.ofNullable(actualRowCounter), expectedRowCount);
+            assertEquals(actualRowCounter, testEntry.row_count);
         }
     }
 
@@ -381,7 +381,7 @@ public class IntegrationTestUtils {
             // Handle expected field being null
             if (expectedRow.get(i) == null) {
                 if (actualRow.getObject(i + 1) == null) {
-                    break;
+                    continue;
                 } else {
                     return false;
                 }
