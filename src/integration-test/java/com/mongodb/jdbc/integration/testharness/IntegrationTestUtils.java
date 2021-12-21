@@ -125,7 +125,7 @@ public class IntegrationTestUtils {
             throws SQLException, InvocationTargetException, IllegalAccessException {
 
         List<Object> metadataFunction = entry.meta_function;
-        assertTrue(metadataFunction != null && metadataFunction.size() > 0);
+        assertTrue(metadataFunction != null && metadataFunction.size() > 0, "expected a DatabaseMetaData method but found none");
         String functionName = (String) metadataFunction.remove(0);
         Method[] m = DatabaseMetaData.class.getMethods();
 
