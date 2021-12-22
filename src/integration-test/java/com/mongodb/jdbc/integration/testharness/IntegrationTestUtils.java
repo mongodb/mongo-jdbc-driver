@@ -318,10 +318,8 @@ public class IntegrationTestUtils {
             throws SQLException {
         Integer actualRowCounter = null;
         if (testEntry.expected_result != null) {
+            actualRowCounter = 0;
             while (rs.next()) {
-                if (actualRowCounter == null) {
-                    actualRowCounter = 0;
-                }
                 assertTrue(
                         compareRow(
                                 (List<Object>) testEntry.expected_result.get(actualRowCounter),
@@ -339,11 +337,9 @@ public class IntegrationTestUtils {
             throws SQLException {
         Integer actualRowCounter = null;
         if (testEntry.expected_result != null) {
+            actualRowCounter = 0;
             while (rs.next()) {
                 boolean found = false;
-                if (actualRowCounter == null) {
-                    actualRowCounter = 0;
-                }
                 actualRowCounter++;
                 for (Object expectedRow : testEntry.expected_result) {
                     if (compareRow((List<Object>) expectedRow, rs)) {

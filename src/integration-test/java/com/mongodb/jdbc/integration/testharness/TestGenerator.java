@@ -25,6 +25,7 @@ public class TestGenerator {
     public static void generateBaselineTestFiles(TestEntry testEntry, ResultSet rs)
             throws IOException, SQLException, IllegalAccessException {
 
+        String description = testEntry.description.replace(' ', '_');
         List<String> expectedSqlType = new ArrayList<>();
         List<String> expectedCatalogName = new ArrayList<>();
         List<String> expectedColumnClassName = new ArrayList<>();
@@ -56,8 +57,7 @@ public class TestGenerator {
         }
 
         String fileName =
-                new SimpleDateFormat("'" + testEntry.description + "'MMddHHmmss'.yaml'")
-                        .format(new Date());
+                new SimpleDateFormat("'" + description + "'MMddHHmmss'.yaml'").format(new Date());
 
         // generating 'expected_result'
         // TODO: SQL-632 Support Types.OTHER
@@ -93,7 +93,7 @@ public class TestGenerator {
             expectedIsWritable.add(resultSetMetadata.isWritable(i));
         }
 
-        testCase.put("description", testEntry.description);
+        testCase.put("description", description);
         if (testEntry.meta_function != null) {
             testCase.put("meta_function", testEntry.meta_function);
         } else {
