@@ -17,8 +17,6 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MongoSQLIntegrationTest {
     static final String URL = "jdbc:mongodb://localhost";
-    public static final String LOCAL_MDB_URL =
-            "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
     public static final String MONGOSQL = "mongosql";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
     private List<TestEntry> testEntries;

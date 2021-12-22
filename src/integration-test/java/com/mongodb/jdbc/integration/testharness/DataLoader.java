@@ -6,7 +6,6 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.Pair;
-import com.mongodb.jdbc.integration.MongoSQLIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestData;
 import com.mongodb.jdbc.integration.testharness.models.TestDataEntry;
 import java.io.File;
@@ -26,6 +25,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 public class DataLoader {
     public static final String TEST_DATA_DIRECTORY = "resources/integration_test/testdata";
+    public static final String LOCAL_MDB_URL =
+            "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
     private static Yaml yaml = new Yaml(new Constructor(TestData.class));
 
     private List<TestDataEntry> datasets;
@@ -98,8 +99,7 @@ public class DataLoader {
     }
 
     public static void main(String[] args) throws IOException {
-        DataLoader loader =
-                new DataLoader(TEST_DATA_DIRECTORY, MongoSQLIntegrationTest.LOCAL_MDB_URL);
+        DataLoader loader = new DataLoader(TEST_DATA_DIRECTORY, DataLoader.LOCAL_MDB_URL);
         loader.dropCollections();
         loader.loadTestData();
     }
