@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -196,34 +195,6 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         assertEquals("bson", resultSetMetaData.getColumnTypeName(ANY_COL));
         assertEquals("null", resultSetMetaData.getColumnTypeName(NULL_COL));
         assertEquals("array", resultSetMetaData.getColumnTypeName(ARRAY_COL));
-    }
-
-    @Test
-    void testGetBsonTypeHelper() throws SQLException {
-        // This test covers all bsonTypes not explicitly covered in the other tests
-        assertEquals(BsonType.ARRAY, MongoColumnInfo.getBsonTypeHelper("array"));
-        assertEquals(BsonType.BOOLEAN, MongoColumnInfo.getBsonTypeHelper("bool"));
-        assertEquals(BsonType.BINARY, MongoColumnInfo.getBsonTypeHelper("binData"));
-        assertEquals(BsonType.DATE_TIME, MongoColumnInfo.getBsonTypeHelper("date"));
-        assertEquals(BsonType.DB_POINTER, MongoColumnInfo.getBsonTypeHelper("dbPointer"));
-        assertEquals(BsonType.DECIMAL128, MongoColumnInfo.getBsonTypeHelper("decimal"));
-        assertEquals(BsonType.DOUBLE, MongoColumnInfo.getBsonTypeHelper("double"));
-        assertEquals(BsonType.INT32, MongoColumnInfo.getBsonTypeHelper("int"));
-        assertEquals(BsonType.JAVASCRIPT, MongoColumnInfo.getBsonTypeHelper("javascript"));
-        assertEquals(
-                BsonType.JAVASCRIPT_WITH_SCOPE,
-                MongoColumnInfo.getBsonTypeHelper("javascriptWithScope"));
-        assertEquals(BsonType.INT64, MongoColumnInfo.getBsonTypeHelper("long"));
-        assertEquals(BsonType.MAX_KEY, MongoColumnInfo.getBsonTypeHelper("maxKey"));
-        assertEquals(BsonType.MIN_KEY, MongoColumnInfo.getBsonTypeHelper("minKey"));
-        assertEquals(BsonType.NULL, MongoColumnInfo.getBsonTypeHelper("null"));
-        assertEquals(BsonType.DOCUMENT, MongoColumnInfo.getBsonTypeHelper("object"));
-        assertEquals(BsonType.OBJECT_ID, MongoColumnInfo.getBsonTypeHelper("objectId"));
-        assertEquals(BsonType.REGULAR_EXPRESSION, MongoColumnInfo.getBsonTypeHelper("regex"));
-        assertEquals(BsonType.STRING, MongoColumnInfo.getBsonTypeHelper("string"));
-        assertEquals(BsonType.SYMBOL, MongoColumnInfo.getBsonTypeHelper("symbol"));
-        assertEquals(BsonType.TIMESTAMP, MongoColumnInfo.getBsonTypeHelper("timestamp"));
-        assertEquals(BsonType.UNDEFINED, MongoColumnInfo.getBsonTypeHelper("undefined"));
     }
 
     @Test
