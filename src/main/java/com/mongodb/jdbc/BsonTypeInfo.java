@@ -1,13 +1,11 @@
 package com.mongodb.jdbc;
 
-import org.bson.BsonType;
-
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import org.bson.BsonType;
 
 public enum BsonTypeInfo {
     BSON_DOUBLE("double", BsonType.DOUBLE, Types.DOUBLE, false, 15, 15, 2, 15, 15, 8),
@@ -22,9 +20,20 @@ public enum BsonTypeInfo {
     BSON_NULL("null", BsonType.NULL, Types.NULL, false, 0, 0, 0, null, null, null),
     BSON_REGEX("regex", BsonType.REGULAR_EXPRESSION, Types.OTHER, true, 0, 0, 0, null, null, null),
     BSON_DBPOINTER("dbPointer", BsonType.DB_POINTER, Types.OTHER, false, 0, 0, 0, null, null, null),
-    BSON_JAVASCRIPT("javascript", BsonType.JAVASCRIPT, Types.OTHER, true, 0, 0, 0, null, null, null),
+    BSON_JAVASCRIPT(
+            "javascript", BsonType.JAVASCRIPT, Types.OTHER, true, 0, 0, 0, null, null, null),
     BSON_SYMBOL("symbol", BsonType.SYMBOL, Types.OTHER, true, 0, 0, 0, null, null, null),
-    BSON_JAVASCRIPTWITHSCOPE("javascriptWithScope", BsonType.JAVASCRIPT_WITH_SCOPE, Types.OTHER, true, 0, 0, 0, null, null, null),
+    BSON_JAVASCRIPTWITHSCOPE(
+            "javascriptWithScope",
+            BsonType.JAVASCRIPT_WITH_SCOPE,
+            Types.OTHER,
+            true,
+            0,
+            0,
+            0,
+            null,
+            null,
+            null),
     BSON_INT("int", BsonType.INT32, Types.INTEGER, false, 0, 0, 2, 10, null, 4),
     BSON_TIMESTAMP("timestamp", BsonType.TIMESTAMP, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_LONG("long", BsonType.INT64, Types.BIGINT, false, 0, 0, 2, 19, null, 8),
@@ -33,28 +42,30 @@ public enum BsonTypeInfo {
     BSON_MAXKEY("maxKey", BsonType.MAX_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_BSON("bson", null, Types.OTHER, false, 0, 0, 0, null, null, null);
 
-    private static final Set<String> BSON_TYPE_NAMES = new HashSet<>(Arrays.asList(
-            BSON_DOUBLE.bsonName,
-            BSON_STRING.bsonName,
-            BSON_OBJECT.bsonName,
-            BSON_ARRAY.bsonName,
-            BSON_BINDATA.bsonName,
-            BSON_UNDEFINED.bsonName,
-            BSON_OBJECTID.bsonName,
-            BSON_BOOL.bsonName,
-            BSON_DATE.bsonName,
-            BSON_NULL.bsonName,
-            BSON_REGEX.bsonName,
-            BSON_DBPOINTER.bsonName,
-            BSON_JAVASCRIPT.bsonName,
-            BSON_SYMBOL.bsonName,
-            BSON_JAVASCRIPTWITHSCOPE.bsonName,
-            BSON_INT.bsonName,
-            BSON_TIMESTAMP.bsonName,
-            BSON_LONG.bsonName,
-            BSON_DECIMAL.bsonName,
-            BSON_MINKEY.bsonName,
-            BSON_MAXKEY.bsonName));
+    private static final Set<String> BSON_TYPE_NAMES =
+            new HashSet<>(
+                    Arrays.asList(
+                            BSON_DOUBLE.bsonName,
+                            BSON_STRING.bsonName,
+                            BSON_OBJECT.bsonName,
+                            BSON_ARRAY.bsonName,
+                            BSON_BINDATA.bsonName,
+                            BSON_UNDEFINED.bsonName,
+                            BSON_OBJECTID.bsonName,
+                            BSON_BOOL.bsonName,
+                            BSON_DATE.bsonName,
+                            BSON_NULL.bsonName,
+                            BSON_REGEX.bsonName,
+                            BSON_DBPOINTER.bsonName,
+                            BSON_JAVASCRIPT.bsonName,
+                            BSON_SYMBOL.bsonName,
+                            BSON_JAVASCRIPTWITHSCOPE.bsonName,
+                            BSON_INT.bsonName,
+                            BSON_TIMESTAMP.bsonName,
+                            BSON_LONG.bsonName,
+                            BSON_DECIMAL.bsonName,
+                            BSON_MINKEY.bsonName,
+                            BSON_MAXKEY.bsonName));
 
     private final String bsonName;
     private final BsonType bsonType;
@@ -67,7 +78,17 @@ public enum BsonTypeInfo {
     private final Integer decimalDigits;
     private final Integer charOctetLength;
 
-    BsonTypeInfo(String bsonName, BsonType bsonType, int jdbcType, boolean caseSensitivity, int minScale, int maxScale, int numPrecRadix, Integer precision, Integer decimalDigits, Integer charOctetLength) {
+    BsonTypeInfo(
+            String bsonName,
+            BsonType bsonType,
+            int jdbcType,
+            boolean caseSensitivity,
+            int minScale,
+            int maxScale,
+            int numPrecRadix,
+            Integer precision,
+            Integer decimalDigits,
+            Integer charOctetLength) {
         this.bsonName = bsonName;
         this.bsonType = bsonType;
         this.jdbcType = jdbcType;
