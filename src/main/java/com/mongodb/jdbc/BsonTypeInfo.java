@@ -40,7 +40,7 @@ public enum BsonTypeInfo {
     BSON_DECIMAL("decimal", BsonType.DECIMAL128, Types.DECIMAL, false, 34, 34, 10, 34, 34, 16),
     BSON_MINKEY("minKey", BsonType.MIN_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_MAXKEY("maxKey", BsonType.MAX_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
-    BSON_BSON("bson", null, Types.OTHER, false, 0, 0, 0, null, null, null);
+    BSON_BSON("bson", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null);
 
     private static final Set<String> BSON_TYPE_NAMES =
             new HashSet<>(
