@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
@@ -32,7 +31,11 @@ public class DataLoader {
     public static final String LOCAL_MDB_URL =
             "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
     public static final String LOCAL_ADL_URL =
-            "mongodb://"+System.getenv("ADL_TEST_LOCAL_USER")+":"+System.getenv("ADL_TEST_LOCAL_PWD")+"@localhost";
+            "mongodb://"
+                    + System.getenv("ADL_TEST_LOCAL_USER")
+                    + ":"
+                    + System.getenv("ADL_TEST_LOCAL_PWD")
+                    + "@localhost";
     private static Yaml yaml = new Yaml(new Constructor(TestData.class));
 
     private List<TestDataEntry> datasets;
@@ -56,7 +59,7 @@ public class DataLoader {
         command.put("sqlGenerateSchema", new BsonInt32(1));
         command.put("setSchemas", new BsonBoolean(true));
 
-        try(MongoClient mongoClient = new MongoClient(adlUri)) {
+        try (MongoClient mongoClient = new MongoClient(adlUri)) {
             for (String database : databases) {
                 MongoDatabase db = mongoClient.getDatabase(database);
                 db.runCommand(command);
