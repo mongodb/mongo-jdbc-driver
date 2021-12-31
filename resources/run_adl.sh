@@ -33,6 +33,7 @@ MONGOD="mongod"
 MONGOHOUSED="mongohoused"
 MONGO_DOWNLOAD_LINK=
 OS=$(uname)
+TIMEOUT=120
 
 MONGO_DOWNLOAD_BASE=https://fastdl.mongodb.org
 # Ubuntu 18.04
@@ -74,6 +75,20 @@ check_mongod() {
     return 0
   else
     return 1
+  fi
+}
+
+# Check if jq exists.  If not, download and set path
+get_jq() {
+  which jq
+  if [[ $? -ne 0 ]]; then
+    if [ $OS = "Linux" ]; then
+      curl -L -o $TMP_DIR/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    else
+      curl -L -o $TMP_DIR/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
+    fi
+    chmod +x $TMP_DIR/jq
+    export PATH=$PATH:$TMP_DIR
   fi
 }
 
@@ -164,6 +179,7 @@ if [[ $? -ne 0 ]]; then
     export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
     export LIBRARY_PATH="$(pwd)/artifacts"
 
+    get_jq
     # Load tenant config into mongodb
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
@@ -185,6 +201,20 @@ if [[ $? -ne 0 ]]; then
     nohup go run -tags mongosql ./cmd/mongohoused/mongohoused.go \
       --config ./testdata/config/mongodb_local/frontend-agent-backend.yaml >> $LOGS_PATH/${MONGOHOUSED}.log &
     echo $! > $TMP_DIR/${MONGOHOUSED}.pid
+
+    waitCounter=0
+    while : ; do
+        check_mongohoused
+        if [[ $? -eq 0 ]]; then
+            break
+        fi
+        if [[ "$waitCounter" -gt $TIMEOUT ]]; then
+            echo "ERROR: Local ADL did not start under $TIMEOUT seconds"
+            exit 1
+        fi
+        let waitCounter=waitCounter+1
+        sleep 1
+    done
   fi
 else
   if [ $ARG = $STOP ]; then
