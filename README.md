@@ -38,7 +38,7 @@ Make sure the following environment variables set:
 ./resources/run_adl.sh stop
 ```
 #### Skip
-The run_adl.sh script has an option to skip the start and stop operations for those managing their own local instances.
+Use the `SKIP_RUN_ADL` option to skip the start and stop operations for those managing their own local instances.
 ```
 export SKIP_RUN_ADL=1
 ```
