@@ -403,6 +403,7 @@ public class IntegrationTestUtils {
                     }
                     break;
                 case Types.BOOLEAN:
+                case Types.BIT:
                     if (((Boolean) expectedRow.get(i)) != actualRow.getBoolean(i + 1)) {
                         return false;
                     }
