@@ -1,4 +1,11 @@
 #!/bin/bash
+# 
+# Usage: run_adl.sh <operation>
+# operation: 'start' or 'stop'
+#
+# This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
+# The supported platforms are macos, ubuntu1804, and rhel7.
+# To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
 
 NAME=`basename "$0"`
 if [[ $SKIP_RUN_ADL -eq 1 ]]; then
@@ -129,6 +136,7 @@ fi
 check_mongod
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
+    echo "Starting $MONGOD"
     # Install and start mongod
     if [ $OS = "Linux" ]; then
       curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK
@@ -158,6 +166,7 @@ fi
 check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
+    echo "Starting $MONGOHOUSED"
     # Install and start mongohoused
     git config --global url.git@github.com:.insteadOf https://github.com/
     # Clone the mongohouse repo

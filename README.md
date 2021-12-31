@@ -27,3 +27,18 @@ Make sure the following environment variables set:
 
 ./gradle/publish.sh 
 
+### Running Local mongod and Atlas Data Lake
+`run_adl.sh` is a helper script that will start a local mongod and Atlas Data Lake instance, used for integration testing.
+#### Start 
+```
+./resources/run_adl.sh start
+```
+#### Stop
+```
+./resources/run_adl.sh stop
+```
+#### Skip
+The run_adl.sh script has an option to skip the start and stop operations for those managing their own local instances.
+```
+export SKIP_RUN_ADL=1
+```
