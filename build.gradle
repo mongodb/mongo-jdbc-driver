@@ -9,6 +9,8 @@ plugins {
 ext {
     gitVersion = getGitVersion()
     gitLastComment = getGitLastComment()
+    javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
+    javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
 
 spotless {
@@ -102,6 +104,7 @@ configurations {
 }
 
 task integrationTest(type: Test) {
+    useJUnitPlatform()
     description = 'Runs integration tests.'
     group = 'verification'
 
@@ -123,6 +126,20 @@ task tdvtTest(type: Test) {
 
 check.dependsOn tdvtTest
 
+task runTestGenerator(type: JavaExec) {
+    group = "Execution"
+    description = "Run the integration test baseline file generator."
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    main = javaTestGenerator
+}
+
+task runDataLoader(type: JavaExec) {
+    group = "Execution"
+    description = "Run the data loader."
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    main = javaDataLoader
+}
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -131,9 +148,11 @@ jar {
 }
 
 dependencies {
+
+    implementation "org.yaml:snakeyaml:$snakeYamlVersion"
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
-    integrationTestImplementation "junit:junit:$junitVersion"
+    integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     tdvtTestImplementation "junit:junit:$junitVersion"
     tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
