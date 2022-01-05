@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.BsonTypeInfo.*;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -132,7 +134,7 @@ public class MongoJsonSchema {
 
         int nullable = required ? DatabaseMetaData.columnNoNulls : DatabaseMetaData.columnNullable;
         if (columnSchema.bsonType != null) {
-            return columnSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName())
+            return columnSchema.bsonType.equals(BSON_NULL.getBsonName())
                     ? DatabaseMetaData.columnNullable
                     : nullable;
         }
@@ -150,7 +152,7 @@ public class MongoJsonSchema {
                         "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
             }
 
-            if (anyOfSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName())) {
+            if (anyOfSchema.bsonType.equals(BSON_NULL.getBsonName())) {
                 return DatabaseMetaData.columnNullable;
             }
         }
@@ -166,11 +168,11 @@ public class MongoJsonSchema {
      */
     public BsonTypeInfo getBsonTypeInfo() throws SQLException {
         if (this.bsonType != null) {
-            return BsonTypeInfo.getBsonTypeInfoByName(this.bsonType);
+            return getBsonTypeInfoByName(this.bsonType);
         }
 
         if (this.isAny()) {
-            return BsonTypeInfo.BSON_BSON;
+            return BSON_BSON;
         }
 
         // Otherwise, the schema must be an AnyOf
@@ -187,13 +189,13 @@ public class MongoJsonSchema {
                         "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
             }
 
-            if (!anyOfSchema.bsonType.equals(BsonTypeInfo.BSON_NULL.getBsonName())) {
+            if (!anyOfSchema.bsonType.equals(BSON_NULL.getBsonName())) {
                 // If info is not null, there must be more than one non-"null" anyOf type, so
                 // we default to "bson".
                 if (info != null) {
-                    info = BsonTypeInfo.BSON_BSON;
+                    info = BSON_BSON;
                 } else {
-                    info = BsonTypeInfo.getBsonTypeInfoByName(anyOfSchema.bsonType);
+                    info = getBsonTypeInfoByName(anyOfSchema.bsonType);
                 }
             }
         }
