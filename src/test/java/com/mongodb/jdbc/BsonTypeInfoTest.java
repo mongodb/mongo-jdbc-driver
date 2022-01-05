@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class BsonTypeInfoTest {
         assertEquals(
                 BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE,
                 BsonTypeInfo.getBsonTypeInfoByName("javascriptWithScope"));
-        assertEquals(BsonTypeInfo.BSON_INT, BsonTypeInfo.getBsonTypeInfoByName("long"));
+        assertEquals(BsonTypeInfo.BSON_LONG, BsonTypeInfo.getBsonTypeInfoByName("long"));
         assertEquals(BsonTypeInfo.BSON_MAXKEY, BsonTypeInfo.getBsonTypeInfoByName("maxKey"));
         assertEquals(BsonTypeInfo.BSON_MINKEY, BsonTypeInfo.getBsonTypeInfoByName("minKey"));
         assertEquals(BsonTypeInfo.BSON_NULL, BsonTypeInfo.getBsonTypeInfoByName("null"));
@@ -32,5 +33,8 @@ public class BsonTypeInfoTest {
         assertEquals(BsonTypeInfo.BSON_SYMBOL, BsonTypeInfo.getBsonTypeInfoByName("symbol"));
         assertEquals(BsonTypeInfo.BSON_TIMESTAMP, BsonTypeInfo.getBsonTypeInfoByName("timestamp"));
         assertEquals(BsonTypeInfo.BSON_UNDEFINED, BsonTypeInfo.getBsonTypeInfoByName("undefined"));
+
+        // Test invalid type name
+        assertThrows(SQLException.class, () -> BsonTypeInfo.getBsonTypeInfoByName("invalid"), "invalid BSON type name expected to throw exception");
     }
 }
