@@ -54,7 +54,7 @@ public class MySQLColumnInfo implements MongoColumnInfo {
         // the BsonType depends on the original bsonType field sent
         // over the wire. This matters for ObjectID, becuase it has
         // a fixed length of 24 not an unknown length like other strings.
-        bsonTypeEnum = MongoColumnInfo.getBsonTypeHelper(bsonType);
+        bsonTypeEnum = BsonTypeInfo.getBsonTypeInfoByName(bsonType).getBsonType();
         jdbcType = getJDBCTypeForBsonType(bsonTypeEnum);
         if (nullTypes.contains(bsonType)) {
             bsonType = "null";

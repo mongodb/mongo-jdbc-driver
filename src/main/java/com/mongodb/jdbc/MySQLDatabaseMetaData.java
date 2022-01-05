@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.BsonTypeInfo.*;
+
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -186,15 +188,22 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_CAT, PROCEDURE_CAT, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_CAT, PROCEDURE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_NAME, PROCEDURE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PROCEDURE_TYPE, PROCEDURE_TYPE, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_NAME, PROCEDURE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SPECIFIC_NAME, SPECIFIC_NAME, "string"));
+                new MySQLColumnInfo("", "", "", REMARKS, REMARKS, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_TYPE, PROCEDURE_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SPECIFIC_NAME, SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -215,32 +224,53 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_CAT, PROCEDURE_CAT, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_CAT, PROCEDURE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_SCHEM, PROCEDURE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PROCEDURE_NAME, PROCEDURE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_NAME, COLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_TYPE, COLUMN_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PRECISION, PRECISION, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", LENGTH, LENGTH, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCALE, SCALE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", RADIX, RADIX, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_DEF, COLUMN_DEF, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", PROCEDURE_NAME, PROCEDURE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", COLUMN_NAME, COLUMN_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, "int"));
+                new MySQLColumnInfo("", "", "", COLUMN_TYPE, COLUMN_TYPE, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", ORDINAL_POSITION, ORDINAL_POSITION, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", IS_NULLABLE, IS_NULLABLE, "string"));
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SPECIFIC_NAME, SPECIFIC_NAME, "string"));
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", PRECISION, PRECISION, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", LENGTH, LENGTH, BSON_INT.getBsonName()));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCALE, SCALE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", RADIX, RADIX, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", REMARKS, REMARKS, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", COLUMN_DEF, COLUMN_DEF, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", ORDINAL_POSITION, ORDINAL_POSITION, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", IS_NULLABLE, IS_NULLABLE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SPECIFIC_NAME, SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -253,7 +283,8 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_TYPE, TABLE_TYPE, "string"));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TABLE_TYPE, TABLE_TYPE, BSON_STRING.getBsonName()));
 
         MySQLResultDoc valuesDoc = new MySQLResultDoc();
         valuesDoc.values = new ArrayList<>();
@@ -457,14 +488,26 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE, SCOPE, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_NAME, COLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_SIZE, COLUMN_SIZE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", BUFFER_LENGTH, BUFFER_LENGTH, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PSEUDO_COLUMN, PSEUDO_COLUMN, "int"));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", SCOPE, SCOPE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", COLUMN_NAME, COLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", COLUMN_SIZE, COLUMN_SIZE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", BUFFER_LENGTH, BUFFER_LENGTH, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", PSEUDO_COLUMN, PSEUDO_COLUMN, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -478,24 +521,43 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_CAT, PKTABLE_CAT, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_NAME, PKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_CAT, PKTABLE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_CAT, FKTABLE_CAT, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_NAME, FKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_NAME, PKTABLE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DEFERRABILITY, DEFERRABILITY, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_CAT, FKTABLE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_NAME, FKTABLE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -510,24 +572,43 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_CAT, PKTABLE_CAT, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_NAME, PKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_CAT, PKTABLE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_CAT, FKTABLE_CAT, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_NAME, FKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_NAME, PKTABLE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DEFERRABILITY, DEFERRABILITY, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_CAT, FKTABLE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_NAME, FKTABLE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -548,24 +629,43 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_CAT, PKTABLE_CAT, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PKTABLE_NAME, PKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_CAT, PKTABLE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_CAT, FKTABLE_CAT, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_SCHEM, PKTABLE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FKTABLE_NAME, FKTABLE_NAME, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", PKTABLE_NAME, PKTABLE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DEFERRABILITY, DEFERRABILITY, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", PKCOLUMN_NAME, PKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_CAT, FKTABLE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_SCHEM, FKTABLE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKTABLE_NAME, FKTABLE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FKCOLUMN_NAME, FKCOLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", KEY_SEQ, KEY_SEQ, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", UPDATE_RULE, UPDATE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DELETE_RULE, DELETE_RULE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", FK_NAME, FK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", PK_NAME, PK_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -600,142 +700,131 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.BINDATA_TYPE_NAME, //typeName
+                        BSON_BINDATA.getBsonName(), //typeName
                         Types.NULL, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.BINDATA_TYPE_NAME), //precision
+                        BSON_BINDATA.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.BINDATA_TYPE_NAME), //caseSensitive
+                        BSON_BINDATA.getCaseSensitivity(), //caseSensitive
                         typePredNone, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.BINDATA_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.BINDATA_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(
-                                BsonTypeInfo.BINDATA_TYPE_NAME))); //numPrecRadix
+                        BSON_BINDATA.getMinScale(), //minScale
+                        BSON_BINDATA.getMaxScale(), //maxScale
+                        BSON_BINDATA.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.BOOL_TYPE_NAME, //typeName
+                        BSON_BOOL.getBsonName(), //typeName
                         Types.BIT, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.BOOL_TYPE_NAME), //precision
+                        BSON_BOOL.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.BOOL_TYPE_NAME), //caseSensitive
+                        BSON_BOOL.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         true, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.BOOL_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.BOOL_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.BOOL_TYPE_NAME))); //numPrecRadix
+                        BSON_BOOL.getMinScale(), //minScale
+                        BSON_BOOL.getMaxScale(), //maxScale
+                        BSON_BOOL.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.DATE_TYPE_NAME, //typeName
+                        BSON_DATE.getBsonName(), //typeName
                         Types.TIMESTAMP, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.DATE_TYPE_NAME), //precision
+                        BSON_DATE.getPrecision(), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.DATE_TYPE_NAME), //caseSensitive
+                        BSON_DATE.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.DATE_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DATE_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.DATE_TYPE_NAME))); //numPrecRadix
+                        BSON_DATE.getMinScale(), //minScale
+                        BSON_DATE.getMaxScale(), //maxScale
+                        BSON_DATE.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.DECIMAL_TYPE_NAME, //typeName
+                        BSON_DECIMAL.getBsonName(), //typeName
                         Types.DECIMAL, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.DECIMAL_TYPE_NAME), //precision
+                        BSON_DECIMAL.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.DECIMAL_TYPE_NAME), //caseSensitive
+                        BSON_DECIMAL.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.DECIMAL_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DECIMAL_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(
-                                BsonTypeInfo.DECIMAL_TYPE_NAME))); //numPrecRadix
+                        BSON_DECIMAL.getMinScale(), //minScale
+                        BSON_DECIMAL.getMaxScale(), //maxScale
+                        BSON_DECIMAL.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.DOUBLE_TYPE_NAME, //typeName
+                        BSON_DOUBLE.getBsonName(), //typeName
                         Types.DOUBLE, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.DOUBLE_TYPE_NAME), //precision
+                        BSON_DOUBLE.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.DOUBLE_TYPE_NAME), //caseSensitive
+                        BSON_DOUBLE.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.DOUBLE_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.DOUBLE_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(
-                                BsonTypeInfo.DOUBLE_TYPE_NAME))); //numPrecRadix
+                        BSON_DOUBLE.getMinScale(), //minScale
+                        BSON_DOUBLE.getMaxScale(), //maxScale
+                        BSON_DOUBLE.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.INT_TYPE_NAME, //typeName
+                        BSON_INT.getBsonName(), //typeName
                         Types.INTEGER, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.INT_TYPE_NAME), //precision
+                        BSON_INT.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(BsonTypeInfo.INT_TYPE_NAME), //caseSensitive
+                        BSON_INT.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.INT_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.INT_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.INT_TYPE_NAME))); //numPrecRadix
+                        BSON_INT.getMinScale(), //minScale
+                        BSON_INT.getMaxScale(), //maxScale
+                        BSON_INT.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.LONG_TYPE_NAME, //typeName
+                        BSON_LONG.getBsonName(), //typeName
                         Types.INTEGER, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.LONG_TYPE_NAME), //precision
+                        BSON_LONG.getPrecision(), //precision
                         null, //literalPrefix
                         null, //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.LONG_TYPE_NAME), //caseSensitive
+                        BSON_LONG.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.LONG_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.LONG_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(BsonTypeInfo.LONG_TYPE_NAME))); //numPrecRadix
+                        BSON_LONG.getMinScale(), //minScale
+                        BSON_LONG.getMaxScale(), //maxScale
+                        BSON_LONG.getNumPrecRadix())); //numPrecRadix
 
         docs.add(
                 getTypeInfoValuesDoc(
-                        BsonTypeInfo.STRING_TYPE_NAME, //typeName
+                        BSON_STRING.getBsonName(), //typeName
                         Types.LONGVARCHAR, //dataType
-                        BsonTypeInfo.getPrecision(BsonTypeInfo.STRING_TYPE_NAME), //precision
+                        BSON_STRING.getPrecision(), //precision
                         "'", //literalPrefix
                         "'", //literalSuffix
                         ResultSetMetaData.columnNullable, //nullable
-                        BsonTypeInfo.getCaseSensitivity(
-                                BsonTypeInfo.STRING_TYPE_NAME), //caseSensitive
+                        BSON_STRING.getCaseSensitivity(), //caseSensitive
                         typeSearchable, //searchable
                         false, //unsigned
                         false, //fixedPrecScale
-                        BsonTypeInfo.getMinScale(BsonTypeInfo.STRING_TYPE_NAME), //minScale
-                        BsonTypeInfo.getMaxScale(BsonTypeInfo.STRING_TYPE_NAME), //maxScale
-                        BsonTypeInfo.getNumPrecRadix(
-                                BsonTypeInfo.STRING_TYPE_NAME))); //numPrecRadix
+                        BSON_STRING.getMinScale(), //minScale
+                        BSON_STRING.getMaxScale(), //maxScale
+                        BSON_STRING.getNumPrecRadix())); //numPrecRadix
 
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
     }
@@ -798,13 +887,20 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", CLASS_NAME, CLASS_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", BASE_TYPE, BASE_TYPE, "int"));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", CLASS_NAME, CLASS_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", REMARKS, REMARKS, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", BASE_TYPE, BASE_TYPE, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -818,15 +914,21 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SUPERTYPE_CAT, SUPERTYPE_CAT, "string"));
+                new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SUPERTYPE_SCHEM, SUPERTYPE_SCHEM, "string"));
+                new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SUPERTYPE_NAME, SUPERTYPE_NAME, "string"));
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SUPERTYPE_CAT, SUPERTYPE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SUPERTYPE_SCHEM, SUPERTYPE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SUPERTYPE_NAME, SUPERTYPE_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -840,11 +942,16 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_CAT, TABLE_CAT, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_SCHEM, TABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_NAME, TABLE_NAME, "string"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SUPERTABLE_NAME, SUPERTABLE_NAME, "string"));
+                new MySQLColumnInfo("", "", "", TABLE_CAT, TABLE_CAT, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", TABLE_SCHEM, TABLE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TABLE_NAME, TABLE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SUPERTABLE_NAME, SUPERTABLE_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -862,33 +969,60 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_NAME, ATTR_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", ATTR_TYPE_NAME, ATTR_TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_SIZE, ATTR_SIZE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", ATTR_DEF, ATTR_DEF, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
+                new MySQLColumnInfo("", "", "", TYPE_CAT, TYPE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
+                new MySQLColumnInfo("", "", "", TYPE_SCHEM, TYPE_SCHEM, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, "int"));
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", ORDINAL_POSITION, ORDINAL_POSITION, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", IS_NULLABLE, IS_NULLABLE, "string"));
+                new MySQLColumnInfo("", "", "", ATTR_NAME, ATTR_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SCOPE_CATALOG, SCOPE_CATALOG, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE_SCHEMA, SCOPE_SCHEMA, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SCOPE_TABLE, SCOPE_TABLE, "string"));
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SOURCE_DATA_TYPE, SOURCE_DATA_TYPE, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", ATTR_TYPE_NAME, ATTR_TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", ATTR_SIZE, ATTR_SIZE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", REMARKS, REMARKS, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", ATTR_DEF, ATTR_DEF, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", ORDINAL_POSITION, ORDINAL_POSITION, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", IS_NULLABLE, IS_NULLABLE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SCOPE_CATALOG, SCOPE_CATALOG, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SCOPE_SCHEMA, SCOPE_SCHEMA, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SCOPE_TABLE, SCOPE_TABLE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SOURCE_DATA_TYPE, SOURCE_DATA_TYPE, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
@@ -907,11 +1041,15 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NAME, NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAX_LEN, MAX_LEN, "int"));
+        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NAME, NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", DEFAULT_VALUE, DEFAULT_VALUE, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DESCRIPTION, DESCRIPTION, "string"));
+                new MySQLColumnInfo("", "", "", MAX_LEN, MAX_LEN, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DEFAULT_VALUE, DEFAULT_VALUE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DESCRIPTION, DESCRIPTION, BSON_STRING.getBsonName()));
         docs.add(metaDoc);
 
         MySQLResultDoc doc = new MySQLResultDoc();
@@ -957,16 +1095,22 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>(5);
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_CAT", "FUNCTION_CAT", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_NAME", "FUNCTION_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_NAME", "FUNCTION_NAME", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_TYPE", "FUNCTION_TYPE", "int"));
+                new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_TYPE", "FUNCTION_TYPE", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", BSON_STRING.getBsonName()));
         return metaDoc;
     }
 
@@ -987,30 +1131,59 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>(17);
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_CAT", "FUNCTION_CAT", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_CAT", "FUNCTION_CAT", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_SCHEM", "FUNCTION_SCHEM", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "FUNCTION_NAME", "FUNCTION_NAME", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "FUNCTION_NAME", "FUNCTION_NAME", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "COLUMN_NAME", "COLUMN_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "COLUMN_TYPE", "COLUMN_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "TYPE_NAME", "TYPE_NAME", "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "PRECISION", "PRECISION", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "LENGTH", "LENGTH", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "SCALE", "SCALE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "RADIX", "RADIX", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "COLUMN_NAME", "COLUMN_NAME", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "CHAR_OCTET_LENGTH", "CHAR_OCTET_LENGTH", "int"));
+                new MySQLColumnInfo(
+                        "", "", "", "COLUMN_TYPE", "COLUMN_TYPE", BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "ORDINAL_POSITION", "ORDINAL_POSITION", "int"));
+                new MySQLColumnInfo("", "", "", "DATA_TYPE", "DATA_TYPE", BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "IS_NULLABLE", "IS_NULLABLE", "string"));
+                new MySQLColumnInfo(
+                        "", "", "", "TYPE_NAME", "TYPE_NAME", BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", "string"));
+                new MySQLColumnInfo("", "", "", "PRECISION", "PRECISION", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", "LENGTH", "LENGTH", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", "SCALE", "SCALE", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", "RADIX", "RADIX", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", "NULLABLE", "NULLABLE", BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", "REMARKS", "REMARKS", BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "",
+                        "",
+                        "",
+                        "CHAR_OCTET_LENGTH",
+                        "CHAR_OCTET_LENGTH",
+                        BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "",
+                        "",
+                        "",
+                        "ORDINAL_POSITION",
+                        "ORDINAL_POSITION",
+                        BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", "IS_NULLABLE", "IS_NULLABLE", BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", "SPECIFIC_NAME", "SPECIFIC_NAME", BSON_STRING.getBsonName()));
         return metaDoc;
     }
 
@@ -1120,33 +1293,60 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", PRECISION, PRECISION, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", LITERAL_PREFIX, LITERAL_PREFIX, "string"));
+                new MySQLColumnInfo("", "", "", TYPE_NAME, TYPE_NAME, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", LITERAL_SUFFIX, LITERAL_SUFFIX, "string"));
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", CREATE_PARAMS, CREATE_PARAMS, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, "int"));
+                new MySQLColumnInfo("", "", "", PRECISION, PRECISION, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", CASE_SENSITIVE, CASE_SENSITIVE, "bool"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SEARCHABLE, SEARCHABLE, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", LITERAL_PREFIX, LITERAL_PREFIX, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", UNSIGNED_ATTRIBUTE, UNSIGNED_ATTRIBUTE, "bool"));
+                new MySQLColumnInfo(
+                        "", "", "", LITERAL_SUFFIX, LITERAL_SUFFIX, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", FIXED_PREC_SCALE, FIXED_PREC_SCALE, "bool"));
+                new MySQLColumnInfo(
+                        "", "", "", CREATE_PARAMS, CREATE_PARAMS, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", AUTO_INCREMENT, AUTO_INCREMENT, "bool"));
+                new MySQLColumnInfo("", "", "", NULLABLE, NULLABLE, BSON_INT.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", LOCAL_TYPE_NAME, LOCAL_TYPE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MINIMUM_SCALE, MINIMUM_SCALE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", MAXIMUM_SCALE, MAXIMUM_SCALE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, "int"));
+                new MySQLColumnInfo(
+                        "", "", "", CASE_SENSITIVE, CASE_SENSITIVE, BSON_BOOL.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "int"));
+                new MySQLColumnInfo("", "", "", SEARCHABLE, SEARCHABLE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "",
+                        "",
+                        "",
+                        UNSIGNED_ATTRIBUTE,
+                        UNSIGNED_ATTRIBUTE,
+                        BSON_BOOL.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", FIXED_PREC_SCALE, FIXED_PREC_SCALE, BSON_BOOL.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", AUTO_INCREMENT, AUTO_INCREMENT, BSON_BOOL.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", LOCAL_TYPE_NAME, LOCAL_TYPE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", MINIMUM_SCALE, MINIMUM_SCALE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", MAXIMUM_SCALE, MAXIMUM_SCALE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATA_TYPE, SQL_DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", SQL_DATETIME_SUB, SQL_DATETIME_SUB, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, BSON_INT.getBsonName()));
 
         return metaDoc;
     }
@@ -1201,20 +1401,37 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         MySQLResultDoc metaDoc = new MySQLResultDoc();
         metaDoc.columns = new ArrayList<>();
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_CAT, TABLE_CAT, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_SCHEM, TABLE_SCHEM, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", TABLE_NAME, TABLE_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_NAME, COLUMN_NAME, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_SIZE, COLUMN_SIZE, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, "int"));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", COLUMN_USAGE, COLUMN_USAGE, "string"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", REMARKS, REMARKS, "string"));
+                new MySQLColumnInfo("", "", "", TABLE_CAT, TABLE_CAT, BSON_STRING.getBsonName()));
         metaDoc.columns.add(
-                new MySQLColumnInfo("", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, "int"));
-        metaDoc.columns.add(new MySQLColumnInfo("", "", "", IS_NULLABLE, IS_NULLABLE, "string"));
+                new MySQLColumnInfo(
+                        "", "", "", TABLE_SCHEM, TABLE_SCHEM, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", TABLE_NAME, TABLE_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", COLUMN_NAME, COLUMN_NAME, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", DATA_TYPE, DATA_TYPE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", COLUMN_SIZE, COLUMN_SIZE, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", DECIMAL_DIGITS, DECIMAL_DIGITS, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", NUM_PREC_RADIX, NUM_PREC_RADIX, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", COLUMN_USAGE, COLUMN_USAGE, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo("", "", "", REMARKS, REMARKS, BSON_STRING.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", CHAR_OCTET_LENGTH, CHAR_OCTET_LENGTH, BSON_INT.getBsonName()));
+        metaDoc.columns.add(
+                new MySQLColumnInfo(
+                        "", "", "", IS_NULLABLE, IS_NULLABLE, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
