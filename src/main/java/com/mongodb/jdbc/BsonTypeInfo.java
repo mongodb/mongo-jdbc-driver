@@ -15,7 +15,7 @@ public enum BsonTypeInfo {
     BSON_BINDATA("binData", BsonType.BINARY, Types.BINARY, false, 0, 0, 0, null, null, null),
     BSON_UNDEFINED("undefined", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_OBJECTID("objectId", BsonType.OBJECT_ID, Types.OTHER, false, 0, 0, 0, 24, null, null),
-    BSON_BOOL("boolean", BsonType.BOOLEAN, Types.BIT, false, 0, 0, 0, 1, null, 1),
+    BSON_BOOL("bool", BsonType.BOOLEAN, Types.BIT, false, 0, 0, 0, 1, null, 1),
     BSON_DATE("date", BsonType.DATE_TIME, Types.TIMESTAMP, false, 0, 3, 0, 24, 3, 8),
     BSON_NULL("null", BsonType.NULL, Types.NULL, false, 0, 0, 0, null, null, null),
     BSON_REGEX("regex", BsonType.REGULAR_EXPRESSION, Types.OTHER, true, 0, 0, 0, null, null, null),
