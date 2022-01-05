@@ -207,7 +207,7 @@ public enum BsonTypeInfo {
                 return BSON_NULL;
             case 'o':
                 switch (typeName.length()) {
-                    case 6: // "object"
+                    case 6:
                         return BSON_OBJECT;
                     case 8:
                         return BSON_OBJECTID;
