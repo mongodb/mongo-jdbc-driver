@@ -42,6 +42,11 @@ public enum BsonTypeInfo {
     BSON_MAXKEY("maxKey", BsonType.MAX_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_BSON("bson", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null);
 
+    // BSON_TYPE_NAMES is the set of all valid BSON type names as listed
+    // here: https://docs.mongodb.com/manual/reference/bson-types/#bson-types
+    // Note that BsonTypeInfo contains a BSON_BSON variant which is intentionally
+    // omitted from this set. That is because "bson" is our catch-all for a
+    // value that has "any" type, but is not an actual specific BSON type.
     private static final Set<String> BSON_TYPE_NAMES =
             new HashSet<>(
                     Arrays.asList(
