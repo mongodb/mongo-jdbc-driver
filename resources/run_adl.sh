@@ -176,17 +176,17 @@ if [[ $? -ne 0 ]]; then
     cd $MONGOHOUSE_DIR
     git pull $MONGOHOUSE_URI
 
-    go mod download
-
-    # Download external dependencies
-    go run cmd/buildscript/build.go tools:download:mqlrun
-    go run cmd/buildscript/build.go tools:download:mongosql
-
     # Set relevant environment variables
     export GOPRIVATE=github.com/10gen
     export MONGOHOUSE_ENVIRONMENT="local"
     export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
     export LIBRARY_PATH="$(pwd)/artifacts"
+
+    go mod download
+
+    # Download external dependencies
+    go run cmd/buildscript/build.go tools:download:mqlrun
+    go run cmd/buildscript/build.go tools:download:mongosql
 
     get_jq
     # Load tenant config into mongodb
