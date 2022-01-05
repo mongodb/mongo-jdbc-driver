@@ -90,7 +90,10 @@ functions:
       working_dir: adl-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          ./resources/run_adl.sh start
+          ./gradlew runDataLoader
           ./gradlew clean integrationTest -x test
+          ./resources/run_adl.sh stop
 
   "run tdvt":
     command: shell.exec
@@ -144,6 +147,11 @@ functions:
           MDBJDBC_VER: "$MDBJDBC_VER"
           JAVA_HOME: "$JAVA_HOME"
           PREPARE_SHELL: |
+            export ADL_TEST_LOCAL_USER=${adl_test_local_user}
+            export ADL_TEST_LOCAL_PWD=${adl_test_local_pwd}
+            export ADL_TEST_LOCAL_HOST=${adl_test_local_host}
+            export ADL_TEST_LOCAL_AUTH_DB=${adl_test_local_auth_db}
+            export MDB_TEST_LOCAL_PORT=${mdb_test_local_port}
             export ADL_TEST_USER=${adl_test_user}
             export ADL_TEST_PWD=${adl_test_pwd}
             export ADL_TEST_HOST=${adl_test_host}

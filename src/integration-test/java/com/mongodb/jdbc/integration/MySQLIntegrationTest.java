@@ -1,51 +1,52 @@
 package com.mongodb.jdbc.integration;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import java.sql.*;
 import java.util.HashSet;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@Category(IntegrationTest.class)
-public class IntegrationTest {
+public class MySQLIntegrationTest {
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
-    static final String URL_WITH_USER_AND_PW =
-            "jdbc:mongodb://"
-                    + System.getenv("ADL_TEST_USER")
-                    + ":"
-                    + System.getenv("ADL_TEST_PWD")
-                    + "@"
-                    + System.getenv("ADL_TEST_HOST")
-                    + "/test";
+    public static final String MYSQL = "mysql";
 
-    private int countRows(ResultSet rs) throws SQLException {
-        for (int i = 0; ; ++i) {
-            if (!rs.next()) {
-                return i;
-            }
-        }
-    }
+    private Connection conn;
 
-    static Connection getBasicConnection() throws SQLException {
+    public Connection getBasicConnection() throws SQLException {
         java.util.Properties p = new java.util.Properties();
+        p.setProperty("dialect", MYSQL);
         p.setProperty("user", System.getenv("ADL_TEST_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_PWD"));
-        p.setProperty("database", "looker");
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
+        p.setProperty("database", "looker");
         p.setProperty("ssl", "true");
         return DriverManager.getConnection(URL, p);
     }
 
+    @BeforeEach
+    public void setupConnection() throws SQLException {
+        conn = getBasicConnection();
+    }
+
+    @AfterEach
+    protected void cleanupTest() throws SQLException {
+        conn.close();
+    }
+
     @Test
     public void basicDatabaseMetaDataTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         assertEquals(System.getenv("ADL_TEST_USER"), dbmd.getUserName());
         // It appears that the url arguments are, in some cases, put in
         // different order, so we check them for set equality instead
         // of linear equality.
         HashSet<String> args = new HashSet<>();
+        args.add("dialect=mysql");
         args.add("authsource=admin");
         args.add("ssl=true");
         String[] urlSp = dbmd.getURL().split("[?]");
@@ -74,7 +75,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseASSERTIONS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.ASSERTIONS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -89,12 +89,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseCHARACTER_SETS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHARACTER_SETS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -112,12 +111,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 31);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 31);
     }
 
     @Test
     public void databaseCHECK_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CHECK_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -128,12 +126,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseCOLUMNS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMNS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -172,7 +169,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseCOLUMN_DOMAIN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_DOMAIN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -189,12 +185,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseCOLUMN_PRVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.COLUMN_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -212,12 +207,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseCONSTRAINT_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery("select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE");
@@ -235,12 +229,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseCONSTRAINT_TABLE_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -256,12 +249,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseDOMAINS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAINS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -288,12 +280,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseDOMAIN_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.DOMAIN_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -311,12 +302,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseKEY_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -340,7 +330,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseREFERENTIAL_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs =
                 stmt.executeQuery("select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS");
@@ -366,7 +355,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseSCHEMATA_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SCHEMATA");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -382,12 +370,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 3);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 3);
     }
 
     @Test
     public void databaseSQL_LANGUAGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.SQL_LANGUAGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -404,12 +391,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseTABLES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -426,7 +412,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseTABLE_CONSTRAINTS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -445,12 +430,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertTrue(countRows(rs) >= 6);
+        assertTrue(IntegrationTestUtils.countRows(rs) >= 6);
     }
 
     @Test
     public void databaseTABLE_PRIVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TABLE_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -467,12 +451,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseTRANSLATIONS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.TRANSLATIONS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -491,12 +474,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseUSAGE_PRIVILEGES_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.USAGE_PRIVILEGES");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -514,12 +496,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseVIEWS_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEWS");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -535,12 +516,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseVIEW_COLUMN_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_COLUMN_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -557,12 +537,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseVIEW_TABLE_USAGE_TABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from INFORMATION_SCHEMA.VIEW_TABLE_USAGE");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -578,12 +557,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseHeterogeneousDataTABLETest() throws SQLException {
-        Connection conn = getBasicConnection();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select num4 from tdvt.Calcs");
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -611,7 +589,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetTablesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTables(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -639,7 +616,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetCatalogsTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getCatalogs();
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -651,12 +627,11 @@ public class IntegrationTest {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
         // We should have at least INFORMATION_SCHEMA.
-        assertTrue(countRows(rs) > 1);
+        assertTrue(IntegrationTestUtils.countRows(rs) > 1);
     }
 
     @Test
     public void databaseMetaDataGetColumnsTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumns(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -697,12 +672,11 @@ public class IntegrationTest {
         // rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern);
         // assertEquals(1, countRows(rs));
         rs = dbmd.getColumns(catalogPattern, null, tableNamePattern, columnNamePattern2);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseMetaDataGetColumnsPrivilegesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getColumnPrivileges(catalogPattern, null, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -720,18 +694,17 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, null);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getColumnPrivileges(catalogPattern, null, tableNamePattern, columnNamePattern2);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseMetaDataGetTablePrivilegesTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getTablePrivileges(catalogPattern, null, null);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -748,9 +721,9 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
         rs = dbmd.getTablePrivileges(catalogPattern, null, tableNamePattern);
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     String schema = "INFORMATION_SCHEMA";
@@ -758,7 +731,6 @@ public class IntegrationTest {
 
     @Test
     public void databaseMetaDataGetBestRowIdentifierTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getBestRowIdentifier(null, schema, table, 0, true);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -776,12 +748,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseMetaDataGetPrimaryKeysTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getPrimaryKeys(null, schema, table);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -792,12 +763,11 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
     public void databaseMetaDataGetIndexInfoTest() throws SQLException {
-        Connection conn = getBasicConnection();
         DatabaseMetaData dbmd = conn.getMetaData();
         ResultSet rs = dbmd.getIndexInfo(null, schema, table, false, false);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -820,7 +790,7 @@ public class IntegrationTest {
         for (int i = 0; i < columns.length; ++i) {
             assertEquals(rsmd.getColumnLabel(i + 1), columns[i]);
         }
-        assertEquals(0, countRows(rs));
+        assertEquals(0, IntegrationTestUtils.countRows(rs));
     }
 
     @Test
