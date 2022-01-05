@@ -67,3 +67,18 @@ Integration testing for mongosql requires a local MongoDB and Atlas Data Lake in
 ./gradlew runTestGenerator  
 ```
 
+### Running Local mongod and Atlas Data Lake
+`run_adl.sh` is a helper script that will start a local mongod and Atlas Data Lake instance, used for integration testing.
+#### Start 
+```
+./resources/run_adl.sh start
+```
+#### Stop
+```
+./resources/run_adl.sh stop
+```
+#### Skip
+Use the `SKIP_RUN_ADL` option to skip the start and stop operations for those managing their own local instances.
+```
+export SKIP_RUN_ADL=1
+```
