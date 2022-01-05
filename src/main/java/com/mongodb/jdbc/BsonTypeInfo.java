@@ -9,7 +9,7 @@ import org.bson.BsonType;
 
 public enum BsonTypeInfo {
     BSON_DOUBLE("double", BsonType.DOUBLE, Types.DOUBLE, false, 15, 15, 2, 15, 15, 8),
-    BSON_STRING("string", BsonType.STRING, Types.LONGNVARCHAR, true, 0, 0, 0, null, null, null),
+    BSON_STRING("string", BsonType.STRING, Types.LONGVARCHAR, true, 0, 0, 0, null, null, null),
     BSON_OBJECT("object", BsonType.DOCUMENT, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_ARRAY("array", BsonType.ARRAY, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_BINDATA("binData", BsonType.BINARY, Types.BINARY, false, 0, 0, 0, null, null, null),
