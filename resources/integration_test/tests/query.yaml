@@ -1,0 +1,255 @@
+tests:
+  - description: select_star_from_grades_ordered
+    sql: SELECT * FROM grades ORDER BY _id
+    skip_reason: SQL-659
+
+  - description: select_star_from_grades_unordered
+    sql: SELECT * FROM grades
+    expected_result:
+      - [0, 84.5, 303, 3]
+      - [1, 97.4, 10329, 3]
+      - [2, 89.3, 342, 3]
+      - [3, 91.9, 204323, 3]
+      - [4, 87.5, 303, 5]
+      - [5, 74.4, 10329, 5]
+      - [6, 80.1, 342, 5]
+      - [7, 83.3, 204323, 5]
+      - [8, 78.5, 200, 5]
+    row_count: 9
+    ordered: false
+    expected_sql_type: [INTEGER, DOUBLE, INTEGER, INTEGER]
+    expected_catalog_name: ['', '', '', '']
+    expected_column_class_name: [int, double, int, int]
+    expected_column_label: [_id, score, studentid, testid]
+    expected_column_display_size: [10, 15, 10, 10]
+    expected_precision: [10, 15, 10, 10]
+    expected_scale: [0, 15, 0, 0]
+    expected_schema_name: ['', '', '', '']
+    expected_is_auto_increment: [false, false, false, false]
+    expected_is_case_sensitive: [false, false, false, false]
+    expected_is_currency: [false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true, true]
+    expected_is_searchable: [true, true, true, true]
+    expected_is_signed: [true, true, true, true]
+    expected_is_writable: [false, false, false, false]
+
+  - description: select_star_from_class_ordered
+    sql: SELECT * FROM class ORDER BY _id;
+    skip_reason: SQL-659
+
+  - description: select_star_from_class_unordered
+    sql: SELECT * FROM class
+    expected_result:
+      - [0, true, John, 10329]
+      - [1, false, Jane, 342]
+      - [2, true, Mike, 303]
+      - [3, false, Mary, 204323]
+      - [4, false, Pete, 10]
+    row_count: 5
+    ordered: false
+    expected_sql_type: [INTEGER, BIT, LONGVARCHAR, INTEGER]
+    expected_catalog_name: ['', '', '', '']
+    expected_column_class_name: [int, boolean, java.lang.String, int]
+    expected_column_label: [_id, enrolled, name, studentid]
+    expected_column_display_size: [10, 1, 0, 10]
+    expected_precision: [10, 1, 0, 10]
+    expected_scale: [0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '']
+    expected_is_auto_increment: [false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, false]
+    expected_is_currency: [false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true, true]
+    expected_is_searchable: [true, true, true, true]
+    expected_is_signed: [true, false, false, true]
+    expected_is_writable: [false, false, false, false]
+
+  - description: select_as_from_grades
+    sql: SELECT score AS s, testid AS t FROM grades
+    expected_result:
+      - [ 84.5, 3 ]
+      - [ 97.4, 3 ]
+      - [ 89.3, 3 ]
+      - [ 91.9, 3 ]
+      - [ 87.5, 5 ]
+      - [ 74.4, 5 ]
+      - [ 80.1, 5 ]
+      - [ 83.3, 5 ]
+      - [ 78.5, 5 ]
+    row_count: 9
+    ordered: false
+    expected_sql_type: [ DOUBLE, INTEGER ]
+    expected_catalog_name: [ '', '' ]
+    expected_column_class_name: [ double, int ]
+    expected_column_label: [ s, t ]
+    expected_column_display_size: [ 15, 10 ]
+    expected_precision: [ 15, 10 ]
+    expected_scale: [ 15, 0 ]
+    expected_schema_name: [ '', '' ]
+    expected_is_auto_increment: [ false, false ]
+    expected_is_case_sensitive: [ false, false ]
+    expected_is_currency: [ false, false ]
+    expected_is_definitely_writable: [ false, false ]
+    expected_is_nullable: [ columnNullable, columnNullable ]
+    expected_is_read_only: [ true, true ]
+    expected_is_searchable: [ true, true ]
+    expected_is_signed: [ true, true ]
+    expected_is_writable: [ false, false ]
+
+  - description: select_as_from_class
+    sql: SELECT enrolled AS e, studentid AS s, name AS n from class
+    expected_result:
+      - [ true, John, 10329 ]
+      - [ false, Jane, 342 ]
+      - [ true, Mike, 303 ]
+      - [ false, Mary, 204323 ]
+      - [ false, Pete, 10 ]
+    row_count: 5
+    ordered: false
+    expected_sql_type: [ BIT, LONGVARCHAR, INTEGER ]
+    expected_catalog_name: [ '', '', '' ]
+    expected_column_class_name: [ boolean, java.lang.String, int ]
+    expected_column_label: [ e, n, s ]
+    expected_column_display_size: [ 1, 0, 10 ]
+    expected_precision: [ 1, 0, 10 ]
+    expected_scale: [ 0, 0, 0 ]
+    expected_schema_name: [ '', '', '' ]
+    expected_is_auto_increment: [ false, false, false ]
+    expected_is_case_sensitive: [ false, true, false ]
+    expected_is_currency: [ false, false, false ]
+    expected_is_definitely_writable: [ false, false, false ]
+    expected_is_nullable: [ columnNullable, columnNullable, columnNullable ]
+    expected_is_read_only: [ true, true, true ]
+    expected_is_searchable: [ true, true, true ]
+    expected_is_signed: [ false, false, true ]
+    expected_is_writable: [ false, false, false ]
+
+  - description: limit_from_grades
+    sql: SELECT studentid, score, testid FROM grades ORDER BY 1, 2, 3 DESC LIMIT 5
+    skip_reason: SQL-659
+
+  - description: limit_from_class
+    sql: SELECT studentid, name FROM class ORDER BY 1, 2 ASC LIMIT 2
+    skip_reason: SQL-659
+
+  - description: inner_join
+    sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
+      = class.studentid"
+    skip_reason: SQL-659
+
+  - description: right_join
+    sql: "SELECT class.name, grades.testid, grades.score FROM grades RIGHT JOIN class ON grades.studentid\
+      = class.studentid"
+    skip_reason: SQL-659
+
+  - description: left_join
+    sql: "SELECT class.name, grades.testid, grades.score FROM grades LEFT JOIN class ON grades.studentid\
+      = class.studentid"
+    skip_reason: SQL-659
+
+  - description: cross_join
+    sql: "SELECT class.name, grades.testid, grades.score FROM grades CROSS JOIN class"
+    expected_result:
+    - [ John, 84.5, 3 ]
+    - [ Jane, 84.5, 3 ]
+    - [ Mike, 84.5, 3 ]
+    - [ Mary, 84.5, 3 ]
+    - [ Pete, 84.5, 3 ]
+    - [ John, 97.4, 3 ]
+    - [ Jane, 97.4, 3 ]
+    - [ Mike, 97.4, 3 ]
+    - [ Mary, 97.4, 3 ]
+    - [ Pete, 97.4, 3 ]
+    - [ John, 89.3, 3 ]
+    - [ Jane, 89.3, 3 ]
+    - [ Mike, 89.3, 3 ]
+    - [ Mary, 89.3, 3 ]
+    - [ Pete, 89.3, 3 ]
+    - [ John, 91.9, 3 ]
+    - [ Jane, 91.9, 3 ]
+    - [ Mike, 91.9, 3 ]
+    - [ Mary, 91.9, 3 ]
+    - [ Pete, 91.9, 3 ]
+    - [ John, 87.5, 5 ]
+    - [ Jane, 87.5, 5 ]
+    - [ Mike, 87.5, 5 ]
+    - [ Mary, 87.5, 5 ]
+    - [ Pete, 87.5, 5 ]
+    - [ John, 74.4, 5 ]
+    - [ Jane, 74.4, 5 ]
+    - [ Mike, 74.4, 5 ]
+    - [ Mary, 74.4, 5 ]
+    - [ Pete, 74.4, 5 ]
+    - [ John, 80.1, 5 ]
+    - [ Jane, 80.1, 5 ]
+    - [ Mike, 80.1, 5 ]
+    - [ Mary, 80.1, 5 ]
+    - [ Pete, 80.1, 5 ]
+    - [ John, 83.3, 5 ]
+    - [ Jane, 83.3, 5 ]
+    - [ Mike, 83.3, 5 ]
+    - [ Mary, 83.3, 5 ]
+    - [ Pete, 83.3, 5 ]
+    - [ John, 78.5, 5 ]
+    - [ Jane, 78.5, 5 ]
+    - [ Mike, 78.5, 5 ]
+    - [ Mary, 78.5, 5 ]
+    - [ Pete, 78.5, 5 ]
+    row_count: 45
+    ordered: false
+    expected_sql_type: [ LONGVARCHAR, DOUBLE, INTEGER ]
+    expected_catalog_name: [ '', '', '' ]
+    expected_column_class_name: [ java.lang.String, double, int ]
+    expected_column_label: [ name, score, testid ]
+    expected_column_display_size: [ 0, 15, 10 ]
+    expected_precision: [ 0, 15, 10 ]
+    expected_scale: [ 0, 15, 0 ]
+    expected_schema_name: [ '', '', '' ]
+    expected_is_auto_increment: [ false, false, false ]
+    expected_is_case_sensitive: [ true, false, false ]
+    expected_is_currency: [ false, false, false ]
+    expected_is_definitely_writable: [ false, false, false ]
+    expected_is_nullable: [ columnNullable, columnNullable, columnNullable ]
+    expected_is_read_only: [ true, true, true ]
+    expected_is_searchable: [ true, true, true ]
+    expected_is_signed: [ false, true, true ]
+    expected_is_writable: [ false, false, false ]
+
+  - description: subquery
+    sql: SELECT studentid FROM (SELECT * FROM class WHERE enrolled = TRUE) AS foo
+    skip_reason: SQL-659
+
+  - description: count_from_grades
+    sql: SELECT COUNT(studentid) FROM grades
+    skip_reason: SQL-658
+
+  - description: count_star_from_grades
+    sql: SELECT COUNT(*) As C FROM grades
+    skip_reason: SQL-658
+
+  - description: count_from_class
+    sql: SELECT COUNT(studentid) FROM class
+    skip_reason: SQL-658
+
+  - description: average
+    sql: SELECT avg(score) FROM grades where testid=5
+    skip_reason: SQL-659
+
+  - description: max
+    sql: SELECT max(score) FROM grades
+    skip_reason: SQL-659
+
+  - description: group_by
+    sql: SELECT COUNT(score), testid FROM grades WHERE score > 85 GROUP BY testid
+    skip_reason: SQL-658
+
+  - description: ascending
+    sql: SELECT grades.score AS score FROM grades ORDER BY score ASC
+    skip_reason: SQL-659
+
+  - description: descending
+    sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
+    skip_reason: SQL-659

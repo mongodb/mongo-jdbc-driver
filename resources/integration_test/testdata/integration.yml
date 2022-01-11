@@ -6,6 +6,7 @@ dataset:
       - {_id: 1, studentid: 342,  name: "Jane", enrolled: false}
       - {_id: 2, studentid: 303,  name: "Mike", enrolled: true}
       - {_id: 3, studentid: 204323,  name: "Mary", enrolled: false}
+      - {_id: 4, studentid: 10,  name: "Pete", enrolled: false}
 
   - db: integration_test
     collection: grades
@@ -18,3 +19,4 @@ dataset:
       - {_id: 5, studentid: 10329, testid: 5,  score: 74.4}
       - {_id: 6, studentid: 342, testid: 5,  score: 80.1}
       - {_id: 7, studentid: 204323, testid: 5, score: 83.3}
+      - {_id: 8, studentid: 200, testid: 5, score: 78.5}
