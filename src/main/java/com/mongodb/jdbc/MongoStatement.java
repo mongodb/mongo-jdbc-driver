@@ -33,7 +33,8 @@ public abstract class MongoStatement<T> implements Statement {
         }
     }
 
-    protected BsonDocument constructQueryDocument(String sql, String dialect, BsonInt32 formatVersion) {
+    protected BsonDocument constructQueryDocument(
+            String sql, String dialect, BsonInt32 formatVersion) {
         BsonDocument stage = new BsonDocument();
         BsonDocument sqlDoc = new BsonDocument();
         sqlDoc.put("statement", new BsonString(sql));
