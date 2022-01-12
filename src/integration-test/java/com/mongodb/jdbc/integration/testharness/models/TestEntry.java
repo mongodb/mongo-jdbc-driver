@@ -4,6 +4,7 @@ import java.util.List;
 
 public class TestEntry {
     public String description;
+    public String db;
     public String sql;
     public List<Object> meta_function;
     public String skip_reason;
