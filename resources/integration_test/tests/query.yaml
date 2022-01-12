@@ -269,4 +269,4 @@ tests:
     sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
     ordered: true
     skip_reason: SQL-659
-    
+
