@@ -1,10 +1,12 @@
 tests:
   - description: select_star_from_grades_ordered
+    db: integration_test
     sql: SELECT * FROM grades ORDER BY _id
     ordered: true
     skip_reason: SQL-659
 
   - description: select_star_from_grades_unordered
+    db: integration_test
     sql: SELECT * FROM grades
     expected_result:
       - [0, 84.5, 303, 3]
@@ -37,11 +39,13 @@ tests:
     expected_is_writable: [false, false, false, false]
 
   - description: select_star_from_class_ordered
+    db: integration_test
     sql: SELECT * FROM class ORDER BY _id;
     ordered: true
     skip_reason: SQL-659
 
   - description: select_star_from_class_unordered
+    db: integration_test
     sql: SELECT * FROM class
     expected_result:
       - [0, true, John, 10329]
@@ -70,6 +74,7 @@ tests:
     expected_is_writable: [false, false, false, false]
 
   - description: select_as_from_grades
+    db: integration_test
     sql: SELECT score AS s, testid AS t FROM grades
     expected_result:
       - [ 84.5, 3 ]
@@ -102,6 +107,7 @@ tests:
     expected_is_writable: [ false, false ]
 
   - description: select_as_from_class
+    db: integration_test
     sql: SELECT enrolled AS e, studentid AS s, name AS n from class
     expected_result:
       - [ true, John, 10329 ]
@@ -130,34 +136,40 @@ tests:
     expected_is_writable: [ false, false, false ]
 
   - description: limit_from_grades
+    db: integration_test
     sql: SELECT studentid, score, testid FROM grades ORDER BY 1, 2, 3 DESC LIMIT 5
     ordered: true
     skip_reason: SQL-659
 
   - description: limit_from_class
+    db: integration_test
     sql: SELECT studentid, name FROM class ORDER BY 1, 2 ASC LIMIT 2
     ordered: true
     skip_reason: SQL-659
 
   - description: inner_join
+    db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
       = class.studentid"
     ordered: false
     skip_reason: SQL-659
 
   - description: right_join
+    db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades RIGHT JOIN class ON grades.studentid\
       = class.studentid"
     ordered: false
     skip_reason: SQL-659
 
   - description: left_join
+    db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades LEFT JOIN class ON grades.studentid\
       = class.studentid"
     ordered: false
     skip_reason: SQL-659
 
   - description: cross_join
+    db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades CROSS JOIN class"
     expected_result:
     - [ John, 84.5, 3 ]
@@ -226,46 +238,55 @@ tests:
     expected_is_writable: [ false, false, false ]
 
   - description: subquery
+    db: integration_test
     sql: SELECT studentid FROM (SELECT * FROM class WHERE enrolled = TRUE) AS foo
     ordered: false
     skip_reason: SQL-659
 
   - description: count_from_grades
+    db: integration_test
     sql: SELECT COUNT(studentid) FROM grades
     ordered: false
     skip_reason: SQL-658
 
   - description: count_star_from_grades
+    db: integration_test
     sql: SELECT COUNT(*) As C FROM grades
     ordered: false
     skip_reason: SQL-658
 
   - description: count_from_class
+    db: integration_test
     sql: SELECT COUNT(studentid) FROM class
     ordered: false
     skip_reason: SQL-658
 
   - description: average
+    db: integration_test
     sql: SELECT avg(score) FROM grades where testid=5
     ordered: false
     skip_reason: SQL-659
 
   - description: max
+    db: integration_test
     sql: SELECT max(score) FROM grades
     ordered: false
     skip_reason: SQL-659
 
   - description: group_by
+    db: integration_test
     sql: SELECT COUNT(score), testid FROM grades WHERE score > 85 GROUP BY testid
     ordered: false
     skip_reason: SQL-658
 
   - description: ascending
+    db: integration_test
     sql: SELECT grades.score AS score FROM grades ORDER BY score ASC
     ordered: true
     skip_reason: SQL-659
 
   - description: descending
+    db: integration_test
     sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
     ordered: true
     skip_reason: SQL-659
