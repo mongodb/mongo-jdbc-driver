@@ -4,10 +4,10 @@ tests:
     db: integration_test
     meta_function: ["getProcedures", "integration_test", null, "%"]
 
-  # getProceduresColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
-  - description: getProceduresColumns returns empty result set
+  # getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
+  - description: getProcedureColumns returns empty result set
     db: integration_test
-    meta_function: ["getProceduresColumns", "integration_test", null, "%", "%"]
+    meta_function: ["getProcedureColumns", "integration_test", null, "%", "%"]
 
   # getSchemas()
   - description: getSchemas returns empty result set
