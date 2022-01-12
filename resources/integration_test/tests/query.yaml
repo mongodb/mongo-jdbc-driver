@@ -1,6 +1,7 @@
 tests:
   - description: select_star_from_grades_ordered
     sql: SELECT * FROM grades ORDER BY _id
+    ordered: true
     skip_reason: SQL-659
 
   - description: select_star_from_grades_unordered
@@ -37,6 +38,7 @@ tests:
 
   - description: select_star_from_class_ordered
     sql: SELECT * FROM class ORDER BY _id;
+    ordered: true
     skip_reason: SQL-659
 
   - description: select_star_from_class_unordered
@@ -129,25 +131,30 @@ tests:
 
   - description: limit_from_grades
     sql: SELECT studentid, score, testid FROM grades ORDER BY 1, 2, 3 DESC LIMIT 5
+    ordered: true
     skip_reason: SQL-659
 
   - description: limit_from_class
     sql: SELECT studentid, name FROM class ORDER BY 1, 2 ASC LIMIT 2
+    ordered: true
     skip_reason: SQL-659
 
   - description: inner_join
     sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
       = class.studentid"
+    ordered: false
     skip_reason: SQL-659
 
   - description: right_join
     sql: "SELECT class.name, grades.testid, grades.score FROM grades RIGHT JOIN class ON grades.studentid\
       = class.studentid"
+    ordered: false
     skip_reason: SQL-659
 
   - description: left_join
     sql: "SELECT class.name, grades.testid, grades.score FROM grades LEFT JOIN class ON grades.studentid\
       = class.studentid"
+    ordered: false
     skip_reason: SQL-659
 
   - description: cross_join
@@ -220,36 +227,45 @@ tests:
 
   - description: subquery
     sql: SELECT studentid FROM (SELECT * FROM class WHERE enrolled = TRUE) AS foo
+    ordered: false
     skip_reason: SQL-659
 
   - description: count_from_grades
     sql: SELECT COUNT(studentid) FROM grades
+    ordered: false
     skip_reason: SQL-658
 
   - description: count_star_from_grades
     sql: SELECT COUNT(*) As C FROM grades
+    ordered: false
     skip_reason: SQL-658
 
   - description: count_from_class
     sql: SELECT COUNT(studentid) FROM class
+    ordered: false
     skip_reason: SQL-658
 
   - description: average
     sql: SELECT avg(score) FROM grades where testid=5
+    ordered: false
     skip_reason: SQL-659
 
   - description: max
     sql: SELECT max(score) FROM grades
+    ordered: false
     skip_reason: SQL-659
 
   - description: group_by
     sql: SELECT COUNT(score), testid FROM grades WHERE score > 85 GROUP BY testid
+    ordered: false
     skip_reason: SQL-658
 
   - description: ascending
     sql: SELECT grades.score AS score FROM grades ORDER BY score ASC
+    ordered: true
     skip_reason: SQL-659
 
   - description: descending
     sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
+    ordered: true
     skip_reason: SQL-659
