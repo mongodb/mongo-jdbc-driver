@@ -15,7 +15,7 @@ tests:
   - description: test_case_description
     db: database_to_use
     # meta_function takes an array.  Function name followed by arguments.
-    meta_function: [meta_function, arg1, arg2, ..., argn]
+    meta_function: [Function name, arg1, arg2, ..., argn]
 ```
 #### Running  
 ```
