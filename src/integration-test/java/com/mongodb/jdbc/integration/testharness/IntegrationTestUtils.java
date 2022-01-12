@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.yaml.snakeyaml.Yaml;
@@ -137,6 +138,7 @@ public class IntegrationTestUtils {
         String functionName = (String) metadataFunction.get(0);
         Method[] m = DatabaseMetaData.class.getMethods();
 
+        RuntimeException possibleException = null;
         for (Method method : m) {
             if (method.getName().equalsIgnoreCase(functionName)) {
                 Class<?>[] types = method.getParameterTypes();
@@ -148,11 +150,15 @@ public class IntegrationTestUtils {
                                     + method.getReturnType());
                 }
                 if (method.getParameterCount() != metadataFunction.size() - 1) {
-                    throw new IllegalArgumentException(
+                    // Some methods may be overloaded. For such methods, we do not
+                    // want to throw immediately when we encounter an incorrect
+                    // argument count; instead we store the error and throw at the end
+                    possibleException = new IllegalArgumentException(
                             "expected parameter count: "
                                     + method.getParameterCount()
                                     + " found: "
                                     + (metadataFunction.size() - 1));
+                    continue;
                 }
                 if (method.getParameterCount() == 0) {
                     return (ResultSet) method.invoke(databaseMetaData);
@@ -191,6 +197,11 @@ public class IntegrationTestUtils {
                 return (ResultSet) method.invoke(databaseMetaData, parameters);
             }
         }
+
+        if (possibleException != null) {
+            throw possibleException;
+        }
+
         throw new IllegalArgumentException("function '" + functionName + "' not found");
     }
 
