@@ -1,29 +1,4 @@
 tests:
-  # getSQLKeywords()
-  - description: getSQLKeywords returns constant result set
-    db: integration_test
-    meta_function: ["getSQLKeywords"]
-
-  # getNumericFunctions()
-  - description: getNumericFunctions returns constant result set
-    db: integration_test
-    meta_function: ["getNumericFunctions"]
-
-  # getStringFunctions()
-  - description: getStringFunctions returns constant result set
-    db: integration_test
-    meta_function: ["getStringFunctions"]
-
-  # getSystemFunctions()
-  - description: getSystemFunctions returns constant result set
-    db: integration_test
-    meta_function: ["getSystemFunctions"]
-
-  # getTimeDateFunctions()
-  - description: getTimeDateFunctions returns constant result set
-    db: integration_test
-    meta_function: ["getTimeDateFunctions"]
-
   # getTableTypes()
   - description: getTableTypes returns constant result set
     db: integration_test
