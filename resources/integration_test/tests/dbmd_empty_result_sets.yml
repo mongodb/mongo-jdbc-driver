@@ -1,70 +1,502 @@
 tests:
   # getProcedures(catalog, schemaPattern, procedureNamePattern)
-  - description: getProcedures returns empty result set
+  - description: getProcedures_returns_empty_result_set
     db: integration_test
-    meta_function: ["getProcedures", "integration_test", null, "%"]
+    meta_function: [getProcedures, integration_test, null, '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, java.lang.String]
+    expected_column_label: [PROCEDURE_CAT, PROCEDURE_NAME, PROCEDURE_SCHEM, PROCEDURE_TYPE,
+                            REMARKS, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 10, 0, 0]
+    expected_precision: [0, 0, 0, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
 
   # getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
-  - description: getProcedureColumns returns empty result set
+  - description: getProcedureColumns_returns_empty_result_set
     db: integration_test
-    meta_function: ["getProcedureColumns", "integration_test", null, "%", "%"]
+    meta_function: [getProcedureColumns, integration_test, null, '%', '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR,
+                        INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                            '', '', '', '', '', '']
+    expected_column_class_name: [int, java.lang.String, java.lang.String, int, int,
+                                 java.lang.String, int, int, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, int, java.lang.String, int, int, java.lang.String]
+    expected_column_label: [CHAR_OCTET_LENGTH, COLUMN_DEF, COLUMN_NAME, COLUMN_TYPE,
+                            DATA_TYPE, IS_NULLABLE, LENGTH, NULLABLE, ORDINAL_POSITION, PRECISION, PROCEDURE_CAT,
+                            PROCEDURE_NAME, PROCEDURE_SCHEM, RADIX, REMARKS, SCALE, SPECIFIC_NAME, SQL_DATA_TYPE,
+                            SQL_DATETIME_SUB, TYPE_NAME]
+    expected_column_display_size: [10, 0, 0, 10, 10, 0, 10, 10, 10, 10, 0, 0, 0, 10,
+                                   0, 10, 0, 10, 10, 0]
+    expected_precision: [10, 0, 0, 10, 10, 0, 10, 10, 10, 10, 0, 0, 0, 10, 0, 10,
+                         0, 10, 10, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                           '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false, false, false, false, false,
+                                 false, false]
+    expected_is_case_sensitive: [false, true, true, false, false, true, false, false,
+                                 false, false, true, true, true, false, true, false, true, false, false, true]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false, false,
+                           false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false, false, false, false, false,
+                                      false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true, true, true, true, true, true, true]
+    expected_is_signed: [true, false, false, true, true, false, true, true, true,
+                         true, false, false, false, true, false, true, false, true, true, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false, false,
+                           false]
 
   # getSchemas()
-  - description: getSchemas returns empty result set
+  - description: getSchemas_returns_empty_result_set
     db: integration_test
-    meta_function: ["getSchemas"]
+    meta_function: [getSchemas]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '']
+    expected_column_class_name: [java.lang.String, java.lang.String]
+    expected_column_label: [TABLE_CATALOG, TABLE_SCHEM]
+    expected_column_display_size: [0, 0]
+    expected_precision: [0, 0]
+    expected_scale: [0, 0]
+    expected_schema_name: ['', '']
+    expected_is_auto_increment: [false, false]
+    expected_is_case_sensitive: [true, true]
+    expected_is_currency: [false, false]
+    expected_is_definitely_writable: [false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true]
+    expected_is_searchable: [true, true]
+    expected_is_signed: [false, false]
+    expected_is_writable: [false, false]
 
   # getSchemas(catalog, schemaPattern)
-  - description: getSchemas returns empty result set
+  - description: getSchemas_returns_empty_result_set
     db: integration_test
-    meta_function: ["getSchemas", "integration_test", null]
+    meta_function: [getSchemas, integration_test, null]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '']
+    expected_column_class_name: [java.lang.String, java.lang.String]
+    expected_column_label: [TABLE_CATALOG, TABLE_SCHEM]
+    expected_column_display_size: [0, 0]
+    expected_precision: [0, 0]
+    expected_scale: [0, 0]
+    expected_schema_name: ['', '']
+    expected_is_auto_increment: [false, false]
+    expected_is_case_sensitive: [true, true]
+    expected_is_currency: [false, false]
+    expected_is_definitely_writable: [false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true]
+    expected_is_searchable: [true, true]
+    expected_is_signed: [false, false]
+    expected_is_writable: [false, false]
 
   # getVersionColumns(catalog, schema, table)
-  - description: getVersionColumns returns empty result set
+  - description: getVersionColumns_returns_empty_result_set
     db: integration_test
-    meta_function: ["getVersionColumns", "integration_test", null, "foo"]
+    meta_function: [getVersionColumns, integration_test, null, foo]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER,
+                        LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, java.lang.String, int, int, int, int, java.lang.String,
+                                 java.lang.String]
+    expected_column_label: [BUFFER_LENGTH, COLUMN_NAME, COLUMN_SIZE, DATA_TYPE, DECIMAL_DIGITS,
+                            PSEUDO_COLUMN, SCOPE, TYPE_NAME]
+    expected_column_display_size: [10, 0, 10, 10, 10, 10, 0, 0]
+    expected_precision: [10, 0, 10, 10, 10, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false]
+    expected_is_case_sensitive: [false, true, false, false, false, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true]
+    expected_is_signed: [true, false, true, true, true, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false]
 
   # getImportedKeys(catalog, schema, table)
-  - description: getImportedKeys returns empty result set
+  - description: getImportedKeys_returns_empty_result_set
     db: integration_test
-    meta_function: ["getImportedKeys", "integration_test", null, "foo"]
+    meta_function: [getImportedKeys, integration_test, null, foo]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, int]
+    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
+                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
+                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
+    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
+                                 true, true, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true]
+    expected_is_signed: [true, true, false, false, false, false, false, true, false,
+                         false, false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
 
   # getExportedKeys(catalog, schema, table)
-  - description: getExportedKeys returns empty result set
+  - description: getExportedKeys_returns_empty_result_set
     db: integration_test
-    meta_function: ["getExportedKeys", "integration_test", null, "foo"]
+    meta_function: [getExportedKeys, integration_test, null, foo]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, int]
+    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
+                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
+                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
+    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
+                                 true, true, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true]
+    expected_is_signed: [true, true, false, false, false, false, false, true, false,
+                         false, false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
 
   # getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)
-  - description: getCrossReference returns empty result set
+  - description: getCrossReference_returns_empty_result_set
     db: integration_test
-    meta_function: ["getCrossReference", "integration_test", null, "foo", "integration_test", null, "bar"]
+    meta_function: [getCrossReference, integration_test, null, foo, integration_test,
+                    null, bar]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, int]
+    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
+                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
+                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
+    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
+                                 true, true, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true]
+    expected_is_signed: [true, true, false, false, false, false, false, true, false,
+                         false, false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false]
 
   # getUDTs(catalog, schemaPattern, typeNamePattern, types)
-  - description: getUDTs returns empty result set
+  - description: getUDTs_returns_empty_result_set
     db: integration_test
-    meta_function: ["getUDTs", "integration_test", null, "%", null]
+    meta_function: [getUDTs, integration_test, null, '%', null]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '', '']
+    expected_column_class_name: [int, java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String]
+    expected_column_label: [BASE_TYPE, CLASS_NAME, DATA_TYPE, REMARKS, TYPE_CAT, TYPE_NAME,
+                            TYPE_SCHEM]
+    expected_column_display_size: [10, 0, 10, 0, 0, 0, 0]
+    expected_precision: [10, 0, 10, 0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false]
+    expected_is_case_sensitive: [false, true, false, true, true, true, true]
+    expected_is_currency: [false, false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true]
+    expected_is_signed: [true, false, true, false, false, false, false]
+    expected_is_writable: [false, false, false, false, false, false, false]
 
   # getSuperTypes(catalog, schemaPattern, typeNamePattern)
-  - description: getSuperTypes returns empty result set
+  - description: getSuperTypes_returns_empty_result_set
     db: integration_test
-    meta_function: ["getSuperTypes", "integration_test", null, "%"]
+    meta_function: [getSuperTypes, integration_test, null, '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String]
+    expected_column_label: [SUPERTYPE_CAT, SUPERTYPE_NAME, SUPERTYPE_SCHEM, TYPE_CAT,
+                            TYPE_NAME, TYPE_SCHEM]
+    expected_column_display_size: [0, 0, 0, 0, 0, 0]
+    expected_precision: [0, 0, 0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, true, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, false, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
 
   # getSuperTables(catalog, schemaPattern, tableNamePattern)
-  - description: getSuperTables returns empty result set
+  - description: getSuperTables_returns_empty_result_set
     db: integration_test
-    meta_function: ["getSuperTables", "integration_test", null, "%"]
+    meta_function: [getSuperTables, integration_test, null, '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String]
+    expected_column_label: [SUPERTABLE_NAME, TABLE_CAT, TABLE_NAME, TABLE_SCHEM]
+    expected_column_display_size: [0, 0, 0, 0]
+    expected_precision: [0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '']
+    expected_is_auto_increment: [false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, true]
+    expected_is_currency: [false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true]
+    expected_is_searchable: [true, true, true, true]
+    expected_is_signed: [false, false, false, false]
+    expected_is_writable: [false, false, false, false]
 
   # getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern)
-  - description: getAttributes returns empty result set
+  - description: getAttributes_returns_empty_result_set
     db: integration_test
-    meta_function: ["getAttributes", "integration_test", null, "%", "%"]
+    meta_function: [getAttributes, integration_test, null, '%', '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
+                        INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                            '', '', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, int, java.lang.String,
+                                 int, int, int, java.lang.String, int, int, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, int, int, int, java.lang.String, java.lang.String,
+                                 java.lang.String]
+    expected_column_label: [ATTR_DEF, ATTR_NAME, ATTR_SIZE, ATTR_TYPE_NAME, CHAR_OCTET_LENGTH,
+                            DATA_TYPE, DECIMAL_DIGITS, IS_NULLABLE, NULLABLE, NUM_PREC_RADIX, ORDINAL_POSITION,
+                            REMARKS, SCOPE_CATALOG, SCOPE_SCHEMA, SCOPE_TABLE, SOURCE_DATA_TYPE, SQL_DATA_TYPE,
+                            SQL_DATETIME_SUB, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_display_size: [0, 0, 10, 0, 10, 10, 10, 0, 10, 10, 10, 0, 0, 0,
+                                   0, 10, 10, 10, 0, 0, 0]
+    expected_precision: [0, 0, 10, 0, 10, 10, 10, 0, 10, 10, 10, 0, 0, 0, 0, 10, 10,
+                         10, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                           '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false, false, false, false, false,
+                                 false, false, false]
+    expected_is_case_sensitive: [true, true, false, true, false, false, false, true,
+                                 false, false, false, true, true, true, true, false, false, false, true, true,
+                                 true]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false, false,
+                           false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false, false, false, false, false,
+                                      false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true, true, true, true, true, true, true, true]
+    expected_is_signed: [false, false, true, false, true, true, true, false, true,
+                         true, true, false, false, false, false, true, true, true, false, false, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false, false,
+                           false, false]
 
   # getClientInfoProperties()
-  - description: getClientInfoProperties returns empty result set
+  - description: getClientInfoProperties_returns_empty_result_set
     db: integration_test
-    meta_function: ["getClientInfoProperties"]
+    meta_function: [getClientInfoProperties]
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String]
+    expected_column_label: [DEFAULT_VALUE, DESCRIPTION, MAX_LEN, NAME]
+    expected_column_display_size: [0, 0, 0, 0]
+    expected_precision: [0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '']
+    expected_is_auto_increment: [false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, true]
+    expected_is_currency: [false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true]
+    expected_is_searchable: [true, true, true, true]
+    expected_is_signed: [false, false, false, false]
+    expected_is_writable: [false, false, false, false]
 
   # getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
-  - description: getPseudoColumns returns empty result set
+  - description: getPseudoColumns_returns_empty_result_set
     db: integration_test
-    meta_function: ["getPseudoColumns", "integration_test", null, "%", "%"]
+    meta_function: [getPseudoColumns, integration_test, null, '%', '%']
+    expected_result: []
+    row_count: 0
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
+                        LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, java.lang.String, int, java.lang.String, int,
+                                 int, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String]
+    expected_column_label: [CHAR_OCTET_LENGTH, COLUMN_NAME, COLUMN_SIZE, COLUMN_USAGE,
+                            DATA_TYPE, DECIMAL_DIGITS, IS_NULLABLE, NUM_PREC_RADIX, REMARKS, TABLE_CAT,
+                            TABLE_NAME, TABLE_SCHEM]
+    expected_column_display_size: [10, 0, 10, 0, 10, 10, 0, 0, 0, 0, 0, 0]
+    expected_precision: [10, 0, 10, 0, 10, 10, 0, 0, 0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false]
+    expected_is_case_sensitive: [false, true, false, true, false, false, true, true,
+                                 true, true, true, true]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true]
+    expected_is_signed: [true, false, true, false, true, true, false, false, false,
+                         false, false, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false]
