@@ -46,40 +46,40 @@ tests:
   - description: getColumns no filters returns all columns
     db: integration_test
     meta_function: ["getColumns", null, null, "%", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumns catalog filter only returns all columns in database
     db: integration_test
     meta_function: ["getColumns", "integration_test", null, "%", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumns catalog and table filters only returns matching columns
     db: integration_test
     meta_function: ["getColumns", "integration_test", null, "foo", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumns catalog, table, and columns filters returns matching columns
     db: integration_test
     meta_function: ["getColumns", "integration_test", null, "b%", "_"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   # getColumnPrivileges(catalog, schemaPattern, tableNamePattern, columnNamePattern)
   - description: getColumnPrivileges no filters returns all columns
     db: integration_test
     meta_function: ["getColumnPrivileges", null, null, "%", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumnPrivileges catalog filter only returns all columns in database
     db: integration_test
     meta_function: ["getColumnPrivileges", "integration_test", null, "%", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumnPrivileges catalog and table filters only returns matching columns
     db: integration_test
     meta_function: ["getColumnPrivileges", "integration_test", null, "foo", "%"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
 
   - description: getColumnPrivileges catalog, table, and columns filters returns matching columns
     db: integration_test
     meta_function: ["getColumnPrivileges", "integration_test", null, "b%", "_"]
-    skip_reason: "TODO: fix MongoJsonSchema bsonType String/Array conflict"
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
