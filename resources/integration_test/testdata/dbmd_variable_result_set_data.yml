@@ -11,14 +11,8 @@ dataset:
       - {"_id": 0, "a": 1, "b": true, "xyz": "hello"}
       - {"_id": 1, "a": 2, "b": null}
 
-  - db: integration_test
-    collection: bar
-    view: baz
-    pipeline:
-      - {"project": {"a": "$a", "a_type": {"$type": "$a"}, "a_string": {"$toString": "$a"}}}
-
   - db: db2
     collection: foo
     docs:
       - {"_id": 1, "b": 100}
-      - {"_id": 1, "b": 200}
+      - {"_id": 2, "b": 200}

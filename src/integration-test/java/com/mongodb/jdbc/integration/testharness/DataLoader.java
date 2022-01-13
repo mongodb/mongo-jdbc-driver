@@ -70,7 +70,7 @@ public class DataLoader {
     private void readDataFiles(String dataDirectory) throws IOException {
         File folder = new File(dataDirectory);
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
-            if (fileEntry.isFile()) {
+            if (fileEntry.isFile() && fileEntry.getName().endsWith(".yml")) {
                 try (InputStream is = new FileInputStream(fileEntry.getPath())) {
                     TestData testData = yaml.load(is);
                     for (TestDataEntry entry : testData.dataset) {
