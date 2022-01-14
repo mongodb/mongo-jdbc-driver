@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.yaml.snakeyaml.Yaml;
@@ -153,11 +152,12 @@ public class IntegrationTestUtils {
                     // Some methods may be overloaded. For such methods, we do not
                     // want to throw immediately when we encounter an incorrect
                     // argument count; instead we store the error and throw at the end
-                    possibleException = new IllegalArgumentException(
-                            "expected parameter count: "
-                                    + method.getParameterCount()
-                                    + " found: "
-                                    + (metadataFunction.size() - 1));
+                    possibleException =
+                            new IllegalArgumentException(
+                                    "expected parameter count: "
+                                            + method.getParameterCount()
+                                            + " found: "
+                                            + (metadataFunction.size() - 1));
                     continue;
                 }
                 if (method.getParameterCount() == 0) {

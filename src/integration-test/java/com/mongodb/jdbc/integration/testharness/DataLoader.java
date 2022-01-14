@@ -123,11 +123,11 @@ public class DataLoader {
                             String indexName = collection.createIndex(new Document(index));
                             System.out.println(
                                     "Created index "
-                                    + indexName
-                                    + " on "
-                                    + entry.db
-                                    + "."
-                                    + entry.collection);
+                                            + indexName
+                                            + " on "
+                                            + entry.db
+                                            + "."
+                                            + entry.collection);
                         }
                     }
                 }
