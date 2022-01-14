@@ -4,6 +4,8 @@ dataset:
     docs:
       - {"_id": 0, "a": 1}
       - {"_id": 1, "a": 2}
+    nonuniqueIndexes:
+      - {"a": 1}
 
   - db: integration_test
     collection: bar

@@ -117,6 +117,19 @@ public class DataLoader {
                                     + entry.db
                                     + "."
                                     + entry.collection);
+
+                    if (entry.nonuniqueIndexes != null) {
+                        for (Map<String, Object> index : entry.nonuniqueIndexes) {
+                            String indexName = collection.createIndex(new Document(index));
+                            System.out.println(
+                                    "Created index "
+                                    + indexName
+                                    + " on "
+                                    + entry.db
+                                    + "."
+                                    + entry.collection);
+                        }
+                    }
                 }
             }
         } catch (MongoException e) {
