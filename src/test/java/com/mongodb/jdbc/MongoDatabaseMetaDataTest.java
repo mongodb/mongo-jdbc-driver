@@ -436,4 +436,70 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
         // The 'SUBS(any character)RING' function(s)
         testGetFunctionsHelper("SUBS_RING", 2);
     }
+
+    @Test
+    void testGetSQLKeywords() throws SQLException {
+        final String expectedKeywords =
+                "AGGREGATE,"
+                        + "ASC,"
+                        + "BINDATA,"
+                        + "BIT,"
+                        + "BOOL,"
+                        + "BSON_DATE,"
+                        + "BSON_TIMESTAMP,"
+                        + "DBPOINTER,"
+                        + "DESC,"
+                        + "DOCUMENT,"
+                        + "ERROR,"
+                        + "EXTRACT,"
+                        + "FIRST,"
+                        + "JAVASCRIPT,"
+                        + "JAVASCRIPTWITHSCOPE,"
+                        + "LIMIT,"
+                        + "LONG,"
+                        + "MAXKEY,"
+                        + "MINKEY,"
+                        + "MISSING,"
+                        + "NEXT,"
+                        + "NUMBER,"
+                        + "OBJECTID,"
+                        + "OFFSET,"
+                        + "POSITION,"
+                        + "REGEX,"
+                        + "SUBSTRING,"
+                        + "SYMBOL,"
+                        + "TRIM,"
+                        + "UNDEFINED";
+
+        assertEquals(expectedKeywords, databaseMetaData.getSQLKeywords());
+    }
+
+    @Test
+    void testGetNumericFunctions() throws SQLException {
+        final String expectedFunctions = "";
+
+        assertEquals(expectedFunctions, databaseMetaData.getNumericFunctions());
+    }
+
+    @Test
+    void testGetStringFunctions() throws SQLException {
+        final String expectedFunctions =
+                "CHAR_LENGTH," + "OCTET_LENGTH," + "POSITION," + "SUBSTRING";
+
+        assertEquals(expectedFunctions, databaseMetaData.getStringFunctions());
+    }
+
+    @Test
+    void testGetSystemFunctions() throws SQLException {
+        final String expectedFunctions = "";
+
+        assertEquals(expectedFunctions, databaseMetaData.getSystemFunctions());
+    }
+
+    @Test
+    void testGetTimeDateFunctions() throws SQLException {
+        final String expectedFunctions = "CURRENT_TIMESTAMP," + "CURRENT_TIMESTAMP," + "EXTRACT";
+
+        assertEquals(expectedFunctions, databaseMetaData.getTimeDateFunctions());
+    }
 }
