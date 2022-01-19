@@ -5,8 +5,6 @@ tests:
     meta_function: [getProcedures, integration_test, null, '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']
@@ -35,8 +33,6 @@ tests:
     meta_function: [getProcedureColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR,
                         INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR]
@@ -87,8 +83,6 @@ tests:
     meta_function: [getSchemas]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
@@ -113,8 +107,6 @@ tests:
     meta_function: [getSchemas, integration_test, null]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
@@ -139,8 +131,6 @@ tests:
     meta_function: [getVersionColumns, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER,
                         LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '']
@@ -171,8 +161,6 @@ tests:
     meta_function: [getImportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         INTEGER]
@@ -213,8 +201,6 @@ tests:
     meta_function: [getExportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         INTEGER]
@@ -256,8 +242,6 @@ tests:
                     null, bar]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         INTEGER]
@@ -298,8 +282,6 @@ tests:
     meta_function: [getUDTs, integration_test, null, '%', null]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '']
@@ -328,8 +310,6 @@ tests:
     meta_function: [getSuperTypes, integration_test, null, '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']
@@ -358,8 +338,6 @@ tests:
     meta_function: [getSuperTables, integration_test, null, '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
@@ -385,8 +363,6 @@ tests:
     meta_function: [getAttributes, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
                         INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
@@ -439,8 +415,6 @@ tests:
     meta_function: [getClientInfoProperties]
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
@@ -466,8 +440,6 @@ tests:
     meta_function: [getPseudoColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']

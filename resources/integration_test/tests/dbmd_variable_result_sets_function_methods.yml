@@ -35,8 +35,6 @@ tests:
       - [def, UPPER, null, 1, returns the provided string with all characters changed
                                 to uppercase., UPPER]
     row_count: 19
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']
@@ -77,8 +75,6 @@ tests:
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
     row_count: 9
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']
@@ -109,8 +105,6 @@ tests:
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']
@@ -141,8 +135,6 @@ tests:
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
       - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
                         LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '']

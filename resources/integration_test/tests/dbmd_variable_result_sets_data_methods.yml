@@ -7,8 +7,6 @@ tests:
       - [db2]
       - [integration_test]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
@@ -42,8 +40,6 @@ tests:
          null]
       - [null, null, null, integration_test, baz, null, view, null, null, null]
     row_count: 6
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -88,8 +84,6 @@ tests:
          null]
       - [null, null, null, integration_test, baz, null, view, null, null, null]
     row_count: 5
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -129,8 +123,6 @@ tests:
       - [null, null, null, integration_test, bar, null, table, null, null, null]
       - [null, null, null, integration_test, baz, null, view, null, null, null]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -174,8 +166,6 @@ tests:
     expected_result:
       - [null, null, null, integration_test, baz, null, view, null, null, null]
     row_count: 1
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -219,8 +209,6 @@ tests:
     expected_result:
       - [null, null, null, integration_test, bar, null, table, null, null, null]
     row_count: 1
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -265,8 +253,6 @@ tests:
       - [null, null, null, integration_test, bar, null, table, null, null, null]
       - [null, null, null, integration_test, baz, null, view, null, null, null]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
@@ -311,8 +297,6 @@ tests:
       - ['', null, null, SELECT, integration_test, foo, null]
       - ['', null, null, SELECT, integration_test, grades, null]
     row_count: 6
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '']
@@ -346,8 +330,6 @@ tests:
       - ['', null, null, SELECT, integration_test, foo, null]
       - ['', null, null, SELECT, integration_test, grades, null]
     row_count: 5
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '']
@@ -378,8 +360,6 @@ tests:
       - ['', null, null, SELECT, integration_test, bar, null]
       - ['', null, null, SELECT, integration_test, baz, null]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '']

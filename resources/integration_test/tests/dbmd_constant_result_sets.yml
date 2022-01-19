@@ -7,8 +7,6 @@ tests:
       - [TABLE]
       - [VIEW]
     row_count: 2
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [LONGVARCHAR]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
@@ -78,8 +76,6 @@ tests:
       - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
          undefined, false]
     row_count: 22
-    row_count_gte: null
-    ordered: null
     expected_sql_type: [BIT, BIT, LONGVARCHAR, INTEGER, BIT, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER,
                         INTEGER, LONGVARCHAR, BIT]
