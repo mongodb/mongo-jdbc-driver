@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.mongodb.jdbc.MongoColumnInfo;
+import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -194,7 +196,7 @@ public class IntegrationTestUtils {
         throw new IllegalArgumentException("function '" + functionName + "' not found");
     }
 
-    private static void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
+    public static void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
             throws SQLException, IllegalAccessException {
         int columnCount = rsMetaData.getColumnCount();
         if (test.expected_sql_type != null) {
@@ -311,6 +313,15 @@ public class IntegrationTestUtils {
                 assertEquals(test.expected_is_writable.get(i), rsMetaData.isWritable(i + 1));
             }
         }
+        if (test.expected_bson_type != null) {
+            assertEquals(test.expected_bson_type.size(), columnCount);
+            for (int i = 0; i < columnCount; i++) {
+                MongoSQLResultSetMetaData mongoSQLResultSetMetadata =
+                        (MongoSQLResultSetMetaData) rsMetaData;
+                MongoColumnInfo columnInfo = mongoSQLResultSetMetadata.getColumnInfo(i + 1);
+                assertEquals(test.expected_bson_type.get(i), columnInfo.getBsonTypeName());
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -367,7 +378,7 @@ public class IntegrationTestUtils {
         }
     }
 
-    private static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
+    public static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
             throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
         assertEquals(expectedRow.size(), rsMetadata.getColumnCount());
@@ -418,14 +429,11 @@ public class IntegrationTestUtils {
                         return false;
                     }
                     break;
-                    // TODO: SQL-632 Support Types.OTHER
-                    // This comparison needs to be improved to correctly handle Types.OTHER
-                    /*
-                    case Types.OTHER:
-                        if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
-                            return false;
-                        }
-                     */
+                case Types.OTHER:
+                    if (!expectedRow.get(i).equals(actualRow.getObject(i + 1))) {
+                        return false;
+                    }
+                    break;
                 default:
                     throw new IllegalArgumentException("unsupported column type:" + columnType);
             }

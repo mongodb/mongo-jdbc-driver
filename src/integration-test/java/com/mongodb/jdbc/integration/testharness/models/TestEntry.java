@@ -13,6 +13,7 @@ public class TestEntry {
     public Boolean ordered;
     public List<Object> expected_result;
     public List<String> expected_sql_type;
+    public List<String> expected_bson_type;
     public List<String> expected_catalog_name;
     public List<String> expected_column_class_name;
     public List<String> expected_column_label;

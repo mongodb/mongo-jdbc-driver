@@ -54,7 +54,7 @@ public class DataLoader {
         readDataFiles(dataDirectory);
     }
 
-    private void generateSchema() {
+    public void generateSchema() {
         BsonDocument command = new BsonDocument();
         command.put("sqlGenerateSchema", new BsonInt32(1));
         command.put("setSchemas", new BsonBoolean(true));
@@ -94,6 +94,21 @@ public class DataLoader {
         }
     }
 
+    public void loadTestRow(String db, String collection, Map<String, Object> row) {
+        databases.add(db);
+        collections.add(new Pair<>(db, collection));
+        try {
+            try (MongoClient mongoClient = new MongoClient(mdbUri)) {
+                MongoDatabase database = mongoClient.getDatabase(db);
+                MongoCollection<Document> coll = database.getCollection(collection);
+                coll.insertOne(new Document(row));
+            }
+        } catch (MongoException e) {
+            dropCollections();
+            throw e;
+        }
+    }
+
     /**
      * Loads integration test data files from dataDirectory to database in specified url
      *
@@ -107,16 +122,18 @@ public class DataLoader {
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     MongoCollection<Document> collection = database.getCollection(entry.collection);
-                    for (Map<String, Object> row : entry.docs) {
-                        collection.insertOne(new Document(row));
+                    if (entry.docs != null) {
+                        for (Map<String, Object> row : entry.docs) {
+                            collection.insertOne(new Document(row));
+                        }
+                        System.out.println(
+                                "Inserted "
+                                        + entry.docs.size()
+                                        + " rows into "
+                                        + entry.db
+                                        + "."
+                                        + entry.collection);
                     }
-                    System.out.println(
-                            "Inserted "
-                                    + entry.docs.size()
-                                    + " rows into "
-                                    + entry.db
-                                    + "."
-                                    + entry.collection);
                 }
             }
         } catch (MongoException e) {

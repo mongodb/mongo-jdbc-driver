@@ -1,5 +1,6 @@
 package com.mongodb.jdbc.integration.testharness;
 
+import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.MongoSQLIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.File;
@@ -27,6 +28,7 @@ public class TestGenerator {
 
         String description = testEntry.description.replace(' ', '_');
         List<String> expectedSqlType = new ArrayList<>();
+        List<String> expectedBsonType = new ArrayList();
         List<String> expectedCatalogName = new ArrayList<>();
         List<String> expectedColumnClassName = new ArrayList<>();
         List<String> expectedColumnLabel = new ArrayList<>();
@@ -46,6 +48,8 @@ public class TestGenerator {
 
         File directory = new File(GENERATED_TEST_DIR);
         ResultSetMetaData resultSetMetadata = rs.getMetaData();
+        MongoSQLResultSetMetaData mongoSQLResultSetMetaData =
+                (MongoSQLResultSetMetaData) resultSetMetadata;
         Map<String, Object> tests = new LinkedHashMap<String, Object>();
         List<Map<String, Object>> testCases = new ArrayList<>();
         Map<String, Object> testCase = new LinkedHashMap<String, Object>();
@@ -58,10 +62,6 @@ public class TestGenerator {
 
         String fileName =
                 new SimpleDateFormat("'" + description + "'MMddHHmmss'.yaml'").format(new Date());
-
-        // generating 'expected_result'
-        // TODO: SQL-632 Support Types.OTHER
-        // Investigate whether the Types.OTHER can be serialized to yaml, if not specify test values in JUnit test case
         ArrayList<List<Object>> result = new ArrayList<>();
         while (rs.next()) {
             List<Object> row = new ArrayList<>();
@@ -91,6 +91,7 @@ public class TestGenerator {
             expectedIsSearchable.add(resultSetMetadata.isSearchable(i));
             expectedIsSigned.add(resultSetMetadata.isSigned(i));
             expectedIsWritable.add(resultSetMetadata.isWritable(i));
+            expectedBsonType.add(mongoSQLResultSetMetaData.getColumnInfo(i).getBsonTypeName());
         }
 
         testCase.put("description", description);
@@ -105,6 +106,7 @@ public class TestGenerator {
         testCase.put("ordered", testEntry.ordered);
 
         testCase.put("expected_sql_type", expectedSqlType);
+        testCase.put("expected_bson_type", expectedBsonType);
         testCase.put("expected_catalog_name", expectedCatalogName);
         testCase.put("expected_column_class_name", expectedColumnClassName);
         testCase.put("expected_column_label", expectedColumnLabel);
