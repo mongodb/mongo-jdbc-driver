@@ -79,7 +79,8 @@ tests:
     expected_result:
       - [A, null, _id, null, _id_, null, false, 1, null, integration_test, foo, null, 3]
       - [A, null, a, null, a_1, null, true, 1, null, integration_test, foo, null, 3]
-    row_count: 2
+      - [D, null, b, null, b_-1, null, true, 1, null, db2, foo, null, 3]
+    row_count: 3
     expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
                         BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']

@@ -18,3 +18,5 @@ dataset:
     docs:
       - {"_id": 1, "b": 100}
       - {"_id": 2, "b": 200}
+    nonuniqueIndexes:
+      - {"b": -1}
