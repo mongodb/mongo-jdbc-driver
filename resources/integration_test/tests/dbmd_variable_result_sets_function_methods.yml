@@ -1,0 +1,174 @@
+tests:
+  # getFunctions(catalog, schemaPattern, functionNamePattern)
+  - description: getFunctions_no_filter_returns_all_functions
+    db: integration_test
+    skip_reason: "SQL-669: incorrect column nullability"
+    meta_function: [getFunctions, integration_test, null, '%']
+    expected_result:
+      - [def, BIT_LENGTH, null, 1, returns length of string in bits, BIT_LENGTH]
+      - [def, CAST, null, 1, converts the provided expression into a value of the
+                               specified type., CAST]
+      - [def, CHAR_LENGTH, null, 1, returns length of string, CHAR_LENGTH]
+      - [def, COALESCE, null, 1, 'returns the first non-null value in the list, or
+          null if there are no non-null values.', COALESCE]
+      - [def, CURRENT_TIMESTAMP, null, 1, returns the current date and time., CURRENT_TIMESTAMP]
+      - [def, CURRENT_TIMESTAMP, null, 1, returns the current date and time., CURRENT_TIMESTAMP]
+      - [def, EXTRACT, null, 1, returns the value of the specified unit from the provided
+                                  date., EXTRACT]
+      - [def, LOWER, null, 1, returns the provided string with all characters changed
+                                to lowercase., LOWER]
+      - [def, NULLIF, null, 1, 'returns null if the two arguments are equal, and the
+          first argument otherwise.', NULLIF]
+      - [def, OCTET_LENGTH, null, 1, returns length of string in bytes, OCTET_LENGTH]
+      - [def, POSITION, null, 1, returns the position of the first occurrence of substring
+                                   substr in string str., POSITION]
+      - [def, SLICE, null, 1, returns a slice of an array., SLICE]
+      - [def, SIZE, null, 1, returns the size of an array., SIZE]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+      - [def, TRIM, null, 1, returns the string str with all remstr prefixes and/or
+                               suffixes removed., TRIM]
+      - [def, TRIM, null, 1, returns the string str with all remstr prefixes and/or
+                               suffixes removed., TRIM]
+      - [def, TRIM, null, 1, returns the string str with all remstr prefixes and/or
+                               suffixes removed., TRIM]
+      - [def, UPPER, null, 1, returns the provided string with all characters changed
+                                to uppercase., UPPER]
+    row_count: 19
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, java.lang.String]
+    expected_column_label: [FUNCTION_CAT, FUNCTION_NAME, FUNCTION_SCHEM, FUNCTION_TYPE,
+                            REMARKS, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 10, 0, 0]
+    expected_precision: [0, 0, 0, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  - description: getFunctions_partial_filter_with_wildcard_substrings_returns_matching_functions
+    db: integration_test
+    skip_reason: "SQL-669: incorrect column nullability"
+    meta_function: [getFunctions, integration_test, null, '%S%']
+    expected_result:
+      - [def, CAST, null, 1, converts the provided expression into a value of the
+                               specified type., CAST]
+      - [def, COALESCE, null, 1, 'returns the first non-null value in the list, or
+          null if there are no non-null values.', COALESCE]
+      - [def, CURRENT_TIMESTAMP, null, 1, returns the current date and time., CURRENT_TIMESTAMP]
+      - [def, CURRENT_TIMESTAMP, null, 1, returns the current date and time., CURRENT_TIMESTAMP]
+      - [def, POSITION, null, 1, returns the position of the first occurrence of substring
+                                   substr in string str., POSITION]
+      - [def, SLICE, null, 1, returns a slice of an array., SLICE]
+      - [def, SIZE, null, 1, returns the size of an array., SIZE]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+    row_count: 9
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, java.lang.String]
+    expected_column_label: [FUNCTION_CAT, FUNCTION_NAME, FUNCTION_SCHEM, FUNCTION_TYPE,
+                            REMARKS, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 10, 0, 0]
+    expected_precision: [0, 0, 0, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  - description: getFunctions_partial_filter_with_wildcard_characters_returns_matching_functions
+    db: integration_test
+    skip_reason: "SQL-669: incorrect column nullability"
+    meta_function: [getFunctions, integration_test, null, SUBS_RIN_]
+    expected_result:
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+    row_count: 2
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, java.lang.String]
+    expected_column_label: [FUNCTION_CAT, FUNCTION_NAME, FUNCTION_SCHEM, FUNCTION_TYPE,
+                            REMARKS, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 10, 0, 0]
+    expected_precision: [0, 0, 0, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  - description: getFunctions_exact_filter_returns_matching_functions
+    db: integration_test
+    skip_reason: "SQL-669: incorrect column nullability"
+    meta_function: [getFunctions, integration_test, null, SUBSTRING]
+    expected_result:
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+      - [def, SUBSTRING, null, 1, takes a substring from a string, SUBSTRING]
+    row_count: 2
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String, java.lang.String]
+    expected_column_label: [FUNCTION_CAT, FUNCTION_NAME, FUNCTION_SCHEM, FUNCTION_TYPE,
+                            REMARKS, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 10, 0, 0]
+    expected_precision: [0, 0, 0, 10, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  # getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
+  - description: getFunctionColumns no function or column filters returns all args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "%", "%"]
+    skip_reason: "SQL-667: getFunctionColumns throws null pointer exceptions"
+
+  - description: getFunctionColumns partial function and column filters returns matching args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "%S%", "arg_"]
+    skip_reason: "SQL-667: getFunctionColumns throws null pointer exceptions"
+
+  - description: getFunctionColumns exact function and column filters returns matching args
+    db: integration_test
+    meta_function: ["getFunctionColumns", "integration_test", null, "SUBSTRING", "arg1"]
+    skip_reason: "SQL-667: getFunctionColumns throws null pointer exceptions"

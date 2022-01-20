@@ -1,0 +1,22 @@
+dataset:
+  - db: integration_test
+    collection: foo
+    docs:
+      - {"_id": 0, "a": 1}
+      - {"_id": 1, "a": 2}
+    nonuniqueIndexes:
+      - {"a": 1}
+
+  - db: integration_test
+    collection: bar
+    docs:
+      - {"_id": 0, "a": 1, "b": true, "xyz": "hello"}
+      - {"_id": 1, "a": 2, "b": null}
+
+  - db: db2
+    collection: foo
+    docs:
+      - {"_id": 1, "b": 100}
+      - {"_id": 2, "b": 200}
+    nonuniqueIndexes:
+      - {"b": -1}

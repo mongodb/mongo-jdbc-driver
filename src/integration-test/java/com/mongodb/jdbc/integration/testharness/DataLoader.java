@@ -70,7 +70,7 @@ public class DataLoader {
     private void readDataFiles(String dataDirectory) throws IOException {
         File folder = new File(dataDirectory);
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
-            if (fileEntry.isFile()) {
+            if (isValidTestDataFile(fileEntry)) {
                 try (InputStream is = new FileInputStream(fileEntry.getPath())) {
                     TestData testData = yaml.load(is);
                     for (TestDataEntry entry : testData.dataset) {
@@ -81,6 +81,11 @@ public class DataLoader {
                 }
             }
         }
+    }
+
+    private boolean isValidTestDataFile(File file) {
+        return file.isFile()
+                && (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"));
     }
 
     /** Drops collections specified in test data files */
@@ -117,6 +122,19 @@ public class DataLoader {
                                     + entry.db
                                     + "."
                                     + entry.collection);
+
+                    if (entry.nonuniqueIndexes != null) {
+                        for (Map<String, Object> index : entry.nonuniqueIndexes) {
+                            String indexName = collection.createIndex(new Document(index));
+                            System.out.println(
+                                    "Created index "
+                                            + indexName
+                                            + " on "
+                                            + entry.db
+                                            + "."
+                                            + entry.collection);
+                        }
+                    }
                 }
             }
         } catch (MongoException e) {

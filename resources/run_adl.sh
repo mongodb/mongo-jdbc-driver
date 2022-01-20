@@ -32,6 +32,7 @@ MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
 MONGOHOUSE_DIR=$(pwd)/mongohouse
 MONGO_DB_PATH=$(pwd)/test_db
 LOGS_PATH=$(pwd)/logs
+DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adl_db_config.json
 MONGOD_PORT=28017
 MONGOHOUSED_PORT=27017
 START="start"
@@ -192,14 +193,13 @@ if [[ $? -ne 0 ]]; then
     # Load tenant config into mongodb
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
-    DATABASES='{ "name" : "integration_test", "collections" : [ { "name": "*", "dataSources" : [
-      { "storeName" : "localmongo", "database" : "integration_test" } ] } ], "views" : null }'
+    DATABASES=$(cat $DB_CONFIG_PATH)
     TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
     # Replace the existing storage config with a wildcard collection for the local mongodb
     jq "del(.storage)" ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
     jq --argjson obj "$STORES" '.storage.stores += [$obj]' ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp\
                                                                && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
-    jq --argjson obj "$DATABASES" '.storage.databases += [$obj]' ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp\
+    jq --argjson obj "$DATABASES" '.storage.databases += $obj' ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp\
                                                                && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
 
     go run cmd/buildscript/build.go init:mongodb-tenant
