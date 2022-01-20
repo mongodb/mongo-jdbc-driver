@@ -18,7 +18,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bson.BsonArray;
 import org.bson.BsonDbPointer;
+import org.bson.BsonInt32;
 import org.bson.BsonJavaScript;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -100,6 +103,13 @@ public class MongoSQLIntegrationTest {
         row.put("e", regularExpression);
         row.put("f", symbol);
         row.put("g", timestamp);
+        /*
+        BsonArray array = new BsonArray();
+        array.add(new BsonInt32(1));
+        array.add(new BsonInt32(2));
+        array.add(new BsonInt32(3));
+        row.put("h", array);
+         */
 
         loader.loadTestRow("integration_test", "types_other", row);
         loader.generateSchema();
