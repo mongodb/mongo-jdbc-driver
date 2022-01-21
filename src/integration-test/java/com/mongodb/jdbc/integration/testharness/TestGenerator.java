@@ -94,6 +94,7 @@ public class TestGenerator {
         }
 
         testCase.put("description", description);
+        testCase.put("db", testEntry.db);
         if (testEntry.meta_function != null) {
             testCase.put("meta_function", testEntry.meta_function);
         } else {
@@ -134,10 +135,10 @@ public class TestGenerator {
     public static void main(String[] args)
             throws SQLException, IOException, InvocationTargetException, IllegalAccessException {
         MongoSQLIntegrationTest integrationTest = new MongoSQLIntegrationTest();
-        try (Connection conn = integrationTest.getBasicConnection()) {
-            List<TestEntry> tests =
-                    IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
-            for (TestEntry testEntry : tests) {
+        List<TestEntry> tests =
+                IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
+        for (TestEntry testEntry : tests) {
+            try (Connection conn = integrationTest.getBasicConnection(testEntry.db)) {
                 if (testEntry.skip_reason != null) {
                     continue;
                 }

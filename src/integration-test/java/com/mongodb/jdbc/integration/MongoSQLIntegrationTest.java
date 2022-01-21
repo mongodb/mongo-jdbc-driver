@@ -21,13 +21,13 @@ public class MongoSQLIntegrationTest {
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
     private List<TestEntry> testEntries;
 
-    public Connection getBasicConnection() throws SQLException {
+    public Connection getBasicConnection(String db) throws SQLException {
         java.util.Properties p = new java.util.Properties();
         p.setProperty("dialect", MONGOSQL);
         p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
-        p.setProperty("database", "integration_test");
+        p.setProperty("database", db);
         p.setProperty("ssl", "false");
         return DriverManager.getConnection(URL, p);
     }
@@ -48,7 +48,7 @@ public class MongoSQLIntegrationTest {
                     DynamicTest.dynamicTest(
                             testEntry.description,
                             () -> {
-                                try (Connection conn = getBasicConnection()) {
+                                try (Connection conn = getBasicConnection(testEntry.db)) {
                                     IntegrationTestUtils.runTest(testEntry, conn, false);
                                 }
                             }));
