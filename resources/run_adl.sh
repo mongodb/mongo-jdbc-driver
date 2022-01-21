@@ -183,6 +183,7 @@ if [[ $? -ne 0 ]]; then
     export LIBRARY_PATH="$(pwd)/artifacts"
 
     go mod download
+    go mod vendor
 
     # Download external dependencies
     go run cmd/buildscript/build.go tools:download:mqlrun
