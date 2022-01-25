@@ -18,10 +18,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bson.BsonArray;
 import org.bson.BsonDbPointer;
-import org.bson.BsonInt32;
 import org.bson.BsonJavaScript;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -104,6 +101,8 @@ public class MongoSQLIntegrationTest {
         row.put("f", symbol);
         row.put("g", timestamp);
         /*
+        // Skip Reason - SQL-697
+        // Getting result set schema throwing error: data did not match any variant of untagged enum BsonType
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(1));
         array.add(new BsonInt32(2));

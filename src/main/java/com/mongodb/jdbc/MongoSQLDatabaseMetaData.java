@@ -1030,7 +1030,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                 TABLE_NAME, new BsonString(namespace.right())),
                                         new BsonElement(COLUMN_NAME, new BsonString(key)),
                                         new BsonElement(
-                                                KEY_SEQ, new BsonInt32(pos.getAndIncrement())),
+                                                KEY_SEQ, new BsonInt32(pos.incrementAndGet())),
                                         new BsonElement(PK_NAME, new BsonString(indexName))))
                 .sorted()
                 .collect(Collectors.toList());
@@ -1627,7 +1627,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                     new BsonElement(INDEX_NAME, indexName),
                                     new BsonElement(TYPE, new BsonInt32(tableIndexOther)),
                                     new BsonElement(
-                                            ORDINAL_POSITION, new BsonInt32(pos.getAndIncrement())),
+                                            ORDINAL_POSITION, new BsonInt32(pos.incrementAndGet())),
                                     new BsonElement(COLUMN_NAME, new BsonString(key)),
                                     new BsonElement(ASC_OR_DESC, ascOrDesc),
                                     new BsonElement(CARDINALITY, BsonNull.VALUE),
