@@ -2,13 +2,14 @@ package com.mongodb.jdbc;
 
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoIterable;
+import org.bson.BsonDocument;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
 
 public class MySQLStatement extends MongoStatement<MySQLResultDoc> implements Statement {
     private boolean relaxed;
@@ -35,7 +36,7 @@ public class MySQLStatement extends MongoStatement<MySQLResultDoc> implements St
                 iterable = iterable.batchSize(fetchSize);
             }
 
-            resultSet = new MySQLResultSet(this, iterable.cursor(), relaxed);
+            resultSet = new MySQLResultSet(conn.connectionId,this, iterable.cursor(), relaxed);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);

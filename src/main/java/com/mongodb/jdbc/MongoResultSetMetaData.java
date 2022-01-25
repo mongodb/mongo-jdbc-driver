@@ -1,12 +1,13 @@
 package com.mongodb.jdbc;
 
+import org.bson.BsonType;
+import org.bson.BsonValue;
+
 import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import org.bson.BsonType;
-import org.bson.BsonValue;
 
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     protected final int unknownLength = 0;

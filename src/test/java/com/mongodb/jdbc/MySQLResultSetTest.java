@@ -143,13 +143,13 @@ class MySQLResultSetTest extends MySQLMock {
         try {
             // create result sets used by tests.
             strictMySQLResultSet =
-                    new MySQLResultSet(
+                    new MySQLResultSet(mongoConnection.connectionId,
                             mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
             relaxedMySQLResultSet =
-                    new MySQLResultSet(
+                    new MySQLResultSet(mongoConnection.connectionId,
                             mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
             closedMySQLResultSet =
-                    new MySQLResultSet(
+                    new MySQLResultSet(mongoConnection.connectionId,
                             mongoStatement, new MySQLExplicitCursor(mongoResultDocs), true);
             // call next() so that each result set is on the pre-populated row.
             relaxedMySQLResultSet.next();
@@ -1349,7 +1349,7 @@ class MySQLResultSetTest extends MySQLMock {
                             return generateMetadataDoc();
                         });
 
-        mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
+        mockResultSet = new MySQLResultSet(mongoConnection.connectionId,mongoStatement, cursor, false);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1374,7 +1374,7 @@ class MySQLResultSetTest extends MySQLMock {
 
         MySQLExplicitCursor cursor =
                 new MySQLExplicitCursor(Arrays.asList(metaDoc, valuesDoc, valuesDoc2));
-        mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
+        mockResultSet = new MySQLResultSet(mongoConnection.connectionId,mongoStatement, cursor, false);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -1413,7 +1413,7 @@ class MySQLResultSetTest extends MySQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
+        mockResultSet = new MySQLResultSet(mongoConnection.connectionId,mongoStatement, cursor, false);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -1449,7 +1449,7 @@ class MySQLResultSetTest extends MySQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
+        mockResultSet = new MySQLResultSet(mongoConnection.connectionId,mongoStatement, cursor, false);
 
         assertEquals(1, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -1497,7 +1497,7 @@ class MySQLResultSetTest extends MySQLMock {
                             return doc;
                         });
 
-        mockResultSet = new MySQLResultSet(mongoStatement, cursor, false);
+        mockResultSet = new MySQLResultSet(mongoConnection.connectionId,mongoStatement, cursor, false);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());

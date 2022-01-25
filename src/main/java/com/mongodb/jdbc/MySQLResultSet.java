@@ -2,24 +2,20 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.text.ParseException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
+import java.math.BigDecimal;
+import java.sql.*;
+import java.text.ParseException;
+
 public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    public MySQLResultSet(int connectionId, Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
-        super(statement);
+        super(connectionId, statement);
         Preconditions.checkNotNull(cursor);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();

@@ -98,7 +98,7 @@ class MySQLResultSetMetaDataTest extends MySQLMock {
 
         try {
             MySQLResultSet rs =
-                    new MySQLResultSet(
+                    new MySQLResultSet(mongoConnection.connectionId,
                             mongoStatement, new MySQLExplicitCursor(mongoResultDocs), false);
             rs.next();
             resultSetMetaData = rs.getMetaData();

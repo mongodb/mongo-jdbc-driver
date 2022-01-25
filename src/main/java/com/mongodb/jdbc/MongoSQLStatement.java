@@ -2,19 +2,22 @@ package com.mongodb.jdbc;
 
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoIterable;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
+import java.util.logging.Level;
 
 public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
     public MongoSQLStatement(MongoConnection conn, String databaseName) throws SQLException {
         super(conn, databaseName);
+        logger.log(Level.FINE, ">> Creating new MongoStatement");
     }
 
     @SuppressWarnings("unchecked")
@@ -40,7 +43,7 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
                             .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
 
             MongoJsonSchema schema = schemaResult.schema.jsonSchema;
-            resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
+            resultSet = new MongoSQLResultSet(conn.connectionId,this, iterable.cursor(), schema);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);

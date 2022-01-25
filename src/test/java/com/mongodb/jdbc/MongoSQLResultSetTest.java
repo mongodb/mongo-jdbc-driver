@@ -87,10 +87,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         try {
             mongoSQLResultSet =
-                    new MongoSQLResultSet(
+                    new MongoSQLResultSet(mongoStatement.conn.connectionId,
                             mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
             closedMongoSQLResultSet =
-                    new MongoSQLResultSet(
+                    new MongoSQLResultSet(mongoStatement.conn.connectionId,
                             mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
             mongoSQLResultSet.next();
             closedMongoSQLResultSet.next();
@@ -805,7 +805,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return generateRow();
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoSQLResultSet(mongoStatement.conn.connectionId,mongoStatement, cursor, schema);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -825,7 +825,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoSQLResultSet(mongoStatement.conn.connectionId, mongoStatement, cursor, schema);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -862,7 +862,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoSQLResultSet(mongoStatement.conn.connectionId, mongoStatement, cursor, schema);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -896,7 +896,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoSQLResultSet(mongoStatement.conn.connectionId, mongoStatement, cursor, schema);
 
         assertEquals(9, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -956,7 +956,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return doc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, sameMetadataSchema);
+        mockResultSet = new MongoSQLResultSet(mongoStatement.conn.connectionId, mongoStatement, cursor, sameMetadataSchema);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());

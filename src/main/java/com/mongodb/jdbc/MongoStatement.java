@@ -2,10 +2,15 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoDatabase;
-import java.sql.*;
+import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.MongoSQLException;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
+
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class MongoStatement<T> implements Statement {
     // Likely, the actual mongo sql command will not
@@ -20,21 +25,25 @@ public abstract class MongoStatement<T> implements Statement {
     protected int maxQuerySec = 0;
     protected String currentDBName;
     protected final BsonInt32 formatVersion = new BsonInt32(2);
+    protected Logger logger;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
         Preconditions.checkNotNull(databaseName);
         this.conn = conn;
+        logger = MongoLogger.getLogger(this.getClass().getCanonicalName(), conn.connectionId);
+        //logger.log(Level.FINE, ">> Creating new MongoStatement");
         currentDBName = databaseName;
 
         try {
             currentDB = conn.getDatabase(databaseName);
         } catch (IllegalArgumentException e) {
-            throw new SQLException("Database name %s is invalid", databaseName);
+            throw new MongoSQLException(String.format("Database name %s is invalid", databaseName), logger);
         }
     }
 
     protected BsonDocument constructQueryDocument(String sql, String dialect) {
+        logger.log(Level.FINE, ">> constructQueryDocument(String sql, String dialect)");
         BsonDocument stage = new BsonDocument();
         BsonDocument sqlDoc = new BsonDocument();
         sqlDoc.put("statement", new BsonString(sql));
@@ -47,7 +56,7 @@ public abstract class MongoStatement<T> implements Statement {
 
     protected void checkClosed() throws SQLException {
         if (isClosed()) {
-            throw new SQLException("Connection is closed.");
+            throw new MongoSQLException("Connection is closed.", logger);
         }
     }
 
@@ -240,7 +249,7 @@ public abstract class MongoStatement<T> implements Statement {
         if (current != CLOSE_CURRENT_RESULT
                 && current != KEEP_CURRENT_RESULT
                 && current != CLOSE_ALL_RESULTS) {
-            throw new SQLException("Invalid input.");
+            throw new MongoSQLException("Invalid input.", logger);
         }
         if (current == KEEP_CURRENT_RESULT || current == CLOSE_ALL_RESULTS) {
             throw new SQLFeatureNotSupportedException(

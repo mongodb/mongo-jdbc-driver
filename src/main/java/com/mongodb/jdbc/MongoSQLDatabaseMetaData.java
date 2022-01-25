@@ -1,34 +1,22 @@
 package com.mongodb.jdbc;
 
-import static com.mongodb.jdbc.BsonTypeInfo.*;
-
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.mongodb.jdbc.logging.MongoLogger;
+import org.bson.*;
+
+import java.sql.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.bson.BsonBoolean;
-import org.bson.BsonDocument;
-import org.bson.BsonElement;
-import org.bson.BsonInt32;
-import org.bson.BsonNull;
-import org.bson.BsonString;
-import org.bson.BsonValue;
-import org.bson.Document;
+
+import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
@@ -87,12 +75,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     public MongoSQLDatabaseMetaData(MongoConnection conn) {
         super(conn);
+        logger.log(Level.FINE, ">> Creating new MongoSQLDatabaseMetaData");
     }
 
     // For all methods in this class, the fields in the result set are nested
     // under the bottom namespace. This helper method takes result set fields
     // and nests them appropriately.
     private BsonDocument createBottomBson(BsonElement... elements) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonDocument bot = new BsonDocument(Arrays.asList(elements));
         return new BsonDocument(BOT_NAME, bot);
     }
@@ -101,6 +92,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // ensures the BsonDocument returned is sortable based on argued criteria.
     private SortableBsonDocument createSortableBottomBson(
             List<SortableBsonDocument.SortSpec> sortSpecs, BsonElement... elements) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonDocument bot = new BsonDocument(Arrays.asList(elements));
         return new SortableBsonDocument(sortSpecs, BOT_NAME, bot);
     }
@@ -110,6 +103,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // and nests them appropriately.
     @SafeVarargs
     private final MongoJsonSchema createBottomSchema(Pair<String, String>... resultSchemaFields) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
         resultSchema.addRequiredScalarKeys(resultSchemaFields);
 
@@ -121,6 +116,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public String getSQLKeywords() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // These come from keywords from the mongosql-rs parser, minus the Standard SQL-2003 Reserved keywords
         return "AGGREGATE,"
                 + "ASC,"
@@ -156,27 +153,37 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public String getNumericFunctions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoSQLFunctions.numericFunctionsString;
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoSQLFunctions.stringFunctionsString;
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoSQLFunctions.systemFunctionsString;
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoSQLFunctions.dateFunctionsString;
     }
 
     @Override
     public ResultSet getProcedures(
             String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(PROCEDURE_CAT, BSON_STRING.getBsonName()),
@@ -186,7 +193,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(PROCEDURE_TYPE, BSON_INT.getBsonName()),
                         new Pair<>(SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -196,6 +203,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String procedureNamePattern,
             String columnNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(PROCEDURE_CAT, BSON_STRING.getBsonName()),
@@ -219,11 +228,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(IS_NULLABLE, BSON_STRING.getBsonName()),
                         new Pair<>(SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
@@ -236,11 +247,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, new BsonExplicitCursor(docs), botSchema);
     }
 
     // Helper for getting a stream of all database names.
     private Stream<String> getDatabaseNames() {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
     }
 
@@ -248,6 +261,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // the argued filter.
     private Stream<MongoListCollectionsResult> getTableDataFromDB(
             String dbName, Function<MongoListCollectionsResult, Boolean> filter) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+            MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                    getMethodName());
         return this.conn
                 .getDatabase(dbName)
                 .withCodecRegistry(MongoDriver.registry)
@@ -261,6 +278,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getTableDataFromDB helper method which is shared between getTables and
     // getTablePrivileges.
     private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
                 // TABLE_NAME.
@@ -281,6 +300,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // for use with the getTableDataFromDB helper method which is shared between getTables
     // and getTablePrivileges.
     private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
                 // PRIVILEGE. Since all PRIVILEGEs are the same, we also omit that.
@@ -302,7 +323,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             Pattern tableNamePatternRE,
             List<String> types,
             BiFunction<String, MongoListCollectionsResult, BsonDocument> bsonSerializer) {
-
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return this.getTableDataFromDB(
                         dbName,
                         res ->
@@ -313,6 +337,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private List<String> toTableTypeList(String[] types) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         List<String> l = null;
         if (types != null) {
             l = Arrays.asList(types);
@@ -325,6 +351,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getTables(
             String catalog, String schemaPattern, String tableNamePattern, String[] types)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -341,7 +369,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(logger, tableNamePattern);
         List<String> typesList = toTableTypeList(types);
 
         Stream<BsonDocument> docs;
@@ -368,21 +396,25 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_SCHEM, BSON_STRING.getBsonName()),
                         new Pair<>(TABLE_CATALOG, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()));
 
@@ -397,7 +429,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                 TABLE_CAT, new BsonString(dbName))))
                                 .collect(Collectors.toList()));
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     /**
@@ -462,6 +494,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getColumnsFromDB helper method which is shared between getColumns and
     // getColumnPrivileges.
     private BsonDocument toGetColumnsDoc(GetColumnsDocInfo i) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue isNullable =
                 new BsonString(
                         i.nullability == columnNoNulls
@@ -506,6 +540,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // for use with the getColumnsFromDB helper method which is shared between getColumns
     // and getColumnPrivileges.
     private BsonDocument toGetColumnPrivilegesDoc(GetColumnsDocInfo i) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  COLUMN_NAME and PRIVILEGE. Since all PRIVILEGEs are the same,
                 // we just sort by COLUMN_NAME here.
@@ -523,6 +559,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for ensuring a sqlGetSchema result is a valid collection schema. As in,
     // it has ok: 1, has a jsonSchema, and the jsonSchema is an object schema.
     private boolean isValidSchema(MongoJsonSchemaResult res) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return res.ok == 1 && res.schema.jsonSchema != null && res.schema.jsonSchema.isObject();
     }
 
@@ -534,6 +572,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
             Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
 
         return db.listCollectionNames()
@@ -597,6 +637,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -627,8 +669,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
-        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(logger, tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(logger, columnNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -664,13 +706,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     @Override
     public ResultSet getColumnPrivileges(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -685,8 +729,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
-        Pattern columnNamePatternRE = toJavaPattern(columnNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(logger, tableNamePattern);
+        Pattern columnNamePatternRE = toJavaPattern(logger, columnNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -722,12 +766,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     @Override
     public ResultSet getTablePrivileges(
             String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -741,7 +787,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
         // MongoDB only has Databases (Catalogs) and Collections (Tables), so we ignore the
         // schemaPattern argument.
-        Pattern tableNamePatternRE = toJavaPattern(tableNamePattern);
+        Pattern tableNamePatternRE = toJavaPattern(logger, tableNamePattern);
 
         Stream<BsonDocument> docs;
         if (catalog == null) {
@@ -769,13 +815,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     private Stream<BsonDocument> getFirstUniqueIndexDocsForTable(
             String dbName,
             String tableName,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
         ListIndexesIterable<Document> i = db.getCollection(tableName).listIndexes();
         List<BsonDocument> docs = new ArrayList<>();
@@ -807,6 +855,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String table,
             MongoJsonSchema botSchema,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         try {
             Stream<BsonDocument> docs;
             if (catalog == null) {
@@ -837,7 +887,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             List<BsonDocument> docsList = docs.collect(Collectors.toList());
             BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-            return new MongoSQLResultSet(null, c, botSchema);
+            return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -850,6 +900,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // method.
     private List<BsonDocument> toGetBestRowIdentifierDocs(
             Pair<String, String> namespace, Document indexInfo) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         List<BsonDocument> docs = new ArrayList<>();
 
         // We've found the first unique index. At this point, we get the schema for this
@@ -879,6 +931,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // getBestRowIdentifier method.
     private BsonDocument toGetBestRowIdentifierDoc(
             String columnName, BsonTypeInfo columnBsonTypeInfo) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return createBottomBson(
                 new BsonElement(SCOPE, BsonNull.VALUE),
                 new BsonElement(COLUMN_NAME, new BsonString(columnName)),
@@ -895,6 +949,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getBestRowIdentifier(
             String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(SCOPE, BSON_INT.getBsonName()),
@@ -917,6 +973,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(SCOPE, BSON_STRING.getBsonName()),
@@ -928,12 +986,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(DECIMAL_DIGITS, BSON_INT.getBsonName()),
                         new Pair<>(PSEUDO_COLUMN, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(PKTABLE_CAT, BSON_STRING.getBsonName()),
@@ -951,12 +1011,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(PK_NAME, BSON_STRING.getBsonName()),
                         new Pair<>(DEFERRABILITY, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(PKTABLE_CAT, BSON_STRING.getBsonName()),
@@ -974,7 +1036,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(PK_NAME, BSON_STRING.getBsonName()),
                         new Pair<>(DEFERRABILITY, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -986,6 +1048,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String foreignSchema,
             String foreignTable)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(PKTABLE_CAT, BSON_STRING.getBsonName()),
@@ -1003,7 +1067,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(PK_NAME, BSON_STRING.getBsonName()),
                         new Pair<>(DEFERRABILITY, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     // Helper for getting the rows for the getPrimaryKeys result set. Given a (dbName, tableName)
@@ -1012,6 +1076,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // with the getFirstUniqueIndexResultSet method.
     private List<BsonDocument> toGetPrimaryKeysDocs(
             Pair<String, String> namespace, Document indexInfo) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
         String indexName = indexInfo.getString(INDEX_NAME_KEY);
         AtomicInteger pos = new AtomicInteger();
@@ -1039,6 +1105,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -1056,7 +1124,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private MongoJsonSchema getTypeInfoJsonSchema() {
-
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
         schema.addRequiredScalarKeys(
                 new Pair<>(TYPE_NAME, BSON_STRING.getBsonName()),
@@ -1081,6 +1150,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private BsonValue asBsonIntOrNull(Integer value) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (value == null) {
             return BsonNull.VALUE;
         }
@@ -1089,6 +1160,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue n = new BsonNull();
         ArrayList<BsonDocument> docs = new ArrayList<>();
         MongoJsonSchema schema = getTypeInfoJsonSchema();
@@ -1595,12 +1668,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, new BsonExplicitCursor(docs), botSchema);
     }
 
     // Helper for creating stream of bson documents from the columns in the indexInfo doc.
     private Stream<BsonDocument> toGetIndexInfoDocs(
             String dbName, String tableName, Document indexInfo) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         Boolean isUnique = indexInfo.getEmbedded(UNIQUE_KEY_PATH, Boolean.class);
         BsonValue nonUnique = new BsonBoolean(isUnique == null || !isUnique);
         BsonValue indexName = new BsonString(indexInfo.getString(INDEX_NAME_KEY));
@@ -1640,6 +1715,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // used for creating the result set for getIndexInfo method.
     private Stream<BsonDocument> getIndexesFromTable(
             String dbName, String tableName, boolean unique) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return this.conn
                 .getDatabase(dbName)
                 .getCollection(tableName)
@@ -1661,6 +1738,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getIndexInfo(
             String catalog, String schema, String table, boolean unique, boolean approximate)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -1704,13 +1783,15 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, c, botSchema);
     }
 
     @Override
     public ResultSet getUDTs(
             String catalog, String schemaPattern, String typeNamePattern, int[] types)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TYPE_CAT, BSON_STRING.getBsonName()),
@@ -1721,12 +1802,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(REMARKS, BSON_STRING.getBsonName()),
                         new Pair<>(BASE_TYPE, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TYPE_CAT, BSON_STRING.getBsonName()),
@@ -1736,12 +1819,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(SUPERTYPE_SCHEM, BSON_STRING.getBsonName()),
                         new Pair<>(SUPERTYPE_NAME, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -1749,7 +1834,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(TABLE_NAME, BSON_STRING.getBsonName()),
                         new Pair<>(SUPERTABLE_NAME, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -1759,6 +1844,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String typeNamePattern,
             String attributeNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TYPE_CAT, BSON_STRING.getBsonName()),
@@ -1783,18 +1870,22 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(SCOPE_TABLE, BSON_STRING.getBsonName()),
                         new Pair<>(SOURCE_DATA_TYPE, BSON_INT.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return getSchemas();
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
@@ -1807,10 +1898,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     private MongoJsonSchema getFunctionJsonSchema() {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(FUNCTION_CAT, BSON_STRING.getBsonName()),
@@ -1824,6 +1917,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     }
 
     private BsonDocument getFunctionValuesDoc(String functionName, String remarks) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
@@ -1839,12 +1934,14 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         ArrayList<BsonDocument> docs = new ArrayList<>(MongoSQLFunctions.functions.length);
         MongoJsonSchema schema = getFunctionJsonSchema();
 
         Pattern functionPatternRE = null;
         if (functionNamePattern != null) {
-            functionPatternRE = toJavaPattern(functionNamePattern);
+            functionPatternRE = toJavaPattern(logger, functionNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
@@ -1855,10 +1952,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs.add(doc);
         }
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(conn.connectionId,null, new BsonExplicitCursor(docs), schema);
     }
 
     private MongoJsonSchema getFunctionColumnJsonSchema() {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(FUNCTION_CAT, BSON_STRING.getBsonName()),
@@ -1888,6 +1987,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String argName,
             String argType,
             boolean isReturnColumn) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
@@ -1925,6 +2026,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String functionNamePattern,
             String columnNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
 
         ArrayList<BsonDocument> docs = new ArrayList<>(MongoSQLFunctions.functions.length);
         MongoJsonSchema schema = getFunctionColumnJsonSchema();
@@ -1932,10 +2035,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         Pattern functionNamePatternRE = null;
         Pattern columnNamePatternRE = null;
         if (functionNamePattern != null) {
-            functionNamePatternRE = toJavaPattern(functionNamePattern);
+            functionNamePatternRE = toJavaPattern(logger, functionNamePattern);
         }
         if (columnNamePattern != null) {
-            columnNamePatternRE = toJavaPattern(columnNamePattern);
+            columnNamePatternRE = toJavaPattern(logger, columnNamePattern);
         }
 
         for (MongoFunctions.MongoFunction func : MongoSQLFunctions.functions) {
@@ -1963,7 +2066,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             }
         }
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(conn.connectionId,null, new BsonExplicitCursor(docs), schema);
     }
 
     //--------------------------JDBC 4.1 -----------------------------
@@ -1971,6 +2074,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     public ResultSet getPseudoColumns(
             String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         MongoJsonSchema botSchema =
                 createBottomSchema(
                         new Pair<>(TABLE_CAT, BSON_STRING.getBsonName()),
@@ -1986,6 +2091,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new Pair<>(CHAR_OCTET_LENGTH, BSON_INT.getBsonName()),
                         new Pair<>(IS_NULLABLE, BSON_STRING.getBsonName()));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.connectionId,null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 }

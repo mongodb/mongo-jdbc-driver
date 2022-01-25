@@ -1,20 +1,20 @@
 package com.mongodb.jdbc;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.RowIdLifetime;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import com.mongodb.jdbc.logging.MongoLogger;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
 
+import java.sql.*;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected MongoConnection conn;
     protected String serverVersion;
+    protected Logger logger;;
 
     protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
     protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
@@ -130,14 +130,20 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
+        logger = MongoLogger.getLogger(this.getClass().getCanonicalName(), conn.connectionId);
+        //logger.log(Level.FINE, ">> Creating new MongoDatabaseMetaData");
     }
 
-    public static String escapeString(String value) {
+    public static String escapeString(Logger logger, String value) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         String escaped = value.replace("'", "''");
         return escaped.replace("\\", "\\\\");
     }
 
-    public static Pattern toJavaPattern(String sqlPattern) {
+    public static Pattern toJavaPattern(Logger logger, String sqlPattern) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
     }
 
@@ -150,56 +156,79 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     // First, a variety of minor information about the target database.
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public String getURL() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return conn.getURL();
     }
 
     @Override
     public String getUserName() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return conn.getUser();
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true; // we are only read-only for now.
     }
 
     @Override
     public boolean nullsAreSortedHigh() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedLow() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false; // missing and NULL < all other values
     }
 
     @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false; // missing and NULL < all other values
     }
 
     @Override
     public String getDatabaseProductName() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return "MongoDB Atlas Data Lake";
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        logger.log(Level.FINE, ">> getDatabaseProductVersion()");
         if (serverVersion != null) {
             return serverVersion;
         }
@@ -209,11 +238,15 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDriverName() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return "MongoDB Atlas Data Lake JDBC Driver";
     }
 
     @Override
     public String getDriverVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoDriver.VERSION;
     }
 
@@ -229,68 +262,94 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // No files are local on Atlas Data Lake
         return false;
     }
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // No files are local on Atlas Data Lake
         return false;
     }
 
     @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return supportsMixedCaseIdentifiers();
     }
 
     @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return "`";
     }
 
     @Override
     public String getSearchStringEscape() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return "\\";
     }
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // Retrieves all the "extra" characters that can be used in unquoted identifier names (those beyond a-z, A-Z, 0-9 and _).
         return "";
     }
@@ -300,31 +359,43 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsConvert(int fromType, int toType) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         switch (toType) {
             case Types.ARRAY:
                 return false;
@@ -344,271 +415,373 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We don't support transactions for now.
         return false;
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // If this isn't true, it's a bug.
         return true;
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // If this isn't true, it's a bug.
         return true;
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // If it does not, this is a bug.
         return true;
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // If it does not, this is a bug.
         return true;
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public String getSchemaTerm() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not support schemata.
         return "schema";
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not support procedures.
         return "procedure";
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return "database";
     }
 
     @Override
     public boolean isCatalogAtStart() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public String getCatalogSeparator() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return ".";
     }
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsPositionedDelete() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsPositionedUpdate() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSelectForUpdate() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsStoredProcedures() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsUnion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // Though we don't support rollback.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // Though we don't support commit.
         return true;
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // Though we don't support rollback.
         return true;
     }
@@ -620,27 +793,37 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     // limit, or the limit is not known.
     @Override
     public int getMaxBinaryLiteralLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxCharLiteralLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxColumnNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxColumnsInGroupBy() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // No specific max size, though it would be limited by max document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInIndex() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // MongoDB has no limit in 4.2+. Datalake doesn't support indexes, yet,
         // but returning 0 is fine.
         return 0;
@@ -648,83 +831,115 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getMaxColumnsInOrderBy() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInSelect() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // The only limit would be based on document size.
         return 0;
     }
 
     @Override
     public int getMaxColumnsInTable() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxConnections() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxCursorNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxIndexLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxSchemaNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxProcedureNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxCatalogNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 255;
     }
 
     @Override
     public int getMaxRowSize() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return true;
     }
 
     @Override
     public int getMaxStatementLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxStatements() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxTableNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
     @Override
     public int getMaxTablesInSelect() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 0;
     }
 
     @Override
     public int getMaxUserNameLength() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return APPROXIMATE_DOC_SIZE;
     }
 
@@ -732,37 +947,51 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDefaultTransactionIsolation() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return java.sql.Connection.TRANSACTION_NONE;
     }
 
     @Override
     public boolean supportsTransactions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return level == java.sql.Connection.TRANSACTION_NONE;
     }
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // at least when we support data manipulation calls. Also A => B and !A ==> true.
         return true;
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
@@ -951,76 +1180,102 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return type == ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return type == ResultSet.TYPE_FORWARD_ONLY && concurrency == ResultSet.CONCUR_READ_ONLY;
     }
 
     @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean updatesAreDetected(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have updates.
         return false;
     }
 
     @Override
     public boolean deletesAreDetected(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have deletes.
         return false;
     }
 
     @Override
     public boolean insertsAreDetected(int type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have inserts.
         return false;
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have updates.
         return false;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return conn;
     }
 
@@ -1028,21 +1283,29 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // This is related to keys generated automatically on inserts,
         // and we do not support inserts.
         return false;
@@ -1050,42 +1313,58 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsResultSetHoldability(int holdability) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
     @Override
     public int getResultSetHoldability() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return ResultSet.HOLD_CURSORS_OVER_COMMIT;
     }
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoDriver.MAJOR_VERSION;
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return MongoDriver.MINOR_VERSION;
     }
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 4;
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return 2;
     }
 
     @Override
     public int getSQLStateType() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // This is what postgres returns.
         return sqlStateSQL;
     }
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // It does not matter what return here. But we don't have locators
         // or allow them to be updated.
         return false;
@@ -1093,6 +1372,8 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return false;
     }
 
@@ -1100,17 +1381,23 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return RowIdLifetime.ROWID_UNSUPPORTED;
     }
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // This is related to using stored procedure escape syntax, which we do not support.
         return false;
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // No writes.
         return false;
     }
@@ -1126,6 +1413,8 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // We do not have generated keys.
         return false;
     }
@@ -1133,12 +1422,16 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     // java.sql.Wrapper impl
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return iface.isInstance(this);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return (T) this;
     }
 }

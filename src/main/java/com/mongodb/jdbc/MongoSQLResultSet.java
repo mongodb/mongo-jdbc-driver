@@ -2,27 +2,23 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.text.ParseException;
-import org.bson.BsonDocument;
-import org.bson.BsonMaxKey;
-import org.bson.BsonMinKey;
-import org.bson.BsonRegularExpression;
-import org.bson.BsonType;
-import org.bson.BsonUndefined;
-import org.bson.BsonValue;
+import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.MongoSQLException;
+import org.bson.*;
 import org.bson.types.Decimal128;
+
+import java.math.BigDecimal;
+import java.sql.*;
+import java.text.ParseException;
+import java.util.logging.Level;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
     public MongoSQLResultSet(
+            int connectionId,
             Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
-        super(statement);
+        super(connectionId, statement);
+        logger.log(Level.FINE, ">> Creating new MongoSQLResultSet");
         Preconditions.checkNotNull(cursor);
 
         this.rsMetaData = new MongoSQLResultSetMetaData(schema);
@@ -37,6 +33,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
     @Override
     protected boolean checkNull(BsonValue o) {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         // reset wasNull from previous check.
         wasNull = false;
         if (o == null) {
@@ -55,6 +53,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
     @Override
     protected BsonValue getBsonValue(int columnIndex) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         checkBounds(columnIndex);
         MongoColumnInfo columnInfo = rsMetaData.getColumnInfo(columnIndex);
         BsonDocument datasource = this.current.get(columnInfo.getTableName()).asDocument();
@@ -63,18 +63,22 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
     @Override
     protected BsonValue getBsonValue(String columnLabel) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         int columnIndex;
         if (rsMetaData.hasColumnWithLabel(columnLabel)) {
             columnIndex = rsMetaData.getColumnPositionFromLabel(columnLabel);
         } else {
 
-            throw new SQLException(String.format("column label '%s' not found", columnLabel));
+            throw new MongoSQLException(String.format("column label '%s' not found", columnLabel), logger);
         }
         return getBsonValue(columnIndex + 1);
     }
 
     @Override
     protected Object getObject(BsonValue o, int columnType) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         switch (columnType) {
             case Types.ARRAY:
                 // not supported
@@ -205,11 +209,13 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.VARCHAR:
                 return getString(o);
         }
-        throw new SQLException("getObject not supported for column type " + columnType);
+        throw new MongoSQLException("getObject not supported for column type " + columnType, logger);
     }
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue out = getBsonValue(columnIndex);
         int columnType = rsMetaData.getColumnType(columnIndex);
         return getObject(out, columnType);
@@ -217,6 +223,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue out = getBsonValue(columnLabel);
         int columnType = rsMetaData.getColumnType(findColumn(columnLabel));
         return getObject(out, columnType);
@@ -225,6 +233,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     public Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue out = getBsonValue(columnIndex);
         String columnTypeName = rsMetaData.getColumnTypeName(columnIndex);
         Class<?> type = map.get(columnTypeName);
@@ -237,27 +247,37 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     public Object getObject(String columnLabel, java.util.Map<String, Class<?>> map)
             throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return getObject(findColumn(columnLabel), map);
     }
 
     @Override
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         BsonValue out = getBsonValue(columnIndex);
         return type.cast(out);
     }
 
     @Override
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         return getObject(findColumn(columnLabel), type);
     }
 
     @Override
     protected byte[] handleBytesConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to blob.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to blob.", logger);
     }
 
     @Override
     protected byte[] getBytes(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return null;
         }
@@ -311,16 +331,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // this is consistent with $convert in mongodb.
                 return null;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected String handleStringConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to string.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to string.", logger);
     }
 
     @Override
     protected String getString(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return null;
         }
@@ -372,16 +396,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // this is consistent with $convert in mongodb.
                 return null;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected boolean handleBooleanConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to boolean.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to boolean.", logger);
     }
 
     @Override
     protected boolean getBoolean(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return false;
         }
@@ -439,16 +467,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // returns false for null values.
                 return false;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected long handleLongConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to integral type.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to integral type.", logger);
     }
 
     @Override
     protected long getLong(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return 0L;
         }
@@ -494,7 +526,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 try {
                     return Long.parseLong(o.asString().getValue());
                 } catch (NumberFormatException e) {
-                    throw new SQLException(e);
+                    throw new MongoSQLException(e, logger);
                 }
             case SYMBOL:
                 return handleLongConversionFailure(SYMBOL);
@@ -505,16 +537,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // returns 0.0 for null values.
                 return 0L;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected double handleDoubleConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to double.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to double.", logger);
     }
 
     @Override
     protected double getDouble(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return 0.0;
         }
@@ -560,7 +596,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 try {
                     return Double.parseDouble(o.asString().getValue());
                 } catch (NumberFormatException e) {
-                    throw new SQLException(e);
+                    throw new MongoSQLException(e, logger);
                 }
             case SYMBOL:
                 return handleDoubleConversionFailure(SYMBOL);
@@ -571,16 +607,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // returns 0.0 for null values.
                 return 0.0;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected BigDecimal handleBigDecimalConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to BigDecimal.");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to BigDecimal.", logger);
     }
 
     @Override
     protected BigDecimal getBigDecimal(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return BigDecimal.ZERO;
         }
@@ -626,7 +666,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 try {
                     return new BigDecimal(o.asString().getValue());
                 } catch (NumberFormatException | ArithmeticException e) {
-                    throw new SQLException(e);
+                    throw new MongoSQLException(e, logger);
                 }
             case SYMBOL:
                 return handleBigDecimalConversionFailure(SYMBOL);
@@ -637,16 +677,20 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // returns 0.0 for null values.
                 return BigDecimal.ZERO;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 
     @Override
     protected java.util.Date handleUtilDateConversionFailure(String from) throws SQLException {
-        throw new SQLException("The " + from + " type cannot be converted to java.util.Date");
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
+        throw new MongoSQLException("The " + from + " type cannot be converted to java.util.Date", logger);
     }
 
     @Override
     protected java.util.Date getUtilDate(BsonValue o) throws SQLException {
+        MongoLogger.logMethodEntry(logger, Thread.currentThread().getStackTrace()[1].
+                getMethodName());
         if (checkNull(o)) {
             return null;
         }
@@ -691,7 +735,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 try {
                     return dateFormat.parse(o.asString().getValue());
                 } catch (ParseException e) {
-                    throw new SQLException(e);
+                    throw new MongoSQLException(e, logger);
                 }
             case SYMBOL:
                 return handleUtilDateConversionFailure(SYMBOL);
@@ -701,6 +745,6 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // this is consistent with $convert in mongodb.
                 return null;
         }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        throw new MongoSQLException("Unknown BSON type: " + o.getBsonType() + ".", logger);
     }
 }
