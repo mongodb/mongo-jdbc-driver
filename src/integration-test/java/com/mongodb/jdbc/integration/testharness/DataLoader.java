@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import org.bson.BsonString;
 import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -94,6 +96,38 @@ public class DataLoader {
         }
     }
 
+    private void setSchema(String database, String collection, Map<String, Object> jsonSchema) {
+        BsonDocument command = new BsonDocument();
+        BsonDocument schema = new BsonDocument();
+        command.put("sqlSetSchema", new BsonString(collection));
+        command.put("schema", schema);
+        schema.put("version", new BsonInt32(1));
+
+        Document doc = new Document(jsonSchema);
+        schema.put(
+                "jsonSchema",
+                doc.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry()));
+        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+            MongoDatabase db = mongoClient.getDatabase(database);
+            db.runCommand(command);
+        }
+    }
+
+    private void generateSchemaOne(String database, String collection) {
+        BsonDocument command = new BsonDocument();
+        command.put("sqlGenerateSchema", new BsonInt32(1));
+        command.put("setSchemas", new BsonBoolean(true));
+
+        BsonArray coll = new BsonArray();
+        coll.add(new BsonString(database + "." + collection));
+        command.put("sampleNamespaces", coll);
+
+        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+            MongoDatabase db = mongoClient.getDatabase("admin");
+            db.runCommand(command);
+        }
+    }
+
     /**
      * Loads integration test data files from dataDirectory to database in specified url
      *
@@ -117,6 +151,12 @@ public class DataLoader {
                                     + entry.db
                                     + "."
                                     + entry.collection);
+                    if (entry.schema == null) {
+                        generateSchemaOne(entry.db, entry.collection);
+                    }
+                    if (entry.schema != null) {
+                        setSchema(entry.db, entry.collection, entry.schema);
+                    }
                 }
             }
         } catch (MongoException e) {
@@ -129,6 +169,5 @@ public class DataLoader {
         DataLoader loader = new DataLoader(TEST_DATA_DIRECTORY);
         loader.dropCollections();
         loader.loadTestData();
-        loader.generateSchema();
     }
 }

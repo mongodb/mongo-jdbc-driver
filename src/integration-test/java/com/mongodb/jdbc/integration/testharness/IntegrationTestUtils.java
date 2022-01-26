@@ -418,6 +418,11 @@ public class IntegrationTestUtils {
                         return false;
                     }
                     break;
+                case Types.TIMESTAMP:
+                    if (!expectedRow.get(i).equals(actualRow.getDate(i + 1))) {
+                        return false;
+                    }
+                    break;
                     // TODO: SQL-632 Support Types.OTHER
                     // This comparison needs to be improved to correctly handle Types.OTHER
                     /*
@@ -426,6 +431,11 @@ public class IntegrationTestUtils {
                             return false;
                         }
                      */
+                case Types.OTHER:
+                    if (!expectedRow.get(i).equals(actualRow.getObject(i + 1))) {
+                        return false;
+                    }
+                    break;
                 default:
                     throw new IllegalArgumentException("unsupported column type:" + columnType);
             }

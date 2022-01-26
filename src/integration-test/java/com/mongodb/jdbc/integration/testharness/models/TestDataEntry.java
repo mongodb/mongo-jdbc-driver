@@ -7,4 +7,5 @@ public class TestDataEntry {
     public String db;
     public String collection;
     public List<Map<String, Object>> docs;
+    public Map<String, Object> schema;
 }
