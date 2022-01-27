@@ -1,29 +1,55 @@
 package com.mongodb.jdbc;
 
-import static com.mongodb.jdbc.BsonTypeInfo.*;
-
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.mongodb.jdbc.BsonTypeInfo.*;
+
 public class MongoJsonSchema {
-    public String bsonType;
+    public static class ScalarProperties
+    {
+        protected String name;
+        protected boolean isRequired = true;
+        protected BsonTypeInfo type;
+
+        public ScalarProperties(String name, BsonTypeInfo type, boolean isRequired) {
+            this.name = name;
+            this.isRequired = isRequired;
+            this.type = type;
+        }
+
+        public ScalarProperties(String name, BsonTypeInfo type) {
+            this.name = name;
+            this.type = type;
+        }
+    }
+
+    public String topBsonType;
+    public Set<String> bsonType;
     public Map<String, MongoJsonSchema> properties;
     public Set<MongoJsonSchema> anyOf;
     public Set<String> required;
     public MongoJsonSchema items;
     public boolean additionalProperties;
 
-    public MongoJsonSchema() {}
+    public void setBsonType(Set<String> bsonType) {
+        this.bsonType = bsonType;
+        System.out.println(bsonType);
+        if (null == topBsonType && null != bsonType)
+        {
+            // Return the first of the list for now
+            // TODO - Check type hierarchy and return correct "top" type
+            topBsonType =  bsonType.toArray(new String[bsonType.size()])[0];
+        }
+    }
 
     public static MongoJsonSchema createEmptyObjectSchema() {
         MongoJsonSchema ret = new MongoJsonSchema();
-        ret.bsonType = "object";
+        ret.topBsonType = "object";
         ret.properties = new HashMap<>();
         ret.required = new HashSet<>();
         return ret;
@@ -31,7 +57,7 @@ public class MongoJsonSchema {
 
     public static MongoJsonSchema createScalarSchema(String type) {
         MongoJsonSchema ret = new MongoJsonSchema();
-        ret.bsonType = type;
+        ret.topBsonType = type;
         return ret;
     }
 
@@ -48,16 +74,18 @@ public class MongoJsonSchema {
      * @return void
      */
     @SafeVarargs
-    public final void addRequiredScalarKeys(Pair<String, String>... scalarProperties) {
+    public final void addRequiredScalarKeys(ScalarProperties... scalarProperties) {
         if (properties == null) {
             properties = new HashMap<>();
         }
         if (required == null) {
             required = new HashSet<>();
         }
-        for (Pair<String, String> p : scalarProperties) {
-            required.add(p.left());
-            properties.put(p.left(), createScalarSchema(p.right()));
+        for (ScalarProperties prop : scalarProperties) {
+            if (prop.isRequired) {
+                required.add(prop.name);
+            }
+            properties.put(prop.name, createScalarSchema(prop.type.getBsonName()));
         }
     }
 
@@ -69,7 +97,7 @@ public class MongoJsonSchema {
     // Any is represented by the empty json schema {}, so all fields
     // will be null or false
     public boolean isAny() {
-        return bsonType == null
+        return topBsonType == null
                 && properties == null
                 && anyOf == null
                 && required == null
@@ -78,7 +106,7 @@ public class MongoJsonSchema {
     }
 
     public boolean isObject() {
-        return bsonType != null && bsonType.equals("object");
+        return topBsonType != null && topBsonType.equals(BSON_OBJECT.getBsonName());
     }
 
     /**
@@ -133,8 +161,8 @@ public class MongoJsonSchema {
         }
 
         int nullable = required ? DatabaseMetaData.columnNoNulls : DatabaseMetaData.columnNullable;
-        if (columnSchema.bsonType != null) {
-            return columnSchema.bsonType.equals(BSON_NULL.getBsonName())
+        if (columnSchema.topBsonType != null) {
+            return columnSchema.topBsonType.equals(BSON_NULL.getBsonName())
                     ? DatabaseMetaData.columnNullable
                     : nullable;
         }
@@ -146,13 +174,13 @@ public class MongoJsonSchema {
         }
 
         for (MongoJsonSchema anyOfSchema : columnSchema.anyOf) {
-            if (anyOfSchema.bsonType == null) {
+            if (anyOfSchema.topBsonType == null) {
                 // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
                 throw new SQLException(
                         "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
             }
 
-            if (anyOfSchema.bsonType.equals(BSON_NULL.getBsonName())) {
+            if (anyOfSchema.topBsonType.equals(BSON_NULL.getBsonName())) {
                 return DatabaseMetaData.columnNullable;
             }
         }
@@ -167,8 +195,8 @@ public class MongoJsonSchema {
      * @throws SQLException If this schema is invalid
      */
     public BsonTypeInfo getBsonTypeInfo() throws SQLException {
-        if (this.bsonType != null) {
-            return getBsonTypeInfoByName(this.bsonType);
+        if (this.topBsonType != null) {
+            return getBsonTypeInfoByName(this.topBsonType);
         }
 
         if (this.isAny()) {
@@ -183,19 +211,19 @@ public class MongoJsonSchema {
 
         BsonTypeInfo info = null;
         for (MongoJsonSchema anyOfSchema : this.anyOf) {
-            if (anyOfSchema.bsonType == null) {
+            if (anyOfSchema.topBsonType == null) {
                 // Schemata returned by MongoSQL must be simplified. Having nested anyOf is invalid.
                 throw new SQLException(
                         "invalid schema: anyOf subschema must have bsonType field; nested anyOf must be simplified");
             }
 
-            if (!anyOfSchema.bsonType.equals(BSON_NULL.getBsonName())) {
+            if (!anyOfSchema.topBsonType.equals(BSON_NULL.getBsonName())) {
                 // If info is not null, there must be more than one non-"null" anyOf type, so
                 // we default to "bson".
                 if (info != null) {
                     info = BSON_BSON;
                 } else {
-                    info = getBsonTypeInfoByName(anyOfSchema.bsonType);
+                    info = getBsonTypeInfoByName(anyOfSchema.topBsonType);
                 }
             }
         }

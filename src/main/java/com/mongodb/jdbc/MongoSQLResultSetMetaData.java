@@ -55,7 +55,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         assertDatasourceSchema(datasourceSchema);
 
         String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
-        Arrays.sort(fields);
+        //Arrays.sort(fields);
 
         for (String field : fields) {
             MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
