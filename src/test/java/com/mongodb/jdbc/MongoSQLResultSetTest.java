@@ -52,7 +52,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     static {
         try {
             schema = generateMongoJsonSchema();
-            resultSetMetaData = new MongoSQLResultSetMetaData(schema);
+            resultSetMetaData = new MongoSQLResultSetMetaData(schema, false);
             mongoStatement = new MongoSQLStatement(mongoConnection, "test");
         } catch (SQLException e) {
             throw new RuntimeException(e);

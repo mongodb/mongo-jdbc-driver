@@ -20,7 +20,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     static {
         try {
-            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema());
+            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema(), true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
