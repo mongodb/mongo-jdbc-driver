@@ -3,7 +3,6 @@ package com.mongodb.jdbc.integration;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
-import com.mongodb.jdbc.integration.testharness.DataLoader;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.IOException;
@@ -15,17 +14,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.bson.BsonDbPointer;
+import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
+import org.bson.BsonJavaScriptWithScope;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
 import org.bson.BsonObjectId;
 import org.bson.BsonRegularExpression;
+import org.bson.BsonString;
 import org.bson.BsonSymbol;
 import org.bson.BsonTimestamp;
+import org.bson.BsonUndefined;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -80,26 +81,35 @@ public class MongoSQLIntegrationTest {
 
     @Test
     public void testTypesOther() throws SQLException, IOException, IllegalAccessException {
-        DataLoader loader = new DataLoader(TEST_DATA_OTHER_DIRECTORY);
-        loader.dropCollections();
-
-        Map<String, Object> row = new LinkedHashMap<>();
+        List<Object> row = new ArrayList<>();
         ObjectId objID = new ObjectId("000000000000000000000001");
-        BsonObjectId objectID = new BsonObjectId(objID);
+        BsonObjectId bsonObjectID = new BsonObjectId(objID);
         BsonDbPointer dbPointer = new BsonDbPointer("namespace", objID);
         BsonJavaScript javaScript = new BsonJavaScript("function(){ }");
         BsonRegularExpression regularExpression = new BsonRegularExpression("a(bc)*");
         BsonSymbol symbol = new BsonSymbol("symbol");
-        BsonTimestamp timestamp = new BsonTimestamp(100);
+        BsonTimestamp timestamp = new BsonTimestamp(100, 0);
+        BsonUndefined undefined = new BsonUndefined();
+        BsonDocument object = new BsonDocument();
+        object.append("foo", new BsonString("bar"));
+        BsonJavaScriptWithScope javaScriptWithScope =
+                new BsonJavaScriptWithScope("function(){ }", object);
 
-        row.put("_id", objectID);
-        row.put("a", dbPointer);
-        row.put("b", javaScript);
-        row.put("c", new BsonMaxKey());
-        row.put("d", new BsonMinKey());
-        row.put("e", regularExpression);
-        row.put("f", symbol);
-        row.put("g", timestamp);
+        row.add(0);
+        row.add(dbPointer);
+        row.add(javaScript);
+        row.add(javaScriptWithScope);
+        row.add(new BsonMaxKey());
+        row.add(new BsonMinKey());
+        row.add(object);
+        row.add(bsonObjectID);
+        row.add(regularExpression);
+        row.add(symbol);
+        row.add(timestamp);
+
+        // Skip Reason -
+        //row.add(undefined);
+
         /*
         // Skip Reason - SQL-697
         // Getting result set schema throwing error: data did not match any variant of untagged enum BsonType
@@ -107,31 +117,43 @@ public class MongoSQLIntegrationTest {
         array.add(new BsonInt32(1));
         array.add(new BsonInt32(2));
         array.add(new BsonInt32(3));
-        row.put("h", array);
+        row.add(array);
          */
-
-        loader.loadTestRow("integration_test", "types_other", row);
-        loader.generateSchema();
 
         TestEntry testEntry = new TestEntry();
         testEntry.expected_column_label =
-                new ArrayList(Arrays.asList("_id", "a", "b", "c", "d", "e", "f", "g"));
+                new ArrayList(
+                        Arrays.asList(
+                                "_id",
+                                "dbPointer",
+                                "javascript",
+                                "javascriptWithScope",
+                                "maxKey",
+                                "minKey",
+                                "object",
+                                "objectId",
+                                "regularExpression",
+                                "symbol",
+                                "timestamp"));
         testEntry.expected_bson_type =
                 new ArrayList(
                         Arrays.asList(
-                                "objectId",
+                                "int",
                                 "dbPointer",
                                 "javascript",
+                                "javascriptWithScope",
                                 "maxKey",
                                 "minKey",
+                                "object",
+                                "objectId",
                                 "regex",
                                 "symbol",
                                 "timestamp"));
         testEntry.expected_sql_type =
                 new ArrayList(
                         Arrays.asList(
-                                "OTHER", "OTHER", "OTHER", "OTHER", "OTHER", "OTHER", "OTHER",
-                                "OTHER"));
+                                "INTEGER", "OTHER", "OTHER", "OTHER", "OTHER", "OTHER", "OTHER",
+                                "OTHER", "OTHER", "OTHER", "OTHER"));
 
         try (Connection conn = getBasicConnection("integration_test")) {
             Statement stmt = conn.createStatement();
@@ -139,7 +161,7 @@ public class MongoSQLIntegrationTest {
             MongoSQLResultSetMetaData resultSetMetadata =
                     (MongoSQLResultSetMetaData) rs.getMetaData();
             rs.next();
-            assertTrue(IntegrationTestUtils.compareRow(new ArrayList<>(row.values()), rs));
+            assertTrue(IntegrationTestUtils.compareRow(row, rs));
             IntegrationTestUtils.validateResultSetMetadata(testEntry, resultSetMetadata);
         }
     }

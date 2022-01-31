@@ -127,7 +127,21 @@ public class DataLoader {
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     MongoCollection<Document> collection = database.getCollection(entry.collection);
-                    if (entry.docs != null) {
+
+                    if (entry.docsJson != null) {
+                        // Process extended json format
+                        for (Map<String, Object> row : entry.docsJson) {
+                            Document d = Document.parse(new Document(row).toJson());
+                            collection.insertOne(new Document(d));
+                        }
+                        System.out.println(
+                                "Inserted "
+                                        + entry.docsJson.size()
+                                        + " rows into "
+                                        + entry.db
+                                        + "."
+                                        + entry.collection);
+                    } else if (entry.docs != null) {
                         for (Map<String, Object> row : entry.docs) {
                             collection.insertOne(new Document(row));
                         }

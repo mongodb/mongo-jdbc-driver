@@ -7,5 +7,6 @@ public class TestDataEntry {
     public String db;
     public String collection;
     public List<Map<String, Object>> docs;
+    public List<Map<String, Object>> docsJson;
     public List<Map<String, Object>> nonuniqueIndexes;
 }

@@ -1,3 +1,0 @@
-dataset:
-  - db: integration_test
-    collection: types_other
