@@ -56,7 +56,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
 
         String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
         // [SQL-703] Only sort the result columns alphabetically for non database metadata resultsets.
-        if (!sortFieldsAlphabetically) {
+        if (sortFieldsAlphabetically) {
             Arrays.sort(fields);
         }
 
