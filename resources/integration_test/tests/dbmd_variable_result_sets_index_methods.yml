@@ -21,6 +21,7 @@ tests:
     row_count: 1
     expected_sql_type: [LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
+    expected_bson_type: [string, int, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, int, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
@@ -50,6 +51,7 @@ tests:
     row_count: 0
     expected_sql_type: [LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
+    expected_bson_type: [string, int, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, int, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
@@ -83,6 +85,8 @@ tests:
     row_count: 3
     expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
                         BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, long, string, long, string, string, bool, int, long,
+                          string, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
                                  java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
@@ -123,6 +127,8 @@ tests:
     row_count: 1
     expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
                         BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, long, string, long, string, string, bool, int, long,
+                          string, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
                                  java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
@@ -164,6 +170,8 @@ tests:
     row_count: 2
     expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
                         BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, long, string, long, string, string, bool, int, long,
+                          string, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
                                  java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
