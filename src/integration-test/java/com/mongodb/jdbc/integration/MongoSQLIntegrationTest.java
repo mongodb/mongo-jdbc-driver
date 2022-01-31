@@ -107,11 +107,11 @@ public class MongoSQLIntegrationTest {
         row.add(symbol);
         row.add(timestamp);
 
-        // Skip Reason -
+        // Skip Reason: SQL-395
         //row.add(undefined);
 
         /*
-        // Skip Reason - SQL-697
+        // Skip Reason: SQL-697
         // Getting result set schema throwing error: data did not match any variant of untagged enum BsonType
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(1));
