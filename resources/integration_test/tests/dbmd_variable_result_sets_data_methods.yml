@@ -8,6 +8,7 @@ tests:
       - [integration_test]
     row_count: 2
     expected_sql_type: [LONGVARCHAR]
+    expected_bson_type: [ string ]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
     expected_column_label: [TABLE_CAT]
