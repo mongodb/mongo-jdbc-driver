@@ -396,9 +396,8 @@ public class IntegrationTestUtils {
 
     private static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
             throws SQLException {
-        boolean result = true;
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
-        assertEquals(expectedRow.size(), rsMetadata.getColumnCount(), "Either the yml test specification is missing entries for 'expected_result' or the data in the DB is not matching the test");
+        assertEquals(expectedRow.size(), rsMetadata.getColumnCount(), "Columns count mismatch.\nEither the yml test specification is missing columns for 'expected_result' or the data in the DB is not matching the test");
 
         for (int i = 0; i < expectedRow.size(); i++) {
             // Handle expected field being null

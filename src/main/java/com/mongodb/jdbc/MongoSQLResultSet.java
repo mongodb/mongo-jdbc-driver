@@ -25,7 +25,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         super(statement);
         Preconditions.checkNotNull(cursor);
 
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement == null);
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement != null);
         this.cursor = cursor;
     }
 

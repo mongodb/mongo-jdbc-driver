@@ -50,13 +50,13 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     }
 
-    private void processDataSource(MongoJsonSchema schema, String datasource, boolean isDatabaseMetadataResultSet) throws SQLException {
+    private void processDataSource(MongoJsonSchema schema, String datasource, boolean sortFieldsAlphabetically) throws SQLException {
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertDatasourceSchema(datasourceSchema);
 
         String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
         // [SQL-703] Only sort the result columns alphabetically for non database metadata resultsets.
-        if (!isDatabaseMetadataResultSet) {
+        if (!sortFieldsAlphabetically) {
             Arrays.sort(fields);
         }
 
@@ -74,7 +74,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     };
 
-    public MongoSQLResultSetMetaData(MongoJsonSchema schema, boolean isDatabaseMetadataResultSet) throws SQLException {
+    public MongoSQLResultSetMetaData(MongoJsonSchema schema, boolean sortFieldsAlphabetically) throws SQLException {
         assertDatasourceSchema(schema);
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();
@@ -85,7 +85,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         Arrays.sort(datasources);
 
         for (String datasource : datasources) {
-            processDataSource(schema, datasource, isDatabaseMetadataResultSet);
+            processDataSource(schema, datasource, sortFieldsAlphabetically);
         }
     }
 
