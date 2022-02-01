@@ -99,7 +99,7 @@ tests:
     sql: SELECT * from any
     skip_reason: SQL-696
 
-  - description: select_field_from_any
+  - description: select_polymorphic_field
     db: integration_test
     sql: SELECT b from any_collection
     expected_result:
