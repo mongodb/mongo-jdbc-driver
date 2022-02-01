@@ -38,7 +38,7 @@ tests:
 
   - description: select_as_confirm_column_label
     db: integration_test
-    sql: SELECT enrolled AS e, studentid AS s, name AS n from class
+    sql: SELECT enrolled AS e, studentid AS s, name AS n FROM class
     expected_result:
       - [ true, John, 10329 ]
       - [ false, Jane, 342 ]
