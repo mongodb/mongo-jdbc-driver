@@ -56,19 +56,6 @@ public class DataLoader {
         readDataFiles(dataDirectory);
     }
 
-    private void generateSchema() {
-        BsonDocument command = new BsonDocument();
-        command.put("sqlGenerateSchema", new BsonInt32(1));
-        command.put("setSchemas", new BsonBoolean(true));
-
-        try (MongoClient mongoClient = new MongoClient(adlUri)) {
-            for (String database : databases) {
-                MongoDatabase db = mongoClient.getDatabase(database);
-                db.runCommand(command);
-            }
-        }
-    }
-
     private void readDataFiles(String dataDirectory) throws IOException {
         File folder = new File(dataDirectory);
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
@@ -118,7 +105,7 @@ public class DataLoader {
         }
     }
 
-    private void generateSchemaOne(String database, String collection) {
+    private void generateSchema(String database, String collection) {
         BsonDocument command = new BsonDocument();
         command.put("sqlGenerateSchema", new BsonInt32(1));
         command.put("setSchemas", new BsonBoolean(true));
@@ -169,7 +156,7 @@ public class DataLoader {
                         }
                     }
                     if (entry.schema == null) {
-                        generateSchemaOne(entry.db, entry.collection);
+                        generateSchema(entry.db, entry.collection);
                     }
                     if (entry.schema != null) {
                         setSchema(entry.db, entry.collection, entry.schema);

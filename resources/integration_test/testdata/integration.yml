@@ -70,17 +70,18 @@ dataset:
     }
 
   - db: integration_test
-    collection: null_field
+    collection: null_and_missing
     docs:
-      - { _id: 0, "a": "a" }
+      - { _id: 0, "a": !!org.bson.BsonTimestamp 1}
       - { _id: 1, "a": null }
+      - { _id: 2 }
 
   - db: integration_test
-    collection: a_column_order
+    collection: a_non_lexicographic_field_order
     docs:
       - { _id: 4, "c": 7, "b": 6, "a":5, "A":1, "B": 2, "C": 3 }
 
   - db: integration_test
-    collection: b_column_order
+    collection: b_non_lexicographic_field_order
     docs:
-      - { _id: 11, "C": 10, "B": 9, "A": 8, "a": 12, "b": 13, "c": 14 }
+      - { "a": 9, _id: 8 }
