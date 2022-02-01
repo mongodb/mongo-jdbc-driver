@@ -1,5 +1,5 @@
 tests:
-  - description: select_star_from_grades_ordered
+  - description: select_star_ordered
     db: integration_test
     sql: SELECT * FROM grades ORDER BY _id
     ordered: true
