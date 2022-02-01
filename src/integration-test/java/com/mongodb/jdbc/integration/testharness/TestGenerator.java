@@ -94,6 +94,7 @@ public class TestGenerator {
         }
 
         testCase.put("description", description);
+        testCase.put("db", testEntry.db);
         if (testEntry.meta_function != null) {
             testCase.put("meta_function", testEntry.meta_function);
         } else {

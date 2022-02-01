@@ -1,0 +1,117 @@
+tests:
+  # getTableTypes()
+  - description: getTableTypes_returns_constant_result_set
+    db: integration_test
+    meta_function: [getTableTypes]
+    expected_result:
+      - [TABLE]
+      - [VIEW]
+    row_count: 2
+    expected_sql_type: [LONGVARCHAR]
+    expected_catalog_name: ['']
+    expected_column_class_name: [java.lang.String]
+    expected_column_label: [TABLE_TYPE]
+    expected_column_display_size: [0]
+    expected_precision: [0]
+    expected_scale: [0]
+    expected_schema_name: ['']
+    expected_is_auto_increment: [false]
+    expected_is_case_sensitive: [true]
+    expected_is_currency: [false]
+    expected_is_definitely_writable: [false]
+    expected_is_nullable: [columnNoNulls]
+    expected_is_read_only: [true]
+    expected_is_searchable: [true]
+    expected_is_signed: [false]
+    expected_is_writable: [false]
+
+  # getTypeInfo()
+  - description: getTypeInfo_returns_constant_result_set
+    db: integration_test
+    skip_reason: "SQL-669, SQL-670: incorrect expected_is_nullable. also missing null type info in actual result set."
+    meta_function: [getTypeInfo]
+    expected_result:
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         array, false]
+      - [false, false, null, -2, false, null, null, null, 0, 0, 1, 0, 0, 0, 0, 0,
+         binData, false]
+      - [false, false, null, -7, false, null, null, null, 0, 0, 1, 0, 1, 3, 0, 0,
+         bool, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         bson, false]
+      - [false, false, null, 93, false, '''', '''', null, 3, 0, 1, 0, 24, 3, 0, 0,
+         date, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         dbPointer, false]
+      - [false, false, null, 3, false, null, null, null, 34, 34, 1, 10, 34, 3, 0,
+         0, decimal, false]
+      - [false, false, null, 8, false, null, null, null, 15, 15, 1, 2, 15, 3, 0, 0,
+         double, false]
+      - [false, false, null, 4, false, null, null, null, 0, 0, 1, 2, 10, 3, 0, 0,
+         int, false]
+      - [false, true, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         javascript, false]
+      - [false, true, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         javascriptWithScope, false]
+      - [false, false, null, -5, false, null, null, null, 0, 0, 1, 2, 19, 3, 0, 0,
+         long, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         maxKey, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         minKey, false]
+      - [false, false, null, 0, false, null, null, null, 0, 0, 1, 0, null, 3, 0, 0,
+         !!str "null", false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         object, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 24, 3, 0,
+         0, objectId, false]
+      - [false, true, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         regex, false]
+      - [false, true, null, -1, false, '''', '''', null, 0, 0, 1, 0, 0, 3, 0, 0, string,
+         false]
+      - [false, true, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         symbol, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         timestamp, false]
+      - [false, false, null, 1111, false, null, null, null, 0, 0, 1, 0, 0, 3, 0, 0,
+         undefined, false]
+    row_count: 22
+    expected_sql_type: [BIT, BIT, LONGVARCHAR, INTEGER, BIT, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER,
+                        INTEGER, LONGVARCHAR, BIT]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                            '', '', '', '']
+    expected_column_class_name: [boolean, boolean, java.lang.String, int, boolean,
+                                 java.lang.String, java.lang.String, java.lang.String, int, int, int, int, int,
+                                 int, int, int, java.lang.String, boolean]
+    expected_column_label: [AUTO_INCREMENT, CASE_SENSITIVE, CREATE_PARAMS, DATA_TYPE,
+                            FIX_PREC_SCALE, LITERAL_PREFIX, LITERAL_SUFFIX, LOCAL_TYPE_NAME, MAXIMUM_SCALE,
+                            MINIMUM_SCALE, NULLABLE, NUM_PREC_RADIX, PRECISION, SEARCHABLE, SQL_DATA_TYPE,
+                            SQL_DATETIME_SUB, TYPE_NAME, UNSIGNED_ATTRIBUTE]
+    expected_column_display_size: [1, 1, 0, 10, 1, 0, 0, 0, 10, 10, 10, 10, 10, 10,
+                                   10, 10, 0, 1]
+    expected_precision: [1, 1, 0, 10, 1, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10,
+                         0, 1]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
+                           '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false, false, false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, false, false, true, true, true,
+                                 false, false, false, false, false, false, false, false, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true, true, true, true, true, true]
+    expected_is_signed: [false, false, false, true, false, false, false, false, true,
+                         true, true, true, true, true, true, true, false, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false, false, false, false, false, false]

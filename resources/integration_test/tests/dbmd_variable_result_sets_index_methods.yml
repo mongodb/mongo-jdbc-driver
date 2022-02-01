@@ -1,0 +1,196 @@
+tests:
+  # getBestRowIdentifier(catalog, schema, table, scope, nullable)
+  # note: the MongoSQLDatabaseMetaData implementation ignores schema, scope, and nullable
+  - description: getBestRowIdentifier no catalog filter returns results for all matching tables
+    db: integration_test
+    meta_function: ["getBestRowIdentifier", null, null, "foo", 0, false]
+    skip_reason: "SQL-668, MHOUSE-1459: fix MongoJsonSchema bsonType String/Array conflict. also expose indexes from mongo-based sources"
+
+  - description: getBestRowIdentifier exact catalog and table filter
+    db: integration_test
+    meta_function: ["getBestRowIdentifier", "integration_test", null, "foo", 0, false]
+    skip_reason: "SQL-668, MHOUSE-1459: fix MongoJsonSchema bsonType String/Array conflict. also expose indexes from mongo-based sources"
+
+  # getPrimaryKeys(catalog, schema, table)
+  - description: getPrimaryKeys_no_catalog_filter_returns_results_for_all_matching_tables
+    db: integration_test
+    skip_reason: "MHOUSE-1459: expose indexes from mongo-based sources"
+    meta_function: [getPrimaryKeys, null, null, foo]
+    expected_result:
+      - [_id, 1, _id_, integration_test, foo, null]
+    row_count: 1
+    expected_sql_type: [LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String]
+    expected_column_label: [COLUMN_NAME, KEY_SEQ, PK_NAME, TABLE_CAT, TABLE_NAME,
+                            TABLE_SCHEM]
+    expected_column_display_size: [0, 10, 0, 0, 0, 0]
+    expected_precision: [0, 10, 0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, false, true, true, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, true, false, false, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  - description: getPrimaryKeys_exact_catalog_and_table_filter
+    db: integration_test
+    skip_reason: "MHOUSE-1459: expose indexes from mongo-based sources"
+    meta_function: [getPrimaryKeys, integration_test, null, bar]
+    expected_result:
+      - [_id, 1, _id_, integration_test, bar, null]
+    row_count: 0
+    expected_sql_type: [LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR]
+    expected_catalog_name: ['', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, int, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String]
+    expected_column_label: [COLUMN_NAME, KEY_SEQ, PK_NAME, TABLE_CAT, TABLE_NAME,
+                            TABLE_SCHEM]
+    expected_column_display_size: [0, 10, 0, 0, 0, 0]
+    expected_precision: [0, 10, 0, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, false, true, true, true, true]
+    expected_is_currency: [false, false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable]
+    expected_is_read_only: [true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true]
+    expected_is_signed: [false, true, false, false, false, false]
+    expected_is_writable: [false, false, false, false, false, false]
+
+  # getIndexInfo(catalog, schema, table, unique, approximate)
+  # note: the MongoSQLDatabaseMetaData implementation ignores schema and approximate
+  - description: getIndexInfo_no_catalog_filter_returns_results_for_all_matching_tables
+    db: integration_test
+    skip_reason: "SQL-669, MHOUSE-1459: incorrect column nullability. also expose indexes from mongo-based sources"
+    meta_function: [getIndexInfo, null, null, foo, false, false]
+    expected_result:
+      - [A, null, _id, null, _id_, null, false, 1, null, integration_test, foo, null, 3]
+      - [A, null, a, null, a_1, null, true, 1, null, integration_test, foo, null, 3]
+      - [D, null, b, null, b_-1, null, true, 1, null, db2, foo, null, 3]
+    row_count: 3
+    expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
+                        BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
+                                 java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 int]
+    expected_column_label: [ASC_OR_DESC, CARDINALITY, COLUMN_NAME, FILTER_CONDITION,
+                            INDEX_NAME, INDEX_QUALIFIER, NON_UNIQUE, ORDINAL_POSITION, PAGES, TABLE_CAT,
+                            TABLE_NAME, TABLE_SCHEM, TYPE]
+    expected_column_display_size: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_precision: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, false, true, false, true, true, false, false,
+                                 false, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNullable, columnNoNulls, columnNullable,
+                           columnNoNulls, columnNullable, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true]
+    expected_is_signed: [false, true, false, true, false, false, false, true, true,
+                         false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
+
+  - description: getIndexInfo_exact_catalog_and_table_filter_with_unique_true
+    db: integration_test
+    skip_reason: "SQL-669, MHOUSE-1459: incorrect column nullability. also expose indexes from mongo-based sources"
+    meta_function: [getIndexInfo, integration_test, null, foo, true, false]
+    expected_result:
+      - [A, null, _id, null, _id_, null, false, 1, null, integration_test, foo, null, 3]
+    row_count: 1
+    expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
+                        BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
+                                 java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 int]
+    expected_column_label: [ASC_OR_DESC, CARDINALITY, COLUMN_NAME, FILTER_CONDITION,
+                            INDEX_NAME, INDEX_QUALIFIER, NON_UNIQUE, ORDINAL_POSITION, PAGES, TABLE_CAT,
+                            TABLE_NAME, TABLE_SCHEM, TYPE]
+    expected_column_display_size: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_precision: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, false, true, false, true, true, false, false,
+                                 false, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNullable, columnNoNulls, columnNullable,
+                           columnNoNulls, columnNullable, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true]
+    expected_is_signed: [false, true, false, true, false, false, false, true, true,
+                         false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
+
+  - description: getIndexInfo_exact_catalog_and_table_filter_with_unique_false
+    db: integration_test
+    skip_reason: "SQL-669, MHOUSE-1459: incorrect column nullability. also expose indexes from mongo-based sources"
+    meta_function: [getIndexInfo, integration_test, null, foo, false, false]
+    expected_result:
+      - [A, null, _id, null, _id_, null, false, 1, null, integration_test, foo, null, 3]
+      - [A, null, a, null, a_1, null, true, 1, null, integration_test, foo, null, 3]
+    row_count: 2
+    expected_sql_type: [LONGVARCHAR, BIGINT, LONGVARCHAR, BIGINT, LONGVARCHAR, LONGVARCHAR,
+                        BIT, INTEGER, BIGINT, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, int, java.lang.String, int, java.lang.String,
+                                 java.lang.String, boolean, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 int]
+    expected_column_label: [ASC_OR_DESC, CARDINALITY, COLUMN_NAME, FILTER_CONDITION,
+                            INDEX_NAME, INDEX_QUALIFIER, NON_UNIQUE, ORDINAL_POSITION, PAGES, TABLE_CAT,
+                            TABLE_NAME, TABLE_SCHEM, TYPE]
+    expected_column_display_size: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_precision: [0, 19, 0, 19, 0, 0, 1, 10, 19, 0, 0, 0, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false, false, false]
+    expected_is_case_sensitive: [true, false, true, false, true, true, false, false,
+                                 false, true, true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false, false, false]
+    expected_is_nullable: [columnNoNulls, columnNullable, columnNoNulls, columnNullable,
+                           columnNoNulls, columnNullable, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNoNulls]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true, true, true]
+    expected_is_signed: [false, true, false, true, false, false, false, true, true,
+                         false, false, false, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false, false, false]
