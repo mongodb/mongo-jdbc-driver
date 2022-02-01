@@ -51,13 +51,7 @@ public class IntegrationTestUtils {
         if (!folder.exists()) {
             return testEntries;
         }
-        if (folder.isDirectory()) {
-            processDirectory(folder, tests);
-        }
-        else
-        {
-            tests.add(processTestFile(folder.getPath()));
-        }
+        processDirectory(folder, tests);
 
         for (Tests testList : tests) {
             testEntries.addAll(testList.tests);
