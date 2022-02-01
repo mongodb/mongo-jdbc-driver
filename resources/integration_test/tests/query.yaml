@@ -5,7 +5,7 @@ tests:
     ordered: true
     skip_reason: SQL-659
 
-  - description: select_star_from_class_unordered
+  - description: select_star_unordered
     db: integration_test
     sql: SELECT * FROM class
     expected_result:
