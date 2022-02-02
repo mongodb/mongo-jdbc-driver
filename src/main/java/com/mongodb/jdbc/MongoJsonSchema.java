@@ -6,8 +6,11 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 public class MongoJsonSchema {
 
@@ -21,12 +24,17 @@ public class MongoJsonSchema {
     /**
      * Converts a deserialized jsonSchema into a MongoJsonSchema. The MongoJsonSchema instance is
      * semantically equivalent to the base jsonSchema, but bsonType has to be a single type
-     * otherwise the types will get pushed down in the anyOf list.
+     * otherwise the types will get pushed down in the anyOf list  and nested anyOfs are flattened.
      *
      * @param baseSchema The base json schema.
      * @return the corresponding MongoJsonSchema.
      */
-    public static MongoJsonSchema toMongoJsonSchema(JsonSchema baseSchema) {
+    public static MongoJsonSchema toSimplifiedMongoJsonSchema(JsonSchema baseSchema) {
+        MongoJsonSchema unsimplifiedSchema = toMongoJsonSchema(baseSchema);
+        return flattenNestedAnyOfs(unsimplifiedSchema);
+    }
+
+    private static MongoJsonSchema toMongoJsonSchema(JsonSchema baseSchema) {
         if (null == baseSchema) {
             return null;
         }
@@ -36,11 +44,11 @@ public class MongoJsonSchema {
         if (null != baseSchema.anyOf) {
             result.anyOf = new HashSet<MongoJsonSchema>();
             for (JsonSchema baseAnyOf : baseSchema.anyOf) {
-                result.anyOf.add(toMongoJsonSchema(baseAnyOf));
+                result.anyOf.add(toSimplifiedMongoJsonSchema(baseAnyOf));
             }
         }
         result.required = baseSchema.required;
-        result.items = toMongoJsonSchema(baseSchema.items);
+        result.items = toSimplifiedMongoJsonSchema(baseSchema.items);
         result.additionalProperties = baseSchema.additionalProperties;
 
         // [SQL-668]  bsonType is always a set of String, not a single String when deserializing the json data.
@@ -83,7 +91,7 @@ public class MongoJsonSchema {
             anyOfSchema.bsonType = currType;
 
             if (BSON_ARRAY.getBsonName().equalsIgnoreCase(currType)) {
-                anyOfSchema.items = toMongoJsonSchema(baseSchema.items);
+                anyOfSchema.items = toSimplifiedMongoJsonSchema(baseSchema.items);
             } else if (BSON_OBJECT.getBsonName().equalsIgnoreCase(currType)) {
                 anyOfSchema.properties = toMongoJsonSchemaProperties(baseSchema.properties);
                 anyOfSchema.required = baseSchema.required;
@@ -91,6 +99,37 @@ public class MongoJsonSchema {
             }
             // Add the bson type as a new anyOf schema
             result.anyOf.add(anyOfSchema);
+        }
+
+        return result;
+    }
+
+    /**
+     * Simplify  flattens nested anyOf.
+     * @param ioSchema    The schema to simplify. ioSchema will be modified directly.
+     * @return the simplified schema for convenience.
+     */
+    private static MongoJsonSchema flattenNestedAnyOfs(MongoJsonSchema ioSchema)
+    {
+        MongoJsonSchema result = ioSchema;
+        if (result.anyOf != null && !result.anyOf.isEmpty()) {
+            result.anyOf = result.anyOf.stream()
+                    .flatMap(anyOf -> {
+                        if (anyOf == null) {
+                            return Stream.empty();
+                        } else if (anyOf.anyOf != null && !anyOf.anyOf.isEmpty()) {
+                            return anyOf.anyOf.stream();
+                        } else {
+                            return Stream.of(anyOf);
+                        }
+                    })
+                    .collect(Collectors.toSet());
+        }
+        else
+        {
+            for (Map.Entry<String, MongoJsonSchema> prop : result.properties.entrySet()) {
+                prop.setValue(flattenNestedAnyOfs(prop.getValue()));
+            }
         }
 
         return result;
@@ -117,7 +156,7 @@ public class MongoJsonSchema {
         }
         Map<String, MongoJsonSchema> to = new HashMap<String, MongoJsonSchema>();
         for (Map.Entry<String, JsonSchema> entry : from.entrySet()) {
-            to.put(entry.getKey(), toMongoJsonSchema(entry.getValue()));
+            to.put(entry.getKey(), toSimplifiedMongoJsonSchema(entry.getValue()));
         }
         return to;
     }
@@ -253,6 +292,7 @@ public class MongoJsonSchema {
      * @return The relevant BsonTypeInfo value
      * @throws SQLException If this schema is invalid
      */
+    @BsonIgnore
     public BsonTypeInfo getBsonTypeInfo() throws SQLException {
         if (this.bsonType != null) {
             return getBsonTypeInfoByName(this.bsonType);
