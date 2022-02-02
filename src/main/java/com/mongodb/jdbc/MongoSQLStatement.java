@@ -39,7 +39,7 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
                             .withCodecRegistry(MongoDriver.registry)
                             .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
 
-            MongoJsonSchema schema = schemaResult.schema.jsonSchema;
+            MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
             resultSet = new MongoSQLResultSet(this, iterable.cursor(), schema);
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {

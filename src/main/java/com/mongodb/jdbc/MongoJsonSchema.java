@@ -4,14 +4,13 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MongoJsonSchema {
+
     public String bsonType;
     public Map<String, MongoJsonSchema> properties;
     public Set<MongoJsonSchema> anyOf;
@@ -19,7 +18,83 @@ public class MongoJsonSchema {
     public MongoJsonSchema items;
     public boolean additionalProperties;
 
-    public MongoJsonSchema() {}
+    /**
+     * Converts a deserialized jsonSchema into a MongoJsonSchema. The MongoJsonSchema instance is
+     * semantically equivalent to the base jsonSchema, but bsonType has to be a single type
+     * otherwise the types will get pushed down in the anyOf list.
+     *
+     * @param baseSchema The base json schema.
+     * @return the corresponding MongoJsonSchema.
+     */
+    public static MongoJsonSchema toMongoJsonSchema(JsonSchema baseSchema) {
+        if (null == baseSchema) {
+            return null;
+        }
+
+        MongoJsonSchema result = new MongoJsonSchema();
+        result.properties = toMongoJsonSchemaProperties(baseSchema.properties);
+        if (null != baseSchema.anyOf) {
+            result.anyOf = new HashSet<MongoJsonSchema>();
+            for (JsonSchema baseAnyOf : baseSchema.anyOf) {
+                result.anyOf.add(toMongoJsonSchema(baseAnyOf));
+            }
+        }
+        result.required = baseSchema.required;
+        result.items = toMongoJsonSchema(baseSchema.items);
+        result.additionalProperties = baseSchema.additionalProperties;
+
+        // [SQL-668]  bsonType is always a set of String, not a single String when deserializing the json data.
+        //  If there are many types in the set and it can not be reduced to one type after eliminating any Null type in the list, the types will be inserted in the list
+        //  of anyOf to be handled as polymorphic type.
+        if (baseSchema.bsonType.size() > 0 && baseSchema.bsonType.size() <= 2) {
+            // If there are 1 or 2 entries only, see if it can
+            // be reduced to a single type
+            List<String> trimmedList =
+                    baseSchema
+                            .bsonType
+                            .stream()
+                            .filter(t -> !t.equalsIgnoreCase(BSON_NULL.getBsonName()))
+                            .collect(Collectors.toList());
+
+            if (trimmedList.size() == 1) {
+                String type = trimmedList.get(0);
+                if (BSON_ARRAY.getBsonName().equalsIgnoreCase(type) && (null == baseSchema.items)) {
+                    // The bson type is an array of unknowns items.
+                    // The bson type is unknown and it's equivalent to any.
+                    // Return an empty schema.
+                    return new MongoJsonSchema();
+                } else {
+                    result.bsonType = type;
+                }
+                return result;
+            }
+        }
+
+        // We need to add the types to the anyOf list.
+        // If the list is null, create a new one.
+        if (null == result.anyOf) {
+            result.anyOf = new HashSet<MongoJsonSchema>();
+        }
+
+        // If BsonType contains a list of types, push down each type
+        // into its own anyOf schema
+        for (String currType : baseSchema.bsonType) {
+            MongoJsonSchema anyOfSchema = new MongoJsonSchema();
+            anyOfSchema.bsonType = currType;
+
+            if (BSON_ARRAY.getBsonName().equalsIgnoreCase(currType)) {
+                anyOfSchema.items = toMongoJsonSchema(baseSchema.items);
+            } else if (BSON_OBJECT.getBsonName().equalsIgnoreCase(currType)) {
+                anyOfSchema.properties = toMongoJsonSchemaProperties(baseSchema.properties);
+                anyOfSchema.required = baseSchema.required;
+                anyOfSchema.additionalProperties = baseSchema.additionalProperties;
+            }
+            // Add the bson type as a new anyOf schema
+            result.anyOf.add(anyOfSchema);
+        }
+
+        return result;
+    }
 
     public static MongoJsonSchema createEmptyObjectSchema() {
         MongoJsonSchema ret = new MongoJsonSchema();
@@ -33,6 +108,18 @@ public class MongoJsonSchema {
         MongoJsonSchema ret = new MongoJsonSchema();
         ret.bsonType = type;
         return ret;
+    }
+
+    private static Map<String, MongoJsonSchema> toMongoJsonSchemaProperties(
+            Map<String, JsonSchema> from) {
+        if (null == from) {
+            return null;
+        }
+        Map<String, MongoJsonSchema> to = new HashMap<String, MongoJsonSchema>();
+        for (Map.Entry<String, JsonSchema> entry : from.entrySet()) {
+            to.put(entry.getKey(), toMongoJsonSchema(entry.getValue()));
+        }
+        return to;
     }
 
     /**
