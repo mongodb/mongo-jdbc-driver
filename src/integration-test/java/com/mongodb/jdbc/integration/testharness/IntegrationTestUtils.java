@@ -209,91 +209,155 @@ public class IntegrationTestUtils {
             throws SQLException, IllegalAccessException {
         int columnCount = rsMetaData.getColumnCount();
         if (test.expected_sql_type != null) {
-            assertEquals(test.expected_sql_type.size(), columnCount, "Either the yml test specification is missing entries for 'expected_sql_type' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_sql_type.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_sql_type' or the data" +
+                            " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 int sqlType = TestTypeInfo.typesStringToInt(test.expected_sql_type.get(i));
-                assertEquals(sqlType, rsMetaData.getColumnType(i + 1), "Invalid getColumnType result for column " + i+1);
+                assertEquals(
+                        sqlType,
+                        rsMetaData.getColumnType(i + 1),
+                        "Invalid getColumnType result for column " + i + 1);
             }
         }
         if (test.expected_catalog_name != null) {
-            assertEquals(test.expected_catalog_name.size(), columnCount, "Either the yml test specification is missing entries for 'expected_catalog_name' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_catalog_name.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_catalog_name' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_catalog_name.get(i), rsMetaData.getCatalogName(i + 1),"Invalid getCatalogName result for column " + i+1);
+                assertEquals(
+                        test.expected_catalog_name.get(i),
+                        rsMetaData.getCatalogName(i + 1),
+                        "Invalid getCatalogName result for column " + i + 1);
             }
         }
         if (test.expected_column_class_name != null) {
-            assertEquals(test.expected_column_class_name.size(), columnCount, "Either the yml test specification is missing entries for 'expected_column_class_name' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_column_class_name.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_column_class_name' or" +
+                            " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_column_class_name.get(i),
                         rsMetaData.getColumnClassName(i + 1),
-                        "Invalid getColumnClassName result for column " + i+1
-                );
+                        "Invalid getColumnClassName result for column " + i + 1);
             }
         }
         if (test.expected_column_display_size != null) {
-            assertEquals(test.expected_column_display_size.size(), columnCount, "Either the yml test specification is missing entries for 'expected_column_display_size' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_column_display_size.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_column_display_size'" +
+                            " or the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_column_display_size.get(i).intValue(),
                         rsMetaData.getColumnDisplaySize(i + 1),
-                        "Invalid getColumnDisplaySize result for column " + i+1);
+                        "Invalid getColumnDisplaySize result for column " + i + 1);
             }
         }
         if (test.expected_column_label != null) {
-            assertEquals(test.expected_column_label.size(), columnCount, "Either the yml test specification is missing entries for 'expected_column_label' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_column_label.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_column_label' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_column_label.get(i), rsMetaData.getColumnLabel(i + 1),
-                        "Invalid getColumnLabel result for column " + i+1);
+                assertEquals(
+                        test.expected_column_label.get(i),
+                        rsMetaData.getColumnLabel(i + 1),
+                        "Invalid getColumnLabel result for column " + i + 1);
             }
         }
         if (test.expected_precision != null) {
-            assertEquals(test.expected_precision.size(), columnCount, "Either the yml test specification is missing entries for 'expected_precision' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_precision.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_precision' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
-                        test.expected_precision.get(i).intValue(), rsMetaData.getPrecision(i + 1),
-                        "Invalid getPrecision result for column " + i+1);
+                        test.expected_precision.get(i).intValue(),
+                        rsMetaData.getPrecision(i + 1),
+                        "Invalid getPrecision result for column " + i + 1);
             }
         }
         if (test.expected_scale != null) {
-            assertEquals(test.expected_scale.size(), columnCount, "Either the yml test specification is missing entries for 'expected_scale' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_scale.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_scale' or the data" +
+                            " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_scale.get(i).intValue(), rsMetaData.getScale(i + 1),
-                        "Invalid getScale result for column " + i+1);
+                assertEquals(
+                        test.expected_scale.get(i).intValue(),
+                        rsMetaData.getScale(i + 1),
+                        "Invalid getScale result for column " + i + 1);
             }
         }
         if (test.expected_schema_name != null) {
-            assertEquals(test.expected_schema_name.size(), columnCount, "Either the yml test specification is missing entries for 'expected_schema_name' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_schema_name.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_schema_name' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_schema_name.get(i), rsMetaData.getSchemaName(i + 1),
-                        "Invalid getSchemaName result for column " + i+1);
+                assertEquals(
+                        test.expected_schema_name.get(i),
+                        rsMetaData.getSchemaName(i + 1),
+                        "Invalid getSchemaName result for column " + i + 1);
             }
         }
         if (test.expected_is_auto_increment != null) {
-            assertEquals(test.expected_is_auto_increment.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_auto_increment' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_auto_increment.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_auto_increment' or" +
+                            " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
-                        test.expected_is_auto_increment.get(i), rsMetaData.isAutoIncrement(i + 1),
-                        "Invalid isAutoIncrement result for column " + i+1);
+                        test.expected_is_auto_increment.get(i),
+                        rsMetaData.isAutoIncrement(i + 1),
+                        "Invalid isAutoIncrement result for column " + i + 1);
             }
         }
         if (test.expected_is_case_sensitive != null) {
-            assertEquals(test.expected_is_case_sensitive.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_case_sensitive' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_case_sensitive.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_case_sensitive' or" +
+                            " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
-                        test.expected_is_case_sensitive.get(i), rsMetaData.isCaseSensitive(i + 1),
-                        "Invalid isCaseSensitive result for column " + i+1);
+                        test.expected_is_case_sensitive.get(i),
+                        rsMetaData.isCaseSensitive(i + 1),
+                        "Invalid isCaseSensitive result for column " + i + 1);
             }
         }
         if (test.expected_is_currency != null) {
-            assertEquals(test.expected_is_currency.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_currency' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_currency.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_currency' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_is_currency.get(i), rsMetaData.isCurrency(i + 1),
-                        "Invalid isCurrency result for column " + i+1);
+                assertEquals(
+                        test.expected_is_currency.get(i),
+                        rsMetaData.isCurrency(i + 1),
+                        "Invalid isCurrency result for column " + i + 1);
             }
         }
         if (test.expected_is_definitely_writable != null) {
-            assertEquals(test.expected_is_definitely_writable.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_definitely_writable' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_definitely_writable.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_definitely_writable'" +
+                            " or the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_definitely_writable.get(i),
@@ -302,40 +366,70 @@ public class IntegrationTestUtils {
             }
         }
         if (test.expected_is_nullable != null) {
-            assertEquals(test.expected_is_nullable.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_nullable' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_nullable.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_nullable' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 int expectedNullable =
                         TestTypeInfo.nullableStringToInt(test.expected_is_nullable.get(i));
-                assertEquals(expectedNullable, rsMetaData.isNullable(i + 1),
-                        "Invalid isNullable result for column " + i+1);
+                assertEquals(
+                        expectedNullable,
+                        rsMetaData.isNullable(i + 1),
+                        "Invalid isNullable result for column " + i + 1);
             }
         }
         if (test.expected_is_read_only != null) {
-            assertEquals(test.expected_is_read_only.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_read_only' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_read_only.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_read_only' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_is_read_only.get(i), rsMetaData.isReadOnly(i + 1),
-                        "Invalid isReadOnly result for column " + i+1);
+                assertEquals(
+                        test.expected_is_read_only.get(i),
+                        rsMetaData.isReadOnly(i + 1),
+                        "Invalid isReadOnly result for column " + i + 1);
             }
         }
         if (test.expected_is_searchable != null) {
-            assertEquals(test.expected_is_searchable.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_searchable' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_searchable.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_searchable' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_is_searchable.get(i), rsMetaData.isSearchable(i + 1),
-                        "Invalid isSearchable result for column " + i+1);
+                assertEquals(
+                        test.expected_is_searchable.get(i),
+                        rsMetaData.isSearchable(i + 1),
+                        "Invalid isSearchable result for column " + i + 1);
             }
         }
         if (test.expected_is_signed != null) {
-            assertEquals(test.expected_is_signed.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_signed' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_signed.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_signed' or the data" +
+                            " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_is_signed.get(i), rsMetaData.isSigned(i + 1),
-                        "Invalid isSigned result for column " + i+1);
+                assertEquals(
+                        test.expected_is_signed.get(i),
+                        rsMetaData.isSigned(i + 1),
+                        "Invalid isSigned result for column " + i + 1);
             }
         }
         if (test.expected_is_writable != null) {
-            assertEquals(test.expected_is_writable.size(), columnCount, "Either the yml test specification is missing entries for 'expected_is_writable' or the data in the DB is not matching the test");
+            assertEquals(
+                    test.expected_is_writable.size(),
+                    columnCount,
+                    "Either the yml test specification is missing entries for 'expected_is_writable' or the" +
+                            " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
-                assertEquals(test.expected_is_writable.get(i), rsMetaData.isWritable(i + 1),
-                        "Invalid isWritable result for column " + i+1);
+                assertEquals(
+                        test.expected_is_writable.get(i),
+                        rsMetaData.isWritable(i + 1),
+                        "Invalid isWritable result for column " + i + 1);
             }
         }
     }
@@ -397,7 +491,11 @@ public class IntegrationTestUtils {
     private static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
             throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
-        assertEquals(expectedRow.size(), rsMetadata.getColumnCount(), "Columns count mismatch.\nEither the yml test specification is missing columns for 'expected_result' or the data in the DB is not matching the test");
+        assertEquals(
+                expectedRow.size(),
+                rsMetadata.getColumnCount(),
+                "Columns count mismatch.\nEither the yml test specification is missing columns for " +
+                        "'expected_result' or the data in the DB is not matching the test");
 
         for (int i = 0; i < expectedRow.size(); i++) {
             // Handle expected field being null

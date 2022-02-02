@@ -4,8 +4,8 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
