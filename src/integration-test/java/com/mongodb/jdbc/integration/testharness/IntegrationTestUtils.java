@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -73,6 +74,11 @@ public class IntegrationTestUtils {
     private static Tests processTestFile(String filename) throws IOException {
         try (InputStream is = new FileInputStream(filename)) {
             return yaml.load(is);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error processing " + filename);
+            throw e;
         }
     }
 
@@ -503,6 +509,7 @@ public class IntegrationTestUtils {
                 if (actualRow.getObject(i + 1) == null) {
                     continue;
                 } else {
+                    System.err.println("Expected null value for column " + (i + 1) + " but is not");
                     return false;
                 }
             }
@@ -513,7 +520,10 @@ public class IntegrationTestUtils {
                 case Types.SMALLINT:
                 case Types.TINYINT:
                 case Types.INTEGER:
-                    if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {
+                    int expected_int = (Integer) expectedRow.get(i);
+                    int actual_int = actualRow.getInt(i + 1);
+                    if (expected_int != actual_int) {
+                        System.err.println("Expected int value " + expected_int + " but is " + actual_int + " for column " + (i + 1));
                         return false;
                     }
                     break;
@@ -523,28 +533,43 @@ public class IntegrationTestUtils {
                 case Types.CHAR:
                 case Types.NVARCHAR:
                 case Types.VARCHAR:
-                    if (!((String) expectedRow.get(i)).equals(actualRow.getString(i + 1))) {
+                    String expected_str = (String) expectedRow.get(i);
+                    String actual_str = actualRow.getString(i + 1);
+                    if (!(expected_str).equals(actual_str)) {
+                        System.err.println("Expected String value " + expected_str + " but is " + actual_str + " for column " + (i + 1));
                         return false;
                     }
                     break;
                 case Types.BOOLEAN:
                 case Types.BIT:
-                    if (((Boolean) expectedRow.get(i)) != actualRow.getBoolean(i + 1)) {
+                    boolean expected_bool = (Boolean) expectedRow.get(i);
+                    boolean actual_bool = actualRow.getBoolean(i + 1);
+                    if (expected_bool != actual_bool) {
+                        System.err.println("Expected boolean value " + expected_bool + " but is " + actual_bool + " for column " + (i + 1));
                         return false;
                     }
                     break;
                 case Types.DOUBLE:
-                    if ((double) expectedRow.get(i) != actualRow.getDouble(i + 1)) {
+                    double expected_double = (double) expectedRow.get(i);
+                    double actual_double = actualRow.getDouble(i + 1);
+                    if (expected_double != actual_double) {
+                        System.err.println("Expected double value " + expected_double + " but is " + actual_double + " for column " + (i + 1));
                         return false;
                     }
                     break;
                 case Types.NULL:
-                    if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
+                    Object expected_null = expectedRow.get(i);
+                    Object actual_null = actualRow.getObject(i + 1);
+                    if (expected_null != actual_null) {
+                        System.err.println("Expected Bson Null value " + expected_null + " but is " + actual_null + " for column " + (i + 1));
                         return false;
                     }
                     break;
                 case Types.TIMESTAMP:
-                    if (!expectedRow.get(i).equals(actualRow.getDate(i + 1))) {
+                    Object expected_date = expectedRow.get(i);
+                    Date actual_date = actualRow.getDate(i + 1);
+                    if (!expected_date.equals(actual_date)) {
+                        System.err.println("Expected date value" + expected_date + " but is " + actual_date + " for column " + (i + 1));
                         return false;
                     }
                     break;
@@ -553,11 +578,15 @@ public class IntegrationTestUtils {
                     /*
                     case Types.OTHER:
                         if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
+                            System.err.println("Expected " + expected + " but is " + actual);
                             return false;
                         }
                      */
                 case Types.OTHER:
+                    Object expected_obj = expectedRow.get(i);
+                    Object actual_obj = expectedRow.get(i);
                     if (!expectedRow.get(i).equals(actualRow.getObject(i + 1))) {
+                        System.err.println("Expected Bson Other value " + expected_obj + " but is " + actual_obj + " for column " + (i + 1));
                         return false;
                     }
                     break;

@@ -1,8 +1,8 @@
 package com.mongodb.jdbc;
 
 public class MongoListCollectionsResult {
-    public static final String TABLE = "TABLE";
-    public static final String COLLECTION = "COLLECTION";
+    public static final String TABLE = "table";
+    public static final String COLLECTION = "collection";
 
     public String name;
     public String type;
