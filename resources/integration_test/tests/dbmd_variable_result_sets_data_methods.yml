@@ -28,7 +28,7 @@ tests:
   # getTables(catalog, schemaPattern, tableNamePattern, types)
   - description: getTables_no_filters_returns_all_tables
     db: integration_test
-    skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    skip_reason: "SQL-669: incorrect column nullability."
     meta_function: [getTables, null, null, '%', null]
     expected_result:
       - [null, null, null, db2, foo, null, table, null, null, null]
@@ -73,7 +73,7 @@ tests:
 
   - description: getTables_catalog_filter_only_returns_matching_tables
     db: integration_test
-    skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    skip_reason: "SQL-669: incorrect column nullability."
     meta_function: [getTables, integration_test, null, '%', null]
     expected_result:
       - [null, null, null, integration_test, bar, null, table, null, null, null]
@@ -117,7 +117,7 @@ tests:
 
   - description: getTables_catalog_and_table_filters_only_returns_matching_tables
     db: integration_test
-    skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    skip_reason: "SQL-669: incorrect column nullability."
     meta_function: [getTables, integration_test, null, b%, null]
     expected_result:
       - [null, null, null, integration_test, bar, null, table, null, null, null]
@@ -199,7 +199,7 @@ tests:
 
   - description: getTables_catalog,_table,_and_type_filters_only_returns_matching_tables_(tables)
     db: integration_test
-    skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    skip_reason: "SQL-669: incorrect column nullability."
     meta_function:
       - getTables
       - integration_test
@@ -242,7 +242,7 @@ tests:
 
   - description: getTables_catalog,_table,_and_type_filters_only_returns_matching_tables_(both)
     db: integration_test
-    skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    skip_reason: "SQL-669: incorrect column nullability."
     meta_function:
       - getTables
       - integration_test
