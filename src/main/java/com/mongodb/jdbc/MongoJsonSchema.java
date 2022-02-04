@@ -24,7 +24,8 @@ public class MongoJsonSchema {
     /**
      * Converts a deserialized jsonSchema into a MongoJsonSchema. The MongoJsonSchema instance is
      * semantically equivalent to the base jsonSchema, but bsonType has to be a single type
-     * otherwise the types will get pushed down in the anyOf list  and nested anyOfs are flattened.
+     * otherwise the types will get pushed down in the anyOf list.
+     * After the conversion is done, anyOfs are flattened.
      *
      * @param baseSchema The base json schema.
      * @return the corresponding MongoJsonSchema.
@@ -34,6 +35,14 @@ public class MongoJsonSchema {
         return flattenNestedAnyOfs(unsimplifiedSchema);
     }
 
+    /**
+     * Converts a deserialized jsonSchema into a MongoJsonSchema. The MongoJsonSchema instance is
+     * semantically equivalent to the base jsonSchema, but bsonType has to be a single type
+     * otherwise the types will get pushed down in the anyOf list.
+     *
+     * @param baseSchema The base json schema.
+     * @return the corresponding MongoJsonSchema.
+     */
     private static MongoJsonSchema toMongoJsonSchema(JsonSchema baseSchema) {
         if (null == baseSchema) {
             return null;
@@ -52,12 +61,9 @@ public class MongoJsonSchema {
         result.additionalProperties = baseSchema.additionalProperties;
 
         if (baseSchema.bsonType!= null) {
-            // [SQL-668]  bsonType is always a set of String, not a single String when deserializing the json data.
             //  If there are many types in the set and it can not be reduced to one type after eliminating any Null
             //  type in the list, the types will be inserted in the list  of anyOf to be handled as polymorphic type.
             if (baseSchema.bsonType.size() > 0 && baseSchema.bsonType.size() <= 2) {
-                // If there are 1 or 2 entries only, see if it can
-                // be reduced to a single type
                 List<String> trimmedList =
                         baseSchema
                                 .bsonType
@@ -79,19 +85,20 @@ public class MongoJsonSchema {
                 }
             }
 
-            // We need to add the types to the anyOf list.
+            // We'll need to add the types from bsontype set to the anyOf list.
             // If the list is null, create a new one.
             if (null == result.anyOf) {
                 result.anyOf = new HashSet<MongoJsonSchema>();
             }
 
-            // If BsonType contains a list of types, push down each type
-            // into its own anyOf schema
+            // Push down each bsontype into its own anyOf schema
             for (String currType : baseSchema.bsonType) {
                 MongoJsonSchema anyOfSchema = new MongoJsonSchema();
                 anyOfSchema.bsonType = currType;
 
                 if (BSON_ARRAY.getBsonName().equalsIgnoreCase(currType)) {
+                    // Move the items down with the anyOf schema for the bsontype Array
+                    // because they go together
                     anyOfSchema.items = toSimplifiedMongoJsonSchema(baseSchema.items);
                 } else if (BSON_OBJECT.getBsonName().equalsIgnoreCase(currType)) {
                     // Move the object related properties down with the anyof schema for the 'object'
@@ -102,7 +109,7 @@ public class MongoJsonSchema {
                     result.required = null;
                     result.additionalProperties = false;
                 }
-                // Add the bson type as a new anyOf schema
+                // Add the bsontype information as a new anyOf schema
                 if (!result.anyOf.contains(anyOfSchema)) {
                     result.anyOf.add(anyOfSchema);
                 }
@@ -113,7 +120,7 @@ public class MongoJsonSchema {
     }
 
     /**
-     * Simplify  flattens nested anyOf.
+     * Flattens nested anyOf.
      * @param ioSchema    The schema to simplify. ioSchema will be modified directly.
      * @return the simplified schema for convenience.
      */
@@ -137,12 +144,6 @@ public class MongoJsonSchema {
                         }
                     })
                     .collect(Collectors.toSet());
-        }
-        else if (result.properties != null)
-        {
-            for (Map.Entry<String, MongoJsonSchema> prop : result.properties.entrySet()) {
-                prop.setValue(flattenNestedAnyOfs(prop.getValue()));
-            }
         }
 
         // Last step is to reduce a single anyOf to the corresponding bsonType, properties, items, etc...

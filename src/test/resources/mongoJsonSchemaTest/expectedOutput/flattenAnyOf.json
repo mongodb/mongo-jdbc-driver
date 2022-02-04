@@ -1,5 +1,25 @@
 {
   "bsonType": "object",
+  "anyOf": [
+    {
+      "bsonType": "symbol"
+    },
+    {
+      "bsonType": "decimal"
+    },
+    {
+      "bsonType": "regex"
+    },
+    {
+      "bsonType": "objectId"
+    },
+    {
+      "bsonType": "date"
+    },
+    {
+      "bsonType": "double"
+    }
+  ],
   "properties": {
     "bar": {
       "anyOf": [
