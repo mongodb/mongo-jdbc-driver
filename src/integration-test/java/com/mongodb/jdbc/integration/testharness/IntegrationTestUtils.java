@@ -584,8 +584,8 @@ public class IntegrationTestUtils {
                      */
                 case Types.OTHER:
                     Object expected_obj = expectedRow.get(i);
-                    Object actual_obj = expectedRow.get(i);
-                    if (!expectedRow.get(i).equals(actualRow.getObject(i + 1))) {
+                    Object actual_obj = actualRow.getObject(i + 1);
+                    if (!expected_obj.equals(actual_obj)) {
                         System.err.println("Expected Bson Other value " + expected_obj + " but is " + actual_obj + " for column " + (i + 1));
                         return false;
                     }
