@@ -1,0 +1,22 @@
+{
+  "bsonType": "object",
+  "properties": {
+    "bar": {
+      "anyOf": [
+        {"bsonType": "null"},
+        {
+          "bsonType": "bool",
+          "additionalProperties": false
+        },
+        {"bsonType": "int"},
+        {
+          "bsonType": "bool",
+          "additionalProperties": true
+        },
+        {
+          "bsonType": "string"
+        }
+      ]
+    }
+  }
+}
