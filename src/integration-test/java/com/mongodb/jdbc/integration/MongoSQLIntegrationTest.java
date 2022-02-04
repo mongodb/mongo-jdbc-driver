@@ -1,36 +1,16 @@
 package com.mongodb.jdbc.integration;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.bson.BsonDbPointer;
-import org.bson.BsonDocument;
-import org.bson.BsonJavaScript;
-import org.bson.BsonJavaScriptWithScope;
-import org.bson.BsonMaxKey;
-import org.bson.BsonMinKey;
-import org.bson.BsonObjectId;
-import org.bson.BsonRegularExpression;
-import org.bson.BsonString;
-import org.bson.BsonSymbol;
-import org.bson.BsonTimestamp;
-import org.bson.BsonUndefined;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 

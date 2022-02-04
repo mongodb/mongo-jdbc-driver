@@ -173,8 +173,7 @@ public class DataLoader {
                     }
                     if (entry.schema != null) {
                         setSchema(entry.db, entry.collection, entry.schema);
-                    }
-                    else {
+                    } else {
                         generateSchema(entry.db, entry.collection);
                     }
                 }

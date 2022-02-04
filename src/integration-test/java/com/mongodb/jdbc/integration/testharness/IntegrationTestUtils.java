@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonInt64;
@@ -221,8 +220,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_sql_type.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_sql_type' or the data" +
-                            " in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_sql_type' or the data"
+                            + " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 int sqlType = TestTypeInfo.typesStringToInt(test.expected_sql_type.get(i));
                 assertEquals(
@@ -235,8 +234,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_catalog_name.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_catalog_name' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_catalog_name' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_catalog_name.get(i),
@@ -248,8 +247,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_column_class_name.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_column_class_name' or" +
-                            " the data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_column_class_name' or"
+                            + " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_column_class_name.get(i),
@@ -261,8 +260,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_column_display_size.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_column_display_size'" +
-                            " or the data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_column_display_size'"
+                            + " or the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_column_display_size.get(i).intValue(),
@@ -274,8 +273,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_column_label.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_column_label' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_column_label' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_column_label.get(i),
@@ -287,8 +286,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_precision.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_precision' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_precision' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_precision.get(i).intValue(),
@@ -300,8 +299,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_scale.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_scale' or the data" +
-                            " in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_scale' or the data"
+                            + " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_scale.get(i).intValue(),
@@ -313,8 +312,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_schema_name.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_schema_name' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_schema_name' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_schema_name.get(i),
@@ -326,8 +325,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_auto_increment.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_auto_increment' or" +
-                            " the data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_auto_increment' or"
+                            + " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_auto_increment.get(i),
@@ -339,8 +338,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_case_sensitive.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_case_sensitive' or" +
-                            " the data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_case_sensitive' or"
+                            + " the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_case_sensitive.get(i),
@@ -352,8 +351,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_currency.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_currency' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_currency' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_currency.get(i),
@@ -365,8 +364,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_definitely_writable.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_definitely_writable'" +
-                            " or the data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_definitely_writable'"
+                            + " or the data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_definitely_writable.get(i),
@@ -378,8 +377,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_nullable.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_nullable' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_nullable' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 int expectedNullable =
                         TestTypeInfo.nullableStringToInt(test.expected_is_nullable.get(i));
@@ -393,8 +392,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_read_only.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_read_only' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_read_only' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_read_only.get(i),
@@ -406,8 +405,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_searchable.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_searchable' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_searchable' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_searchable.get(i),
@@ -419,8 +418,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_signed.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_signed' or the data" +
-                            " in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_signed' or the data"
+                            + " in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_signed.get(i),
@@ -432,8 +431,8 @@ public class IntegrationTestUtils {
             assertEquals(
                     test.expected_is_writable.size(),
                     columnCount,
-                    "Either the yml test specification is missing entries for 'expected_is_writable' or the" +
-                            " data in the DB is not matching the test");
+                    "Either the yml test specification is missing entries for 'expected_is_writable' or the"
+                            + " data in the DB is not matching the test");
             for (int i = 0; i < columnCount; i++) {
                 assertEquals(
                         test.expected_is_writable.get(i),
@@ -471,18 +470,23 @@ public class IntegrationTestUtils {
         if (testEntry.expected_result_extended_json != null || testEntry.expected_result != null) {
             actualRowCounter = 0;
             while (rs.next()) {
-                if(testEntry.expected_result_extended_json != null) {
-                    assertTrue(testEntry.expected_result_extended_json.size() > actualRowCounter, "Database returned more rows than the expected amount: " + testEntry.expected_result_extended_json.size());
-                    expectedResults = processExtendedJson(testEntry.expected_result_extended_json.get(actualRowCounter));
+                if (testEntry.expected_result_extended_json != null) {
+                    assertTrue(
+                            testEntry.expected_result_extended_json.size() > actualRowCounter,
+                            "Database returned more rows than the expected amount: "
+                                    + testEntry.expected_result_extended_json.size());
+                    expectedResults =
+                            processExtendedJson(
+                                    testEntry.expected_result_extended_json.get(actualRowCounter));
+                } else {
+                    assertTrue(
+                            testEntry.expected_result.size() > actualRowCounter,
+                            "Database returned more rows than the expected amount: "
+                                    + testEntry.expected_result.size());
+                    expectedResults =
+                            (List<Object>) testEntry.expected_result.get(actualRowCounter);
                 }
-                else {
-                    assertTrue(testEntry.expected_result.size() > actualRowCounter, "Database returned more rows than the expected amount: " + testEntry.expected_result.size());
-                    expectedResults = (List<Object>) testEntry.expected_result.get(actualRowCounter);
-                }
-                assertTrue(
-                        compareRow(
-                                expectedResults,
-                                rs));
+                assertTrue(compareRow(expectedResults, rs));
                 actualRowCounter++;
             }
         }
@@ -501,15 +505,14 @@ public class IntegrationTestUtils {
             while (rs.next()) {
                 actualRowCounter++;
                 boolean found = false;
-                if(testEntry.expected_result_extended_json != null) {
-                    for (Map<String, Object> entry :testEntry.expected_result_extended_json) {
-                        if (compareRow(processExtendedJson(entry), rs)){
+                if (testEntry.expected_result_extended_json != null) {
+                    for (Map<String, Object> entry : testEntry.expected_result_extended_json) {
+                        if (compareRow(processExtendedJson(entry), rs)) {
                             found = true;
                             break;
                         }
                     }
-                }
-                else {
+                } else {
                     for (Object expectedRow : testEntry.expected_result) {
                         if (compareRow((List<Object>) expectedRow, rs)) {
                             found = true;
@@ -543,8 +546,8 @@ public class IntegrationTestUtils {
         assertEquals(
                 expectedRow.size(),
                 rsMetadata.getColumnCount(),
-                "Columns count mismatch.\nEither the yml test specification is missing columns for " +
-                        "'expected_result' or the data in the DB is not matching the test");
+                "Columns count mismatch.\nEither the yml test specification is missing columns for "
+                        + "'expected_result' or the data in the DB is not matching the test");
 
         for (int i = 0; i < expectedRow.size(); i++) {
             // Handle expected field being null
@@ -563,13 +566,12 @@ public class IntegrationTestUtils {
                 case Types.TINYINT:
                 case Types.INTEGER:
                     Object expectedInt = expectedRow.get(i);
-                    int actualInt = actualRow.getInt(i+1);
+                    int actualInt = actualRow.getInt(i + 1);
                     if ((expectedInt instanceof BsonInt32) || (expectedInt instanceof BsonInt64)) {
                         if (((BsonNumber) expectedInt).longValue() != actualInt) {
                             return false;
                         }
-                    }
-                    else if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {
+                    } else if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {
                         return false;
                     }
                     break;
