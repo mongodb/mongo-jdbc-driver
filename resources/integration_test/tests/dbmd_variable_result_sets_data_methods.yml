@@ -67,37 +67,55 @@ tests:
     meta_function: [getTables, null, null, '%', null]
     expected_result:
       - [db2, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, a_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
+      - [integration_test, null, any_collection, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, anyof_collection, table, null, null, null, null,
+         null, null]
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
       - [integration_test, null, bar, table, null, null, null, null, null, null]
-      - [integration_test, null, class, table, null, null, null, null, null,
-        null]
+      - [integration_test, null, class, table, null, null, null, null, null, null]
       - [integration_test, null, foo, table, null, null, null, null, null, null]
-      - [integration_test, null, grades, table, null, null, null, null, null,
-        null]
+      - [integration_test, null, grades, table, null, null, null, null, null, null]
+      - [integration_test, null, null_and_missing, table, null, null, null, null,
+         null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 6
+    row_count: 11
     ordered: true
 
   - description: getTables_catalog_filter_only_returns_matching_tables
     db: integration_test
     meta_function: [getTables, integration_test, null, '%', null]
     expected_result:
+      - [integration_test, null, a_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
+      - [integration_test, null, any_collection, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, anyof_collection, table, null, null, null, null,
+         null, null]
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
       - [integration_test, null, bar, table, null, null, null, null, null, null]
-      - [integration_test, null, class, table, null, null, null, null, null,
-        null]
+      - [integration_test, null, class, table, null, null, null, null, null, null]
       - [integration_test, null, foo, table, null, null, null, null, null, null]
-      - [integration_test, null, grades, table, null, null, null, null, null,
-        null]
+      - [integration_test, null, grades, table, null, null, null, null, null, null]
+      - [integration_test, null, null_and_missing, table, null, null, null, null,
+         null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 5
+    row_count: 10
     ordered: true
 
   - description: getTables_catalog_and_table_filters_only_returns_matching_tables
     db: integration_test
     meta_function: [getTables, integration_test, null, b%, null]
     expected_result:
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
       - [integration_test, null, bar, table, null, null, null, null, null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 2
+    row_count: 3
     ordered: true
 
   - description: getTables_catalog,_table,_and_type_filters_only_returns_matching_tables_(views)
@@ -122,8 +140,10 @@ tests:
       - b%
       - [table]
     expected_result:
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
       - [integration_test, null, bar, table, null, null, null, null, null, null]
-    row_count: 1
+    row_count: 2
     ordered: true
 
   - description: getTables_catalog,_table,_and_type_filters_only_returns_matching_tables_(both)
@@ -135,9 +155,11 @@ tests:
       - b%
       - [view, table]
     expected_result:
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
       - [integration_test, null, bar, table, null, null, null, null, null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 2
+    row_count: 3
     ordered: true
 
   # getTablePrivileges(catalog, schemaPattern, tableNamePattern)
@@ -171,33 +193,49 @@ tests:
     meta_function: [getTablePrivileges, null, null, '%']
     expected_result:
       - [db2, null, foo, null, '', SELECT, null]
+      - [integration_test, null, a_non_lexicographic_field_order, null, '', SELECT,
+         null]
+      - [integration_test, null, any_collection, null, '', SELECT, null]
+      - [integration_test, null, anyof_collection, null, '', SELECT, null]
+      - [integration_test, null, b_non_lexicographic_field_order, null, '', SELECT,
+         null]
       - [integration_test, null, bar, null, '', SELECT, null]
       - [integration_test, null, baz, null, '', SELECT, null]
       - [integration_test, null, class, null, '', SELECT, null]
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
-    row_count: 6
+      - [integration_test, null, null_and_missing, null, '', SELECT, null]
+    row_count: 11
     ordered: true
 
   - description: getTablePrivileges_catalog_filter_only_returns_matching_tables
     db: integration_test
     meta_function: [getTablePrivileges, integration_test, null, '%']
     expected_result:
+      - [integration_test, null, a_non_lexicographic_field_order, null, '', SELECT,
+         null]
+      - [integration_test, null, any_collection, null, '', SELECT, null]
+      - [integration_test, null, anyof_collection, null, '', SELECT, null]
+      - [integration_test, null, b_non_lexicographic_field_order, null, '', SELECT,
+         null]
       - [integration_test, null, bar, null, '', SELECT, null]
       - [integration_test, null, baz, null, '', SELECT, null]
       - [integration_test, null, class, null, '', SELECT, null]
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
-    row_count: 5
+      - [integration_test, null, null_and_missing, null, '', SELECT, null]
+    row_count: 10
     ordered: true
 
   - description: getTablePrivileges_catalog_and_table_filters_returns_matching_tables
     db: integration_test
     meta_function: [getTablePrivileges, integration_test, null, b%]
     expected_result:
+      - [integration_test, null, b_non_lexicographic_field_order, null, '', SELECT,
+         null]
       - [integration_test, null, bar, null, '', SELECT, null]
       - [integration_test, null, baz, null, '', SELECT, null]
-    row_count: 2
+    row_count: 3
     ordered: true
 
   # getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
