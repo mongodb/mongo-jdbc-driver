@@ -446,7 +446,7 @@ public class IntegrationTestUtils {
                 MongoSQLResultSetMetaData mongoSQLResultSetMetadata =
                         (MongoSQLResultSetMetaData) rsMetaData;
                 MongoColumnInfo columnInfo = mongoSQLResultSetMetadata.getColumnInfo(i + 1);
-                assertEquals(test.expected_bson_type.get(i), columnInfo.getBsonTypeName());
+                assertEquals(test.expected_bson_type.get(i), columnInfo.getBsonTypeName(), "Bson type mismatch");
             }
         }
     }
@@ -486,7 +486,7 @@ public class IntegrationTestUtils {
                     expectedResults =
                             (List<Object>) testEntry.expected_result.get(actualRowCounter);
                 }
-                assertTrue(compareRow(expectedResults, rs));
+                assertTrue(compareRow(expectedResults, rs), "Row " + actualRowCounter + " does not match.");
                 actualRowCounter++;
             }
         }
@@ -567,8 +567,8 @@ public class IntegrationTestUtils {
                 case Types.INTEGER:
                     Object expectedInt = expectedRow.get(i);
                     int actualInt = actualRow.getInt(i + 1);
-                    if ((expectedInt instanceof BsonInt32) || (expectedInt instanceof BsonInt64)) {
-                        if (((BsonNumber) expectedInt).longValue() != actualInt) {
+                    if (expectedInt instanceof BsonInt32) {
+                        if (((BsonInt32) expectedInt).intValue() != actualInt) {
                             return false;
                         }
                     } else if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {

@@ -19,8 +19,6 @@ public class MongoSQLIntegrationTest {
     static final String URL = "jdbc:mongodb://localhost";
     public static final String MONGOSQL = "mongosql";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
-    public static final String TEST_DATA_OTHER_DIRECTORY =
-            "resources/integration_test/testdata_other";
 
     private List<TestEntry> testEntries;
 
