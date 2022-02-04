@@ -11,16 +11,9 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
-import org.bson.BsonArray;
-import org.bson.BsonBinary;
-import org.bson.BsonDocument;
-import org.bson.BsonDouble;
-import org.bson.BsonInt32;
-import org.bson.BsonNull;
-import org.bson.BsonString;
-import org.bson.BsonUndefined;
+import java.util.LinkedHashMap;
+import org.bson.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
@@ -208,7 +201,7 @@ public abstract class MongoSQLMock {
         MongoJsonSchema nullSchema = new MongoJsonSchema();
         nullSchema.bsonType = "null";
 
-        fooSchema.properties = new HashMap<String, MongoJsonSchema>();
+        fooSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         fooSchema.properties.put(INT_COL_LABEL, cSchema);
         fooSchema.properties.put(ANY_OF_INT_STRING_COL_LABEL, aSchema);
         // new MongoJsonSchema() is the ANY schema
@@ -219,7 +212,7 @@ public abstract class MongoSQLMock {
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
-        botSchema.properties = new HashMap<String, MongoJsonSchema>();
+        botSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         aSchema = new MongoJsonSchema();
         aSchema.bsonType = "double";
         botSchema.properties.put(DOUBLE_COL_LABEL, aSchema);
@@ -230,7 +223,7 @@ public abstract class MongoSQLMock {
         strSchema.bsonType = "string";
         botSchema.properties.put("str", strSchema);
 
-        schema.properties = new HashMap<String, MongoJsonSchema>();
+        schema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         schema.properties.put("foo", fooSchema);
         schema.properties.put("", botSchema);
         return schema;

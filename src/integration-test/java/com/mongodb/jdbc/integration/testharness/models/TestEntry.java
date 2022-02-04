@@ -1,6 +1,7 @@
 package com.mongodb.jdbc.integration.testharness.models;
 
 import java.util.List;
+import java.util.Map;
 
 public class TestEntry {
     public String description;
@@ -12,6 +13,7 @@ public class TestEntry {
     public Boolean row_count_gte;
     public Boolean ordered;
     public List<Object> expected_result;
+    public List<Map<String, Object>> expected_result_extended_json;
     public List<String> expected_sql_type;
     public List<String> expected_bson_type;
     public List<String> expected_catalog_name;

@@ -5,27 +5,27 @@ tests:
     meta_function: [getProcedures, integration_test, null, '%']
     expected_result: []
     row_count: 0
-    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR,
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR]
-    expected_bson_type: [string, string, string, int, string, string]
+    expected_bson_type: [string, string, string, string, int, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
-                                 int, java.lang.String, java.lang.String]
-    expected_column_label: [PROCEDURE_CAT, PROCEDURE_NAME, PROCEDURE_SCHEM, PROCEDURE_TYPE,
-                            REMARKS, SPECIFIC_NAME]
-    expected_column_display_size: [0, 0, 0, 10, 0, 0]
-    expected_precision: [0, 0, 0, 10, 0, 0]
+                                 java.lang.String, int, java.lang.String]
+    expected_column_label: [PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME, REMARKS,
+                            PROCEDURE_TYPE, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 0, 10, 0]
+    expected_precision: [0, 0, 0, 0, 10, 0]
     expected_scale: [0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false]
-    expected_is_case_sensitive: [true, true, true, false, true, true]
+    expected_is_case_sensitive: [true, true, true, true, false, true]
     expected_is_currency: [false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false]
     expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
                            columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true]
-    expected_is_signed: [false, false, false, true, false, false]
+    expected_is_signed: [false, false, false, false, true, false]
     expected_is_writable: [false, false, false, false, false, false]
 
   # getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
@@ -34,32 +34,32 @@ tests:
     meta_function: [getProcedureColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR,
-                        INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
-                        LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR]
-    expected_bson_type: [ int, string, string, int, int, string, int, int, int, int,
-                          string, string, string, int, string, int, string, int, int, string ]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, int, int, string, int, int,
+                          int, int, int, string, string, int, int, int, int, string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
                             '', '', '', '', '', '']
-    expected_column_class_name: [int, java.lang.String, java.lang.String, int, int,
-                                 java.lang.String, int, int, int, int, java.lang.String, java.lang.String, java.lang.String,
-                                 int, java.lang.String, int, java.lang.String, int, int, java.lang.String]
-    expected_column_label: [CHAR_OCTET_LENGTH, COLUMN_DEF, COLUMN_NAME, COLUMN_TYPE,
-                            DATA_TYPE, IS_NULLABLE, LENGTH, NULLABLE, ORDINAL_POSITION, PRECISION, PROCEDURE_CAT,
-                            PROCEDURE_NAME, PROCEDURE_SCHEM, RADIX, REMARKS, SCALE, SPECIFIC_NAME, SQL_DATA_TYPE,
-                            SQL_DATETIME_SUB, TYPE_NAME]
-    expected_column_display_size: [10, 0, 0, 10, 10, 0, 10, 10, 10, 10, 0, 0, 0, 10,
-                                   0, 10, 0, 10, 10, 0]
-    expected_precision: [10, 0, 0, 10, 10, 0, 10, 10, 10, 10, 0, 0, 0, 10, 0, 10,
-                         0, 10, 10, 0]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, int, int, java.lang.String, int, int, int, int, int, java.lang.String,
+                                 java.lang.String, int, int, int, int, java.lang.String, java.lang.String]
+    expected_column_label: [PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME, COLUMN_NAME,
+                            COLUMN_TYPE, DATA_TYPE, TYPE_NAME, PRECISION, LENGTH, SCALE, RADIX, NULLABLE,
+                            REMARKS, COLUMN_DEF, SQL_DATA_TYPE, SQL_DATETIME_SUB, CHAR_OCTET_LENGTH, ORDINAL_POSITION,
+                            IS_NULLABLE, SPECIFIC_NAME]
+    expected_column_display_size: [0, 0, 0, 0, 10, 10, 0, 10, 10, 10, 10, 10, 0, 0,
+                                   10, 10, 10, 10, 0, 0]
+    expected_precision: [0, 0, 0, 0, 10, 10, 0, 10, 10, 10, 10, 10, 0, 0, 10, 10,
+                         10, 10, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
                            '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false, false, false, false, false, false, false,
                                  false, false]
-    expected_is_case_sensitive: [false, true, true, false, false, true, false, false,
-                                 false, false, true, true, true, false, true, false, true, false, false, true]
+    expected_is_case_sensitive: [true, true, true, true, false, false, true, false,
+                                 false, false, false, false, true, true, false, false, false, false, true, true]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false, false, false, false, false, false,
                            false]
@@ -74,8 +74,8 @@ tests:
                             true, true, true, true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true, true, true, true, true, true, true, true, true]
-    expected_is_signed: [true, false, false, true, true, false, true, true, true,
-                         true, false, false, false, true, false, true, false, true, true, false]
+    expected_is_signed: [false, false, false, false, true, true, false, true, true,
+                         true, true, true, false, false, true, true, true, true, false, false]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false, false, false, false, false, false,
                            false]
@@ -90,7 +90,7 @@ tests:
     expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
-    expected_column_label: [TABLE_CATALOG, TABLE_SCHEM]
+    expected_column_label: [TABLE_SCHEM, TABLE_CATALOG]
     expected_column_display_size: [0, 0]
     expected_precision: [0, 0]
     expected_scale: [0, 0]
@@ -115,7 +115,7 @@ tests:
     expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
-    expected_column_label: [TABLE_CATALOG, TABLE_SCHEM]
+    expected_column_label: [TABLE_SCHEM, TABLE_CATALOG]
     expected_column_display_size: [0, 0]
     expected_precision: [0, 0]
     expected_scale: [0, 0]
@@ -136,21 +136,21 @@ tests:
     meta_function: [getVersionColumns, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER,
-                        LONGVARCHAR, LONGVARCHAR]
-    expected_bson_type: [int, string, int, int, int, int, string, string]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
+                        INTEGER, INTEGER]
+    expected_bson_type: [string, string, int, string, int, int, int, int]
     expected_catalog_name: ['', '', '', '', '', '', '', '']
-    expected_column_class_name: [int, java.lang.String, int, int, int, int, java.lang.String,
-                                 java.lang.String]
-    expected_column_label: [BUFFER_LENGTH, COLUMN_NAME, COLUMN_SIZE, DATA_TYPE, DECIMAL_DIGITS,
-                            PSEUDO_COLUMN, SCOPE, TYPE_NAME]
-    expected_column_display_size: [10, 0, 10, 10, 10, 10, 0, 0]
-    expected_precision: [10, 0, 10, 10, 10, 10, 0, 0]
+    expected_column_class_name: [java.lang.String, java.lang.String, int, java.lang.String,
+                                 int, int, int, int]
+    expected_column_label: [SCOPE, COLUMN_NAME, DATA_TYPE, TYPE_NAME, COLUMN_SIZE,
+                            BUFFER_LENGTH, DECIMAL_DIGITS, PSEUDO_COLUMN]
+    expected_column_display_size: [0, 0, 10, 0, 10, 10, 10, 10]
+    expected_precision: [0, 0, 10, 0, 10, 10, 10, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false]
-    expected_is_case_sensitive: [false, true, false, false, false, false, true, true]
+    expected_is_case_sensitive: [true, true, false, true, false, false, false, false]
     expected_is_currency: [false, false, false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false]
@@ -158,7 +158,7 @@ tests:
                            columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true]
-    expected_is_signed: [true, false, true, true, true, true, false, false]
+    expected_is_signed: [false, false, true, false, true, true, true, true]
     expected_is_writable: [false, false, false, false, false, false, false, false]
 
   # getImportedKeys(catalog, schema, table)
@@ -167,26 +167,26 @@ tests:
     meta_function: [getImportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        INTEGER]
-    expected_bson_type: [ int, int, string, string, string, string, string, int, string,
-                          string, string, string, string, int ]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
-    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, java.lang.String, int]
-    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
-                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
-                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
-    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
-    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+                                 int, int, int, java.lang.String, java.lang.String, int]
+    expected_column_label: [PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, PKCOLUMN_NAME,
+                            FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, FKCOLUMN_NAME, KEY_SEQ, UPDATE_RULE,
+                            DELETE_RULE, FK_NAME, PK_NAME, DEFERRABILITY]
+    expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
+    expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false, false, false]
-    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
-                                 true, true, true, true, true, false]
+    expected_is_case_sensitive: [true, true, true, true, true, true, true, true, false,
+                                 false, false, true, true, false]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
@@ -198,8 +198,8 @@ tests:
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true, true, true]
-    expected_is_signed: [true, true, false, false, false, false, false, true, false,
-                         false, false, false, false, true]
+    expected_is_signed:  [false, false, false, false, false, false, false, false, true,
+                          true, true, false, false, true]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
 
@@ -209,26 +209,26 @@ tests:
     meta_function: [getExportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        INTEGER]
-    expected_bson_type: [ int, int, string, string, string, string, string, int, string,
-                          string, string, string, string, int ]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
-    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, java.lang.String, int]
-    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
-                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
-                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
-    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
-    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+                                 int, int, int, java.lang.String, java.lang.String, int]
+    expected_column_label: [PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, PKCOLUMN_NAME,
+                            FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, FKCOLUMN_NAME, KEY_SEQ, UPDATE_RULE,
+                            DELETE_RULE, FK_NAME, PK_NAME, DEFERRABILITY]
+    expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
+    expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false, false, false]
-    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
-                                 true, true, true, true, true, false]
+    expected_is_case_sensitive: [true, true, true, true, true, true, true, true, false,
+                                 false, false, true, true, false]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
@@ -240,8 +240,8 @@ tests:
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true, true, true]
-    expected_is_signed: [true, true, false, false, false, false, false, true, false,
-                         false, false, false, false, true]
+    expected_is_signed: [false, false, false, false, false, false, false, false, true,
+                         true, true, false, false, true]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
 
@@ -252,26 +252,26 @@ tests:
                     null, bar]
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        INTEGER]
-    expected_bson_type: [ int, int, string, string, string, string, string, int, string,
-                          string, string, string, string, int ]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
+                        LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
-    expected_column_class_name: [int, int, java.lang.String, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, int, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, java.lang.String, int]
-    expected_column_label: [DEFERRABILITY, DELETE_RULE, FKCOLUMN_NAME, FKTABLE_CAT,
-                            FKTABLE_NAME, FKTABLE_SCHEM, FK_NAME, KEY_SEQ, PKCOLUMN_NAME, PKTABLE_CAT, PKTABLE_NAME,
-                            PKTABLE_SCHEM, PK_NAME, UPDATE_RULE]
-    expected_column_display_size: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
-    expected_precision: [10, 10, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 10]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+                                 int, int, int, java.lang.String, java.lang.String, int]
+    expected_column_label: [PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, PKCOLUMN_NAME,
+                            FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, FKCOLUMN_NAME, KEY_SEQ, UPDATE_RULE,
+                             DELETE_RULE, FK_NAME, PK_NAME, DEFERRABILITY]
+    expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
+    expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false, false, false]
-    expected_is_case_sensitive: [false, false, true, true, true, true, true, false,
-                                 true, true, true, true, true, false]
+    expected_is_case_sensitive: [true, true, true, true, true, true, true, true, false,
+                                 false, false, true, true, false]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
@@ -283,8 +283,8 @@ tests:
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true, true, true]
-    expected_is_signed: [true, true, false, false, false, false, false, true, false,
-                         false, false, false, false, true]
+    expected_is_signed: [false, false, false, false, false, false, false, false, true,
+                         true, true, false, false, true]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false]
 
@@ -294,27 +294,27 @@ tests:
     meta_function: [getUDTs, integration_test, null, '%', null]
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        LONGVARCHAR]
-    expected_bson_type: [int, string, int, string, string, string, string]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, int, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '']
-    expected_column_class_name: [int, java.lang.String, int, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String]
-    expected_column_label: [BASE_TYPE, CLASS_NAME, DATA_TYPE, REMARKS, TYPE_CAT, TYPE_NAME,
-                            TYPE_SCHEM]
-    expected_column_display_size: [10, 0, 10, 0, 0, 0, 0]
-    expected_precision: [10, 0, 10, 0, 0, 0, 0]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, int, java.lang.String, int]
+    expected_column_label: [TYPE_CAT, TYPE_SCHEM, TYPE_NAME, CLASS_NAME, DATA_TYPE,
+                            REMARKS, BASE_TYPE]
+    expected_column_display_size: [0, 0, 0, 0, 10, 0, 10]
+    expected_precision: [0, 0, 0, 0, 10, 0, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false]
-    expected_is_case_sensitive: [false, true, false, true, true, true, true]
+    expected_is_case_sensitive: [true, true, true, true, false, true, false]
     expected_is_currency: [false, false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false]
     expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
                            columnNoNulls, columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true]
-    expected_is_signed: [true, false, true, false, false, false, false]
+    expected_is_signed: [false, false, false, false, true, false, true]
     expected_is_writable: [false, false, false, false, false, false, false]
 
   # getSuperTypes(catalog, schemaPattern, typeNamePattern)
@@ -329,8 +329,8 @@ tests:
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String]
-    expected_column_label: [SUPERTYPE_CAT, SUPERTYPE_NAME, SUPERTYPE_SCHEM, TYPE_CAT,
-                            TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SUPERTYPE_CAT, SUPERTYPE_SCHEM,
+                            SUPERTYPE_NAME]
     expected_column_display_size: [0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0]
@@ -357,7 +357,7 @@ tests:
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String]
-    expected_column_label: [SUPERTABLE_NAME, TABLE_CAT, TABLE_NAME, TABLE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, SUPERTABLE_NAME]
     expected_column_display_size: [0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0]
@@ -378,34 +378,35 @@ tests:
     meta_function: [getAttributes, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
-                        INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                        LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
-    expected_bson_type: [ string, string, int, string, int, int, int, string, int,
-                          int, int, string, string, string, string, int, int, int, string, string, string ]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                        INTEGER]
+    expected_bson_type: [ string, string, string, string, int, string, int, int, int,
+                          int, string, string, int, int, int, int, string, string, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
-                            '', '', '', '', '', '', '']
-    expected_column_class_name: [java.lang.String, java.lang.String, int, java.lang.String,
-                                 int, int, int, java.lang.String, int, int, int, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String, int, int, int, java.lang.String, java.lang.String,
-                                 java.lang.String]
-    expected_column_label: [ATTR_DEF, ATTR_NAME, ATTR_SIZE, ATTR_TYPE_NAME, CHAR_OCTET_LENGTH,
-                            DATA_TYPE, DECIMAL_DIGITS, IS_NULLABLE, NULLABLE, NUM_PREC_RADIX, ORDINAL_POSITION,
-                            REMARKS, SCOPE_CATALOG, SCOPE_SCHEMA, SCOPE_TABLE, SOURCE_DATA_TYPE, SQL_DATA_TYPE,
-                            SQL_DATETIME_SUB, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
-    expected_column_display_size: [0, 0, 10, 0, 10, 10, 10, 0, 10, 10, 10, 0, 0, 0,
-                                   0, 10, 10, 10, 0, 0, 0]
-    expected_precision: [0, 0, 10, 0, 10, 10, 10, 0, 10, 10, 10, 0, 0, 0, 0, 10, 10,
-                         10, 0, 0, 0]
+      '', '', '', '', '', '', '']
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, int, java.lang.String, int, int, int, int, java.lang.String,
+                                 java.lang.String, int, int, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, int]
+    expected_column_label: [TYPE_CAT, TYPE_SCHEM, TYPE_NAME, ATTR_NAME, DATA_TYPE,
+                            ATTR_TYPE_NAME, ATTR_SIZE, DECIMAL_DIGITS, NUM_PREC_RADIX, NULLABLE, REMARKS,
+                            ATTR_DEF, SQL_DATA_TYPE, SQL_DATETIME_SUB, CHAR_OCTET_LENGTH, ORDINAL_POSITION,
+                            IS_NULLABLE, SCOPE_CATALOG, SCOPE_SCHEMA, SCOPE_TABLE, SOURCE_DATA_TYPE]
+    expected_column_display_size: [0, 0, 0, 0, 10, 0, 10, 10, 10, 10, 0, 0, 10, 10,
+                                   10, 10, 0, 0, 0, 0, 10]
+    expected_precision: [0, 0, 0, 0, 10, 0, 10, 10, 10, 10, 0, 0, 10, 10, 10, 10,
+                         0, 0, 0, 0, 10]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
                            '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false, false, false, false, false, false, false,
                                  false, false, false]
-    expected_is_case_sensitive: [true, true, false, true, false, false, false, true,
-                                 false, false, false, true, true, true, true, false, false, false, true, true,
-                                 true]
+    expected_is_case_sensitive: [true, true, true, true, false, true, false, false,
+                                 false, false, true, true, false, false, false, false, true, true, true, true,
+                                 false]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false, false, false, false, false, false,
                            false, false]
@@ -420,8 +421,8 @@ tests:
                             true, true, true, true, true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true, true, true, true, true, true, true, true, true, true]
-    expected_is_signed: [false, false, true, false, true, true, true, false, true,
-                         true, true, false, false, false, false, true, true, true, false, false, false]
+    expected_is_signed: [false, false, false, false, true, false, true, true, true,
+                         true, false, false, true, true, true, true, false, false, false, false, true]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false, false, false, false, false, false, false, false,
                            false, false]
@@ -437,7 +438,7 @@ tests:
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String]
-    expected_column_label: [DEFAULT_VALUE, DESCRIPTION, MAX_LEN, NAME]
+    expected_column_label: [NAME, MAX_LEN, DEFAULT_VALUE, DESCRIPTION]
     expected_column_display_size: [0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0]
@@ -458,25 +459,25 @@ tests:
     meta_function: [getPseudoColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    expected_sql_type: [INTEGER, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
-                        LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
-    expected_bson_type: [ int, string, int, string, int, int, string, string, string,
-                          string, string, string ]
+    expected_bson_type: [string, string, string, string, int, int, int, string, string,
+                         string, int, string]
+    expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
+                        INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']
-    expected_column_class_name: [int, java.lang.String, int, java.lang.String, int,
-                                 int, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-                                 java.lang.String, java.lang.String]
-    expected_column_label: [CHAR_OCTET_LENGTH, COLUMN_NAME, COLUMN_SIZE, COLUMN_USAGE,
-                            DATA_TYPE, DECIMAL_DIGITS, IS_NULLABLE, NUM_PREC_RADIX, REMARKS, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM]
-    expected_column_display_size: [10, 0, 10, 0, 10, 10, 0, 0, 0, 0, 0, 0]
-    expected_precision: [10, 0, 10, 0, 10, 10, 0, 0, 0, 0, 0, 0]
+    expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
+                                 java.lang.String, int, int, int, java.lang.String, java.lang.String, java.lang.String,
+                                 int, java.lang.String]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, COLUMN_NAME, DATA_TYPE,
+                            COLUMN_SIZE, DECIMAL_DIGITS, NUM_PREC_RADIX, COLUMN_USAGE, REMARKS, CHAR_OCTET_LENGTH,
+                            IS_NULLABLE]
+    expected_column_display_size: [0, 0, 0, 0, 10, 10, 10, 0, 0, 0, 10, 0]
+    expected_precision: [0, 0, 0, 0, 10, 10, 10, 0, 0, 0, 10, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
                                  false, false, false, false, false]
-    expected_is_case_sensitive: [false, true, false, true, false, false, true, true,
-                                 true, true, true, true]
+    expected_is_case_sensitive: [true, true, true, true, false, false, false, true,
+      true, true, false, true]
     expected_is_currency: [false, false, false, false, false, false, false, false,
                            false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
@@ -488,7 +489,7 @@ tests:
                             true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
                              true, true, true]
-    expected_is_signed: [true, false, true, false, true, true, false, false, false,
-                         false, false, false]
+    expected_is_signed: [false, false, false, false, true, true, true, false, false,
+                         false, true, false]
     expected_is_writable: [false, false, false, false, false, false, false, false,
                            false, false, false, false]

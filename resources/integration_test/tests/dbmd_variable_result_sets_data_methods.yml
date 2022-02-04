@@ -32,14 +32,14 @@ tests:
     skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
     meta_function: [getTables, null, null, '%', null]
     expected_result:
-      - [null, null, null, db2, foo, null, table, null, null, null]
-      - [null, null, null, integration_test, bar, null, table, null, null, null]
-      - [null, null, null, integration_test, class, null, table, null, null,
-         null]
-      - [null, null, null, integration_test, foo, null, table, null, null, null]
-      - [null, null, null, integration_test, grades, null, table, null, null,
-         null]
-      - [null, null, null, integration_test, baz, null, view, null, null, null]
+      - [db2, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, bar, table, null, null, null, null, null, null]
+      - [integration_test, null, class, table, null, null, null, null, null,
+        null]
+      - [integration_test, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, grades, table, null, null, null, null, null,
+        null]
+      - [integration_test, null, baz, view, null, null, null, null, null, null]
     row_count: 6
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
@@ -49,8 +49,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                            TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -79,13 +79,13 @@ tests:
     skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
     meta_function: [getTables, integration_test, null, '%', null]
     expected_result:
-      - [null, null, null, integration_test, bar, null, table, null, null, null]
-      - [null, null, null, integration_test, class, null, table, null, null,
-         null]
-      - [null, null, null, integration_test, foo, null, table, null, null, null]
-      - [null, null, null, integration_test, grades, null, table, null, null,
-         null]
-      - [null, null, null, integration_test, baz, null, view, null, null, null]
+      - [integration_test, null, bar, table, null, null, null, null, null, null]
+      - [integration_test, null, class, table, null, null, null, null, null,
+        null]
+      - [integration_test, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, grades, table, null, null, null, null, null,
+        null]
+      - [integration_test, null, baz, view, null, null, null, null, null, null]
     row_count: 5
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
@@ -95,8 +95,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+      TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -125,8 +125,8 @@ tests:
     skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
     meta_function: [getTables, integration_test, null, b%, null]
     expected_result:
-      - [null, null, null, integration_test, bar, null, table, null, null, null]
-      - [null, null, null, integration_test, baz, null, view, null, null, null]
+      - [integration_test, null, bar, table, null, null, null, null, null, null]
+      - [integration_test, null, baz, view, null, null, null, null, null, null]
     row_count: 2
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
@@ -136,8 +136,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                            TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -181,8 +181,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                            TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -226,8 +226,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                            TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -272,8 +272,8 @@ tests:
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String]
-    expected_column_label: [REF_GENERATION, REMARKS, SELF_REFERENCING_COL_NAME, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM, TABLE_TYPE, TYPE_CAT, TYPE_NAME, TYPE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                            TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -303,12 +303,12 @@ tests:
     skip_reason: "SQL-669: incorrect column nullability"
     meta_function: [getTablePrivileges, null, null, '%']
     expected_result:
-      - ['', null, null, SELECT, db2, foo, null]
-      - ['', null, null, SELECT, integration_test, bar, null]
-      - ['', null, null, SELECT, integration_test, baz, null]
-      - ['', null, null, SELECT, integration_test, class, null]
-      - ['', null, null, SELECT, integration_test, foo, null]
-      - ['', null, null, SELECT, integration_test, grades, null]
+      - [db2, null, foo, null, '', SELECT, null]
+      - [integration_test, null, bar, null, '', SELECT, null]
+      - [integration_test, null, baz, null, '', SELECT, null]
+      - [integration_test, null, class, null, '', SELECT, null]
+      - [integration_test, null, foo, null, '', SELECT, null]
+      - [integration_test, null, grades, null, '', SELECT, null]
     row_count: 6
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
@@ -316,8 +316,8 @@ tests:
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
-    expected_column_label: [GRANTEE, GRANTOR, IS_GRANTABLE, PRIVILEGE, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, GRANTOR, GRANTEE,
+                            PRIVILEGE, IS_GRANTABLE]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0]
@@ -338,11 +338,11 @@ tests:
     skip_reason: "SQL-669: incorrect column nullability"
     meta_function: [getTablePrivileges, integration_test, null, '%']
     expected_result:
-      - ['', null, null, SELECT, integration_test, bar, null]
-      - ['', null, null, SELECT, integration_test, baz, null]
-      - ['', null, null, SELECT, integration_test, class, null]
-      - ['', null, null, SELECT, integration_test, foo, null]
-      - ['', null, null, SELECT, integration_test, grades, null]
+      - [integration_test, null, bar, null, '', SELECT, null]
+      - [integration_test, null, baz, null, '', SELECT, null]
+      - [integration_test, null, class, null, '', SELECT, null]
+      - [integration_test, null, foo, null, '', SELECT, null]
+      - [integration_test, null, grades, null, '', SELECT, null]
     row_count: 5
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
@@ -350,8 +350,8 @@ tests:
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
-    expected_column_label: [GRANTEE, GRANTOR, IS_GRANTABLE, PRIVILEGE, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, GRANTOR, GRANTEE,
+                            PRIVILEGE, IS_GRANTABLE]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0]
@@ -372,8 +372,8 @@ tests:
     skip_reason: "SQL-669: incorrect column nullability"
     meta_function: [getTablePrivileges, integration_test, null, b%]
     expected_result:
-      - ['', null, null, SELECT, integration_test, bar, null]
-      - ['', null, null, SELECT, integration_test, baz, null]
+      - [integration_test, null, bar, null, '', SELECT, null]
+      - [integration_test, null, baz, null, '', SELECT, null]
     row_count: 2
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
@@ -381,8 +381,8 @@ tests:
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
-    expected_column_label: [GRANTEE, GRANTOR, IS_GRANTABLE, PRIVILEGE, TABLE_CAT,
-                            TABLE_NAME, TABLE_SCHEM]
+    expected_column_label: [TABLE_CAT, TABLE_SCHEM, TABLE_NAME, GRANTOR, GRANTEE,
+                            PRIVILEGE, IS_GRANTABLE]
     expected_column_display_size: [0, 0, 0, 0, 0, 0, 0]
     expected_precision: [0, 0, 0, 0, 0, 0, 0]
     expected_scale: [0, 0, 0, 0, 0, 0, 0]

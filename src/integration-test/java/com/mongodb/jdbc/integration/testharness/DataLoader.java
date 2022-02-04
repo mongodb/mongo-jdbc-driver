@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import org.bson.BsonString;
 import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -52,19 +54,6 @@ public class DataLoader {
         this.adlUri = new MongoClientURI(LOCAL_ADL_URL);
 
         readDataFiles(dataDirectory);
-    }
-
-    public void generateSchema() {
-        BsonDocument command = new BsonDocument();
-        command.put("sqlGenerateSchema", new BsonInt32(1));
-        command.put("setSchemas", new BsonBoolean(true));
-
-        try (MongoClient mongoClient = new MongoClient(adlUri)) {
-            for (String database : databases) {
-                MongoDatabase db = mongoClient.getDatabase(database);
-                db.runCommand(command);
-            }
-        }
     }
 
     private void readDataFiles(String dataDirectory) throws IOException {
@@ -99,18 +88,35 @@ public class DataLoader {
         }
     }
 
-    public void loadTestRow(String db, String collection, Map<String, Object> row) {
-        databases.add(db);
-        collections.add(new Pair<>(db, collection));
-        try {
-            try (MongoClient mongoClient = new MongoClient(mdbUri)) {
-                MongoDatabase database = mongoClient.getDatabase(db);
-                MongoCollection<Document> coll = database.getCollection(collection);
-                coll.insertOne(new Document(row));
-            }
-        } catch (MongoException e) {
-            dropCollections();
-            throw e;
+    private void setSchema(String database, String collection, Map<String, Object> jsonSchema) {
+        BsonDocument command = new BsonDocument();
+        BsonDocument schema = new BsonDocument();
+        command.put("sqlSetSchema", new BsonString(collection));
+        command.put("schema", schema);
+        schema.put("version", new BsonInt32(1));
+
+        Document doc = new Document(jsonSchema);
+        schema.put(
+                "jsonSchema",
+                doc.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry()));
+        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+            MongoDatabase db = mongoClient.getDatabase(database);
+            db.runCommand(command);
+        }
+    }
+
+    private void generateSchema(String database, String collection) {
+        BsonDocument command = new BsonDocument();
+        command.put("sqlGenerateSchema", new BsonInt32(1));
+        command.put("setSchemas", new BsonBoolean(true));
+
+        BsonArray coll = new BsonArray();
+        coll.add(new BsonString(database + "." + collection));
+        command.put("sampleNamespaces", coll);
+
+        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+            MongoDatabase db = mongoClient.getDatabase("admin");
+            db.runCommand(command);
         }
     }
 
@@ -128,15 +134,15 @@ public class DataLoader {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     MongoCollection<Document> collection = database.getCollection(entry.collection);
 
-                    if (entry.docsJson != null) {
+                    if (entry.docsExtJson != null) {
                         // Process extended json format
-                        for (Map<String, Object> row : entry.docsJson) {
+                        for (Map<String, Object> row : entry.docsExtJson) {
                             Document d = Document.parse(new Document(row).toJson());
                             collection.insertOne(new Document(d));
                         }
                         System.out.println(
                                 "Inserted "
-                                        + entry.docsJson.size()
+                                        + entry.docsExtJson.size()
                                         + " rows into "
                                         + entry.db
                                         + "."
@@ -165,6 +171,12 @@ public class DataLoader {
                                             + entry.collection);
                         }
                     }
+                    if (entry.schema != null) {
+                        setSchema(entry.db, entry.collection, entry.schema);
+                    }
+                    else {
+                        generateSchema(entry.db, entry.collection);
+                    }
                 }
             }
         } catch (MongoException e) {
@@ -177,6 +189,5 @@ public class DataLoader {
         DataLoader loader = new DataLoader(TEST_DATA_DIRECTORY);
         loader.dropCollections();
         loader.loadTestData();
-        loader.generateSchema();
     }
 }

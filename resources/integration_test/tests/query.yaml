@@ -1,0 +1,240 @@
+tests:
+  - description: select_star_ordered
+    db: integration_test
+    sql: SELECT * FROM grades ORDER BY _id
+    ordered: true
+    skip_reason: SQL-659
+
+  - description: select_star_unordered
+    db: integration_test
+    sql: SELECT * FROM class
+    expected_result:
+      - [ 0, true, John, 2000-01-01, 10329 ]
+      - [ 1, false, Jane, 2000-02-01, 342 ]
+      - [ 2, true, Mike, 2000-01-01, 303 ]
+      - [ 3, false, Mary, 2000-03-01, 204323 ]
+      - [ 4, false, Pete, 2000-01-01, 10 ]
+    row_count: 5
+    ordered: false
+    expected_sql_type: [ INTEGER, BIT, LONGVARCHAR, TIMESTAMP, INTEGER ]
+    expected_bson_type: [int, bool, string, date, int]
+    expected_catalog_name: [ '', '', '', '', '' ]
+    expected_column_class_name: [ int, boolean, java.lang.String, java.sql.Timestamp,
+                                  int ]
+    expected_column_label: [ _id, enrolled, name, startdate, studentid ]
+    expected_column_display_size: [ 10, 1, 0, 24, 10 ]
+    expected_precision: [ 10, 1, 0, 24, 10 ]
+    expected_scale: [ 0, 0, 0, 0, 0 ]
+    expected_schema_name: [ '', '', '', '', '' ]
+    expected_is_auto_increment: [ false, false, false, false, false ]
+    expected_is_case_sensitive: [ false, false, true, false, false ]
+    expected_is_currency: [ false, false, false, false, false ]
+    expected_is_definitely_writable: [ false, false, false, false, false ]
+    expected_is_nullable: [ columnNullable, columnNullable, columnNullable, columnNullable,
+                            columnNullable ]
+    expected_is_read_only: [ true, true, true, true, true ]
+    expected_is_searchable: [ true, true, true, true, true ]
+    expected_is_signed: [ true, false, false, false, true ]
+    expected_is_writable: [ false, false, false, false, false ]
+
+  - description: select_as_confirm_column_label
+    db: integration_test
+    sql: SELECT enrolled AS e, studentid AS s, name AS n FROM class
+    expected_result:
+      - [ true, John, 10329 ]
+      - [ false, Jane, 342 ]
+      - [ true, Mike, 303 ]
+      - [ false, Mary, 204323 ]
+      - [ false, Pete, 10 ]
+    row_count: 5
+    ordered: false
+    expected_sql_type: [ BIT, LONGVARCHAR, INTEGER ]
+    expected_bson_type: [bool, string, int]
+    expected_catalog_name: [ '', '', '' ]
+    expected_column_class_name: [ boolean, java.lang.String, int ]
+    expected_column_label: [ e, n, s ]
+    expected_column_display_size: [ 1, 0, 10 ]
+    expected_precision: [ 1, 0, 10 ]
+    expected_scale: [ 0, 0, 0 ]
+    expected_schema_name: [ '', '', '' ]
+    expected_is_auto_increment: [ false, false, false ]
+    expected_is_case_sensitive: [ false, true, false ]
+    expected_is_currency: [ false, false, false ]
+    expected_is_definitely_writable: [ false, false, false ]
+    expected_is_nullable: [ columnNullable, columnNullable, columnNullable ]
+    expected_is_read_only: [ true, true, true ]
+    expected_is_searchable: [ true, true, true ]
+    expected_is_signed: [ false, false, true ]
+    expected_is_writable: [ false, false, false ]
+
+  - description: inner_join
+    db: integration_test
+    sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
+      = class.studentid"
+    ordered: false
+    skip_reason: SQL-659
+
+  - description: subquery
+    db: integration_test
+    sql: SELECT studentid FROM (SELECT * FROM class WHERE enrolled = TRUE) AS foo
+    ordered: false
+    skip_reason: SQL-659
+
+  - description: driver_does_not_alter_result_set_row_order
+    db: integration_test
+    sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
+    ordered: true
+    skip_reason: SQL-659
+
+  - description: select_star_from_anyof
+    db: integration_test
+    sql: SELECT * FROM anyof_collection
+    skip_reason: SQL-668
+
+  - description: select_star_from_any
+    db: integration_test
+    sql: SELECT * from any_collection
+    skip_reason: SQL-696
+
+  - description: select_polymorphic_field
+    db: integration_test
+    sql: SELECT b from any_collection
+    expected_result:
+      - - !!org.bson.BsonInt32  3
+      - - !!org.bson.BsonString  b
+      - - !!org.bson.BsonDouble  4.5
+    row_count: 3
+    row_count_gte: null
+    ordered: null
+    expected_sql_type: [ OTHER ]
+    expected_bson_type: [bson]
+    expected_catalog_name: [ '' ]
+    expected_column_class_name: [ org.bson.BsonValue ]
+    expected_column_label: [ b ]
+    expected_column_display_size: [ 0 ]
+    expected_precision: [ 0 ]
+    expected_scale: [ 0 ]
+    expected_schema_name: [ '' ]
+    expected_is_auto_increment: [ false ]
+    expected_is_case_sensitive: [ true ]
+    expected_is_currency: [ false ]
+    expected_is_definitely_writable: [ false ]
+    expected_is_nullable: [ columnNullable ]
+    expected_is_read_only: [ true ]
+    expected_is_searchable: [ true ]
+    expected_is_signed: [ true ]
+    expected_is_writable: [ false ]
+
+  - description: select_null_and_missing_field
+    db: integration_test
+    sql: SELECT a FROM null_and_missing
+    skip_reason: SQL-698
+    expected_result:
+      - - !!org.bson.BsonTimestamp 1
+      - - null
+      - - null
+    row_count: 1
+    expected_sql_type: [ OTHER ]
+    expected_catalog_name: [ '' ]
+    expected_column_class_name: [ org.bson.BsonValue ]
+    expected_column_label: [ a ]
+    expected_column_display_size: [ 0 ]
+    expected_precision: [ 0 ]
+    expected_scale: [ 0 ]
+    expected_schema_name: [ '' ]
+    expected_is_auto_increment: [ false ]
+    expected_is_case_sensitive: [ false ]
+    expected_is_currency: [ false ]
+    expected_is_definitely_writable: [ false ]
+    expected_is_nullable: [ columnNullable ]
+    expected_is_read_only: [ true ]
+    expected_is_searchable: [ true ]
+    expected_is_signed: [ false ]
+    expected_is_writable: [ false ]
+
+  - description: lexicographical_column_ordering
+    db: integration_test
+    sql: select * from b_non_lexicographic_field_order inner join a_non_lexicographic_field_order
+    expected_result:
+      - [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    row_count: 1
+    expected_sql_type: [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER,
+                        INTEGER, INTEGER]
+    expected_bson_type: [int, int, int, int, int, int, int, int, int]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, int, int, int, int, int, int, int, int]
+    expected_column_label: [A, B, C, _id, a, b, c, _id, a]
+    expected_column_display_size: [10, 10, 10, 10, 10, 10, 10, 10, 10]
+    expected_precision: [10, 10, 10, 10, 10, 10, 10, 10, 10]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false]
+    expected_is_case_sensitive: [false, false, false, false, false, false, false,
+                                 false, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable,
+                           columnNullable, columnNullable, columnNullable, columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true]
+    expected_is_signed: [true, true, true, true, true, true, true, true, true]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false]
+
+  - description: query_types_other
+    db: integration_test
+    sql: SELECT * FROM types_other
+    expected_result_extended_json: [ {
+      "0": 0,
+      "1": { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
+      "2": {"$code": "function(){ }"},
+      "3": {"$code": "function(){ }", "$scope": {"foo":"bar"}},
+      "4": {"$maxKey": 1},
+      "5": {"$minKey": 1},
+      "6": {"foo":"bar"},
+      "7": { "$oid": "000000000000000000000001" },
+      "8": {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
+      "9": { "$symbol": "symbol" },
+      "10": {"$timestamp": {"t":100, "i":0}}
+      # Skip reason: SQL-395
+      # 11: {"$undefined":true},
+      # Skip reason: SQL-697
+      # 12: [1,2,3]
+    } ]
+    row_count: 1
+    expected_sql_type: [INTEGER, OTHER, OTHER, OTHER, OTHER, OTHER, OTHER, OTHER,
+                        OTHER, OTHER, OTHER]
+    expected_bson_type: [int, dbPointer, javascript, javascriptWithScope, maxKey,
+                         minKey, object, objectId, regex, symbol, timestamp]
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '']
+    expected_column_class_name: [int, org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue,
+                                 org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue,
+                                 org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue]
+    expected_column_label: [_id, dbPointer, javascript, javascriptWithScope, maxKey,
+                            minKey, object, objectId, regularExpression, symbol, timestamp]
+    expected_column_display_size: [10, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
+    expected_precision: [10, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '']
+    expected_is_auto_increment: [false, false, false, false, false, false, false,
+                                 false, false, false, false]
+    expected_is_case_sensitive: [false, false, true, true, false, false, false, false,
+                                 true, true, false]
+    expected_is_currency: [false, false, false, false, false, false, false, false,
+                           false, false, false]
+    expected_is_definitely_writable: [false, false, false, false, false, false, false,
+                                      false, false, false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable,
+                           columnNullable, columnNullable, columnNullable, columnNullable, columnNullable,
+                           columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true, true, true, true, true, true, true,
+                            true, true]
+    expected_is_searchable: [true, true, true, true, true, true, true, true, true,
+                             true, true]
+    expected_is_signed: [true, false, false, false, false, false, false, false, false,
+                         false, false]
+    expected_is_writable: [false, false, false, false, false, false, false, false,
+                           false, false, false]
