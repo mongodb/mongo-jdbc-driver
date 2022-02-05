@@ -834,7 +834,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typePrec(String typeName) {
+    public static Integer typePrec(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -854,7 +854,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typeScale(String typeName) {
+    public static Integer typeScale(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -869,7 +869,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typeBytes(String typeName) {
+    public static Integer typeBytes(String typeName) {
         if (typeName == null) {
             return 0;
         }
@@ -894,7 +894,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return 0;
     }
 
-    public static int typeRadix(String typeName) {
+    public static Integer typeRadix(String typeName) {
         if (typeName == null) {
             return 0;
         }
