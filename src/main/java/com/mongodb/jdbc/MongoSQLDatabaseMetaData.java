@@ -1902,10 +1902,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         bot.put(DATA_TYPE, new BsonInt32(typeNum(argType)));
         bot.put(TYPE_NAME, argType == null ? n : new BsonString(argType));
 
-        bot.put(PRECISION, new BsonInt32(typePrec(argType)));
-        bot.put(LENGTH, new BsonInt32(typeBytes(argType)));
-        bot.put(SCALE, new BsonInt32(typeScale(argType)));
-        bot.put(RADIX, new BsonInt32(typeBytes(argType)));
+        bot.put(PRECISION, bsonInt32(typePrec(argType)));
+        bot.put(LENGTH, bsonInt32(typeBytes(argType)));
+        bot.put(SCALE, bsonInt32(typeScale(argType)));
+        bot.put(RADIX, bsonInt32(typeBytes(argType)));
 
         bot.put(NULLABLE, new BsonInt32(functionNullable));
         bot.put(REMARKS, new BsonString(func.comment));

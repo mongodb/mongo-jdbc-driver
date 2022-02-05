@@ -1202,7 +1202,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         doc.values.add(new BsonString(functionName));
         doc.values.add(new BsonString(argName));
         doc.values.add(new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
-        doc.values.add(new BsonInt32(typeNum(argType)));
+        doc.values.add(bsonInt32(typeNum(argType)));
         doc.values.add(argType == null ? n : new BsonString(argType));
         doc.values.add(bsonInt32(typePrec(argType)));
         doc.values.add(bsonInt32(typeBytes(argType)));

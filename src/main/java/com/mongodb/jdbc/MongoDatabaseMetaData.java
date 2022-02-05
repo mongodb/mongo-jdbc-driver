@@ -866,7 +866,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             case "decimal":
                 return 34;
         }
-        return null;
+        return 0;
     }
 
     public static Integer typeBytes(String typeName) {
@@ -891,7 +891,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             case "bool":
                 return 1;
         }
-        return null;
+        return 0;
     }
 
     public static Integer typeRadix(String typeName) {
