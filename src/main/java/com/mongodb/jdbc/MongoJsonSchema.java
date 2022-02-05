@@ -4,10 +4,14 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
@@ -164,7 +168,7 @@ public class MongoJsonSchema {
     public static MongoJsonSchema createEmptyObjectSchema() {
         MongoJsonSchema ret = new MongoJsonSchema();
         ret.bsonType = "object";
-        ret.properties = new HashMap<>();
+        ret.properties = new LinkedHashMap<>();
         ret.required = new HashSet<>();
         return ret;
     }
@@ -202,7 +206,7 @@ public class MongoJsonSchema {
     @SafeVarargs
     public final void addRequiredScalarKeys(Pair<String, String>... scalarProperties) {
         if (properties == null) {
-            properties = new HashMap<>();
+            properties = new LinkedHashMap<>();
         }
         if (required == null) {
             required = new HashSet<>();

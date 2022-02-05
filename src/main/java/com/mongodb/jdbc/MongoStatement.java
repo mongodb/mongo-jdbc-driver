@@ -19,7 +19,6 @@ public abstract class MongoStatement<T> implements Statement {
     protected int fetchSize = 0;
     protected int maxQuerySec = 0;
     protected String currentDBName;
-    protected final BsonInt32 formatVersion = new BsonInt32(2);
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
@@ -34,7 +33,8 @@ public abstract class MongoStatement<T> implements Statement {
         }
     }
 
-    protected BsonDocument constructQueryDocument(String sql, String dialect) {
+    protected BsonDocument constructQueryDocument(
+            String sql, String dialect, BsonInt32 formatVersion) {
         BsonDocument stage = new BsonDocument();
         BsonDocument sqlDoc = new BsonDocument();
         sqlDoc.put("statement", new BsonString(sql));

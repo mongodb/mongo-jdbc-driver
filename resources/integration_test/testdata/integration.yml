@@ -2,10 +2,11 @@ dataset:
   - db: integration_test
     collection: class
     docs:
-      - {_id: 0, studentid: 10329,  name: "John", enrolled: true}
-      - {_id: 1, studentid: 342,  name: "Jane", enrolled: false}
-      - {_id: 2, studentid: 303,  name: "Mike", enrolled: true}
-      - {_id: 3, studentid: 204323,  name: "Mary", enrolled: false}
+      - {_id: 0, studentid: 10329,  name: "John", enrolled: true, startdate: 2000-01-01 }
+      - {_id: 1, studentid: 342,  name: "Jane", enrolled: false, startdate: 2000-02-01}
+      - {_id: 2, studentid: 303,  name: "Mike", enrolled: true, startdate: 2000-01-01}
+      - {_id: 3, studentid: 204323,  name: "Mary", enrolled: false, startdate: 2000-03-01}
+      - {_id: 4, studentid: 10,  name: "Pete", enrolled: false, startdate: 2000-01-01}
 
   - db: integration_test
     collection: grades
@@ -18,3 +19,69 @@ dataset:
       - {_id: 5, studentid: 10329, testid: 5,  score: 74.4}
       - {_id: 6, studentid: 342, testid: 5,  score: 80.1}
       - {_id: 7, studentid: 204323, testid: 5, score: 83.3}
+      - {_id: 8, studentid: 200, testid: 5, score: 78.5}
+
+  - db: integration_test
+    collection: anyof_collection
+    docs:
+      - { _id: 0, a: 3 }
+      - { _id: 1, a: 3000000000 }
+      - { _id: 2, a: 4.5 }
+    schema: {
+              "bsonType":[
+                  "object"
+              ],
+              "properties":{
+                "a":{
+                  "bsonType":[
+                      "long",
+                      "double",
+                      "int"
+                  ]
+                },
+                "_id":{
+                  "bsonType":[
+                      "int"
+                  ]
+                }
+              }
+            }
+
+  - db: integration_test
+    collection: any_collection
+    docs:
+      - { _id: 0, b: 3 }
+      - { _id: 1, b: "b" }
+      - { _id: 2, b: 4.5 }
+    schema: {
+      "bsonType":[
+          "object"
+      ],
+      "required":[
+          "b"
+      ],
+      "properties":{
+        "_id":{
+          "bsonType":[
+              "int"
+          ]
+        }
+      }
+    }
+
+  - db: integration_test
+    collection: null_and_missing
+    docs:
+      - { _id: 0, "a": !!org.bson.BsonTimestamp 1}
+      - { _id: 1, "a": null }
+      - { _id: 2 }
+
+  - db: integration_test
+    collection: a_non_lexicographic_field_order
+    docs:
+      - { _id: 4, "c": 7, "b": 6, "a":5, "A":1, "B": 2, "C": 3 }
+
+  - db: integration_test
+    collection: b_non_lexicographic_field_order
+    docs:
+      - { "a": 9, _id: 8 }

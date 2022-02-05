@@ -9,9 +9,11 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
+import org.bson.BsonInt32;
 
 public class MySQLStatement extends MongoStatement<MySQLResultDoc> implements Statement {
     private boolean relaxed;
+    private final BsonInt32 formatVersion = new BsonInt32(2);
 
     public MySQLStatement(MongoConnection conn, String databaseName, boolean relaxed)
             throws SQLException {
@@ -24,7 +26,7 @@ public class MySQLStatement extends MongoStatement<MySQLResultDoc> implements St
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql, "mysql");
+        BsonDocument stage = constructQueryDocument(sql, "mysql", formatVersion);
         try {
             MongoIterable<MySQLResultDoc> iterable =
                     currentDB

@@ -13,6 +13,8 @@ import org.bson.BsonInt32;
 import org.bson.BsonString;
 
 public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
+    private final BsonInt32 formatVersion = new BsonInt32(1);
+
     public MongoSQLStatement(MongoConnection conn, String databaseName) throws SQLException {
         super(conn, databaseName);
     }
@@ -22,7 +24,7 @@ public class MongoSQLStatement extends MongoStatement<BsonDocument> implements S
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql, "mongosql");
+        BsonDocument stage = constructQueryDocument(sql, "mongosql", formatVersion);
         BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
             MongoIterable<BsonDocument> iterable =

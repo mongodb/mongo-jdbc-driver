@@ -25,7 +25,10 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         super(statement);
         Preconditions.checkNotNull(cursor);
 
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema);
+        // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
+        // The JDBC specification provides the order for each database metadata result set.
+        // Because a lot BI tools will access database metadata columns by index, the specification order must be respected.
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement != null);
         this.cursor = cursor;
     }
 

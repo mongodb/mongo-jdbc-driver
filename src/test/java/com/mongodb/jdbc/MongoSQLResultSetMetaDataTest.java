@@ -20,7 +20,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     static {
         try {
-            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema());
+            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema(), true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -36,6 +36,35 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
     @Test
     void testGetColumnCount() throws SQLException {
         assertEquals(9, MongoSQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+    }
+
+    @Test
+    void testMetadataFieldsdOrder() throws SQLException {
+
+        // Verify that the columns are sorted alphabetically when the sortFieldsAlphabetically is true and that the original order is kept when it's false.
+        String[] expected_sorted_columns =
+                new String[] {"a", "binary", "str", "a", "b", "c", "d", "null", "vec"};
+        String[] expected_original_columns =
+                new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null"};
+        MongoJsonSchema schema = generateMongoJsonSchema();
+        MongoSQLResultSetMetaData unsortedMedata = new MongoSQLResultSetMetaData(schema, false);
+        MongoSQLResultSetMetaData sortedMedata = new MongoSQLResultSetMetaData(schema, true);
+
+        assertEquals(
+                expected_original_columns.length,
+                unsortedMedata.getColumnCount(),
+                "The number of expected columns doesn't match the actual number of columns");
+        for (int i = 0; i < unsortedMedata.getColumnCount(); i++) {
+            assertEquals(expected_original_columns[i], unsortedMedata.getColumnName(i + 1));
+        }
+
+        assertEquals(
+                expected_sorted_columns.length,
+                sortedMedata.getColumnCount(),
+                "The number of expected columns doesn't match the actual number of columns");
+        for (int i = 0; i < sortedMedata.getColumnCount(); i++) {
+            assertEquals(expected_sorted_columns[i], sortedMedata.getColumnName(i + 1));
+        }
     }
 
     @Test
