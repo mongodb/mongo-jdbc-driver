@@ -36,27 +36,36 @@ Close the release on JIRA, adding the current date (you may need to ask the SQL 
 #### Ensure master up to date
 Ensure you have the `master` branch checked out, and that you have pulled the latest commit from `mongodb/mongo-jdbc-driver`.
 
-#### Commit the release version, tag, and push
-- Update the version in `gradle.properties` to the version being released.
-- Commit this change with the commit message `BUMP v<version>`
-- Create an annotated tag with message `<version>` and name `v<version>`
-- Push the newly created commit and tag to master
+#### Create the tag and push
+Create an annotated tag and push it:
+```
+git tag -a -m X.Y.Z vX.Y.Z
+git push --tags
+```
+This should trigger an Evergreen version that can be viewed on the [mongo-jdbc-driver waterfall](https://evergreen.mongodb.com/waterfall/mongo-jdbc-driver).
+If it does not, you may have to ask the project manager to give you the right permissions to do so.
+Make sure to run the 'release' task, if it is not run automatically.
+
+#### Set Evergreen Priorities
+Some evergreen variants may have a long schedule queue.
+To speed up release tasks, you can set the task priority for any variant to 101 for release candidates and 200 for actual releases.
+If you do not have permissions to set priority above 100, ask someone the project manager to set the
+priority.
 
 ### Post-Release Tasks
 
 #### Wait for evergreen
 Wait for the evergreen version to finish, and ensure that the release task completes successfully.
-You may need to bump task priorities if queues are long.
 
 #### Verify release artifacts
 Check that the version just released is available in the [Sonatype Nexus Repo Manager](https://oss.sonatype.org/#nexus-search;quick~mongodb-jdbc)
-
-#### Update master branch to SNAPSHOT version
-- Update `gradle.properties` to version `<new_version>-SNAPSHOT`, where the new version is a patch increment over the version just released.
-- Commit this change with the commit message `BUMP <new version>-SNAPSHOT` and push it.
 
 #### Create Github Release
 Create a Github release and upload the release artifact from Sonatype/Maven Central.
 
 #### Close Release Ticket
 Move the JIRA ticket tracking this release to the "Closed" state.
+
+#### Ensure next release ticket and fixVersion created
+Ensure that a JIRA ticket tracking the next release has been created
+and is assigned the appropriate fixVersion.
