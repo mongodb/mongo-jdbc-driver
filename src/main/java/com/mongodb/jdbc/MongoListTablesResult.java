@@ -1,6 +1,6 @@
 package com.mongodb.jdbc;
 
-public class MongoListCollectionsResult {
+public class MongoListTablesResult {
     public static final String TABLE = "table";
     public static final String COLLECTION = "collection";
 
