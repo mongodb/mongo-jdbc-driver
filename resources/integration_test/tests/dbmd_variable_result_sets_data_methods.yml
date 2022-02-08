@@ -458,7 +458,7 @@ tests:
     expected_is_writable: [false, false, false, false, false, false, false]
 
   # getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
-  - description: getColumns null parameters returns all columns
+  - description: getColumns_null_parameters_returns_all_columns
     db: integration_test
     meta_function: [ "getColumns", null, null, null, null ]
     skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
