@@ -82,8 +82,10 @@ tests:
       - [integration_test, null, grades, table, null, null, null, null, null, null]
       - [integration_test, null, null_and_missing, table, null, null, null, null,
          null, null]
+      - [ integration_test, null, types_other, table, null, null, null, null,
+          null, null ]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 11
+    row_count: 12
     ordered: true
 
   - description: getTables_catalog_filter_only_returns_matching_tables
@@ -104,8 +106,10 @@ tests:
       - [integration_test, null, grades, table, null, null, null, null, null, null]
       - [integration_test, null, null_and_missing, table, null, null, null, null,
          null, null]
+      - [ integration_test, null, types_other, table, null, null, null, null,
+          null, null ]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 10
+    row_count: 11
     ordered: true
 
 
@@ -208,7 +212,8 @@ tests:
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
       - [integration_test, null, null_and_missing, null, '', SELECT, null]
-    row_count: 11
+      - [integration_test, null, types_other, null, '', SELECT, null]
+    row_count: 12
     ordered: true
 
   - description: getTablePrivileges_catalog_filter_only_returns_matching_tables
@@ -226,7 +231,9 @@ tests:
       - [integration_test, null, class, null, '', SELECT, null]
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
-    row_count: 10
+      - [ integration_test, null, null_and_missing, null, '', SELECT, null ]
+      - [ integration_test, null, types_other, null, '', SELECT, null ]
+    row_count: 11
     ordered: true
 
   - description: getTablePrivileges_catalog_and_table_filters_returns_matching_tables
