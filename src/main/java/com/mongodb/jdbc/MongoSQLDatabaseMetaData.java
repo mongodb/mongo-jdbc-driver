@@ -542,7 +542,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 .stream()
 
                 // filter only for collections matching the pattern
-                .filter(tableName -> tableNamePatternRE == null || tableNamePatternRE.matcher(tableName).matches())
+                .filter(
+                        tableName ->
+                                tableNamePatternRE == null
+                                        || tableNamePatternRE.matcher(tableName).matches())
 
                 // map the collection names into triples of (dbName, tableName, tableSchema)
                 .map(
@@ -572,10 +575,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                     // filter only for columns matching the pattern
                                     .filter(
                                             entry ->
-                                                    columnNamePatternRE == null ||
-                                                    columnNamePatternRE
-                                                            .matcher(entry.getKey())
-                                                            .matches())
+                                                    columnNamePatternRE == null
+                                                            || columnNamePatternRE
+                                                                    .matcher(entry.getKey())
+                                                                    .matches())
 
                                     // sort by column name since ordinal position is
                                     // based on column sort order
