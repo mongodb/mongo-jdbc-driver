@@ -459,10 +459,10 @@ tests:
     meta_function: [getPseudoColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
-    expected_bson_type: [string, string, string, string, int, int, int, string, string,
-                         string, int, string]
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, int, int, int, string, string,
+                          string, int, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, int, int, java.lang.String, java.lang.String, java.lang.String,

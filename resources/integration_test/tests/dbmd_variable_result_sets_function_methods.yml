@@ -37,7 +37,7 @@ tests:
     row_count: 19
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR]
-    expected_bson_type: [string, string, string, int, string, string]
+    expected_bson_type: [string, string, string, string, int, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, java.lang.String]
@@ -78,7 +78,7 @@ tests:
     row_count: 9
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR]
-    expected_bson_type: [string, string, string, int, string, string]
+    expected_bson_type: [string, string, string, string, int, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, java.lang.String]
@@ -107,9 +107,9 @@ tests:
       - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
       - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
     row_count: 2
-    expected_bson_type: [ string, string, string, int, string, string ]
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
       LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, int, string ]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
       java.lang.String, int, java.lang.String]
@@ -138,9 +138,9 @@ tests:
       - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
       - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
     row_count: 2
-    expected_bson_type: [string, string, string, int, string, string]
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
       LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, int, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
       java.lang.String, int, java.lang.String]

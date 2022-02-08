@@ -80,6 +80,8 @@ tests:
     expected_sql_type: [LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         INTEGER, BIT, INTEGER, BIT, BIT, BIT, LONGVARCHAR, INTEGER, INTEGER, INTEGER,
                         INTEGER, INTEGER]
+    expected_bson_type: [ string, int, int, string, string, string, int, bool, int,
+                          bool, bool, bool, string, int, int, int, int, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
                             '', '', '', '']
     expected_column_class_name: [java.lang.String, int, int, java.lang.String, java.lang.String,
