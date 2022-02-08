@@ -48,10 +48,8 @@ tests:
     #     null]
     #  - [integration_test, null, null_and_missing, table, null, null, null, null,
     #     null, null]
-    #  - [integration_test, null, types_other, table, null, null, null, null,
-    #     null, null]
     #  - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 12
+    row_count: 11
     expected_sql_type: [ LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                          LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR ]
     expected_catalog_name: [ '', '', '', '', '', '', '', '', '', '' ]
