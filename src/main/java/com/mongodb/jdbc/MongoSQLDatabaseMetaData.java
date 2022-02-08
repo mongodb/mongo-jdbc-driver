@@ -246,12 +246,12 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
 
     // Helper for getting a stream of MongoListCollectionsResults from the argued db that match
     // the argued filter.
-    private Stream<MongoListCollectionsResult> getTableDataFromDB(
-            String dbName, Function<MongoListCollectionsResult, Boolean> filter) {
+    private Stream<MongoListTablesResult> getTableDataFromDB(
+            String dbName, Function<MongoListTablesResult, Boolean> filter) {
         return this.conn
                 .getDatabase(dbName)
                 .withCodecRegistry(MongoDriver.registry)
-                .listCollections(MongoListCollectionsResult.class)
+                .listCollections(MongoListTablesResult.class)
                 .into(new ArrayList<>())
                 .stream()
                 .filter(filter::apply);
@@ -260,7 +260,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for creating BSON documents for the getTables method. Intended for use
     // with the getTableDataFromDB helper method which is shared between getTables and
     // getTablePrivileges.
-    private BsonDocument toGetTablesDoc(String dbName, MongoListCollectionsResult res) {
+    private BsonDocument toGetTablesDoc(String dbName, MongoListTablesResult res) {
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_TYPE, TABLE_CAT, TABLE_SCHEM (omitted), and
                 // TABLE_NAME.
@@ -280,7 +280,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for creating BSON documents for the getTablePrivileges method. Intended
     // for use with the getTableDataFromDB helper method which is shared between getTables
     // and getTablePrivileges.
-    private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListCollectionsResult res) {
+    private BsonDocument toGetTablePrivilegesDoc(String dbName, MongoListTablesResult res) {
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME, and
                 // PRIVILEGE. Since all PRIVILEGEs are the same, we also omit that.
@@ -301,7 +301,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             String dbName,
             Pattern tableNamePatternRE,
             List<String> types,
-            BiFunction<String, MongoListCollectionsResult, BsonDocument> bsonSerializer) {
+            BiFunction<String, MongoListTablesResult, BsonDocument> bsonSerializer) {
 
         return this.getTableDataFromDB(
                         dbName,

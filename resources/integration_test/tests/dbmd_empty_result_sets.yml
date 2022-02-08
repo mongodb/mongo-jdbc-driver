@@ -5,6 +5,7 @@ tests:
     meta_function: [getProcedures, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR]
     expected_bson_type: [string, string, string, string, int, string]
@@ -34,6 +35,7 @@ tests:
     meta_function: [getProcedureColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR]
@@ -86,6 +88,7 @@ tests:
     meta_function: [getSchemas]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
     expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
@@ -111,6 +114,7 @@ tests:
     meta_function: [getSchemas, integration_test, null]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
     expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
@@ -136,6 +140,7 @@ tests:
     meta_function: [getVersionColumns, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
                         INTEGER, INTEGER]
     expected_bson_type: [string, string, int, string, int, int, int, int]
@@ -167,6 +172,7 @@ tests:
     meta_function: [getImportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
@@ -209,6 +215,7 @@ tests:
     meta_function: [getExportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
@@ -252,6 +259,7 @@ tests:
                     null, bar]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
@@ -294,6 +302,7 @@ tests:
     meta_function: [getUDTs, integration_test, null, '%', null]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR, INTEGER]
     expected_bson_type: [ string, string, string, string, int, string, int ]
@@ -323,6 +332,7 @@ tests:
     meta_function: [getSuperTypes, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
     expected_bson_type: [string, string, string, string, string, string]
@@ -352,6 +362,7 @@ tests:
     meta_function: [getSuperTables, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_bson_type: [string, string, string, string]
     expected_catalog_name: ['', '', '', '']
@@ -378,6 +389,7 @@ tests:
     meta_function: [getAttributes, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
@@ -433,6 +445,7 @@ tests:
     meta_function: [getClientInfoProperties]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
     expected_bson_type: [ string, string, string, string ]
     expected_catalog_name: ['', '', '', '']
@@ -459,6 +472,7 @@ tests:
     meta_function: [getPseudoColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR]
     expected_bson_type: [ string, string, string, string, int, int, int, string, string,
