@@ -9,6 +9,7 @@ tests:
     row_count: 2
     ordered: true
     expected_sql_type: [LONGVARCHAR]
+    expected_bson_type: [string]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
     expected_column_label: [TABLE_TYPE]
@@ -122,3 +123,4 @@ tests:
          undefined, false]
     row_count: 22
     ordered: true
+

@@ -133,16 +133,32 @@ public class DataLoader {
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     MongoCollection<Document> collection = database.getCollection(entry.collection);
-                    for (Map<String, Object> row : entry.docs) {
-                        collection.insertOne(new Document(row));
+
+                    if (entry.docsExtJson != null) {
+                        // Process extended json format
+                        for (Map<String, Object> row : entry.docsExtJson) {
+                            Document d = Document.parse(new Document(row).toJson());
+                            collection.insertOne(new Document(d));
+                        }
+                        System.out.println(
+                                "Inserted "
+                                        + entry.docsExtJson.size()
+                                        + " rows into "
+                                        + entry.db
+                                        + "."
+                                        + entry.collection);
+                    } else if (entry.docs != null) {
+                        for (Map<String, Object> row : entry.docs) {
+                            collection.insertOne(new Document(row));
+                        }
+                        System.out.println(
+                                "Inserted "
+                                        + entry.docs.size()
+                                        + " rows into "
+                                        + entry.db
+                                        + "."
+                                        + entry.collection);
                     }
-                    System.out.println(
-                            "Inserted "
-                                    + entry.docs.size()
-                                    + " rows into "
-                                    + entry.db
-                                    + "."
-                                    + entry.collection);
                     if (entry.nonuniqueIndexes != null) {
                         for (Map<String, Object> index : entry.nonuniqueIndexes) {
                             String indexName = collection.createIndex(new Document(index));
@@ -155,11 +171,10 @@ public class DataLoader {
                                             + entry.collection);
                         }
                     }
-                    if (entry.schema == null) {
-                        generateSchema(entry.db, entry.collection);
-                    }
                     if (entry.schema != null) {
                         setSchema(entry.db, entry.collection, entry.schema);
+                    } else {
+                        generateSchema(entry.db, entry.collection);
                     }
                 }
             }

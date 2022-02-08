@@ -9,6 +9,7 @@ tests:
     row_count: 2
     ordered: true
     expected_sql_type: [LONGVARCHAR]
+    expected_bson_type: [ string ]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
     expected_column_label: [TABLE_CAT]
@@ -107,6 +108,7 @@ tests:
     row_count: 10
     ordered: true
 
+
   - description: getTables_catalog_and_table_filters_only_returns_matching_tables
     db: integration_test
     meta_function: [getTables, integration_test, null, b%, null]
@@ -168,6 +170,7 @@ tests:
     meta_function: [getTablePrivileges, null, null, '%']
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
@@ -223,7 +226,6 @@ tests:
       - [integration_test, null, class, null, '', SELECT, null]
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
-      - [integration_test, null, null_and_missing, null, '', SELECT, null]
     row_count: 10
     ordered: true
 
