@@ -306,7 +306,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return this.getTableDataFromDB(
                         dbName,
                         res ->
-                                tableNamePatternRE.matcher(res.name).matches()
+                                (tableNamePatternRE == null
+                                                || tableNamePatternRE.matcher(res.name).matches())
                                         && (types == null
                                                 || types.contains(res.type.toLowerCase())))
                 .map(res -> bsonSerializer.apply(dbName, res));

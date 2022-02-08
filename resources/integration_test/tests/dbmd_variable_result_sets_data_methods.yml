@@ -26,6 +26,63 @@ tests:
     expected_is_writable: [false]
 
   # getTables(catalog, schemaPattern, tableNamePattern, types)
+  - description: getTables_null_parameters_returns_all_tables
+    db: integration_test
+    #skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"
+    meta_function: [ getTables, null, null, null, null ]
+    #expected_result:
+    #  - [db2, null, foo, table, null, null, null, null, null, null]
+    #  - [integration_test, null, a_non_lexicographic_field_order, table, null,
+    #     null, null, null, null, null]
+    #  - [integration_test, null, any_collection, table, null, null, null, null,
+    #     null, null]
+    #  - [integration_test, null, anyof_collection, table, null, null, null, null,
+    #     null, null]
+    #  - [integration_test, null, b_non_lexicographic_field_order, table, null,
+    #     null, null, null, null, null]
+    #  - [integration_test, null, bar, table, null, null, null, null, null, null]
+    #  - [integration_test, null, class, table, null, null, null, null, null,
+    #     null]
+    #  - [integration_test, null, foo, table, null, null, null, null, null, null]
+    #  - [integration_test, null, grades, table, null, null, null, null, null,
+    #     null]
+    #  - [integration_test, null, null_and_missing, table, null, null, null, null,
+    #     null, null]
+    #  - [integration_test, null, types_other, table, null, null, null, null,
+    #     null, null]
+    #  - [integration_test, null, baz, view, null, null, null, null, null, null]
+    row_count: 12
+    expected_sql_type: [ LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
+                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR ]
+    expected_catalog_name: [ '', '', '', '', '', '', '', '', '', '' ]
+    expected_column_class_name: [ java.lang.String, java.lang.String, java.lang.String,
+                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+                                  java.lang.String, java.lang.String ]
+    expected_column_label: [ TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,
+                             TYPE_CAT, TYPE_SCHEM, TYPE_NAME, SELF_REFERENCING_COL_NAME, REF_GENERATION ]
+    expected_column_display_size: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    expected_precision: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    expected_scale: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    expected_schema_name: [ '', '', '', '', '', '', '', '', '', '' ]
+    expected_is_auto_increment: [ false, false, false, false, false, false, false,
+                                  false, false, false ]
+    expected_is_case_sensitive: [ true, true, true, true, true, true, true, true, true,
+                                  true ]
+    expected_is_currency: [ false, false, false, false, false, false, false, false,
+                            false, false ]
+    expected_is_definitely_writable: [ false, false, false, false, false, false, false,
+                                       false, false, false ]
+    #expected_is_nullable: [ columnNullable, columnNullable, columnNullable, columnNoNulls,
+    #                        columnNoNulls, columnNullable, columnNoNulls, columnNullable, columnNullable, columnNullable ]
+    expected_is_read_only: [ true, true, true, true, true, true, true, true, true,
+                             true ]
+    expected_is_searchable: [ true, true, true, true, true, true, true, true, true,
+                              true ]
+    expected_is_signed: [ false, false, false, false, false, false, false, false, false,
+                          false ]
+    expected_is_writable: [ false, false, false, false, false, false, false, false,
+                            false, false ]
+
   - description: getTables_no_filters_returns_all_tables
     db: integration_test
     skip_reason: "SQL-669, SQL-672: incorrect column nullability. also, using 'collection' instead of 'table'"

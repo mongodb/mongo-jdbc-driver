@@ -138,7 +138,9 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     public static Pattern toJavaPattern(String sqlPattern) {
-        return Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
+        return sqlPattern == null
+                ? null
+                : Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
     }
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
