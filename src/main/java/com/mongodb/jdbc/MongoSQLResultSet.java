@@ -78,6 +78,13 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
 
     @Override
     protected Object getObject(BsonValue o, int columnType) throws SQLException {
+        // The type of the Java object will be the default Java object type corresponding to the column's SQL type (see
+        // "TABLE B-3 Mapping from JDBC Types to Java Object Types" in the JDBC specification), following the mapping
+        // for built-in types specified in the JDBC specification.
+        // If the value is an SQL NULL, the driver returns a Java null.
+        if (checkNull(o)) {
+            return null;
+        }
         switch (columnType) {
             case Types.ARRAY:
                 // not supported
@@ -166,6 +173,8 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                         return o.asTimestamp();
                     case UNDEFINED:
                         return (BsonUndefined) o;
+                    case NULL:
+                        return null;
                     default:
                         return o;
                 }
@@ -214,21 +223,27 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         BsonValue out = getBsonValue(columnIndex);
+        // If the value is Null, no need to try to convert to a Java Object
+        if (checkNull(out)) {
+            return null;
+        }
         int columnType = rsMetaData.getColumnType(columnIndex);
         return getObject(out, columnType);
     }
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
-        BsonValue out = getBsonValue(columnLabel);
-        int columnType = rsMetaData.getColumnType(findColumn(columnLabel));
-        return getObject(out, columnType);
+        int columnIndex = findColumn(columnLabel);
+        return getObject(columnIndex);
     }
 
     @Override
     public Object getObject(int columnIndex, java.util.Map<String, Class<?>> map)
             throws SQLException {
         BsonValue out = getBsonValue(columnIndex);
+        if (checkNull(out)) {
+            return null;
+        }
         String columnTypeName = rsMetaData.getColumnTypeName(columnIndex);
         Class<?> type = map.get(columnTypeName);
         if (type == null) {
@@ -246,6 +261,9 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
     @Override
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
         BsonValue out = getBsonValue(columnIndex);
+        if (checkNull(out)) {
+            return null;
+        }
         return type.cast(out);
     }
 
