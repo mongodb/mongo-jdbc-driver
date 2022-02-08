@@ -8,7 +8,7 @@ public class MongoListTablesResult {
     public String type;
 
     public void setType(String type) {
-        // If mongodb type is collection, map it as TABLE.
+        // If mongodb type is COLLECTION, map it as TABLE.
         // Otherwise, keep the type as is.
         this.type = type.equalsIgnoreCase(COLLECTION) ? TABLE : type;
     }
