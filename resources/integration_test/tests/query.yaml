@@ -128,12 +128,11 @@ tests:
   - description: select_null_and_missing_field
     db: integration_test
     sql: SELECT a FROM null_and_missing
-    skip_reason: SQL-698
     expected_result:
       - - !!org.bson.BsonTimestamp 1
       - - null
       - - null
-    row_count: 1
+    row_count: 3
     expected_sql_type: [ OTHER ]
     expected_catalog_name: [ '' ]
     expected_column_class_name: [ org.bson.BsonValue ]
