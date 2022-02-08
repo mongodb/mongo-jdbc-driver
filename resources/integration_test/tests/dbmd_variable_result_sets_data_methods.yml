@@ -8,6 +8,7 @@ tests:
       - [integration_test]
     row_count: 2
     expected_sql_type: [LONGVARCHAR]
+    expected_bson_type: [ string ]
     expected_catalog_name: ['']
     expected_column_class_name: [java.lang.String]
     expected_column_label: [TABLE_CAT]
@@ -42,6 +43,8 @@ tests:
     row_count: 6
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -86,6 +89,8 @@ tests:
     row_count: 5
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -125,6 +130,8 @@ tests:
     row_count: 2
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -168,6 +175,8 @@ tests:
     row_count: 1
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -211,6 +220,8 @@ tests:
     row_count: 1
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -255,6 +266,8 @@ tests:
     row_count: 2
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -299,6 +312,7 @@ tests:
     row_count: 6
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
@@ -332,6 +346,7 @@ tests:
     row_count: 5
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
@@ -362,6 +377,7 @@ tests:
     row_count: 2
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String]
