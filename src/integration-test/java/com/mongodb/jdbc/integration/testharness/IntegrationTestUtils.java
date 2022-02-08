@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.BsonInt64;
-import org.bson.BsonNumber;
 import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -446,16 +444,18 @@ public class IntegrationTestUtils {
                 MongoSQLResultSetMetaData mongoSQLResultSetMetadata =
                         (MongoSQLResultSetMetaData) rsMetaData;
                 MongoColumnInfo columnInfo = mongoSQLResultSetMetadata.getColumnInfo(i + 1);
-                assertEquals(test.expected_bson_type.get(i), columnInfo.getBsonTypeName(), "Bson type mismatch");
+                assertEquals(
+                        test.expected_bson_type.get(i),
+                        columnInfo.getBsonTypeName(),
+                        "Bson type mismatch");
             }
         }
     }
 
     private static List<Object> processExtendedJson(Map<String, Object> entry) {
         List<Object> expectedResults = new ArrayList<>();
-        Document a = new Document(entry);
-        String s = a.toJson();
-        BsonDocument bsonDoc = BsonDocument.parse(s);
+        String entryAsJson = new Document(entry).toJson();
+        BsonDocument bsonDoc = BsonDocument.parse(entryAsJson);
         for (int i = 0; i < entry.size(); i++) {
             expectedResults.add(bsonDoc.get(String.valueOf(i)));
         }
@@ -486,7 +486,9 @@ public class IntegrationTestUtils {
                     expectedResults =
                             (List<Object>) testEntry.expected_result.get(actualRowCounter);
                 }
-                assertTrue(compareRow(expectedResults, rs), "Row " + actualRowCounter + " does not match.");
+                assertTrue(
+                        compareRow(expectedResults, rs),
+                        "Row " + actualRowCounter + " does not match.");
                 actualRowCounter++;
             }
         }
