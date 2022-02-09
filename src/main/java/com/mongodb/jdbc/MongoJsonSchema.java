@@ -12,6 +12,24 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MongoJsonSchema {
+    public static class ScalarProperties
+    {
+        protected String name;
+        protected boolean isRequired = true;
+        protected BsonTypeInfo type;
+
+        public ScalarProperties(String name, BsonTypeInfo type, boolean isRequired) {
+            this.name = name;
+            this.isRequired = isRequired;
+            this.type = type;
+        }
+
+        public ScalarProperties(String name, BsonTypeInfo type) {
+            this.name = name;
+            this.type = type;
+        }
+    }
+
     public String bsonType;
     public Map<String, MongoJsonSchema> properties;
     public Set<MongoJsonSchema> anyOf;
@@ -48,16 +66,18 @@ public class MongoJsonSchema {
      * @return void
      */
     @SafeVarargs
-    public final void addRequiredScalarKeys(Pair<String, String>... scalarProperties) {
+    public final void addRequiredScalarKeys(ScalarProperties... scalarProperties) {
         if (properties == null) {
             properties = new LinkedHashMap<>();
         }
         if (required == null) {
             required = new HashSet<>();
         }
-        for (Pair<String, String> p : scalarProperties) {
-            required.add(p.left());
-            properties.put(p.left(), createScalarSchema(p.right()));
+        for (ScalarProperties prop : scalarProperties) {
+            if (prop.isRequired) {
+                required.add(prop.name);
+            }
+            properties.put(prop.name, createScalarSchema(prop.type.getBsonName()));
         }
     }
 
