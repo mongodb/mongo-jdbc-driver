@@ -69,7 +69,7 @@ public class MongoJsonSchema {
      *                                                           }
      *
      * @param scalarProperties Contains the basic info (name, bsonType and required flag) for each
-     *     key. Each property into a scalar MongoJsonSchema and added to this parent schema.
+     *     key. Each property is converted into a scalar MongoJsonSchema and added to this parent schema.
      */
     @SafeVarargs
     public final void addScalarKeys(ScalarProperties... scalarProperties) {
