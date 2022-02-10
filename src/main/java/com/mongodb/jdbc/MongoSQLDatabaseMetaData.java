@@ -606,28 +606,28 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new MongoJsonSchema.ScalarProperties(TABLE_CAT, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(TABLE_SCHEM, BSON_STRING),
+                        new MongoJsonSchema.ScalarProperties(TABLE_CAT, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(TABLE_SCHEM, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(TABLE_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(COLUMN_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(COLUMN_SIZE, BSON_INT),
-                        new MongoJsonSchema.ScalarProperties(BUFFER_LENGTH, BSON_INT),
-                        new MongoJsonSchema.ScalarProperties(DECIMAL_DIGITS, BSON_INT),
+                        new MongoJsonSchema.ScalarProperties(BUFFER_LENGTH, BSON_INT, false),
+                        new MongoJsonSchema.ScalarProperties(DECIMAL_DIGITS, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(NUM_PREC_RADIX, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(NULLABLE, BSON_INT),
-                        new MongoJsonSchema.ScalarProperties(REMARKS, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(COLUMN_DEF, BSON_STRING),
+                        new MongoJsonSchema.ScalarProperties(REMARKS, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(COLUMN_DEF, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(SQL_DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(SQL_DATETIME_SUB, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(CHAR_OCTET_LENGTH, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(ORDINAL_POSITION, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(IS_NULLABLE, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(SCOPE_CATALOG, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(SCOPE_SCHEMA, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(SCOPE_TABLE, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(SOURCE_DATA_TYPE, BSON_INT),
+                        new MongoJsonSchema.ScalarProperties(SCOPE_CATALOG, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(SCOPE_SCHEMA, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(SCOPE_TABLE, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(SOURCE_DATA_TYPE, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(IS_AUTOINCREMENT, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(IS_GENERATEDCOLUMN, BSON_STRING));
 
@@ -926,7 +926,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new MongoJsonSchema.ScalarProperties(SCOPE, BSON_STRING),
+                        new MongoJsonSchema.ScalarProperties(SCOPE, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(COLUMN_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
