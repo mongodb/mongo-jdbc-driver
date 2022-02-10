@@ -12,8 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MongoJsonSchema {
-    public static class ScalarProperties
-    {
+    public static class ScalarProperties {
         protected String name;
         protected boolean isRequired = true;
         protected BsonTypeInfo type;
@@ -54,19 +53,26 @@ public class MongoJsonSchema {
     }
 
     /**
-     * Adds required scalar properties to a MongoJsonSchema, adding them as required and giving them
-     * the passed bsonType. If properties or required for `this` are null, this method creates them.
+     * Adds scalar properties to a MongoJsonSchema.
+     * Below is an example for adding a scalar property :
+     * {                                                        {
+     *   "bsonType": "object",                                      "bsonType": "object",
+     *   "properties": {                                            "properties": {
+     *     "bar": {                             ==>                     "bar": {
+     *       "bsonType": "int"                                              "bsonType": "int"
+     *     }                                                            },
+     *   }                                                               "foo": {
+     *  }                                                                    "bsonType": "bool"
+     *                                                                  }
+     *                                                               },
+     *                                                               "required": [foo]
+     *                                                           }
      *
-     * <p>ex: addRequiredScalarKeys( new Pair<>("foo", "int"), new Pair<>("bar", "string"), new
-     * Pair<>("baz", "objectId"));
-     *
-     * @param scalarProperties are variadic pairs of (String property name, String property bson
-     *     type). Each property type is converted into a scalar MongoJsonSchema with the proper
-     *     bsonType
-     * @return void
+     * @param scalarProperties Contains the basic info (name, bsonType and required flag) for each
+     *     key. Each property into a scalar MongoJsonSchema and added to this parent schema.
      */
     @SafeVarargs
-    public final void addRequiredScalarKeys(ScalarProperties... scalarProperties) {
+    public final void addScalarKeys(ScalarProperties... scalarProperties) {
         if (properties == null) {
             properties = new LinkedHashMap<>();
         }

@@ -109,9 +109,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // under the bottom namespace. This helper method takes result schema fields
     // and nests them appropriately.
     @SafeVarargs
-    private final MongoJsonSchema createBottomSchema(MongoJsonSchema.ScalarProperties... resultSchemaFields) {
+    private final MongoJsonSchema createBottomSchema(
+            MongoJsonSchema.ScalarProperties... resultSchemaFields) {
         MongoJsonSchema resultSchema = MongoJsonSchema.createEmptyObjectSchema();
-        resultSchema.addRequiredScalarKeys(resultSchemaFields);
+        resultSchema.addScalarKeys(resultSchemaFields);
 
         MongoJsonSchema bot = MongoJsonSchema.createEmptyObjectSchema();
         bot.required.add(BOT_NAME);
@@ -227,7 +228,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(new MongoJsonSchema.ScalarProperties(TABLE_TYPE, BSON_STRING));
+        schema.addScalarKeys(new MongoJsonSchema.ScalarProperties(TABLE_TYPE, BSON_STRING));
 
         docs.add(createBottomBson(new BsonElement(TABLE_TYPE, new BsonString("TABLE"))));
         docs.add(createBottomBson(new BsonElement(TABLE_TYPE, new BsonString("VIEW"))));
@@ -336,7 +337,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(TYPE_CAT, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(TYPE_SCHEM, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING, false),
-                        new MongoJsonSchema.ScalarProperties(SELF_REFERENCING_COL_NAME, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(
+                                SELF_REFERENCING_COL_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(REF_GENERATION, BSON_STRING, false));
 
         // Note: JDBC has Catalogs, Schemas, and Tables: they are three levels of organization.
@@ -911,7 +913,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(DECIMAL_DIGITS, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(PSEUDO_COLUMN, BSON_INT));
 
-
         // As in other methods, we ignore the schema argument. Here, we also ignore the
         // scope and nullable arguments.
         return liftSQLException(
@@ -925,7 +926,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             throws SQLException {
         MongoJsonSchema botSchema =
                 createBottomSchema(
-                        new MongoJsonSchema.ScalarProperties(SCOPE, BSON_STRING, false),
+                        new MongoJsonSchema.ScalarProperties(SCOPE, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(COLUMN_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
@@ -933,7 +934,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(BUFFER_LENGTH, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(DECIMAL_DIGITS, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(PSEUDO_COLUMN, BSON_INT));
-
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -981,7 +981,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(PK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(DEFERRABILITY, BSON_INT));
 
-
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
@@ -1010,7 +1009,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(FK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(PK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(DEFERRABILITY, BSON_INT));
-
 
         return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
@@ -1066,7 +1064,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     private MongoJsonSchema getTypeInfoJsonSchema() {
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        schema.addScalarKeys(
                 new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
                 new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                 new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT),
@@ -1806,7 +1804,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         ArrayList<BsonDocument> docs = new ArrayList<>();
 
         MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.addRequiredScalarKeys(
+        schema.addScalarKeys(
                 new MongoJsonSchema.ScalarProperties(NAME, BSON_STRING),
                 new MongoJsonSchema.ScalarProperties(MAX_LEN, BSON_STRING),
                 new MongoJsonSchema.ScalarProperties(DEFAULT_VALUE, BSON_STRING),
@@ -1878,7 +1876,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(LENGTH, BSON_INT),
-                        new MongoJsonSchema.ScalarProperties(SCALE, BSON_INT),
+                        new MongoJsonSchema.ScalarProperties(SCALE, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(RADIX, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(NULLABLE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(REMARKS, BSON_STRING),
