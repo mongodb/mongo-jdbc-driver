@@ -250,6 +250,6 @@ else
         echo "Restoring ${TENANT_CONFIG}"
         cd $LOCAL_MONGOHOUSE_DIR
         cp ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
-	fi
+    fi
   fi
 fi
