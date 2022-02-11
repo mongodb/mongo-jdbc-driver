@@ -247,7 +247,7 @@ else
     echo "Stopping $MONGOHOUSED, pid $MONGOHOUSED_PID"
     pkill -TERM -P ${MONGOHOUSED_PID}
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -d "$LOCAL_MONGOHOUSE_DIR" ]]; then
-		echo "Restoring ${TENANT_CONFIG}"
+        echo "Restoring ${TENANT_CONFIG}"
         cd $LOCAL_MONGOHOUSE_DIR
         cp ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
 	fi
