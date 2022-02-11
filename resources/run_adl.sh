@@ -175,7 +175,7 @@ if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOHOUSED"
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
         if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
-            echo "ERROR: LOCAL_MONGOHOUSE_DIR is not a directory"
+            echo "ERROR: $LOCAL_MONGOHOUSE_DIR is not a directory"
             exit 1
         fi
         cd $LOCAL_MONGOHOUSE_DIR
