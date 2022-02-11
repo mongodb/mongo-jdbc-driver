@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.BsonInvalidOperationException;
+import org.bson.BsonType;
+import org.bson.BsonValue;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 public class MongoJsonSchema {
@@ -66,12 +69,12 @@ public class MongoJsonSchema {
         result.additionalProperties = baseSchema.additionalProperties;
 
         if (baseSchema.bsonType!= null) {
+            Set<String> bsonTypes = polymorphicBsonTypeToStringSet(baseSchema.bsonType);
             //  If there are many types in the set and it can not be reduced to one type after eliminating any Null
             //  type in the list, the types will be inserted in the list  of anyOf to be handled as polymorphic type.
-            if (baseSchema.bsonType.size() > 0 && baseSchema.bsonType.size() <= 2) {
+            if (bsonTypes.size() > 0 && bsonTypes.size() <= 2) {
                 List<String> trimmedList =
-                        baseSchema
-                                .bsonType
+                        bsonTypes
                                 .stream()
                                 .filter(t -> !t.equalsIgnoreCase(BSON_NULL.getBsonName()))
                                 .collect(Collectors.toList());
@@ -97,7 +100,7 @@ public class MongoJsonSchema {
             }
 
             // Push down each bsontype into its own anyOf schema
-            for (String currType : baseSchema.bsonType) {
+            for (String currType : bsonTypes) {
                 MongoJsonSchema anyOfSchema = new MongoJsonSchema();
                 anyOfSchema.bsonType = currType;
 
@@ -119,6 +122,32 @@ public class MongoJsonSchema {
                     result.anyOf.add(anyOfSchema);
                 }
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * Converts a polymorphic bsonType which can either be a BsonArray or a BsonString to a set of Strings.
+     *
+     * @param polymorphicBsonType   The original polymorphic type.
+     *
+     * @return the corresponding String set.
+     */
+    private static Set<String> polymorphicBsonTypeToStringSet(BsonValue polymorphicBsonType) {
+        Set<String> result;
+        if (polymorphicBsonType.isArray()) {
+            result = polymorphicBsonType.asArray().stream().map(val -> val.asString().getValue())
+                    .collect(Collectors.toSet());
+        }
+        else if (polymorphicBsonType.isString()) {
+            result = new HashSet<String>();
+            result.add(polymorphicBsonType.asString().getValue());
+        }
+        else
+        {
+            throw new BsonInvalidOperationException("Value expected to be of type " + BsonType.ARRAY +" or " +
+                    BsonType.STRING + " but  is of unexpected type " + polymorphicBsonType.getBsonType());
         }
 
         return result;

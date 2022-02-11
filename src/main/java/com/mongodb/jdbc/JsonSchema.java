@@ -17,31 +17,13 @@ import static java.lang.String.format;
 
 // Simple POJO for deserializing jsonschema.
 public class JsonSchema {
-    private BsonValue polymorphicBsonType;
-    @BsonIgnore
-    public Set<String> bsonType;
+
+    public BsonValue bsonType;
     public Map<String, JsonSchema> properties;
     public Set<JsonSchema> anyOf;
     public Set<String> required;
     public JsonSchema items;
     public boolean additionalProperties;
-
-    public void setBsonType(BsonValue polymorphicBsonType) {
-        this.polymorphicBsonType = polymorphicBsonType;
-        if (polymorphicBsonType.isArray()) {
-            this.bsonType = polymorphicBsonType.asArray().stream().map(val -> val.asString().getValue())
-                    .collect(Collectors.toSet());
-        }
-        else if (polymorphicBsonType.isString()) {
-            bsonType = new HashSet<String>();
-            bsonType.add(polymorphicBsonType.asString().getValue());
-        }
-        else
-        {
-            throw new BsonInvalidOperationException("Value expected to be of type " + BsonType.ARRAY +" or " +
-                    BsonType.STRING + " but  is of unexpected type " + polymorphicBsonType.getBsonType());
-        }
-    }
 
     @Override
     public boolean equals(Object obj) {
