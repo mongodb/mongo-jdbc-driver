@@ -427,7 +427,7 @@ public abstract class TestUtils {
     {
         try
         {
-            //PrintUtils.printResultSetMetadata(rs.getMetaData());
+            PrintUtils.printResultSetMetadata(rs.getMetaData());
             PrintUtils.printResultSet(rs);
         }
         catch (Exception e)
