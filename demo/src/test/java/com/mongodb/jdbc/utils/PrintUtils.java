@@ -93,7 +93,7 @@ public class PrintUtils {
             StringBuilder sb = new StringBuilder();
 
             int[] maxColsWidth = printRsHeader(sb, columnCount, rsMeta);
-            printRsContent(sb, columnCount, rs, maxColsWidth);
+            printRsContents(sb, columnCount, rs, maxColsWidth);
 
             System.out.println(sb.toString());
         }
@@ -109,7 +109,7 @@ public class PrintUtils {
         return "| %-" + maxColWidth + "s ";
     }
 
-    private static void printRsContent(StringBuilder sb, int columnCount, ResultSet rs, int[] maxColsWidth) throws SQLException
+    private static void printRsContents(StringBuilder sb, int columnCount, ResultSet rs, int[] maxColsWidth) throws SQLException
     {
         String data = null;
         while (rs.next()) {

@@ -29,7 +29,6 @@ public abstract class TestUtils {
 
     @Test
     void testConnection() throws Exception {
-
         System.out.println(m_dbMeta.getDriverName());
         System.out.println(m_dbMeta.getDriverVersion());
 
@@ -247,41 +246,41 @@ public abstract class TestUtils {
                 .println("-----------------------------------------------------------------------");
         System.out
                 .println("-----------------------------------------------------------------------");
-        System.out.println("API databases matadata test call:");
+        System.out.println("API databases metadata");
         System.out.println("Driver Name: " + m_dbMeta.getDriverName());
         System.out.println("Driver Version: " + m_dbMeta.getDriverVersion());
         System.out.println("Driver Major Version: "
                 + m_dbMeta.getDriverMajorVersion());
         System.out.println("Driver Minor Version: "
                 + m_dbMeta.getDriverMinorVersion());
-        System.out.println("Server product Name: "
+        System.out.println("Database Product Name: "
                 + m_dbMeta.getDatabaseProductName());
-        System.out.println("Server product version: "
+        System.out.println("Database Product version: "
                 + m_dbMeta.getDatabaseProductVersion());
-        System.out.println("Server product Major version: "
+        System.out.println("Database Major version: "
                 + m_dbMeta.getDatabaseMajorVersion());
-        System.out.println("Server product Minor version : "
+        System.out.println("Database Minor version : "
                 + m_dbMeta.getDatabaseMinorVersion());
-        System.out.println("supports Mixed Case Quoted Identifiers: "
+        System.out.println("Supports Mixed Case Quoted Identifiers: "
                 + m_dbMeta.supportsMixedCaseQuotedIdentifiers());
-        System.out.println("supports Mixed Case Identifiers: "
+        System.out.println("Supports Mixed Case Identifiers: "
                 + m_dbMeta.supportsMixedCaseIdentifiers());
-        System.out.println("stores UpperCase Quoted Identifiers: "
+        System.out.println("Stores UpperCase Quoted Identifiers: "
                 + m_dbMeta.storesUpperCaseQuotedIdentifiers());
-        System.out.println("stores LowerCase Quoted Identifiers: "
+        System.out.println("Stores LowerCase Quoted Identifiers: "
                 + m_dbMeta.storesLowerCaseQuotedIdentifiers());
-        System.out.println("stores Mixed Case Quoted Identifiers: "
+        System.out.println("Stores Mixed Case Quoted Identifiers: "
                 + m_dbMeta.storesMixedCaseQuotedIdentifiers());
-        System.out.println("stores Upper Case Identifiers: "
+        System.out.println("Stores Upper Case Identifiers: "
                 + m_dbMeta.storesUpperCaseIdentifiers());
-        System.out.println("stores Lower Case Identifiers: "
+        System.out.println("Stores Lower Case Identifiers: "
                 + m_dbMeta.storesLowerCaseIdentifiers());
-        System.out.println("stores Mixed Case Identifiers: "
+        System.out.println("Stores Mixed Case Identifiers: "
                 + m_dbMeta.storesMixedCaseIdentifiers());
-        System.out.println("get Identifier Quote String: "
+        System.out.println("Identifier Quote String: "
                 + m_dbMeta.getIdentifierQuoteString());
-        System.out.println("is ReadOnly: " + m_dbMeta.isReadOnly());
-        System.out.println("supports ResultSet Concurrency: "
+        System.out.println("Is ReadOnly: " + m_dbMeta.isReadOnly());
+        System.out.println("Supports ResultSet Concurrency: "
                 + m_dbMeta.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY,
                 ResultSet.FETCH_UNKNOWN));
 
@@ -314,8 +313,7 @@ public abstract class TestUtils {
     {
         // The query must be a long running query for cancel to be effective
         String query = "select * from class";
-        System.out
-                .println("-----------------------------------------------------------------------");
+        System.out.println("-----------------------------------------------------------------------");
 
         class QueryExecutor implements Runnable
         {
@@ -324,11 +322,10 @@ public abstract class TestUtils {
             private ResultSet m_result;
             private final Statement m_statement;
 
-            public QueryExecutor(Statement statement, String query, ResultSet result)
+            public QueryExecutor(Statement statement, String query)
             {
                 m_statement = statement;
                 m_query = query;
-                m_result = result;
                 m_isExecuting = false;
             }
 
@@ -356,13 +353,20 @@ public abstract class TestUtils {
                 {
                     e.printStackTrace();
                 }
+                finally {
+                    try {
+                        m_result.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 
         Statement statement = m_conn.createStatement();
         ResultSet result = null;
 
-        QueryExecutor queryExecutor = new QueryExecutor(statement, query, result);
+        QueryExecutor queryExecutor = new QueryExecutor(statement, query);
         Thread execThread = new Thread(queryExecutor);
         execThread.start();
 
@@ -374,11 +378,8 @@ public abstract class TestUtils {
         {
             try
             {
-                // Still need to wait because the m_isExecuting flag is set
-                // before
-                // statement.executeQuery is called. Need to wait until an
-                // executor
-                // object is created.
+                // Still need to wait because the m_isExecuting flag is set  before statement.executeQuery is called.
+                // Need to wait until an executor object is created.
                 Thread.sleep(2000);
             }
             catch (InterruptedException e)
@@ -390,7 +391,7 @@ public abstract class TestUtils {
             System.out.println("The query cancelled successfully.");
 
             // Try to use the statement again
-            queryExecutor = new QueryExecutor(statement, query, result);
+            queryExecutor = new QueryExecutor(statement, query);
             execThread = new Thread(queryExecutor);
             execThread.start();
         }
@@ -400,8 +401,7 @@ public abstract class TestUtils {
             queryExecutor.getResultSet().close();
         }
 
-        System.out
-                .println("-----------------------------------------------------------------------");
+        System.out.println("-----------------------------------------------------------------------");
     }
 
     private void runExecuteQuery(String query, boolean printRs) throws Exception
