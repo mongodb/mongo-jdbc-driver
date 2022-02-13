@@ -200,9 +200,16 @@ if [[ $? -ne 0 ]]; then
     export LIBRARY_PATH="$(pwd)/artifacts"
 
     # Download latest versions of external dependencies
+    MONGOSQL_LIB=$(pwd)/artifacts/libmongosql.a
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MOGOHOUSE_MQLRUN" ]]; then
+        cp ${MONGOHOUSE_MQLRUN} ${MOGOHOUSE_MQLRUN}.orig
+    fi
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MONGOSQL_LIB" ]]; then
+        cp ${MONGOSQL_LIB} ${MONGOSQL_LIB}.orig
+    fi
     rm -f $MONGOHOUSE_MQLRUN
     go run cmd/buildscript/build.go tools:download:mqlrun
-    rm -f $(pwd)/artifacts/libmongosql.a
+    rm -f $MONGOSQL_LIB
     go run cmd/buildscript/build.go tools:download:mongosql
 
     get_jq
@@ -250,6 +257,15 @@ else
         echo "Restoring ${TENANT_CONFIG}"
         cd $LOCAL_MONGOHOUSE_DIR
         cp ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
+        if [[ -f ${MONGOSQL_MQLRUN}.orig ]] ; then
+            echo "Restoring $MONGOSQL_MQLRUN"
+            cp ${MONGOSQL_MQLRUN}.orig $MONGOSQL_MQLRUN
+        fi
+        MONGOSQL_LIB=$LOCAL_MONGOHOUSE_DIR/artifacts/libmongosql.a
+        if [[ -f ${MONGOSQL_LIB}.orig ]] ; then
+            echo "Restoring $MONGOSQL_LIB"
+            cp ${MONGOSQL_LIB}.orig $MONGOSQL_LIB
+        fi
     fi
   fi
 fi
