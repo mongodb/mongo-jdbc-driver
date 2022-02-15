@@ -5,7 +5,11 @@
 #
 # This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
 # The supported platforms are macos, ubuntu1804, and rhel7.
-# To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
+#
+# - To skip the download of ADL, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
+#   and set the environment variable LOCAL_MONGOHOUSE_DIR to the root directory of the
+#   mongohouse source tree.
+# - To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
 
 NAME=`basename "$0"`
 if [[ $SKIP_RUN_ADL -eq 1 ]]; then
@@ -39,6 +43,7 @@ START="start"
 STOP="stop"
 MONGOD="mongod"
 MONGOHOUSED="mongohoused"
+TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
 MONGO_DOWNLOAD_LINK=
 OS=$(uname)
 TIMEOUT=120
@@ -168,25 +173,43 @@ check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOHOUSED"
-    # Install and start mongohoused
-    git config --global url.git@github.com:.insteadOf https://github.com/
-    # Clone the mongohouse repo
-    if [ ! -d "$MONGOHOUSE_DIR" ]; then
-      git clone $MONGOHOUSE_URI
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
+        if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
+            echo "ERROR: $LOCAL_MONGOHOUSE_DIR is not a directory"
+            exit 1
+        fi
+        cd $LOCAL_MONGOHOUSE_DIR
+    else
+        echo "Downloading mongohouse"
+        # Install and start mongohoused
+        git config --global url.git@github.com:.insteadOf https://github.com/
+        # Clone the mongohouse repo
+        if [ ! -d "$MONGOHOUSE_DIR" ]; then
+            git clone $MONGOHOUSE_URI
+        fi
+        cd $MONGOHOUSE_DIR
+        git pull $MONGOHOUSE_URI
+
+        export GOPRIVATE=github.com/10gen
+        go mod download
     fi
-    cd $MONGOHOUSE_DIR
-    git pull $MONGOHOUSE_URI
 
     # Set relevant environment variables
-    export GOPRIVATE=github.com/10gen
     export MONGOHOUSE_ENVIRONMENT="local"
     export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
     export LIBRARY_PATH="$(pwd)/artifacts"
 
-    go mod download
-
-    # Download external dependencies
+    # Download latest versions of external dependencies
+    MONGOSQL_LIB=$(pwd)/artifacts/libmongosql.a
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MOGOHOUSE_MQLRUN" ]]; then
+        cp ${MONGOHOUSE_MQLRUN} ${MOGOHOUSE_MQLRUN}.orig
+    fi
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MONGOSQL_LIB" ]]; then
+        cp ${MONGOSQL_LIB} ${MONGOSQL_LIB}.orig
+    fi
+    rm -f $MONGOHOUSE_MQLRUN
     go run cmd/buildscript/build.go tools:download:mqlrun
+    rm -f $MONGOSQL_LIB
     go run cmd/buildscript/build.go tools:download:mongosql
 
     get_jq
@@ -194,8 +217,8 @@ if [[ $? -ne 0 ]]; then
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
     DATABASES=$(cat $DB_CONFIG_PATH)
-    TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
     # Replace the existing storage config with a wildcard collection for the local mongodb
+    cp ${TENANT_CONFIG} ${TENANT_CONFIG}.orig
     jq "del(.storage)" ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
     jq --argjson obj "$STORES" '.storage.stores += [$obj]' ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp\
                                                                && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
@@ -230,5 +253,19 @@ else
     MONGOHOUSED_PID=$(< $TMP_DIR/${MONGOHOUSED}.pid)
     echo "Stopping $MONGOHOUSED, pid $MONGOHOUSED_PID"
     pkill -TERM -P ${MONGOHOUSED_PID}
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -d "$LOCAL_MONGOHOUSE_DIR" ]]; then
+        echo "Restoring ${TENANT_CONFIG}"
+        cd $LOCAL_MONGOHOUSE_DIR
+        mv ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
+        if [[ -f ${MONGOSQL_MQLRUN}.orig ]] ; then
+            echo "Restoring $MONGOSQL_MQLRUN"
+            mv ${MONGOSQL_MQLRUN}.orig $MONGOSQL_MQLRUN
+        fi
+        MONGOSQL_LIB=$LOCAL_MONGOHOUSE_DIR/artifacts/libmongosql.a
+        if [[ -f ${MONGOSQL_LIB}.orig ]] ; then
+            echo "Restoring $MONGOSQL_LIB"
+            mv ${MONGOSQL_LIB}.orig $MONGOSQL_LIB
+        fi
+    fi
   fi
 fi
