@@ -256,15 +256,15 @@ else
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -d "$LOCAL_MONGOHOUSE_DIR" ]]; then
         echo "Restoring ${TENANT_CONFIG}"
         cd $LOCAL_MONGOHOUSE_DIR
-        cp ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
+        mv ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
         if [[ -f ${MONGOSQL_MQLRUN}.orig ]] ; then
             echo "Restoring $MONGOSQL_MQLRUN"
-            cp ${MONGOSQL_MQLRUN}.orig $MONGOSQL_MQLRUN
+            mv ${MONGOSQL_MQLRUN}.orig $MONGOSQL_MQLRUN
         fi
         MONGOSQL_LIB=$LOCAL_MONGOHOUSE_DIR/artifacts/libmongosql.a
         if [[ -f ${MONGOSQL_LIB}.orig ]] ; then
             echo "Restoring $MONGOSQL_LIB"
-            cp ${MONGOSQL_LIB}.orig $MONGOSQL_LIB
+            mv ${MONGOSQL_LIB}.orig $MONGOSQL_LIB
         fi
     fi
   fi
