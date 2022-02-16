@@ -56,8 +56,8 @@ Integration testing for mongosql requires a local MongoDB and Atlas Data Lake in
 **ADL_TEST_LOCAL_USER**: Local ADL username  
 **ADL_TEST_LOCAL_PWD**: Local ADL password  
 **ADL_TEST_LOCAL_AUTH_DB**: Local ADL authentication database  
-**HAVE_LOCAL_MONGOHOUSE**: "1" if using local mongohouse source 
-**LOCAL_MONGOHOUSE_DIR**: Path to local mongohouse source 
+**HAVE_LOCAL_MONGOHOUSE**: "1" if using local mongohouse source  
+**LOCAL_MONGOHOUSE_DIR**: Path to local mongohouse source  
 
 **MDB_TEST_LOCAL_PORT**: Local MongoDB port
 #### To load integration test data
