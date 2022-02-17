@@ -128,7 +128,7 @@ tests:
     expected_is_definitely_writable: [ false, false, false, false, false, false, false,
                                        false, false, false, false, false, false, false, false, false, false ]
     expected_is_nullable: [ columnNullable, columnNullable, columnNoNulls, columnNoNulls,
-                            columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNullable,
+                            columnNoNulls, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls, columnNullable,
                             columnNoNulls, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls, columnNoNulls,
                             columnNoNulls ]
     expected_is_read_only: [ true, true, true, true, true, true, true, true, true,

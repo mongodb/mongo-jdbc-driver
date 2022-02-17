@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -1192,28 +1194,33 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) {
-        BsonValue n = new BsonNull();
-        String functionName = func.name;
+            boolean isReturnColumn) throws SQLException {
+
+        Map<String, BsonValue> info = super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         MySQLResultDoc doc = new MySQLResultDoc();
         doc.values = new ArrayList<>(17);
-        doc.values.add(new BsonString("def"));
-        doc.values.add(n);
-        doc.values.add(new BsonString(functionName));
-        doc.values.add(new BsonString(argName));
-        doc.values.add(new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
-        doc.values.add(bsonInt32(typeNum(argType)));
-        doc.values.add(argType == null ? n : new BsonString(argType));
-        doc.values.add(bsonInt32(typePrec(argType)));
-        doc.values.add(bsonInt32(typeBytes(argType)));
-        doc.values.add(bsonInt32(typeScale(argType)));
-        doc.values.add(bsonInt32(typeRadix(argType)));
-        doc.values.add(new BsonInt32(functionNullable));
-        doc.values.add(new BsonString(func.comment));
-        doc.values.add(bsonInt32(typeBytes(argType)));
-        doc.values.add(new BsonInt32(i));
-        doc.values.add(new BsonString("YES"));
-        doc.values.add(new BsonString(functionName));
+        doc.values.add(info.get(FUNCTION_CAT));
+        doc.values.add(info.get(FUNCTION_SCHEM));
+        doc.values.add(info.get(FUNCTION_NAME));
+
+        doc.values.add(info.get(COLUMN_NAME));
+        doc.values.add(info.get(COLUMN_TYPE));
+        doc.values.add(info.get(DATA_TYPE));
+        doc.values.add(info.get(TYPE_NAME));
+        doc.values.add(info.get(PRECISION));
+
+        doc.values.add(info.get(LENGTH));
+        doc.values.add(info.get(SCALE));
+        doc.values.add(info.get(RADIX));
+
+        doc.values.add(info.get(NULLABLE));
+        doc.values.add(info.get(REMARKS));
+        doc.values.add(info.get(CHAR_OCTET_LENGTH));
+
+        doc.values.add(info.get(ORDINAL_POSITION));
+        doc.values.add(info.get(IS_NULLABLE));
+
+        doc.values.add(info.get(SPECIFIC_NAME));
         return doc;
     }
 
@@ -1435,5 +1442,74 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
+    }
+
+    private static String[] typeNames =
+            new String[] {
+                    "null",
+                    "document",
+                    "binData",
+                    "numeric",
+                    "string",
+                    // Keep this for now or Tableau cannot figure out the types properly.
+                    "varchar",
+                    "long",
+                    // Keep this for now or Tableau cannot figure out the types properly.
+                    "bigint",
+                    "tinyint",
+                    "int",
+                    "datetime",
+                    "date",
+                    "double",
+                    "decimal",
+            };
+
+    private static final HashMap<String, Integer> typeNums = new HashMap<>();
+    private static final HashMap<String, Integer> typePrecs = new HashMap<>();
+    private static final HashMap<String, Integer> typeScales = new HashMap<>();
+    private static final HashMap<String, Integer> typeBytes = new HashMap<>();
+
+    static {
+        for (String name : typeNames) {
+            typeNums.put(name, typeNum(name));
+            typePrecs.put(name, typePrec(name));
+            typeScales.put(name, typeScale(name));
+            typeBytes.put(name, typeBytes(name));
+        }
+    }
+
+
+    private String getDataTypeNumCase(String col) {
+        return getTypeCase(col, typeNums);
+    }
+
+    private String getDataTypePrecCase(String col) {
+        return getTypeCase(col, typePrecs);
+    }
+
+    private String getDataTypeScaleCase(String col) {
+        return getTypeCase(col, typeScales);
+    }
+
+    private String getDataTypeBytesCase(String col) {
+        return getTypeCase(col, typeBytes);
+    }
+
+    private String getTypeCase(String col, HashMap<String, Integer> outs) {
+        StringBuilder ret = new StringBuilder("case ");
+        ret.append(col);
+        ret.append("\n");
+        for (String name : typeNames) {
+            Integer out = outs.get(name);
+            String range = out == null ? "NULL" : out.toString();
+            ret.append("when ");
+            ret.append("'");
+            ret.append(name);
+            ret.append("' then ");
+            ret.append(range);
+            ret.append(" \n");
+        }
+        ret.append("end");
+        return ret.toString();
     }
 }

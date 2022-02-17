@@ -1086,13 +1086,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return schema;
     }
 
-    private BsonValue asBsonIntOrNull(Integer value) {
-        if (value == null) {
-            return BsonNull.VALUE;
-        }
-        return new BsonInt32(value);
-    }
-
     @Override
     public ResultSet getTypeInfo() throws SQLException {
         BsonValue n = new BsonNull();
@@ -1874,7 +1867,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(COLUMN_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT),
+                        new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(LENGTH, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(SCALE, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(RADIX, BSON_INT),
@@ -1892,29 +1885,32 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) {
+            boolean isReturnColumn) throws SQLException {
+
+        BsonTypeInfo bsonTypeInfo = argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        BsonValue n = BsonNull.VALUE;
         String functionName = func.name;
         bot.put(FUNCTION_CAT, new BsonString("def"));
-        bot.put(FUNCTION_SCHEM, n);
+        bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
         bot.put(FUNCTION_NAME, new BsonString(functionName));
 
         bot.put(COLUMN_NAME, new BsonString(argName));
-        bot.put(COLUMN_TYPE, new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
-        bot.put(DATA_TYPE, new BsonInt32(typeNum(argType)));
-        bot.put(TYPE_NAME, argType == null ? n : new BsonString(argType));
+        bot.put(COLUMN_TYPE, asBsonIntOrNull(isReturnColumn ? functionReturn : functionColumnIn));
+        bot.put(DATA_TYPE, asBsonIntOrNull(bsonTypeInfo.getJdbcType()));
+        bot.put(TYPE_NAME, new BsonString(bsonTypeInfo.getBsonName()));
 
-        bot.put(PRECISION, bsonInt32(typePrec(argType)));
-        bot.put(LENGTH, bsonInt32(typeBytes(argType)));
-        bot.put(SCALE, bsonInt32(typeScale(argType)));
-        bot.put(RADIX, bsonInt32(typeBytes(argType)));
+        bot.put(PRECISION, asBsonIntOrNull(bsonTypeInfo.getPrecision()));
+        // Note : LENGTH is only reported in getFunctionColumns and getProcedureColumns and is not flagged as 'may be null'
+        // so for unknown length we are defaulting to 0.
+        bot.put(LENGTH, asBsonIntOrDefault(bsonTypeInfo.getFixedBytesLength(), 0));
+        bot.put(SCALE, asBsonIntOrNull(bsonTypeInfo.getDecimalDigits()));
+        bot.put(RADIX, new BsonInt32(bsonTypeInfo.getNumPrecRadix()));
 
         bot.put(NULLABLE, new BsonInt32(functionNullable));
         bot.put(REMARKS, new BsonString(func.comment));
-        bot.put(CHAR_OCTET_LENGTH, bsonInt32(typeBytes(argType)));
+        bot.put(CHAR_OCTET_LENGTH, asBsonIntOrNull(bsonTypeInfo.getCharOctetLength()));
 
         bot.put(ORDINAL_POSITION, new BsonInt32(i));
         bot.put(IS_NULLABLE, new BsonString("YES"));

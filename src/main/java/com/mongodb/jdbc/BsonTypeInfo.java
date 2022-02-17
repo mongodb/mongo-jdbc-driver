@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.bson.BsonType;
+import org.checkerframework.checker.units.qual.C;
 
 public enum BsonTypeInfo {
     BSON_DOUBLE("double", BsonType.DOUBLE, Types.DOUBLE, false, 15, 15, 2, 15, 15, 8),
@@ -76,12 +77,27 @@ public enum BsonTypeInfo {
     private final BsonType bsonType;
     private final int jdbcType;
     private final boolean caseSensitivity;
+    // Minimum scale for numeric data and date time data.
     private final int minScale;
+    // Maximum scale for numeric data and date time data.
     private final int maxScale;
+    // Radix (typically either 10 or 2) for numeric data.
     private final int numPrecRadix;
+    // The column/data size for the given type.
+    //  - For numeric data, this is the maximum precision.
+    //  - For character data, this is the maximum length in characters.
+    //  - For datetime data types, this is the length in characters of the String representation (assuming the maximum
+    //  allowed precision of the fractional seconds component).
+    //  - For binary data, this is the maximum length in bytes.
+    //  - For the ROWID datatype, this is the length in bytes.
+    //  - Null is returned for data types where the column size is not applicable.
     private final Integer precision;
+    // The number of fractional digits for numeric and date time data. Null is returned for data types where
+    // DECIMAL_DIGITS is not applicable.
+    // Also known as scale.
     private final Integer decimalDigits;
-    private final Integer charOctetLength;
+    // The length in bytes for fixed length data type.
+    private final Integer fixedBytesLength;
 
     BsonTypeInfo(
             String bsonName,
@@ -93,7 +109,7 @@ public enum BsonTypeInfo {
             int numPrecRadix,
             Integer precision,
             Integer decimalDigits,
-            Integer charOctetLength) {
+            Integer fixedBytesLength) {
         this.bsonName = bsonName;
         this.bsonType = bsonType;
         this.jdbcType = jdbcType;
@@ -103,7 +119,7 @@ public enum BsonTypeInfo {
         this.numPrecRadix = numPrecRadix;
         this.precision = precision;
         this.decimalDigits = decimalDigits;
-        this.charOctetLength = charOctetLength;
+        this.fixedBytesLength = fixedBytesLength;
     }
 
     public String getBsonName() {
@@ -138,12 +154,27 @@ public enum BsonTypeInfo {
         return precision;
     }
 
+    public Integer getFixedBytesLength() {
+        return fixedBytesLength;
+    }
+
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
+    /**
+     *  CHAR_OCTET_LENGTH is the maximum length of binary and character based data in bytes.
+     *  For any other datatype the value is null.
+     *  We can use 'precision' combined with the data type for reporting the correct info.
+     */
     public Integer getCharOctetLength() {
-        return charOctetLength;
+        switch (this.bsonType){
+            case BINARY:
+            case STRING:
+                return this.precision;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -154,6 +185,10 @@ public enum BsonTypeInfo {
      * @return BsonTypeInfo object corresponding to bson type name.
      */
     public static BsonTypeInfo getBsonTypeInfoByName(String typeName) throws SQLException {
+        if (typeName == null)
+        {
+            throw new SQLException("Missing bson type name. Value is Null");
+        }
         if (!BSON_TYPE_NAMES.contains(typeName)) {
             throw new SQLException("Unknown bson type name: \"" + typeName + "\"");
         }
