@@ -5,7 +5,11 @@
 #
 # This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
 # The supported platforms are macos, ubuntu1804, and rhel7.
-# To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
+#
+# - To skip the download of ADL, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
+#   and set the environment variable LOCAL_MONGOHOUSE_DIR to the root directory of the
+#   mongohouse source tree.
+# - To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
 
 NAME=`basename "$0"`
 if [[ $SKIP_RUN_ADL -eq 1 ]]; then
@@ -28,11 +32,11 @@ if [ -d "/opt/golang/$GO_VERSION" ]; then
 fi
 
 TMP_DIR="/tmp/run_adl/"
-LOCAL_ADL_DIR=$(pwd)/local_adl
+LOCAL_INSTALL_DIR=$(pwd)/local_adl
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
-MONGOHOUSE_DIR=$LOCAL_ADL_DIR/mongohouse
-MONGO_DB_PATH=$LOCAL_ADL_DIR/test_db
-LOGS_PATH=$LOCAL_ADL_DIR/logs
+MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
+MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
+LOGS_PATH=$LOCAL_INSTALL_DIR/logs
 DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adl_db_config.json
 MONGOD_PORT=28017
 MONGOHOUSED_PORT=27017
@@ -40,6 +44,7 @@ START="start"
 STOP="stop"
 MONGOD="mongod"
 MONGOHOUSED="mongohoused"
+TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
 MONGO_DOWNLOAD_LINK=
 MONGO_DOWNLOAD_DIR=
 OS=$(uname)
@@ -53,7 +58,7 @@ MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-5.0.4.tgz
 # macOS
 MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-5.0.4.tgz
 
-mkdir -p $LOCAL_ADL_DIR
+mkdir -p $LOCAL_INSTALL_DIR
 
 check_procname() {
   ps -ef 2>/dev/null | grep $1 | grep -v grep >/dev/null 
@@ -144,14 +149,14 @@ if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOD"
     # Install and start mongod
     if [ $OS = "Linux" ]; then
-      (cd $LOCAL_ADL_DIR && curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK)
+      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK)
     else
-      (cd $LOCAL_ADL_DIR && curl -O $MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_LINK)
+      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_LINK)
     fi
 
     # Uncompressed the archive
-    tar zxvf $LOCAL_ADL_DIR/$MONGO_DOWNLOAD_LINK --directory $LOCAL_ADL_DIR
-    MONGO_DOWNLOAD_DIR=$LOCAL_ADL_DIR/${MONGO_DOWNLOAD_LINK:0:$((${#MONGO_DOWNLOAD_LINK} - 4))}
+    tar zxvf $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_LINK --directory $LOCAL_INSTALL_DIR
+    MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/${MONGO_DOWNLOAD_LINK:0:$((${#MONGO_DOWNLOAD_LINK} - 4))}
 
     mkdir -p $MONGO_DB_PATH
     mkdir -p $LOGS_PATH
@@ -174,25 +179,44 @@ check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOHOUSED"
-    # Install and start mongohoused
-    git config --global url.git@github.com:.insteadOf https://github.com/
-    # Clone the mongohouse repo
-    if [ ! -d "$MONGOHOUSE_DIR" ]; then
-      git clone $MONGOHOUSE_URI $MONGOHOUSE_DIR
+
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
+        if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
+            echo "ERROR: $LOCAL_MONGOHOUSE_DIR is not a directory"
+            exit 1
+        fi
+        cd $LOCAL_MONGOHOUSE_DIR
+    else
+        echo "Downloading mongohouse"
+        # Install and start mongohoused
+        git config --global url.git@github.com:.insteadOf https://github.com/
+        # Clone the mongohouse repo
+        if [ ! -d "$MONGOHOUSE_DIR" ]; then
+            git clone $MONGOHOUSE_URI
+        fi
+        cd $MONGOHOUSE_DIR
+        git pull $MONGOHOUSE_URI
+
+        export GOPRIVATE=github.com/10gen
+        go mod download
     fi
-    cd $MONGOHOUSE_DIR
-    git pull $MONGOHOUSE_URI
 
     # Set relevant environment variables
-    export GOPRIVATE=github.com/10gen
     export MONGOHOUSE_ENVIRONMENT="local"
     export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
     export LIBRARY_PATH="$(pwd)/artifacts"
 
-    go mod download
-
-    # Download external dependencies
+    # Download latest versions of external dependencies
+    MONGOSQL_LIB=$(pwd)/artifacts/libmongosql.a
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MOGOHOUSE_MQLRUN" ]]; then
+        cp ${MONGOHOUSE_MQLRUN} ${MOGOHOUSE_MQLRUN}.orig
+    fi
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MONGOSQL_LIB" ]]; then
+        cp ${MONGOSQL_LIB} ${MONGOSQL_LIB}.orig
+    fi
+    rm -f $MONGOHOUSE_MQLRUN
     go run cmd/buildscript/build.go tools:download:mqlrun
+    rm -f $MONGOSQL_LIB
     go run cmd/buildscript/build.go tools:download:mongosql
 
     get_jq
@@ -200,8 +224,9 @@ if [[ $? -ne 0 ]]; then
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
     DATABASES=$(cat $DB_CONFIG_PATH)
-    TENANT_CONFIG="$MONGOHOUSE_DIR/testdata/config/mongodb_local/tenant-config.json"
+
     # Replace the existing storage config with a wildcard collection for the local mongodb
+    cp ${TENANT_CONFIG} ${TENANT_CONFIG}.orig
     jq "del(.storage)" ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
     jq --argjson obj "$STORES" '.storage.stores += [$obj]' ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp\
                                                                && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
@@ -236,5 +261,19 @@ else
     MONGOHOUSED_PID=$(< $TMP_DIR/${MONGOHOUSED}.pid)
     echo "Stopping $MONGOHOUSED, pid $MONGOHOUSED_PID"
     pkill -TERM -P ${MONGOHOUSED_PID}
+    if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -d "$LOCAL_MONGOHOUSE_DIR" ]]; then
+        echo "Restoring ${TENANT_CONFIG}"
+        cd $LOCAL_MONGOHOUSE_DIR
+        mv ${TENANT_CONFIG}.orig ${TENANT_CONFIG}
+        if [[ -f ${MONGOSQL_MQLRUN}.orig ]] ; then
+            echo "Restoring $MONGOSQL_MQLRUN"
+            mv ${MONGOSQL_MQLRUN}.orig $MONGOSQL_MQLRUN
+        fi
+        MONGOSQL_LIB=$LOCAL_MONGOHOUSE_DIR/artifacts/libmongosql.a
+        if [[ -f ${MONGOSQL_LIB}.orig ]] ; then
+            echo "Restoring $MONGOSQL_LIB"
+            mv ${MONGOSQL_LIB}.orig $MONGOSQL_LIB
+        fi
+    fi
   fi
 fi
