@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PrintUtils {
@@ -18,7 +19,7 @@ public class PrintUtils {
             StringBuilder sb = new StringBuilder();
             List<String> colNames = new ArrayList<String>();
             colNames.add("TABLE_CAT");
-            colNames.add("TABLE_SCHEM");
+            colNames.add("TABLE_SCHEMA");
             colNames.add("TABLE_NAME");
             colNames.add("COLUMN_NAME");
             colNames.add("DATA_TYPE");
@@ -112,15 +113,17 @@ public class PrintUtils {
     private static void printRsContents(StringBuilder sb, int columnCount, ResultSet rs, int[] maxColsWidth) throws SQLException
     {
         String data = null;
+        String cellValue;
         while (rs.next()) {
             String[] row = new String[columnCount];
+
             boolean hasMoreData;
             do {
                 hasMoreData = false;
                 for (int i = 0; i < columnCount; i++) {
                     if (row[i] == null) {
-                        row[i] = rs.getString(i + 1);
-                        if (row[i] == null ) {row[i] = NULL_STR;}
+                        cellValue = rs.getString(i + 1);
+                        row[i] = (cellValue == null ? NULL_STR : cellValue);
                     }
                     int cutIndex = Math.min(row[i].length(), maxColsWidth[i]);
                     data = row[i].substring(0, cutIndex);
@@ -144,7 +147,7 @@ public class PrintUtils {
     private static int[] printRsHeader(StringBuilder sb, int columnCount, ResultSetMetaData rsMeta) throws SQLException
     {
         String[] col_names = new String[columnCount];
-        int[] maxColWidth = new int[columnCount];;
+        int[] maxColWidth = new int[columnCount];
         for (int i = 0; i < columnCount; i++)
         {
             maxColWidth[i] = MAX_COL_WIDTH;
