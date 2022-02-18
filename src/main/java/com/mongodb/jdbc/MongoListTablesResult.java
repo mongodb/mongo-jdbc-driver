@@ -12,5 +12,4 @@ public class MongoListTablesResult {
         // Otherwise, keep the type as is.
         this.type = type.equalsIgnoreCase(COLLECTION) ? TABLE : type;
     }
-
 }

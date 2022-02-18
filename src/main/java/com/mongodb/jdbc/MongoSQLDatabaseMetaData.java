@@ -1885,9 +1885,11 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) throws SQLException {
+            boolean isReturnColumn)
+            throws SQLException {
 
-        BsonTypeInfo bsonTypeInfo = argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
+        BsonTypeInfo bsonTypeInfo =
+                argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);

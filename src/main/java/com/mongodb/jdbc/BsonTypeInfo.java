@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.bson.BsonType;
-import org.checkerframework.checker.units.qual.C;
 
 public enum BsonTypeInfo {
     BSON_DOUBLE("double", BsonType.DOUBLE, Types.DOUBLE, false, 15, 15, 2, 15, 15, 8),
@@ -168,7 +167,7 @@ public enum BsonTypeInfo {
      *  We can use 'precision' combined with the data type for reporting the correct info.
      */
     public Integer getCharOctetLength() {
-        switch (this.bsonType){
+        switch (this.bsonType) {
             case BINARY:
             case STRING:
                 return this.precision;
@@ -185,8 +184,7 @@ public enum BsonTypeInfo {
      * @return BsonTypeInfo object corresponding to bson type name.
      */
     public static BsonTypeInfo getBsonTypeInfoByName(String typeName) throws SQLException {
-        if (typeName == null)
-        {
+        if (typeName == null) {
             throw new SQLException("Missing bson type name. Value is Null");
         }
         if (!BSON_TYPE_NAMES.contains(typeName)) {
