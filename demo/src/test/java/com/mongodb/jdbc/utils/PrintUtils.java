@@ -12,8 +12,7 @@ public class PrintUtils {
     private static int MAX_RS_META_COL_WIDTH = 12;
     public static int MAX_COL_WIDTH = 20;
 
-    public static void printResultSetMetadata(ResultSetMetaData rsMeta)  throws SQLException
-    {
+    public static void printResultSetMetadata(ResultSetMetaData rsMeta)  throws SQLException {
         try {
             int columnCount = rsMeta.getColumnCount();
             StringBuilder sb = new StringBuilder();
@@ -31,8 +30,7 @@ public class PrintUtils {
             colNames.add("LABEL");
 
             printRowSeparator(sb, colNames.size(), MAX_RS_META_COL_WIDTH);
-            for (int i = 0; i < colNames.size(); i++)
-            {
+            for (int i = 0; i < colNames.size(); i++) {
                 sb.append(String.format(getFormat(MAX_RS_META_COL_WIDTH), colNames.get(i)));
             }
             sb.append("|\n");
@@ -75,43 +73,35 @@ public class PrintUtils {
 
             System.out.println(sb.toString());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    public static void printResultSet(ResultSet rs) throws SQLException
-    {
+    public static void printResultSet(ResultSet rs) throws SQLException {
         try {
             // Get the metadata of this rs.
             ResultSetMetaData rsMeta;
             rsMeta = rs.getMetaData();
-
             int columnCount = rsMeta.getColumnCount();
-
             StringBuilder sb = new StringBuilder();
-
             int[] maxColsWidth = printRsHeader(sb, columnCount, rsMeta);
             printRsContents(sb, columnCount, rs, maxColsWidth);
 
             System.out.println(sb.toString());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    private static String getFormat(int maxColWidth) throws SQLException
-    {
+    private static String getFormat(int maxColWidth) {
         return "| %-" + maxColWidth + "s ";
     }
 
-    private static void printRsContents(StringBuilder sb, int columnCount, ResultSet rs, int[] maxColsWidth) throws SQLException
-    {
+    private static void printRsContents(StringBuilder sb, int columnCount, ResultSet rs, int[] maxColsWidth) throws SQLException {
         String data = null;
         String cellValue;
         while (rs.next()) {
@@ -127,13 +117,11 @@ public class PrintUtils {
                     }
                     int cutIndex = Math.min(row[i].length(), maxColsWidth[i]);
                     data = row[i].substring(0, cutIndex);
-                    if (cutIndex == maxColsWidth[i])
-                    {
+                    if (cutIndex == maxColsWidth[i]) {
                         row[i] = row[i].substring(cutIndex);
                         hasMoreData = true;
                     }
-                    else
-                    {
+                    else {
                         row[i] = "";
                     }
                     sb.append(String.format(getFormat(maxColsWidth[i]), data));
@@ -144,23 +132,19 @@ public class PrintUtils {
         printRowSeparator(sb, columnCount, maxColsWidth);
     }
 
-    private static int[] printRsHeader(StringBuilder sb, int columnCount, ResultSetMetaData rsMeta) throws SQLException
-    {
+    private static int[] printRsHeader(StringBuilder sb, int columnCount, ResultSetMetaData rsMeta) throws SQLException {
         String[] col_names = new String[columnCount];
         int[] maxColWidth = new int[columnCount];
-        for (int i = 0; i < columnCount; i++)
-        {
+        for (int i = 0; i < columnCount; i++) {
             maxColWidth[i] = MAX_COL_WIDTH;
             col_names[i] =  rsMeta.getColumnName(i+1);
-            if (col_names[i].length() > maxColWidth[i])
-            {
+            if (col_names[i].length() > maxColWidth[i]) {
                 maxColWidth[i] = col_names[i].length();
             }
         }
 
         printRowSeparator(sb, columnCount, maxColWidth);
-        for (int i = 0; i < columnCount; i++)
-        {
+        for (int i = 0; i < columnCount; i++) {
             sb.append(String.format(getFormat(maxColWidth[i]), col_names[i]));
         }
         sb.append("|\n");
@@ -169,8 +153,7 @@ public class PrintUtils {
         return maxColWidth;
     }
 
-    private static void printRowSeparator(StringBuilder sb, int columnCount, int[] maxColsWidth)
-    {
+    private static void printRowSeparator(StringBuilder sb, int columnCount, int[] maxColsWidth) {
         sb.append("+");
         for (int i = 0; i < columnCount; i++) {
             sb.append(new String(new char[maxColsWidth[i] + 2]).replace("\0", "-"));
@@ -179,8 +162,7 @@ public class PrintUtils {
         sb.replace(sb.length() - 1, sb.length(), "+\n");
     }
 
-    private static void printRowSeparator(StringBuilder sb, int columnCount, int maxColsWidth)
-    {
+    private static void printRowSeparator(StringBuilder sb, int columnCount, int maxColsWidth) {
         sb.append("+");
         for (int i = 0; i < columnCount; i++) {
             sb.append(new String(new char[maxColsWidth + 2]).replace("\0", "-"));

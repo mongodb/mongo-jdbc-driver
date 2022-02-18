@@ -53,74 +53,64 @@ public abstract class TestUtils {
     }
 
     @Test
-    void tryExecute() throws Exception
-    {
+    void tryExecute() throws Exception {
         runExecuteQuery("select * from bar", true);
     }
 
     @Test
-    void tryExecutePrintMetadata() throws Exception
-    {
+    void tryExecutePrintMetadata() throws Exception {
         runExecuteQuery("select * from foo", false);
     }
 
     @Test
-    void tryGetCatalogs() throws Exception
-    {
+    void tryGetCatalogs() throws Exception {
         ResultSet rs = m_dbMeta.getCatalogs();
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetTables() throws Exception
-    {
+    void tryGetTables() throws Exception {
         //ResultSet rs = m_dbMeta.getTables(null, null, null, null);
         ResultSet rs = m_dbMeta.getTables(null, null, "%", new String[]{"table", "view"});
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetColumns() throws Exception
-    {
+    void tryGetColumns() throws Exception {
         //ResultSet rs = m_dbMeta.getColumns(null, null, null, null);
         ResultSet rs = m_dbMeta.getColumns(null, "%", "%", "%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetSchemas() throws Exception
-    {
+    void tryGetSchemas() throws Exception {
         ResultSet rs = m_dbMeta.getSchemas();
         //ResultSet rs = m_dbMeta.getSchemas(null, "filter");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetTablePrivileges() throws Exception
-    {
+    void tryGetTablePrivileges() throws Exception {
         //ResultSet rs = m_dbMeta.getTablePrivileges(null, null, null);
         ResultSet rs = m_dbMeta.getTablePrivileges(null, "%", "%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetTableTypes() throws Exception
-    {
+    void tryGetTableTypes() throws Exception {
         ResultSet rs = m_dbMeta.getTableTypes();
         printRsInfo(rs);
     }
 
     @Test
-    void tryVersionColumns() throws Exception
-    {
+    void tryVersionColumns() throws Exception {
         //ResultSet rs = m_dbMeta.getVersionColumns(null, null, null);
         ResultSet rs = m_dbMeta.getVersionColumns(null, "%", "%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetFunctions() throws Exception
-    {
+    void tryGetFunctions() throws Exception {
         ResultSet rs = m_dbMeta.getFunctions(null, null, null);
         //ResultSet rs = m_dbMeta.getFunctions(null, "%", "%");
 
@@ -128,131 +118,114 @@ public abstract class TestUtils {
     }
 
     @Test
-    void tryGetFunctionColumns() throws Exception
-    {
+    void tryGetFunctionColumns() throws Exception {
         //ResultSet rs = m_dbMeta.getFunctionColumns(null, null, null, null);
         ResultSet rs = m_dbMeta.getFunctionColumns(null, "%", "%", "%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetProcedures() throws Exception
-    {
+    void tryGetProcedures() throws Exception {
         //ResultSet rs = m_dbMeta.getProcedures(null,null,null);
         ResultSet rs = m_dbMeta.getProcedures(null,"%","%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetProcedureColumns() throws Exception
-    {
+    void tryGetProcedureColumns() throws Exception {
         //ResultSet rs = m_dbMeta.getProcedureColumns(null,null,null, null);
         ResultSet rs = m_dbMeta.getProcedureColumns(null,"%","%", "%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetClientInfoProperties() throws Exception
-    {
+    void tryGetClientInfoProperties() throws Exception {
         ResultSet rs = m_dbMeta.getClientInfoProperties();
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetAttributes() throws Exception
-    {
+    void tryGetAttributes() throws Exception {
         //ResultSet rs = m_dbMeta.getAttributes(null, null,null,null);
         ResultSet rs = m_dbMeta.getAttributes(null, "%","%","%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetBestRowIdentifier() throws Exception
-    {
+    void tryGetBestRowIdentifier() throws Exception {
         //ResultSet rs = m_dbMeta.getBestRowIdentifier(null,null,null,0,false);
         ResultSet rs = m_dbMeta.getBestRowIdentifier(null,null,"myTable",0,false);
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetColumnPrivileges() throws Exception
-    {
+    void tryGetColumnPrivileges() throws Exception {
         //ResultSet rs = m_dbMeta.getColumnPrivileges(null,null,null,null);
         ResultSet rs = m_dbMeta.getColumnPrivileges(null,null,"myTable","%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetCrossReference() throws Exception
-    {
+    void tryGetCrossReference() throws Exception {
         //ResultSet rs = m_dbMeta.getCrossReference(null,null,null,null,null, null);
         ResultSet rs = m_dbMeta.getCrossReference(null,null,"parentTable","foreignCatalog",null,"foreignTable");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetExportedKeys() throws Exception
-    {
+    void tryGetExportedKeys() throws Exception {
         //ResultSet rs = m_dbMeta.getExportedKeys(null,null,null);
         ResultSet rs = m_dbMeta.getExportedKeys(null,null,"myTable");
         printRsInfo(rs);
     }
 
     @Test
-    void getImportedKeys() throws Exception
-    {
+    void getImportedKeys() throws Exception {
         //ResultSet rs = m_dbMeta.getImportedKeys(null,null,null);
         ResultSet rs = m_dbMeta.getImportedKeys(null,null,"myTable");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetIndexInfo() throws Exception
-    {
+    void tryGetIndexInfo() throws Exception {
         ResultSet rs = m_dbMeta.getIndexInfo(null,null,null,false, false);
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetPrimaryKeys() throws Exception
-    {
+    void tryGetPrimaryKeys() throws Exception {
         //ResultSet rs = m_dbMeta.getPrimaryKeys(null,null,null);
         ResultSet rs = m_dbMeta.getPrimaryKeys(null,null,"myTable");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetPseudoColumns() throws Exception
-    {
+    void tryGetPseudoColumns() throws Exception {
         //ResultSet rs = m_dbMeta.getPseudoColumns(null,null,null,null);
         ResultSet rs = m_dbMeta.getPseudoColumns(null,"%","%","%");
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetSuperTables() throws Exception
-    {
+    void tryGetSuperTables() throws Exception {
         ResultSet rs = m_dbMeta.getSuperTables(null,null,null);
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetSuperTypes() throws Exception
-    {
+    void tryGetSuperTypes() throws Exception {
         ResultSet rs = m_dbMeta.getSuperTypes(null,null,null);
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetTypeInfo() throws Exception
-    {
+    void tryGetTypeInfo() throws Exception {
         ResultSet rs = m_dbMeta.getTypeInfo();
         printRsInfo(rs);
     }
 
     @Test
-    void tryGetUDTs() throws Exception
-    {
+    void tryGetUDTs() throws Exception {
         ResultSet rs = m_dbMeta.getUDTs(null,null,null, new int[]{1});
         printRsInfo(rs);
     }
@@ -312,22 +285,19 @@ public abstract class TestUtils {
     }
 
     @Test
-    void tryGetUrl() throws Exception
-    {
+    void tryGetUrl() throws Exception {
         System.out.println(m_dbMeta.getURL());
     }
 
     @Test
-    void trySetCatalog() throws SQLException
-    {
+    void trySetCatalog() throws SQLException {
         m_conn.setCatalog("test_set_catalog");
         System.out.println(m_conn.getCatalog());
     }
 
     //@Test
     // TODO : Cancel is not supported yet
-    void tryCancel() throws SQLException
-    {
+    void tryCancel() throws SQLException {
         // The query must be a long running query for cancel to be effective
         String query = "select * from class";
         System.out.println("-----------------------------------------------------------------------");
@@ -339,35 +309,30 @@ public abstract class TestUtils {
             private ResultSet m_result;
             private final Statement m_statement;
 
-            public QueryExecutor(Statement statement, String query)
-            {
+            public QueryExecutor(Statement statement, String query) {
                 m_statement = statement;
                 m_query = query;
                 m_isExecuting = false;
             }
 
-            public boolean getIsExecuting()
-            {
+            public boolean getIsExecuting() {
                 return m_isExecuting;
             }
 
-            public ResultSet getResultSet()
-            {
+            public ResultSet getResultSet() {
                 return m_result;
             }
 
             @Override
             public void run()
             {
-                try
-                {
+                try {
                     System.out.println("Executing '" + m_query + "'");
                     m_isExecuting = true;
                     m_result = m_statement.executeQuery(m_query);
                     m_isExecuting = false;
                 }
-                catch (SQLException e)
-                {
+                catch (SQLException e) {
                     e.printStackTrace();
                 }
                 finally {
@@ -387,20 +352,16 @@ public abstract class TestUtils {
         Thread execThread = new Thread(queryExecutor);
         execThread.start();
 
-        while (!queryExecutor.getIsExecuting())
-        {
+        while (!queryExecutor.getIsExecuting()) {
             ;
         }
-        if (execThread.isAlive())
-        {
-            try
-            {
+        if (execThread.isAlive()) {
+            try {
                 // Still need to wait because the m_isExecuting flag is set  before statement.executeQuery is called.
                 // Need to wait until an executor object is created.
                 Thread.sleep(2000);
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("Calling cancel");
@@ -412,8 +373,7 @@ public abstract class TestUtils {
             execThread = new Thread(queryExecutor);
             execThread.start();
         }
-        else
-        {
+        else {
             System.out.println("The execution finished before cancel");
             queryExecutor.getResultSet().close();
         }
@@ -427,8 +387,7 @@ public abstract class TestUtils {
      * @param printRs           A flag to turn on printing the resultset content when true or the resultset metadata when false.
      * @throws Exception        If an error occurs while executing the query or retrieving the values to display.
      */
-    private void runExecuteQuery(String query, boolean printRs) throws Exception
-    {
+    private void runExecuteQuery(String query, boolean printRs) throws Exception {
         try {
             Statement stmt = m_conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -439,8 +398,7 @@ public abstract class TestUtils {
                 PrintUtils.printResultSetMetadata(rs.getMetaData());
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
@@ -451,15 +409,12 @@ public abstract class TestUtils {
      * @param rs            The result set to display information for.
      * @throws Exception    If an error occurs when retrieving the information to display.
      */
-    private void printRsInfo(ResultSet rs) throws Exception
-    {
-        try
-        {
+    private void printRsInfo(ResultSet rs) throws Exception {
+        try {
             PrintUtils.printResultSetMetadata(rs.getMetaData());
             PrintUtils.printResultSet(rs);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
