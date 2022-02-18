@@ -34,7 +34,6 @@ fi
 TMP_DIR="/tmp/run_adl/"
 LOCAL_INSTALL_DIR=$(pwd)/local_adl
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
-MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
 MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
 LOGS_PATH=$LOCAL_INSTALL_DIR/logs
 DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adl_db_config.json
@@ -44,9 +43,9 @@ START="start"
 STOP="stop"
 MONGOD="mongod"
 MONGOHOUSED="mongohoused"
-TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
 MONGO_DOWNLOAD_LINK=
 MONGO_DOWNLOAD_DIR=
+MONGOHOUSE_DIR=
 OS=$(uname)
 TIMEOUT=120
 
@@ -185,14 +184,15 @@ if [[ $? -ne 0 ]]; then
             echo "ERROR: $LOCAL_MONGOHOUSE_DIR is not a directory"
             exit 1
         fi
-        cd $LOCAL_MONGOHOUSE_DIR
+        MONGOHOUSE_DIR=$LOCAL_MONGOHOUSE_DIR
     else
         echo "Downloading mongohouse"
+        MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
         # Install and start mongohoused
         git config --global url.git@github.com:.insteadOf https://github.com/
         # Clone the mongohouse repo
         if [ ! -d "$MONGOHOUSE_DIR" ]; then
-            git clone $MONGOHOUSE_URI
+            git clone $MONGOHOUSE_URI $MONGOHOUSE_DIR
         fi
         cd $MONGOHOUSE_DIR
         git pull $MONGOHOUSE_URI
@@ -200,6 +200,8 @@ if [[ $? -ne 0 ]]; then
         export GOPRIVATE=github.com/10gen
         go mod download
     fi
+
+    cd $MONGOHOUSE_DIR
 
     # Set relevant environment variables
     export MONGOHOUSE_ENVIRONMENT="local"
@@ -224,6 +226,7 @@ if [[ $? -ne 0 ]]; then
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
     DATABASES=$(cat $DB_CONFIG_PATH)
+    TENANT_CONFIG="$MONGOHOUSE_DIR/testdata/config/mongodb_local/tenant-config.json"
 
     # Replace the existing storage config with a wildcard collection for the local mongodb
     cp ${TENANT_CONFIG} ${TENANT_CONFIG}.orig
