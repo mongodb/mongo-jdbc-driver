@@ -68,7 +68,7 @@ public class MongoJsonSchema {
         result.items = toSimplifiedMongoJsonSchema(baseSchema.items);
         result.additionalProperties = baseSchema.additionalProperties;
 
-        if (baseSchema.bsonType!= null) {
+        if (baseSchema.bsonType != null) {
             Set<String> bsonTypes = polymorphicBsonTypeToStringSet(baseSchema.bsonType);
             //  If there are many types in the set and it can not be reduced to one type after eliminating any Null
             //  type in the list, the types will be inserted in the list  of anyOf to be handled as polymorphic type.
@@ -81,7 +81,8 @@ public class MongoJsonSchema {
 
                 if (trimmedList.size() == 1) {
                     String type = trimmedList.get(0);
-                    if (BSON_ARRAY.getBsonName().equalsIgnoreCase(type) && (null == baseSchema.items)) {
+                    if (BSON_ARRAY.getBsonName().equalsIgnoreCase(type)
+                            && (null == baseSchema.items)) {
                         // The bson type is an array of unknowns items.
                         // The bson type is unknown and it's equivalent to any.
                         // Return an empty schema.
@@ -128,26 +129,32 @@ public class MongoJsonSchema {
     }
 
     /**
-     * Converts a polymorphic bsonType which can either be a BsonArray or a BsonString to a set of Strings.
+     * Converts a polymorphic bsonType which can either be a BsonArray or a BsonString to a set of
+     * Strings.
      *
-     * @param polymorphicBsonType   The original polymorphic type.
-     *
+     * @param polymorphicBsonType The original polymorphic type.
      * @return the corresponding String set.
      */
     private static Set<String> polymorphicBsonTypeToStringSet(BsonValue polymorphicBsonType) {
         Set<String> result;
         if (polymorphicBsonType.isArray()) {
-            result = polymorphicBsonType.asArray().stream().map(val -> val.asString().getValue())
-                    .collect(Collectors.toSet());
-        }
-        else if (polymorphicBsonType.isString()) {
+            result =
+                    polymorphicBsonType
+                            .asArray()
+                            .stream()
+                            .map(val -> val.asString().getValue())
+                            .collect(Collectors.toSet());
+        } else if (polymorphicBsonType.isString()) {
             result = new HashSet<String>();
             result.add(polymorphicBsonType.asString().getValue());
-        }
-        else
-        {
-            throw new BsonInvalidOperationException("Value expected to be of type " + BsonType.ARRAY +" or " +
-                    BsonType.STRING + " but  is of unexpected type " + polymorphicBsonType.getBsonType());
+        } else {
+            throw new BsonInvalidOperationException(
+                    "Value expected to be of type "
+                            + BsonType.ARRAY
+                            + " or "
+                            + BsonType.STRING
+                            + " but  is of unexpected type "
+                            + polymorphicBsonType.getBsonType());
         }
 
         return result;
@@ -155,34 +162,35 @@ public class MongoJsonSchema {
 
     /**
      * Flattens nested anyOf.
-     * @param ioSchema    The schema to simplify. ioSchema will be modified directly.
+     *
+     * @param ioSchema The schema to simplify. ioSchema will be modified directly.
      * @return the simplified schema for convenience.
      */
-    private static MongoJsonSchema flattenNestedAnyOfs(MongoJsonSchema ioSchema)
-    {
-        if (null == ioSchema)
-        {
+    private static MongoJsonSchema flattenNestedAnyOfs(MongoJsonSchema ioSchema) {
+        if (null == ioSchema) {
             return null;
         }
 
         MongoJsonSchema result = ioSchema;
         if (result.anyOf != null && !result.anyOf.isEmpty()) {
-            result.anyOf = result.anyOf.stream()
-                    .flatMap(anyOf -> {
-                        if (anyOf == null) {
-                            return Stream.empty();
-                        } else if (anyOf.anyOf != null && !anyOf.anyOf.isEmpty()) {
-                            return anyOf.anyOf.stream();
-                        } else {
-                            return Stream.of(anyOf);
-                        }
-                    })
-                    .collect(Collectors.toSet());
+            result.anyOf =
+                    result.anyOf
+                            .stream()
+                            .flatMap(
+                                    anyOf -> {
+                                        if (anyOf == null) {
+                                            return Stream.empty();
+                                        } else if (anyOf.anyOf != null && !anyOf.anyOf.isEmpty()) {
+                                            return anyOf.anyOf.stream();
+                                        } else {
+                                            return Stream.of(anyOf);
+                                        }
+                                    })
+                            .collect(Collectors.toSet());
         }
 
         // Last step is to reduce a single anyOf to the corresponding bsonType, properties, items, etc...
-        if (result.anyOf != null && result.anyOf.size() == 1 && result.bsonType == null)
-        {
+        if (result.anyOf != null && result.anyOf.size() == 1 && result.bsonType == null) {
             MongoJsonSchema singleAnyOf = result.anyOf.toArray(new MongoJsonSchema[0])[0];
             result.bsonType = singleAnyOf.bsonType;
             result.properties = singleAnyOf.properties;
@@ -253,12 +261,12 @@ public class MongoJsonSchema {
             return false;
         }
         MongoJsonSchema other = (MongoJsonSchema) obj;
-        return Objects.equals(bsonType, other.bsonType) &&
-                Objects.equals(properties, other.properties) &&
-                Objects.equals(anyOf, other.anyOf) &&
-                Objects.equals(required, other.required) &&
-                Objects.equals(items, other.items) &&
-                additionalProperties == other.additionalProperties;
+        return Objects.equals(bsonType, other.bsonType)
+                && Objects.equals(properties, other.properties)
+                && Objects.equals(anyOf, other.anyOf)
+                && Objects.equals(required, other.required)
+                && Objects.equals(items, other.items)
+                && additionalProperties == other.additionalProperties;
     }
 
     @Override
