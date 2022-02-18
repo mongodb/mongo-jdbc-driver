@@ -80,9 +80,7 @@ public class IntegrationTestUtils {
     private static Tests processTestFile(String filename) throws IOException {
         try (InputStream is = new FileInputStream(filename)) {
             return yaml.load(is);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Error processing " + filename);
             throw e;
         }
@@ -593,7 +591,13 @@ public class IntegrationTestUtils {
                     String expected_str = (String) expectedRow.get(i);
                     String actual_str = actualRow.getString(i + 1);
                     if (!(expected_str).equals(actual_str)) {
-                        System.err.println("Expected String value " + expected_str + " but is " + actual_str + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected String value "
+                                        + expected_str
+                                        + " but is "
+                                        + actual_str
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
@@ -602,7 +606,13 @@ public class IntegrationTestUtils {
                     boolean expected_bool = (Boolean) expectedRow.get(i);
                     boolean actual_bool = actualRow.getBoolean(i + 1);
                     if (expected_bool != actual_bool) {
-                        System.err.println("Expected boolean value " + expected_bool + " but is " + actual_bool + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected boolean value "
+                                        + expected_bool
+                                        + " but is "
+                                        + actual_bool
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
@@ -610,7 +620,13 @@ public class IntegrationTestUtils {
                     double expected_double = (double) expectedRow.get(i);
                     double actual_double = actualRow.getDouble(i + 1);
                     if (expected_double != actual_double) {
-                        System.err.println("Expected double value " + expected_double + " but is " + actual_double + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected double value "
+                                        + expected_double
+                                        + " but is "
+                                        + actual_double
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
@@ -618,7 +634,13 @@ public class IntegrationTestUtils {
                     Object expected_null = expectedRow.get(i);
                     Object actual_null = actualRow.getObject(i + 1);
                     if (expected_null != actual_null) {
-                        System.err.println("Expected Bson Null value " + expected_null + " but is " + actual_null + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected Bson Null value "
+                                        + expected_null
+                                        + " but is "
+                                        + actual_null
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
@@ -626,7 +648,13 @@ public class IntegrationTestUtils {
                     Object expected_date = expectedRow.get(i);
                     Date actual_date = actualRow.getDate(i + 1);
                     if (!expected_date.equals(actual_date)) {
-                        System.err.println("Expected date value" + expected_date + " but is " + actual_date + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected date value"
+                                        + expected_date
+                                        + " but is "
+                                        + actual_date
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
@@ -634,7 +662,13 @@ public class IntegrationTestUtils {
                     Object expected_obj = expectedRow.get(i);
                     Object actual_obj = actualRow.getObject(i + 1);
                     if (!expected_obj.equals(actual_obj)) {
-                        System.err.println("Expected Bson Other value " + expected_obj + " but is " + actual_obj + " for column " + (i + 1));
+                        System.err.println(
+                                "Expected Bson Other value "
+                                        + expected_obj
+                                        + " but is "
+                                        + actual_obj
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
