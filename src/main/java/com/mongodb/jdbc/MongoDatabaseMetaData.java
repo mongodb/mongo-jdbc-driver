@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_NULL;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -13,9 +15,6 @@ import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
-
-
-import static com.mongodb.jdbc.BsonTypeInfo.BSON_NULL;
 
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected MongoConnection conn;
@@ -155,12 +154,12 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     /**
      * Returns information for a given function argument.
-     * @param func              The function name.
-     * @param i                 The parameter index.
-     * @param argName           The parameter name.
-     * @param argType           The parameter type.
-     * @param isReturnColumn    Is the parameter a return parameter.
      *
+     * @param func The function name.
+     * @param i The parameter index.
+     * @param argName The parameter name.
+     * @param argType The parameter type.
+     * @param isReturnColumn Is the parameter a return parameter.
      * @return the information for the given parameter.
      */
     protected Map<String, BsonValue> getFunctionParameterValues(
@@ -168,9 +167,11 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) throws SQLException {
+            boolean isReturnColumn)
+            throws SQLException {
         Map<String, BsonValue> info = new HashMap<String, BsonValue>();
-        BsonTypeInfo bsonTypeInfo = argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
+        BsonTypeInfo bsonTypeInfo =
+                argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
         info.put(FUNCTION_CAT, new BsonString("def"));
         info.put(FUNCTION_SCHEM, BsonNull.VALUE);
         info.put(FUNCTION_NAME, new BsonString(func.name));
@@ -817,99 +818,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
         return false;
-    }
-
-    public static int typeNum(String typeName) {
-        if (typeName == null) {
-            return Types.NULL;
-        }
-        try {
-            return BsonTypeInfo.getBsonTypeInfoByName(typeName).getJdbcType();
-        }
-        catch (Exception e)
-        {
-            return Types.NULL;
-        }
-    }
-
-    public static Integer typePrec(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 34;
-            case "double":
-                return 15;
-            case "long":
-            case "bigint":
-                return 19;
-            case "int":
-                return 10;
-            case "decimal":
-                return 34;
-        }
-        return 0;
-    }
-
-    public static Integer typeScale(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 34;
-            case "double":
-                return 15;
-            case "decimal":
-                return 34;
-        }
-        return 0;
-    }
-
-    public static Integer typeBytes(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 16;
-            case "double":
-                return 8;
-            case "long":
-            case "bigint":
-            case "date":
-            case "datatime":
-                return 8;
-            case "int":
-                return 4;
-            case "decimal":
-                return 16;
-            case "tinyint":
-            case "bool":
-                return 1;
-        }
-        return 0;
-    }
-
-    public static Integer typeRadix(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 10;
-            case "double":
-                return 2;
-            case "long":
-            case "bigint":
-                return 2;
-            case "int":
-                return 2;
-            case "decimal":
-                return 10;
-        }
-        return 0;
     }
 
     //--------------------------JDBC 2.0-----------------------------

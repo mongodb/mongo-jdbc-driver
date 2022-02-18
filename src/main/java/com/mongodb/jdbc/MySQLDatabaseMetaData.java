@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
@@ -1194,9 +1193,11 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) throws SQLException {
+            boolean isReturnColumn)
+            throws SQLException {
 
-        Map<String, BsonValue> info = super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
+        Map<String, BsonValue> info =
+                super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         MySQLResultDoc doc = new MySQLResultDoc();
         doc.values = new ArrayList<>(17);
         doc.values.add(info.get(FUNCTION_CAT));
@@ -1444,69 +1445,52 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
     }
 
-    private static String[] typeNames =
-            new String[] {
-                    "null",
-                    "document",
-                    "binData",
-                    "numeric",
-                    "string",
-                    // Keep this for now or Tableau cannot figure out the types properly.
-                    "varchar",
-                    "long",
-                    // Keep this for now or Tableau cannot figure out the types properly.
-                    "bigint",
-                    "tinyint",
-                    "int",
-                    "datetime",
-                    "date",
-                    "double",
-                    "decimal",
-            };
-
-    private static final HashMap<String, Integer> typeNums = new HashMap<>();
-    private static final HashMap<String, Integer> typePrecs = new HashMap<>();
-    private static final HashMap<String, Integer> typeScales = new HashMap<>();
-    private static final HashMap<String, Integer> typeBytes = new HashMap<>();
-
-    static {
-        for (String name : typeNames) {
-            typeNums.put(name, typeNum(name));
-            typePrecs.put(name, typePrec(name));
-            typeScales.put(name, typeScale(name));
-            typeBytes.put(name, typeBytes(name));
-        }
+    private enum TypeCase {
+        JDBC_TYPE,
+        PRECISION,
+        SCALE,
+        FIXED_BYTES_LENGTH
     }
 
-
     private String getDataTypeNumCase(String col) {
-        return getTypeCase(col, typeNums);
+        return getTypeCase(col, TypeCase.JDBC_TYPE);
     }
 
     private String getDataTypePrecCase(String col) {
-        return getTypeCase(col, typePrecs);
+        return getTypeCase(col, TypeCase.PRECISION);
     }
 
     private String getDataTypeScaleCase(String col) {
-        return getTypeCase(col, typeScales);
+        return getTypeCase(col, TypeCase.SCALE);
     }
 
     private String getDataTypeBytesCase(String col) {
-        return getTypeCase(col, typeBytes);
+        return getTypeCase(col, TypeCase.FIXED_BYTES_LENGTH);
     }
 
-    private String getTypeCase(String col, HashMap<String, Integer> outs) {
+    private String getTypeCase(String col, TypeCase typeCase) {
         StringBuilder ret = new StringBuilder("case ");
         ret.append(col);
         ret.append("\n");
-        for (String name : typeNames) {
-            Integer out = outs.get(name);
-            String range = out == null ? "NULL" : out.toString();
+        for (BsonTypeInfo typeInfo : BsonTypeInfo.values()) {
             ret.append("when ");
             ret.append("'");
-            ret.append(name);
+            ret.append(typeInfo.getBsonName());
             ret.append("' then ");
-            ret.append(range);
+            switch (typeCase) {
+                case JDBC_TYPE:
+                    ret.append(typeInfo.getJdbcType());
+                    break;
+                case PRECISION:
+                    ret.append(typeInfo.getPrecision());
+                    break;
+                case SCALE:
+                    ret.append(typeInfo.getMaxScale());
+                    break;
+                case FIXED_BYTES_LENGTH:
+                    ret.append(typeInfo.getFixedBytesLength());
+                    break;
+            }
             ret.append(" \n");
         }
         ret.append("end");
