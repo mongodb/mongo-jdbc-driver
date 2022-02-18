@@ -71,7 +71,7 @@ public class MongoJsonSchema {
         if (baseSchema.bsonType != null) {
             Set<String> bsonTypes = polymorphicBsonTypeToStringSet(baseSchema.bsonType);
             //  If there are many types in the set and it can not be reduced to one type after eliminating any Null
-            //  type in the list, the types will be inserted in the list  of anyOf to be handled as polymorphic type.
+            //  type in the list, the types will be inserted in the list of anyOf to be handled as polymorphic type.
             if (bsonTypes.size() > 0 && bsonTypes.size() <= 2) {
                 List<String> trimmedList =
                         bsonTypes
@@ -100,7 +100,19 @@ public class MongoJsonSchema {
                 result.anyOf = new HashSet<MongoJsonSchema>();
             }
 
-            // Push down each bsontype into its own anyOf schema
+            /** Push down each bsontype into its own anyOf schema.
+             * For example :
+             * "y": {
+             *     "bsonType": ["string", "int"]
+             *  }
+             *  will become
+             *  "y": {
+             *      "anyOf": [
+             *          {"bsonType": "string"},
+             *          {"bsonType": "int"}
+             *      ]
+             *  }
+             */
             for (String currType : bsonTypes) {
                 MongoJsonSchema anyOfSchema = new MongoJsonSchema();
                 anyOfSchema.bsonType = currType;
