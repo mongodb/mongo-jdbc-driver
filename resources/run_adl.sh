@@ -32,10 +32,10 @@ if [ -d "/opt/golang/$GO_VERSION" ]; then
 fi
 
 TMP_DIR="/tmp/run_adl/"
+LOCAL_INSTALL_DIR=$(pwd)/local_adl
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
-MONGOHOUSE_DIR=$(pwd)/mongohouse
-MONGO_DB_PATH=$(pwd)/test_db
-LOGS_PATH=$(pwd)/logs
+MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
+LOGS_PATH=$LOCAL_INSTALL_DIR/logs
 DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adl_db_config.json
 MONGOD_PORT=28017
 MONGOHOUSED_PORT=27017
@@ -45,6 +45,7 @@ MONGOD="mongod"
 MONGOHOUSED="mongohoused"
 TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
 MONGO_DOWNLOAD_LINK=
+MONGO_DOWNLOAD_DIR=
 OS=$(uname)
 TIMEOUT=120
 
@@ -55,6 +56,8 @@ MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu1804-5.0.4.tgz
 MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-5.0.4.tgz
 # macOS
 MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-5.0.4.tgz
+
+mkdir -p $LOCAL_INSTALL_DIR
 
 check_procname() {
   ps -ef 2>/dev/null | grep $1 | grep -v grep >/dev/null 
@@ -145,12 +148,14 @@ if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOD"
     # Install and start mongod
     if [ $OS = "Linux" ]; then
-      curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK
+      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK)
     else
-      curl -O $MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_LINK
+      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_LINK)
     fi
 
-    tar zxvf $MONGO_DOWNLOAD_LINK
+    # Uncompressed the archive
+    tar zxvf $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_LINK --directory $LOCAL_INSTALL_DIR
+    MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/${MONGO_DOWNLOAD_LINK:0:$((${#MONGO_DOWNLOAD_LINK} - 4))}
 
     mkdir -p $MONGO_DB_PATH
     mkdir -p $LOGS_PATH
@@ -158,7 +163,7 @@ if [[ $? -ne 0 ]]; then
 
     # Note: ADL has a storage.json file that generates configs for us.
     # The mongodb source is on port $MONGOD_PORT so we use that here.
-    ${MONGO_DOWNLOAD_LINK:0:$((${#MONGO_DOWNLOAD_LINK} - 4))}/bin/mongod --port $MONGOD_PORT --dbpath $MONGO_DB_PATH \
+    $MONGO_DOWNLOAD_DIR/bin/mongod --port $MONGOD_PORT --dbpath $MONGO_DB_PATH \
       --logpath $LOGS_PATH/mongodb_test.log --pidfilepath $TMP_DIR/${MONGOD}.pid --fork
   fi
 else
@@ -173,6 +178,7 @@ check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOHOUSED"
+
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
         if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
             echo "ERROR: $LOCAL_MONGOHOUSE_DIR is not a directory"
@@ -181,11 +187,12 @@ if [[ $? -ne 0 ]]; then
         cd $LOCAL_MONGOHOUSE_DIR
     else
         echo "Downloading mongohouse"
+        MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
         # Install and start mongohoused
         git config --global url.git@github.com:.insteadOf https://github.com/
         # Clone the mongohouse repo
         if [ ! -d "$MONGOHOUSE_DIR" ]; then
-            git clone $MONGOHOUSE_URI
+            git clone $MONGOHOUSE_URI $MONGOHOUSE_DIR
         fi
         cd $MONGOHOUSE_DIR
         git pull $MONGOHOUSE_URI
@@ -217,6 +224,7 @@ if [[ $? -ne 0 ]]; then
     STORES='{ "name" : "localmongo", "provider" : "mongodb", "uri" : "mongodb://localhost:%s" }'
     STORES=$(printf "$STORES" "${MONGOD_PORT}")
     DATABASES=$(cat $DB_CONFIG_PATH)
+
     # Replace the existing storage config with a wildcard collection for the local mongodb
     cp ${TENANT_CONFIG} ${TENANT_CONFIG}.orig
     jq "del(.storage)" ${TENANT_CONFIG} > ${TENANT_CONFIG}.tmp && mv ${TENANT_CONFIG}.tmp ${TENANT_CONFIG}
