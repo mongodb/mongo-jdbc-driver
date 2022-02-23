@@ -161,12 +161,12 @@ public abstract class MongoSQLMock {
         }
         */
         MongoJsonSchema schema = new MongoJsonSchema();
-        schema.type = "object";
+        schema.bsonType = "object";
         schema.required = new HashSet<String>();
         schema.required.add("foo");
 
         MongoJsonSchema fooSchema = new MongoJsonSchema();
-        fooSchema.type = "object";
+        fooSchema.bsonType = "object";
         fooSchema.required = new HashSet<String>();
         fooSchema.required.add(ANY_OF_INT_STRING_COL_LABEL);
         fooSchema.required.add(INT_NULLABLE_COL_LABEL);
@@ -175,31 +175,31 @@ public abstract class MongoSQLMock {
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
         MongoJsonSchema anyOf1Schema = new MongoJsonSchema();
-        anyOf1Schema.type = "int";
+        anyOf1Schema.bsonType = "int";
         MongoJsonSchema anyOf2Schema = new MongoJsonSchema();
-        anyOf2Schema.type = "string";
+        anyOf2Schema.bsonType = "string";
         aSchema.anyOf.add(anyOf1Schema);
         aSchema.anyOf.add(anyOf2Schema);
 
         MongoJsonSchema bSchema = new MongoJsonSchema();
         bSchema.anyOf = new HashSet<MongoJsonSchema>();
         anyOf1Schema = new MongoJsonSchema();
-        anyOf1Schema.type = "int";
+        anyOf1Schema.bsonType = "int";
         anyOf2Schema = new MongoJsonSchema();
-        anyOf2Schema.type = "null";
+        anyOf2Schema.bsonType = "null";
         bSchema.anyOf.add(anyOf1Schema);
         bSchema.anyOf.add(anyOf2Schema);
 
         MongoJsonSchema cSchema = new MongoJsonSchema();
-        cSchema.type = "int";
+        cSchema.bsonType = "int";
 
         MongoJsonSchema vecSchema = new MongoJsonSchema();
-        vecSchema.type = "array";
+        vecSchema.bsonType = "array";
         vecSchema.items = new MongoJsonSchema();
-        vecSchema.items.type = "int";
+        vecSchema.items.bsonType = "int";
 
         MongoJsonSchema nullSchema = new MongoJsonSchema();
-        nullSchema.type = "null";
+        nullSchema.bsonType = "null";
 
         fooSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         fooSchema.properties.put(INT_COL_LABEL, cSchema);
@@ -211,16 +211,16 @@ public abstract class MongoSQLMock {
         fooSchema.properties.put(NULL_COL_LABEL, nullSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
-        botSchema.type = "object";
+        botSchema.bsonType = "object";
         botSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         aSchema = new MongoJsonSchema();
-        aSchema.type = "double";
+        aSchema.bsonType = "double";
         botSchema.properties.put(DOUBLE_COL_LABEL, aSchema);
         MongoJsonSchema binarySchema = new MongoJsonSchema();
-        binarySchema.type = "binData";
+        binarySchema.bsonType = "binData";
         botSchema.properties.put("binary", binarySchema);
         MongoJsonSchema strSchema = new MongoJsonSchema();
-        strSchema.type = "string";
+        strSchema.bsonType = "string";
         botSchema.properties.put("str", strSchema);
 
         schema.properties = new LinkedHashMap<String, MongoJsonSchema>();

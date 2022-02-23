@@ -919,17 +919,17 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         AtomicBoolean nextCalledOnCursor = new AtomicBoolean(false);
 
         MongoJsonSchema sameMetadataSchema = new MongoJsonSchema();
-        sameMetadataSchema.type = "object";
+        sameMetadataSchema.bsonType = "object";
         sameMetadataSchema.required = new HashSet<String>();
         sameMetadataSchema.required.add("foo");
 
         MongoJsonSchema fooSchema = new MongoJsonSchema();
-        fooSchema.type = "object";
+        fooSchema.bsonType = "object";
         fooSchema.required = new HashSet<String>();
         fooSchema.required.add("a");
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
-        aSchema.type = "int";
+        aSchema.bsonType = "int";
 
         fooSchema.properties = new HashMap<String, MongoJsonSchema>();
         fooSchema.properties.put("a", aSchema);
