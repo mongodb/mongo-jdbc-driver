@@ -132,6 +132,10 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PAGES = "PAGES";
     protected static final String FILTER_CONDITION = "FILTER_CONDITION";
 
+    protected static final String FUNC_DEFAULT_CATALOG = "def";
+
+    private static final String YES = "YES";
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
     }
@@ -172,7 +176,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         Map<String, BsonValue> info = new HashMap<String, BsonValue>();
         BsonTypeInfo bsonTypeInfo =
                 argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
-        info.put(FUNCTION_CAT, new BsonString("def"));
+        info.put(FUNCTION_CAT, new BsonString(FUNC_DEFAULT_CATALOG));
         info.put(FUNCTION_SCHEM, BsonNull.VALUE);
         info.put(FUNCTION_NAME, new BsonString(func.name));
 
@@ -193,7 +197,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         info.put(CHAR_OCTET_LENGTH, asBsonIntOrNull(bsonTypeInfo.getCharOctetLength()));
 
         info.put(ORDINAL_POSITION, new BsonInt32(i));
-        info.put(IS_NULLABLE, new BsonString("YES"));
+        info.put(IS_NULLABLE, new BsonString(YES));
 
         info.put(SPECIFIC_NAME, new BsonString(func.comment));
 

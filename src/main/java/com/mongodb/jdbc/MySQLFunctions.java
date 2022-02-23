@@ -61,7 +61,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "ATAN2",
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),
                                         "returns the arc tangent of the number(s) provided.",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "CEIL",
@@ -101,7 +104,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "CONCATWS",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the provided strings concatenated and separated by the provided separator.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "CONNECTIONID",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
@@ -111,12 +117,18 @@ public class MySQLFunctions extends MongoFunctions {
                                         "CONV",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "converts a number from one numeric base system to another, and returns the result as a string value.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "CONVERT",
                                         null,
                                         "converts the provided expression into a value of the specified type.",
-                                        new String[] {null, BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            null, BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "COS",
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),
@@ -168,22 +180,36 @@ public class MySQLFunctions extends MongoFunctions {
                                         "DATEADD",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "adds a specified number of datetime units to the provided datetime value.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "DATEDIFF",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns date1 - date2 expressed as a value in days.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "DATEFORMAT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "formats a datetime value according to the provided format string.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "DATESUB",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "subtracts a specified number of datetime units from the provided datetime value.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "DAYNAME",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
@@ -218,7 +244,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "ELT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the Nth element of the list of strings.",
-                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "EXP",
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),
@@ -233,7 +262,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         EXTRACT,
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns the value of the specified unit from the provided date.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "FIELD",
@@ -288,18 +320,29 @@ public class MySQLFunctions extends MongoFunctions {
                                         "INSERT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the string str, with the substring beginning at position pos and len characters long replaced by the string newstr.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "INSTR",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns the position of the first occurrence of substring substr in string str.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "INTERVAL",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "returns 0 if N < N1, 1 if N < N2, and so on.",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_DECIMAL.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "LASTDAY",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
@@ -320,7 +363,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "LEFT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the leftmost n characters from the provided string, or NULL if either argument is NULL.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
                                         FunctionCategory.STRING_FUNC),
                                 /**
                                  * Note This is equivalent to LENGTH(string, OCTETS) in the String
@@ -342,7 +388,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "LOCATE",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns the position of the first occurrence of substring substr in string str, starting at index pos if provided",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        },
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "LOG",
@@ -365,7 +414,11 @@ public class MySQLFunctions extends MongoFunctions {
                                         "LPAD",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the string str, left-padded with the string padstr to a length of len characters.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "LTRIM",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
@@ -376,7 +429,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "MAKEDATE",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "returns a date, given year and day-of-year values. day_of_year must be greater than zero, or the result is NULL.",
-                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "MD5",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
@@ -391,7 +447,11 @@ public class MySQLFunctions extends MongoFunctions {
                                         "MID",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "mid(str, pos, len) is a synonym for substring(str, pos, len).",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 /**
                                  * Note Even though the function works on DateTime values, MySql
                                  * list the argument as Time
@@ -409,7 +469,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "MOD",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "returns the remainder of n divided by m.",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "MONTH",
@@ -442,7 +505,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "POW",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "returns the value of base raised to the power of exp.",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_DECIMAL.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "QUARTER",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
@@ -465,13 +531,20 @@ public class MySQLFunctions extends MongoFunctions {
                                         "REPEAT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns a string consisting of the provided string repeated n times. If n is less than 1, returns an empty string. Returns NULL if either argument is NULL.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "REPLACE",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the string with all occurrences of the string from_str replaced by the string to_str.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        },
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "REVERSE",
@@ -482,18 +555,28 @@ public class MySQLFunctions extends MongoFunctions {
                                         "RIGHT",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the rightmost n characters from the provided string, or NULL if any argument is NULL.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "ROUND",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "rounds the argument x to d decimal places (or zero places if not specified).",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
                                         FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "RPAD",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the string str, right-padded with the string padstr to a length of len characters.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "RTRIM",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
@@ -545,23 +628,37 @@ public class MySQLFunctions extends MongoFunctions {
                                         "STRTODATE",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "takes a string and a date format string, and attempts to parse a date from the string according to the provided format string.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         SUBSTRING,
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "takes a substring from a string starting at the given position",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         SUBSTRING,
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "takes a substring from a string starting at the given position and with the given lenght",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
                                         "SUBSTRINGINDEX",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the substring from string str before count occurrences of the delimiter delim. If count is positive, everything to the left of the final delimiter (counting from the left) is returned. If count is negative, everything to the right of the final delimiter (counting from the right) is returned. SUBSTRING_INDEX() performs a case-sensitive match when searching for delim.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "TAN",
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),
@@ -572,7 +669,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "TIMEDIFF",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "returns expr1 - expr2 expressed as a time value.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "TIMETOSEC",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
@@ -582,7 +682,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "TIMESTAMP",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "returns the provided argument as a datetime value. With two arguments, adds the provided time expression to the first argument and returns the result as a datetime.",
-                                        new String[] {BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
                                 /**
                                  * Note The function supports the Open CLI interval names SQL_TSI_XX
                                  * but also the shorter Mysql names omitting the SQL_TSI_ prefix.
@@ -591,7 +694,11 @@ public class MySQLFunctions extends MongoFunctions {
                                         "TIMESTAMPADD",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "adds the integer expression interval to the date or datetime expression datetime_expr. The unit for interval is given by the unit argument, which should be one of MICROSECOND (microseconds), SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, or YEAR.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 /**
                                  * Note The function supports the Open CLI interval names SQL_TSI_XX
@@ -601,7 +708,11 @@ public class MySQLFunctions extends MongoFunctions {
                                         "TIMESTAMPDIFF",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "subtracts the provided timestamps, returning the difference in the specified unit.",
-                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName(), BsonTypeInfo.BSON_DATE.getBsonName()},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
                                         "TODAYS",
@@ -622,7 +733,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         "TRUNCATE",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "returns the number x truncated to d decimal places.",
-                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName(), BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
                                 new MongoFunction(
                                         "UCASE",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),

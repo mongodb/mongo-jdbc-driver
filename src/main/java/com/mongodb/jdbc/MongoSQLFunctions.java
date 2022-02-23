@@ -55,7 +55,8 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns the value of the specified unit from the provided date.",
                                         new String[] {
-                                            BsonTypeInfo.BSON_STRING.getBsonName(), "date"
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
                                         },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(

@@ -1826,7 +1826,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        bot.put(FUNCTION_CAT, new BsonString("def"));
+        bot.put(FUNCTION_CAT, new BsonString(FUNC_DEFAULT_CATALOG));
         bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
         bot.put(FUNCTION_NAME, new BsonString(functionName));
         bot.put(REMARKS, new BsonString(remarks));
