@@ -145,8 +145,8 @@ public class MySQLFunctions extends MongoFunctions {
                                         CURRENT_TIMESTAMP,
                                         "date",
                                         "returns the current date and time.",
-                                        new String[] {"int"}, // Timestamp precision
-                                        FunctionCategory.TIME_DATE_FUNC),
+                                        // Timestamp precision
+                                        new String[] {"int"}),
                                 new MongoFunction(
                                         "CURTIME",
                                         "date",
