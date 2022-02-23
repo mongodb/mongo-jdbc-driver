@@ -478,7 +478,7 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
 
     @Test
     void testGetTimeDateFunctions() throws SQLException {
-        final String expectedFunctions = "CURRENT_TIMESTAMP," + "CURRENT_TIMESTAMP," + "EXTRACT";
+        final String expectedFunctions = "CURRENT_TIMESTAMP,EXTRACT";
 
         assertEquals(expectedFunctions, databaseMetaData.getTimeDateFunctions());
     }
