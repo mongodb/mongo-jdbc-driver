@@ -33,6 +33,8 @@ tests:
     meta_function: [ getTables, null, null, '%', null ]
     expected_sql_type: [ LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                          LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR ]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          string, string ]
     expected_catalog_name: [ '', '', '', '', '', '', '', '', '', '' ]
     expected_column_class_name: [ java.lang.String, java.lang.String, java.lang.String,
                                   java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -51,9 +53,8 @@ tests:
                             false, false ]
     expected_is_definitely_writable: [ false, false, false, false, false, false, false,
                                        false, false, false ]
-    #skip_reason: "SQL-669: incorrect column nullability."
-    #expected_is_nullable: [ columnNullable, columnNullable, columnNullable, columnNoNulls,
-    #                        columnNoNulls, columnNullable, columnNoNulls, columnNullable, columnNullable, columnNullable ]
+    expected_is_nullable: [ columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                            columnNoNulls, columnNullable, columnNullable, columnNullable, columnNullable, columnNullable ]
     expected_is_read_only: [ true, true, true, true, true, true, true, true, true,
                              true ]
     expected_is_searchable: [ true, true, true, true, true, true, true, true, true,
@@ -62,6 +63,30 @@ tests:
                           false ]
     expected_is_writable: [ false, false, false, false, false, false, false, false,
                               false, false ]
+
+  - description: getTables_null_parameters_returns_all_tables
+    db: integration_test
+    meta_function: [ getTables, null, null, null, null ]
+    expected_result:
+      - [db2, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, a_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
+      - [integration_test, null, any_collection, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, anyof_collection, table, null, null, null, null,
+         null, null]
+      - [integration_test, null, b_non_lexicographic_field_order, table, null, null,
+         null, null, null, null]
+      - [integration_test, null, bar, table, null, null, null, null, null, null]
+      - [integration_test, null, class, table, null, null, null, null, null, null]
+      - [integration_test, null, foo, table, null, null, null, null, null, null]
+      - [integration_test, null, grades, table, null, null, null, null, null, null]
+      - [integration_test, null, null_and_missing, table, null, null, null, null,
+         null, null]
+      - [ integration_test, null, types_other, table, null, null, null, null,
+          null, null ]
+      - [integration_test, null, baz, view, null, null, null, null, null, null]
+    row_count: 12
 
   - description: getTables_no_filters_returns_all_tables
     db: integration_test
@@ -188,8 +213,7 @@ tests:
     expected_is_case_sensitive: [true, true, true, true, true, true, true]
     expected_is_currency: [false, false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false]
-    #skip_reason: "SQL-669: incorrect column nullability"
-    #expected_is_nullable: [columnNoNulls, columnNullable, columnNullable, columnNoNulls, columnNoNulls, columnNoNulls, columnNullable]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNullable, columnNoNulls, columnNoNulls, columnNullable]
     expected_is_read_only: [true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true]
     expected_is_signed: [false, false, false, false, false, false, false]
@@ -248,6 +272,11 @@ tests:
     ordered: true
 
   # getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
+  - description: getColumns_null_parameters_returns_all_columns
+    db: integration_test
+    meta_function: [ "getColumns", null, null, null, null ]
+    skip_reason: "SQL-668: fix MongoJsonSchema bsonType String/Array conflict"
+
   - description: getColumns no filters returns all columns
     db: integration_test
     meta_function: ["getColumns", null, null, "%", "%"]
