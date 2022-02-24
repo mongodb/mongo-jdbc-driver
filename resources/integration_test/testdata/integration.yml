@@ -85,3 +85,24 @@ dataset:
     collection: b_non_lexicographic_field_order
     docs:
       - { "a": 9, _id: 8 }
+
+  - db: integration_test
+    collection: types_other
+    docsExtJson:
+      - {
+        _id: 0,
+        dbPointer: { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
+        javascript: {"$code": "function(){ }"},
+        javascriptWithScope: {"$code": "function(){ }", "$scope": {"foo":"bar"}},
+        maxKey: {"$maxKey": 1},
+        minKey: {"$minKey": 1},
+        object: {"foo":"bar"},
+        objectId: { "$oid": "000000000000000000000001" },
+        regularExpression: {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
+        symbol: { "$symbol": "symbol" },
+        timestamp: {"$timestamp": {"t":100, "i":0}}
+        # Skip reason: SQL-395
+        # undefined: {"$undefined":true},
+        # Skip reason: SQL-697
+        # array: [1,2,3]
+      }

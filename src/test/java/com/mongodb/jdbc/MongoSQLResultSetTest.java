@@ -420,7 +420,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertNull(mongoSQLResultSet.getObject(NULL_COL));
         assertEquals(4, mongoSQLResultSet.getObject(INT_COL_LABEL));
 
-        assertEquals(new BsonUndefined(), mongoSQLResultSet.getObject(ANY_COL_LABEL));
+        assertNull(mongoSQLResultSet.getObject(ANY_COL_LABEL));
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(5));

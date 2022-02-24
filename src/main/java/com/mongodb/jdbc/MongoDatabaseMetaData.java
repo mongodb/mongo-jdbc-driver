@@ -138,7 +138,9 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     public static Pattern toJavaPattern(String sqlPattern) {
-        return Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
+        return sqlPattern == null
+                ? null
+                : Pattern.compile(sqlPattern.replaceAll("%", ".*").replaceAll("_", "."));
     }
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
@@ -866,7 +868,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             case "decimal":
                 return 34;
         }
-        return null;
+        return 0;
     }
 
     public static Integer typeBytes(String typeName) {
@@ -891,7 +893,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             case "bool":
                 return 1;
         }
-        return null;
+        return 0;
     }
 
     public static Integer typeRadix(String typeName) {

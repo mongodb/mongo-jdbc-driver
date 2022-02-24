@@ -3,3 +3,9 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore debugging helpers
+demo/src/test/
+
+# Ignore local ADL directory
+local_adl

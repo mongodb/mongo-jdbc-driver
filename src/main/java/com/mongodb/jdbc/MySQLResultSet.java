@@ -84,6 +84,9 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
 
     @Override
     protected Object getObject(BsonValue o, int columnType) throws SQLException {
+        if (checkNull(o)) {
+            return null;
+        }
         switch (columnType) {
             case Types.ARRAY:
                 // not supported
@@ -658,15 +661,18 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         BsonValue out = getBsonValue(columnIndex);
+        // If the value is Null, no need to try to convert to a Java Object
+        if (checkNull(out)) {
+            return null;
+        }
         int columnType = rsMetaData.getColumnType(columnIndex);
         return getObject(out, columnType);
     }
 
     @Override
     public Object getObject(String columnLabel) throws SQLException {
-        BsonValue out = getBsonValue(columnLabel);
-        int columnType = rsMetaData.getColumnType(findColumn(columnLabel));
-        return getObject(out, columnType);
+        int columnIndex = findColumn(columnLabel);
+        return getObject(columnIndex);
     }
 
     @Override

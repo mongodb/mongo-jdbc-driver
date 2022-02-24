@@ -19,6 +19,7 @@ public class MongoSQLIntegrationTest {
     static final String URL = "jdbc:mongodb://localhost";
     public static final String MONGOSQL = "mongosql";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
+
     private List<TestEntry> testEntries;
 
     public Connection getBasicConnection(String db) throws SQLException {

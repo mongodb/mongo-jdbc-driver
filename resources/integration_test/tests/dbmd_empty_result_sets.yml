@@ -5,8 +5,10 @@ tests:
     meta_function: [getProcedures, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, int, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, java.lang.String]
@@ -20,7 +22,7 @@ tests:
     expected_is_case_sensitive: [true, true, true, true, false, true]
     expected_is_currency: [false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
                            columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true]
@@ -33,9 +35,12 @@ tests:
     meta_function: [getProcedureColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, int, int, string, int, int,
+                          int, int, int, string, string, int, int, int, int, string, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
                             '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
@@ -63,10 +68,10 @@ tests:
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false, false, false, false, false, false, false,
                                       false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNullable,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNullable, columnNoNulls, columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true, true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
@@ -83,7 +88,9 @@ tests:
     meta_function: [getSchemas]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
     expected_column_label: [TABLE_SCHEM, TABLE_CATALOG]
@@ -95,19 +102,21 @@ tests:
     expected_is_case_sensitive: [true, true]
     expected_is_currency: [false, false]
     expected_is_definitely_writable: [false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNoNulls, columnNullable]
     expected_is_read_only: [true, true]
     expected_is_searchable: [true, true]
     expected_is_signed: [false, false]
     expected_is_writable: [false, false]
 
   # getSchemas(catalog, schemaPattern)
-  - description: getSchemas_returns_empty_result_set
+  - description: getSchemas_with_filter_returns_empty_result_set
     db: integration_test
     meta_function: [getSchemas, integration_test, null]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string]
     expected_catalog_name: ['', '']
     expected_column_class_name: [java.lang.String, java.lang.String]
     expected_column_label: [TABLE_SCHEM, TABLE_CATALOG]
@@ -119,7 +128,7 @@ tests:
     expected_is_case_sensitive: [true, true]
     expected_is_currency: [false, false]
     expected_is_definitely_writable: [false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNoNulls, columnNullable]
     expected_is_read_only: [true, true]
     expected_is_searchable: [true, true]
     expected_is_signed: [false, false]
@@ -131,8 +140,10 @@ tests:
     meta_function: [getVersionColumns, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR, INTEGER, INTEGER,
                         INTEGER, INTEGER]
+    expected_bson_type: [string, string, int, string, int, int, int, int]
     expected_catalog_name: ['', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, int, java.lang.String,
                                  int, int, int, int]
@@ -148,8 +159,8 @@ tests:
     expected_is_currency: [false, false, false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNullable, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true]
     expected_is_signed: [false, false, true, false, true, true, true, true]
@@ -161,9 +172,12 @@ tests:
     meta_function: [getImportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -183,9 +197,9 @@ tests:
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNullable, columnNullable, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNullable, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
@@ -201,9 +215,12 @@ tests:
     meta_function: [getExportedKeys, integration_test, null, foo]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -223,9 +240,9 @@ tests:
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNullable, columnNullable, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNullable, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
@@ -242,9 +259,12 @@ tests:
                     null, bar]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, INTEGER, INTEGER, LONGVARCHAR,
                         LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, string, string, string, string,
+                          int, int, int, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -264,9 +284,9 @@ tests:
                            false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNullable, columnNullable, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNullable, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
@@ -282,8 +302,10 @@ tests:
     meta_function: [getUDTs, integration_test, null, '%', null]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR, INTEGER]
+    expected_bson_type: [ string, string, string, string, int, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, java.lang.String, int]
@@ -297,8 +319,8 @@ tests:
     expected_is_case_sensitive: [true, true, true, true, false, true, false]
     expected_is_currency: [false, false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNullable]
     expected_is_read_only: [true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true]
     expected_is_signed: [false, false, false, false, true, false, true]
@@ -310,8 +332,10 @@ tests:
     meta_function: [getSuperTypes, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         LONGVARCHAR]
+    expected_bson_type: [string, string, string, string, string, string]
     expected_catalog_name: ['', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, java.lang.String, java.lang.String]
@@ -325,8 +349,8 @@ tests:
     expected_is_case_sensitive: [true, true, true, true, true, true]
     expected_is_currency: [false, false, false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNullable,
+                           columnNullable, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true]
     expected_is_signed: [false, false, false, false, false, false]
@@ -338,7 +362,9 @@ tests:
     meta_function: [getSuperTables, integration_test, null, '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [string, string, string, string]
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String]
@@ -351,7 +377,7 @@ tests:
     expected_is_case_sensitive: [true, true, true, true]
     expected_is_currency: [false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true]
     expected_is_searchable: [true, true, true, true]
     expected_is_signed: [false, false, false, false]
@@ -363,10 +389,13 @@ tests:
     meta_function: [getAttributes, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         LONGVARCHAR, INTEGER, INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
                         INTEGER]
+    expected_bson_type: [ string, string, string, string, int, string, int, int, int,
+                          int, string, string, int, int, int, int, string, string, string, string, int ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '', '', '',
       '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
@@ -396,10 +425,10 @@ tests:
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false, false, false, false, false, false, false,
                                       false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls]
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNoNulls, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNullable, columnNullable, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNullable, columnNullable, columnNullable, columnNullable]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true, true, true, true, true, true, true, true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
@@ -416,7 +445,9 @@ tests:
     meta_function: [getClientInfoProperties]
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string ]
     expected_catalog_name: ['', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String]
@@ -441,8 +472,11 @@ tests:
     meta_function: [getPseudoColumns, integration_test, null, '%', '%']
     expected_result: []
     row_count: 0
+    ordered: true
     expected_sql_type: [LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER,
                         INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, INTEGER, LONGVARCHAR]
+    expected_bson_type: [ string, string, string, string, int, int, int, string, string,
+                          string, int, string ]
     expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [java.lang.String, java.lang.String, java.lang.String,
                                  java.lang.String, int, int, int, java.lang.String, java.lang.String, java.lang.String,
@@ -462,8 +496,8 @@ tests:
                            false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
                                       false, false, false, false, false]
-    expected_is_nullable: [columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
-                           columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls, columnNoNulls,
+    expected_is_nullable: [columnNullable, columnNullable, columnNoNulls, columnNoNulls,
+                           columnNoNulls, columnNoNulls, columnNullable, columnNoNulls, columnNoNulls, columnNullable,
                            columnNoNulls, columnNoNulls]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
                             true, true, true]

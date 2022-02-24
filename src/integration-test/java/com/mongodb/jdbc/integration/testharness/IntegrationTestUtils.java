@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.mongodb.jdbc.MongoColumnInfo;
+import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -15,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -22,7 +25,11 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -74,6 +81,9 @@ public class IntegrationTestUtils {
     private static Tests processTestFile(String filename) throws IOException {
         try (InputStream is = new FileInputStream(filename)) {
             return yaml.load(is);
+        } catch (Exception e) {
+            System.err.println("Error processing " + filename);
+            throw e;
         }
     }
 
@@ -206,7 +216,7 @@ public class IntegrationTestUtils {
         throw new IllegalArgumentException("function '" + functionName + "' not found");
     }
 
-    private static void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
+    public static void validateResultSetMetadata(TestEntry test, ResultSetMetaData rsMetaData)
             throws SQLException, IllegalAccessException {
         int columnCount = rsMetaData.getColumnCount();
         if (test.expected_sql_type != null) {
@@ -220,7 +230,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         sqlType,
                         rsMetaData.getColumnType(i + 1),
-                        "Invalid getColumnType result for column " + i + 1);
+                        "Invalid getColumnType result for column " + (i + 1));
             }
         }
         if (test.expected_catalog_name != null) {
@@ -233,7 +243,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_catalog_name.get(i),
                         rsMetaData.getCatalogName(i + 1),
-                        "Invalid getCatalogName result for column " + i + 1);
+                        "Invalid getCatalogName result for column " + (i + 1));
             }
         }
         if (test.expected_column_class_name != null) {
@@ -246,7 +256,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_column_class_name.get(i),
                         rsMetaData.getColumnClassName(i + 1),
-                        "Invalid getColumnClassName result for column " + i + 1);
+                        "Invalid getColumnClassName result for column " + (i + 1));
             }
         }
         if (test.expected_column_display_size != null) {
@@ -259,7 +269,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_column_display_size.get(i).intValue(),
                         rsMetaData.getColumnDisplaySize(i + 1),
-                        "Invalid getColumnDisplaySize result for column " + i + 1);
+                        "Invalid getColumnDisplaySize result for column " + (i + 1));
             }
         }
         if (test.expected_column_label != null) {
@@ -272,7 +282,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_column_label.get(i),
                         rsMetaData.getColumnLabel(i + 1),
-                        "Invalid getColumnLabel result for column " + i + 1);
+                        "Invalid getColumnLabel result for column " + (i + 1));
             }
         }
         if (test.expected_precision != null) {
@@ -285,7 +295,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_precision.get(i).intValue(),
                         rsMetaData.getPrecision(i + 1),
-                        "Invalid getPrecision result for column " + i + 1);
+                        "Invalid getPrecision result for column " + (i + 1));
             }
         }
         if (test.expected_scale != null) {
@@ -298,7 +308,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_scale.get(i).intValue(),
                         rsMetaData.getScale(i + 1),
-                        "Invalid getScale result for column " + i + 1);
+                        "Invalid getScale result for column " + (i + 1));
             }
         }
         if (test.expected_schema_name != null) {
@@ -311,7 +321,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_schema_name.get(i),
                         rsMetaData.getSchemaName(i + 1),
-                        "Invalid getSchemaName result for column " + i + 1);
+                        "Invalid getSchemaName result for column " + (i + 1));
             }
         }
         if (test.expected_is_auto_increment != null) {
@@ -324,7 +334,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_auto_increment.get(i),
                         rsMetaData.isAutoIncrement(i + 1),
-                        "Invalid isAutoIncrement result for column " + i + 1);
+                        "Invalid isAutoIncrement result for column " + (i + 1));
             }
         }
         if (test.expected_is_case_sensitive != null) {
@@ -337,7 +347,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_case_sensitive.get(i),
                         rsMetaData.isCaseSensitive(i + 1),
-                        "Invalid isCaseSensitive result for column " + i + 1);
+                        "Invalid isCaseSensitive result for column " + (i + 1));
             }
         }
         if (test.expected_is_currency != null) {
@@ -350,7 +360,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_currency.get(i),
                         rsMetaData.isCurrency(i + 1),
-                        "Invalid isCurrency result for column " + i + 1);
+                        "Invalid isCurrency result for column " + (i + 1));
             }
         }
         if (test.expected_is_definitely_writable != null) {
@@ -363,7 +373,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_definitely_writable.get(i),
                         rsMetaData.isDefinitelyWritable(i + 1),
-                        "Invalid isDefinitelyWritable result for column " + i + 1);
+                        "Invalid isDefinitelyWritable result for column " + (i + 1));
             }
         }
         if (test.expected_is_nullable != null) {
@@ -378,7 +388,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         expectedNullable,
                         rsMetaData.isNullable(i + 1),
-                        "Invalid isNullable result for column " + i + 1);
+                        "Invalid isNullable result for column " + (i + 1));
             }
         }
         if (test.expected_is_read_only != null) {
@@ -391,7 +401,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_read_only.get(i),
                         rsMetaData.isReadOnly(i + 1),
-                        "Invalid isReadOnly result for column " + i + 1);
+                        "Invalid isReadOnly result for column " + (i + 1));
             }
         }
         if (test.expected_is_searchable != null) {
@@ -404,7 +414,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_searchable.get(i),
                         rsMetaData.isSearchable(i + 1),
-                        "Invalid isSearchable result for column " + i + 1);
+                        "Invalid isSearchable result for column " + (i + 1));
             }
         }
         if (test.expected_is_signed != null) {
@@ -417,7 +427,7 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_signed.get(i),
                         rsMetaData.isSigned(i + 1),
-                        "Invalid isSigned result for column " + i + 1);
+                        "Invalid isSigned result for column " + (i + 1));
             }
         }
         if (test.expected_is_writable != null) {
@@ -430,22 +440,60 @@ public class IntegrationTestUtils {
                 assertEquals(
                         test.expected_is_writable.get(i),
                         rsMetaData.isWritable(i + 1),
-                        "Invalid isWritable result for column " + i + 1);
+                        "Invalid isWritable result for column " + (i + 1));
             }
         }
+        if (test.expected_bson_type != null) {
+            assertEquals(test.expected_bson_type.size(), columnCount);
+            for (int i = 0; i < columnCount; i++) {
+                MongoSQLResultSetMetaData mongoSQLResultSetMetadata =
+                        (MongoSQLResultSetMetaData) rsMetaData;
+                MongoColumnInfo columnInfo = mongoSQLResultSetMetadata.getColumnInfo(i + 1);
+                assertEquals(
+                        test.expected_bson_type.get(i),
+                        columnInfo.getBsonTypeName(),
+                        "Bson type mismatch");
+            }
+        }
+    }
+
+    private static List<Object> processExtendedJson(Map<String, Object> entry) {
+        List<Object> expectedResults = new ArrayList<>();
+        String entryAsJson = new Document(entry).toJson();
+        BsonDocument bsonDoc = BsonDocument.parse(entryAsJson);
+        for (int i = 0; i < entry.size(); i++) {
+            expectedResults.add(bsonDoc.get(String.valueOf(i)));
+        }
+        return expectedResults;
     }
 
     @SuppressWarnings("unchecked")
     private static void validateResultsOrdered(TestEntry testEntry, ResultSet rs)
             throws SQLException {
         Integer actualRowCounter = null;
-        if (testEntry.expected_result != null) {
+        List<Object> expectedResults = null;
+        if (testEntry.expected_result_extended_json != null || testEntry.expected_result != null) {
             actualRowCounter = 0;
             while (rs.next()) {
+                if (testEntry.expected_result_extended_json != null) {
+                    assertTrue(
+                            testEntry.expected_result_extended_json.size() > actualRowCounter,
+                            "Database returned more rows than the expected amount: "
+                                    + testEntry.expected_result_extended_json.size());
+                    expectedResults =
+                            processExtendedJson(
+                                    testEntry.expected_result_extended_json.get(actualRowCounter));
+                } else {
+                    assertTrue(
+                            testEntry.expected_result.size() > actualRowCounter,
+                            "Database returned more rows than the expected amount: "
+                                    + testEntry.expected_result.size());
+                    expectedResults =
+                            (List<Object>) testEntry.expected_result.get(actualRowCounter);
+                }
                 assertTrue(
-                        compareRow(
-                                (List<Object>) testEntry.expected_result.get(actualRowCounter),
-                                rs));
+                        compareRow(expectedResults, rs),
+                        "Row " + actualRowCounter + " does not match.");
                 actualRowCounter++;
             }
         }
@@ -458,15 +506,25 @@ public class IntegrationTestUtils {
     private static void validateResultsUnordered(TestEntry testEntry, ResultSet rs)
             throws SQLException {
         Integer actualRowCounter = null;
-        if (testEntry.expected_result != null) {
+        List<Object> expectedResults = null;
+        if (testEntry.expected_result_extended_json != null || testEntry.expected_result != null) {
             actualRowCounter = 0;
             while (rs.next()) {
-                boolean found = false;
                 actualRowCounter++;
-                for (Object expectedRow : testEntry.expected_result) {
-                    if (compareRow((List<Object>) expectedRow, rs)) {
-                        found = true;
-                        break;
+                boolean found = false;
+                if (testEntry.expected_result_extended_json != null) {
+                    for (Map<String, Object> entry : testEntry.expected_result_extended_json) {
+                        if (compareRow(processExtendedJson(entry), rs)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                } else {
+                    for (Object expectedRow : testEntry.expected_result) {
+                        if (compareRow((List<Object>) expectedRow, rs)) {
+                            found = true;
+                            break;
+                        }
                     }
                 }
                 assertTrue(found, "Invalid row " + actualRowCounter + ". No match found.");
@@ -489,7 +547,7 @@ public class IntegrationTestUtils {
         }
     }
 
-    private static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
+    public static boolean compareRow(List<Object> expectedRow, ResultSet actualRow)
             throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
         assertEquals(
@@ -504,6 +562,7 @@ public class IntegrationTestUtils {
                 if (actualRow.getObject(i + 1) == null) {
                     continue;
                 } else {
+                    System.err.println("Expected null value for column " + (i + 1) + " but is not");
                     return false;
                 }
             }
@@ -514,7 +573,13 @@ public class IntegrationTestUtils {
                 case Types.SMALLINT:
                 case Types.TINYINT:
                 case Types.INTEGER:
-                    if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {
+                    Object expectedInt = expectedRow.get(i);
+                    int actualInt = actualRow.getInt(i + 1);
+                    if (expectedInt instanceof BsonInt32) {
+                        if (((BsonInt32) expectedInt).intValue() != actualInt) {
+                            return false;
+                        }
+                    } else if ((((Integer) expectedRow.get(i)) != actualRow.getInt(i + 1))) {
                         return false;
                     }
                     break;
@@ -524,41 +589,87 @@ public class IntegrationTestUtils {
                 case Types.CHAR:
                 case Types.NVARCHAR:
                 case Types.VARCHAR:
-                    if (!((String) expectedRow.get(i)).equals(actualRow.getString(i + 1))) {
+                    String expected_str = (String) expectedRow.get(i);
+                    String actual_str = actualRow.getString(i + 1);
+                    if (!(expected_str).equals(actual_str)) {
+                        System.err.println(
+                                "Expected String value "
+                                        + expected_str
+                                        + " but is "
+                                        + actual_str
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
                 case Types.BOOLEAN:
                 case Types.BIT:
-                    if (((Boolean) expectedRow.get(i)) != actualRow.getBoolean(i + 1)) {
+                    boolean expected_bool = (Boolean) expectedRow.get(i);
+                    boolean actual_bool = actualRow.getBoolean(i + 1);
+                    if (expected_bool != actual_bool) {
+                        System.err.println(
+                                "Expected boolean value "
+                                        + expected_bool
+                                        + " but is "
+                                        + actual_bool
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
                 case Types.DOUBLE:
-                    if ((double) expectedRow.get(i) != actualRow.getDouble(i + 1)) {
+                    double expected_double = (double) expectedRow.get(i);
+                    double actual_double = actualRow.getDouble(i + 1);
+                    if (expected_double != actual_double) {
+                        System.err.println(
+                                "Expected double value "
+                                        + expected_double
+                                        + " but is "
+                                        + actual_double
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
                 case Types.NULL:
-                    if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
+                    Object expected_null = expectedRow.get(i);
+                    Object actual_null = actualRow.getObject(i + 1);
+                    if (expected_null != actual_null) {
+                        System.err.println(
+                                "Expected Bson Null value "
+                                        + expected_null
+                                        + " but is "
+                                        + actual_null
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
                 case Types.TIMESTAMP:
-                    if (!expectedRow.get(i).equals(actualRow.getDate(i + 1))) {
+                    Object expected_date = expectedRow.get(i);
+                    Date actual_date = actualRow.getDate(i + 1);
+                    if (!expected_date.equals(actual_date)) {
+                        System.err.println(
+                                "Expected date value"
+                                        + expected_date
+                                        + " but is "
+                                        + actual_date
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
-                    // TODO: SQL-632 Support Types.OTHER
-                    // This comparison needs to be improved to correctly handle Types.OTHER
-                    /*
-                    case Types.OTHER:
-                        if (expectedRow.get(i) != actualRow.getObject(i + 1)) {
-                            return false;
-                        }
-                     */
                 case Types.OTHER:
-                    if (!expectedRow.get(i).equals(actualRow.getObject(i + 1))) {
+                    Object expected_obj = expectedRow.get(i);
+                    Object actual_obj = actualRow.getObject(i + 1);
+                    if (!expected_obj.equals(actual_obj)) {
+                        System.err.println(
+                                "Expected Bson Other value "
+                                        + expected_obj
+                                        + " but is "
+                                        + actual_obj
+                                        + " for column "
+                                        + (i + 1));
                         return false;
                     }
                     break;
