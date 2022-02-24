@@ -100,7 +100,7 @@ public class MongoJsonSchema {
                 result.anyOf = new HashSet<MongoJsonSchema>();
             }
 
-            /** Push down each bsontype into its own anyOf schema.
+            /** Push down each bsontype from a bsontype array into a separate bsonType in an anyOf schema.
              * For example :
              * "y": {
              *     "bsonType": ["string", "int"]
