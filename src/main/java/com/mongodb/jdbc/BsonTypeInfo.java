@@ -88,7 +88,7 @@ public enum BsonTypeInfo {
     //  - For datetime data types, this is the length in characters of the String representation (assuming the maximum
     //  allowed precision of the fractional seconds component).
     //  - For binary data, this is the maximum length in bytes.
-    //  - For the ROWID datatype, this is the length in bytes.
+    //  - For ObjectId (row id data type) data, this is the length in bytes.
     //  - Null is returned for data types where the column size is not applicable.
     private final Integer precision;
     // The number of fractional digits for numeric and date time data. Null is returned for data types where

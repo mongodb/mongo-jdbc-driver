@@ -49,7 +49,10 @@ public class MySQLFunctions extends MongoFunctions {
                                         ATAN,
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),
                                         "returns the arc tangent of the number(s) provided.",
-                                        new String[] {"numeric, numeric"},
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
                                         FunctionCategory.NUM_FUNC),
                                 /**
                                  * Note ATAN2(number) is supported by the driver but not listed as a

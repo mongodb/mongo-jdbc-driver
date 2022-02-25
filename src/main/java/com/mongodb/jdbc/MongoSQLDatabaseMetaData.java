@@ -1888,36 +1888,13 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             boolean isReturnColumn)
             throws SQLException {
 
-        BsonTypeInfo bsonTypeInfo =
-                argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
+        Map<String, BsonValue> info =
+                super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
         String functionName = func.name;
-        bot.put(FUNCTION_CAT, new BsonString("def"));
-        bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
-        bot.put(FUNCTION_NAME, new BsonString(functionName));
-
-        bot.put(COLUMN_NAME, new BsonString(argName));
-        bot.put(COLUMN_TYPE, asBsonIntOrNull(isReturnColumn ? functionReturn : functionColumnIn));
-        bot.put(DATA_TYPE, asBsonIntOrNull(bsonTypeInfo.getJdbcType()));
-        bot.put(TYPE_NAME, new BsonString(bsonTypeInfo.getBsonName()));
-
-        bot.put(PRECISION, asBsonIntOrNull(bsonTypeInfo.getPrecision()));
-        // Note : LENGTH is only reported in getFunctionColumns and getProcedureColumns and is not flagged as 'may be null'
-        // so for unknown length we are defaulting to 0.
-        bot.put(LENGTH, asBsonIntOrDefault(bsonTypeInfo.getFixedBytesLength(), 0));
-        bot.put(SCALE, asBsonIntOrNull(bsonTypeInfo.getDecimalDigits()));
-        bot.put(RADIX, new BsonInt32(bsonTypeInfo.getNumPrecRadix()));
-
-        bot.put(NULLABLE, new BsonInt32(functionNullable));
-        bot.put(REMARKS, new BsonString(func.comment));
-        bot.put(CHAR_OCTET_LENGTH, asBsonIntOrNull(bsonTypeInfo.getCharOctetLength()));
-
-        bot.put(ORDINAL_POSITION, new BsonInt32(i));
-        bot.put(IS_NULLABLE, new BsonString("YES"));
-
-        bot.put(SPECIFIC_NAME, new BsonString(functionName));
+        bot.putAll(info);
         return root;
     }
 

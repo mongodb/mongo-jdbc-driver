@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BsonInt32;
@@ -173,7 +173,10 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
             String argType,
             boolean isReturnColumn)
             throws SQLException {
-        Map<String, BsonValue> info = new HashMap<String, BsonValue>();
+        Map<String, BsonValue> info =
+                new LinkedHashMap<
+                        String,
+                        BsonValue>(); // Using a LinkedHashMap to conserve the insertion order
         BsonTypeInfo bsonTypeInfo =
                 argType == null ? BSON_NULL : BsonTypeInfo.getBsonTypeInfoByName(argType);
         info.put(FUNCTION_CAT, new BsonString(FUNC_DEFAULT_CATALOG));
@@ -199,7 +202,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         info.put(ORDINAL_POSITION, new BsonInt32(i));
         info.put(IS_NULLABLE, new BsonString(YES));
 
-        info.put(SPECIFIC_NAME, new BsonString(func.comment));
+        info.put(SPECIFIC_NAME, new BsonString(func.name));
 
         return info;
     }

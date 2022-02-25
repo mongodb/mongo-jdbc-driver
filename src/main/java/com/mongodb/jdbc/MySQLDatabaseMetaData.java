@@ -1200,28 +1200,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                 super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         MySQLResultDoc doc = new MySQLResultDoc();
         doc.values = new ArrayList<>(17);
-        doc.values.add(info.get(FUNCTION_CAT));
-        doc.values.add(info.get(FUNCTION_SCHEM));
-        doc.values.add(info.get(FUNCTION_NAME));
-
-        doc.values.add(info.get(COLUMN_NAME));
-        doc.values.add(info.get(COLUMN_TYPE));
-        doc.values.add(info.get(DATA_TYPE));
-        doc.values.add(info.get(TYPE_NAME));
-        doc.values.add(info.get(PRECISION));
-
-        doc.values.add(info.get(LENGTH));
-        doc.values.add(info.get(SCALE));
-        doc.values.add(info.get(RADIX));
-
-        doc.values.add(info.get(NULLABLE));
-        doc.values.add(info.get(REMARKS));
-        doc.values.add(info.get(CHAR_OCTET_LENGTH));
-
-        doc.values.add(info.get(ORDINAL_POSITION));
-        doc.values.add(info.get(IS_NULLABLE));
-
-        doc.values.add(info.get(SPECIFIC_NAME));
+        doc.values.addAll(info.values());
         return doc;
     }
 
