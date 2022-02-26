@@ -161,7 +161,7 @@ public class MySQLFunctions extends MongoFunctions {
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
                                         "returns the current date and time.",
                                         // Timestamp precision
-                                        new String[] {"int"}),
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()}),
                                 new MongoFunction(
                                         "CURTIME",
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
