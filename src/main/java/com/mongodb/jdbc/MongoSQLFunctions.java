@@ -18,21 +18,11 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         "returns length of string in bits",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
                                 new MongoFunction(
-                                        "CAST",
-                                        null,
-                                        "converts the provided expression into a value of the specified type.",
-                                        new String[] {null, null, null, null}),
-                                new MongoFunction(
                                         "CHAR_LENGTH",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns length of string",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()},
                                         FunctionCategory.STRING_FUNC),
-                                new MongoFunction(
-                                        COALESCE,
-                                        null,
-                                        "returns the first non-null value in the list, or null if there are no non-null values.",
-                                        new String[] {null}),
                                 new MongoFunction(
                                         CURRENT_TIMESTAMP,
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
@@ -65,11 +55,6 @@ public class MongoSQLFunctions extends MongoFunctions {
                                         "returns the provided string with all characters changed to lowercase.",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
                                 new MongoFunction(
-                                        NULLIF,
-                                        BsonTypeInfo.BSON_NULL.getBsonName(),
-                                        "returns null if the two arguments are equal, and the first argument otherwise.",
-                                        new String[] {null, null}),
-                                new MongoFunction(
                                         "OCTET_LENGTH",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns length of string in bytes",
@@ -84,15 +69,6 @@ public class MongoSQLFunctions extends MongoFunctions {
                                             BsonTypeInfo.BSON_STRING.getBsonName()
                                         },
                                         FunctionCategory.STRING_FUNC),
-                                new MongoFunction(
-                                        "SLICE",
-                                        null,
-                                        "returns a slice of an array.",
-                                        new String[] {
-                                            BsonTypeInfo.BSON_ARRAY.getBsonName(),
-                                            BsonTypeInfo.BSON_INT.getBsonName(),
-                                            BsonTypeInfo.BSON_INT.getBsonName()
-                                        }),
                                 new MongoFunction(
                                         "SIZE",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),

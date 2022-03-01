@@ -31,23 +31,16 @@ tests:
     meta_function: [ getFunctions, integration_test, null, '%' ]
     expected_result:
       - [ def, null, BIT_LENGTH, returns length of string in bits, 1, BIT_LENGTH ]
-      - [ def, null, CAST, converts the provided expression into a value of the specified
-                             type., 1, CAST ]
       - [ def, null, CHAR_LENGTH, returns length of string, 1, CHAR_LENGTH ]
-      - [ def, null, COALESCE, 'returns the first non-null value in the list, or null
-          if there are no non-null values.', 1, COALESCE ]
       - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
       - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
       - [ def, null, EXTRACT, returns the value of the specified unit from the provided
                                 date., 1, EXTRACT ]
       - [ def, null, LOWER, returns the provided string with all characters changed
                               to lowercase., 1, LOWER ]
-      - [ def, null, NULLIF, 'returns null if the two arguments are equal, and the
-          first argument otherwise.', 1, NULLIF ]
       - [ def, null, OCTET_LENGTH, returns length of string in bytes, 1, OCTET_LENGTH ]
       - [ def, null, POSITION, returns the position of the first occurrence of substring
                                  substr in string str., 1, POSITION ]
-      - [ def, null, SLICE, returns a slice of an array., 1, SLICE ]
       - [ def, null, SIZE, returns the size of an array., 1, SIZE ]
       - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
       - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
@@ -59,25 +52,20 @@ tests:
                              removed., 1, TRIM ]
       - [ def, null, UPPER, returns the provided string with all characters changed
                               to uppercase., 1, UPPER ]
-    row_count: 19
+    row_count: 15
 
   - description: getFunctions_partial_filter_with_wildcard_substrings_returns_matching_functions
     db: integration_test
     meta_function: [ getFunctions, integration_test, null, '%S%' ]
     expected_result:
-      - [ def, null, CAST, converts the provided expression into a value of the specified
-                             type., 1, CAST ]
-      - [ def, null, COALESCE, 'returns the first non-null value in the list, or null
-          if there are no non-null values.', 1, COALESCE ]
       - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
       - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
       - [ def, null, POSITION, returns the position of the first occurrence of substring
                                  substr in string str., 1, POSITION ]
-      - [ def, null, SLICE, returns a slice of an array., 1, SLICE ]
       - [ def, null, SIZE, returns the size of an array., 1, SIZE ]
       - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
       - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
-    row_count: 9
+    row_count: 6
 
   - description: getFunctions_partial_filter_with_wildcard_characters_returns_matching_functions
     db: integration_test
@@ -149,31 +137,10 @@ tests:
           length of string in bits, null, 1, 'YES', BIT_LENGTH]
       - [def, null, BIT_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
           length of string in bits, null, 1, 'YES', BIT_LENGTH]
-      - [def, null, CAST, arg1, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 1, 'YES',
-        CAST]
-      - [def, null, CAST, arg2, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 2, 'YES',
-        CAST]
-      - [def, null, CAST, arg3, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 3, 'YES',
-        CAST]
-      - [def, null, CAST, arg4, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 4, 'YES',
-        CAST]
-      - [def, null, CAST, argReturn, 4, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 4, 'YES',
-        CAST]
       - [def, null, CHAR_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
           length of string, null, 1, 'YES', CHAR_LENGTH]
       - [def, null, CHAR_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
           length of string, null, 1, 'YES', CHAR_LENGTH]
-      - [def, null, COALESCE, arg1, 1, 1111, any, null, 0, null, 0, 1, 'returns
-          the first non-null value in the list, or null if there are no non-null values.',
-        null, 1, 'YES', COALESCE]
-      - [def, null, COALESCE, argReturn, 4, 1111, any, null, 0, null, 0, 1,
-        'returns the first non-null value in the list, or null if there are no non-null
-          values.', null, 1, 'YES', COALESCE]
       - [def, null, CURRENT_TIMESTAMP, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns
           the current date and time., null, 0, 'YES', CURRENT_TIMESTAMP]
       - [def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
@@ -191,15 +158,6 @@ tests:
       - [def, null, LOWER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
           the provided string with all characters changed to lowercase., null, 1,
         'YES', LOWER]
-      - [def, null, NULLIF, arg1, 1, 1111, any, null, 0, null, 0, 1, 'returns
-          null if the two arguments are equal, and the first argument otherwise.',
-        null, 1, 'YES', NULLIF]
-      - [def, null, NULLIF, arg2, 1, 1111, any, null, 0, null, 0, 1, 'returns
-          null if the two arguments are equal, and the first argument otherwise.',
-        null, 2, 'YES', NULLIF]
-      - [def, null, NULLIF, argReturn, 4, 0, 'null', null, 0, null, 0, 1, 'returns
-          null if the two arguments are equal, and the first argument otherwise.',
-        null, 2, 'YES', NULLIF]
       - [def, null, OCTET_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
           length of string in bytes, null, 1, 'YES', OCTET_LENGTH]
       - [def, null, OCTET_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
@@ -213,14 +171,6 @@ tests:
       - [def, null, POSITION, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the
           position of the first occurrence of substring substr in string str., null,
         2, 'YES', POSITION]
-      - [def, null, SLICE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns a slice
-          of an array., null, 1, 'YES', SLICE]
-      - [def, null, SLICE, arg2, 1, 4, int, 10, 4, null, 2, 1, returns a slice of
-          an array., null, 2, 'YES', SLICE]
-      - [def, null, SLICE, arg3, 1, 4, int, 10, 4, null, 2, 1, returns a slice of
-          an array., null, 3, 'YES', SLICE]
-      - [def, null, SLICE, argReturn, 4, 1111, any, null, 0, null, 0, 1, returns
-          a slice of an array., null, 3, 'YES', SLICE]
       - [def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
           of an array., null, 1, 'YES', SIZE]
       - [def, null, SIZE, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
@@ -265,26 +215,11 @@ tests:
       - [def, null, UPPER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
           the provided string with all characters changed to uppercase., null, 1,
         'YES', UPPER]
-    row_count: 51
+    row_count: 37
   - description: getFunctionColumns partial function and column filters returns matching args
     db: integration_test
     meta_function: [ "getFunctionColumns", "integration_test", null, "%S%", "arg_" ]
     expected_result:
-      - [def, null, CAST, arg1, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 1, 'YES',
-        CAST]
-      - [def, null, CAST, arg2, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 2, 'YES',
-        CAST]
-      - [def, null, CAST, arg3, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 3, 'YES',
-        CAST]
-      - [def, null, CAST, arg4, 1, 1111, any, null, 0, null, 0, 1, converts
-          the provided expression into a value of the specified type., null, 4, 'YES',
-        CAST]
-      - [def, null, COALESCE, arg1, 1, 1111, any, null, 0, null, 0, 1, 'returns
-          the first non-null value in the list, or null if there are no non-null values.',
-        null, 1, 'YES', COALESCE]
       - [def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
           the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP]
       - [def, null, POSITION, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
@@ -293,12 +228,6 @@ tests:
       - [def, null, POSITION, arg2, 1, -1, string, null, 0, null, 0, 1, returns the
           position of the first occurrence of substring substr in string str., null,
         2, 'YES', POSITION]
-      - [def, null, SLICE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns a slice
-          of an array., null, 1, 'YES', SLICE]
-      - [def, null, SLICE, arg2, 1, 4, int, 10, 4, null, 2, 1, returns a slice of
-          an array., null, 2, 'YES', SLICE]
-      - [def, null, SLICE, arg3, 1, 4, int, 10, 4, null, 2, 1, returns a slice of
-          an array., null, 3, 'YES', SLICE]
       - [def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
           of an array., null, 1, 'YES', SIZE]
       - [def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
@@ -311,7 +240,7 @@ tests:
           from a string, null, 2, 'YES', SUBSTRING]
       - [def, null, SUBSTRING, arg3, 1, -5, long, 19, 8, null, 2, 1, takes a substring
           from a string, null, 3, 'YES', SUBSTRING]
-    row_count: 17
+    row_count: 9
 
   - description: getFunctionColumns exact function and column filters returns matching args
     db: integration_test

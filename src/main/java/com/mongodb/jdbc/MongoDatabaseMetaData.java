@@ -135,7 +135,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String FUNC_DEFAULT_CATALOG = "def";
 
     private static final String YES = "YES";
-    private static final String ANY = "any";
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
@@ -189,7 +188,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         info.put(DATA_TYPE, asBsonIntOrNull(bsonTypeInfo.getJdbcType()));
         info.put(
                 TYPE_NAME,
-                new BsonString(bsonTypeInfo == BSON_UNDEFINED ? ANY : bsonTypeInfo.getBsonName()));
+                new BsonString(bsonTypeInfo == BSON_UNDEFINED ? "" : bsonTypeInfo.getBsonName()));
 
         info.put(PRECISION, asBsonIntOrNull(bsonTypeInfo.getPrecision()));
         // Note : LENGTH is only reported in getFunctionColumns and getProcedureColumns and is not flagged as 'may be null'
