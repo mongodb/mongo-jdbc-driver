@@ -1,0 +1,8 @@
+{
+  "bsonType": "object",
+  "properties": {
+    "bar": {
+      "bsonType": ["int"]
+    }
+  }
+}

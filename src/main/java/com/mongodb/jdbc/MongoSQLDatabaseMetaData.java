@@ -526,7 +526,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
     // Helper for ensuring a sqlGetSchema result is a valid collection schema. As in,
     // it has ok: 1, has a jsonSchema, and the jsonSchema is an object schema.
     private boolean isValidSchema(MongoJsonSchemaResult res) {
-        return res.ok == 1 && res.schema.jsonSchema != null && res.schema.jsonSchema.isObject();
+        return res.ok == 1
+                && res.schema.mongoJsonSchema != null
+                && res.schema.mongoJsonSchema.isObject();
     }
 
     // Helper for getting column data for all columns from all tables from a specific
@@ -569,7 +571,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                             MongoJsonSchemaResult res = p.right();
                             AtomicInteger idx = new AtomicInteger();
                             return res.schema
-                                    .jsonSchema
+                                    .mongoJsonSchema
                                     .properties
                                     .entrySet()
                                     .stream()
@@ -594,7 +596,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                     ns.left(),
                                                                     ns.right(),
                                                                     entry.getKey(),
-                                                                    res.schema.jsonSchema,
+                                                                    res.schema.mongoJsonSchema,
                                                                     entry.getValue(),
                                                                     idx.getAndIncrement())));
                         });
@@ -873,7 +875,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             for (String key : keys.keySet()) {
                 docs.add(
                         toGetBestRowIdentifierDoc(
-                                key, r.schema.jsonSchema.properties.get(key).getBsonTypeInfo()));
+                                key,
+                                r.schema.mongoJsonSchema.properties.get(key).getBsonTypeInfo()));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

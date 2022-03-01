@@ -59,6 +59,7 @@ public class IntegrationTestUtils {
             return testEntries;
         }
         processDirectory(folder, tests);
+
         for (Tests testList : tests) {
             testEntries.addAll(testList.tests);
         }

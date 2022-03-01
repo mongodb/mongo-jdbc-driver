@@ -280,7 +280,7 @@ public abstract class MongoSQLMock {
         MongoJsonSchemaResult schemaResult = new MongoJsonSchemaResult();
         schemaResult.ok = 1;
         schemaResult.schema = new MongoVersionedJsonSchema();
-        schemaResult.schema.jsonSchema = generateMongoJsonSchema();
+        schemaResult.schema.mongoJsonSchema = generateMongoJsonSchema();
         return schemaResult;
     }
 }

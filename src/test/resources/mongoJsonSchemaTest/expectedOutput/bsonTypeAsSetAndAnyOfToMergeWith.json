@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "bar": {
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "a": {
+              "bsonType": "string"
+            }
+          },
+          "required": [
+            "a"
+          ]
+        },
+        {
+          "bsonType": "bool"
+        },
+        {
+          "bsonType": "int"
+        },
+        {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "a": {
+              "bsonType": "int"
+            }
+          },
+          "required": [
+            "a"
+          ]
+        },
+        {
+          "bsonType": "string"
+        },
+        {
+          "bsonType": "null"
+        },
+        {
+          "bsonType": "bool",
+          "additionalProperties": true
+        }
+      ]
+    }
+  }
+}
