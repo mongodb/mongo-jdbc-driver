@@ -1,0 +1,57 @@
+{
+  "bsonType": "object",
+  "anyOf": [
+    {"bsonType": "double"},
+    {
+      "bsonType": "date"
+    },
+    {
+      "anyOf": [
+        {"bsonType": "regex"},
+        {
+          "anyOf": [
+            {
+              "bsonType": "symbol"
+            },
+            {
+              "bsonType": "objectId"
+            },
+            {
+              "bsonType": "decimal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "bar": {
+      "anyOf": [
+        {"bsonType": "null"},
+        {
+          "bsonType": "bool",
+          "additionalProperties": false
+        },
+        {
+          "anyOf": [
+            {"bsonType": "int"},
+            {
+              "anyOf": [
+                {
+                  "bsonType": "null"
+                },
+                {
+                  "bsonType": "bool",
+                  "additionalProperties": true
+                },
+                {
+                  "bsonType": "string"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
