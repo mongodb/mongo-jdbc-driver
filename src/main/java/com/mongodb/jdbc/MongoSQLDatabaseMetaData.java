@@ -1089,13 +1089,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         return schema;
     }
 
-    private BsonValue asBsonIntOrNull(Integer value) {
-        if (value == null) {
-            return BsonNull.VALUE;
-        }
-        return new BsonInt32(value);
-    }
-
     @Override
     public ResultSet getTypeInfo() throws SQLException {
         BsonValue n = new BsonNull();
@@ -1836,7 +1829,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        bot.put(FUNCTION_CAT, new BsonString("def"));
+        bot.put(FUNCTION_CAT, new BsonString(FUNC_DEFAULT_CATALOG));
         bot.put(FUNCTION_SCHEM, BsonNull.VALUE);
         bot.put(FUNCTION_NAME, new BsonString(functionName));
         bot.put(REMARKS, new BsonString(remarks));
@@ -1877,7 +1870,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(COLUMN_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(DATA_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(TYPE_NAME, BSON_STRING),
-                        new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT),
+                        new MongoJsonSchema.ScalarProperties(PRECISION, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(LENGTH, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(SCALE, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(RADIX, BSON_INT),
@@ -1895,34 +1888,16 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) {
+            boolean isReturnColumn)
+            throws SQLException {
+
+        Map<String, BsonValue> info =
+                super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         BsonDocument root = new BsonDocument();
         BsonDocument bot = new BsonDocument();
         root.put(BOT_NAME, bot);
-        BsonValue n = BsonNull.VALUE;
         String functionName = func.name;
-        bot.put(FUNCTION_CAT, new BsonString("def"));
-        bot.put(FUNCTION_SCHEM, n);
-        bot.put(FUNCTION_NAME, new BsonString(functionName));
-
-        bot.put(COLUMN_NAME, new BsonString(argName));
-        bot.put(COLUMN_TYPE, new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
-        bot.put(DATA_TYPE, new BsonInt32(typeNum(argType)));
-        bot.put(TYPE_NAME, argType == null ? n : new BsonString(argType));
-
-        bot.put(PRECISION, bsonInt32(typePrec(argType)));
-        bot.put(LENGTH, bsonInt32(typeBytes(argType)));
-        bot.put(SCALE, bsonInt32(typeScale(argType)));
-        bot.put(RADIX, bsonInt32(typeBytes(argType)));
-
-        bot.put(NULLABLE, new BsonInt32(functionNullable));
-        bot.put(REMARKS, new BsonString(func.comment));
-        bot.put(CHAR_OCTET_LENGTH, bsonInt32(typeBytes(argType)));
-
-        bot.put(ORDINAL_POSITION, new BsonInt32(i));
-        bot.put(IS_NULLABLE, new BsonString("YES"));
-
-        bot.put(SPECIFIC_NAME, new BsonString(functionName));
+        bot.putAll(info);
         return root;
     }
 

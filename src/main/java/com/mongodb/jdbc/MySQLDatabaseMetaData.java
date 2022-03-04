@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BsonBoolean;
 import org.bson.BsonInt32;
@@ -1192,28 +1193,14 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             int i,
             String argName,
             String argType,
-            boolean isReturnColumn) {
-        BsonValue n = new BsonNull();
-        String functionName = func.name;
+            boolean isReturnColumn)
+            throws SQLException {
+
+        Map<String, BsonValue> info =
+                super.getFunctionParameterValues(func, i, argName, argType, isReturnColumn);
         MySQLResultDoc doc = new MySQLResultDoc();
         doc.values = new ArrayList<>(17);
-        doc.values.add(new BsonString("def"));
-        doc.values.add(n);
-        doc.values.add(new BsonString(functionName));
-        doc.values.add(new BsonString(argName));
-        doc.values.add(new BsonInt32(isReturnColumn ? functionReturn : functionColumnIn));
-        doc.values.add(bsonInt32(typeNum(argType)));
-        doc.values.add(argType == null ? n : new BsonString(argType));
-        doc.values.add(bsonInt32(typePrec(argType)));
-        doc.values.add(bsonInt32(typeBytes(argType)));
-        doc.values.add(bsonInt32(typeScale(argType)));
-        doc.values.add(bsonInt32(typeRadix(argType)));
-        doc.values.add(new BsonInt32(functionNullable));
-        doc.values.add(new BsonString(func.comment));
-        doc.values.add(bsonInt32(typeBytes(argType)));
-        doc.values.add(new BsonInt32(i));
-        doc.values.add(new BsonString("YES"));
-        doc.values.add(new BsonString(functionName));
+        doc.values.addAll(info.values());
         return doc;
     }
 
@@ -1435,5 +1422,57 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(metaDoc);
         return new MySQLResultSet(null, new MySQLExplicitCursor(docs), true);
+    }
+
+    private enum TypeCase {
+        JDBC_TYPE,
+        PRECISION,
+        SCALE,
+        FIXED_BYTES_LENGTH
+    }
+
+    private String getDataTypeNumCase(String col) {
+        return getTypeCase(col, TypeCase.JDBC_TYPE);
+    }
+
+    private String getDataTypePrecCase(String col) {
+        return getTypeCase(col, TypeCase.PRECISION);
+    }
+
+    private String getDataTypeScaleCase(String col) {
+        return getTypeCase(col, TypeCase.SCALE);
+    }
+
+    private String getDataTypeBytesCase(String col) {
+        return getTypeCase(col, TypeCase.FIXED_BYTES_LENGTH);
+    }
+
+    private String getTypeCase(String col, TypeCase typeCase) {
+        StringBuilder ret = new StringBuilder("case ");
+        ret.append(col);
+        ret.append("\n");
+        for (BsonTypeInfo typeInfo : BsonTypeInfo.values()) {
+            ret.append("when ");
+            ret.append("'");
+            ret.append(typeInfo.getBsonName());
+            ret.append("' then ");
+            switch (typeCase) {
+                case JDBC_TYPE:
+                    ret.append(typeInfo.getJdbcType());
+                    break;
+                case PRECISION:
+                    ret.append(typeInfo.getPrecision());
+                    break;
+                case SCALE:
+                    ret.append(typeInfo.getMaxScale());
+                    break;
+                case FIXED_BYTES_LENGTH:
+                    ret.append(typeInfo.getFixedBytesLength());
+                    break;
+            }
+            ret.append(" \n");
+        }
+        ret.append("end");
+        return ret.toString();
     }
 }

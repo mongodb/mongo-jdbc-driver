@@ -406,9 +406,9 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     void testGetFunctions() throws SQLException {
         // All function(s)
-        testGetFunctionsHelper("%", 19);
+        testGetFunctionsHelper("%", 15);
         // All function(s) with a 'S'
-        testGetFunctionsHelper("%S%", 9);
+        testGetFunctionsHelper("%S%", 6);
         // All function(s) with a 's'
         testGetFunctionsHelper("%s%", 0);
         // The 'SUBSTRING' function(s)
@@ -478,7 +478,7 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
 
     @Test
     void testGetTimeDateFunctions() throws SQLException {
-        final String expectedFunctions = "CURRENT_TIMESTAMP," + "CURRENT_TIMESTAMP," + "EXTRACT";
+        final String expectedFunctions = "CURRENT_TIMESTAMP,EXTRACT";
 
         assertEquals(expectedFunctions, databaseMetaData.getTimeDateFunctions());
     }
