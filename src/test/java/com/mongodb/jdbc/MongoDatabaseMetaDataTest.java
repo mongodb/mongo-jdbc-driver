@@ -408,7 +408,7 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
         // All function(s)
         testGetFunctionsHelper("%", 15);
         // All function(s) with a 'S'
-        testGetFunctionsHelper("%S%", 5);
+        testGetFunctionsHelper("%S%", 6);
         // All function(s) with a 's'
         testGetFunctionsHelper("%s%", 0);
         // The 'SUBSTRING' function(s)
