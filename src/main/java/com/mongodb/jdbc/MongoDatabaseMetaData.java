@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -13,9 +14,6 @@ import org.bson.BsonNull;
 import org.bson.BsonValue;
 
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
-    protected MongoConnection conn;
-    protected String serverVersion;
-
     protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
     protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
     protected static final String PROCEDURE_NAME = "PROCEDURE_NAME";
@@ -128,8 +126,13 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PAGES = "PAGES";
     protected static final String FILTER_CONDITION = "FILTER_CONDITION";
 
+    protected MongoConnection conn;
+    protected String serverVersion;
+    protected MongoLogger logger;
+
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
+        logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getConnectionId());
     }
 
     public static String escapeString(String value) {

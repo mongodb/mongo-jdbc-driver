@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import org.bson.BsonType;
@@ -17,7 +16,8 @@ import org.bson.types.Decimal128;
 public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    public MySQLResultSet(
+            MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);

@@ -19,6 +19,7 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.ClientInfoStatus;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -58,6 +60,8 @@ public class MongoDriver implements Driver {
     // database is the database to switch to.
     static final String DATABASE = "database";
     static final String DIALECT = "dialect";
+    static final String LOG_LEVEL = "LogLevel";
+    static final String LOG_DIR = "LogDir";
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
     static final String NAME;
@@ -133,10 +137,21 @@ public class MongoDriver implements Driver {
             throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
         String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
+        Level logLevel = Level.parse(info.getProperty(LOG_LEVEL, Level.OFF.getName()));
+        String logDirVal = info.getProperty(LOG_DIR);
+        File logDir = (logDirVal == null) ? null : new File(logDirVal);
+        if (logDir != null && !logDir.isDirectory()) {
+            throw new SQLException(
+                    "Invalid " + LOG_DIR + " property value. It must be a directory.");
+        }
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
                 return new MySQLConnection(
-                        cs, info.getProperty(DATABASE), info.getProperty(CONVERSION_MODE));
+                        cs,
+                        info.getProperty(DATABASE),
+                        info.getProperty(CONVERSION_MODE),
+                        logLevel,
+                        logDir);
             case MONGOSQL_DIALECT:
                 if (info.containsKey(CONVERSION_MODE)) {
                     throw new SQLClientInfoException(
@@ -146,7 +161,7 @@ public class MongoDriver implements Driver {
                             Collections.singletonMap(
                                     CONVERSION_MODE, ClientInfoStatus.REASON_VALUE_INVALID));
                 }
-                return new MongoSQLConnection(cs, info.getProperty(DATABASE));
+                return new MongoSQLConnection(cs, info.getProperty(DATABASE), logLevel, logDir);
             default:
                 throw new SQLClientInfoException(
                         String.format("invalid dialect '%s'", dialect),

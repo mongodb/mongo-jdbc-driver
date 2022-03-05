@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import org.bson.BsonDocument;
@@ -20,7 +19,7 @@ import org.bson.types.Decimal128;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
     public MongoSQLResultSet(
-            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
         super(statement);
         Preconditions.checkNotNull(cursor);

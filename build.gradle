@@ -11,6 +11,7 @@ ext {
     gitLastComment = getGitLastComment()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
+    aspectjVersion = '1.9.7'
 }
 
 spotless {
@@ -51,22 +52,50 @@ allprojects {
         mavenCentral()
     }
 
+    configurations {
+        ajc
+        aspects
+        compile {
+            extendsFrom aspects
+        }
+    }
+
     dependencies {
         // MongoDB
+        ajc "org.aspectj:aspectjtools:$aspectjVersion"
+        implementation "org.aspectj:aspectjrt:$aspectjVersion"
         implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
         implementation group: 'org.mongodb', name: 'mongodb-driver-core', version: mongodbDriverVersion
         implementation group: 'org.mongodb', name: 'mongodb-driver', version: mongodbDriverVersion
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
+        ajc "org.aspectj:aspectjtools:$aspectjVersion"
         testCompile group: 'junit', name: 'junit', version: junitVersion
-
-
 
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
         testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
         testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+    }
+
+    ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.VERBOSE
+
+    compileJava {
+        doLast {
+            ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+                    classpath: configurations.ajc.asPath)
+
+            ant.iajc(
+                    maxmem: "1024m", fork: "true", Xlint: "ignore",
+                    destDir: project.sourceSets.main.output.classesDirs[0].absolutePath,
+                    sourceroots: project.sourceSets.main.java.srcDirs[0].absolutePath,
+                    classpath: project.sourceSets.main.runtimeClasspath.asPath,
+                    source: project.sourceCompatibility,
+                    target: project.targetCompatibility,
+                    showWeaveInfo: true
+            )
+        }
     }
 
     test {

@@ -6,6 +6,9 @@ import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.MongoLoggerUtils;
+import java.io.File;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -31,6 +34,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
@@ -41,9 +46,17 @@ public abstract class MongoConnection implements Connection {
     protected String url;
     protected String user;
     protected boolean isClosed;
+    protected MongoLogger logger;
+    protected int connectionId;
+    private static AtomicInteger connectionCounter = new AtomicInteger();
+    private AtomicInteger stmtCounter = new AtomicInteger();
 
-    public MongoConnection(ConnectionString cs, String database) {
+    public MongoConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
         Preconditions.checkNotNull(cs);
+        this.connectionId = connectionCounter.incrementAndGet();
+        // Initializes a parent logger for the connection
+        MongoLoggerUtils.initConnectionLogger(connectionId, logLevel, logDir);
+        this.logger = new MongoLogger(this.getClass().getCanonicalName(), connectionId);
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
@@ -66,8 +79,16 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
+    protected int getConnectionId() {
+        return connectionId;
+    }
+
+    protected int getNextStatementId() {
+        return stmtCounter.incrementAndGet();
+    }
+
     protected void checkConnection() throws SQLException {
-        if (isClosed()) {
+        if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
     }
@@ -375,7 +396,7 @@ public abstract class MongoConnection implements Connection {
             throw new SQLException("Input is invalid.");
         }
 
-        if (isClosed()) {
+        if (isClosed) {
             return false;
         }
         // We use createStatement to test the connection. Since we are not allowed

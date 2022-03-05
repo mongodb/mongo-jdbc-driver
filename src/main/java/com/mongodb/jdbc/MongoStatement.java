@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
@@ -19,10 +20,16 @@ public abstract class MongoStatement<T> implements Statement {
     protected int fetchSize = 0;
     protected int maxQuerySec = 0;
     protected String currentDBName;
+    protected MongoLogger logger;
+    protected int statementId;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
         Preconditions.checkNotNull(databaseName);
+        this.statementId = conn.getNextStatementId();
+        logger =
+                new MongoLogger(
+                        this.getClass().getCanonicalName(), conn.getConnectionId(), statementId);
         this.conn = conn;
         currentDBName = databaseName;
 
@@ -31,6 +38,14 @@ public abstract class MongoStatement<T> implements Statement {
         } catch (IllegalArgumentException e) {
             throw new SQLException("Database name %s is invalid", databaseName);
         }
+    }
+
+    protected int getConnectionId() {
+        return conn.getConnectionId();
+    }
+
+    protected int getStatementId() {
+        return statementId;
     }
 
     protected BsonDocument constructQueryDocument(
@@ -46,7 +61,7 @@ public abstract class MongoStatement<T> implements Statement {
     }
 
     protected void checkClosed() throws SQLException {
-        if (isClosed()) {
+        if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
     }

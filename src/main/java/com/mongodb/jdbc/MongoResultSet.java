@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -68,13 +69,18 @@ public abstract class MongoResultSet<T> implements ResultSet {
     protected int rowNum = 0;
 
     protected boolean closed = false;
-    protected Statement statement;
+    protected MongoStatement statement;
     protected boolean wasNull = false;
     protected MongoResultSetMetaData rsMetaData;
+    protected MongoLogger logger;
 
-    public MongoResultSet(Statement statement) {
+    public MongoResultSet(MongoStatement statement) {
         this.statement = statement;
-
+        this.logger =
+                new MongoLogger(
+                        this.getClass().getCanonicalName(),
+                        statement.getConnectionId(),
+                        statement.getStatementId());
         // dateFormat is not thread safe, so we do not want to make it a static field.
         TimeZone UTC = TimeZone.getTimeZone("UTC");
         dateFormat.setTimeZone(UTC);
