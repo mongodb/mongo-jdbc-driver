@@ -75,8 +75,13 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     };
 
-    public MongoSQLResultSetMetaData(MongoJsonSchema schema, boolean sortFieldsAlphabetically)
+    public MongoSQLResultSetMetaData(
+            MongoJsonSchema schema,
+            boolean sortFieldsAlphabetically,
+            int connectionId,
+            Integer statementId)
             throws SQLException {
+        super(connectionId, statementId);
         assertDatasourceSchema(schema);
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();

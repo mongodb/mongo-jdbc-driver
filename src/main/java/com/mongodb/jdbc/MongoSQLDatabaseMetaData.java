@@ -187,7 +187,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(PROCEDURE_TYPE, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(SPECIFIC_NAME, BSON_STRING));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(IS_NULLABLE, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(SPECIFIC_NAME, BSON_STRING));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -237,7 +237,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), new BsonExplicitCursor(docs), botSchema);
     }
 
     // Helper for getting a stream of all database names.
@@ -371,7 +371,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     @Override
@@ -381,7 +381,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(TABLE_SCHEM, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(TABLE_CATALOG, BSON_STRING, false));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -400,7 +400,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                                                 TABLE_CAT, new BsonString(dbName))))
                                 .collect(Collectors.toList()));
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     /**
@@ -673,7 +673,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     @Override
@@ -731,7 +731,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     @Override
@@ -778,7 +778,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     private Stream<BsonDocument> getFirstUniqueIndexDocsForTable(
@@ -846,7 +846,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             List<BsonDocument> docsList = docs.collect(Collectors.toList());
             BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-            return new MongoSQLResultSet(null, c, botSchema);
+            return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -938,7 +938,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(DECIMAL_DIGITS, BSON_INT, false),
                         new MongoJsonSchema.ScalarProperties(PSEUDO_COLUMN, BSON_INT));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -961,7 +961,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(PK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(DEFERRABILITY, BSON_INT));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -984,7 +984,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(PK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(DEFERRABILITY, BSON_INT));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -1013,7 +1013,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(PK_NAME, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(DEFERRABILITY, BSON_INT));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     // Helper for getting the rows for the getPrimaryKeys result set. Given a (dbName, tableName)
@@ -1597,7 +1597,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), new BsonExplicitCursor(docs), botSchema);
     }
 
     // Helper for creating stream of bson documents from the columns in the indexInfo doc.
@@ -1706,7 +1706,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         List<BsonDocument> docsList = docs.sorted().collect(Collectors.toList());
         BsonExplicitCursor c = new BsonExplicitCursor(docsList);
 
-        return new MongoSQLResultSet(null, c, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), c, botSchema);
     }
 
     @Override
@@ -1723,7 +1723,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(REMARKS, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(BASE_TYPE, BSON_INT, false));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -1738,7 +1738,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(SUPERTYPE_SCHEM, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(SUPERTYPE_NAME, BSON_STRING));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -1751,7 +1751,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(TABLE_NAME, BSON_STRING),
                         new MongoJsonSchema.ScalarProperties(SUPERTABLE_NAME, BSON_STRING));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     @Override
@@ -1785,7 +1785,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(SCOPE_TABLE, BSON_STRING, false),
                         new MongoJsonSchema.ScalarProperties(SOURCE_DATA_TYPE, BSON_INT, false));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -1809,7 +1809,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         // All fields in this result set are nested under the bottom namespace.
         MongoJsonSchema botSchema = MongoJsonSchema.createEmptyObjectSchema();
         botSchema.properties.put(BOT_NAME, schema);
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 
     private MongoJsonSchema getFunctionJsonSchema() {
@@ -1857,7 +1857,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             docs.add(doc);
         }
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(conn.getConnectionId(), new BsonExplicitCursor(docs), schema);
     }
 
     private MongoJsonSchema getFunctionColumnJsonSchema() {
@@ -1946,7 +1946,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
             }
         }
 
-        return new MongoSQLResultSet(null, new BsonExplicitCursor(docs), schema);
+        return new MongoSQLResultSet(conn.getConnectionId(), new BsonExplicitCursor(docs), schema);
     }
 
     //--------------------------JDBC 4.1 -----------------------------
@@ -1969,6 +1969,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new MongoJsonSchema.ScalarProperties(CHAR_OCTET_LENGTH, BSON_INT),
                         new MongoJsonSchema.ScalarProperties(IS_NULLABLE, BSON_STRING));
 
-        return new MongoSQLResultSet(null, BsonExplicitCursor.EMPTY_CURSOR, botSchema);
+        return new MongoSQLResultSet(conn.getConnectionId(), BsonExplicitCursor.EMPTY_CURSOR, botSchema);
     }
 }

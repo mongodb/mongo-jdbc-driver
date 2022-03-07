@@ -18,16 +18,52 @@ import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+
+
+    /**
+     * Constructor for a MongoSQLResultSet not tied to a statement used for MongoSQLDatabaseMetaData.
+     * @param connectionId The connection id this resultset is related to.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
     public MongoSQLResultSet(
-            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
-            throws SQLException {
+            int connectionId, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)  throws SQLException {
+        super(connectionId);
+        setUpResultset(cursor, schema);
+        this.rsMetaData =
+                new MongoSQLResultSetMetaData(
+                        schema,
+                        false,
+                        connectionId,
+                        null);
+    }
+
+    /**
+     * Constructor for a MongoSQLResultset tied to a connection and statement.
+     * @param statement The statement this resultset is related to.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
+    public MongoSQLResultSet(
+            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)  throws SQLException {
         super(statement);
+        setUpResultset(cursor, schema);
+        this.rsMetaData =
+                new MongoSQLResultSetMetaData(
+                        schema,
+                        true,
+                        statement.getConnectionId(),
+                        statement.getStatementId());
+    }
+
+    private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)   throws SQLException {
         Preconditions.checkNotNull(cursor);
 
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
         // The JDBC specification provides the order for each database metadata result set.
         // Because a lot BI tools will access database metadata columns by index, the specification order must be respected.
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement != null);
         this.cursor = cursor;
     }
 

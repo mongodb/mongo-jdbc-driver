@@ -12,7 +12,7 @@ public class MongoLoggerUtils {
     private static ConcurrentHashMap<Integer, Logger> loggerPerConnection =
             new ConcurrentHashMap<>();
 
-    public static void initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
+    public static Logger initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
         Logger parentConnectionLogger = loggerPerConnection.get(connection_id);
         if (null != parentConnectionLogger) {
             // There is already a parent connection logger, there is a problem
@@ -46,6 +46,7 @@ public class MongoLoggerUtils {
                 // Can't log the error since it can't open the log file
                 e.printStackTrace();
             }
+            return logger;
         }
     }
 
@@ -64,7 +65,7 @@ public class MongoLoggerUtils {
         Logger logger = Logger.getLogger(loggername);
         Logger parentConnectionLogger = loggerPerConnection.get(connection_id);
         if (null == parentConnectionLogger) {
-            initConnectionLogger(connection_id, null, null);
+            parentConnectionLogger = initConnectionLogger(connection_id, null, null);
         }
         logger.setParent(parentConnectionLogger);
 

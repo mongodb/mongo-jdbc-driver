@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -27,8 +28,14 @@ import java.util.Calendar;
 public class MongoPreparedStatement implements PreparedStatement {
     private String sql;
     private MongoStatement statement;
+    protected MongoLogger logger;
 
     public MongoPreparedStatement(String sql, MongoStatement statement) throws SQLException {
+        this.logger =
+                new MongoLogger(
+                        this.getClass().getCanonicalName(),
+                        statement.getConnectionId(),
+                        statement.getStatementId());
         this.sql = sql;
         this.statement = statement;
     }

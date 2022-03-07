@@ -16,14 +16,44 @@ import org.bson.types.Decimal128;
 public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(
-            MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    /**
+     * Constructor for a resultset tied to a statement.
+     * @param statement The statement related to this resultset.
+     * @param cursor The resultset cursor.
+     * @param relaxed Flag for the relaxed mode.
+     * @throws SQLException
+     */
+    public MySQLResultSet(MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
         super(statement);
-        Preconditions.checkNotNull(cursor);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MySQLResultSetMetaData(metadataDoc);
+        rsMetaData =
+                new MySQLResultSetMetaData(
+                        metadataDoc, statement.getConnectionId(), statement.getStatementId());
+
+    }
+    /***
+     * Constructor for a resultset not tied to a statement for DatabaseMetadata resultsets.
+     * @param connectionId  The id of the connection tied to this resultset.
+     * @param cursor The resultset cursor.
+     * @param relaxed Flag for the relaxed mode.
+     * @throws SQLException
+     */
+    public MySQLResultSet(int connectionId, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
+        super(connectionId);
+        setupResultset(cursor, relaxed);
+        // iterate the cursor to get the metadata doc
+        MySQLResultDoc metadataDoc = cursor.next();
+        rsMetaData =
+                new MySQLResultSetMetaData(
+                        metadataDoc, statement.getConnectionId(), null);
+    }
+
+    private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed) throws SQLException {
+        Preconditions.checkNotNull(cursor);
+
         this.cursor = cursor;
         this.relaxed = relaxed;
     }

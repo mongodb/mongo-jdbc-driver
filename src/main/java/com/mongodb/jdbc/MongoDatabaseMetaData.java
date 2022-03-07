@@ -1,8 +1,8 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_UNDEFINED;
 
 import com.mongodb.jdbc.logging.MongoLogger;
-import static com.mongodb.jdbc.BsonTypeInfo.BSON_UNDEFINED;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -129,7 +129,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String CARDINALITY = "CARDINALITY";
     protected static final String PAGES = "PAGES";
     protected static final String FILTER_CONDITION = "FILTER_CONDITION";
-
 
     protected MongoConnection conn;
     protected String serverVersion;
