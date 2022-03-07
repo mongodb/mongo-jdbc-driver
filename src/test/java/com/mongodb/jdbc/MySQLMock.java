@@ -12,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 import org.mockito.InjectMocks;
@@ -27,7 +28,7 @@ public abstract class MySQLMock {
     @Mock protected static MongoCursor<MySQLResultDoc> mongoCursor;
 
     @InjectMocks
-    protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null);
+    protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null, null, null);
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {

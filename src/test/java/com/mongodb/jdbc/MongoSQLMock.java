@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import org.bson.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -57,7 +58,7 @@ public abstract class MongoSQLMock {
     @Mock protected static MongoCursor<BsonDocument> mongoCursor;
 
     @InjectMocks
-    protected static MongoConnection mongoConnection = new MongoSQLConnection(uri, database);
+    protected static MongoConnection mongoConnection = new MongoSQLConnection(uri, database, null, null);
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {
