@@ -1,16 +1,20 @@
 package com.mongodb.jdbc;
 
+
 import com.mongodb.jdbc.logging.MongoLogger;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_UNDEFINED;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
@@ -126,9 +130,14 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PAGES = "PAGES";
     protected static final String FILTER_CONDITION = "FILTER_CONDITION";
 
+
     protected MongoConnection conn;
     protected String serverVersion;
     protected MongoLogger logger;
+
+    protected static final String FUNC_DEFAULT_CATALOG = "def";
+
+    private static final String YES = "YES";
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
@@ -150,6 +159,59 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     // since this value is used to set limits on literals and field names.
     // This is arbitrary and conservative.
     static final int APPROXIMATE_DOC_SIZE = 16777000;
+
+    /**
+     * Returns information for a given function argument.
+     *
+     * @param func The function name.
+     * @param i The parameter index.
+     * @param argName The parameter name.
+     * @param argType The parameter type.
+     * @param isReturnColumn Is the parameter a return parameter.
+     * @return the information for the given parameter.
+     */
+    protected Map<String, BsonValue> getFunctionParameterValues(
+            MongoFunctions.MongoFunction func,
+            int i,
+            String argName,
+            String argType,
+            boolean isReturnColumn)
+            throws SQLException {
+        Map<String, BsonValue> info =
+                new LinkedHashMap<
+                        String,
+                        BsonValue>(); // Using a LinkedHashMap to conserve the insertion order
+        BsonTypeInfo bsonTypeInfo =
+                argType == null ? BSON_UNDEFINED : BsonTypeInfo.getBsonTypeInfoByName(argType);
+        info.put(FUNCTION_CAT, new BsonString(FUNC_DEFAULT_CATALOG));
+        info.put(FUNCTION_SCHEM, BsonNull.VALUE);
+        info.put(FUNCTION_NAME, new BsonString(func.name));
+
+        info.put(COLUMN_NAME, new BsonString(argName));
+        info.put(COLUMN_TYPE, asBsonIntOrNull(isReturnColumn ? functionReturn : functionColumnIn));
+        info.put(DATA_TYPE, asBsonIntOrNull(bsonTypeInfo.getJdbcType()));
+        info.put(
+                TYPE_NAME,
+                new BsonString(bsonTypeInfo == BSON_UNDEFINED ? "" : bsonTypeInfo.getBsonName()));
+
+        info.put(PRECISION, asBsonIntOrNull(bsonTypeInfo.getPrecision()));
+        // Note : LENGTH is only reported in getFunctionColumns and getProcedureColumns and is not flagged as 'may be null'
+        // so for unknown length we are defaulting to 0.
+        info.put(LENGTH, asBsonIntOrDefault(bsonTypeInfo.getFixedBytesLength(), 0));
+        info.put(SCALE, asBsonIntOrNull(bsonTypeInfo.getDecimalDigits()));
+        info.put(RADIX, new BsonInt32(bsonTypeInfo.getNumPrecRadix()));
+
+        info.put(NULLABLE, new BsonInt32(functionNullable));
+        info.put(REMARKS, new BsonString(func.comment));
+        info.put(CHAR_OCTET_LENGTH, asBsonIntOrNull(bsonTypeInfo.getCharOctetLength()));
+
+        info.put(ORDINAL_POSITION, new BsonInt32(i));
+        info.put(IS_NULLABLE, new BsonString(YES));
+
+        info.put(SPECIFIC_NAME, new BsonString(func.name));
+
+        return info;
+    }
 
     //----------------------------------------------------------------------
     // First, a variety of minor information about the target database.
@@ -771,188 +833,6 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-    public static String[] typeNames =
-            new String[] {
-                "null",
-                "document",
-                "binData",
-                "numeric",
-                "string",
-                // Keep this for now or Tableau cannot figure out the types properly.
-                "varchar",
-                "long",
-                // Keep this for now or Tableau cannot figure out the types properly.
-                "bigint",
-                "tinyint",
-                "int",
-                "datetime",
-                "date",
-                "double",
-                "decimal",
-            };
-
-    public static final HashMap<String, Integer> typeNums = new HashMap<>();
-    public static final HashMap<String, Integer> typePrecs = new HashMap<>();
-    public static final HashMap<String, Integer> typeScales = new HashMap<>();
-    public static final HashMap<String, Integer> typeBytes = new HashMap<>();
-
-    static {
-        for (String name : typeNames) {
-            typeNums.put(name, typeNum(name));
-            typePrecs.put(name, typePrec(name));
-            typeScales.put(name, typeScale(name));
-            typeBytes.put(name, typeBytes(name));
-        }
-    }
-
-    public static int typeNum(String typeName) {
-        if (typeName == null) {
-            return Types.NULL;
-        }
-        switch (typeName) {
-            case "null":
-                return Types.NULL;
-            case "bool":
-                return Types.BIT;
-            case "document":
-                return Types.NULL;
-            case "binData":
-                return Types.BINARY;
-            case "numeric":
-                return Types.NUMERIC;
-            case "string":
-            case "varchar":
-                return Types.LONGVARCHAR;
-            case "long":
-            case "int":
-            case "bigint":
-            case "tinyint":
-                return Types.INTEGER;
-            case "date":
-            case "datetime":
-                return Types.TIMESTAMP;
-            case "double":
-                return Types.DOUBLE;
-            case "decimal":
-                return Types.DECIMAL;
-        }
-        return 0;
-    }
-
-    public static Integer typePrec(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 34;
-            case "double":
-                return 15;
-            case "long":
-            case "bigint":
-                return 19;
-            case "int":
-                return 10;
-            case "decimal":
-                return 34;
-        }
-        return 0;
-    }
-
-    public static Integer typeScale(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 34;
-            case "double":
-                return 15;
-            case "decimal":
-                return 34;
-        }
-        return 0;
-    }
-
-    public static Integer typeBytes(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 16;
-            case "double":
-                return 8;
-            case "long":
-            case "bigint":
-            case "date":
-            case "datatime":
-                return 8;
-            case "int":
-                return 4;
-            case "decimal":
-                return 16;
-            case "tinyint":
-            case "bool":
-                return 1;
-        }
-        return 0;
-    }
-
-    public static Integer typeRadix(String typeName) {
-        if (typeName == null) {
-            return 0;
-        }
-        switch (typeName) {
-            case "numeric":
-                return 10;
-            case "double":
-                return 2;
-            case "long":
-            case "bigint":
-                return 2;
-            case "int":
-                return 2;
-            case "decimal":
-                return 10;
-        }
-        return 0;
-    }
-
-    protected String getTypeCase(String col, HashMap<String, Integer> outs) {
-        StringBuilder ret = new StringBuilder("case ");
-        ret.append(col);
-        ret.append("\n");
-        for (String name : typeNames) {
-            Integer out = outs.get(name);
-            String range = out == null ? "NULL" : out.toString();
-            ret.append("when ");
-            ret.append("'");
-            ret.append(name);
-            ret.append("' then ");
-            ret.append(range);
-            ret.append(" \n");
-        }
-        ret.append("end");
-        return ret.toString();
-    }
-
-    protected String getDataTypeNumCase(String col) {
-        return getTypeCase(col, typeNums);
-    }
-
-    protected String getDataTypePrecCase(String col) {
-        return getTypeCase(col, typePrecs);
-    }
-
-    protected String getDataTypeScaleCase(String col) {
-        return getTypeCase(col, typeScales);
-    }
-
-    protected String getDataTypeBytesCase(String col) {
-        return getTypeCase(col, typeBytes);
-    }
-
     //--------------------------JDBC 2.0-----------------------------
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
@@ -1120,9 +1000,13 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
         return false;
     }
 
-    protected BsonValue bsonInt32(Integer i) {
+    protected BsonValue asBsonIntOrNull(Integer i) {
+        return asBsonIntOrDefault(i, null);
+    }
+
+    protected BsonValue asBsonIntOrDefault(Integer i, Integer defaultVal) {
         if (i == null) {
-            return new BsonNull();
+            return defaultVal == null ? new BsonNull() : new BsonInt32(defaultVal);
         }
         return new BsonInt32(i);
     }
