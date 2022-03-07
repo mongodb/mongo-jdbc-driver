@@ -19,46 +19,43 @@ import org.bson.types.Decimal128;
 
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
 
-
     /**
-     * Constructor for a MongoSQLResultSet not tied to a statement used for MongoSQLDatabaseMetaData.
+     * Constructor for a MongoSQLResultSet not tied to a statement used for
+     * MongoSQLDatabaseMetaData.
+     *
      * @param connectionId The connection id this resultset is related to.
      * @param cursor The resultset cursor.
      * @param schema The resultset schema.
      * @throws SQLException
      */
     public MongoSQLResultSet(
-            int connectionId, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)  throws SQLException {
+            int connectionId, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         super(connectionId);
         setUpResultset(cursor, schema);
-        this.rsMetaData =
-                new MongoSQLResultSetMetaData(
-                        schema,
-                        false,
-                        connectionId,
-                        null);
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, false, connectionId, null);
     }
 
     /**
      * Constructor for a MongoSQLResultset tied to a connection and statement.
+     *
      * @param statement The statement this resultset is related to.
      * @param cursor The resultset cursor.
      * @param schema The resultset schema.
      * @throws SQLException
      */
     public MongoSQLResultSet(
-            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)  throws SQLException {
+            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         super(statement);
         setUpResultset(cursor, schema);
         this.rsMetaData =
                 new MongoSQLResultSetMetaData(
-                        schema,
-                        true,
-                        statement.getConnectionId(),
-                        statement.getStatementId());
+                        schema, true, statement.getConnectionId(), statement.getStatementId());
     }
 
-    private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)   throws SQLException {
+    private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         Preconditions.checkNotNull(cursor);
 
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.

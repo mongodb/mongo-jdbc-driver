@@ -18,12 +18,14 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
 
     /**
      * Constructor for a resultset tied to a statement.
+     *
      * @param statement The statement related to this resultset.
      * @param cursor The resultset cursor.
      * @param relaxed Flag for the relaxed mode.
      * @throws SQLException
      */
-    public MySQLResultSet(MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    public MySQLResultSet(
+            MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
         super(statement);
         // iterate the cursor to get the metadata doc
@@ -31,11 +33,11 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
         rsMetaData =
                 new MySQLResultSetMetaData(
                         metadataDoc, statement.getConnectionId(), statement.getStatementId());
-
     }
-    /***
-     * Constructor for a resultset not tied to a statement for DatabaseMetadata resultsets.
-     * @param connectionId  The id of the connection tied to this resultset.
+    /**
+     * * Constructor for a resultset not tied to a statement for DatabaseMetadata resultsets.
+     *
+     * @param connectionId The id of the connection tied to this resultset.
      * @param cursor The resultset cursor.
      * @param relaxed Flag for the relaxed mode.
      * @throws SQLException
@@ -46,12 +48,11 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
         setupResultset(cursor, relaxed);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
-        rsMetaData =
-                new MySQLResultSetMetaData(
-                        metadataDoc, statement.getConnectionId(), null);
+        rsMetaData = new MySQLResultSetMetaData(metadataDoc, statement.getConnectionId(), null);
     }
 
-    private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed) throws SQLException {
+    private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
         Preconditions.checkNotNull(cursor);
 
         this.cursor = cursor;

@@ -79,6 +79,7 @@ public abstract class MongoResultSet<T> implements ResultSet {
 
     /**
      * Constructor for a statement bound resultset.
+     *
      * @param statement The statement this resulset is related to.
      */
     public MongoResultSet(MongoStatement statement) {
@@ -95,12 +96,11 @@ public abstract class MongoResultSet<T> implements ResultSet {
 
     /**
      * Constructor for a resultset not bound to a statement used for DatabaseMetadataResultset.
+     *
      * @param connectionId The connection id.
      */
     public MongoResultSet(int connectionId) {
-        this.logger = new MongoLogger(
-                this.getClass().getCanonicalName(),
-                connectionId);
+        this.logger = new MongoLogger(this.getClass().getCanonicalName(), connectionId);
         // dateFormat is not thread safe, so we do not want to make it a static field.
         dateFormat.setTimeZone(UTC);
     }

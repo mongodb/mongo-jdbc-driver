@@ -17,12 +17,15 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
      * Constructor.
      *
      * @param connectionId The connection id for the logger.
-     * @param statementId The statement id for the logger or null if this resultset is not tied to a statement.
+     * @param statementId The statement id for the logger or null if this resultset is not tied to a
+     *     statement.
      */
     public MongoResultSetMetaData(int connectionId, Integer statementId) {
-        this.logger = (statementId == null) ?
-                new MongoLogger(this.getClass().getCanonicalName(), connectionId) :
-                new MongoLogger(this.getClass().getCanonicalName(), connectionId, statementId);
+        this.logger =
+                (statementId == null)
+                        ? new MongoLogger(this.getClass().getCanonicalName(), connectionId)
+                        : new MongoLogger(
+                                this.getClass().getCanonicalName(), connectionId, statementId);
     }
 
     protected void checkBounds(int i) throws SQLException {
