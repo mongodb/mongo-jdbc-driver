@@ -59,8 +59,7 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
             {
                 b.append("()");
             }
-
-            logger.getLogger().logp(Level.FINER,sourceName, null,  b.toString());
+            logger.getLogger().logp(Level.FINER, sourceName, null, b.toString());
         }
     }
 

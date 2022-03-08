@@ -2,6 +2,8 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+import com.mongodb.ConnectionString;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class MongoDatabaseMetaDataTest {
+    protected static final ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
+    protected static final String database = "mock";
+
     protected DatabaseMetaData databaseMetaData;
 
     protected abstract DatabaseMetaData createDatabaseMetaData();
@@ -311,7 +316,7 @@ abstract class MongoDatabaseMetaDataTest {
 class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
-        return new MySQLDatabaseMetaData(null);
+        return new MySQLDatabaseMetaData(new MySQLConnection(uri, database, null, null, null));
     }
 
     @Test
@@ -383,7 +388,7 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
 class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
-        return new MongoSQLDatabaseMetaData(null);
+        return new MongoSQLDatabaseMetaData(new MongoSQLConnection(uri, database, null, null));
     }
 
     @Test

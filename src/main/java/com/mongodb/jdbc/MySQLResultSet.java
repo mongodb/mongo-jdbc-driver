@@ -48,7 +48,7 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
         setupResultset(cursor, relaxed);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MySQLResultSetMetaData(metadataDoc, statement.getConnectionId(), null);
+        rsMetaData = new MySQLResultSetMetaData(metadataDoc, connectionId, null);
     }
 
     private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
