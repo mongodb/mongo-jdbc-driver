@@ -24,7 +24,7 @@ if [[ -z $ARG ]]; then
   exit 0
 fi
 
-GO_VERSION="go1.16"
+GO_VERSION="go1.17"
 if [ -d "/opt/golang/$GO_VERSION" ]; then
   GOROOT="/opt/golang/$GO_VERSION"
   GOBINDIR="$GOROOT"/bin
@@ -178,6 +178,7 @@ check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOHOUSED"
+    go version
 
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
         if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
