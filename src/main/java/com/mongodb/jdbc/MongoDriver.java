@@ -99,18 +99,50 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
+        Pair<MongoConnection, Integer> p = createUnvalidatedConnectionAndTimeout(url, info);
+        Connection conn = p.left();
+        conn.isValid(p.right());
+        return conn;
+    }
+
+    public MongoConnection createUnvalidatedConnection(String url, Properties info)
+        throws SQLException {
+        return createUnvalidatedConnectionAndTimeout(url, info).left();
+    }
+
+    private Pair<MongoConnection, Integer> createUnvalidatedConnectionAndTimeout(String url, Properties info)
+        throws SQLException {
         if (!acceptsURL(url)) {
             return null;
         }
         if (info == null) {
             info = new Properties();
         }
+
         // reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionString(url, info);
+        // ensure that the ConnectionString and Properties are consistent.
+        reconcileProperties(p.right(), info);
+
+        ConnectionString cs = p.left();
+        Connection ret = createDialectConnection(cs, info);
+        System.out.println(cs);
+        // use a timeout of 5s if no timeout is specified in the URL.
+        int timeout = 5;
+        try {
+            timeout = cs.getConnectTimeout();
+        } catch (NullPointerException e) {
+            // timeout not specified.
+            // this is an unfortunate reality of the Java driver, it throws NPE if
+            // the option is not specified.
+        }
+        return new Pair<>(createDialectConnection(cs, info), timeout);
+    }
+
+    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
-        DriverPropertyInfo[] driverPropertyInfo = p.right();
         if (driverPropertyInfo.length != 0) {
             if (driverPropertyInfo[0].name.equals(USER)) {
                 throw new SQLException("password specified without user");
@@ -126,10 +158,9 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return createConnection(p.left(), info);
     }
 
-    private MongoConnection createConnection(ConnectionString cs, Properties info)
+    private MongoConnection createDialectConnection(ConnectionString cs, Properties info)
             throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
         String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);

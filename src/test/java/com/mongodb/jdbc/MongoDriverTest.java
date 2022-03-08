@@ -61,16 +61,16 @@ class MongoDriverTest {
     void testDBURL() throws SQLException {
         MongoDriver d = new MongoDriver();
         // Should not return null or throw, even with null properties.
-        assertNotNull(d.connect(authDBURL, null));
+        assertNotNull(d.createUnvalidatedConnection(authDBURL, null));
 
         Properties p = new Properties();
-        assertNotNull(d.connect(authDBURL, p));
+        assertNotNull(d.createUnvalidatedConnection(authDBURL, p));
 
         p.setProperty("database", "admin2");
 
         // Database is not the same as the authDatabase in the uri.
         // So this is safe and should not throw.
-        assertNotNull(d.connect(authDBURL, p));
+        assertNotNull(d.createUnvalidatedConnection(authDBURL, p));
     }
 
     @Test
@@ -210,19 +210,19 @@ class MongoDriverTest {
         Connection c;
 
         // dialect not set defaults to MySQLConnection
-        c = d.connect(basicURL, p);
+        c = d.createUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
         assertTrue(c instanceof MySQLConnection);
 
         // dialect set to "mysql" results in MySQLConnection
         p.setProperty("dialect", "MySQL");
-        c = d.connect(basicURL, p);
+        c = d.createUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
         assertTrue(c instanceof MySQLConnection);
 
         // dialect set to "mongosql" results in MongoSQLConnection
         p.setProperty("dialect", "MongoSQL");
-        c = d.connect(basicURL, p);
+        c = d.createUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
         assertTrue(c instanceof MongoSQLConnection);
 
