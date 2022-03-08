@@ -11,10 +11,10 @@ public class MongoLogger {
     /**
      * Gets a logger to log information before a connection has been made.
      *
-     * @param className The classname to find the associated logger.
+     * @param logger The logger.
      */
-    public MongoLogger(String className) {
-        this.logger = MongoLoggerUtils.getLogger(className, null);
+    public MongoLogger(Logger logger) {
+        this.logger = logger;
     }
 
     /**

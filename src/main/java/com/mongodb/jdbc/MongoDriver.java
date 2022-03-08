@@ -19,6 +19,8 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.MongoLoggerUtils;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -99,6 +102,12 @@ public class MongoDriver implements Driver {
         }
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
+    }
+
+    private MongoLogger logger;
+
+    public MongoDriver() {
+        this.logger = MongoLoggerUtils.getDriverLogger();
     }
 
     @Override

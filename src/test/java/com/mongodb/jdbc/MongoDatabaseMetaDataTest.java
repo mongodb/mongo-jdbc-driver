@@ -2,7 +2,6 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import com.mongodb.ConnectionString;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -14,7 +13,8 @@ import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class MongoDatabaseMetaDataTest {
-    protected static final ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
+    protected static final ConnectionString uri =
+            new ConnectionString("mongodb://localhost:27017/admin");
     protected static final String database = "mock";
 
     protected DatabaseMetaData databaseMetaData;

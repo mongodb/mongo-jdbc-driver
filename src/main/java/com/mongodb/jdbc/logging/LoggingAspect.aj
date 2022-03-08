@@ -3,6 +3,7 @@ package com.mongodb.jdbc.logging;
 import com.mongodb.MongoException;
 import java.sql.SQLException;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import org.aspectj.lang.JoinPoint;
 import org.bson.BsonValue;
@@ -45,6 +46,9 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
                         bsonTypeName[0] = Character.toUpperCase(bsonTypeName[0]);
                         b.append(bsonTypeName.toString());
                         b.append("{***}");
+                    }
+                    else if (params[i] instanceof Properties) {
+                        b.append(((Properties)params[i]).stringPropertyNames());
                     }
                     else
                     {
