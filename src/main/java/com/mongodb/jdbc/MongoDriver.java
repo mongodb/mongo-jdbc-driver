@@ -131,7 +131,8 @@ public class MongoDriver implements Driver {
         // use a timeout of 5s if no timeout is specified in the URL.
         int timeout = 5;
         try {
-            timeout = cs.getConnectTimeout();
+            // mongo connect timeoutes are in MS, so divide by 1000.
+            timeout = cs.getConnectTimeout() / 1000;
         } catch (NullPointerException e) {
             // timeout not specified.
             // this is an unfortunate reality of the Java driver, it throws NPE if
