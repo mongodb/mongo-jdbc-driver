@@ -99,7 +99,7 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        Pair<MongoConnection, Integer> p = createUnvalidatedConnectionAndTimeout(url, info);
+        Pair<MongoConnection, Integer> p = getUnvalidatedConnectionAndTimeout(url, info);
         Connection conn = p.left();
         conn.isValid(p.right());
         return conn;
@@ -107,10 +107,10 @@ public class MongoDriver implements Driver {
 
     public MongoConnection createUnvalidatedConnection(String url, Properties info)
         throws SQLException {
-        return createUnvalidatedConnectionAndTimeout(url, info).left();
+        return getUnvalidatedConnectionAndTimeout(url, info).left();
     }
 
-    private Pair<MongoConnection, Integer> createUnvalidatedConnectionAndTimeout(String url, Properties info)
+    private Pair<MongoConnection, Integer> getUnvalidatedConnectionAndTimeout(String url, Properties info)
         throws SQLException {
         if (!acceptsURL(url)) {
             return null;
