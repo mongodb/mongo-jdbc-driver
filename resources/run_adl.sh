@@ -178,6 +178,7 @@ check_mongohoused
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOHOUSED"
+    go version
 
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 ]]; then
         if [ ! -d "$LOCAL_MONGOHOUSE_DIR" ]; then
