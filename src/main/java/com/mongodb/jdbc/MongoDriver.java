@@ -127,7 +127,6 @@ public class MongoDriver implements Driver {
 
         ConnectionString cs = p.left();
         Connection ret = createDialectConnection(cs, info);
-        System.out.println(cs);
         // use a timeout of 5s if no timeout is specified in the URL.
         int timeout = 5;
         try {
