@@ -19,8 +19,6 @@ package com.mongodb.jdbc;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.jdbc.logging.MongoLogger;
-import com.mongodb.jdbc.logging.MongoLoggerUtils;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -57,14 +55,14 @@ public class MongoDriver implements Driver {
 
     static final String MONGODB_URL_PREFIX = JDBC + "mongodb:";
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
-    static final String USER = "user";
-    static final String PASSWORD = "password";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
-    static final String DATABASE = "database";
+    public static final String DATABASE = "database";
     static final String DIALECT = "dialect";
-    static final String LOG_LEVEL = "LogLevel";
-    static final String LOG_DIR = "LogDir";
+    public static final String LOG_LEVEL = "LogLevel";
+    public static final String LOG_DIR = "LogDir";
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
     static final String NAME;
@@ -102,12 +100,6 @@ public class MongoDriver implements Driver {
         }
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
-    }
-
-    private MongoLogger logger;
-
-    public MongoDriver() {
-        this.logger = MongoLoggerUtils.getDriverLogger();
     }
 
     @Override
@@ -151,7 +143,11 @@ public class MongoDriver implements Driver {
         File logDir = (logDirVal == null) ? null : new File(logDirVal);
         if (logDir != null && !logDir.isDirectory()) {
             throw new SQLException(
-                    "Invalid " + LOG_DIR + " property value. It must be a directory.");
+                    "Invalid "
+                            + LOG_DIR
+                            + " property value : "
+                            + logDirVal
+                            + ". It must be a directory.");
         }
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:

@@ -2,7 +2,6 @@ package com.mongodb.jdbc.logging;
 
 import com.mongodb.MongoException;
 import com.mongodb.jdbc.MongoConnection;
-import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +11,6 @@ import java.util.logging.*;
 public class MongoLoggerUtils {
     private static ConcurrentHashMap<Integer, Logger> loggerPerConnection =
             new ConcurrentHashMap<>();
-
-    private static final MongoLogger DRIVER_LOGGER;
-
-    public static MongoLogger getDriverLogger() {
-        return DRIVER_LOGGER;
-    }
 
     public static Logger initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
         Logger parentConnectionLogger = loggerPerConnection.get(connection_id);
@@ -37,9 +30,7 @@ public class MongoLoggerUtils {
                         String logPath =
                                 logDir == null
                                         ? logFileName
-                                        : logDir.getAbsolutePath()
-                                                + File.pathSeparator
-                                                + logFileName;
+                                        : logDir.getAbsolutePath() + File.separator + logFileName;
                         FileHandler fileHandler = new FileHandler(logPath);
                         fileHandler.setFormatter(new SimpleFormatter());
                         logger.addHandler(fileHandler);
@@ -88,23 +79,5 @@ public class MongoLoggerUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Logger logger = Logger.getLogger(MongoDriver.class.getCanonicalName());
-        try {
-
-            String logFileName = "driver.log";
-            FileHandler fileHandler = new FileHandler(logFileName);
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-            System.out.println(logger);
-            System.out.println(logger.getHandlers()[0]);
-            logger.setLevel(Level.FINER);
-
-        } catch (IOException e) {
-            // Can't log the error since it can't open the log file
-            e.printStackTrace();
-        }
-
-        DRIVER_LOGGER = new MongoLogger(logger);
     }
 }
