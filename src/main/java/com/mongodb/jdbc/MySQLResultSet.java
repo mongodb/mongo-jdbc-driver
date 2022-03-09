@@ -28,6 +28,7 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
             MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
         super(statement);
+        setupResultset(cursor, relaxed);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
         rsMetaData =
