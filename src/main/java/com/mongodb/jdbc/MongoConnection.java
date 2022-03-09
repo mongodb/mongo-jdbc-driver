@@ -347,9 +347,9 @@ public abstract class MongoConnection implements Connection {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    class ConnValidation implements Callable<Object> {
+    class ConnValidation implements Callable<Void> {
         @Override
-        public Object call() throws SQLException {
+        public Void call() throws SQLException {
             Statement statement = createStatement();
             boolean resultExists = statement.execute("SELECT 1 from DUAL");
             if (!resultExists) {
@@ -373,7 +373,7 @@ public abstract class MongoConnection implements Connection {
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future<Object> future = executor.submit(new ConnValidation());
+        Future<Void> future = executor.submit(new ConnValidation());
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);

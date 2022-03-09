@@ -105,7 +105,7 @@ public class MongoDriver implements Driver {
         return conn;
     }
 
-    public MongoConnection createUnvalidatedConnection(String url, Properties info)
+    protected MongoConnection createUnvalidatedConnection(String url, Properties info)
         throws SQLException {
         return getUnvalidatedConnectionAndTimeout(url, info).left();
     }
