@@ -126,18 +126,18 @@ public class MongoDriver implements Driver {
         reconcileProperties(p.right(), info);
 
         ConnectionString cs = p.left();
-        Connection ret = createDialectConnection(cs, info);
-        // use a timeout of 5s if no timeout is specified in the URL.
-        int timeout = 5;
+        Connection ret = createConnection(cs, info);
+        // use a timeout of 30s, if no timeout is specified in the URL.
+        int timeout = 30;
         try {
-            // mongo connect timeoutes are in MS, so divide by 1000.
+            // mongo connect timeouts are in MS, so divide by 1000.
             timeout = cs.getConnectTimeout() / 1000;
         } catch (NullPointerException e) {
             // timeout not specified.
-            // this is an unfortunate reality of the Java driver, it throws NPE if
+            // this is an unfortunate reality of the Java driver, it throws NPE, if
             // the option is not specified.
         }
-        return new Pair<>(createDialectConnection(cs, info), timeout);
+        return new Pair<>(createConnection(cs, info), timeout);
     }
 
     private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {
@@ -160,7 +160,7 @@ public class MongoDriver implements Driver {
         }
     }
 
-    private MongoConnection createDialectConnection(ConnectionString cs, Properties info)
+    private MongoConnection createConnection(ConnectionString cs, Properties info)
             throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
         String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
