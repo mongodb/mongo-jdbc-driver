@@ -79,7 +79,7 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
-    protected int getConnectionId() {
+    public int getConnectionId() {
         return connectionId;
     }
 

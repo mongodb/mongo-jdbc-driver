@@ -9,21 +9,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MongoSQLIntegrationTest {
+public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     static final String URL = "jdbc:mongodb://localhost";
+    static final String DEFAULT_TEST_DB = "integration_test";
     public static final String MONGOSQL = "mongosql";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
 
     private List<TestEntry> testEntries;
 
-    public Connection getBasicConnection(String db) throws SQLException {
-        java.util.Properties p = new java.util.Properties();
+    @Override
+    public Connection getBasicConnection(Properties extraProps) throws SQLException {
+        return getBasicConnection(DEFAULT_TEST_DB, extraProps);
+    }
+
+    public Connection getBasicConnection(String db, Properties extraProps) throws SQLException {
+
+        Properties p = new java.util.Properties(extraProps);
         p.setProperty("dialect", MONGOSQL);
         p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
@@ -49,7 +58,7 @@ public class MongoSQLIntegrationTest {
                     DynamicTest.dynamicTest(
                             testEntry.description,
                             () -> {
-                                try (Connection conn = getBasicConnection(testEntry.db)) {
+                                try (Connection conn = getBasicConnection(testEntry.db, null)) {
                                     IntegrationTestUtils.runTest(testEntry, conn, false);
                                 }
                             }));
