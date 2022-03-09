@@ -2,11 +2,14 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -234,5 +237,154 @@ class MongoDriverTest {
         p.remove("conversionMode");
         p.setProperty("dialect", "invalid");
         assertThrows(SQLClientInfoException.class, () -> d.connect(basicURL, p));
+    }
+
+    @Test
+    void testLoggingOff() throws SQLException {
+        // Default connection settings.
+        // No logging. No files are created, nothing is logged.
+        Properties props = new Properties();
+        Connection conn = createConnectionAndVerifyLogFileExists(props);
+
+        // Clean-up
+        cleanupLoggingTest((MongoConnection) conn, props);
+    }
+
+    @Test
+    void testLoggingSevere() throws SQLException {
+        // Creates a log file for the connection. Only logs error.
+        // Connection is successful, the log file will be empty.
+        Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
+        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
+        conn.getMetaData();
+        // The file is still empty because no exception was thrown.
+        assertTrue(logFile.length() == 0);
+        // Clean-up
+        cleanupLoggingTest((MongoConnection) conn, props);
+    }
+
+    @Test
+    void testLoggingSevereWithError() throws SQLException {
+        // Creates a log file for the connection. Only logs error.
+        // Connection is successful, the log file will be empty.
+        Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
+        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        try {
+            conn.getTypeMap(); // Call will fail with a SQLFeatureNotSupportedException
+            fail();
+        } catch (SQLFeatureNotSupportedException e) {
+            // Expected. Keep going.
+        }
+        File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
+        // The file now contains the log entry for the exception
+        assertTrue(logFile.length() > 0);
+        // Clean-up
+        cleanupLoggingTest((MongoConnection) conn, props);
+    }
+
+    @Test
+    void testLoggingFiner() throws SQLException {
+        // Creates a log file for the connection. Log public method entries.
+        // Connection is successful, the log file will contain logs.
+        Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
+        conn.getMetaData();
+        // The file now contains the log entry for getMetadata
+        assertTrue(logFile.length() > 0);
+        // Clean-up
+        cleanupLoggingTest((MongoConnection) conn, props);
+    }
+
+    @Test
+    void testCustomLogDir() throws SQLException {
+        // Creates a log file for the connection in the custom directory.
+        // Log public method entries.
+        // Connection is successful, the log file will contain logs.
+        Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        File specialLogDir = new File(new File(".").getAbsolutePath(), "customLogDir");
+        if (!specialLogDir.exists()) {
+            specialLogDir.mkdir();
+        }
+        props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
+        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
+        conn.getMetaData();
+        // The file now contains the log entry for getMetadata
+        assertTrue(logFile.length() > 0);
+        // Clean-up
+        cleanupLoggingTest((MongoConnection) conn, props);
+        if (specialLogDir.exists()) {
+            specialLogDir.delete();
+        }
+    }
+
+    /**
+     * Creates a new Connection and check if the related log file exist if it should.
+     *
+     * @param loggingTestProps The logging properties.
+     * @throws SQLException If an error occurs.
+     */
+    private Connection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
+            throws SQLException {
+        MongoDriver d = new MongoDriver();
+        loggingTestProps.setProperty("dialect", "MongoSQL");
+        loggingTestProps.setProperty("database", "admin");
+
+        MongoConnection connection = (MongoConnection) d.connect(userURL, loggingTestProps);
+        assertNotNull(connection);
+        File logFile = getLogFile(loggingTestProps, connection.connectionId);
+        if (null != loggingTestProps.getProperty(MongoDriver.LOG_LEVEL)
+                && !loggingTestProps
+                        .getProperty(MongoDriver.LOG_LEVEL)
+                        .equals(Level.OFF.getName())) {
+            assertTrue(logFile.exists());
+            // The file is empty before any public method is called.
+            assertTrue(logFile.length() == 0);
+        } else {
+            assertFalse(logFile.exists());
+        }
+        return connection;
+    }
+
+    /**
+     * Get the log file which will be associated with the connection when/if logging is turned on.
+     *
+     * @param loggingTestProps The connection settings related to logging.
+     * @param connectionId The connection id.
+     * @return The log file.
+     */
+    private File getLogFile(Properties loggingTestProps, int connectionId) {
+        File logDir =
+                (loggingTestProps != null
+                                && loggingTestProps.getProperty(MongoDriver.LOG_DIR) != null)
+                        ? new File(loggingTestProps.getProperty(MongoDriver.LOG_DIR))
+                        : new File(".");
+        File logFile = new File(logDir + File.separator + "connection_" + connectionId + ".log");
+        return logFile;
+    }
+
+    /**
+     * Close the connection and remove the log file if it exists.
+     *
+     * @param conn The connection.
+     * @param props The connection settings.
+     */
+    private void cleanupLoggingTest(MongoConnection conn, Properties props) {
+        try {
+            conn.close();
+            File logFile = getLogFile(props, conn.connectionId);
+            if (logFile.exists()) {
+                logFile.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Ignore clean-up error if any
+        }
     }
 }
