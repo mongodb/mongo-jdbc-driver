@@ -3,6 +3,9 @@ package com.mongodb.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLClientInfoException;
@@ -10,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -266,12 +270,12 @@ class MongoDriverTest {
     }
 
     @Test
-    void testLoggingSevereWithError() throws SQLException {
+    void testLoggingSevereWithError() throws Exception {
         // Creates a log file for the connection. Only logs error.
         // Connection is successful, the log file will be empty.
         Properties props = new Properties();
         props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
-        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         try {
             conn.getTypeMap(); // Call will fail with a SQLFeatureNotSupportedException
             fail();
@@ -281,27 +285,28 @@ class MongoDriverTest {
         File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
         // The file now contains the log entry for the exception
         assertTrue(logFile.length() > 0);
+        checkLogContent(logFile, conn.connectionId, "[SEVERE] [c-" + conn.connectionId + "] com.mongodb.jdbc.MongoConnection: Error in MongoConnection.getTypeMap()", 1);
         // Clean-up
         cleanupLoggingTest((MongoConnection) conn, props);
     }
 
     @Test
-    void testLoggingFiner() throws SQLException {
+    void testLoggingFiner() throws Exception {
         // Creates a log file for the connection. Log public method entries.
         // Connection is successful, the log file will contain logs.
         Properties props = new Properties();
         props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
-        Connection conn = createConnectionAndVerifyLogFileExists(props);
+        MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
         conn.getMetaData();
-        // The file now contains the log entry for getMetadata
-        assertTrue(logFile.length() > 0);
+        checkLogContent(logFile, conn.connectionId,"[FINER] [c-" + conn.connectionId + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()", 1);
+
         // Clean-up
         cleanupLoggingTest((MongoConnection) conn, props);
     }
 
     @Test
-    void testCustomLogDir() throws SQLException {
+    void testCustomLogDir() throws Exception {
         // Creates a log file for the connection in the custom directory.
         // Log public method entries.
         // Connection is successful, the log file will contain logs.
@@ -312,11 +317,10 @@ class MongoDriverTest {
             specialLogDir.mkdir();
         }
         props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
-        Connection conn = createConnectionAndVerifyLogFileExists(props);
-        File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
+        MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
+        File logFile = getLogFile(props, conn.connectionId);
         conn.getMetaData();
-        // The file now contains the log entry for getMetadata
-        assertTrue(logFile.length() > 0);
+        checkLogContent(logFile, conn.connectionId, "[FINER] [c-" + conn.connectionId + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()", 1);
         // Clean-up
         cleanupLoggingTest((MongoConnection) conn, props);
         if (specialLogDir.exists()) {
@@ -325,12 +329,30 @@ class MongoDriverTest {
     }
 
     /**
+     * Check that the log file contains the expect number of lines and the filtered line.
+     * @param logFile The log file to verify.
+     * @param connectionId The connection id.
+     * @param filter The filter to apply on the log file to filter log lines.
+     * @param expectedFilteredLineCount The expected number of filtered log lines.
+     *
+     * @throws IOException If an error occurs reading the log files.
+     */
+    private void checkLogContent(File logFile, int connectionId, String filter, int expectedFilteredLineCount) throws IOException {
+        // The file now contains the log entry for getMetadata
+        assertTrue(logFile.length() > 0);
+        long logLinesCount = Files.lines(Paths.get(logFile.getAbsolutePath()))
+                .filter(s -> s.contains(filter))
+                .count();
+        assertEquals(expectedFilteredLineCount, logLinesCount);
+    }
+
+    /**
      * Creates a new Connection and check if the related log file exist if it should.
      *
      * @param loggingTestProps The logging properties.
      * @throws SQLException If an error occurs.
      */
-    private Connection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
+    private MongoConnection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
             throws SQLException {
         MongoDriver d = new MongoDriver();
         loggingTestProps.setProperty("dialect", "MongoSQL");
