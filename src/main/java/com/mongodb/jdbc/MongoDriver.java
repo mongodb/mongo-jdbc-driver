@@ -69,6 +69,16 @@ public class MongoDriver implements Driver {
     static final String VERSION;
     static final int MAJOR_VERSION;
     static final int MINOR_VERSION;
+    static final String LEVELS =
+            Arrays.toString(
+                    new String[] {
+                        Level.OFF.getName(),
+                        Level.SEVERE.getName(),
+                        Level.FINER.getName(),
+                        Level.INFO.getName(),
+                        Level.FINE.getName(),
+                        Level.WARNING.getName()
+                    });
 
     static CodecRegistry registry =
             fromProviders(
@@ -138,7 +148,21 @@ public class MongoDriver implements Driver {
             throws SQLException {
         // attempt to get DIALECT property, and default to "mysql" if none is present
         String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
-        Level logLevel = Level.parse(info.getProperty(LOG_LEVEL, Level.OFF.getName()));
+        // Default log level is OFF
+        String logLevelVal = info.getProperty(LOG_LEVEL, Level.OFF.getName());
+        Level logLevel;
+        try {
+            logLevel = Level.parse(logLevelVal);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(
+                    "Invalid "
+                            + LOG_LEVEL
+                            + " property value : "
+                            + logLevelVal
+                            + ". Valid values are : "
+                            + LEVELS
+                            + ".");
+        }
         String logDirVal = info.getProperty(LOG_DIR);
         File logDir = (logDirVal == null) ? null : new File(logDirVal);
         if (logDir != null && !logDir.isDirectory()) {

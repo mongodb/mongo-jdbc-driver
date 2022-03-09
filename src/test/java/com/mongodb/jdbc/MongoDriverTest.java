@@ -243,6 +243,20 @@ class MongoDriverTest {
     }
 
     @Test
+    void testInvalidLoggingLevel() throws SQLException {
+        // Default connection settings.
+        // No logging. No files are created, nothing is logged.
+        Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_LEVEL, "NOT_A_LOG_LEVEL");
+        try {
+            Connection conn = createConnectionAndVerifyLogFileExists(props);
+            fail("Expected connection to fail because log level is invalid.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     void testLoggingOff() throws SQLException {
         // Default connection settings.
         // No logging. No files are created, nothing is logged.
@@ -342,6 +356,21 @@ class MongoDriverTest {
         cleanupLoggingTest((MongoConnection) conn, props);
         if (specialLogDir.exists()) {
             specialLogDir.delete();
+        }
+    }
+
+    @Test
+    void testInvalidCustomLogDir() throws Exception {
+        // Set the custom log dir to an invalid path
+        // Connection is not successful.
+        Properties props = new Properties();
+        File specialLogDir = new File(new File("."), "ThisIsNotAValidPath");
+        props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
+        try {
+            MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
+            fail("Expected to fail because the logging director does not exist.");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
