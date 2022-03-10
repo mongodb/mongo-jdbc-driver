@@ -25,7 +25,7 @@ sourceSets {
             compileClasspath += main.output
             runtimeClasspath += main.output
             srcDir file('src/integration-test/java')
-            exclude '**/MySQLIntegrationTest'
+            exclude '**/MySQLIntegrationTest.java'
         }
         resources.srcDir file('src/integration-test/resources')
     }
