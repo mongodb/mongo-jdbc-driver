@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.BSON_UNDEFINED;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -17,6 +18,7 @@ import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
     protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
     protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";

@@ -2,12 +2,14 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
+@AutoLoggable
 public abstract class MongoStatement<T> implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those

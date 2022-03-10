@@ -4,6 +4,7 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -30,6 +31,7 @@ import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
 
+@AutoLoggable
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final String BOT_NAME = "";

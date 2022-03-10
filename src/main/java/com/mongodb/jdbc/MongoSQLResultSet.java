@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import org.bson.BsonUndefined;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
+@AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
 
     /**

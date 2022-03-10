@@ -23,7 +23,7 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
         return proceed(arg);
     }
 
-    before() : execution(public * com.mongodb.jdbc.*.*(..)) && !within(LoggingAspect) {
+    before() : execution(public * @AutoLoggable com.mongodb.jdbc.*.*(..)) && !within(LoggingAspect) {
         if (null != logger && null != logger.getLogger()) {
 
             String sourceName = getSourceName(thisJoinPoint);            ;

@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AutoLoggable
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     private static class NameSpace {
         String datasource;

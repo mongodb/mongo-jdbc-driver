@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.InputStream;
 import java.io.Reader;
@@ -25,6 +26,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+@AutoLoggable
 public class MongoPreparedStatement implements PreparedStatement {
     private String sql;
     private MongoStatement statement;

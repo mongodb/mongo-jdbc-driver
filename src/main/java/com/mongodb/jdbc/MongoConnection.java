@@ -6,6 +6,7 @@ import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.logging.MongoLoggerUtils;
 import java.io.File;
@@ -40,6 +41,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
 
+@AutoLoggable
 public abstract class MongoConnection implements Connection {
     protected MongoClient mongoClient;
     protected String currentDB;

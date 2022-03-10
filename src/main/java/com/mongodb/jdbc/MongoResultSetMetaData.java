@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
@@ -9,6 +10,7 @@ import java.sql.Types;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     protected final int UNKNOWN_LENGTH = 0;
     protected MongoLogger logger;

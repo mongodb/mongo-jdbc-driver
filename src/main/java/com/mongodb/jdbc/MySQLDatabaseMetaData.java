@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -17,6 +18,7 @@ import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static com.mongodb.jdbc.MySQLFunctions MySQLFunctions =

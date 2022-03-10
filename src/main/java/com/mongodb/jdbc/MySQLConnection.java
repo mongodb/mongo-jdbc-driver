@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
+@AutoLoggable
 public class MySQLConnection extends MongoConnection implements Connection {
     private boolean relaxed;
 

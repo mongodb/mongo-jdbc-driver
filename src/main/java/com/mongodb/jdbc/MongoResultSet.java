@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public abstract class MongoResultSet<T> implements ResultSet {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
