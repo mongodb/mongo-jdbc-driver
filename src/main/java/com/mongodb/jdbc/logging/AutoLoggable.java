@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
  * conjunction with LoggingAspect to provide auto-logging of public methods entry.
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface AutoLoggable {}

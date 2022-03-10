@@ -69,7 +69,7 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
             int nullability = datasourceSchema.getColumnNullability(field);
             columnIndices.add(new NameSpace(datasource, field));
             columnInfo.add(
-                    new MongoSQLColumnInfo(datasource, field, columnBsonTypeInfo, nullability));
+                    new MongoSQLColumnInfo(this.logger, datasource, field, columnBsonTypeInfo, nullability));
             if (!columnLabels.containsKey(field)) {
                 columnLabels.put(
                         field, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
