@@ -12,8 +12,8 @@ publishing {
             artifact javadocJar
             pom {
                 name = 'JDBC Driver'
-                description = 'JDBC Driver for Atlas Data Lake'
-                url = 'https://github.com/10gen/adl-jdbc-driver'
+                description = 'JDBC Driver for MongoDB Atlas SQL interface'
+                url = 'https://github.com/mongodb/mongo-jdbc-driver'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -26,9 +26,9 @@ publishing {
                     }
                 }
                 scm {
-                    url = 'https://github.com/10gen/adl-jdbc-driver'
-                    connection = 'scm:git@github.com:10gen/adl-jdbc-driver.git'
-                    developerConnection = 'scm:git@github.com:10gen/adl-jdbc-driver.git'
+                    url = 'https://github.com/mongodb/mongo-jdbc-driver'
+                    connection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
+                    developerConnection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
                 }
             }
         }
