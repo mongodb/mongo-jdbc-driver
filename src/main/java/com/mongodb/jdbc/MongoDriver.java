@@ -101,7 +101,12 @@ public class MongoDriver implements Driver {
     public Connection connect(String url, Properties info) throws SQLException {
         Pair<MongoConnection, Integer> p = getUnvalidatedConnectionAndTimeout(url, info);
         Connection conn = p.left();
-        conn.isValid(p.right());
+        // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
+        // (cases where multiple jdbc drivers are present and the program is checking which driver
+        // to use), so it is possible for conn to be null at this point.
+        if (conn != null) {
+            conn.isValid(p.right());
+        }
         return conn;
     }
 
