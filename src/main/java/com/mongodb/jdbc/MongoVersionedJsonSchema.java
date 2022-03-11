@@ -21,7 +21,6 @@ public class MongoVersionedJsonSchema {
             @BsonProperty("version") final int version,
             @BsonProperty("jsonSchema") JsonSchema schema) {
         this.version = version;
-        System.out.println(schema);
         this.mongoJsonSchema = MongoJsonSchema.toSimplifiedMongoJsonSchema(schema);
     }
 }
