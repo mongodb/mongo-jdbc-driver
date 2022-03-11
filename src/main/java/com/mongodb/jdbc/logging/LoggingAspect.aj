@@ -8,9 +8,9 @@ import org.aspectj.lang.JoinPoint;
  */
 public aspect LoggingAspect pertarget(com.mongodb.jdbc.logging.MongoLogger)
 {
-    void around():  execution(private void com.mongodb.jdbc.logging.MongoLogger.plog(..)) &&
+    void around(): execution(private void com.mongodb.jdbc.logging.MongoLogger.plog(..)) &&
         !within(LoggingAspect) {
-        System.out.println("TODO call logp");
+        System.out.println("Call argument " + thisJoinPoint.getArgs());
     }
 
 }

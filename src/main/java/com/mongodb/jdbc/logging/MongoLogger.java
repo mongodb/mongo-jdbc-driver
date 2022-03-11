@@ -193,9 +193,9 @@ public class MongoLogger {
 
     /**
      * -----------------------------------------------------------------------------------------------
-     * Below are the private counterpart of all the log methods. This way, the public facing method
+     * Below are the private counterparts of all the log(..) methods. This way, the public facing methods
      * can check that the logger is not null and we can override the private method and add the
-     * connection and statement id as the sourceclass prefix.*
+     * connection and statement id as the sourceclass prefix.
      * -----------------------------------------------------------------------------------------------
      */
     private void plog(Logger logger, Level level, String msg) {
