@@ -162,9 +162,9 @@ public enum BsonTypeInfo {
     }
 
     /**
-     *  CHAR_OCTET_LENGTH is the maximum length of binary and character based data in bytes.
-     *  For any other datatype the value is null.
-     *  We can use 'precision' combined with the data type for reporting the correct info.
+     * CHAR_OCTET_LENGTH is the maximum length of binary and character based data in bytes. For any
+     * other datatype the value is null. We can use 'precision' combined with the data type for
+     * reporting the correct info.
      */
     public Integer getCharOctetLength() {
         switch (this.bsonType) {

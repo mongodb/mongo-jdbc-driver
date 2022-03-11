@@ -60,6 +60,9 @@ public class MongoDriver implements Driver {
     static final String DIALECT = "dialect";
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
+    static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
+    static final String MONGOSQL_DRIVER_NAME = MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
+
     static final String NAME;
     static final String VERSION;
     static final int MAJOR_VERSION;

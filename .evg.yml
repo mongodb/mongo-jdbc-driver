@@ -20,6 +20,13 @@ post:
   - func: "upload xunit test results"
 
 buildvariants:
+
+  - name: static-analysis
+    display_name: "Static Analysis"
+    run_on: [ ubuntu2004-test ]
+    tasks:
+      - spotless
+
   - name: ubuntu1804-64-jdk-8
     display_name: Ubuntu 18.04 jdk-8
     expansions:
@@ -54,21 +61,35 @@ tasks:
     commands:
       - func: "publish maven"
 
+  - name: spotless
+    commands:
+      - func: "check spotless"
+
 functions:
+
   "build jdbc driver":
     command: shell.exec
     type: test
     params:
-      working_dir: adl-jdbc-driver
+      working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
           ./gradlew clean -x test -x tdvtTest -x integrationTest spotlessApply build --rerun-tasks
+
+  "check spotless":
+    command: shell.exec
+    type: test
+    params:
+      working_dir: mongo-jdbc-driver
+      script: |
+          ${PREPARE_SHELL}
+          ./gradlew spotlessCheck
 
   "run unit test":
     command: shell.exec
     type: test
     params:
-      working_dir: adl-jdbc-driver
+      working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
           ./gradlew clean test 
@@ -77,7 +98,7 @@ functions:
     command: shell.exec
     type: test
     params:
-      working_dir: adl-jdbc-driver
+      working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
           ./resources/run_adl.sh start
@@ -88,7 +109,7 @@ functions:
   "export variables":
     - command: shell.exec
       params:
-        working_dir: adl-jdbc-driver
+        working_dir: mongo-jdbc-driver
         script: |
 
           # set the state needed irrespective of _platform
@@ -143,15 +164,15 @@ functions:
 
     - command: expansions.update
       params:
-        file: adl-jdbc-driver/artifacts/expansions.yml
+        file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc files":
     - command: s3.get
       params:
-        working_dir: adl-jdbc-driver
+        working_dir: mongo-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
         bucket: mciuploads
 
@@ -160,10 +181,10 @@ functions:
       params:
         silent: true
         script: |
-          rm -rf adl-jdbc-driver
+          rm -rf mongo-jdbc-driver
     - command: git.get_project
       params:
-        directory: adl-jdbc-driver
+        directory: mongo-jdbc-driver
 
   "upload unit test classes":
     - command: s3.put
@@ -172,7 +193,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/test/classes/*.html
+            - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
         bucket: mciuploads
@@ -187,7 +208,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
+            - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
         bucket: mciuploads
@@ -202,7 +223,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/test/packages/*.html
+            - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
         bucket: mciuploads
@@ -217,7 +238,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
+            - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
         content_type: text/html
         bucket: mciuploads
@@ -231,7 +252,7 @@ functions:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/reports/tests/test/index.html
+        local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
         bucket: mciuploads
@@ -244,7 +265,7 @@ functions:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/reports/tests/integrationTest/index.html
+        local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
         bucket: mciuploads
@@ -258,7 +279,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/test/css/*.css
+            - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
         bucket: mciuploads
@@ -273,7 +294,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/integrationTest/css/*.css
+            - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
         content_type: text/css
         bucket: mciuploads
@@ -288,7 +309,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/test/js/*.js
+            - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
         bucket: mciuploads
@@ -303,7 +324,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-            - adl-jdbc-driver/build/reports/tests/integrationTest/js/*.js
+            - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
         content_type: application/javascript
         bucket: mciuploads
@@ -315,7 +336,7 @@ functions:
     - command: attach.xunit_results
       params:
         silent: true
-        file: adl-jdbc-driver/build/test-results/*/TEST-*.xml
+        file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
 
 
   "upload jar file":
@@ -324,7 +345,7 @@ functions:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: adl-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
         content_type: application/java-archive
         bucket: mciuploads
@@ -335,6 +356,6 @@ functions:
     - command: shell.exec
       type: test
       params:
-        working_dir: adl-jdbc-driver
+        working_dir: mongo-jdbc-driver
         script: |
           PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_USERNAME=${NEXUS_USERNAME} NEXUS_PASSWORD=${NEXUS_PASSWORD} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh

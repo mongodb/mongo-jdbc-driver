@@ -48,8 +48,8 @@ public class MongoJsonSchema {
     /**
      * Converts a deserialized jsonSchema into a MongoJsonSchema. The MongoJsonSchema instance is
      * semantically equivalent to the base jsonSchema, but bsonType has to be a single type
-     * otherwise the types will get pushed down in the anyOf list.
-     * After the conversion is done, anyOfs are flattened.
+     * otherwise the types will get pushed down in the anyOf list. After the conversion is done,
+     * anyOfs are flattened.
      *
      * @param baseSchema The base json schema.
      * @return the corresponding MongoJsonSchema.
@@ -116,19 +116,26 @@ public class MongoJsonSchema {
                 result.anyOf = new HashSet<MongoJsonSchema>();
             }
 
-            /** Push down each bsontype from a bsontype array into a separate bsonType in an anyOf
-             * schema.
-             * For example :
+            /**
+             * Push down each bsontype from a bsontype array into a separate bsonType in an anyOf
+             * schema. For example:
+             *
+             * <pre>
              * "y": {
              *     "bsonType": ["string", "int"]
              *  }
-             *  will become
+             * </pre>
+             *
+             * will become
+             *
+             * <pre>
              *  "y": {
              *      "anyOf": [
              *          {"bsonType": "string"},
              *          {"bsonType": "int"}
              *      ]
              *  }
+             * </pre>
              */
             for (String currType : bsonTypes) {
                 MongoJsonSchema anyOfSchema = new MongoJsonSchema();
@@ -259,20 +266,30 @@ public class MongoJsonSchema {
     }
 
     /**
-     * Adds scalar properties to a MongoJsonSchema.
-     * Below is an example for adding a scalar property :
-     * {                                                        {
-     *   "bsonType": "object",                                      "bsonType": "object",
-     *   "properties": {                                            "properties": {
-     *     "bar": {                             ==>                     "bar": {
-     *       "bsonType": "int"                                              "bsonType": "int"
-     *     }                                                            },
-     *   }                                                               "foo": {
-     *  }                                                                    "bsonType": "bool"
-     *                                                                  }
-     *                                                               },
-     *                                                               "required": [foo]
-     *                                                           }
+     * Adds scalar properties to a MongoJsonSchema. Below is an example for adding a scalar
+     * property:
+     *
+     * <pre>
+     * {
+     *   "bsonType": "object",
+     *   "properties": {
+     *     "bar": { "bsonType": "int" }
+     *   }
+     * }
+     * </pre>
+     *
+     * will become
+     *
+     * <pre>
+     * {
+     *   "bsonType": "object",
+     *   "properties": {
+     *     "bar": { "bsonType": "int" },
+     *     "foo": { "bsonType": "bool" }
+     *   },
+     *   "required": [foo]
+     * }
+     * </pre>
      *
      * @param scalarProperties Contains the basic info (name, bsonType and required flag) for each
      *     key. Each property is converted into a scalar MongoJsonSchema and added to this parent
