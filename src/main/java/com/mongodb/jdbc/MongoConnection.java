@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -43,6 +44,7 @@ import org.bson.Document;
 
 @AutoLoggable
 public abstract class MongoConnection implements Connection {
+    private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
     protected String currentDB;
     protected String url;
@@ -71,9 +73,10 @@ public abstract class MongoConnection implements Connection {
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
 
+        this.mongoClientSettings = MongoClientSettings.builder().applyConnectionString(cs).build();
         mongoClient =
                 MongoClients.create(
-                        cs,
+                        mongoClientSettings,
                         MongoDriverInformation.builder()
                                 .driverName(MongoDriver.NAME)
                                 .driverVersion(version)
@@ -93,6 +96,10 @@ public abstract class MongoConnection implements Connection {
         if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
+    }
+
+    protected int getDefaultConnectionValidationTimeoutSeconds() {
+        return this.mongoClientSettings.getSocketSettings().getConnectTimeout(TimeUnit.SECONDS);
     }
 
     String getURL() {
@@ -370,18 +377,9 @@ public abstract class MongoConnection implements Connection {
                 Thread.currentThread().getStackTrace()[1].toString());
     }
 
-    private void validateConn() throws SQLException {
-        Statement statement = createStatement();
-        boolean resultExists = statement.execute("SELECT 1");
-        if (!resultExists) {
-            // no resultSet returned
-            throw new SQLException("Connection error");
-        }
-    }
-
-    class ConnValidation implements Callable<Object> {
+    class ConnValidation implements Callable<Void> {
         @Override
-        public Object call() throws SQLException {
+        public Void call() throws SQLException {
             Statement statement = createStatement();
             boolean resultExists = statement.execute("SELECT 1 from DUAL");
             if (!resultExists) {
@@ -405,7 +403,7 @@ public abstract class MongoConnection implements Connection {
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future<Object> future = executor.submit(new ConnValidation());
+        Future<Void> future = executor.submit(new ConnValidation());
         try {
             if (timeout > 0) {
                 future.get(timeout, TimeUnit.SECONDS);

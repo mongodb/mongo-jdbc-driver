@@ -65,6 +65,9 @@ public class MongoDriver implements Driver {
     public static final String LOG_DIR = "LogDir";
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
+    static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
+    static final String MONGOSQL_DRIVER_NAME = MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
+
     static final String NAME;
     static final String VERSION;
     static final int MAJOR_VERSION;
@@ -114,18 +117,38 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
+        MongoConnection conn = getUnvalidatedConnection(url, info);
+        // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
+        // (cases where multiple jdbc drivers are present and the program is checking which driver
+        // to use), so it is possible for conn to be null at this point.
+        if (conn != null) {
+            conn.isValid(conn.getDefaultConnectionValidationTimeoutSeconds());
+        }
+        return conn;
+    }
+
+    protected MongoConnection getUnvalidatedConnection(String url, Properties info)
+        throws SQLException {
         if (!acceptsURL(url)) {
             return null;
         }
         if (info == null) {
             info = new Properties();
         }
+
         // reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionString(url, info);
+        // ensure that the ConnectionString and Properties are consistent.
+        reconcileProperties(p.right(), info);
+
+        ConnectionString cs = p.left();
+        return createConnection(cs, info);
+    }
+
+    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
-        DriverPropertyInfo[] driverPropertyInfo = p.right();
         if (driverPropertyInfo.length != 0) {
             if (driverPropertyInfo[0].name.equals(USER)) {
                 throw new SQLException("password specified without user");
@@ -141,7 +164,6 @@ public class MongoDriver implements Driver {
                     "unexpected driver property info prompt returned: "
                             + String.join(", ", propertyNames));
         }
-        return createConnection(p.left(), info);
     }
 
     private MongoConnection createConnection(ConnectionString cs, Properties info)
