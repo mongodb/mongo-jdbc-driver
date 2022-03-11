@@ -99,23 +99,17 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        Pair<MongoConnection, Integer> p = getUnvalidatedConnectionAndTimeout(url, info);
-        Connection conn = p.left();
+        MongoConnection conn = getUnvalidatedConnection(url, info);
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
         // to use), so it is possible for conn to be null at this point.
         if (conn != null) {
-            conn.isValid(p.right());
+            conn.isValid(conn.getDefaultConnectionValidationTimeoutSeconds());
         }
         return conn;
     }
 
-    protected MongoConnection createUnvalidatedConnection(String url, Properties info)
-        throws SQLException {
-        return getUnvalidatedConnectionAndTimeout(url, info).left();
-    }
-
-    private Pair<MongoConnection, Integer> getUnvalidatedConnectionAndTimeout(String url, Properties info)
+    protected MongoConnection getUnvalidatedConnection(String url, Properties info)
         throws SQLException {
         if (!acceptsURL(url)) {
             return null;
@@ -131,18 +125,7 @@ public class MongoDriver implements Driver {
         reconcileProperties(p.right(), info);
 
         ConnectionString cs = p.left();
-        Connection ret = createConnection(cs, info);
-        // use a timeout of 30s, if no timeout is specified in the URL.
-        int timeout = 30;
-        try {
-            // mongo connect timeouts are in MS, so divide by 1000.
-            timeout = cs.getConnectTimeout() / 1000;
-        } catch (NullPointerException e) {
-            // timeout not specified.
-            // this is an unfortunate reality of the Java driver, it throws NPE, if
-            // the option is not specified.
-        }
-        return new Pair<>(createConnection(cs, info), timeout);
+        return createConnection(cs, info);
     }
 
     private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {

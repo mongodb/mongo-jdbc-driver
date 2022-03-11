@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -36,6 +37,7 @@ import org.bson.BsonInt32;
 import org.bson.Document;
 
 public abstract class MongoConnection implements Connection {
+    private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
     protected String currentDB;
     protected String url;
@@ -56,9 +58,10 @@ public abstract class MongoConnection implements Connection {
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
 
+        this.mongoClientSettings = MongoClientSettings.builder().applyConnectionString(cs).build();
         mongoClient =
                 MongoClients.create(
-                        cs,
+                        mongoClientSettings,
                         MongoDriverInformation.builder()
                                 .driverName(MongoDriver.NAME)
                                 .driverVersion(version)
@@ -70,6 +73,10 @@ public abstract class MongoConnection implements Connection {
         if (isClosed()) {
             throw new SQLException("Connection is closed.");
         }
+    }
+
+    protected int getDefaultConnectionValidationTimeoutSeconds() {
+        return this.mongoClientSettings.getSocketSettings().getConnectTimeout(TimeUnit.SECONDS);
     }
 
     String getURL() {
