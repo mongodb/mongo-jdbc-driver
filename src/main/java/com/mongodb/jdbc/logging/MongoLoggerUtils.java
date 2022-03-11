@@ -29,15 +29,15 @@ public class MongoLoggerUtils {
                         // If a log directory is provided, create a new file handler to log messages in that directory
                         if (logDir != null) {
                             String logFileName = "connection_" + connection_id + ".log";
-                            String logPath = logDir.getAbsolutePath() + File.separator + logFileName;
+                            String logPath =
+                                    logDir.getAbsolutePath() + File.separator + logFileName;
                             FileHandler fileHandler = new FileHandler(logPath);
                             fileHandler.setLevel(logLevel);
                             fileHandler.setFormatter(new SimpleFormatter());
                             logger.addHandler(fileHandler);
                         }
                         // If no directory is provided, send the message to the console
-                        else
-                        {
+                        else {
                             ConsoleHandler consoleHandler = new ConsoleHandler();
                             consoleHandler.setFormatter(new SimpleFormatter());
                             consoleHandler.setLevel(logLevel);

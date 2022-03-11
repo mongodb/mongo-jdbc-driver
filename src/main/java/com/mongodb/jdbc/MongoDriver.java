@@ -66,7 +66,8 @@ public class MongoDriver implements Driver {
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
     static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
-    static final String MONGOSQL_DRIVER_NAME = MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
+    static final String MONGOSQL_DRIVER_NAME =
+            MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
 
     static final String NAME;
     static final String VERSION;
@@ -128,7 +129,7 @@ public class MongoDriver implements Driver {
     }
 
     protected MongoConnection getUnvalidatedConnection(String url, Properties info)
-        throws SQLException {
+            throws SQLException {
         if (!acceptsURL(url)) {
             return null;
         }
@@ -146,7 +147,8 @@ public class MongoDriver implements Driver {
         return createConnection(cs, info);
     }
 
-    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {
+    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info)
+            throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
         if (driverPropertyInfo.length != 0) {

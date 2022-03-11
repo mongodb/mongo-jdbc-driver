@@ -1,6 +1,5 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,8 +12,11 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private final boolean isPolymorphic;
     private final int nullable;
 
-    MongoSQLColumnInfo(MongoLogger logger,
-            String datasource, String field, BsonTypeInfo bsonTypeInfo, int nullability) {
+    MongoSQLColumnInfo(
+            String datasource,
+            String field,
+            BsonTypeInfo bsonTypeInfo,
+            int nullability) {
         this.datasource = datasource;
         this.field = field;
         this.bsonTypeInfo = bsonTypeInfo;
