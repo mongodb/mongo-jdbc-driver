@@ -114,7 +114,7 @@ public class MongoDriver implements Driver {
     }
 
     protected MongoConnection getUnvalidatedConnection(String url, Properties info)
-        throws SQLException {
+            throws SQLException {
         if (!acceptsURL(url)) {
             return null;
         }
@@ -132,7 +132,8 @@ public class MongoDriver implements Driver {
         return createConnection(cs, info);
     }
 
-    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info) throws SQLException {
+    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info)
+            throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
         if (driverPropertyInfo.length != 0) {
