@@ -33,7 +33,8 @@ class MongoDriverTest {
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
 
-    private static final String CURRENT_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final String CURRENT_DIR =
+            Paths.get(".").toAbsolutePath().normalize().toString();
 
     @BeforeAll
     void initMocks() {
