@@ -258,7 +258,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        return "MongoDB Atlas";
+        return MongoDriver.MONGOSQL_DB_PRODUCT_NAME;
     }
 
     @Override
@@ -272,7 +272,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDriverName() throws SQLException {
-        return "MongoDB Atlas SQL interface JDBC Driver";
+        return MongoDriver.MONGOSQL_DRIVER_NAME;
     }
 
     @Override
