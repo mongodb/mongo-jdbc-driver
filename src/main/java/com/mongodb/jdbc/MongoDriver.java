@@ -152,7 +152,7 @@ public class MongoDriver implements Driver {
         String logLevelVal = info.getProperty(LOG_LEVEL, Level.OFF.getName());
         Level logLevel;
         try {
-            logLevel = Level.parse(logLevelVal);
+            logLevel = Level.parse(logLevelVal.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new SQLException(
                     "Invalid "

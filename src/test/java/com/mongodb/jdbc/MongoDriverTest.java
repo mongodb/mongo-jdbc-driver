@@ -33,6 +33,8 @@ class MongoDriverTest {
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
 
+    private static final String CURRENT_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -261,6 +263,7 @@ class MongoDriverTest {
         // Default connection settings.
         // No logging. No files are created, nothing is logged.
         Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         Connection conn = createConnectionAndVerifyLogFileExists(props);
 
         // Clean-up
@@ -272,6 +275,7 @@ class MongoDriverTest {
         // Creates a log file for the connection. Only logs error.
         // Connection is successful, the log file will be empty.
         Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
         Connection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
@@ -287,6 +291,7 @@ class MongoDriverTest {
         // Creates a log file for the connection. Only logs error.
         // Connection is successful, the log file will be empty.
         Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         try {
@@ -314,6 +319,7 @@ class MongoDriverTest {
         // Creates a log file for the connection. Log public method entries.
         // Connection is successful, the log file will contain logs.
         Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props, ((MongoConnection) conn).connectionId);
@@ -336,6 +342,7 @@ class MongoDriverTest {
         // Log public method entries.
         // Connection is successful, the log file will contain logs.
         Properties props = new Properties();
+        props.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
         File specialLogDir = new File(new File(".").getAbsolutePath(), "customLogDir");
         if (!specialLogDir.exists()) {

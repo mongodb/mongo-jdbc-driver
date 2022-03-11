@@ -12,7 +12,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
     private final BsonTypeInfo bsonTypeInfo;
     private final boolean isPolymorphic;
     private final int nullable;
-    protected MongoLogger logger;
 
     MongoSQLColumnInfo(MongoLogger logger,
             String datasource, String field, BsonTypeInfo bsonTypeInfo, int nullability) {
@@ -21,7 +20,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
         this.bsonTypeInfo = bsonTypeInfo;
         this.nullable = nullability;
         this.isPolymorphic = bsonTypeInfo == BsonTypeInfo.BSON_BSON;
-        this.logger = logger;
     }
 
     @Override
@@ -29,7 +27,6 @@ public class MongoSQLColumnInfo implements MongoColumnInfo {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
-    @AutoLoggable
     @Override
     public boolean isPolymorphic() {
         return isPolymorphic;

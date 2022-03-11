@@ -23,20 +23,29 @@ public class MongoLoggerUtils {
                             connection_id + "_" + MongoConnection.class.getCanonicalName());
             try {
                 if (logLevel != null) {
+                    // If log level is not OFF, create a new handler.
+                    // Otherwise, don't bother.
                     if (logLevel != Level.OFF) {
-                        // If log level is not OFF, create a new file handler for it
-                        // Otherwise, don't bother
-                        String logFileName = "connection_" + connection_id + ".log";
-                        String logPath =
-                                logDir == null
-                                        ? logFileName
-                                        : logDir.getAbsolutePath() + File.separator + logFileName;
-                        FileHandler fileHandler = new FileHandler(logPath);
-                        fileHandler.setFormatter(new SimpleFormatter());
-                        logger.addHandler(fileHandler);
+                        // If a log directory is provided, create a new file handler to log messages in that directory
+                        if (logDir != null) {
+                            String logFileName = "connection_" + connection_id + ".log";
+                            String logPath = logDir.getAbsolutePath() + File.separator + logFileName;
+                            FileHandler fileHandler = new FileHandler(logPath);
+                            fileHandler.setLevel(logLevel);
+                            fileHandler.setFormatter(new SimpleFormatter());
+                            logger.addHandler(fileHandler);
+                        }
+                        // If no directory is provided, send the message to the console
+                        else
+                        {
+                            ConsoleHandler consoleHandler = new ConsoleHandler();
+                            consoleHandler.setFormatter(new SimpleFormatter());
+                            consoleHandler.setLevel(logLevel);
+                            logger.addHandler(consoleHandler);
+                        }
                     }
 
-                    // Set the logger level
+                    // Set the overall logger level too
                     logger.setLevel(logLevel);
                 }
                 loggerPerConnection.put(connection_id, logger);
@@ -66,6 +75,9 @@ public class MongoLoggerUtils {
             parentConnectionLogger = initConnectionLogger(connection_id, null, null);
         }
         logger.setParent(parentConnectionLogger);
+        logger.setLevel(parentConnectionLogger.getLevel());
+        // Make sure to allow using parent handler
+        logger.setUseParentHandlers(true);
 
         return logger;
     }
