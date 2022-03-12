@@ -22,7 +22,7 @@ public class JsonSchema {
         }
         MongoJsonSchema other = (MongoJsonSchema) obj;
         return Objects.equals(bsonType, other.bsonType)
-                && Objects.equals(properties, other.properties)
+                &&   Objects.equals(properties, other.properties)
                 && Objects.equals(anyOf, other.anyOf)
                 && Objects.equals(required, other.required)
                 && Objects.equals(items, other.items)
