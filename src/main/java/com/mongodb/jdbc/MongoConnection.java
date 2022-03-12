@@ -72,7 +72,9 @@ public abstract class MongoConnection implements Connection {
                                 .append(".")
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
-        logger.log(Level.INFO, "Test");
+
+        // Log the driver name and version
+        logger.log(Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
 
         this.mongoClientSettings = MongoClientSettings.builder().applyConnectionString(cs).build();
         mongoClient =

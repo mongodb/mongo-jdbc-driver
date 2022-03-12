@@ -75,41 +75,13 @@ public class MongoLogger {
      */
     public void log(Level level, String msg) {
         if (null != logger) {
-            plog(logger, level, msg);
-        }
-    }
+            // Get access to caller
+            StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+            StackTraceElement ste = stacktrace[2];
+            String sourceClassName = ste.getClassName();
+            String methodName = ste.getMethodName();
 
-    /**
-     * Log a message, which is only to be constructed if the logging level is such that the message
-     * will actually be logged.
-     *
-     * <p>If the logger is currently enabled for the given message level then the message is
-     * constructed by invoking the provided supplier function and forwarded to all the registered
-     * output Handler objects.
-     *
-     * @param level One of the message level identifiers, e.g., SEVERE
-     * @param msgSupplier A function, which when called, produces the desired log message
-     * @since 1.8
-     */
-    public void log(Level level, Supplier<String> msgSupplier) {
-        if (null != logger) {
-            plog(logger, level, msgSupplier);
-        }
-    }
-
-    /**
-     * Log a message, with one object parameter.
-     *
-     * <p>If the logger is currently enabled for the given message level then a corresponding
-     * LogRecord is created and forwarded to all the registered output Handler objects.
-     *
-     * @param level One of the message level identifiers, e.g., SEVERE
-     * @param msg The string message (or a key in the message catalog)
-     * @param param1 parameter to the message
-     */
-    public void log(Level level, String msg, Object param1) {
-        if (null != logger) {
-            plog(logger, level, msg, param1);
+            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg);
         }
     }
 
@@ -125,7 +97,13 @@ public class MongoLogger {
      */
     public void log(Level level, String msg, Object params[]) {
         if (null != logger) {
-            plog(logger, level, msg, params);
+            // Get access to caller
+            StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+            StackTraceElement ste = stacktrace[2];
+            String sourceClassName = ste.getClassName();
+            String methodName = ste.getMethodName();
+
+            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg, params);
         }
     }
 
@@ -145,30 +123,13 @@ public class MongoLogger {
      */
     public void log(Level level, String msg, Throwable thrown) {
         if (null != logger) {
-            plog(logger, level, msg, thrown);
-        }
-    }
+            // Get access to caller
+            StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+            StackTraceElement ste = stacktrace[2];
+            String sourceClassName = ste.getClassName();
+            String methodName = ste.getMethodName();
 
-    /**
-     * Log a lazily constructed message, with associated Throwable information.
-     *
-     * <p>If the logger is currently enabled for the given message level then the message is
-     * constructed by invoking the provided supplier function. The message and the given {@link
-     * Throwable} are then stored in a {@link LogRecord} which is forwarded to all registered output
-     * handlers.
-     *
-     * <p>Note that the thrown argument is stored in the LogRecord thrown property, rather than the
-     * LogRecord parameters property. Thus it is processed specially by output Formatters and is not
-     * treated as a formatting parameter to the LogRecord message property.
-     *
-     * @param level One of the message level identifiers, e.g., SEVERE
-     * @param thrown Throwable associated with log message.
-     * @param msgSupplier A function, which when called, produces the desired log message
-     * @since 1.8
-     */
-    public void log(Level level, Throwable thrown, Supplier<String> msgSupplier) {
-        if (null != logger) {
-            plog(logger, level, thrown, msgSupplier);
+            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg, thrown);
         }
     }
 
@@ -189,36 +150,5 @@ public class MongoLogger {
         }
 
         return sourceName;
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------------------
-     * Below are the private counterparts of all the log(..) methods. This way, the public facing methods
-     * can check that the logger is not null and we can override the private method and add the
-     * connection and statement id as the sourceclass prefix.
-     * -----------------------------------------------------------------------------------------------
-     */
-    private void plog(Logger logger, Level level, String msg) {
-        // Method body is in LoggingAspect
-    }
-
-    private void plog(Logger logger, Level level, Supplier<String> msgSupplier) {
-        // Method body is in LoggingAspect
-    }
-
-    private void plog(Logger logger, Level level, String msg, Object param1) {
-        // Method body is in LoggingAspect
-    }
-
-    private void plog(Logger logger, Level level, String msg, Object params[]) {
-        // Method body is in LoggingAspect
-    }
-
-    private void plog(Logger logger, Level level, String msg, Throwable thrown) {
-        // Method body is in LoggingAspect
-    }
-
-    private void plog(Logger logger, Level level, Throwable thrown, Supplier<String> msgSupplier) {
-        // Method body is in LoggingAspect
     }
 }
