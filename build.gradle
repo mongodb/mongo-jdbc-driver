@@ -125,8 +125,6 @@ task tdvtTest(type: Test) {
     shouldRunAfter test
 }
 
-check.dependsOn tdvtTest
-
 task runTestGenerator(type: JavaExec) {
     group = "Execution"
     description = "Run the integration test baseline file generator."
