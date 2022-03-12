@@ -155,7 +155,7 @@ public class MongoDriver implements Driver {
 
     private MongoConnection createConnection(ConnectionString cs, Properties info)
             throws SQLException {
-        // attempt to get DIALECT property, and default to "mysql" if none is present
+        // attempt to get DIALECT property, and default to "mongosql" if none is present
         String dialect = info.getProperty(DIALECT, MONGOSQL_DIALECT);
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
