@@ -334,7 +334,7 @@ class MongoDriverTest {
                 1);
 
         // Clean-up
-        cleanupLoggingTest((MongoConnection) conn, props);
+        //cleanupLoggingTest((MongoConnection) conn, props);
     }
 
     @Test
@@ -415,7 +415,8 @@ class MongoDriverTest {
         loggingTestProps.setProperty("dialect", "MongoSQL");
         loggingTestProps.setProperty("database", "admin");
 
-        MongoConnection connection = (MongoConnection) d.connect(userURL, loggingTestProps);
+        MongoConnection connection =
+                (MongoConnection) d.getUnvalidatedConnection(userURL, loggingTestProps);
         assertNotNull(connection);
         File logFile = getLogFile(loggingTestProps, connection.connectionId);
         if (null != loggingTestProps.getProperty(MongoDriver.LOG_LEVEL)
@@ -423,8 +424,6 @@ class MongoDriverTest {
                         .getProperty(MongoDriver.LOG_LEVEL)
                         .equals(Level.OFF.getName())) {
             assertTrue(logFile.exists());
-            // The file is empty before any public method is called.
-            assertTrue(logFile.length() == 0);
         } else {
             assertFalse(logFile.exists());
         }

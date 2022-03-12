@@ -15,6 +15,7 @@ public class MongoSQLConnection extends MongoConnection implements Connection {
 
     public MongoSQLConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
         super(cs, database, logLevel, logDir);
+        super.logger.log(Level.FINER, "Dialect is MongoSQL");
     }
 
     @Override

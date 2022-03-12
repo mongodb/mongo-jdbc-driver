@@ -35,7 +35,8 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
                     }
                     else if (params[i] instanceof BsonValue) {
                         b.append("Bson");
-                        char bsonTypeName[] = ((BsonValue)params[i]).getBsonType().toString().toLowerCase().toCharArray();
+                        char bsonTypeName[] =
+                                ((BsonValue)params[i]).getBsonType().toString().toLowerCase().toCharArray();
                         bsonTypeName[0] = Character.toUpperCase(bsonTypeName[0]);
                         b.append(bsonTypeName.toString());
                         b.append("{***}");
@@ -63,8 +64,8 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
     after () throwing (Exception e) : execution(* *.*(..)) && !within(LoggingAspect)
             {
                 if (null != logger) {
-                    logger.log(
-                            Level.SEVERE,
+                    logger.logError(
+                            thisJoinPoint.getSignature().getDeclaringTypeName(),
                             "Error in " + thisJoinPoint.getSignature().toShortString(),
                             e);
                 }

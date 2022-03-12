@@ -1,8 +1,6 @@
 package com.mongodb.jdbc.logging;
 
-import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class MongoLogger {
@@ -64,6 +62,17 @@ public class MongoLogger {
         }
     }
 
+    protected void logError(String sourceName, String msg, Throwable thrown) {
+        if (null != logger) {
+            logger.logp(
+                    Level.SEVERE,
+                    addConnectionStatementIdsToSourceName(sourceName),
+                    null,
+                    msg,
+                    thrown);
+        }
+    }
+
     /**
      * Log a message, with no arguments.
      *
@@ -81,7 +90,8 @@ public class MongoLogger {
             String sourceClassName = ste.getClassName();
             String methodName = ste.getMethodName();
 
-            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg);
+            logger.logp(
+                    level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg);
         }
     }
 
@@ -103,7 +113,12 @@ public class MongoLogger {
             String sourceClassName = ste.getClassName();
             String methodName = ste.getMethodName();
 
-            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg, params);
+            logger.logp(
+                    level,
+                    addConnectionStatementIdsToSourceName(sourceClassName),
+                    methodName,
+                    msg,
+                    params);
         }
     }
 
@@ -129,7 +144,12 @@ public class MongoLogger {
             String sourceClassName = ste.getClassName();
             String methodName = ste.getMethodName();
 
-            logger.logp(level, addConnectionStatementIdsToSourceName(sourceClassName), methodName, msg, thrown);
+            logger.logp(
+                    level,
+                    addConnectionStatementIdsToSourceName(sourceClassName),
+                    methodName,
+                    msg,
+                    thrown);
         }
     }
 
