@@ -159,7 +159,23 @@ dependencies {
 
 task printVersionInfo {
 	println("is tagged: ${isTaggedVersion()}")
-	println("version: ${getGitVersion()}")
+	println("is dirty: ${isDirtyVersion()}")
+	println("git version: ${getGitVersion()}")
+	println("release version: ${getReleaseVersion()}")
+}
+
+def getReleaseVersion() {
+	def version = getGitVersion()
+	def snapshot = isDirtyVersion() || !isTaggedVersion()
+	if (snapshot) {
+		return getGitVersion() + "-SNAPSHOT"
+	} else {
+		return getGitVersion()
+	}
+}
+
+def isDirtyVersion() {
+	getGitVersion().endsWith("dirty")
 }
 
 def isTaggedVersion() {
