@@ -36,7 +36,6 @@ buildvariants:
       - name: "build"
       - name: "test-unit"
       - name: "test-integration"
-
   - name: release
     display_name: "Release"
     expansions:
@@ -44,7 +43,6 @@ buildvariants:
     run_on: ubuntu1804-build
     tasks:
       - name: "publish-maven"
-      - name: "print-version-info"
 
 tasks:
   - name: "build"
@@ -62,10 +60,6 @@ tasks:
   - name: "publish-maven"
     commands:
       - func: "publish maven"
-
-  - name: "print-version-info"
-    commands:
-      - func: "print version info"
 
   - name: spotless
     commands:
@@ -111,15 +105,6 @@ functions:
           ./gradlew runDataLoader
           ./gradlew clean integrationTest -x test
           ./resources/run_adl.sh stop
-
-  "print version info":
-    command: shell.exec
-    type: test
-    params:
-      working_dir: mongo-jdbc-driver
-      script: |
-          ${PREPARE_SHELL}
-          ./gradlew printVersionInfo
 
   "export variables":
     - command: shell.exec
