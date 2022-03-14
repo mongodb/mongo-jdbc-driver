@@ -8,7 +8,6 @@ plugins {
 
 ext {
     gitVersion = getGitVersion()
-    gitLastComment = getGitLastComment()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
@@ -164,6 +163,26 @@ task printVersionInfo {
 	println("release version: ${getReleaseVersion()}")
 }
 
+task publishMaven {
+	group = 'publishing'
+
+	def releaseVersion = getReleaseVersion()
+	println("Publishing: ${project.name} : ${releaseVersion}")
+
+	if (releaseVersion.endsWith('-SNAPSHOT')) {
+		description = 'Publishes snapshots to Sonatype'
+		dependsOn ':publishToSonatype'
+	} else {
+		description = 'Publishes a release and uploads to Sonatype / Maven Central'
+		dependsOn ':closeAndReleaseRepository'
+		dependsOn ':publishToSonatype'
+		// Make sure we publish to staging first
+		project.tasks.getByName('publishToSonatype').finalizedBy(
+				project.tasks.getByName('closeAndReleaseRepository'),
+		)
+	}
+}
+
 def getReleaseVersion() {
 	def version = getGitVersion()
 	def snapshot = isDirtyVersion() || !isTaggedVersion()
@@ -203,15 +222,5 @@ def getGitVersion() {
 	version
 }
 
-def getGitLastComment() {
-    def describeStdOut = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '-1', '--pretty=%B'
-        standardOutput = describeStdOut
-    }
-    describeStdOut.toString().trim()
-}
-
 apply from: 'gradle/publish.gradle'
-apply from: 'gradle/deploy.gradle'
 
