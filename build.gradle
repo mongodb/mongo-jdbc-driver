@@ -80,7 +80,7 @@ allprojects {
         testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
     }
 
-    ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.VERBOSE
+    //ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.VERBOSE
 
     compileJava {
         doLast {
