@@ -157,13 +157,34 @@ dependencies {
     tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
+task printVersionInfo {
+	println("is tagged: ${isTaggedVersion()}")
+	println("version: ${getGitVersion()}")
+}
+
+def isTaggedVersion() {
+	def out = new ByteArrayOutputStream()
+	def result = exec {
+		commandLine 'git', 'describe', '--exact'
+		ignoreExitValue true
+		standardOutput out
+		errorOutput out
+	}
+	if (result.getExitValue() == 0) {
+		return true
+	} else {
+		return false
+	}
+}
+
 def getGitVersion() {
-    def describeStdOut = new ByteArrayOutputStream()
+    def out = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'describe', '--tags', '--always', '--dirty'
-        standardOutput = describeStdOut
+        standardOutput = out
     }
-    describeStdOut.toString().substring(1).trim()
+    def version = out.toString().substring(1).trim()
+	version
 }
 
 def getGitLastComment() {
