@@ -218,10 +218,10 @@ class MongoDriverTest {
         Properties p = new Properties();
         Connection c;
 
-        // dialect not set defaults to MySQLConnection
+        // dialect not set defaults to MongoSQLConnection
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
-        assertTrue(c instanceof MySQLConnection);
+        assertTrue(c instanceof MongoSQLConnection);
 
         // dialect set to "mysql" results in MySQLConnection
         p.setProperty("dialect", "MySQL");

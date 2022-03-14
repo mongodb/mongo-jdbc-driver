@@ -170,8 +170,8 @@ public class MongoDriver implements Driver {
 
     private MongoConnection createConnection(ConnectionString cs, Properties info)
             throws SQLException {
-        // attempt to get DIALECT property, and default to "mysql" if none is present
-        String dialect = info.getProperty(DIALECT, MYSQL_DIALECT);
+        // attempt to get DIALECT property, and default to "mongosql" if none is present
+        String dialect = info.getProperty(DIALECT, MONGOSQL_DIALECT);
         // Default log level is OFF
         String logLevelVal = info.getProperty(LOG_LEVEL, Level.OFF.getName());
         Level logLevel;
