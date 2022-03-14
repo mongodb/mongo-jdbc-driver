@@ -4,6 +4,7 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -15,12 +16,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.BsonArray;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
+import org.bson.json.JsonReader;
 
 public class MongoJsonSchema {
+    private static final Codec<JsonSchema> JSON_SCHEMA_CODEC =
+            MongoDriver.registry.get(JsonSchema.class);
+
     public static class ScalarProperties {
         protected String name;
         protected boolean isRequired = true;
@@ -42,7 +50,7 @@ public class MongoJsonSchema {
     public Map<String, MongoJsonSchema> properties;
     public Set<MongoJsonSchema> anyOf;
     public Set<String> required;
-    public MongoJsonSchema items;
+    public Set<MongoJsonSchema> items;
     public boolean additionalProperties;
 
     /**
@@ -81,8 +89,11 @@ public class MongoJsonSchema {
             }
         }
         result.required = baseSchema.required;
-        result.items = toSimplifiedMongoJsonSchema(baseSchema.items);
-        result.additionalProperties = baseSchema.additionalProperties;
+        if (baseSchema.items != null) {
+            result.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
+        }
+        result.additionalProperties =
+                toMongoJsonSchemaAdditionalProperties(baseSchema.additionalProperties);
 
         if (baseSchema.bsonType != null) {
             Set<String> bsonTypes = polymorphicBsonTypeToStringSet(baseSchema.bsonType);
@@ -144,12 +155,13 @@ public class MongoJsonSchema {
                 if (BSON_ARRAY.getBsonName().equalsIgnoreCase(currType)) {
                     // Move the items down with the anyOf schema for the bsontype Array
                     // because they go together
-                    anyOfSchema.items = toSimplifiedMongoJsonSchema(baseSchema.items);
+                    anyOfSchema.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
                 } else if (BSON_OBJECT.getBsonName().equalsIgnoreCase(currType)) {
                     // Move the object related properties down with the anyof schema for the 'object'
                     anyOfSchema.properties = toMongoJsonSchemaProperties(baseSchema.properties);
                     anyOfSchema.required = baseSchema.required;
-                    anyOfSchema.additionalProperties = baseSchema.additionalProperties;
+                    anyOfSchema.additionalProperties =
+                            toMongoJsonSchemaAdditionalProperties(baseSchema.additionalProperties);
                     result.properties = null;
                     result.required = null;
                     result.additionalProperties = false;
@@ -162,6 +174,78 @@ public class MongoJsonSchema {
         }
 
         return result;
+    }
+
+    /**
+     * Converts a polymorphic items field which can either be a JsonSchema or an Array of JsonSchema
+     * to a set of MongoJsonSchema.
+     *
+     * @param polymorphicItems The original polymorphic field.
+     * @return the corresponding MongoJsonSchema set.
+     */
+    private static Set<MongoJsonSchema> polymorphicItemsToMongoJsonSchemaSet(
+            BsonValue polymorphicItems) {
+        if (polymorphicItems == null) {
+            return null;
+        }
+
+        // The only expected types for Items are BsonArray or BsonDocument
+        if (!(polymorphicItems.isArray() || polymorphicItems.isDocument())) {
+            throw new BsonInvalidOperationException(
+                    "Value expected to be of type "
+                            + BsonType.ARRAY
+                            + " or "
+                            + BsonType.DOCUMENT
+                            + " but  is of unexpected type "
+                            + polymorphicItems.getBsonType());
+        }
+
+        BsonArray items =
+                polymorphicItems.isDocument()
+                        ? new BsonArray(Collections.singletonList(polymorphicItems.asDocument()))
+                        : polymorphicItems.asArray();
+
+        return items.asArray()
+                .stream()
+                .map(
+                        val ->
+                                toSimplifiedMongoJsonSchema(
+                                        JSON_SCHEMA_CODEC.decode(
+                                                new JsonReader(val.asDocument().toJson()),
+                                                DecoderContext.builder().build())))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Converts a polymorphic additionalProperties which can either be a boolean or a Document to a
+     * boolean.
+     *
+     * @param polymorphocAdditionalProperties The original polymorphic additionalProperties field.
+     * @return the corresponding boolean value.
+     */
+    private static boolean toMongoJsonSchemaAdditionalProperties(
+            BsonValue polymorphocAdditionalProperties) {
+        if (polymorphocAdditionalProperties == null) {
+            // By default, additional properties is false
+            return false;
+        }
+
+        // The only expected types for additionalProperties are Document or Boolean
+        if (!(polymorphocAdditionalProperties.isBoolean()
+                || polymorphocAdditionalProperties.isDocument())) {
+            throw new BsonInvalidOperationException(
+                    "Value expected to be of type "
+                            + BsonType.BOOLEAN
+                            + " or "
+                            + BsonType.DOCUMENT
+                            + " but  is of unexpected type "
+                            + polymorphocAdditionalProperties.getBsonType());
+        }
+
+        // If additionalProperties is a document, return "true", otherwise return the boolean value.
+        return polymorphocAdditionalProperties.isDocument()
+                ? true
+                : polymorphocAdditionalProperties.asBoolean().getValue();
     }
 
     /**

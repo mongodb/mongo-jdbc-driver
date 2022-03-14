@@ -195,8 +195,10 @@ public abstract class MongoSQLMock {
 
         MongoJsonSchema vecSchema = new MongoJsonSchema();
         vecSchema.bsonType = "array";
-        vecSchema.items = new MongoJsonSchema();
-        vecSchema.items.bsonType = "int";
+        vecSchema.items = new HashSet<MongoJsonSchema>();
+        MongoJsonSchema item = new MongoJsonSchema();
+        item.bsonType = "int";
+        vecSchema.items.add(item);
 
         MongoJsonSchema nullSchema = new MongoJsonSchema();
         nullSchema.bsonType = "null";
