@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import java.sql.*;
 import java.util.HashSet;
@@ -20,7 +22,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
     private Connection conn;
 
     @Override
-    public Connection getBasicConnection(Properties extraProps) throws SQLException {
+    public MongoConnection getBasicConnection(Properties extraProps) throws SQLException {
         java.util.Properties p = new java.util.Properties(extraProps);
         p.setProperty("dialect", MYSQL);
         p.setProperty("user", System.getenv("ADL_TEST_USER"));
@@ -28,7 +30,7 @@ public class MySQLIntegrationTest extends MongoIntegrationTest {
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
         p.setProperty("database", DB);
         p.setProperty("ssl", "true");
-        return DriverManager.getConnection(URL, p);
+        return (MongoConnection) DriverManager.getConnection(URL, p);
     }
 
     @BeforeEach

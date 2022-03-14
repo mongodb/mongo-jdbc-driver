@@ -1,5 +1,6 @@
 package com.mongodb.jdbc.integration;
 
+import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.IOException;
@@ -25,11 +26,12 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
     private List<TestEntry> testEntries;
 
     @Override
-    public Connection getBasicConnection(Properties extraProps) throws SQLException {
+    public MongoConnection getBasicConnection(Properties extraProps) throws SQLException {
         return getBasicConnection(DEFAULT_TEST_DB, extraProps);
     }
 
-    public Connection getBasicConnection(String db, Properties extraProps) throws SQLException {
+    public MongoConnection getBasicConnection(String db, Properties extraProps)
+            throws SQLException {
 
         Properties p = new java.util.Properties(extraProps);
         p.setProperty("dialect", MONGOSQL);
@@ -38,7 +40,7 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
         p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
-        return DriverManager.getConnection(URL, p);
+        return (MongoConnection) DriverManager.getConnection(URL, p);
     }
 
     @BeforeAll

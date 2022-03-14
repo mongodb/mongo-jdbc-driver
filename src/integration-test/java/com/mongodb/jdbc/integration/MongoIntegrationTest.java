@@ -3,6 +3,7 @@ package com.mongodb.jdbc.integration;
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +18,8 @@ import java.util.logging.Level;
 import org.junit.jupiter.api.Test;
 
 public abstract class MongoIntegrationTest {
+    private static final String CURRENT_DIR =
+            Paths.get(".").toAbsolutePath().normalize().toString();
 
     /**
      * Creates a new connection.
@@ -26,7 +29,7 @@ public abstract class MongoIntegrationTest {
      * @return The connection.
      * @throws SQLException If the connection can not be created.
      */
-    public abstract Connection getBasicConnection(Properties extraProps) throws SQLException;
+    public abstract MongoConnection getBasicConnection(Properties extraProps) throws SQLException;
 
     /** Simple callable used to spawn a new statement and execute a query. */
     public class SimpleQueryExecutor implements Callable<Void> {
@@ -58,11 +61,11 @@ public abstract class MongoIntegrationTest {
         List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
 
         // Connection with no logging.
-        Connection noLogging = connect(null);
+        MongoConnection noLogging = connect(null);
         // Connection only logging exceptions.
-        Connection logErrorOnly = connect(Level.SEVERE);
+        MongoConnection logErrorOnly = connect(Level.SEVERE);
         // Connection logging all public method entries of the JDBC interface.
-        Connection logEntries = connect(Level.FINER);
+        MongoConnection logEntries = connect(Level.FINER);
         try {
             addSimpleQueryExecTasks(tasks, noLogging);
             addSimpleQueryExecTasks(tasks, logErrorOnly);
@@ -71,13 +74,13 @@ public abstract class MongoIntegrationTest {
         } finally {
             executor.awaitTermination(1, TimeUnit.SECONDS);
             if (noLogging != null) {
-                cleanUp((MongoConnection) noLogging);
+                cleanUp(noLogging);
             }
             if (logErrorOnly != null) {
-                cleanUp((MongoConnection) logErrorOnly);
+                cleanUp(logErrorOnly);
             }
             if (logEntries != null) {
-                cleanUp((MongoConnection) logEntries);
+                cleanUp(logEntries);
             }
         }
     }
@@ -89,11 +92,14 @@ public abstract class MongoIntegrationTest {
      * @return the connection.
      * @throws SQLException If an error occurs during the connection process.
      */
-    private Connection connect(Level logLevel) throws SQLException {
+    private MongoConnection connect(Level logLevel) throws SQLException {
         Properties loggingProps = new Properties();
         if (null != logLevel) {
             loggingProps.setProperty(MongoDriver.LOG_LEVEL, logLevel.getName());
         }
+
+        // Log files will be created in the current directory
+        loggingProps.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
         return getBasicConnection(loggingProps);
     }
 

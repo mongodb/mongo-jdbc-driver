@@ -376,7 +376,7 @@ class MongoDriverTest {
         props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
         try {
             MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
-            fail("Expected to fail because the logging director does not exist.");
+            fail("Expected to fail because the logging directory does not exist.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
