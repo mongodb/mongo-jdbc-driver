@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.DisableAutoLogging;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +92,8 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
-    protected MongoLogger getLogger() {
+    @DisableAutoLogging
+    public MongoLogger getLogger() {
         return logger;
     }
 

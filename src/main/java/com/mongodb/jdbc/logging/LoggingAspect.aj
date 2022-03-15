@@ -20,8 +20,9 @@ public aspect LoggingAspect perthis(execution(com.mongodb.jdbc.*.new(..)))
         return proceed(arg);
     }
 
-    before() : (execution(public * @AutoLoggable com.mongodb.jdbc.*.*(..)) ||
+    before() : (execution(public * @AutoLoggable com.mongodb.jdbc.*.*(..))||
             execution(@AutoLoggable public * com.mongodb.jdbc.*.*(..))) &&
+            !@annotation(com.mongodb.jdbc.logging.DisableAutoLogging) &&
             !within(LoggingAspect) {
         if (null != logger) {
             final StringBuilder b = new StringBuilder(thisJoinPoint.getSignature().getName());
