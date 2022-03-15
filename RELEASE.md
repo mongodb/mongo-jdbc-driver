@@ -49,7 +49,7 @@ Make sure to run the 'release' task, if it is not run automatically.
 #### Set Evergreen Priorities
 Some evergreen variants may have a long schedule queue.
 To speed up release tasks, you can set the task priority for any variant to 101 for release candidates and 200 for actual releases.
-If you do not have permissions to set priority above 100, ask someone the project manager to set the
+If you do not have permissions to set priority above 100, ask the project manager to set the
 priority.
 
 ### Post-Release Tasks
