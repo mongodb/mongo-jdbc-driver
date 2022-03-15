@@ -11,22 +11,13 @@ public class MongoLogger {
     private Integer statementId;
 
     /**
-     * Gets a logger to log information before a connection has been made.
-     *
-     * @param logger The logger.
-     */
-    public MongoLogger(Logger logger) {
-        this.logger = logger;
-    }
-
-    /**
      * Gets a logger, tied to a connection. Used for logging after a connection has been created.
      *
-     * @param className The classname to find the associated logger.
+     * @param logger The logger.
      * @param connectionId The connection id.
      */
-    public MongoLogger(String className, int connectionId) {
-        this.logger = MongoLoggerUtils.getLogger(className, connectionId);
+    public MongoLogger(Logger logger, int connectionId) {
+        this.logger = logger;
         this.connectionId = connectionId;
     }
 
@@ -35,13 +26,43 @@ public class MongoLogger {
      * been created.
      *
      * @param className The classname to find the associated logger.
-     * @param connectionId The connection id.
+     * @param parentLogger The parent logger.
      * @param statementId The statement id.
      */
-    public MongoLogger(String className, int connectionId, int statementId) {
-        this.logger = MongoLoggerUtils.getLogger(className, connectionId);
-        this.connectionId = connectionId;
+    public MongoLogger(String className, MongoLogger parentLogger, int statementId) {
+        createLogger(className, parentLogger);
         this.statementId = statementId;
+    }
+
+    /**
+     * Gets a logger, tied to a connection but no statement. This is used for logging
+     * DatabaseMetadata for example.
+     *
+     * @param className The classname to find the associated logger.
+     * @param parentLogger The parent logger.
+     */
+    public MongoLogger(String className, MongoLogger parentLogger) {
+        createLogger(className, parentLogger);
+    }
+
+    /**
+     * Create a logger for this class and attach it to the provided parent logger.
+     *
+     * @param className The classname to find the associated logger.
+     * @param parentLogger The parent logger.
+     */
+    private void createLogger(String className, MongoLogger parentLogger) {
+        String loggername =
+                (parentLogger.connectionId == null)
+                        ? className
+                        : parentLogger.connectionId + "_" + className;
+        Logger logger = Logger.getLogger(loggername);
+        logger.setParent(parentLogger.logger);
+        logger.setLevel(parentLogger.logger.getLevel());
+        // Make sure to allow using parent handler
+        logger.setUseParentHandlers(true);
+
+        this.connectionId = parentLogger.connectionId;
     }
 
     /**

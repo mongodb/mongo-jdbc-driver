@@ -209,7 +209,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", SPECIFIC_NAME, SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -276,7 +276,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", SPECIFIC_NAME, SPECIFIC_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
 
         docs.add(metaDoc);
         docs.add(valuesDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -513,7 +513,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", PSEUDO_COLUMN, PSEUDO_COLUMN, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -563,7 +563,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -614,7 +614,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -671,7 +671,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", DEFERRABILITY, DEFERRABILITY, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -829,7 +829,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         BSON_STRING.getMaxScale(), //maxScale
                         BSON_STRING.getNumPrecRadix())); //numPrecRadix
 
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -906,7 +906,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                 new MySQLColumnInfo("", "", "", BASE_TYPE, BASE_TYPE, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -934,7 +934,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", SUPERTYPE_NAME, SUPERTYPE_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -957,7 +957,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", SUPERTABLE_NAME, SUPERTABLE_NAME, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -1028,7 +1028,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", SOURCE_DATA_TYPE, SOURCE_DATA_TYPE, BSON_INT.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     //------------------------- JDBC 4.0 -----------------------------------
@@ -1091,7 +1091,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
         doc.values.add(new BsonString("database to connect to"));
         docs.add(doc);
 
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     private MySQLResultDoc getFunctionMetaDoc() throws SQLException {
@@ -1227,7 +1227,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             docs.add(doc);
         }
 
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     @Override
@@ -1275,7 +1275,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
             }
         }
 
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     private MySQLResultDoc getTypeInfoMetaDoc() throws SQLException {
@@ -1423,7 +1423,7 @@ public class MySQLDatabaseMetaData extends MongoDatabaseMetaData implements Data
                         "", "", "", IS_NULLABLE, IS_NULLABLE, BSON_STRING.getBsonName()));
 
         docs.add(metaDoc);
-        return new MySQLResultSet(conn.getConnectionId(), new MySQLExplicitCursor(docs), true);
+        return new MySQLResultSet(conn.getLogger(), new MySQLExplicitCursor(docs), true);
     }
 
     private enum TypeCase {

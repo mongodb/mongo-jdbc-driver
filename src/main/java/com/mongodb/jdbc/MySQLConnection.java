@@ -21,7 +21,7 @@ public class MySQLConnection extends MongoConnection implements Connection {
             Level logLevel,
             File logDir) {
         super(cs, database, logLevel, logDir);
-        super.logger.log(Level.FINER, "Dialect is Mysql");
+        super.getLogger().log(Level.FINER, "Dialect is Mysql");
         relaxed = conversionMode == null || !conversionMode.equals("strict");
     }
 

@@ -142,7 +142,7 @@ public abstract class MongoDatabaseMetaData implements DatabaseMetaData {
 
     public MongoDatabaseMetaData(MongoConnection conn) {
         this.conn = conn;
-        logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getConnectionId());
+        logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getLogger());
     }
 
     public static String escapeString(String value) {

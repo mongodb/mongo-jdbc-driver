@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,10 +81,10 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
     public MongoSQLResultSetMetaData(
             MongoJsonSchema schema,
             boolean sortFieldsAlphabetically,
-            int connectionId,
+            MongoLogger parentLogger,
             Integer statementId)
             throws SQLException {
-        super(connectionId, statementId);
+        super(parentLogger, statementId);
         assertDatasourceSchema(schema);
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();

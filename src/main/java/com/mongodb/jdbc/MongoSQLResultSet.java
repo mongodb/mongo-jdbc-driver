@@ -3,6 +3,7 @@ package com.mongodb.jdbc;
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -25,17 +26,17 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
      * Constructor for a MongoSQLResultSet not tied to a statement used for
      * MongoSQLDatabaseMetaData.
      *
-     * @param connectionId The connection id this resultset is related to.
+     * @param parentLogger The parent connection logger.
      * @param cursor The resultset cursor.
      * @param schema The resultset schema.
      * @throws SQLException
      */
     public MongoSQLResultSet(
-            int connectionId, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
-        super(connectionId);
+        super(parentLogger);
         setUpResultset(cursor, schema);
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema, false, connectionId, null);
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, false, parentLogger, null);
     }
 
     /**
@@ -53,7 +54,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         setUpResultset(cursor, schema);
         this.rsMetaData =
                 new MongoSQLResultSetMetaData(
-                        schema, true, statement.getConnectionId(), statement.getStatementId());
+                        schema, true, statement.getParentLogger(), statement.getStatementId());
     }
 
     private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)

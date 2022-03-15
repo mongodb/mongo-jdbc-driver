@@ -29,9 +29,7 @@ public abstract class MongoStatement<T> implements Statement {
         Preconditions.checkNotNull(conn);
         Preconditions.checkNotNull(databaseName);
         this.statementId = conn.getNextStatementId();
-        logger =
-                new MongoLogger(
-                        this.getClass().getCanonicalName(), conn.getConnectionId(), statementId);
+        logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getLogger(), statementId);
         this.conn = conn;
         currentDBName = databaseName;
 
@@ -42,8 +40,8 @@ public abstract class MongoStatement<T> implements Statement {
         }
     }
 
-    protected int getConnectionId() {
-        return conn.getConnectionId();
+    protected MongoLogger getParentLogger() {
+        return conn.getLogger();
     }
 
     protected int getStatementId() {

@@ -1,6 +1,7 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -12,9 +13,10 @@ public class MySQLResultSetMetaData extends MongoResultSetMetaData implements Re
     protected List<MySQLColumnInfo> columnInfo;
     protected Map<String, Integer> columnPositions;
 
-    public MySQLResultSetMetaData(MySQLResultDoc metadataDoc, int connectionId, Integer statementId)
+    public MySQLResultSetMetaData(
+            MySQLResultDoc metadataDoc, MongoLogger parentLogger, Integer statementId)
             throws SQLException {
-        super(connectionId, statementId);
+        super(parentLogger, statementId);
         columnInfo = metadataDoc.columns;
 
         columnPositions = new HashMap<>(columnInfo.size());

@@ -3,6 +3,7 @@ package com.mongodb.jdbc;
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -35,23 +36,24 @@ public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements Re
         MySQLResultDoc metadataDoc = cursor.next();
         rsMetaData =
                 new MySQLResultSetMetaData(
-                        metadataDoc, statement.getConnectionId(), statement.getStatementId());
+                        metadataDoc, statement.getParentLogger(), statement.getStatementId());
     }
     /**
      * * Constructor for a resultset not tied to a statement for DatabaseMetadata resultsets.
      *
-     * @param connectionId The id of the connection tied to this resultset.
+     * @param parentLogger The parent connection logger.
      * @param cursor The resultset cursor.
      * @param relaxed Flag for the relaxed mode.
      * @throws SQLException
      */
-    public MySQLResultSet(int connectionId, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    public MySQLResultSet(
+            MongoLogger parentLogger, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
-        super(connectionId);
+        super(parentLogger);
         setupResultset(cursor, relaxed);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MySQLResultSetMetaData(metadataDoc, connectionId, null);
+        rsMetaData = new MySQLResultSetMetaData(metadataDoc, parentLogger, null);
     }
 
     private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed)

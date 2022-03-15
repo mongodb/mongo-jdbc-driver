@@ -126,7 +126,7 @@ public abstract class MongoIntegrationTest {
      */
     private void cleanUp(MongoConnection conn) {
         try {
-            File logFile = new File("./connection_" + conn.getConnectionId() + ".log");
+            File logFile = new File("./connection_" + conn.getLogger() + ".log");
             conn.close();
             if (logFile.exists()) {
                 logFile.delete();

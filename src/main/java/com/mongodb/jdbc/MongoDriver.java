@@ -20,6 +20,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.ClientInfoStatus;
@@ -35,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -83,6 +86,19 @@ public class MongoDriver implements Driver {
                         Level.FINE.getName(),
                         Level.WARNING.getName()
                     });
+    static final String LOG_TO_CONSOLE = "console";
+
+    // Load logging.properties
+    static {
+        InputStream stream =
+                MongoDriver.class.getClassLoader().getResourceAsStream("logging.properties");
+        try {
+            LogManager.getLogManager().reset();
+            LogManager.getLogManager().readConfiguration(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     static CodecRegistry registry =
             fromProviders(
@@ -188,6 +204,11 @@ public class MongoDriver implements Driver {
                             + ".");
         }
         String logDirVal = info.getProperty(LOG_DIR);
+        if ((logDirVal != null) && LOG_TO_CONSOLE.equalsIgnoreCase(logDirVal.trim())) {
+            // If logDir is "console" then remove the value since the logger
+            // will default to a console handler if no logDir is specified
+            logDirVal = null;
+        }
         File logDir = (logDirVal == null) ? null : new File(logDirVal);
         if (logDir != null && !logDir.isDirectory()) {
             throw new SQLException(

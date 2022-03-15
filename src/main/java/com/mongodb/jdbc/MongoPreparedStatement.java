@@ -36,7 +36,7 @@ public class MongoPreparedStatement implements PreparedStatement {
         this.logger =
                 new MongoLogger(
                         this.getClass().getCanonicalName(),
-                        statement.getConnectionId(),
+                        statement.getParentLogger(),
                         statement.getStatementId());
         this.sql = sql;
         this.statement = statement;

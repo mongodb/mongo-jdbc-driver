@@ -9,8 +9,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
-import com.mongodb.jdbc.logging.MongoLoggerUtils;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -37,7 +37,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
@@ -50,7 +54,7 @@ public abstract class MongoConnection implements Connection {
     protected String url;
     protected String user;
     protected boolean isClosed;
-    protected MongoLogger logger;
+    private MongoLogger logger;
     protected int connectionId;
     private static AtomicInteger connectionCounter = new AtomicInteger();
     private AtomicInteger stmtCounter = new AtomicInteger();
@@ -59,8 +63,7 @@ public abstract class MongoConnection implements Connection {
         Preconditions.checkNotNull(cs);
         this.connectionId = connectionCounter.incrementAndGet();
         // Initializes a parent logger for the connection
-        MongoLoggerUtils.initConnectionLogger(connectionId, logLevel, logDir);
-        this.logger = new MongoLogger(this.getClass().getCanonicalName(), connectionId);
+        initConnectionLogger(connectionId, logLevel, logDir);
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
@@ -88,8 +91,8 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
-    public int getConnectionId() {
-        return connectionId;
+    public MongoLogger getLogger() {
+        return logger;
     }
 
     protected int getNextStatementId() {
@@ -518,5 +521,41 @@ public abstract class MongoConnection implements Connection {
     @SuppressWarnings("unchecked")
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return (T) this;
+    }
+
+    private void initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
+        Logger logger =
+                Logger.getLogger(connection_id + "_" + MongoConnection.class.getCanonicalName());
+        try {
+            if (logLevel != null) {
+                // If log level is not OFF, create a new handler.
+                // Otherwise, don't bother.
+                if (logLevel != Level.OFF) {
+                    // If a log directory is provided, create a new file handler to log messages in that directory
+                    if (logDir != null) {
+                        String logFileName = "connection_" + connection_id + ".log";
+                        String logPath = logDir.getAbsolutePath() + File.separator + logFileName;
+                        FileHandler fileHandler = new FileHandler(logPath);
+                        fileHandler.setLevel(logLevel);
+                        fileHandler.setFormatter(new SimpleFormatter());
+                        logger.addHandler(fileHandler);
+                    }
+                    // If no directory is provided, send the message to the console
+                    else {
+                        ConsoleHandler consoleHandler = new ConsoleHandler();
+                        consoleHandler.setFormatter(new SimpleFormatter());
+                        consoleHandler.setLevel(logLevel);
+                        logger.addHandler(consoleHandler);
+                    }
+                }
+
+                // Set the overall logger level too
+                logger.setLevel(logLevel);
+            }
+        } catch (IOException e) {
+            // Can't log the error since it can't open the log file
+            e.printStackTrace();
+        }
+        this.logger = new MongoLogger(logger, connectionId);
     }
 }
