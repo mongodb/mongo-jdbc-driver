@@ -7,7 +7,6 @@ plugins {
 }
 
 ext {
-    gitVersion = getGitVersion()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
@@ -177,7 +176,6 @@ task publishMaven {
 }
 
 def getReleaseVersion() {
-	def version = getGitVersion()
 	def snapshot = isDirtyVersion() || !isTaggedVersion()
 	if (snapshot) {
 		return getGitVersion() + "-SNAPSHOT"
