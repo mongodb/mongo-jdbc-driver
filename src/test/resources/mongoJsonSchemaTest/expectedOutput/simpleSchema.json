@@ -25,14 +25,13 @@
         "u": {"bsonType":  "maxKey"},
         "v": {
           "bsonType": "array",
-          "items": [
+          "items":
             {
             "anyOf": [
               {"bsonType":  "string"},
               {"bsonType":  "null"}
             ]
           }
-          ]
         },
         "w": {
           "anyOf": [

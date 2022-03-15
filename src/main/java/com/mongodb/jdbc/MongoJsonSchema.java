@@ -50,7 +50,7 @@ public class MongoJsonSchema {
     public Map<String, MongoJsonSchema> properties;
     public Set<MongoJsonSchema> anyOf;
     public Set<String> required;
-    public Set<MongoJsonSchema> items;
+    public MongoJsonSchema items;
     public boolean additionalProperties;
 
     /**
@@ -90,7 +90,7 @@ public class MongoJsonSchema {
         }
         result.required = baseSchema.required;
         if (baseSchema.items != null) {
-            result.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
+                result.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
         }
         result.additionalProperties =
                 toMongoJsonSchemaAdditionalProperties(baseSchema.additionalProperties);
@@ -183,8 +183,9 @@ public class MongoJsonSchema {
      * @param polymorphicItems The original polymorphic field.
      * @return the corresponding MongoJsonSchema set.
      */
-    private static Set<MongoJsonSchema> polymorphicItemsToMongoJsonSchemaSet(
+    private static MongoJsonSchema polymorphicItemsToMongoJsonSchemaSet(
             BsonValue polymorphicItems) {
+        MongoJsonSchema result = null;
         if (polymorphicItems == null) {
             return null;
         }
@@ -200,52 +201,86 @@ public class MongoJsonSchema {
                             + polymorphicItems.getBsonType());
         }
 
-        BsonArray items =
-                polymorphicItems.isDocument()
-                        ? new BsonArray(Collections.singletonList(polymorphicItems.asDocument()))
-                        : polymorphicItems.asArray();
+        if (polymorphicItems.isDocument()) {
+            // Single JsonSchema in the Items field
+            result = toSimplifiedMongoJsonSchema(
+                    JSON_SCHEMA_CODEC.decode(
+                            new JsonReader(polymorphicItems.asDocument().toJson()),
+                            DecoderContext.builder().build()));
+        }
+        else {
+            /**
+             * Push down each JsonSchema from an Items array into a separate Items in an anyOf
+             * schema. For example:
+             *
+             * <pre>
+             * "y": {
+             *     "items": [
+             *         {"bsonType": "string"},
+             *         {"bsonType": "int"}
+             *      ]
+             *  }
+             * </pre>
+             *
+             * will become
+             *
+             * <pre>
+             *  "y": {
+             *       "items" : {
+             *          "anyOf": [
+             *              {"bsonType": "string"},
+             *              {"bsonType": "int"}
+             *          ]
+             *      }
+             *  }
+             * </pre>
+             */
+            result = new MongoJsonSchema();
+            result.anyOf =
+                    polymorphicItems.asArray()
+                    .stream()
+                    .map(
+                            val ->
+                                    toSimplifiedMongoJsonSchema(
+                                            JSON_SCHEMA_CODEC.decode(
+                                                    new JsonReader(val.asDocument().toJson()),
+                                                    DecoderContext.builder().build())))
+                    .collect(Collectors.toSet());
+        }
 
-        return items.asArray()
-                .stream()
-                .map(
-                        val ->
-                                toSimplifiedMongoJsonSchema(
-                                        JSON_SCHEMA_CODEC.decode(
-                                                new JsonReader(val.asDocument().toJson()),
-                                                DecoderContext.builder().build())))
-                .collect(Collectors.toSet());
+        return result;
     }
 
     /**
      * Converts a polymorphic additionalProperties which can either be a boolean or a Document to a
      * boolean.
      *
-     * @param polymorphocAdditionalProperties The original polymorphic additionalProperties field.
+     * @param polymorphicAdditionalProperties The original polymorphic additionalProperties field.
      * @return the corresponding boolean value.
      */
     private static boolean toMongoJsonSchemaAdditionalProperties(
-            BsonValue polymorphocAdditionalProperties) {
-        if (polymorphocAdditionalProperties == null) {
+            BsonValue polymorphicAdditionalProperties) {
+        if (polymorphicAdditionalProperties == null) {
             // By default, additional properties is false
             return false;
         }
 
         // The only expected types for additionalProperties are Document or Boolean
-        if (!(polymorphocAdditionalProperties.isBoolean()
-                || polymorphocAdditionalProperties.isDocument())) {
+        if (!(polymorphicAdditionalProperties.isBoolean()
+                || polymorphicAdditionalProperties.isDocument())) {
             throw new BsonInvalidOperationException(
                     "Value expected to be of type "
                             + BsonType.BOOLEAN
                             + " or "
                             + BsonType.DOCUMENT
-                            + " but  is of unexpected type "
-                            + polymorphocAdditionalProperties.getBsonType());
+                            + " but is of unexpected type "
+                            + polymorphicAdditionalProperties.getBsonType());
         }
 
         // If additionalProperties is a document, return "true", otherwise return the boolean value.
-        return polymorphocAdditionalProperties.isDocument()
+        return polymorphicAdditionalProperties.isDocument()
                 ? true
-                : polymorphocAdditionalProperties.asBoolean().getValue();
+                : polymorphicAdditionalProperties.asBoolean().getValue();
     }
 
     /**
