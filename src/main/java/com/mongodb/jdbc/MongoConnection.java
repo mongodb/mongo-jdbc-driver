@@ -91,7 +91,7 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
-    public MongoLogger getLogger() {
+    protected MongoLogger getLogger() {
         return logger;
     }
 
