@@ -1,0 +1,26 @@
+{"bsonType": "object",
+  "properties": {
+    "bar": {
+      "bsonType": "object",
+      "properties": {
+        "a": {
+          "bsonType": "object",
+          "additionalProperties": {
+            "props": "val"
+            }
+        },
+        "b": {
+          "bsonType": "boolean",
+          "additionalProperties": false
+        },
+        "c": {
+          "bsonType": "string",
+          "additionalProperties": true
+        },
+        "d": {
+          "bsonType": "date"
+        }
+      }
+    }
+  }
+}

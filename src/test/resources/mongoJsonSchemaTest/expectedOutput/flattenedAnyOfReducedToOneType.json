@@ -3,9 +3,7 @@
   "properties": {
     "bar": {
       "bsonType": "array",
-      "items": {
-        "bsonType": "int"
-      },
+      "items":{},
       "additionalProperties": true
     }
   }

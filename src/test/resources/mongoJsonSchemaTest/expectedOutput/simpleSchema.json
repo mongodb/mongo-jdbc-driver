@@ -25,12 +25,7 @@
         "u": {"bsonType":  "maxKey"},
         "v": {
           "bsonType": "array",
-          "items": {
-            "anyOf": [
-              {"bsonType":  "string"},
-              {"bsonType":  "null"}
-            ]
-          }
+          "items":{}
         },
         "w": {
           "anyOf": [

@@ -1,0 +1,22 @@
+{
+  "bsonType":"object",
+  "properties":{
+    "bar":{
+      "bsonType":"object",
+      "properties":{
+        "a":{
+          "bsonType":"array",
+          "items":{}
+        },
+        "b":{
+          "bsonType":"array",
+          "items":{},
+          "additionalProperties":false
+        },
+        "c":{
+          "bsonType":"objectId"
+        }
+      }
+    }
+  }
+}

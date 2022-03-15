@@ -6,14 +6,15 @@ import java.util.Set;
 import org.bson.BsonValue;
 
 // Simple POJO for deserializing jsonschema.
+// For more details on jsonSchema, see https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/.
 public class JsonSchema {
 
     public BsonValue bsonType;
     public Map<String, JsonSchema> properties;
     public Set<JsonSchema> anyOf;
     public Set<String> required;
-    public JsonSchema items;
-    public boolean additionalProperties;
+    public BsonValue items;
+    public BsonValue additionalProperties;
 
     @Override
     public boolean equals(Object obj) {
@@ -26,7 +27,7 @@ public class JsonSchema {
                 && Objects.equals(anyOf, other.anyOf)
                 && Objects.equals(required, other.required)
                 && Objects.equals(items, other.items)
-                && additionalProperties == other.additionalProperties;
+                && Objects.equals(additionalProperties, other.additionalProperties);
     }
 
     @Override
