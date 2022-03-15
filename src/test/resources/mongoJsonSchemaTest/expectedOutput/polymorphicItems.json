@@ -6,29 +6,11 @@
       "properties":{
         "a":{
           "bsonType":"array",
-          "items":{
-            "bsonType":"date"
-          }
+          "items":{}
         },
         "b":{
           "bsonType":"array",
-          "items":{
-            "anyOf":[
-              {
-                "anyOf":[
-                  {
-                    "bsonType":"string"
-                  },
-                  {
-                    "bsonType":"null"
-                  }
-                ]
-              },
-              {
-                "bsonType":"boolean"
-              }
-            ]
-          },
+          "items":{},
           "additionalProperties":false
         },
         "c":{

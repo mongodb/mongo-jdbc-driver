@@ -4,7 +4,6 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -16,14 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.BsonArray;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
-import org.bson.json.JsonReader;
 
 public class MongoJsonSchema {
     private static final Codec<JsonSchema> JSON_SCHEMA_CODEC =
@@ -90,7 +86,7 @@ public class MongoJsonSchema {
         }
         result.required = baseSchema.required;
         if (baseSchema.items != null) {
-                result.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
+            result.items = toMongoJsonSchemaItems(baseSchema.items);
         }
         result.additionalProperties =
                 toMongoJsonSchemaAdditionalProperties(baseSchema.additionalProperties);
@@ -155,7 +151,7 @@ public class MongoJsonSchema {
                 if (BSON_ARRAY.getBsonName().equalsIgnoreCase(currType)) {
                     // Move the items down with the anyOf schema for the bsontype Array
                     // because they go together
-                    anyOfSchema.items = polymorphicItemsToMongoJsonSchemaSet(baseSchema.items);
+                    anyOfSchema.items = toMongoJsonSchemaItems(baseSchema.items);
                 } else if (BSON_OBJECT.getBsonName().equalsIgnoreCase(currType)) {
                     // Move the object related properties down with the anyof schema for the 'object'
                     anyOfSchema.properties = toMongoJsonSchemaProperties(baseSchema.properties);
@@ -181,10 +177,11 @@ public class MongoJsonSchema {
      * to a set of MongoJsonSchema.
      *
      * @param polymorphicItems The original polymorphic field.
-     * @return the corresponding MongoJsonSchema set.
+     * @return any, represented by an empty MongoJsonSchema.
+     * @throws BsonInvalidOperationException If the BsonValue is neither JsonSchema or an Array.
      */
-    private static MongoJsonSchema polymorphicItemsToMongoJsonSchemaSet(
-            BsonValue polymorphicItems) {
+    private static MongoJsonSchema toMongoJsonSchemaItems(BsonValue polymorphicItems)
+            throws BsonInvalidOperationException {
         MongoJsonSchema result = null;
         if (polymorphicItems == null) {
             return null;
@@ -201,54 +198,7 @@ public class MongoJsonSchema {
                             + polymorphicItems.getBsonType());
         }
 
-        if (polymorphicItems.isDocument()) {
-            // Single JsonSchema in the Items field
-            result = toSimplifiedMongoJsonSchema(
-                    JSON_SCHEMA_CODEC.decode(
-                            new JsonReader(polymorphicItems.asDocument().toJson()),
-                            DecoderContext.builder().build()));
-        }
-        else {
-            /**
-             * Push down each JsonSchema from an Items array into a separate Items in an anyOf
-             * schema. For example:
-             *
-             * <pre>
-             * "y": {
-             *     "items": [
-             *         {"bsonType": "string"},
-             *         {"bsonType": "int"}
-             *      ]
-             *  }
-             * </pre>
-             *
-             * will become
-             *
-             * <pre>
-             *  "y": {
-             *       "items" : {
-             *          "anyOf": [
-             *              {"bsonType": "string"},
-             *              {"bsonType": "int"}
-             *          ]
-             *      }
-             *  }
-             * </pre>
-             */
-            result = new MongoJsonSchema();
-            result.anyOf =
-                    polymorphicItems.asArray()
-                    .stream()
-                    .map(
-                            val ->
-                                    toSimplifiedMongoJsonSchema(
-                                            JSON_SCHEMA_CODEC.decode(
-                                                    new JsonReader(val.asDocument().toJson()),
-                                                    DecoderContext.builder().build())))
-                    .collect(Collectors.toSet());
-        }
-
-        return result;
+        return new MongoJsonSchema();
     }
 
     /**
@@ -257,9 +207,10 @@ public class MongoJsonSchema {
      *
      * @param polymorphicAdditionalProperties The original polymorphic additionalProperties field.
      * @return the corresponding boolean value.
+     * @throws BsonInvalidOperationException If the BsonValue is neither a Boolean or a Document.
      */
     private static boolean toMongoJsonSchemaAdditionalProperties(
-            BsonValue polymorphicAdditionalProperties) {
+            BsonValue polymorphicAdditionalProperties) throws BsonInvalidOperationException {
         if (polymorphicAdditionalProperties == null) {
             // By default, additional properties is false
             return false;
@@ -289,8 +240,11 @@ public class MongoJsonSchema {
      *
      * @param polymorphicBsonType The original polymorphic type.
      * @return the corresponding String set.
+     * @throws BsonInvalidOperationException If the BsonValue is neither a BsonArray or a
+     *     BsonString.
      */
-    private static Set<String> polymorphicBsonTypeToStringSet(BsonValue polymorphicBsonType) {
+    private static Set<String> polymorphicBsonTypeToStringSet(BsonValue polymorphicBsonType)
+            throws BsonInvalidOperationException {
         Set<String> result;
         if (polymorphicBsonType.isArray()) {
             result =
