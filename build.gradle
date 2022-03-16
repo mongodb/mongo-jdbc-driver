@@ -9,6 +9,7 @@ plugins {
 version =  getGitVersion()
 
 ext {
+    releaseVersion = getReleaseVersion()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
@@ -102,8 +103,8 @@ configurations {
     tdvtTestRuntimeOnly.extendsFrom runtimeOnly
 
     // Use the release version instead of gitVersion for the produced jar
-    jar.archiveVersion = getReleaseVersion()
-    shadowJar.archiveVersion = getReleaseVersion()
+    jar.archiveVersion = releaseVersion
+    shadowJar.archiveVersion = releaseVersion
 }
 
 task integrationTest(type: Test) {
@@ -149,7 +150,6 @@ jar {
 }
 
 dependencies {
-
     implementation "org.yaml:snakeyaml:$snakeYamlVersion"
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
@@ -157,6 +157,25 @@ dependencies {
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     tdvtTestImplementation "junit:junit:$junitVersion"
     tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+}
+
+task publishMaven {
+    group = 'publishing'
+
+    if (releaseVersion.endsWith('-SNAPSHOT')) {
+        description = 'Publishes snapshots to Sonatype'
+        dependsOn ':publishToSonatype'
+    } else {
+        description = 'Publishes a release and uploads to Sonatype / Maven Central'
+        if (project.name == rootProject.name) {
+            dependsOn ':closeAndReleaseRepository'
+            dependsOn ':publishToSonatype'
+            // Make sure we publish to staging first
+            project.tasks.getByName('publishToSonatype').finalizedBy(
+                    project.tasks.getByName('closeAndReleaseRepository'),
+            )
+        }
+    }
 }
 
 def getReleaseVersion() {
@@ -206,4 +225,3 @@ def getAbbreviatedGitVersion() {
 }
 
 apply from: 'gradle/publish.gradle'
-apply from: 'gradle/deploy.gradle'
