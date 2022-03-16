@@ -6,11 +6,9 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
-
 version =  getGitVersion()
 
 ext {
-    releaseVersion = getReleaseVersion()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
