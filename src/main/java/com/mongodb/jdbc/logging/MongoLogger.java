@@ -74,7 +74,7 @@ public class MongoLogger {
      * @param callSignature The call signature, method and arguments, to log.
      */
     protected void logMethodEntry(String sourceName, String callSignature) {
-        if (null != logger) {
+        if ((null != logger) && logger.isLoggable(Level.FINER)) {
             logger.logp(
                     Level.FINER,
                     addConnectionStatementIdsToSourceName(sourceName),
@@ -84,7 +84,7 @@ public class MongoLogger {
     }
 
     protected void logError(String sourceName, String msg, Throwable thrown) {
-        if (null != logger) {
+        if ((null != logger) && logger.isLoggable(Level.SEVERE)) {
             logger.logp(
                     Level.SEVERE,
                     addConnectionStatementIdsToSourceName(sourceName),
@@ -104,7 +104,7 @@ public class MongoLogger {
      * @param msg The string message (or a key in the message catalog)
      */
     public void log(Level level, String msg) {
-        if (null != logger) {
+        if ((null != logger) && logger.isLoggable(level)) {
             // Get access to caller
             StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
             StackTraceElement ste = stacktrace[2];
@@ -127,7 +127,7 @@ public class MongoLogger {
      * @param params array of parameters to the message
      */
     public void log(Level level, String msg, Object params[]) {
-        if (null != logger) {
+        if ((null != logger) && logger.isLoggable(level)) {
             // Get access to caller
             StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
             StackTraceElement ste = stacktrace[2];
@@ -158,7 +158,7 @@ public class MongoLogger {
      * @param thrown Throwable associated with log message.
      */
     public void log(Level level, String msg, Throwable thrown) {
-        if (null != logger) {
+        if ((null != logger) && logger.isLoggable(level)) {
             // Get access to caller
             StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
             StackTraceElement ste = stacktrace[2];

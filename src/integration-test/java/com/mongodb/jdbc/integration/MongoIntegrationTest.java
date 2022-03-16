@@ -126,10 +126,15 @@ public abstract class MongoIntegrationTest {
      */
     private void cleanUp(MongoConnection conn) {
         try {
-            File logFile = new File("./connection_" + conn.getLogger() + ".log");
             conn.close();
-            if (logFile.exists()) {
-                logFile.delete();
+            File logDir = new File(CURRENT_DIR);
+            if (logDir.exists()) {
+                for (File file : logDir.listFiles()) {
+                    // Delete log file before delete directory because
+                    // the directory must be empty for delete to work
+                    file.delete();
+                }
+                logDir.delete();
             }
         } catch (Exception e) {
             // Ignore clean-up exceptions

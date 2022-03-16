@@ -28,6 +28,8 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -59,6 +61,8 @@ public abstract class MongoConnection implements Connection {
     protected int connectionId;
     private static AtomicInteger connectionCounter = new AtomicInteger();
     private AtomicInteger stmtCounter = new AtomicInteger();
+    private static ConsoleHandler consoleHandler;
+    private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
 
     public MongoConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
         Preconditions.checkNotNull(cs);
@@ -533,20 +537,26 @@ public abstract class MongoConnection implements Connection {
                 // If log level is not OFF, create a new handler.
                 // Otherwise, don't bother.
                 if (logLevel != Level.OFF) {
-                    // If a log directory is provided, create a new file handler to log messages in that directory
+                    // If a log directory is provided, get the file handler to log messages
+                    // in that directory or create a new one if none exist yet.
                     if (logDir != null) {
-                        String logFileName = "connection_" + connection_id + ".log";
-                        String logPath = logDir.getAbsolutePath() + File.separator + logFileName;
-                        FileHandler fileHandler = new FileHandler(logPath);
-                        fileHandler.setLevel(logLevel);
-                        fileHandler.setFormatter(new SimpleFormatter());
-                        logger.addHandler(fileHandler);
+                        String logDirAbsPath = logDir.getAbsolutePath();
+                        if (!fileHandlers.containsKey(logDirAbsPath)) {
+                            String logPath = logDirAbsPath + File.separator + "connection.log";
+                            FileHandler fileHandler = new FileHandler(logPath);
+                            fileHandler.setLevel(logLevel);
+                            fileHandler.setFormatter(new SimpleFormatter());
+                            fileHandlers.put(logDirAbsPath, fileHandler);
+                        }
+                        logger.addHandler(fileHandlers.get(logDirAbsPath));
                     }
                     // If no directory is provided, send the message to the console
                     else {
-                        ConsoleHandler consoleHandler = new ConsoleHandler();
-                        consoleHandler.setFormatter(new SimpleFormatter());
-                        consoleHandler.setLevel(logLevel);
+                        if (consoleHandler == null) {
+                            consoleHandler = new ConsoleHandler();
+                            consoleHandler.setFormatter(new SimpleFormatter());
+                            consoleHandler.setLevel(logLevel);
+                        }
                         logger.addHandler(consoleHandler);
                     }
                 }
@@ -558,6 +568,7 @@ public abstract class MongoConnection implements Connection {
             // Can't log the error since it can't open the log file
             e.printStackTrace();
         }
+
         this.logger = new MongoLogger(logger, connectionId);
     }
 }

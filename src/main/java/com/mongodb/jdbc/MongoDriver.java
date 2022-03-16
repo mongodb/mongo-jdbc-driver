@@ -86,7 +86,7 @@ public class MongoDriver implements Driver {
                         Level.FINE.getName(),
                         Level.WARNING.getName()
                     });
-    static final String LOG_TO_CONSOLE = "console";
+    public static final String LOG_TO_CONSOLE = "console";
 
     // Load logging.properties
     static {
