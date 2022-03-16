@@ -10,6 +10,7 @@ plugins {
 version =  getGitVersion()
 
 ext {
+    releaseVersion = getReleaseVersion()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
@@ -160,28 +161,6 @@ dependencies {
     tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
-task publishMaven {
-	group = 'publishing'
-    // Only publish tagged, non dirty version
-    if (!isDirtyVersion() && isTaggedVersion()) {
-        def releaseVersion = getReleaseVersion()
-        println("Publishing: ${project.name} : ${releaseVersion}")
-
-        if (releaseVersion.endsWith('-SNAPSHOT')) {
-            description = 'Publishes snapshots to Sonatype'
-            dependsOn ':publishToSonatype'
-        } else {
-            description = 'Publishes a release and uploads to Sonatype / Maven Central'
-            dependsOn ':closeAndReleaseRepository'
-            dependsOn ':publishToSonatype'
-            // Make sure we publish to staging first
-            project.tasks.getByName('publishToSonatype').finalizedBy(
-                    project.tasks.getByName('closeAndReleaseRepository'),
-            )
-        }
-    }
-}
-
 def getReleaseVersion() {
 	def snapshot = isDirtyVersion() || !isTaggedVersion()
 	if (snapshot) {
@@ -229,4 +208,4 @@ def getAbbreviatedGitVersion() {
 }
 
 apply from: 'gradle/publish.gradle'
-
+apply from: 'gradle/deploy.gradle'
