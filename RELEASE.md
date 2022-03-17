@@ -59,9 +59,9 @@ Wait for the evergreen version to finish, and ensure that the release task compl
 
 #### Verify release artifacts
 Check that the version just released is available in the [Sonatype Nexus Repo Manager](https://oss.sonatype.org/#nexus-search;quick~mongodb-jdbc)
-
-#### Create Github Release
-Create a Github release and upload the release artifact from Sonatype/Maven Central.
+It is also a good idea to download the released artifacts mongodb-jdbc-x.x.x.jar and mongodb-jdbc-x.x.x-all.jar and verify that they are correctly 
+loading and the simple operations connecting, retrieving metadata and executing a query are all working.
+It should appear to [Maven Central](https://search.maven.org/search?q=g:org.mongodb%20AND%20a:mongodb-jdbc) after a while.
 
 #### Close Release Ticket
 Move the JIRA ticket tracking this release to the "Closed" state.
