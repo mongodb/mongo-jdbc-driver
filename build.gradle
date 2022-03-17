@@ -6,7 +6,10 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
+version =  getGitVersion()
+
 ext {
+    releaseVersion = getReleaseVersion()
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
 }
@@ -59,8 +62,6 @@ allprojects {
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
         testCompile group: 'junit', name: 'junit', version: junitVersion
 
-
-
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
@@ -100,6 +101,10 @@ configurations {
     integrationTestRuntimeOnly.extendsFrom runtimeOnly
     tdvtTestImplementation.extendsFrom implementation
     tdvtTestRuntimeOnly.extendsFrom runtimeOnly
+
+    // Use the release version instead of gitVersion for the produced jar
+    jar.archiveVersion = releaseVersion
+    shadowJar.archiveVersion = releaseVersion
 }
 
 task integrationTest(type: Test) {
@@ -145,7 +150,6 @@ jar {
 }
 
 dependencies {
-
     implementation "org.yaml:snakeyaml:$snakeYamlVersion"
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
@@ -156,29 +160,28 @@ dependencies {
 }
 
 task publishMaven {
-	group = 'publishing'
+    group = 'publishing'
 
-	def releaseVersion = getReleaseVersion()
-	println("Publishing: ${project.name} : ${releaseVersion}")
-
-	if (releaseVersion.endsWith('-SNAPSHOT')) {
-		description = 'Publishes snapshots to Sonatype'
-		dependsOn ':publishToSonatype'
-	} else {
-		description = 'Publishes a release and uploads to Sonatype / Maven Central'
-		dependsOn ':closeAndReleaseRepository'
-		dependsOn ':publishToSonatype'
-		// Make sure we publish to staging first
-		project.tasks.getByName('publishToSonatype').finalizedBy(
-				project.tasks.getByName('closeAndReleaseRepository'),
-		)
-	}
+    if (releaseVersion.endsWith('-SNAPSHOT')) {
+        description = 'Publishes snapshots to Sonatype'
+        dependsOn ':publishToSonatype'
+    } else {
+        description = 'Publishes a release and uploads to Sonatype / Maven Central'
+        if (project.name == rootProject.name) {
+            dependsOn ':closeAndReleaseRepository'
+            dependsOn ':publishToSonatype'
+            // Make sure we publish to staging first
+            project.tasks.getByName('publishToSonatype').finalizedBy(
+                    project.tasks.getByName('closeAndReleaseRepository'),
+            )
+        }
+    }
 }
 
 def getReleaseVersion() {
 	def snapshot = isDirtyVersion() || !isTaggedVersion()
 	if (snapshot) {
-		return getGitVersion() + "-SNAPSHOT"
+		return getAbbreviatedGitVersion() + "-SNAPSHOT"
 	} else {
 		return getGitVersion()
 	}
@@ -209,9 +212,16 @@ def getGitVersion() {
         commandLine 'git', 'describe', '--tags', '--always', '--dirty'
         standardOutput = out
     }
-    def version = out.toString().substring(1).trim()
-	version
+    out.toString().substring(1).trim()
+}
+
+def getAbbreviatedGitVersion() {
+    def out = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--abbrev=0'
+        standardOutput = out
+    }
+    out.toString().substring(1).trim()
 }
 
 apply from: 'gradle/publish.gradle'
-
