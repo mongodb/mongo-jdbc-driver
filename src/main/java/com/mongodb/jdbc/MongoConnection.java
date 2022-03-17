@@ -62,7 +62,9 @@ public abstract class MongoConnection implements Connection {
     private static AtomicInteger connectionCounter = new AtomicInteger();
     private AtomicInteger stmtCounter = new AtomicInteger();
     private static ConsoleHandler consoleHandler;
+    private static Map<String, Integer> handlerCount = new HashMap<String, Integer>();
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
+    private String logDirPath;
 
     public MongoConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
         Preconditions.checkNotNull(cs);
@@ -183,6 +185,22 @@ public abstract class MongoConnection implements Connection {
             return;
         }
         mongoClient.close();
+
+        // Decrement fileHandlerCount and delete entry
+        // if no more connections are using it.
+        synchronized (this) {
+            if ((null != handlerCount) && handlerCount.containsKey(logDirPath)) {
+                handlerCount.put(logDirPath, handlerCount.get(logDirPath) - 1);
+                if (handlerCount.get(logDirPath) == 0) {
+                    // Remove the FileHandler and remove this entry too
+                    if (null != fileHandlers) {
+                        fileHandlers.remove(logDirPath);
+                    }
+                    handlerCount.remove(logDirPath);
+                }
+            }
+        }
+
         isClosed = true;
     }
 
@@ -540,15 +558,22 @@ public abstract class MongoConnection implements Connection {
                     // If a log directory is provided, get the file handler to log messages
                     // in that directory or create a new one if none exist yet.
                     if (logDir != null) {
-                        String logDirAbsPath = logDir.getAbsolutePath();
-                        if (!fileHandlers.containsKey(logDirAbsPath)) {
-                            String logPath = logDirAbsPath + File.separator + "connection.log";
-                            FileHandler fileHandler = new FileHandler(logPath);
-                            fileHandler.setLevel(logLevel);
-                            fileHandler.setFormatter(new SimpleFormatter());
-                            fileHandlers.put(logDirAbsPath, fileHandler);
+                        logDirPath = logDir.getAbsolutePath();
+                        synchronized (this) {
+                            if (!fileHandlers.containsKey(logDirPath)) {
+                                String logPath = logDirPath + File.separator + "connection.log";
+                                FileHandler fileHandler = new FileHandler(logPath);
+                                fileHandler.setLevel(logLevel);
+                                fileHandler.setFormatter(new SimpleFormatter());
+                                fileHandlers.put(logDirPath, fileHandler);
+                                if (handlerCount.containsKey(logDirPath)) {
+                                    handlerCount.put(logDirPath, handlerCount.get(logDirPath) + 1);
+                                } else {
+                                    handlerCount.put(logDirPath, Integer.valueOf(1));
+                                }
+                            }
+                            logger.addHandler(fileHandlers.get(logDirPath));
                         }
-                        logger.addHandler(fileHandlers.get(logDirAbsPath));
                     }
                     // If no directory is provided, send the message to the console
                     else {
