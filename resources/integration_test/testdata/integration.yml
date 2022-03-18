@@ -106,3 +106,6 @@ dataset:
         # Skip reason: SQL-697
         # array: [1,2,3]
       }
+
+  - db: integration_test
+    view: baz

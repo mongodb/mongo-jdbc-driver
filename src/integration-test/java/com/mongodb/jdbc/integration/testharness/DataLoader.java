@@ -42,6 +42,7 @@ public class DataLoader {
 
     private List<TestDataEntry> datasets;
     private Set<Pair<String, String>> collections;
+    private Set<Pair<String, String>> views;
     private Set<String> databases;
     private MongoClientURI mdbUri;
     private MongoClientURI adlUri;
@@ -49,6 +50,7 @@ public class DataLoader {
     public DataLoader(String dataDirectory) throws IOException {
         this.datasets = new ArrayList<>();
         this.collections = new HashSet<>();
+        this.views = new HashSet<>();
         this.databases = new HashSet<>();
         this.mdbUri = new MongoClientURI(LOCAL_MDB_URL);
         this.adlUri = new MongoClientURI(LOCAL_ADL_URL);
@@ -65,7 +67,16 @@ public class DataLoader {
                     for (TestDataEntry entry : testData.dataset) {
                         datasets.add(entry);
                         databases.add(entry.db);
-                        collections.add(new Pair<>(entry.db, entry.collection));
+                        if (entry.collection != null) {
+                            collections.add(new Pair<>(entry.db, entry.collection));
+                        } else if (entry.view != null) {
+                            views.add(new Pair<>(entry.db, entry.view));
+                        } else {
+                            System.out.println(
+                                    "One entry in "
+                                            + fileEntry.getName()
+                                            + " has no collection or view associated.");
+                        }
                     }
                 }
             }
@@ -132,55 +143,69 @@ public class DataLoader {
             try (MongoClient mongoClient = new MongoClient(mdbUri)) {
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
-                    MongoCollection<Document> collection = database.getCollection(entry.collection);
-
-                    if (entry.docsExtJson != null) {
-                        // Process extended json format
-                        for (Map<String, Object> row : entry.docsExtJson) {
-                            Document d = Document.parse(new Document(row).toJson());
-                            collection.insertOne(new Document(d));
-                        }
-                        System.out.println(
-                                "Inserted "
-                                        + entry.docsExtJson.size()
-                                        + " rows into "
-                                        + entry.db
-                                        + "."
-                                        + entry.collection);
-                    } else if (entry.docs != null) {
-                        for (Map<String, Object> row : entry.docs) {
-                            collection.insertOne(new Document(row));
-                        }
-                        System.out.println(
-                                "Inserted "
-                                        + entry.docs.size()
-                                        + " rows into "
-                                        + entry.db
-                                        + "."
-                                        + entry.collection);
+                    if (entry.collection != null) {
+                        loadCollection(entry, database);
                     }
-                    if (entry.nonuniqueIndexes != null) {
-                        for (Map<String, Object> index : entry.nonuniqueIndexes) {
-                            String indexName = collection.createIndex(new Document(index));
-                            System.out.println(
-                                    "Created index "
-                                            + indexName
-                                            + " on "
-                                            + entry.db
-                                            + "."
-                                            + entry.collection);
-                        }
-                    }
-                    if (entry.schema != null) {
-                        setSchema(entry.db, entry.collection, entry.schema);
-                    } else {
-                        generateSchema(entry.db, entry.collection);
+                    else if (entry.view != null) {
+                        generateSchema(entry.db, entry.view);
                     }
                 }
             }
         } catch (MongoException e) {
             dropCollections();
             throw e;
+        }
+    }
+
+    /**
+     * Loads a collection with the information provided in the TestDataEntry.
+     * @param entry the collection entry.
+     * @param database The database to add the collection to.
+     */
+    private void loadCollection(TestDataEntry entry, MongoDatabase database) {
+        MongoCollection<Document> collection = database.getCollection(entry.collection);
+
+        if (entry.docsExtJson != null) {
+            // Process extended json format
+            for (Map<String, Object> row : entry.docsExtJson) {
+                Document d = Document.parse(new Document(row).toJson());
+                collection.insertOne(new Document(d));
+            }
+            System.out.println(
+                    "Inserted "
+                            + entry.docsExtJson.size()
+                            + " rows into "
+                            + entry.db
+                            + "."
+                            + entry.collection);
+        } else if (entry.docs != null) {
+            for (Map<String, Object> row : entry.docs) {
+                collection.insertOne(new Document(row));
+            }
+            System.out.println(
+                    "Inserted "
+                            + entry.docs.size()
+                            + " rows into "
+                            + entry.db
+                            + "."
+                            + entry.collection);
+        }
+        if (entry.nonuniqueIndexes != null) {
+            for (Map<String, Object> index : entry.nonuniqueIndexes) {
+                String indexName = collection.createIndex(new Document(index));
+                System.out.println(
+                        "Created index "
+                                + indexName
+                                + " on "
+                                + entry.db
+                                + "."
+                                + entry.collection);
+            }
+        }
+        if (entry.schema != null) {
+            setSchema(entry.db, entry.collection, entry.schema);
+        } else {
+            generateSchema(entry.db, entry.collection);
         }
     }
 
