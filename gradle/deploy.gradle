@@ -1,0 +1,20 @@
+allprojects {
+    task publishMaven {
+        group = 'publishing'
+
+        if (releaseVersion.endsWith('-SNAPSHOT')) {
+            description = 'Publishes snapshots to Sonatype'
+            dependsOn ':publishToSonatype'
+        } else {
+            description = 'Publishes a release and uploads to Sonatype / Maven Central'
+            if (project.name == rootProject.name) {
+                dependsOn ':closeAndReleaseRepository'
+                dependsOn ':publishToSonatype'
+                // Make sure we publish to staging first
+                project.tasks.getByName('publishToSonatype').finalizedBy(
+                        project.tasks.getByName('closeAndReleaseRepository'),
+                )
+            }
+        }
+    }
+}
