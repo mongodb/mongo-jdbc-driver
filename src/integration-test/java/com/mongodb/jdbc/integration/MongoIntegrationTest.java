@@ -1,5 +1,7 @@
 package com.mongodb.jdbc.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
@@ -19,9 +21,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class MongoIntegrationTest {
     private static final String CURRENT_DIR =
@@ -81,12 +80,18 @@ public abstract class MongoIntegrationTest {
             executor.awaitTermination(1, TimeUnit.SECONDS);
 
             // Verify that there is only one log file
-            List<File> logFiles = Files.list(Paths.get(CURRENT_DIR))
-                    .map(Path::toFile)
-                    .filter(p -> p.isFile() && p.getName().matches("connection.log(.\\d+)*"))
-                    .collect(Collectors.toList());
+            List<File> logFiles =
+                    Files.list(Paths.get(CURRENT_DIR))
+                            .map(Path::toFile)
+                            .filter(
+                                    p ->
+                                            p.isFile()
+                                                    && p.getName()
+                                                            .matches("connection.log(.\\d+)*"))
+                            .collect(Collectors.toList());
 
-            assertEquals(1,logFiles.size(), "Expected only one log file, but found " + logFiles.size());
+            assertEquals(
+                    1, logFiles.size(), "Expected only one log file, but found " + logFiles.size());
 
             if (noLogging != null) {
                 cleanUp(noLogging);
