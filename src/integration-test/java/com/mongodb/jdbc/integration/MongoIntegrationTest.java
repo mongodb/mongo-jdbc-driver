@@ -3,6 +3,8 @@ package com.mongodb.jdbc.integration;
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,7 +17,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class MongoIntegrationTest {
     private static final String CURRENT_DIR =
@@ -73,6 +79,15 @@ public abstract class MongoIntegrationTest {
             executor.invokeAll(tasks);
         } finally {
             executor.awaitTermination(1, TimeUnit.SECONDS);
+
+            // Verify that there is only one log file
+            List<File> logFiles = Files.list(Paths.get(CURRENT_DIR))
+                    .map(Path::toFile)
+                    .filter(p -> p.isFile() && p.getName().matches("connection.log(.\\d+)*"))
+                    .collect(Collectors.toList());
+
+            assertEquals(1,logFiles.size(), "Expected only one log file, but found " + logFiles.size());
+
             if (noLogging != null) {
                 cleanUp(noLogging);
             }

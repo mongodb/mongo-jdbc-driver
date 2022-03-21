@@ -56,7 +56,7 @@ public class MongoLogger {
                 (parentLogger.connectionId == null)
                         ? className
                         : parentLogger.connectionId + "_" + className;
-        Logger logger = Logger.getLogger(loggername);
+        this.logger = Logger.getLogger(loggername);
         logger.setParent(parentLogger.logger);
         logger.setLevel(parentLogger.logger.getLevel());
         // Make sure to allow using parent handler
