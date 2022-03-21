@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 
 public abstract class MySQLMock {
-    static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");;
+    static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
     protected static String database = "test";
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
@@ -27,7 +27,8 @@ public abstract class MySQLMock {
     @Mock protected static MongoCursor<MySQLResultDoc> mongoCursor;
 
     @InjectMocks
-    protected static MongoConnection mongoConnection = new MySQLConnection(uri, database, null);
+    protected static MongoConnection mongoConnection =
+            new MySQLConnection(uri, database, null, null, null);
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {

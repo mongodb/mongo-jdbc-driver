@@ -2,11 +2,14 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
+@AutoLoggable
 public abstract class MongoStatement<T> implements Statement {
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
@@ -19,10 +22,14 @@ public abstract class MongoStatement<T> implements Statement {
     protected int fetchSize = 0;
     protected int maxQuerySec = 0;
     protected String currentDBName;
+    protected MongoLogger logger;
+    protected int statementId;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
         Preconditions.checkNotNull(databaseName);
+        this.statementId = conn.getNextStatementId();
+        logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getLogger(), statementId);
         this.conn = conn;
         currentDBName = databaseName;
 
@@ -31,6 +38,14 @@ public abstract class MongoStatement<T> implements Statement {
         } catch (IllegalArgumentException e) {
             throw new SQLException("Database name %s is invalid", databaseName);
         }
+    }
+
+    protected MongoLogger getParentLogger() {
+        return conn.getLogger();
+    }
+
+    protected int getStatementId() {
+        return statementId;
     }
 
     protected BsonDocument constructQueryDocument(
@@ -46,7 +61,7 @@ public abstract class MongoStatement<T> implements Statement {
     }
 
     protected void checkClosed() throws SQLException {
-        if (isClosed()) {
+        if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
     }

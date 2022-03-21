@@ -2,11 +2,12 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import org.bson.BsonDocument;
@@ -18,17 +19,51 @@ import org.bson.BsonUndefined;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
+@AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+
+    /**
+     * Constructor for a MongoSQLResultSet not tied to a statement used for
+     * MongoSQLDatabaseMetaData.
+     *
+     * @param parentLogger The parent connection logger.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
     public MongoSQLResultSet(
-            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
+        super(parentLogger);
+        setUpResultset(cursor, schema);
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, false, parentLogger, null);
+    }
+
+    /**
+     * Constructor for a MongoSQLResultset tied to a connection and statement.
+     *
+     * @param statement The statement this resultset is related to.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
+    public MongoSQLResultSet(
+            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
         super(statement);
+        setUpResultset(cursor, schema);
+        this.rsMetaData =
+                new MongoSQLResultSetMetaData(
+                        schema, true, statement.getParentLogger(), statement.getStatementId());
+    }
+
+    private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         Preconditions.checkNotNull(cursor);
 
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
         // The JDBC specification provides the order for each database metadata result set.
         // Because a lot BI tools will access database metadata columns by index, the specification order must be respected.
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement != null);
         this.cursor = cursor;
     }
 

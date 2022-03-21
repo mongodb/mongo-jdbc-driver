@@ -1,6 +1,9 @@
 package com.mongodb.jdbc;
 
+import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -31,7 +34,10 @@ import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public abstract class MongoResultSet<T> implements ResultSet {
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+
     // dateFormat cannot be static due to a threading bug in the library.
     protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -68,15 +74,36 @@ public abstract class MongoResultSet<T> implements ResultSet {
     protected int rowNum = 0;
 
     protected boolean closed = false;
-    protected Statement statement;
+    protected MongoStatement statement;
     protected boolean wasNull = false;
     protected MongoResultSetMetaData rsMetaData;
+    protected MongoLogger logger;
 
-    public MongoResultSet(Statement statement) {
+    /**
+     * Constructor for a statement bound resultset.
+     *
+     * @param statement The statement this resulset is related to.
+     */
+    public MongoResultSet(MongoStatement statement) {
+        Preconditions.checkNotNull(statement);
         this.statement = statement;
-
+        this.logger =
+                new MongoLogger(
+                        this.getClass().getCanonicalName(),
+                        statement.getParentLogger(),
+                        statement.getStatementId());
         // dateFormat is not thread safe, so we do not want to make it a static field.
-        TimeZone UTC = TimeZone.getTimeZone("UTC");
+        dateFormat.setTimeZone(UTC);
+    }
+
+    /**
+     * Constructor for a resultset not bound to a statement used for DatabaseMetadataResultset.
+     *
+     * @param parentLogger The parent connection logger.
+     */
+    public MongoResultSet(MongoLogger parentLogger) {
+        this.logger = new MongoLogger(this.getClass().getCanonicalName(), parentLogger);
+        // dateFormat is not thread safe, so we do not want to make it a static field.
         dateFormat.setTimeZone(UTC);
     }
 

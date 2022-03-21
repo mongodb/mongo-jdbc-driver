@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -8,8 +10,25 @@ import java.sql.Types;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 
+@AutoLoggable
 public abstract class MongoResultSetMetaData implements ResultSetMetaData {
-    protected final int unknownLength = 0;
+    protected final int UNKNOWN_LENGTH = 0;
+    protected MongoLogger logger;
+
+    /**
+     * Constructor.
+     *
+     * @param parentLogger The parent connection logger.
+     * @param statementId The statement id for the logger or null if this resultset is not tied to a
+     *     statement.
+     */
+    public MongoResultSetMetaData(MongoLogger parentLogger, Integer statementId) {
+        this.logger =
+                (statementId == null)
+                        ? new MongoLogger(this.getClass().getCanonicalName(), parentLogger)
+                        : new MongoLogger(
+                                this.getClass().getCanonicalName(), parentLogger, statementId);
+    }
 
     protected void checkBounds(int i) throws SQLException {
         if (i > getColumnCount()) {
@@ -186,14 +205,14 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     public int getColumnDisplaySize(int column) throws SQLException {
         MongoColumnInfo ci = getColumnInfo(column);
         if (ci.isPolymorphic()) {
-            return unknownLength;
+            return UNKNOWN_LENGTH;
         }
         BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case BINARY:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case BOOLEAN:
                 return 1;
             case DATE_TIME:
@@ -204,7 +223,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case DECIMAL128:
                 return 34;
             case DOCUMENT:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case DOUBLE:
                 return 15;
             case INT32:
@@ -212,9 +231,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case INT64:
                 return 19;
             case JAVASCRIPT:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case JAVASCRIPT_WITH_SCOPE:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case MAX_KEY:
                 return 0;
             case MIN_KEY:
@@ -224,13 +243,13 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case OBJECT_ID:
                 return 24;
             case REGULAR_EXPRESSION:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case STRING:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case SYMBOL:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case TIMESTAMP:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case UNDEFINED:
                 return 0;
         }
@@ -241,14 +260,14 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     public int getPrecision(int column) throws SQLException {
         MongoColumnInfo ci = getColumnInfo(column);
         if (ci.isPolymorphic()) {
-            return unknownLength;
+            return UNKNOWN_LENGTH;
         }
         BsonType t = ci.getBsonTypeEnum();
         switch (t) {
             case ARRAY:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case BINARY:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case BOOLEAN:
                 return 1;
             case DATE_TIME:
@@ -258,7 +277,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case DECIMAL128:
                 return 34;
             case DOCUMENT:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case DOUBLE:
                 return 15;
             case INT32:
@@ -266,9 +285,9 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case INT64:
                 return 19;
             case JAVASCRIPT:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case JAVASCRIPT_WITH_SCOPE:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case MAX_KEY:
                 return 0;
             case MIN_KEY:
@@ -278,11 +297,11 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
             case OBJECT_ID:
                 return 24;
             case REGULAR_EXPRESSION:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case STRING:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case SYMBOL:
-                return unknownLength;
+                return UNKNOWN_LENGTH;
             case TIMESTAMP:
                 return 0;
             case UNDEFINED:
@@ -295,7 +314,7 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
     public int getScale(int column) throws SQLException {
         MongoColumnInfo ci = getColumnInfo(column);
         if (ci.isPolymorphic()) {
-            return unknownLength;
+            return UNKNOWN_LENGTH;
         }
         BsonType t = ci.getBsonTypeEnum();
         switch (t) {

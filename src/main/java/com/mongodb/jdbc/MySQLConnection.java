@@ -1,17 +1,27 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
+@AutoLoggable
 public class MySQLConnection extends MongoConnection implements Connection {
     private boolean relaxed;
 
-    public MySQLConnection(ConnectionString cs, String database, String conversionMode) {
-        super(cs, database);
+    public MySQLConnection(
+            ConnectionString cs,
+            String database,
+            String conversionMode,
+            Level logLevel,
+            File logDir) {
+        super(cs, database, logLevel, logDir);
+        super.getLogger().log(Level.INFO, "Dialect is Mysql");
         relaxed = conversionMode == null || !conversionMode.equals("strict");
     }
 
