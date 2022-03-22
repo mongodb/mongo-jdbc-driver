@@ -91,6 +91,7 @@ dataset:
     docsExtJson:
       - {
         _id: 0,
+        array: [1,2,3],
         dbPointer: { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
         javascript: {"$code": "function(){ }"},
         javascriptWithScope: {"$code": "function(){ }", "$scope": {"foo":"bar"}},
@@ -103,6 +104,4 @@ dataset:
         timestamp: {"$timestamp": {"t":100, "i":0}}
         # Skip reason: SQL-395
         # undefined: {"$undefined":true},
-        # Skip reason: SQL-697
-        # array: [1,2,3]
       }

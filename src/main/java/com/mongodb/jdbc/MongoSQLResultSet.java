@@ -375,7 +375,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                return handleStringConversionFailure(ARRAY);
+                return o.asArray().getValues().toString();
             case BINARY:
                 return handleStringConversionFailure(BINARY);
             case BOOLEAN:
@@ -388,7 +388,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DECIMAL128:
                 return o.asDecimal128().getValue().toString();
             case DOCUMENT:
-                return handleStringConversionFailure(DOCUMENT);
+                return o.asDocument().toString();
             case DOUBLE:
                 return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:
