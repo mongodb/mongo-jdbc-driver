@@ -145,8 +145,7 @@ public class DataLoader {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     if (entry.collection != null) {
                         loadCollection(entry, database);
-                    }
-                    else if (entry.view != null) {
+                    } else if (entry.view != null) {
                         generateSchema(entry.db, entry.view);
                     }
                 }
@@ -159,6 +158,7 @@ public class DataLoader {
 
     /**
      * Loads a collection with the information provided in the TestDataEntry.
+     *
      * @param entry the collection entry.
      * @param database The database to add the collection to.
      */
@@ -194,12 +194,7 @@ public class DataLoader {
             for (Map<String, Object> index : entry.nonuniqueIndexes) {
                 String indexName = collection.createIndex(new Document(index));
                 System.out.println(
-                        "Created index "
-                                + indexName
-                                + " on "
-                                + entry.db
-                                + "."
-                                + entry.collection);
+                        "Created index " + indexName + " on " + entry.db + "." + entry.collection);
             }
         }
         if (entry.schema != null) {
