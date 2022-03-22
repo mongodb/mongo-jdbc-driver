@@ -673,8 +673,7 @@ public class IntegrationTestUtils {
                                             + (i + 1));
                             return false;
                         }
-                    }
-                    else {
+                    } else {
                         Object actual_obj = actualRow.getObject(i + 1);
                         if (!expected_obj.equals(actual_obj)) {
                             System.err.println(
