@@ -42,7 +42,6 @@ public class DataLoader {
 
     private List<TestDataEntry> datasets;
     private Set<Pair<String, String>> collections;
-    private Set<Pair<String, String>> views;
     private Set<String> databases;
     private MongoClientURI mdbUri;
     private MongoClientURI adlUri;
@@ -50,7 +49,6 @@ public class DataLoader {
     public DataLoader(String dataDirectory) throws IOException {
         this.datasets = new ArrayList<>();
         this.collections = new HashSet<>();
-        this.views = new HashSet<>();
         this.databases = new HashSet<>();
         this.mdbUri = new MongoClientURI(LOCAL_MDB_URL);
         this.adlUri = new MongoClientURI(LOCAL_ADL_URL);
@@ -69,9 +67,7 @@ public class DataLoader {
                         databases.add(entry.db);
                         if (entry.collection != null) {
                             collections.add(new Pair<>(entry.db, entry.collection));
-                        } else if (entry.view != null) {
-                            views.add(new Pair<>(entry.db, entry.view));
-                        } else {
+                        } else if (entry.view == null) {
                             System.out.println(
                                     "One entry in "
                                             + fileEntry.getName()
