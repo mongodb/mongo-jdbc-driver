@@ -4,12 +4,16 @@ import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
+
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -17,7 +21,15 @@ import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
 import org.bson.BsonUndefined;
 import org.bson.BsonValue;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.Decimal128;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 @AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
@@ -373,9 +385,15 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (checkNull(o)) {
             return null;
         }
+        JsonWriterSettings settings = JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).build();
+        CodecRegistry registry = fromProviders(new BsonValueCodecProvider());
         switch (o.getBsonType()) {
             case ARRAY:
-                return o.asArray().getValues().toString();
+                Codec codec = registry.get(BsonArray.class);
+                StringWriter writer = new StringWriter();
+                codec.encode(new NoCheckStateJsonWriter(writer, settings), o, EncoderContext.builder().build());
+                writer.flush();
+                return writer.toString();
             case BINARY:
                 return handleStringConversionFailure(BINARY);
             case BOOLEAN:
@@ -388,7 +406,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DECIMAL128:
                 return o.asDecimal128().getValue().toString();
             case DOCUMENT:
-                return o.asDocument().toString();
+                return o.asDocument().toJson(settings);
             case DOUBLE:
                 return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:

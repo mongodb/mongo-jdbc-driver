@@ -91,13 +91,14 @@ dataset:
     docsExtJson:
       - {
         _id: 0,
-        array: [1,2,3],
+        array: [1,2,3,"$oid": "000000000000000000000003", "$timestamp": {"t":200, "i":0}],
         dbPointer: { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
         javascript: {"$code": "function(){ }"},
         javascriptWithScope: {"$code": "function(){ }", "$scope": {"foo":"bar"}},
         maxKey: {"$maxKey": 1},
         minKey: {"$minKey": 1},
-        object: {"foo":"bar"},
+        object: {"foo":"bar", "objId": {"$oid": "000000000000000000000002"}, "value": 3,
+                 "time": {"$timestamp": {"t":200, "i":0}}},
         objectId: { "$oid": "000000000000000000000001" },
         regularExpression: {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
         symbol: { "$symbol": "symbol" },

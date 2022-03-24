@@ -188,13 +188,15 @@ tests:
     sql: SELECT * FROM types_other
     expected_result_extended_json: [ {
       "0": 0,
-      "1": [1,2,3],
+      "1": [{"$numberInt": "1"}, {"$numberInt": "2"}, {"$numberInt": "3"},
+            {"$oid": "000000000000000000000003"}, {"$timestamp": {"t": 200, "i": 0}}],
       "2": { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
       "3": {"$code": "function(){ }"},
       "4": {"$code": "function(){ }", "$scope": {"foo":"bar"}},
       "5": {"$maxKey": 1},
       "6": {"$minKey": 1},
-      "7": {"foo":"bar"},
+      "7": {"foo": "bar", "objId": {"$oid": "000000000000000000000002"},
+            "value": 3, "time": {"$timestamp": {"t": 200, "i": 0}}},
       "8": { "$oid": "000000000000000000000001" },
       "9": {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
       "10": { "$symbol": "symbol" },
@@ -241,6 +243,9 @@ tests:
     db: integration_test
     sql: SELECT `array`, `object` FROM types_other
     expected_result:
-      - [ "[BsonInt32{value=1}, BsonInt32{value=2}, BsonInt32{value=3}]", "{\"foo\": \"bar\"}" ]
+      - ["[{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}, {\"$numberInt\": \"3\"}, \
+          {\"$oid\": \"000000000000000000000003\"}, {\"$timestamp\": {\"t\": 200, \"i\": 0}}]",
+         "{\"foo\": \"bar\", \"objId\": {\"$oid\": \"000000000000000000000002\"}, \
+          \"value\": {\"$numberInt\": \"3\"}, \"time\": {\"$timestamp\": {\"t\": 200, \"i\": 0}}}"]
     row_count: 1
 
