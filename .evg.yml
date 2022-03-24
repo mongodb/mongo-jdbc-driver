@@ -101,9 +101,12 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./resources/run_adl.sh start && ./gradlew runDataLoader
+          ./resources/run_adl.sh start &&
+          ./gradlew runDataLoader &&
           ./gradlew clean integrationTest -x test
+          EXITCODE=$?
           ./resources/run_adl.sh stop
+          exit $EXITCODE
 
   "export variables":
     - command: shell.exec
