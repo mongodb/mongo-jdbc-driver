@@ -31,6 +31,10 @@ import org.bson.types.Decimal128;
 
 @AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+    static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
+    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
+    static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     /**
      * Constructor for a MongoSQLResultSet not tied to a statement used for
@@ -383,17 +387,14 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (checkNull(o)) {
             return null;
         }
-        JsonWriterSettings settings =
-                JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).build();
-        CodecRegistry registry = fromProviders(new BsonValueCodecProvider());
         switch (o.getBsonType()) {
             case ARRAY:
-                Codec codec = registry.get(BsonArray.class);
+                Codec codec = CODEC_REGISTRY.get(BsonArray.class);
                 StringWriter writer = new StringWriter();
                 codec.encode(
-                        new NoCheckStateJsonWriter(writer, settings),
+                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
                         o.asArray(),
-                        EncoderContext.builder().build());
+                        ENCODER_CONTEXT);
                 writer.flush();
                 return writer.toString();
             case BINARY:
@@ -408,7 +409,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DECIMAL128:
                 return o.asDecimal128().getValue().toString();
             case DOCUMENT:
-                return o.asDocument().toJson(settings);
+                return o.asDocument().toJson(JSON_WRITER_SETTINGS);
             case DOUBLE:
                 return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:

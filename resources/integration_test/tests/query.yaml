@@ -243,9 +243,8 @@ tests:
     db: integration_test
     sql: SELECT `array`, `object` FROM types_other
     expected_result:
-      - ["[{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}, {\"$numberInt\": \"3\"}, \
-          {\"$oid\": \"000000000000000000000003\"}, {\"$timestamp\": {\"t\": 200, \"i\": 0}}]",
-         "{\"foo\": \"bar\", \"objId\": {\"$oid\": \"000000000000000000000002\"}, \
-          \"value\": {\"$numberInt\": \"3\"}, \"time\": {\"$timestamp\": {\"t\": 200, \"i\": 0}}}"]
+      - ["[1, 2, 3, {\"$oid\": \"000000000000000000000003\"}, {\"$timestamp\": {\"t\": 200, \"i\": 0}}]",
+         "{\"foo\": \"bar\", \"objId\": {\"$oid\": \"000000000000000000000002\"}, \"value\": 3, \
+         \"time\": {\"$timestamp\": {\"t\": 200, \"i\": 0}}}"]
     row_count: 1
 
