@@ -391,7 +391,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case ARRAY:
                 Codec codec = registry.get(BsonArray.class);
                 StringWriter writer = new StringWriter();
-                codec.encode(new NoCheckStateJsonWriter(writer, settings), o, EncoderContext.builder().build());
+                codec.encode(new NoCheckStateJsonWriter(writer, settings), o.asArray(), EncoderContext.builder().build());
                 writer.flush();
                 return writer.toString();
             case BINARY:
