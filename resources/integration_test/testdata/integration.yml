@@ -91,7 +91,7 @@ dataset:
     docsExtJson:
       - {
         _id: 0,
-        array: [1,2,3,{"$oid": "000000000000000000000003"}, {"$timestamp": {"t":200, "i":0}}],
+        array: [ 1, 2, 3, "$oid": "000000000000000000000003", "$timestamp": {"t":200, "i":0}],
         dbPointer: { "$dbPointer": { "$ref": "namespace", "$id": {"$oid": "000000000000000000000001" }}},
         javascript: {"$code": "function(){ }"},
         javascriptWithScope: {"$code": "function(){ }", "$scope": {"foo":"bar"}},
