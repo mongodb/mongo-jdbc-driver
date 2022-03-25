@@ -1,15 +1,19 @@
 package com.mongodb.jdbc;
 
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -17,10 +21,20 @@ import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
 import org.bson.BsonUndefined;
 import org.bson.BsonValue;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.Decimal128;
 
 @AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+    static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
+    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
+    static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     /**
      * Constructor for a MongoSQLResultSet not tied to a statement used for
@@ -375,7 +389,14 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                return handleStringConversionFailure(ARRAY);
+                Codec codec = CODEC_REGISTRY.get(BsonArray.class);
+                StringWriter writer = new StringWriter();
+                codec.encode(
+                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
+                        o.asArray(),
+                        ENCODER_CONTEXT);
+                writer.flush();
+                return writer.toString();
             case BINARY:
                 return handleStringConversionFailure(BINARY);
             case BOOLEAN:
@@ -388,7 +409,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DECIMAL128:
                 return o.asDecimal128().getValue().toString();
             case DOCUMENT:
-                return handleStringConversionFailure(DOCUMENT);
+                return o.asDocument().toJson(JSON_WRITER_SETTINGS);
             case DOUBLE:
                 return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:

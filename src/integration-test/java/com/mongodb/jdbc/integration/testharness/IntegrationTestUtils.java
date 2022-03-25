@@ -661,16 +661,30 @@ public class IntegrationTestUtils {
                     break;
                 case Types.OTHER:
                     Object expected_obj = expectedRow.get(i);
-                    Object actual_obj = actualRow.getObject(i + 1);
-                    if (!expected_obj.equals(actual_obj)) {
-                        System.err.println(
-                                "Expected Bson Other value "
-                                        + expected_obj
-                                        + " but is "
-                                        + actual_obj
-                                        + " for column "
-                                        + (i + 1));
-                        return false;
+                    if (expected_obj instanceof String) {
+                        String actual_obj = actualRow.getString(i + 1);
+                        if (!expected_obj.equals(actual_obj)) {
+                            System.err.println(
+                                    "Expected Bson Other String value "
+                                            + expected_obj
+                                            + " but is "
+                                            + actual_obj
+                                            + " for column "
+                                            + (i + 1));
+                            return false;
+                        }
+                    } else {
+                        Object actual_obj = actualRow.getObject(i + 1);
+                        if (!expected_obj.equals(actual_obj)) {
+                            System.err.println(
+                                    "Expected Bson Other Object value "
+                                            + expected_obj
+                                            + " but is "
+                                            + actual_obj
+                                            + " for column "
+                                            + (i + 1));
+                            return false;
+                        }
                     }
                     break;
                 default:

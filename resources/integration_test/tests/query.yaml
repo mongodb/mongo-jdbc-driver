@@ -188,53 +188,62 @@ tests:
     sql: SELECT * FROM types_other
     expected_result_extended_json: [ {
       "0": 0,
-      "1": { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
-      "2": {"$code": "function(){ }"},
-      "3": {"$code": "function(){ }", "$scope": {"foo":"bar"}},
-      "4": {"$maxKey": 1},
-      "5": {"$minKey": 1},
-      "6": {"foo":"bar"},
-      "7": { "$oid": "000000000000000000000001" },
-      "8": {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
-      "9": { "$symbol": "symbol" },
-      "10": {"$timestamp": {"t":100, "i":0}}
-      # Skip reason: SQL-395
-      # 11: {"$undefined":true},
-      # Skip reason: SQL-697
-      # 12: [1,2,3]
+      "1": [{"$numberInt": "1"}, {"$numberInt": "2"}, {"$numberInt": "3"},
+            {"$oid": "000000000000000000000003"}, {"$timestamp": {"t": 200, "i": 0}}],
+      "2": { "$dbPointer": { "$ref": "namespace", "$id": { "$oid": "000000000000000000000001" } } },
+      "3": {"$code": "function(){ }"},
+      "4": {"$code": "function(){ }", "$scope": {"foo":"bar"}},
+      "5": {"$maxKey": 1},
+      "6": {"$minKey": 1},
+      "7": {"foo": "bar", "objId": {"$oid": "000000000000000000000002"},
+            "value": 3, "time": {"$timestamp": {"t": 200, "i": 0}}},
+      "8": { "$oid": "000000000000000000000001" },
+      "9": {"$regularExpression": {pattern: "a(bc)*", "options": ""}},
+      "10": { "$symbol": "symbol" },
+      "11": {"$timestamp": {"t":100, "i":0}}
+        # Skip reason: SQL-395
+        # 11: {"$undefined":true},
     } ]
     row_count: 1
     expected_sql_type: [INTEGER, OTHER, OTHER, OTHER, OTHER, OTHER, OTHER, OTHER,
-                        OTHER, OTHER, OTHER]
-    expected_bson_type: [int, dbPointer, javascript, javascriptWithScope, maxKey,
+                        OTHER, OTHER, OTHER, OTHER]
+    expected_bson_type: [int, array, dbPointer, javascript, javascriptWithScope, maxKey,
                          minKey, object, objectId, regex, symbol, timestamp]
-    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '']
+    expected_catalog_name: ['', '', '', '', '', '', '', '', '', '', '', '']
     expected_column_class_name: [int, org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue,
                                  org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue,
-                                 org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue]
-    expected_column_label: [_id, dbPointer, javascript, javascriptWithScope, maxKey,
-                            minKey, object, objectId, regularExpression, symbol, timestamp]
-    expected_column_display_size: [10, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
-    expected_precision: [10, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
-    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '']
+                                 org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue, org.bson.BsonValue]
+    expected_column_label: [_id, array, dbPointer, javascript, javascriptWithScope,
+                            maxKey, minKey, object, objectId, regularExpression, symbol, timestamp]
+    expected_column_display_size: [10, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
+    expected_precision: [10, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0]
+    expected_scale: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expected_schema_name: ['', '', '', '', '', '', '', '', '', '', '', '']
     expected_is_auto_increment: [false, false, false, false, false, false, false,
-                                 false, false, false, false]
-    expected_is_case_sensitive: [false, false, true, true, false, false, false, false,
-                                 true, true, false]
+                                 false, false, false, false, false]
+    expected_is_case_sensitive: [false, false, false, true, true, false, false, false,
+                                 false, true, true, false]
     expected_is_currency: [false, false, false, false, false, false, false, false,
-                           false, false, false]
+                           false, false, false, false]
     expected_is_definitely_writable: [false, false, false, false, false, false, false,
-                                      false, false, false, false]
+                                      false, false, false, false, false]
     expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable,
                            columnNullable, columnNullable, columnNullable, columnNullable, columnNullable,
-                           columnNullable, columnNullable]
+                           columnNullable, columnNullable, columnNullable]
     expected_is_read_only: [true, true, true, true, true, true, true, true, true,
-                            true, true]
+                            true, true, true]
     expected_is_searchable: [true, true, true, true, true, true, true, true, true,
-                             true, true]
+                             true, true, true]
     expected_is_signed: [true, false, false, false, false, false, false, false, false,
-                         false, false]
+                         false, false, false]
     expected_is_writable: [false, false, false, false, false, false, false, false,
-                           false, false, false]
+                           false, false, false, false]
+
+  - description: query_array_and_document_as_string
+    db: integration_test
+    sql: SELECT `array`, `object` FROM types_other
+    expected_result:
+      - ['[1, 2, 3, {"$oid": "000000000000000000000003"}, {"$timestamp": {"t": 200, "i": 0}}]',
+         '{"foo": "bar", "objId": {"$oid": "000000000000000000000002"}, "value": 3, "time": {"$timestamp": {"t": 200, "i": 0}}}']
+    row_count: 1
 
