@@ -24,21 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.ClientInfoStatus;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -153,39 +150,51 @@ public class MongoDriver implements Driver {
             info = new Properties();
         }
 
-        // reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
+        // Reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
-        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionString(url, info);
+        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
         // ensure that the ConnectionString and Properties are consistent.
-        reconcileProperties(p.right(), info);
-
-        ConnectionString cs = p.left();
-        return createConnection(cs, info);
+        validateProperties(p.right());
+        return createConnection(p.left(), info);
     }
 
-    private void reconcileProperties(DriverPropertyInfo[] driverPropertyInfo, Properties info)
-            throws SQLException {
+    private void validateProperties(DriverPropertyInfo[] driverPropertyInfo) throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
         if (driverPropertyInfo.length != 0) {
-            if (driverPropertyInfo[0].name.equals(USER)) {
-                throw new SQLException("password specified without user");
+            for (DriverPropertyInfo info : driverPropertyInfo) {
+                if (info.name.equals(USER)) {
+                    throw new SQLException(
+                            "password specified without user. Please provide '"
+                                    + USER
+                                    + "' property value",
+                            "08000");
+                } else if (info.name.equals(PASSWORD)) {
+                    throw new SQLException(
+                            "user specified without password. Please provide '"
+                                    + PASSWORD
+                                    + "' property value",
+                            "08000");
+                } else if (info.name.equals(DATABASE)) {
+                    throw new SQLException(
+                            "Mandatory property '" + DATABASE + "' is missing.", "08000");
+                }
+                String[] propertyNames = new String[driverPropertyInfo.length];
+                for (int i = 0; i < propertyNames.length; ++i) {
+                    propertyNames[i] = driverPropertyInfo[i].name;
+                }
+                throw new SQLException(
+                        "Unexpected driver property info prompt returned: "
+                                + String.join(", ", propertyNames));
             }
-            if (driverPropertyInfo[0].name.equals(PASSWORD)) {
-                throw new SQLException("user specified without password");
-            }
-            String[] propertyNames = new String[driverPropertyInfo.length];
-            for (int i = 0; i < propertyNames.length; ++i) {
-                propertyNames[i] = driverPropertyInfo[i].name;
-            }
-            throw new SQLException(
-                    "unexpected driver property info prompt returned: "
-                            + String.join(", ", propertyNames));
         }
     }
 
     private MongoConnection createConnection(ConnectionString cs, Properties info)
             throws SQLException {
+        // Database from the properties must be present
+        String database = info.getProperty(DATABASE);
+
         // attempt to get DIALECT property, and default to "mongosql" if none is present
         String dialect = info.getProperty(DIALECT, MONGOSQL_DIALECT);
         // Default log level is OFF
@@ -221,25 +230,26 @@ public class MongoDriver implements Driver {
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
                 return new MySQLConnection(
-                        cs,
-                        info.getProperty(DATABASE),
-                        info.getProperty(CONVERSION_MODE),
-                        logLevel,
-                        logDir);
+                        cs, database, info.getProperty(CONVERSION_MODE), logLevel, logDir);
             case MONGOSQL_DIALECT:
                 if (info.containsKey(CONVERSION_MODE)) {
-                    throw new SQLClientInfoException(
-                            String.format(
-                                    "must not set '%s' if '%s' is '%s'",
-                                    CONVERSION_MODE, DIALECT, MONGOSQL_DIALECT),
-                            Collections.singletonMap(
-                                    CONVERSION_MODE, ClientInfoStatus.REASON_VALUE_INVALID));
+                    throw new SQLException(
+                            "Must not set"
+                                    + CONVERSION_MODE
+                                    + " if "
+                                    + DIALECT
+                                    + " is "
+                                    + MONGOSQL_DIALECT);
                 }
-                return new MongoSQLConnection(cs, info.getProperty(DATABASE), logLevel, logDir);
+                return new MongoSQLConnection(cs, database, logLevel, logDir);
             default:
-                throw new SQLClientInfoException(
-                        String.format("invalid dialect '%s'", dialect),
-                        Collections.singletonMap(DIALECT, ClientInfoStatus.REASON_VALUE_INVALID));
+                throw new SQLException(
+                        "Invalid dialect "
+                                + dialect
+                                + ". Valid values are "
+                                + MONGOSQL_DIALECT
+                                + " and "
+                                + MYSQL_DIALECT);
         }
     }
 
@@ -251,7 +261,7 @@ public class MongoDriver implements Driver {
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, java.util.Properties info)
             throws SQLException {
-        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionString(url, info);
+        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
         return p.right();
     }
 
@@ -299,11 +309,13 @@ public class MongoDriver implements Driver {
 
     // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionString(
+    private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
             String url, Properties info) throws SQLException {
+        List<DriverPropertyInfo> propertyInfoList = new ArrayList<>();
         if (info == null) {
             info = new Properties();
         }
+
         String actualURL = removePrefix(JDBC, url);
         ConnectionString originalConnectionString;
         try {
@@ -318,32 +330,32 @@ public class MongoDriver implements Driver {
         String user = result.user;
         char[] password = result.password;
 
-        if (user == null && password == null) {
-            ConnectionString c =
-                    new ConnectionString(
-                            buildNewURI(
-                                    originalConnectionString.getHosts(),
-                                    null,
-                                    null,
-                                    authDatabase,
-                                    result.normalizedOptions));
-            Pair<ConnectionString, DriverPropertyInfo[]> pair =
-                    new Pair<>(c, new DriverPropertyInfo[] {});
-            return pair;
+        List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
+        if (!info.containsKey(DATABASE) || info.getProperty(DATABASE).isEmpty()) {
+            // Missing required database used for querying (as opposed to the authentication database which can be provided in the connection string)
+            mandatoryConnectionProperties.add(new DriverPropertyInfo(DATABASE, null));
         }
-        if (user == null) {
+
+        if (user == null && password != null) {
             // user is null, but password is not, we must prompt for the user.
             // Note: The convention is actually to return DriverPropertyInfo objects
             // with null values, this is not a bug.
-            return new Pair<>(null, new DriverPropertyInfo[] {new DriverPropertyInfo(USER, null)});
+            mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
         }
-        if (password == null) {
-            // If password is null here, then user name must be non-null,because
-            // the both null case is handled above. Prompt for the password.
+        if (password == null && user != null) {
+            // password is null, but user is not, we must prompt for the password.
+            mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+        }
+
+        // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
+        if (mandatoryConnectionProperties.size() > 0) {
             return new Pair<>(
-                    null, new DriverPropertyInfo[] {new DriverPropertyInfo(PASSWORD, null)});
+                    null,
+                    mandatoryConnectionProperties.toArray(
+                            new DriverPropertyInfo[mandatoryConnectionProperties.size()]));
         }
-        // If we are here, we must have both a user and password. So we have a valid URI state,
+
+        // If we are here, we must have all the required connection information. So we have a valid URI state,
         // go ahead and construct it and prompt for nothing.
         ConnectionString c =
                 new ConnectionString(

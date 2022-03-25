@@ -34,6 +34,8 @@ class MongoDriverTest {
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
 
+    private static final String CONNECTION_ERROR_SQLSTATE = "08000";
+
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
     private static final String NOT_LOGGING_TO_FILE_ERROR = "Not logging to files.";
@@ -74,17 +76,31 @@ class MongoDriverTest {
     @Test
     void testDBURL() throws SQLException {
         MongoDriver d = new MongoDriver();
-        // Should not return null or throw, even with null properties.
-        assertNotNull(d.getUnvalidatedConnection(authDBURL, null));
+        missingConnectionSettings(d, authDBURL, null);
 
         Properties p = new Properties();
-        assertNotNull(d.getUnvalidatedConnection(authDBURL, p));
+        missingConnectionSettings(d, authDBURL, p);
 
         p.setProperty("database", "admin2");
 
         // Database is not the same as the authDatabase in the uri.
         // So this is safe and should not throw.
         assertNotNull(d.getUnvalidatedConnection(authDBURL, p));
+    }
+
+    private void missingConnectionSettings(
+            MongoDriver d, String connectionUrl, Properties properties) {
+        // Should not return null or throw, even with null properties.
+        try {
+            d.getUnvalidatedConnection(connectionUrl, properties);
+            fail("The connection should fail because a mandatory connection setting is missing.");
+        } catch (SQLException e) {
+            // Expected failure
+            assertEquals(
+                    CONNECTION_ERROR_SQLSTATE,
+                    e.getSQLState(),
+                    "Expect SQL state " + CONNECTION_ERROR_SQLSTATE + " but got " + e.getMessage());
+        }
     }
 
     @Test
