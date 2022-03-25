@@ -4,7 +4,7 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class MongoVersionedJsonSchema {
-    public int version;
+    public Integer version;
     public MongoJsonSchema mongoJsonSchema;
 
     /** Empty Json schema. */
@@ -18,7 +18,7 @@ public class MongoVersionedJsonSchema {
      */
     @BsonCreator
     public MongoVersionedJsonSchema(
-            @BsonProperty("version") final int version,
+            @BsonProperty("version") final Integer version,
             @BsonProperty("jsonSchema") JsonSchema schema) {
         this.version = version;
         this.mongoJsonSchema = MongoJsonSchema.toSimplifiedMongoJsonSchema(schema);

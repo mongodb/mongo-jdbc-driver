@@ -7,18 +7,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.bson.BsonDocument;
+import org.bson.BsonDocumentWriter;
+import org.bson.BsonWriter;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.json.JsonReader;
+import org.bson.json.JsonWriterSettings;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 /** Test the deserialization and simplifacation of JsonSchema returned by a sqlgetschema command. */
@@ -30,6 +37,8 @@ public class MongoJsonSchemaTest {
                     PojoCodecProvider.builder().automatic(true).build());
     static final Codec<MongoJsonSchema> MONGO_JSON_SCHEMA_CODEC =
             REGISTRY.get(MongoJsonSchema.class);
+    static final Codec<MongoVersionedJsonSchema> MONGO_VERSIONED_JSON_SCHEMA_CODEC =
+            REGISTRY.get(MongoVersionedJsonSchema.class);
     static final Codec<JsonSchema> JSON_SCHEMA_CODEC = REGISTRY.get(JsonSchema.class);
 
     @TestFactory
@@ -58,7 +67,43 @@ public class MongoJsonSchemaTest {
         return dynamicTests;
     }
 
-    public void testDeserializeAndSimplifySchema(File input, File output)
+    @Test
+    public void testEmptySchema() throws Exception {
+        JsonWriterSettings settings = JsonWriterSettings.builder().indent(true).build();
+
+        // Deserializes empty documents
+        Codec[] schemaCodecs = {
+            JSON_SCHEMA_CODEC, MONGO_JSON_SCHEMA_CODEC, MONGO_VERSIONED_JSON_SCHEMA_CODEC
+        };
+        for (Codec codec : schemaCodecs) {
+            Class encoderClass = codec.getEncoderClass();
+            // Encode an "emtpy" object using the default constructor with no arguments for the class associated to the codec
+            BsonDocument docFromEmptyObj = new BsonDocument();
+            BsonWriter writer = new BsonDocumentWriter(docFromEmptyObj);
+            codec.encode(
+                    writer,
+                    encoderClass.getConstructor().newInstance(),
+                    EncoderContext.builder().build());
+            writer.flush();
+
+            try (JsonReader reader = new JsonReader(new StringReader("{}"))) {
+                // Decode the empty document
+                Object encodedObj = codec.decode(reader, DecoderContext.builder().build());
+                assertEquals(encoderClass, encodedObj.getClass());
+
+                // Re-encode the decoded schema and check its content, verify that it matches a new "empty" instance
+                BsonDocument docFromDecodedEmptyJson = new BsonDocument();
+                writer = new BsonDocumentWriter(docFromDecodedEmptyJson);
+                codec.encode(writer, encodedObj, EncoderContext.builder().build());
+                writer.flush();
+
+                assertEquals(
+                        docFromEmptyObj.toJson(settings), docFromDecodedEmptyJson.toJson(settings));
+            }
+        }
+    }
+
+    private void testDeserializeAndSimplifySchema(File input, File output)
             throws FileNotFoundException {
         JsonSchema in_schema = null;
         MongoJsonSchema out_schema = null;
