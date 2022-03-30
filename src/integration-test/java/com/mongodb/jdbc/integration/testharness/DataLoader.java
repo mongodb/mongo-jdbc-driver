@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,7 @@ public class DataLoader {
     }
 
     private void setSchema(String database, String collection, Map<String, Object> jsonSchema) {
+        System.out.println("Set schema for  " + database + "." + collection);
         BsonDocument command = new BsonDocument();
         BsonDocument schema = new BsonDocument();
         command.put("sqlSetSchema", new BsonString(collection));
@@ -113,6 +115,7 @@ public class DataLoader {
     }
 
     private void generateSchema(String database, String collection) {
+        System.out.println("Generate schema for  " + database + "." + collection);
         BsonDocument command = new BsonDocument();
         command.put("sqlGenerateSchema", new BsonInt32(1));
         command.put("setSchemas", new BsonBoolean(true));
@@ -137,13 +140,21 @@ public class DataLoader {
     public void loadTestData() throws IOException {
         try {
             try (MongoClient mongoClient = new MongoClient(mdbUri)) {
+                Map<String, String> views = new HashMap<>();
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
                     if (entry.collection != null) {
                         loadCollection(entry, database);
                     } else if (entry.view != null) {
-                        generateSchema(entry.db, entry.view);
+                        views.put(entry.db, entry.view);
                     }
+                }
+
+                // Generate views schema after all collections have been setup
+                // to make sure a view schema is not generated before the
+                // collection data and schema are there.
+                for (Map.Entry<String, String> view : views.entrySet()) {
+                    generateSchema(view.getKey(), view.getValue());
                 }
             }
         } catch (MongoException e) {
