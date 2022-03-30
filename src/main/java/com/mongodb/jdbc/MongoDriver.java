@@ -84,6 +84,7 @@ public class MongoDriver implements Driver {
                         Level.WARNING.getName()
                     });
     public static final String LOG_TO_CONSOLE = "console";
+    protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
 
     // Load logging.properties
     static {
@@ -150,38 +151,46 @@ public class MongoDriver implements Driver {
             info = new Properties();
         }
 
+        // Ensure that the ConnectionString and Properties are consistent.
         // Reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
-        // ensure that the ConnectionString and Properties are consistent.
-        validateProperties(p.right());
+        checkMissingProperties(p.right());
         return createConnection(p.left(), info);
     }
 
-    private void validateProperties(DriverPropertyInfo[] driverPropertyInfo) throws SQLException {
+    /**
+     * Provides feedback regarding the missing properties.
+     *
+     * @param missingRequiredProperties
+     * @throws SQLException The connection error to return to the user.
+     */
+    private void checkMissingProperties(DriverPropertyInfo[] missingRequiredProperties)
+            throws SQLException {
         // since the user is calling connect, we should throw an SQLException if we get
         // a prompt back. Inspect the return value to format the SQLException.
-        if (driverPropertyInfo.length != 0) {
-            for (DriverPropertyInfo info : driverPropertyInfo) {
+        if (missingRequiredProperties.length != 0) {
+            for (DriverPropertyInfo info : missingRequiredProperties) {
                 if (info.name.equals(USER)) {
                     throw new SQLException(
                             "password specified without user. Please provide '"
                                     + USER
                                     + "' property value",
-                            "08000");
+                            CONNECTION_ERROR_SQLSTATE);
                 } else if (info.name.equals(PASSWORD)) {
                     throw new SQLException(
                             "user specified without password. Please provide '"
                                     + PASSWORD
                                     + "' property value",
-                            "08000");
+                            CONNECTION_ERROR_SQLSTATE);
                 } else if (info.name.equals(DATABASE)) {
                     throw new SQLException(
-                            "Mandatory property '" + DATABASE + "' is missing.", "08000");
+                            "Mandatory property '" + DATABASE + "' is missing.",
+                            CONNECTION_ERROR_SQLSTATE);
                 }
-                String[] propertyNames = new String[driverPropertyInfo.length];
+                String[] propertyNames = new String[missingRequiredProperties.length];
                 for (int i = 0; i < propertyNames.length; ++i) {
-                    propertyNames[i] = driverPropertyInfo[i].name;
+                    propertyNames[i] = missingRequiredProperties[i].name;
                 }
                 throw new SQLException(
                         "Unexpected driver property info prompt returned: "
@@ -382,7 +391,7 @@ public class MongoDriver implements Driver {
         if (info == null) {
             info = new Properties();
         }
-        // The coalesce function takse the first non-null argument, returning null only
+        // The coalesce function takes the first non-null argument, returning null only
         // if both arguments are null. The java type system requires us to write this twice,
         // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
         // that.
