@@ -277,17 +277,30 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // BINARY_COL              [10, 20, 30]
         // ANY_OF_INT_STRING_COL   3
         // INT_OR_NULL_COL         null
+        // NULL_COL                null
         // INT_COL                 4
         // ANY_COL                 "{}"
         // ARRAY_COL               [5, 6, 7]
-        //
+        // DOC_COL                 {"c": 5}
 
         //Test String values are as expected
         assertEquals("2.4", mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getString(STRING_COL_LABEL));
+        assertNull(mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
         assertNull(mongoSQLResultSet.getString(NULL_COL));
         assertEquals("4", mongoSQLResultSet.getString(INT_COL_LABEL));
-        assertEquals(null, mongoSQLResultSet.getString(ANY_COL_LABEL));
+        assertNull(mongoSQLResultSet.getString(ANY_COL_LABEL));
+        assertEquals("[5, 6, 7]", mongoSQLResultSet.getString(ARRAY_COL_LABEL));
+        assertEquals("{\"c\": 5}", mongoSQLResultSet.getString(DOC_COL_LABEL));
+
+        // Check that getObject().toString() matches getString()
+        assertEquals(mongoSQLResultSet.getString(DOUBLE_COL_LABEL), mongoSQLResultSet.getObject(DOUBLE_COL_LABEL).toString());
+        assertEquals(mongoSQLResultSet.getString(STRING_COL_LABEL), mongoSQLResultSet.getObject(STRING_COL_LABEL).toString());
+        assertEquals(mongoSQLResultSet.getString(INT_COL_LABEL), mongoSQLResultSet.getObject(INT_COL_LABEL).toString());
+        assertEquals(mongoSQLResultSet.getString(ARRAY_COL_LABEL), mongoSQLResultSet.getObject(ARRAY_COL_LABEL).toString());
+        assertEquals(mongoSQLResultSet.getString(DOC_COL_LABEL), mongoSQLResultSet.getObject(DOC_COL_LABEL).toString());
+
+        // Check getAsciiStream and getUnicodeStream output are non-null.
         assertNotNull(mongoSQLResultSet.getAsciiStream(STRING_COL_LABEL));
         assertNotNull(mongoSQLResultSet.getUnicodeStream(STRING_COL_LABEL));
 
