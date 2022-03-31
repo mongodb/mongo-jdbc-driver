@@ -35,10 +35,12 @@ public abstract class MongoSQLMock {
     protected static int INT_COL = 6;
     // foo.d
     protected static int ANY_COL = 7;
+    // foo.doc
+    protected static int DOC_COL = 8;
     // foo.null
-    protected static int NULL_COL = 8;
+    protected static int NULL_COL = 9;
     // foo.vec
-    protected static int ARRAY_COL = 9;
+    protected static int ARRAY_COL = 10;
 
     protected static String DOUBLE_COL_LABEL = "a";
     protected static String BINARY_COL_LABEL = "binary";
@@ -48,6 +50,7 @@ public abstract class MongoSQLMock {
     protected static String INT_NULLABLE_COL_LABEL = "b";
     protected static String INT_COL_LABEL = "c";
     protected static String ANY_COL_LABEL = "d";
+    protected static String DOC_COL_LABEL = "doc";
     protected static String NULL_COL_LABEL = "null";
     protected static String ARRAY_COL_LABEL = "vec";
 
@@ -139,9 +142,18 @@ public abstract class MongoSQLMock {
                         },
                         null: {
                            bsonType: NULL
+                        },
+                        doc: {
+                           bsonType: object,
+                           properties: {
+                              c: {
+                                 bsonType: int
+                              }
+                           },
+                           required: [a]
                         }
                     },
-                    required: [a, b, vec],
+                    required: [a, b, vec, doc],
                 },
                 "": {
                    bsonType: object,
@@ -172,6 +184,7 @@ public abstract class MongoSQLMock {
         fooSchema.required.add(ANY_OF_INT_STRING_COL_LABEL);
         fooSchema.required.add(INT_NULLABLE_COL_LABEL);
         fooSchema.required.add(ARRAY_COL_LABEL);
+        fooSchema.required.add(DOC_COL_LABEL);
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
@@ -202,6 +215,11 @@ public abstract class MongoSQLMock {
         MongoJsonSchema nullSchema = new MongoJsonSchema();
         nullSchema.bsonType = "null";
 
+        // For the doc schema, we reuse the foo.c INT field variables
+        MongoJsonSchema docSchema = MongoJsonSchema.createEmptyObjectSchema();
+        docSchema.required.add(INT_COL_LABEL);
+        docSchema.properties.put(INT_COL_LABEL, cSchema);
+
         fooSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         fooSchema.properties.put(INT_COL_LABEL, cSchema);
         fooSchema.properties.put(ANY_OF_INT_STRING_COL_LABEL, aSchema);
@@ -210,6 +228,7 @@ public abstract class MongoSQLMock {
         fooSchema.properties.put(INT_NULLABLE_COL_LABEL, bSchema);
         fooSchema.properties.put(ARRAY_COL_LABEL, vecSchema);
         fooSchema.properties.put(NULL_COL_LABEL, nullSchema);
+        fooSchema.properties.put(DOC_COL_LABEL, docSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
@@ -233,21 +252,24 @@ public abstract class MongoSQLMock {
     BsonDocument generateRow() {
         /*
         {
-            "foo.a":1,
-            "foo.b":null,
-            "foo.c":2,
-            "foo.d":{
+            "foo.a": 1,
+            "foo.b": null,
+            "foo.c": 2,
+            "foo.d": {
                 "$undefined":true
             },
-             "foo.null": null
-             "foo.vec":[
+            "foo.null": null
+            "foo.vec": [
                 1,
                 2,
                 3
             ],
-            "__bot.a":1.2,
+            "foo.doc": {
+                "c": 5
+            }
+            "__bot.a": 1.2,
             "__bot.binary": <binary data>
-            "__bot.str":"a"
+            "__bot.str": "a"
         }
         */
         BsonDocument document = new BsonDocument();
@@ -265,6 +287,10 @@ public abstract class MongoSQLMock {
         array.add(new BsonInt32(2));
         array.add(new BsonInt32(3));
         foo.put(ARRAY_COL_LABEL, array);
+
+        BsonDocument fooSubDoc = new BsonDocument();
+        fooSubDoc.put(INT_COL_LABEL, new BsonInt32(5));
+        foo.put(DOC_COL_LABEL, fooSubDoc);
 
         bot.put(DOUBLE_COL_LABEL, new BsonDouble(1.2));
         byte binary[] = {10, 20, 30};
