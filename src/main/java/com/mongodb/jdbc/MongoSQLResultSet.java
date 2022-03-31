@@ -1,41 +1,22 @@
 package com.mongodb.jdbc;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
-import org.bson.BsonArray;
 import org.bson.BsonDocument;
-import org.bson.BsonMaxKey;
-import org.bson.BsonMinKey;
-import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
-import org.bson.BsonUndefined;
 import org.bson.BsonValue;
-import org.bson.codecs.BsonValueCodecProvider;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.json.JsonMode;
-import org.bson.json.JsonWriterSettings;
 import org.bson.types.Decimal128;
 
 @AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    static final JsonWriterSettings JSON_WRITER_SETTINGS =
-            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
-    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
-    static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
-
     /**
      * Constructor for a MongoSQLResultSet not tied to a statement used for
      * MongoSQLDatabaseMetaData.

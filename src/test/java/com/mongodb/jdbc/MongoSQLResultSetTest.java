@@ -294,11 +294,21 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals("{\"c\": 5}", mongoSQLResultSet.getString(DOC_COL_LABEL));
 
         // Check that getObject().toString() matches getString()
-        assertEquals(mongoSQLResultSet.getString(DOUBLE_COL_LABEL), mongoSQLResultSet.getObject(DOUBLE_COL_LABEL).toString());
-        assertEquals(mongoSQLResultSet.getString(STRING_COL_LABEL), mongoSQLResultSet.getObject(STRING_COL_LABEL).toString());
-        assertEquals(mongoSQLResultSet.getString(INT_COL_LABEL), mongoSQLResultSet.getObject(INT_COL_LABEL).toString());
-        assertEquals(mongoSQLResultSet.getString(ARRAY_COL_LABEL), mongoSQLResultSet.getObject(ARRAY_COL_LABEL).toString());
-        assertEquals(mongoSQLResultSet.getString(DOC_COL_LABEL), mongoSQLResultSet.getObject(DOC_COL_LABEL).toString());
+        assertEquals(
+                mongoSQLResultSet.getString(DOUBLE_COL_LABEL),
+                mongoSQLResultSet.getObject(DOUBLE_COL_LABEL).toString());
+        assertEquals(
+                mongoSQLResultSet.getString(STRING_COL_LABEL),
+                mongoSQLResultSet.getObject(STRING_COL_LABEL).toString());
+        assertEquals(
+                mongoSQLResultSet.getString(INT_COL_LABEL),
+                mongoSQLResultSet.getObject(INT_COL_LABEL).toString());
+        assertEquals(
+                mongoSQLResultSet.getString(ARRAY_COL_LABEL),
+                mongoSQLResultSet.getObject(ARRAY_COL_LABEL).toString());
+        assertEquals(
+                mongoSQLResultSet.getString(DOC_COL_LABEL),
+                mongoSQLResultSet.getObject(DOC_COL_LABEL).toString());
 
         // Check getAsciiStream and getUnicodeStream output are non-null.
         assertNotNull(mongoSQLResultSet.getAsciiStream(STRING_COL_LABEL));
@@ -440,14 +450,15 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSet.getObject(ARRAY_COL),
                 mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(DOC_COL),
-                mongoSQLResultSet.getObject(DOC_COL_LABEL));
+                mongoSQLResultSet.getObject(DOC_COL), mongoSQLResultSet.getObject(DOC_COL_LABEL));
 
         // test that getObject returns the expected java object for each bson type
         assertNull(mongoSQLResultSet.getObject(NULL_COL_LABEL));
         assertEquals(2.4, mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getObject(STRING_COL_LABEL));
-        assertEquals(new ExtJsonValue(new BsonInt32(3)), mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
+        assertEquals(
+                new ExtJsonValue(new BsonInt32(3)),
+                mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoSQLResultSet.getObject(NULL_COL));
         assertEquals(4, mongoSQLResultSet.getObject(INT_COL_LABEL));

@@ -681,7 +681,8 @@ public class IntegrationTestUtils {
                         }
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
-                        ExtJsonValue expectedAsExtJsonValue = new ExtJsonValue((BsonValue) expected_obj);
+                        ExtJsonValue expectedAsExtJsonValue =
+                                new ExtJsonValue((BsonValue) expected_obj);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             System.err.println(
                                     "Expected Bson Other BsonValue value "

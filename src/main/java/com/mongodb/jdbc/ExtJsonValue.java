@@ -1,5 +1,10 @@
 package com.mongodb.jdbc;
 
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+
+import java.io.StringWriter;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import org.bson.BsonArray;
 import org.bson.BsonValue;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -9,21 +14,13 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
-import java.io.StringWriter;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-
 /**
- *  ExtJsonValue is a wrapper for BsonValue. The purpose of this class is to
- *  override the toString() method to produce the extended JSON representation
- *  of a BsonValue, rather than the java driver's default BsonValue.toString()
- *  output.
+ * ExtJsonValue is a wrapper for BsonValue. The purpose of this class is to override the toString()
+ * method to produce the extended JSON representation of a BsonValue, rather than the java driver's
+ * default BsonValue.toString() output.
  *
- *  The driver's BsonValue class is abstract and intentionally cannot be
- *  extended by third parties. The driver explains this is to keep the BSON
- *  type system closed.
+ * <p>The driver's BsonValue class is abstract and intentionally cannot be extended by third
+ * parties. The driver explains this is to keep the BSON type system closed.
  */
 public class ExtJsonValue {
     static final JsonWriterSettings JSON_WRITER_SETTINGS =
@@ -40,9 +37,7 @@ public class ExtJsonValue {
         this.v = v;
     }
 
-    /**
-     * @return The underlying BsonValue
-     */
+    /** @return The underlying BsonValue */
     public BsonValue getBsonValue() {
         return this.v;
     }
