@@ -190,40 +190,10 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.NVARCHAR:
                 return getString(o);
             case Types.OTHER:
-                switch (o.getBsonType()) {
-                    case ARRAY:
-                        return o.asArray();
-                    case DOCUMENT:
-                        return o.asDocument();
-                    case OBJECT_ID:
-                        return o.asObjectId();
-                    case DB_POINTER:
-                        return o.asDBPointer();
-                    case INT32:
-                        return o.asInt32();
-                    case INT64:
-                        return o.asInt64();
-                    case JAVASCRIPT:
-                        return o.asJavaScript();
-                    case JAVASCRIPT_WITH_SCOPE:
-                        return o.asJavaScriptWithScope();
-                    case MAX_KEY:
-                        return (BsonMaxKey) o;
-                    case MIN_KEY:
-                        return (BsonMinKey) o;
-                    case REGULAR_EXPRESSION:
-                        return (BsonRegularExpression) o;
-                    case SYMBOL:
-                        return o.asSymbol();
-                    case TIMESTAMP:
-                        return o.asTimestamp();
-                    case UNDEFINED:
-                        return (BsonUndefined) o;
-                    case NULL:
-                        return null;
-                    default:
-                        return o;
+                if (o.getBsonType() == BsonType.NULL) {
+                    return null;
                 }
+                return new ExtJsonValue(o);
             case Types.REAL:
                 // not supported
                 break;

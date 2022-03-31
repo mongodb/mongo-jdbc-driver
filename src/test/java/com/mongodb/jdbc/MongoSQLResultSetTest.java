@@ -447,7 +447,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertNull(mongoSQLResultSet.getObject(NULL_COL_LABEL));
         assertEquals(2.4, mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getObject(STRING_COL_LABEL));
-        assertEquals(new BsonInt32(3), mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
+        assertEquals(new ExtJsonValue(new BsonInt32(3)), mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoSQLResultSet.getObject(NULL_COL));
         assertEquals(4, mongoSQLResultSet.getObject(INT_COL_LABEL));
@@ -458,11 +458,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        assertEquals(array, mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(new ExtJsonValue(array), mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
-        assertEquals(doc, mongoSQLResultSet.getObject(DOC_COL_LABEL));
+        assertEquals(new ExtJsonValue(doc), mongoSQLResultSet.getObject(DOC_COL_LABEL));
 
         byte binary[] = {10, 20, 30};
         assertEquals(new BsonBinary(binary), mongoSQLResultSet.getObject(BINARY_COL_LABEL));

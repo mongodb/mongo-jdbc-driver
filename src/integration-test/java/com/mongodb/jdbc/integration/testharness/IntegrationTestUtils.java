@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.mongodb.jdbc.ExtJsonValue;
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -676,6 +678,19 @@ public class IntegrationTestUtils {
                                     + actual_obj
                                     + " for column "
                                     + (i + 1);
+                        }
+                    } else if (expected_obj instanceof BsonValue) {
+                        Object actual_obj = actualRow.getObject(i + 1);
+                        ExtJsonValue expectedAsExtJsonValue = new ExtJsonValue((BsonValue) expected_obj);
+                        if (!expectedAsExtJsonValue.equals(actual_obj)) {
+                            System.err.println(
+                                    "Expected Bson Other BsonValue value "
+                                            + expected_obj
+                                            + " but is "
+                                            + actual_obj
+                                            + " for column "
+                                            + (i + 1));
+                            return false;
                         }
                     } else {
                         Object actual_obj = actualRow.getObject(i + 1);
