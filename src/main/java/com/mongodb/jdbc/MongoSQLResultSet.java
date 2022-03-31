@@ -358,36 +358,12 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             return null;
         }
         switch (o.getBsonType()) {
-            case ARRAY:
-                Codec codec = CODEC_REGISTRY.get(BsonArray.class);
-                StringWriter writer = new StringWriter();
-                codec.encode(
-                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
-                        o.asArray(),
-                        ENCODER_CONTEXT);
-                writer.flush();
-                return writer.toString();
             case BINARY:
                 return handleStringConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? "true" : "false";
-            case DATE_TIME:
-                Date d = new Date(o.asDateTime().getValue());
-                return dateFormat.format(d);
             case DB_POINTER:
                 return handleStringConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().getValue().toString();
-            case DOCUMENT:
-                return o.asDocument().toJson(JSON_WRITER_SETTINGS);
-            case DOUBLE:
-                return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:
                 return handleStringConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return Integer.toString(o.asInt32().getValue());
-            case INT64:
-                return Long.toString(o.asInt64().getValue());
             case JAVASCRIPT:
                 return handleStringConversionFailure(JAVASCRIPT);
             case JAVASCRIPT_WITH_SCOPE:
@@ -396,21 +372,25 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 return handleStringConversionFailure(MAX_KEY);
             case MIN_KEY:
                 return handleStringConversionFailure(MIN_KEY);
-            case NULL:
-                return null;
-            case OBJECT_ID:
-                return o.asObjectId().getValue().toString();
             case REGULAR_EXPRESSION:
                 return handleStringConversionFailure(REGEX);
-            case STRING:
-                return o.asString().getValue();
             case SYMBOL:
                 return handleStringConversionFailure(SYMBOL);
             case TIMESTAMP:
                 return handleStringConversionFailure(TIMESTAMP);
+            case ARRAY:
+            case BOOLEAN:
+            case DATE_TIME:
+            case DECIMAL128:
+            case DOCUMENT:
+            case DOUBLE:
+            case INT32:
+            case INT64:
+            case NULL:
+            case OBJECT_ID:
+            case STRING:
             case UNDEFINED:
-                // this is consistent with $convert in mongodb.
-                return null;
+                return new ExtJsonValue(o).toString();
         }
         throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
     }
