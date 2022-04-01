@@ -104,7 +104,7 @@ class MongoDriverTest {
                     "Expect SQL state "
                             + MongoDriver.CONNECTION_ERROR_SQLSTATE
                             + " but got "
-                            + e.getMessage());
+                            + e.getSQLState());
         }
     }
 

@@ -155,48 +155,50 @@ public class MongoDriver implements Driver {
         // Reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
-        checkMissingProperties(p.right());
+        // Since the user is calling connect, we should throw a SQLException if we get a prompt back.
+        if (p.right().length != 0) {
+            // Inspect the return value to format the SQLException and throw the connection error
+            throw new SQLException(reportMissingProperties(p.right()), CONNECTION_ERROR_SQLSTATE);
+        }
+
         return createConnection(p.left(), info);
     }
 
     /**
      * Provides feedback regarding the missing properties.
      *
-     * @param missingRequiredProperties
-     * @throws SQLException The connection error to return to the user.
+     * @param missingRequiredProperties The list of required properties a connection needs to be
+     *     successful.
+     * @return the format error message to return to the user.
      */
-    private void checkMissingProperties(DriverPropertyInfo[] missingRequiredProperties)
-            throws SQLException {
-        // since the user is calling connect, we should throw an SQLException if we get
-        // a prompt back. Inspect the return value to format the SQLException.
-        if (missingRequiredProperties.length != 0) {
-            for (DriverPropertyInfo info : missingRequiredProperties) {
-                if (info.name.equals(USER)) {
-                    throw new SQLException(
-                            "password specified without user. Please provide '"
-                                    + USER
-                                    + "' property value",
-                            CONNECTION_ERROR_SQLSTATE);
-                } else if (info.name.equals(PASSWORD)) {
-                    throw new SQLException(
-                            "user specified without password. Please provide '"
-                                    + PASSWORD
-                                    + "' property value",
-                            CONNECTION_ERROR_SQLSTATE);
-                } else if (info.name.equals(DATABASE)) {
-                    throw new SQLException(
-                            "Mandatory property '" + DATABASE + "' is missing.",
-                            CONNECTION_ERROR_SQLSTATE);
-                }
-                String[] propertyNames = new String[missingRequiredProperties.length];
-                for (int i = 0; i < propertyNames.length; ++i) {
-                    propertyNames[i] = missingRequiredProperties[i].name;
-                }
-                throw new SQLException(
-                        "Unexpected driver property info prompt returned: "
-                                + String.join(", ", propertyNames));
+    private String reportMissingProperties(DriverPropertyInfo[] missingRequiredProperties) {
+        List<String> propertyNames = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("There are issues with your connection settings : ");
+        for (DriverPropertyInfo info : missingRequiredProperties) {
+            if (info.name.equals(USER)) {
+                sb.append("Password specified without user. Please provide '");
+                sb.append(USER);
+                sb.append("' property value.\n");
+            } else if (info.name.equals(PASSWORD)) {
+                sb.append("User specified without password. Please provide '");
+                sb.append(PASSWORD);
+                sb.append("' property value.\n");
+            } else if (info.name.equals(DATABASE)) {
+                sb.append("Mandatory property '");
+                sb.append(DATABASE);
+                sb.append("' is missing.\n");
+            } else {
+                propertyNames.add(info.name);
             }
         }
+        if (!propertyNames.isEmpty()) {
+            sb.append("Unexpected driver property info : ");
+            sb.append(String.join(", ", propertyNames));
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
     private MongoConnection createConnection(ConnectionString cs, Properties info)
@@ -320,7 +322,6 @@ public class MongoDriver implements Driver {
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
     private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
             String url, Properties info) throws SQLException {
-        List<DriverPropertyInfo> propertyInfoList = new ArrayList<>();
         if (info == null) {
             info = new Properties();
         }
@@ -341,7 +342,8 @@ public class MongoDriver implements Driver {
 
         List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
         if (!info.containsKey(DATABASE) || info.getProperty(DATABASE).isEmpty()) {
-            // Missing required database used for querying (as opposed to the authentication database which can be provided in the connection string)
+            // Missing required database used for querying (as opposed to the authentication
+            // database which can be provided in the connection string)
             mandatoryConnectionProperties.add(new DriverPropertyInfo(DATABASE, null));
         }
 
