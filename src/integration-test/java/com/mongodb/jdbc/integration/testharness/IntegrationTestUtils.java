@@ -2,7 +2,7 @@ package com.mongodb.jdbc.integration.testharness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.mongodb.jdbc.MongoColumnInfo;
@@ -494,8 +494,9 @@ public class IntegrationTestUtils {
                 }
 
                 String compOutcome = compareRow(expectedResults, rs);
-                assertNotNull(
-                        compOutcome, "Row " + actualRowCounter + " does not match :" + compOutcome);
+                assertNull(
+                        compOutcome,
+                        "Row " + actualRowCounter + " does not match : " + compOutcome);
                 actualRowCounter++;
             }
         }
