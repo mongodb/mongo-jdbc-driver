@@ -684,25 +684,15 @@ public class IntegrationTestUtils {
                         ExtJsonValue expectedAsExtJsonValue =
                                 new ExtJsonValue((BsonValue) expected_obj);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
-                            System.err.println(
-                                    "Expected Bson Other BsonValue value "
-                                            + expected_obj
-                                            + " but is "
-                                            + actual_obj
-                                            + " for column "
-                                            + (i + 1));
-                            return false;
-                        }
-                    } else {
-                        Object actual_obj = actualRow.getObject(i + 1);
-                        if (!expected_obj.equals(actual_obj)) {
-                            return "Expected Bson Other value "
+                            return "Expected Bson Other BsonValue value "
                                     + expected_obj
                                     + " but is "
                                     + actual_obj
                                     + " for column "
                                     + (i + 1);
                         }
+                    } else {
+                        throw new IllegalArgumentException("unsupported expected value class: " + expected_obj.getClass());
                     }
                     break;
                 default:
