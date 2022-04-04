@@ -20,7 +20,9 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     static {
         try {
-            resultSetMetaData = new MongoSQLResultSetMetaData(generateMongoJsonSchema(), true);
+            resultSetMetaData =
+                    new MongoSQLResultSetMetaData(
+                            generateMongoJsonSchema(), true, mongoConnection.getLogger(), 0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,8 +49,10 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         String[] expected_original_columns =
                 new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null"};
         MongoJsonSchema schema = generateMongoJsonSchema();
-        MongoSQLResultSetMetaData unsortedMedata = new MongoSQLResultSetMetaData(schema, false);
-        MongoSQLResultSetMetaData sortedMedata = new MongoSQLResultSetMetaData(schema, true);
+        MongoSQLResultSetMetaData unsortedMedata =
+                new MongoSQLResultSetMetaData(schema, false, mongoConnection.getLogger(), 0);
+        MongoSQLResultSetMetaData sortedMedata =
+                new MongoSQLResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
 
         assertEquals(
                 expected_original_columns.length,

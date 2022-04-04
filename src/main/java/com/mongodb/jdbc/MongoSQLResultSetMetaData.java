@@ -1,5 +1,7 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AutoLoggable
 public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     private static class NameSpace {
         String datasource;
@@ -75,8 +78,13 @@ public class MongoSQLResultSetMetaData extends MongoResultSetMetaData implements
         }
     };
 
-    public MongoSQLResultSetMetaData(MongoJsonSchema schema, boolean sortFieldsAlphabetically)
+    public MongoSQLResultSetMetaData(
+            MongoJsonSchema schema,
+            boolean sortFieldsAlphabetically,
+            MongoLogger parentLogger,
+            Integer statementId)
             throws SQLException {
+        super(parentLogger, statementId);
         assertDatasourceSchema(schema);
 
         columnLabels = new HashMap<String, DatasourceAndIndex>();

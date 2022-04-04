@@ -1,16 +1,21 @@
 package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
+@AutoLoggable
 public class MongoSQLConnection extends MongoConnection implements Connection {
 
-    public MongoSQLConnection(ConnectionString cs, String database) {
-        super(cs, database);
+    public MongoSQLConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
+        super(cs, database, logLevel, logDir);
+        super.getLogger().log(Level.INFO, "Dialect is MongoSQL");
     }
 
     @Override

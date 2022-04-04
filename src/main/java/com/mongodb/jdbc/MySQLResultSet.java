@@ -2,28 +2,64 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.types.Decimal128;
 
+@AutoLoggable
 public class MySQLResultSet extends MongoResultSet<MySQLResultDoc> implements ResultSet {
     private boolean relaxed = true;
 
-    public MySQLResultSet(Statement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+    /**
+     * Constructor for a resultset tied to a statement.
+     *
+     * @param statement The statement related to this resultset.
+     * @param cursor The resultset cursor.
+     * @param relaxed Flag for the relaxed mode.
+     * @throws SQLException
+     */
+    public MySQLResultSet(
+            MongoStatement statement, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
             throws SQLException {
         super(statement);
-        Preconditions.checkNotNull(cursor);
+        setupResultset(cursor, relaxed);
         // iterate the cursor to get the metadata doc
         MySQLResultDoc metadataDoc = cursor.next();
-        rsMetaData = new MySQLResultSetMetaData(metadataDoc);
+        rsMetaData =
+                new MySQLResultSetMetaData(
+                        metadataDoc, statement.getParentLogger(), statement.getStatementId());
+    }
+    /**
+     * * Constructor for a resultset not tied to a statement for DatabaseMetadata resultsets.
+     *
+     * @param parentLogger The parent connection logger.
+     * @param cursor The resultset cursor.
+     * @param relaxed Flag for the relaxed mode.
+     * @throws SQLException
+     */
+    public MySQLResultSet(
+            MongoLogger parentLogger, MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
+        super(parentLogger);
+        setupResultset(cursor, relaxed);
+        // iterate the cursor to get the metadata doc
+        MySQLResultDoc metadataDoc = cursor.next();
+        rsMetaData = new MySQLResultSetMetaData(metadataDoc, parentLogger, null);
+    }
+
+    private void setupResultset(MongoCursor<MySQLResultDoc> cursor, boolean relaxed)
+            throws SQLException {
+        Preconditions.checkNotNull(cursor);
+
         this.cursor = cursor;
         this.relaxed = relaxed;
     }

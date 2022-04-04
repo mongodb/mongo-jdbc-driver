@@ -2,6 +2,7 @@ package com.mongodb.jdbc;
 
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
@@ -12,6 +13,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
+@AutoLoggable
 public class MongoSQLStatement extends MongoStatement<BsonDocument> implements Statement {
     private final BsonInt32 formatVersion = new BsonInt32(1);
 

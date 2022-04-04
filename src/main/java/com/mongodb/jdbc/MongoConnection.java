@@ -7,6 +7,11 @@ import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.DisableAutoLogging;
+import com.mongodb.jdbc.logging.MongoLogger;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -23,6 +28,8 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -32,10 +39,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
 
+@AutoLoggable
 public abstract class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
@@ -43,9 +57,20 @@ public abstract class MongoConnection implements Connection {
     protected String url;
     protected String user;
     protected boolean isClosed;
+    private MongoLogger logger;
+    protected int connectionId;
+    private static AtomicInteger connectionCounter = new AtomicInteger();
+    private AtomicInteger stmtCounter = new AtomicInteger();
+    private static ConsoleHandler consoleHandler;
+    private static Map<String, Integer> handlerCount = new HashMap<String, Integer>();
+    private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
+    private String logDirPath;
 
-    public MongoConnection(ConnectionString cs, String database) {
+    public MongoConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
         Preconditions.checkNotNull(cs);
+        this.connectionId = connectionCounter.incrementAndGet();
+        // Initializes a parent logger for the connection
+        initConnectionLogger(connectionId, logLevel, logDir);
         this.url = cs.getConnectionString();
         this.user = cs.getUsername();
         this.currentDB = database;
@@ -58,6 +83,10 @@ public abstract class MongoConnection implements Connection {
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
 
+        // Log the driver name and version
+        logger.log(
+                Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
+
         this.mongoClientSettings = MongoClientSettings.builder().applyConnectionString(cs).build();
         mongoClient =
                 MongoClients.create(
@@ -69,8 +98,17 @@ public abstract class MongoConnection implements Connection {
         isClosed = false;
     }
 
+    @DisableAutoLogging
+    public MongoLogger getLogger() {
+        return logger;
+    }
+
+    protected int getNextStatementId() {
+        return stmtCounter.incrementAndGet();
+    }
+
     protected void checkConnection() throws SQLException {
-        if (isClosed()) {
+        if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
     }
@@ -147,6 +185,22 @@ public abstract class MongoConnection implements Connection {
             return;
         }
         mongoClient.close();
+
+        // Decrement fileHandlerCount and delete entry
+        // if no more connections are using it.
+        synchronized (this) {
+            if ((null != handlerCount) && handlerCount.containsKey(logDirPath)) {
+                handlerCount.put(logDirPath, handlerCount.get(logDirPath) - 1);
+                if (handlerCount.get(logDirPath) == 0) {
+                    // Remove the FileHandler and remove this entry too
+                    if (null != fileHandlers) {
+                        fileHandlers.remove(logDirPath);
+                    }
+                    handlerCount.remove(logDirPath);
+                }
+            }
+        }
+
         isClosed = true;
     }
 
@@ -373,7 +427,7 @@ public abstract class MongoConnection implements Connection {
             throw new SQLException("Input is invalid.");
         }
 
-        if (isClosed()) {
+        if (isClosed) {
             return false;
         }
         // We use createStatement to test the connection. Since we are not allowed
@@ -491,5 +545,55 @@ public abstract class MongoConnection implements Connection {
     @SuppressWarnings("unchecked")
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return (T) this;
+    }
+
+    private void initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
+        Logger logger =
+                Logger.getLogger(connection_id + "_" + MongoConnection.class.getCanonicalName());
+        try {
+            if (logLevel != null) {
+                // If log level is not OFF, create a new handler.
+                // Otherwise, don't bother.
+                if (logLevel != Level.OFF) {
+                    // If a log directory is provided, get the file handler to log messages
+                    // in that directory or create a new one if none exist yet.
+                    if (logDir != null) {
+                        logDirPath = logDir.getAbsolutePath();
+                        synchronized (this) {
+                            if (!fileHandlers.containsKey(logDirPath)) {
+                                String logPath = logDirPath + File.separator + "connection.log";
+                                FileHandler fileHandler = new FileHandler(logPath);
+                                fileHandler.setLevel(logLevel);
+                                fileHandler.setFormatter(new SimpleFormatter());
+                                fileHandlers.put(logDirPath, fileHandler);
+                                if (handlerCount.containsKey(logDirPath)) {
+                                    handlerCount.put(logDirPath, handlerCount.get(logDirPath) + 1);
+                                } else {
+                                    handlerCount.put(logDirPath, Integer.valueOf(1));
+                                }
+                            }
+                            logger.addHandler(fileHandlers.get(logDirPath));
+                        }
+                    }
+                    // If no directory is provided, send the message to the console
+                    else {
+                        if (consoleHandler == null) {
+                            consoleHandler = new ConsoleHandler();
+                            consoleHandler.setFormatter(new SimpleFormatter());
+                            consoleHandler.setLevel(logLevel);
+                        }
+                        logger.addHandler(consoleHandler);
+                    }
+                }
+
+                // Set the overall logger level too
+                logger.setLevel(logLevel);
+            }
+        } catch (IOException e) {
+            // Can't log the error since it can't open the log file
+            e.printStackTrace();
+        }
+
+        this.logger = new MongoLogger(logger, connectionId);
     }
 }

@@ -140,7 +140,7 @@ public class TestGenerator {
         List<TestEntry> tests =
                 IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
         for (TestEntry testEntry : tests) {
-            try (Connection conn = integrationTest.getBasicConnection(testEntry.db)) {
+            try (Connection conn = integrationTest.getBasicConnection(testEntry.db, null)) {
                 if (testEntry.skip_reason != null) {
                     continue;
                 }

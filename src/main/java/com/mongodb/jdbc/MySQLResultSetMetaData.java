@@ -1,16 +1,22 @@
 package com.mongodb.jdbc;
 
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AutoLoggable
 public class MySQLResultSetMetaData extends MongoResultSetMetaData implements ResultSetMetaData {
     protected List<MySQLColumnInfo> columnInfo;
     protected Map<String, Integer> columnPositions;
 
-    public MySQLResultSetMetaData(MySQLResultDoc metadataDoc) throws SQLException {
+    public MySQLResultSetMetaData(
+            MySQLResultDoc metadataDoc, MongoLogger parentLogger, Integer statementId)
+            throws SQLException {
+        super(parentLogger, statementId);
         columnInfo = metadataDoc.columns;
 
         columnPositions = new HashMap<>(columnInfo.size());

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
@@ -494,9 +496,9 @@ public class IntegrationTestUtils {
                 }
 
                 String compOutcome = compareRow(expectedResults, rs);
-                assertNull(
-                        compOutcome,
-                        "Row " + actualRowCounter + " does not match : " + compOutcome);
+                if(compOutcome != null) {
+                    fail("Row " + actualRowCounter + " does not match. " + compOutcome);
+                }
                 actualRowCounter++;
             }
         }
@@ -667,14 +669,26 @@ public class IntegrationTestUtils {
                     break;
                 case Types.OTHER:
                     Object expected_obj = expectedRow.get(i);
-                    Object actual_obj = actualRow.getObject(i + 1);
-                    if (!expected_obj.equals(actual_obj)) {
-                        return "Expected Bson Other value "
-                                + expected_obj.toString()
-                                + " but is "
-                                + actual_obj.toString()
-                                + " for column "
-                                + (i + 1);
+                    if (expected_obj instanceof String) {
+                        String actual_obj = actualRow.getString(i + 1);
+                        if (!expected_obj.equals(actual_obj)) {
+                            return "Expected Bson Other String value "
+                                    + expected_obj
+                                    + " but is "
+                                    + actual_obj
+                                    + " for column "
+                                    + (i + 1);
+                        }
+                    } else {
+                        Object actual_obj = actualRow.getObject(i + 1);
+                        if (!expected_obj.equals(actual_obj)) {
+                            return "Expected Bson Other value "
+                                    + expected_obj
+                                    + " but is "
+                                    + actual_obj
+                                    + " for column "
+                                    + (i + 1);
+                        }
                     }
                     break;
                 default:

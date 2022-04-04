@@ -1,14 +1,19 @@
 package com.mongodb.jdbc;
 
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.jdbc.logging.AutoLoggable;
+import com.mongodb.jdbc.logging.MongoLogger;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonMaxKey;
 import org.bson.BsonMinKey;
@@ -16,19 +21,63 @@ import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
 import org.bson.BsonUndefined;
 import org.bson.BsonValue;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.Decimal128;
 
+@AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
+    static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
+    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
+    static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
+
+    /**
+     * Constructor for a MongoSQLResultSet not tied to a statement used for
+     * MongoSQLDatabaseMetaData.
+     *
+     * @param parentLogger The parent connection logger.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
     public MongoSQLResultSet(
-            Statement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
+        super(parentLogger);
+        setUpResultset(cursor, schema);
+        this.rsMetaData = new MongoSQLResultSetMetaData(schema, false, parentLogger, null);
+    }
+
+    /**
+     * Constructor for a MongoSQLResultset tied to a connection and statement.
+     *
+     * @param statement The statement this resultset is related to.
+     * @param cursor The resultset cursor.
+     * @param schema The resultset schema.
+     * @throws SQLException
+     */
+    public MongoSQLResultSet(
+            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
         super(statement);
+        setUpResultset(cursor, schema);
+        this.rsMetaData =
+                new MongoSQLResultSetMetaData(
+                        schema, true, statement.getParentLogger(), statement.getStatementId());
+    }
+
+    private void setUpResultset(MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            throws SQLException {
         Preconditions.checkNotNull(cursor);
 
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
         // The JDBC specification provides the order for each database metadata result set.
         // Because a lot BI tools will access database metadata columns by index, the specification order must be respected.
-        this.rsMetaData = new MongoSQLResultSetMetaData(schema, statement != null);
         this.cursor = cursor;
     }
 
@@ -340,7 +389,14 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         }
         switch (o.getBsonType()) {
             case ARRAY:
-                return handleStringConversionFailure(ARRAY);
+                Codec codec = CODEC_REGISTRY.get(BsonArray.class);
+                StringWriter writer = new StringWriter();
+                codec.encode(
+                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
+                        o.asArray(),
+                        ENCODER_CONTEXT);
+                writer.flush();
+                return writer.toString();
             case BINARY:
                 return handleStringConversionFailure(BINARY);
             case BOOLEAN:
@@ -353,7 +409,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case DECIMAL128:
                 return o.asDecimal128().getValue().toString();
             case DOCUMENT:
-                return handleStringConversionFailure(DOCUMENT);
+                return o.asDocument().toJson(JSON_WRITER_SETTINGS);
             case DOUBLE:
                 return Double.toString(o.asDouble().getValue());
             case END_OF_DOCUMENT:

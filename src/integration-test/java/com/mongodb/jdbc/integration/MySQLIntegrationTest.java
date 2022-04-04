@@ -4,33 +4,38 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Properties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MySQLIntegrationTest {
+public class MySQLIntegrationTest extends MongoIntegrationTest {
     static final String URL = "jdbc:mongodb://" + System.getenv("ADL_TEST_HOST") + "/test";
     public static final String MYSQL = "mysql";
+    public static final String DB = "looker";
 
     private Connection conn;
 
-    public Connection getBasicConnection() throws SQLException {
-        java.util.Properties p = new java.util.Properties();
+    @Override
+    public MongoConnection getBasicConnection(Properties extraProps) throws SQLException {
+        java.util.Properties p = new java.util.Properties(extraProps);
         p.setProperty("dialect", MYSQL);
         p.setProperty("user", System.getenv("ADL_TEST_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_PWD"));
         p.setProperty("authSource", System.getenv("ADL_TEST_AUTH_DB"));
-        p.setProperty("database", "looker");
+        p.setProperty("database", DB);
         p.setProperty("ssl", "true");
-        return DriverManager.getConnection(URL, p);
+        return (MongoConnection) DriverManager.getConnection(URL, p);
     }
 
     @BeforeEach
     public void setupConnection() throws SQLException {
-        conn = getBasicConnection();
+        conn = getBasicConnection(null);
     }
 
     @AfterEach
