@@ -106,3 +106,6 @@ dataset:
         # Skip reason: SQL-395
         # undefined: {"$undefined":true},
       }
+
+  - db: integration_test
+    view: baz

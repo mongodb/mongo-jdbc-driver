@@ -6,6 +6,7 @@ import java.util.Map;
 public class TestDataEntry {
     public String db;
     public String collection;
+    public String view;
     public List<Map<String, Object>> docs;
     public List<Map<String, Object>> docsExtJson;
     public Map<String, Object> schema;

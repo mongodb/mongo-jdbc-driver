@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,14 @@ public class DataLoader {
                     for (TestDataEntry entry : testData.dataset) {
                         datasets.add(entry);
                         databases.add(entry.db);
-                        collections.add(new Pair<>(entry.db, entry.collection));
+                        if (entry.collection != null) {
+                            collections.add(new Pair<>(entry.db, entry.collection));
+                        } else if (entry.view == null) {
+                            System.out.println(
+                                    "One entry in "
+                                            + fileEntry.getName()
+                                            + " has no collection or view associated.");
+                        }
                     }
                 }
             }
@@ -89,6 +97,7 @@ public class DataLoader {
     }
 
     private void setSchema(String database, String collection, Map<String, Object> jsonSchema) {
+        System.out.println("Set schema for  " + database + "." + collection);
         BsonDocument command = new BsonDocument();
         BsonDocument schema = new BsonDocument();
         command.put("sqlSetSchema", new BsonString(collection));
@@ -106,6 +115,7 @@ public class DataLoader {
     }
 
     private void generateSchema(String database, String collection) {
+        System.out.println("Generate schema for  " + database + "." + collection);
         BsonDocument command = new BsonDocument();
         command.put("sqlGenerateSchema", new BsonInt32(1));
         command.put("setSchemas", new BsonBoolean(true));
@@ -130,57 +140,74 @@ public class DataLoader {
     public void loadTestData() throws IOException {
         try {
             try (MongoClient mongoClient = new MongoClient(mdbUri)) {
+                Map<String, String> views = new HashMap<>();
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);
-                    MongoCollection<Document> collection = database.getCollection(entry.collection);
+                    if (entry.collection != null) {
+                        loadCollection(entry, database);
+                    } else if (entry.view != null) {
+                        views.put(entry.db, entry.view);
+                    }
+                }
 
-                    if (entry.docsExtJson != null) {
-                        // Process extended json format
-                        for (Map<String, Object> row : entry.docsExtJson) {
-                            Document d = Document.parse(new Document(row).toJson());
-                            collection.insertOne(new Document(d));
-                        }
-                        System.out.println(
-                                "Inserted "
-                                        + entry.docsExtJson.size()
-                                        + " rows into "
-                                        + entry.db
-                                        + "."
-                                        + entry.collection);
-                    } else if (entry.docs != null) {
-                        for (Map<String, Object> row : entry.docs) {
-                            collection.insertOne(new Document(row));
-                        }
-                        System.out.println(
-                                "Inserted "
-                                        + entry.docs.size()
-                                        + " rows into "
-                                        + entry.db
-                                        + "."
-                                        + entry.collection);
-                    }
-                    if (entry.nonuniqueIndexes != null) {
-                        for (Map<String, Object> index : entry.nonuniqueIndexes) {
-                            String indexName = collection.createIndex(new Document(index));
-                            System.out.println(
-                                    "Created index "
-                                            + indexName
-                                            + " on "
-                                            + entry.db
-                                            + "."
-                                            + entry.collection);
-                        }
-                    }
-                    if (entry.schema != null) {
-                        setSchema(entry.db, entry.collection, entry.schema);
-                    } else {
-                        generateSchema(entry.db, entry.collection);
-                    }
+                // Generate views schema after all collections have been setup
+                // to make sure a view schema is not generated before the
+                // collection data and schema are there.
+                for (Map.Entry<String, String> view : views.entrySet()) {
+                    generateSchema(view.getKey(), view.getValue());
                 }
             }
         } catch (MongoException e) {
             dropCollections();
             throw e;
+        }
+    }
+
+    /**
+     * Loads a collection with the information provided in the TestDataEntry.
+     *
+     * @param entry the collection entry.
+     * @param database The database to add the collection to.
+     */
+    private void loadCollection(TestDataEntry entry, MongoDatabase database) {
+        MongoCollection<Document> collection = database.getCollection(entry.collection);
+
+        if (entry.docsExtJson != null) {
+            // Process extended json format
+            for (Map<String, Object> row : entry.docsExtJson) {
+                Document d = Document.parse(new Document(row).toJson());
+                collection.insertOne(new Document(d));
+            }
+            System.out.println(
+                    "Inserted "
+                            + entry.docsExtJson.size()
+                            + " rows into "
+                            + entry.db
+                            + "."
+                            + entry.collection);
+        } else if (entry.docs != null) {
+            for (Map<String, Object> row : entry.docs) {
+                collection.insertOne(new Document(row));
+            }
+            System.out.println(
+                    "Inserted "
+                            + entry.docs.size()
+                            + " rows into "
+                            + entry.db
+                            + "."
+                            + entry.collection);
+        }
+        if (entry.nonuniqueIndexes != null) {
+            for (Map<String, Object> index : entry.nonuniqueIndexes) {
+                String indexName = collection.createIndex(new Document(index));
+                System.out.println(
+                        "Created index " + indexName + " on " + entry.db + "." + entry.collection);
+            }
+        }
+        if (entry.schema != null) {
+            setSchema(entry.db, entry.collection, entry.schema);
+        } else {
+            generateSchema(entry.db, entry.collection);
         }
     }
 
