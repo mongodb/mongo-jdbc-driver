@@ -44,6 +44,10 @@ public class ExtJsonValue {
 
     @Override
     public String toString() {
+        if (this.v == null) {
+            return null;
+        }
+
         switch (this.v.getBsonType()) {
             case ARRAY:
                 Codec<BsonArray> codec = CODEC_REGISTRY.get(BsonArray.class);
