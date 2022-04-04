@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.mongodb.jdbc.ExtJsonValue;
+import com.mongodb.jdbc.MongoSQLValue;
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
@@ -681,8 +681,8 @@ public class IntegrationTestUtils {
                         }
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
-                        ExtJsonValue expectedAsExtJsonValue =
-                                new ExtJsonValue((BsonValue) expected_obj);
+                        MongoSQLValue expectedAsExtJsonValue =
+                                new MongoSQLValue((BsonValue) expected_obj);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             return "Expected Bson Other BsonValue value "
                                     + expected_obj

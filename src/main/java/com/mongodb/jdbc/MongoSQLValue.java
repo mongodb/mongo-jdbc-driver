@@ -22,7 +22,7 @@ import org.bson.json.JsonWriterSettings;
  * <p>The driver's BsonValue class is abstract and intentionally cannot be extended by third
  * parties. The driver explains this is to keep the BSON type system closed.
  */
-public class ExtJsonValue {
+public class MongoSQLValue {
     static final JsonWriterSettings JSON_WRITER_SETTINGS =
             JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
     static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
@@ -33,7 +33,7 @@ public class ExtJsonValue {
 
     private BsonValue v;
 
-    public ExtJsonValue(BsonValue v) {
+    public MongoSQLValue(BsonValue v) {
         this.v = v;
     }
 
@@ -108,6 +108,6 @@ public class ExtJsonValue {
         if (o == null || getClass() != o.getClass()) return false;
 
         // Compare the wrapped BsonValue for equality
-        return this.v.equals(((ExtJsonValue) o).v);
+        return this.v.equals(((MongoSQLValue) o).v);
     }
 }

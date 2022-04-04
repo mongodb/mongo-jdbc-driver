@@ -174,7 +174,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 if (o.getBsonType() == BsonType.NULL) {
                     return null;
                 }
-                return new ExtJsonValue(o);
+                return new MongoSQLValue(o);
             case Types.REAL:
                 // not supported
                 break;
@@ -371,7 +371,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case OBJECT_ID:
             case STRING:
             case UNDEFINED:
-                return new ExtJsonValue(o).toString();
+                return new MongoSQLValue(o).toString();
         }
         throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
     }
