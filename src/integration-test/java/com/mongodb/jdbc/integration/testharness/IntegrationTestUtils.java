@@ -2,10 +2,8 @@ package com.mongodb.jdbc.integration.testharness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
 
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
@@ -496,7 +494,7 @@ public class IntegrationTestUtils {
                 }
 
                 String compOutcome = compareRow(expectedResults, rs);
-                if(compOutcome != null) {
+                if (compOutcome != null) {
                     fail("Row " + actualRowCounter + " does not match. " + compOutcome);
                 }
                 actualRowCounter++;
