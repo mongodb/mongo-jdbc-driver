@@ -1,31 +1,26 @@
 package com.mongodb.jdbc;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-
 import java.io.StringWriter;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import org.bson.BsonArray;
 import org.bson.BsonValue;
-import org.bson.codecs.BsonValueCodecProvider;
-import org.bson.codecs.Codec;
+import org.bson.codecs.BsonValueCodec;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
 /**
- * ExtJsonValue is a wrapper for BsonValue. The purpose of this class is to override the toString()
- * method to produce the extended JSON representation of a BsonValue, rather than the java driver's
- * default BsonValue.toString() output.
+ * MongoSQLValue is a wrapper for BsonValue. The purpose of this class is to override the toString()
+ * method to produce the extended JSON representation of a BsonValue for types that correspond to
+ * JDBC Types.OTHER, rather than the java driver's default BsonValue.toString() output.
  *
  * <p>The driver's BsonValue class is abstract and intentionally cannot be extended by third
- * parties. The driver explains this is to keep the BSON type system closed.
+ * parties. The driver explains this is to keep the BSON type system closed. Therefore, this class
+ * does not extend BsonValue, instead it contains a BsonValue member.
  */
 public class MongoSQLValue {
     static final JsonWriterSettings JSON_WRITER_SETTINGS =
             JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
-    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     // dateFormat cannot be static due to a threading bug in the library.
@@ -49,15 +44,6 @@ public class MongoSQLValue {
         }
 
         switch (this.v.getBsonType()) {
-            case ARRAY:
-                Codec<BsonArray> codec = CODEC_REGISTRY.get(BsonArray.class);
-                StringWriter writer = new StringWriter();
-                codec.encode(
-                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
-                        this.v.asArray(),
-                        ENCODER_CONTEXT);
-                writer.flush();
-                return writer.toString();
             case BOOLEAN:
                 return this.v.asBoolean().getValue() ? "true" : "false";
             case DATE_TIME:
@@ -75,25 +61,34 @@ public class MongoSQLValue {
                 return Long.toString(this.v.asInt64().getValue());
             case NULL:
                 return null;
-            case OBJECT_ID:
-                return this.v.asObjectId().getValue().toString();
             case STRING:
                 return this.v.asString().getValue();
             case UNDEFINED:
                 // this is consistent with $convert in mongodb.
                 return null;
+            case ARRAY:
             case BINARY:
             case DB_POINTER:
-            case END_OF_DOCUMENT:
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case MAX_KEY:
             case MIN_KEY:
+            case OBJECT_ID:
             case REGULAR_EXPRESSION:
             case SYMBOL:
             case TIMESTAMP:
+                // These types are stringified in extended JSON format.
+                BsonValueCodec c = new BsonValueCodec();
+                StringWriter w = new StringWriter();
+                c.encode(
+                        new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS),
+                        this.v,
+                        ENCODER_CONTEXT);
+                w.flush();
+                return w.toString();
+            case END_OF_DOCUMENT:
             default:
-                return "<invalid>"; // TODO - what should we do for these types?
+                return "<invalid>";
         }
     }
 
