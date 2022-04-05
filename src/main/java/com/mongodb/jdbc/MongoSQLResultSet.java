@@ -119,7 +119,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.BIGINT:
                 return getInt(o);
             case Types.BINARY:
-                return o.asBinary();
+                return new MongoSQLValue(o.asBinary());
             case Types.BIT:
                 return getBoolean(o);
             case Types.BLOB:

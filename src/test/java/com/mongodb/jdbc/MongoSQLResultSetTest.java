@@ -402,8 +402,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSetAllTypes.getObject(ALL_DOC_COL_LABEL).toString());
         assertEquals(
                 "[7, 8, 9]", mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
-        // TODO: Java driver doesn't seem to serialize binary using extended json
-        //        assertEquals("{\"$binary\": {\"base64\": \"\", \"subType\": \"0\"}}", mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
+        assertEquals(
+                "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
+                mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
         assertEquals(
                 "{\"$oid\": \"" + ALL_OBJECT_ID_VAL.toString() + "\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
