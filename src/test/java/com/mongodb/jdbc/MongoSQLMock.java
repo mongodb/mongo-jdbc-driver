@@ -1,9 +1,9 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.BsonTypeInfo.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static com.mongodb.jdbc.BsonTypeInfo.*;
 
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.ConnectionString;
@@ -461,61 +461,94 @@ public abstract class MongoSQLMock {
         schema.required.add("all");
 
         MongoJsonSchema allSchema = MongoJsonSchema.createEmptyObjectSchema();
-        allSchema.required.addAll(ImmutableSet.of(
-                ALL_DOUBLE_COL_LABEL,
-                ALL_STRING_COL_LABEL,
-                ALL_DOC_COL_LABEL,
-                ALL_ARRAY_COL_LABEL,
-                ALL_BINARY_COL_LABEL,
-                ALL_UNDEFINED_COL_LABEL,
-                ALL_OBJECT_ID_COL_LABEL,
-                ALL_BOOL_COL_LABEL,
-                ALL_DATE_COL_LABEL,
-                ALL_NULL_COL_LABEL,
-                ALL_REGEX_COL_LABEL,
-                ALL_DB_POINTER_COL_LABEL,
-                ALL_JAVASCRIPT_COL_LABEL,
-                ALL_SYMBOL_COL_LABEL,
-                ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
-                ALL_INT_COL_LABEL,
-                ALL_TIMESTAMP_COL_LABEL,
-                ALL_LONG_COL_LABEL,
-                ALL_DECIMAL_COL_LABEL,
-                ALL_MIN_KEY_COL_LABEL,
-                ALL_MAX_KEY_COL_LABEL
-        ));
+        allSchema.required.addAll(
+                ImmutableSet.of(
+                        ALL_DOUBLE_COL_LABEL,
+                        ALL_STRING_COL_LABEL,
+                        ALL_DOC_COL_LABEL,
+                        ALL_ARRAY_COL_LABEL,
+                        ALL_BINARY_COL_LABEL,
+                        ALL_UNDEFINED_COL_LABEL,
+                        ALL_OBJECT_ID_COL_LABEL,
+                        ALL_BOOL_COL_LABEL,
+                        ALL_DATE_COL_LABEL,
+                        ALL_NULL_COL_LABEL,
+                        ALL_REGEX_COL_LABEL,
+                        ALL_DB_POINTER_COL_LABEL,
+                        ALL_JAVASCRIPT_COL_LABEL,
+                        ALL_SYMBOL_COL_LABEL,
+                        ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
+                        ALL_INT_COL_LABEL,
+                        ALL_TIMESTAMP_COL_LABEL,
+                        ALL_LONG_COL_LABEL,
+                        ALL_DECIMAL_COL_LABEL,
+                        ALL_MIN_KEY_COL_LABEL,
+                        ALL_MAX_KEY_COL_LABEL));
 
         MongoJsonSchema docSchema = MongoJsonSchema.createEmptyObjectSchema();
         docSchema.required.add("x");
         docSchema.required.add("y");
         docSchema.properties.put("x", MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName()));
-        docSchema.properties.put("y", MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
+        docSchema.properties.put(
+                "y", MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
 
         MongoJsonSchema arraySchema = new MongoJsonSchema();
         arraySchema.bsonType = BSON_ARRAY.getBsonName();
         arraySchema.items = MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName());
 
-        allSchema.properties.put(ALL_DOUBLE_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DOUBLE.getBsonName()));
-        allSchema.properties.put(ALL_STRING_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_STRING.getBsonName()));
+        allSchema.properties.put(
+                ALL_DOUBLE_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_DOUBLE.getBsonName()));
+        allSchema.properties.put(
+                ALL_STRING_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_STRING.getBsonName()));
         allSchema.properties.put(ALL_DOC_COL_LABEL, docSchema);
         allSchema.properties.put(ALL_ARRAY_COL_LABEL, arraySchema);
-        allSchema.properties.put(ALL_BINARY_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_BINDATA.getBsonName()));
-        allSchema.properties.put(ALL_UNDEFINED_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_UNDEFINED.getBsonName()));
-        allSchema.properties.put(ALL_OBJECT_ID_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
-        allSchema.properties.put(ALL_BOOL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_BOOL.getBsonName()));
-        allSchema.properties.put(ALL_DATE_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DATE.getBsonName()));
-        allSchema.properties.put(ALL_NULL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_NULL.getBsonName()));
-        allSchema.properties.put(ALL_REGEX_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_REGEX.getBsonName()));
-        allSchema.properties.put(ALL_DB_POINTER_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DBPOINTER.getBsonName()));
-        allSchema.properties.put(ALL_JAVASCRIPT_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPT.getBsonName()));
-        allSchema.properties.put(ALL_SYMBOL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_SYMBOL.getBsonName()));
-        allSchema.properties.put(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPTWITHSCOPE.getBsonName()));
-        allSchema.properties.put(ALL_INT_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName()));
-        allSchema.properties.put(ALL_TIMESTAMP_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_TIMESTAMP.getBsonName()));
-        allSchema.properties.put(ALL_LONG_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_LONG.getBsonName()));
-        allSchema.properties.put(ALL_DECIMAL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DECIMAL.getBsonName()));
-        allSchema.properties.put(ALL_MIN_KEY_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_MINKEY.getBsonName()));
-        allSchema.properties.put(ALL_MAX_KEY_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_MAXKEY.getBsonName()));
+        allSchema.properties.put(
+                ALL_BINARY_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_BINDATA.getBsonName()));
+        allSchema.properties.put(
+                ALL_UNDEFINED_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_UNDEFINED.getBsonName()));
+        allSchema.properties.put(
+                ALL_OBJECT_ID_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
+        allSchema.properties.put(
+                ALL_BOOL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_BOOL.getBsonName()));
+        allSchema.properties.put(
+                ALL_DATE_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DATE.getBsonName()));
+        allSchema.properties.put(
+                ALL_NULL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_NULL.getBsonName()));
+        allSchema.properties.put(
+                ALL_REGEX_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_REGEX.getBsonName()));
+        allSchema.properties.put(
+                ALL_DB_POINTER_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_DBPOINTER.getBsonName()));
+        allSchema.properties.put(
+                ALL_JAVASCRIPT_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPT.getBsonName()));
+        allSchema.properties.put(
+                ALL_SYMBOL_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_SYMBOL.getBsonName()));
+        allSchema.properties.put(
+                ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPTWITHSCOPE.getBsonName()));
+        allSchema.properties.put(
+                ALL_INT_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName()));
+        allSchema.properties.put(
+                ALL_TIMESTAMP_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_TIMESTAMP.getBsonName()));
+        allSchema.properties.put(
+                ALL_LONG_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_LONG.getBsonName()));
+        allSchema.properties.put(
+                ALL_DECIMAL_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_DECIMAL.getBsonName()));
+        allSchema.properties.put(
+                ALL_MIN_KEY_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_MINKEY.getBsonName()));
+        allSchema.properties.put(
+                ALL_MAX_KEY_COL_LABEL,
+                MongoJsonSchema.createScalarSchema(BSON_MAXKEY.getBsonName()));
 
         schema.properties.put("all", allSchema);
 
@@ -549,7 +582,9 @@ public abstract class MongoSQLMock {
         all.put(ALL_DB_POINTER_COL_LABEL, new BsonDbPointer("db2", ALL_OBJECT_ID_VAL));
         all.put(ALL_JAVASCRIPT_COL_LABEL, new BsonJavaScript("javascript"));
         all.put(ALL_SYMBOL_COL_LABEL, new BsonSymbol("sym"));
-        all.put(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL, new BsonJavaScriptWithScope("code", new BsonDocument("x", new BsonInt32(1))));
+        all.put(
+                ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
+                new BsonJavaScriptWithScope("code", new BsonDocument("x", new BsonInt32(1))));
         all.put(ALL_INT_COL_LABEL, new BsonInt32(3));
         all.put(ALL_TIMESTAMP_COL_LABEL, new BsonTimestamp(1412180887, 1));
         all.put(ALL_LONG_COL_LABEL, new BsonInt64(5));

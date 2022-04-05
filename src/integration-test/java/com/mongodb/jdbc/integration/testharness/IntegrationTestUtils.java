@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.mongodb.jdbc.MongoSQLValue;
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
+import com.mongodb.jdbc.MongoSQLValue;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -692,7 +692,8 @@ public class IntegrationTestUtils {
                                     + (i + 1);
                         }
                     } else {
-                        throw new IllegalArgumentException("unsupported expected value class: " + expected_obj.getClass());
+                        throw new IllegalArgumentException(
+                                "unsupported expected value class: " + expected_obj.getClass());
                     }
                     break;
                 default:
