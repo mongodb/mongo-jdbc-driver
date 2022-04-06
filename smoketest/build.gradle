@@ -1,0 +1,12 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClassName = 'com.mongodb.jdbc.smoketest.SmokeTest'
+}
+
+dependencies {
+    implementation files('../build/libs/'+rootProject.name+'-'+getReleaseVersion()+'-all.jar')
+}
+
