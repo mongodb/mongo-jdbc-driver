@@ -139,7 +139,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // not supported
                 break;
             case Types.DECIMAL:
-                return getBigDecimal(o);
+                return new MongoSQLValue(o.asDecimal128());
             case Types.DISTINCT:
                 // not supported
                 break;
@@ -202,7 +202,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 // not supported
                 break;
             case Types.TIMESTAMP:
-                return getTimestamp(o);
+                return new MongoSQLValue(o.asDateTime());
             case Types.TIMESTAMP_WITH_TIMEZONE:
                 // not supported
                 break;
@@ -338,42 +338,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (checkNull(o)) {
             return null;
         }
-        switch (o.getBsonType()) {
-            case BINARY:
-                return handleStringConversionFailure(BINARY);
-            case DB_POINTER:
-                return handleStringConversionFailure(DB_POINTER);
-            case END_OF_DOCUMENT:
-                return handleStringConversionFailure(END_OF_DOCUMENT);
-            case JAVASCRIPT:
-                return handleStringConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleStringConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleStringConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleStringConversionFailure(MIN_KEY);
-            case REGULAR_EXPRESSION:
-                return handleStringConversionFailure(REGEX);
-            case SYMBOL:
-                return handleStringConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleStringConversionFailure(TIMESTAMP);
-            case ARRAY:
-            case BOOLEAN:
-            case DATE_TIME:
-            case DECIMAL128:
-            case DOCUMENT:
-            case DOUBLE:
-            case INT32:
-            case INT64:
-            case NULL:
-            case OBJECT_ID:
-            case STRING:
-            case UNDEFINED:
-                return new MongoSQLValue(o).toString();
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        return new MongoSQLValue(o).toString();
     }
 
     @Override

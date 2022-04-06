@@ -1,7 +1,6 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import org.bson.BsonValue;
 import org.bson.codecs.BsonValueCodec;
@@ -46,11 +45,6 @@ public class MongoSQLValue {
         switch (this.v.getBsonType()) {
             case BOOLEAN:
                 return this.v.asBoolean().getValue() ? "true" : "false";
-            case DATE_TIME:
-                Date d = new Date(this.v.asDateTime().getValue());
-                return dateFormat.format(d);
-            case DECIMAL128:
-                return this.v.asDecimal128().getValue().toString();
             case DOCUMENT:
                 return this.v.asDocument().toJson(JSON_WRITER_SETTINGS);
             case DOUBLE:
@@ -68,7 +62,9 @@ public class MongoSQLValue {
                 return null;
             case ARRAY:
             case BINARY:
+            case DATE_TIME:
             case DB_POINTER:
+            case DECIMAL128:
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case MAX_KEY:
@@ -88,7 +84,7 @@ public class MongoSQLValue {
                 return w.toString();
             case END_OF_DOCUMENT:
             default:
-                return "<invalid>";
+                return this.v.toString();
         }
     }
 
