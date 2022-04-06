@@ -103,8 +103,6 @@ public abstract class MongoSQLMock {
     // all.maxKey
     protected static String ALL_MAX_KEY_COL_LABEL = "maxKey";
 
-    protected static ObjectId ALL_OBJECT_ID_VAL = new ObjectId();
-
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
     @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;

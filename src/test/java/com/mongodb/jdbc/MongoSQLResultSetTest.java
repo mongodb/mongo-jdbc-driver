@@ -326,7 +326,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals("1.0", mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
         assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
         assertEquals(
-                "{\"x\": 10, \"y\": {\"$oid\": \"" + ALL_OBJECT_ID_VAL.toString() + "\"}}",
+                "{\"x\": 10, \"y\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
         assertEquals(
                 "[7, 8, 9]", mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
@@ -334,11 +334,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
         assertEquals(
-                "{\"$oid\": \"" + ALL_OBJECT_ID_VAL.toString() + "\"}",
+                "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals("true", mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
         assertEquals(
-                "{\"$date\": {\"$numberLong\": \"1608916394000\"}}",
+                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
@@ -373,9 +373,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
-                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \""
-                        + ALL_OBJECT_ID_VAL.toString()
-                        + "\"}}",
+                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
 
         // Note that getString() returns null for NULL and UNDEFINED BSON values
@@ -389,7 +387,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals("1.0", mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
         assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
         assertEquals(
-                "{\"x\": 10, \"y\": {\"$oid\": \"" + ALL_OBJECT_ID_VAL.toString() + "\"}}",
+                "{\"x\": 10, \"y\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
         assertEquals(
                 "[7, 8, 9]", mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
@@ -397,11 +395,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
         assertEquals(
-                "{\"$oid\": \"" + ALL_OBJECT_ID_VAL.toString() + "\"}",
+                "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals("true", mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
         assertEquals(
-                "{\"$date\": {\"$numberLong\": \"1608916394000\"}}",
+                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
@@ -436,9 +434,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
-                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \""
-                        + ALL_OBJECT_ID_VAL.toString()
-                        + "\"}}",
+                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
 
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
