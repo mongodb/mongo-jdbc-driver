@@ -7,6 +7,6 @@ application {
 }
 
 dependencies {
-    implementation files('../build/libs/'+rootProject.name+'-'+getReleaseVersion()+'-all.jar')
+    runtimeOnly files('../build/libs/'+rootProject.name+'-'+getReleaseVersion()+'-all.jar')
 }
 
