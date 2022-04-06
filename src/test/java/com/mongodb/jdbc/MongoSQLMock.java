@@ -17,7 +17,6 @@ import org.bson.*;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.json.JsonReader;
-import org.bson.types.ObjectId;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;

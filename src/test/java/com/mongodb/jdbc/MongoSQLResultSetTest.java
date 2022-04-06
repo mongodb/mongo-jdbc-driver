@@ -328,8 +328,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 "{\"x\": 10, \"y\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
-        assertEquals(
-                "[7, 8, 9]", mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
+        assertEquals("[7, 8, 9]", mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
         assertEquals(
                 "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
                 mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
@@ -338,9 +337,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL));
         assertEquals("true", mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
         // TODO: timezone seems incorrect
-//        assertEquals(
-//                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
-//                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
+        //        assertEquals(
+        //                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
+        //                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
                 mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
@@ -352,9 +351,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL));
         assertEquals(
                 "{\"$code\": \"code\", \"$scope\": {\"x\": 1}}",
-                mongoSQLResultSetAllTypes
-                        .getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL)
-                        );
+                mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL));
         assertEquals("3", mongoSQLResultSetAllTypes.getString(ALL_INT_COL_LABEL));
         assertEquals(
                 "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}",
@@ -364,11 +361,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 "{\"$numberDecimal\": \"21.2\"}",
                 mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
         assertEquals(
-                "{\"$minKey\": 1}",
-                mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
+                "{\"$minKey\": 1}", mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
         assertEquals(
-                "{\"$maxKey\": 1}",
-                mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
+                "{\"$maxKey\": 1}", mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
@@ -400,9 +395,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals("true", mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
         // TODO: timezone seems incorrect
-//        assertEquals(
-//                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
-//                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+        //        assertEquals(
+        //                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
+        //                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
