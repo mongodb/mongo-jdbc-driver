@@ -146,7 +146,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.DOUBLE:
                 return getDouble(o);
             case Types.FLOAT:
-                return getFloat(o);
+                return getDouble(o);
             case Types.INTEGER:
                 return getInt(o);
             case Types.JAVA_OBJECT:
@@ -176,8 +176,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 }
                 return new MongoSQLValue(o);
             case Types.REAL:
-                // not supported
-                break;
+                return getFloat(o);
             case Types.REF:
                 // not supported
                 break;
