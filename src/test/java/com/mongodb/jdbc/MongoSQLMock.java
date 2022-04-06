@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableSet;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
@@ -16,6 +15,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import org.bson.*;
+import org.bson.codecs.DecoderContext;
+import org.bson.json.JsonReader;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.mockito.InjectMocks;
@@ -64,16 +65,16 @@ public abstract class MongoSQLMock {
     protected static String ALL_DOUBLE_COL_LABEL = "double";
     // all.string
     protected static String ALL_STRING_COL_LABEL = "string";
-    // all.doc
-    protected static String ALL_DOC_COL_LABEL = "doc";
+    // all.object
+    protected static String ALL_OBJECT_COL_LABEL = "object";
     // all.array
     protected static String ALL_ARRAY_COL_LABEL = "array";
     // all.binary
-    protected static String ALL_BINARY_COL_LABEL = "binary";
+    protected static String ALL_BINARY_COL_LABEL = "binData";
     // all.undefined
     protected static String ALL_UNDEFINED_COL_LABEL = "undefined";
-    // all.object_id
-    protected static String ALL_OBJECT_ID_COL_LABEL = "object_id";
+    // all.objectId
+    protected static String ALL_OBJECT_ID_COL_LABEL = "objectId";
     // all.bool
     protected static String ALL_BOOL_COL_LABEL = "bool";
     // all.date
@@ -82,14 +83,14 @@ public abstract class MongoSQLMock {
     protected static String ALL_NULL_COL_LABEL = "null";
     // all.regex
     protected static String ALL_REGEX_COL_LABEL = "regex";
-    // all.db_pointer
-    protected static String ALL_DB_POINTER_COL_LABEL = "db_pointer";
+    // all.dbPointer
+    protected static String ALL_DB_POINTER_COL_LABEL = "dbPointer";
     // all.javascript
     protected static String ALL_JAVASCRIPT_COL_LABEL = "javascript";
     // all.symbol
     protected static String ALL_SYMBOL_COL_LABEL = "symbol";
-    // all.javascript_with_scope
-    protected static String ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL = "javascript_with_scope";
+    // all.javascriptWithScope
+    protected static String ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL = "javascriptWithScope";
     // all.int
     protected static String ALL_INT_COL_LABEL = "int";
     // all.timestamp
@@ -98,10 +99,10 @@ public abstract class MongoSQLMock {
     protected static String ALL_LONG_COL_LABEL = "long";
     // all.decimal
     protected static String ALL_DECIMAL_COL_LABEL = "decimal";
-    // all.min_key
-    protected static String ALL_MIN_KEY_COL_LABEL = "min_key";
-    // all.max_key
-    protected static String ALL_MAX_KEY_COL_LABEL = "max_key";
+    // all.minKey
+    protected static String ALL_MIN_KEY_COL_LABEL = "minKey";
+    // all.maxKey
+    protected static String ALL_MAX_KEY_COL_LABEL = "maxKey";
 
     protected static ObjectId ALL_OBJECT_ID_VAL = new ObjectId();
 
@@ -363,196 +364,103 @@ public abstract class MongoSQLMock {
     }
 
     protected static MongoJsonSchema generateMongoJsonSchemaAllTypes() {
-        /*
-        {
-            bsonType: object,
-            properties: {
-                all: {
-                    bsonType: object,
-                    properties: {
-                        double: {
-                            bsonType: double
-                        },
-                        string: {
-                            bsonType: string
-                        },
-                        doc: {
-                           bsonType: object,
-                           properties: {
-                              X: {
-                                 bsonType: int
-                              },
-                              y: {
-                                 bsonType: objectId
-                              }
-                           },
-                           required: [x, y]
-                        }
-                        array: {
-                           bsonType: array,
-                           items: {
-                               bsonType: int,
-                           }
-                        },
-                        binary: {
-                            bsonType: binData
-                        },
-                        undefined: {
-                            bsonType: undefined
-                        },
-                        object_id: {
-                            bsonType: objectId
-                        },
-                        bool: {
-                            bsonType: bool
-                        },
-                        date: {
-                            bsonType: date
-                        },
-                        null: {
-                            bsonType: null
-                        },
-                        regex: {
-                            bsonType: regex
-                        },
-                        db_pointer: {
-                            bsonType: dbPointer
-                        },
-                        javascript: {
-                            bsonType: javascript
-                        },
-                        symbol: {
-                            bsonType: symbol
-                        },
-                        javascript_with_scope: {
-                            bsonType: javascriptWithScope
-                        },
-                        int: {
-                            bsonType: int
-                        },
-                        timestamp: {
-                            bsonType: timestamp
-                        },
-                        long: {
-                            bsonType: long
-                        },
-                        decimal: {
-                            bsonType: decimal
-                        },
-                        min_key: {
-                            bsonType: minKey
-                        },
-                        max_key: {
-                            bsonType: maxKey
-                        }
-                    },
-                    required: [
-                        double, string, doc, array, binary, undefined,
-                        object_id, bool, date, null, regex, db_pointer,
-                        javascript, symbol, javascript_with_scope, int,
-                        timestamp, long, decimal, min_key, max_key
-                    ]
-                }
-            },
-            required: [all]
-        }
-        */
-        MongoJsonSchema schema = MongoJsonSchema.createEmptyObjectSchema();
-        schema.required.add("all");
+        String schema =
+                ""
+                        + "{"
+                        + "    \"bsonType\": \"object\""
+                        + "    \"properties\": {"
+                        + "        \"all\": {"
+                        + "            \"bsonType\": \"object\","
+                        + "            \"properties\": {"
+                        + "                \"double\": {"
+                        + "                    \"bsonType\": \"double\""
+                        + "                },"
+                        + "                \"string\": {"
+                        + "                    \"bsonType\": \"string\""
+                        + "                },"
+                        + "                \"object\": {"
+                        + "                    \"bsonType\": \"object\","
+                        + "                    \"properties\": {"
+                        + "                        \"x\": {"
+                        + "                            \"bsonType\": \"int\""
+                        + "                        },"
+                        + "                        \"y\": {"
+                        + "                            \"bsonType\": \"objectId\""
+                        + "                        }"
+                        + "                    }"
+                        + "                },"
+                        + "                \"array\": {"
+                        + "                    \"bsonType\": \"array\","
+                        + "                    \"items\": {"
+                        + "                        \"bsonType\": \"int\""
+                        + "                    }"
+                        + "                },"
+                        + "                \"binData\": {"
+                        + "                    \"bsonType\": \"binData\""
+                        + "                },"
+                        + "                \"undefined\": {"
+                        + "                    \"bsonType\": \"undefined\""
+                        + "                },"
+                        + "                \"objectId\": {"
+                        + "                    \"bsonType\": \"objectId\""
+                        + "                },"
+                        + "                \"bool\": {"
+                        + "                    \"bsonType\": \"bool\""
+                        + "                },"
+                        + "                \"date\": {"
+                        + "                    \"bsonType\": \"date\""
+                        + "                },"
+                        + "                \"null\": {"
+                        + "                    \"bsonType\": \"null\""
+                        + "                },"
+                        + "                \"regex\": {"
+                        + "                    \"bsonType\": \"regex\""
+                        + "                },"
+                        + "                \"dbPointer\": {"
+                        + "                    \"bsonType\": \"dbPointer\""
+                        + "                },"
+                        + "                \"javascript\": {"
+                        + "                    \"bsonType\": \"javascript\""
+                        + "                },"
+                        + "                \"symbol\": {"
+                        + "                    \"bsonType\": \"symbol\""
+                        + "                },"
+                        + "                \"javascriptWithScope\": {"
+                        + "                    \"bsonType\": \"javascriptWithScope\""
+                        + "                },"
+                        + "                \"int\": {"
+                        + "                    \"bsonType\": \"int\""
+                        + "                },"
+                        + "                \"timestamp\": {"
+                        + "                    \"bsonType\": \"timestamp\""
+                        + "                },"
+                        + "                \"long\": {"
+                        + "                    \"bsonType\": \"long\""
+                        + "                },"
+                        + "                \"decimal\": {"
+                        + "                    \"bsonType\": \"decimal\""
+                        + "                },"
+                        + "                \"minKey\": {"
+                        + "                    \"bsonType\": \"minKey\""
+                        + "                },"
+                        + "                \"maxKey\": {"
+                        + "                    \"bsonType\": \"maxKey\""
+                        + "                }"
+                        + "            },"
+                        + "            \"required\": ["
+                        + "                \"double\", \"string\", \"object\", \"array\", \"binData\", \"undefined\","
+                        + "                \"objectId\", \"bool\", \"date\", \"null\", \"regex\", \"dbPointer\","
+                        + "                \"javascript\", \"symbol\", \"javascriptWithScope\", \"int\","
+                        + "                \"timestamp\", \"long\", \"decimal\", \"minKey\", \"maxKey\""
+                        + "            ]"
+                        + "        }"
+                        + "    },"
+                        + "    \"required\": [\"all\"]"
+                        + "}";
 
-        MongoJsonSchema allSchema = MongoJsonSchema.createEmptyObjectSchema();
-        allSchema.required.addAll(
-                ImmutableSet.of(
-                        ALL_DOUBLE_COL_LABEL,
-                        ALL_STRING_COL_LABEL,
-                        ALL_DOC_COL_LABEL,
-                        ALL_ARRAY_COL_LABEL,
-                        ALL_BINARY_COL_LABEL,
-                        ALL_UNDEFINED_COL_LABEL,
-                        ALL_OBJECT_ID_COL_LABEL,
-                        ALL_BOOL_COL_LABEL,
-                        ALL_DATE_COL_LABEL,
-                        ALL_NULL_COL_LABEL,
-                        ALL_REGEX_COL_LABEL,
-                        ALL_DB_POINTER_COL_LABEL,
-                        ALL_JAVASCRIPT_COL_LABEL,
-                        ALL_SYMBOL_COL_LABEL,
-                        ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
-                        ALL_INT_COL_LABEL,
-                        ALL_TIMESTAMP_COL_LABEL,
-                        ALL_LONG_COL_LABEL,
-                        ALL_DECIMAL_COL_LABEL,
-                        ALL_MIN_KEY_COL_LABEL,
-                        ALL_MAX_KEY_COL_LABEL));
-
-        MongoJsonSchema docSchema = MongoJsonSchema.createEmptyObjectSchema();
-        docSchema.required.add("x");
-        docSchema.required.add("y");
-        docSchema.properties.put("x", MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName()));
-        docSchema.properties.put(
-                "y", MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
-
-        MongoJsonSchema arraySchema = new MongoJsonSchema();
-        arraySchema.bsonType = BSON_ARRAY.getBsonName();
-        arraySchema.items = MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName());
-
-        allSchema.properties.put(
-                ALL_DOUBLE_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_DOUBLE.getBsonName()));
-        allSchema.properties.put(
-                ALL_STRING_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_STRING.getBsonName()));
-        allSchema.properties.put(ALL_DOC_COL_LABEL, docSchema);
-        allSchema.properties.put(ALL_ARRAY_COL_LABEL, arraySchema);
-        allSchema.properties.put(
-                ALL_BINARY_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_BINDATA.getBsonName()));
-        allSchema.properties.put(
-                ALL_UNDEFINED_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_UNDEFINED.getBsonName()));
-        allSchema.properties.put(
-                ALL_OBJECT_ID_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_OBJECTID.getBsonName()));
-        allSchema.properties.put(
-                ALL_BOOL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_BOOL.getBsonName()));
-        allSchema.properties.put(
-                ALL_DATE_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_DATE.getBsonName()));
-        allSchema.properties.put(
-                ALL_NULL_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_NULL.getBsonName()));
-        allSchema.properties.put(
-                ALL_REGEX_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_REGEX.getBsonName()));
-        allSchema.properties.put(
-                ALL_DB_POINTER_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_DBPOINTER.getBsonName()));
-        allSchema.properties.put(
-                ALL_JAVASCRIPT_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPT.getBsonName()));
-        allSchema.properties.put(
-                ALL_SYMBOL_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_SYMBOL.getBsonName()));
-        allSchema.properties.put(
-                ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_JAVASCRIPTWITHSCOPE.getBsonName()));
-        allSchema.properties.put(
-                ALL_INT_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_INT.getBsonName()));
-        allSchema.properties.put(
-                ALL_TIMESTAMP_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_TIMESTAMP.getBsonName()));
-        allSchema.properties.put(
-                ALL_LONG_COL_LABEL, MongoJsonSchema.createScalarSchema(BSON_LONG.getBsonName()));
-        allSchema.properties.put(
-                ALL_DECIMAL_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_DECIMAL.getBsonName()));
-        allSchema.properties.put(
-                ALL_MIN_KEY_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_MINKEY.getBsonName()));
-        allSchema.properties.put(
-                ALL_MAX_KEY_COL_LABEL,
-                MongoJsonSchema.createScalarSchema(BSON_MAXKEY.getBsonName()));
-
-        schema.properties.put("all", allSchema);
-
-        return schema;
+        return MongoDriver.registry
+                .get(MongoJsonSchema.class)
+                .decode(new JsonReader(schema), DecoderContext.builder().build());
     }
 
     static BsonDocument generateRowAllTypes() {
@@ -570,7 +478,7 @@ public abstract class MongoSQLMock {
 
         all.put(ALL_DOUBLE_COL_LABEL, new BsonDouble(1.0));
         all.put(ALL_STRING_COL_LABEL, new BsonString("str"));
-        all.put(ALL_DOC_COL_LABEL, allSubDoc);
+        all.put(ALL_OBJECT_COL_LABEL, allSubDoc);
         all.put(ALL_ARRAY_COL_LABEL, array);
         all.put(ALL_BINARY_COL_LABEL, new BsonBinary(new byte[0]));
         all.put(ALL_UNDEFINED_COL_LABEL, new BsonUndefined());
