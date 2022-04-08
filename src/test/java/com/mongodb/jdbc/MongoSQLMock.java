@@ -361,8 +361,7 @@ public abstract class MongoSQLMock {
 
     protected static MongoJsonSchema generateMongoJsonSchemaAllTypes() {
         String schema =
-                ""
-                        + "{"
+                "{"
                         + "    \"bsonType\": \"object\""
                         + "    \"properties\": {"
                         + "        \"all\": {"
@@ -461,8 +460,7 @@ public abstract class MongoSQLMock {
 
     static BsonDocument generateRowAllTypes() {
         String doc =
-                ""
-                        + "{"
+                "{"
                         + "    \"all\": {"
                         + "        \"double\": {"
                         + "            \"$numberDouble\": \"1.0\""
