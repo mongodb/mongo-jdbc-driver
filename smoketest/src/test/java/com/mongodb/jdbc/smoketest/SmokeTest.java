@@ -1,5 +1,10 @@
 package com.mongodb.jdbc.smoketest;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -15,7 +20,9 @@ import java.util.Properties;
 public class SmokeTest {
     static final String URL = "jdbc:mongodb://localhost";
     static final String DB = "integration_test";
-    public static final String MONGOSQL = "mongosql";
+    static final String MONGOSQL = "mongosql";
+
+    private Connection conn;
 
     public static Connection getBasicConnection(String url, String db)
             throws SQLException {
@@ -29,42 +36,40 @@ public class SmokeTest {
         return DriverManager.getConnection(URL, p);
     }
 
-    public static void databaseMetadataTest(DatabaseMetaData dbMetadata) throws SQLException {
-        ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
-        rowCountCheck(rs, 47);
+    @BeforeEach
+    public void setupConnection() throws SQLException {
+        conn = getBasicConnection(URL, DB);
     }
 
-    public static void queryTest(Connection conn) throws SQLException {
+    @AfterEach
+    protected void cleanupTest() throws SQLException {
+        conn.close();
+    }
+
+    @Test
+    public void databaseMetadataTest() throws SQLException {
+        DatabaseMetaData dbMetadata = conn.getMetaData();
+        System.out.println(dbMetadata.getDriverName());
+        System.out.println(dbMetadata.getDriverVersion());
+
+        ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
+        rowsReturnedCheck(rs);
+    }
+
+    @Test
+    public  void queryTest() throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             String query = "SELECT * from class";
             ResultSet rs = stmt.executeQuery(query);
-            rowCountCheck(rs, 5);
+            rowsReturnedCheck(rs);
         }
     }
 
-    public static void rowCountCheck(ResultSet rs, int expectedCount) throws SQLException {
+    public static void rowsReturnedCheck(ResultSet rs) throws SQLException {
         int actualCount = 0;
         while (rs.next()) {
             actualCount++;
         }
-
-        if (expectedCount != actualCount) {
-            throw new RuntimeException("Incorrect row count, expected: " + expectedCount + " actual: " + actualCount);
-        }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        try (Connection conn = getBasicConnection(URL, DB)) {
-            DatabaseMetaData dbMetadata = conn.getMetaData();
-            System.out.println(dbMetadata.getDriverName());
-            System.out.println(dbMetadata.getDriverVersion());
-
-            databaseMetadataTest(dbMetadata);
-            queryTest(conn);
-
-        } catch( Exception e) {
-            System.err.println(e);
-            throw(e);
-        }
+        assertTrue(actualCount >= 1, "No rows returned in result set");
     }
 }
