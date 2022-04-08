@@ -1,7 +1,6 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import org.bson.BsonValue;
 import org.bson.codecs.BsonValueCodec;
 import org.bson.codecs.EncoderContext;
@@ -21,9 +20,6 @@ public class MongoSQLValue {
     static final JsonWriterSettings JSON_WRITER_SETTINGS =
             JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
-
-    // dateFormat cannot be static due to a threading bug in the library.
-    protected SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private BsonValue v;
 
