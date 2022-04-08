@@ -130,12 +130,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
     @Test
     void testBinaryGetters() throws Exception {
-        // Binary cannot be gotten through anything other than getBlob and getBinaryStream, currently.
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoSQLResultSet.getString(BINARY_COL);
-                });
+        // Binary cannot be gotten through anything other than getString, getBlob, and getBinaryStream, currently.
         assertThrows(
                 SQLException.class,
                 () -> {
