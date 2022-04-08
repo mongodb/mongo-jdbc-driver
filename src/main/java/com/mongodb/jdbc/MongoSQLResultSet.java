@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.ParseException;
 import org.bson.BsonDocument;
@@ -118,14 +119,18 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.SMALLINT:
             case Types.TINYINT:
                 return getInt(o);
+            case Types.BINARY:
+                return o.asBinary().getData();
             case Types.BIT:
             case Types.BOOLEAN:
                 return getBoolean(o);
             case Types.CHAR:
             case Types.DOUBLE:
             case Types.FLOAT:
-            case Types.NUMERIC:
                 return getDouble(o);
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+                return o.asDecimal128().decimal128Value().bigDecimalValue();
             case Types.LONGNVARCHAR:
             case Types.LONGVARCHAR:
             case Types.NCHAR:
@@ -134,13 +139,12 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 return getString(o);
             case Types.REAL:
                 return getFloat(o);
+            case Types.TIMESTAMP:
+                return new Timestamp(o.asDateTime().getValue());
             case Types.NULL:
                 return null;
 
-            case Types.BINARY:
-            case Types.DECIMAL:
             case Types.OTHER:
-            case Types.TIMESTAMP:
                 if (o.getBsonType() == BsonType.NULL) {
                     return null;
                 }

@@ -365,7 +365,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
     @Test
     public void testGetObjectToStringAllTypes() throws Exception {
-        // Test getObject().toString() result for each BSON type
+        // Test getObject().toString() result for each BSON type.
         assertEquals(
                 ALL_DOUBLE_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
@@ -376,17 +376,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 ALL_ARRAY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
         assertEquals(
-                ALL_BINARY_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
-        assertEquals(
                 ALL_OBJECT_ID_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals(
                 ALL_BOOL_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
-        assertEquals(
-                ALL_DATE_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 ALL_REGEX_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
@@ -406,9 +400,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_TIMESTAMP_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
-        assertEquals(
-                ALL_DECIMAL_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
         assertEquals(
                 ALL_MIN_KEY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
@@ -434,17 +425,23 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertNull(new MongoSQLBsonValue(new BsonUndefined()).toString());
         assertNull(mongoSQLResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
         assertNull(new MongoSQLBsonValue(new BsonNull()).toString());
+
+        // Note that getObject() must return the following classes for the following types:
+        //   - Types.DECIMAL   => java.math.BigDecimal
+        //   - Types.BINARY    => byte[]
+        //   - Types.TIMESTAMP => java.sql.Timestamp
+        // Therefore, the getObject().toString() representations are not extended JSON.
+        // Since Types.BINARY maps to an array, we omit the getObject().toString() test.
+        assertEquals("21.2", mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
+        assertEquals(
+                "2020-12-25 12:13:14.0",
+                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
     }
 
     @Test
     public void testGetObjectToStringMatchesGetString() throws Exception {
-        // Null types omitted
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
+        // Assert that getObject().toString() matches getString() for BSON types
+        // that map to JDBC Types.OTHER.
         assertEquals(
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
@@ -452,17 +449,8 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
-        assertEquals(
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
@@ -481,17 +469,8 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                         .getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL)
                         .toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_INT_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_INT_COL_LABEL).toString());
-        assertEquals(
                 mongoSQLResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_LONG_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
-        assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
         assertEquals(
                 mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL),
                 mongoSQLResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
@@ -652,8 +631,8 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         doc.put(INT_COL_LABEL, new BsonInt32(5));
         assertEquals(new MongoSQLBsonValue(doc), mongoSQLResultSet.getObject(DOC_COL_LABEL));
 
-        byte binary[] = {10, 20, 30};
-        assertEquals(new BsonBinary(binary), mongoSQLResultSet.getObject(BINARY_COL_LABEL));
+        byte[] binary = {10, 20, 30};
+        assertArrayEquals(binary, (byte[]) mongoSQLResultSet.getObject(BINARY_COL_LABEL));
     }
 
     @SuppressWarnings("deprecation")
