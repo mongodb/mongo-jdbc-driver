@@ -102,6 +102,35 @@ public abstract class MongoSQLMock {
     // all.maxKey
     protected static String ALL_MAX_KEY_COL_LABEL = "maxKey";
 
+    protected static String ALL_DOUBLE_COL_VAL = "1.0";
+    protected static String ALL_STRING_COL_VAL = "\"str\"";
+    protected static String ALL_OBJECT_ID_COL_VAL = "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}";
+    protected static String ALL_OBJECT_COL_VAL =
+            "{\"x\": 10, \"y\": " + ALL_OBJECT_ID_COL_VAL + "}";
+    protected static String ALL_ARRAY_COL_VAL = "[7, 8, 9]";
+    protected static String ALL_BINARY_COL_VAL =
+            "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}";
+    protected static String ALL_UNDEFINED_COL_VAL = "{\"$undefined\": true}";
+    protected static String ALL_BOOL_COL_VAL = "true";
+    protected static String ALL_DATE_COL_VAL = "{\"$date\": \"2020-12-25T17:13:14Z\"}";
+    protected static String ALL_NULL_COL_VAL = "null";
+    protected static String ALL_REGEX_COL_VAL =
+            "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}";
+    protected static String ALL_DB_POINTER_COL_VAL =
+            "{\"$dbPointer\": {\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}}";
+    protected static String ALL_JAVASCRIPT_COL_VAL = "{\"$code\": \"javascript\"}";
+    protected static String ALL_SYMBOL_COL_VAL = "{\"$symbol\": \"sym\"}";
+    protected static String ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL =
+            "{\"$code\": \"code\", \"$scope\": {\"x\": 1}}";
+    protected static String ALL_INT_COL_VAL = "3";
+    protected static String ALL_TIMESTAMP_COL_VAL =
+            "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}";
+    protected static String ALL_LONG_COL_VAL =
+            "{\"$numberLong\": \"5\"}"; // must use extended JSON here to distinguish this from the int 5
+    protected static String ALL_DECIMAL_COL_VAL = "{\"$numberDecimal\": \"21.2\"}";
+    protected static String ALL_MIN_KEY_COL_VAL = "{\"$minKey\": 1}";
+    protected static String ALL_MAX_KEY_COL_VAL = "{\"$maxKey\": 1}";
+
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
     @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;
@@ -460,85 +489,112 @@ public abstract class MongoSQLMock {
 
     static BsonDocument generateRowAllTypes() {
         String doc =
-                "{"
-                        + "    \"all\": {"
-                        + "        \"double\": {"
-                        + "            \"$numberDouble\": \"1.0\""
-                        + "        },"
-                        + "        \"string\": \"str\","
-                        + "        \"object\": {"
-                        + "            \"x\": 10,"
-                        + "            \"y\": {"
-                        + "                \"$oid\": \"57e193d7a9cc81b4027498b5\""
-                        + "            }"
-                        + "        },"
-                        + "        \"array\": [7, 8, 9],"
-                        + "        \"binData\": {"
-                        + "            \"$binary\": {"
-                        + "                \"base64\": \"\","
-                        + "                \"subType\": \"00\""
-                        + "            }"
-                        + "        },"
-                        + "        \"undefined\": {"
-                        + "            \"$undefined\": true"
-                        + "        },"
-                        + "        \"objectId\": {"
-                        + "            \"$oid\": \"57e193d7a9cc81b4027498b5\""
-                        + "        },"
-                        + "        \"bool\": true,"
-                        + "        \"date\": {"
-                        + "            \"$date\": {"
-                        + "                \"$numberLong\": \"1608916394000\""
-                        + "            }"
-                        + "        },"
-                        + "        \"null\": null,"
-                        + "        \"regex\": {"
-                        + "            \"$regularExpression\": {"
-                        + "                \"pattern\": \"abc\","
-                        + "                \"options\": \"i\""
-                        + "            }"
-                        + "        },"
-                        + "        \"dbPointer\": {"
-                        + "            \"$dbPointer\": {"
-                        + "                \"$ref\": \"db2\","
-                        + "                \"$id\": {"
-                        + "                    \"$oid\": \"57e193d7a9cc81b4027498b5\""
-                        + "                }"
-                        + "            }"
-                        + "        },"
-                        + "        \"javascript\": {"
-                        + "            \"$code\": \"javascript\""
-                        + "        },"
-                        + "        \"symbol\": {"
-                        + "            \"$symbol\": \"sym\""
-                        + "        },"
-                        + "        \"javascriptWithScope\": {"
-                        + "            \"$code\": \"code\","
-                        + "            \"$scope\": {"
-                        + "                \"x\": 1"
-                        + "            }"
-                        + "        },"
-                        + "        \"int\": 3,"
-                        + "        \"timestamp\": {"
-                        + "            \"$timestamp\": {"
-                        + "                \"t\": 1412180887,"
-                        + "                \"i\": 1"
-                        + "            }"
-                        + "        },"
-                        + "        \"long\": {"
-                        + "            \"$numberLong\": \"5\""
-                        + "        },"
-                        + "        \"decimal\": {"
-                        + "            \"$numberDecimal\": \"21.2\""
-                        + "        },"
-                        + "        \"minKey\": {"
-                        + "            \"$minKey\": 1"
-                        + "        },"
-                        + "        \"maxKey\": {"
-                        + "            \"$maxKey\": 1"
-                        + "        }"
-                        + "    }"
-                        + "}";
+                "{\"all\": {"
+                        + "\""
+                        + ALL_DOUBLE_COL_LABEL
+                        + "\": "
+                        + ALL_DOUBLE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_STRING_COL_LABEL
+                        + "\": "
+                        + ALL_STRING_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_OBJECT_COL_LABEL
+                        + "\": "
+                        + ALL_OBJECT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_ARRAY_COL_LABEL
+                        + "\": "
+                        + ALL_ARRAY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_BINARY_COL_LABEL
+                        + "\": "
+                        + ALL_BINARY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_UNDEFINED_COL_LABEL
+                        + "\": "
+                        + ALL_UNDEFINED_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_OBJECT_ID_COL_LABEL
+                        + "\": "
+                        + ALL_OBJECT_ID_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_BOOL_COL_LABEL
+                        + "\": "
+                        + ALL_BOOL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DATE_COL_LABEL
+                        + "\": "
+                        + ALL_DATE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_NULL_COL_LABEL
+                        + "\": "
+                        + ALL_NULL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_REGEX_COL_LABEL
+                        + "\": "
+                        + ALL_REGEX_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DB_POINTER_COL_LABEL
+                        + "\": "
+                        + ALL_DB_POINTER_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_JAVASCRIPT_COL_LABEL
+                        + "\": "
+                        + ALL_JAVASCRIPT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_SYMBOL_COL_LABEL
+                        + "\": "
+                        + ALL_SYMBOL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL
+                        + "\": "
+                        + ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_INT_COL_LABEL
+                        + "\": "
+                        + ALL_INT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_TIMESTAMP_COL_LABEL
+                        + "\": "
+                        + ALL_TIMESTAMP_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_LONG_COL_LABEL
+                        + "\": "
+                        + ALL_LONG_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DECIMAL_COL_LABEL
+                        + "\": "
+                        + ALL_DECIMAL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_MIN_KEY_COL_LABEL
+                        + "\": "
+                        + ALL_MIN_KEY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_MAX_KEY_COL_LABEL
+                        + "\": "
+                        + ALL_MAX_KEY_COL_VAL
+                        + "}}";
 
         return new BsonDocumentCodec()
                 .decode(new JsonReader(doc), DecoderContext.builder().build());

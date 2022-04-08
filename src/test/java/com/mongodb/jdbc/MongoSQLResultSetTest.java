@@ -323,52 +323,44 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     @Test
     public void testGetStringAllTypes() throws Exception {
         // non-null types
-        assertEquals("1.0", mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
-        assertEquals("str", mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
+        assertEquals(ALL_DOUBLE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
+        assertEquals(ALL_OBJECT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
+        assertEquals(ALL_ARRAY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
+        assertEquals(ALL_BINARY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
         assertEquals(
-                "{\"x\": 10, \"y\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
-                mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
-        assertEquals("[7, 8, 9]", mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
-        assertEquals(
-                "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
-                mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
-        assertEquals(
-                "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
+                ALL_OBJECT_ID_COL_VAL,
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL));
-        assertEquals("true", mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
+        assertEquals(ALL_BOOL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
+        assertEquals(ALL_DATE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
+        assertEquals(ALL_REGEX_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
         assertEquals(
-                "{\"$date\": \"2020-12-25T17:13:14Z\"}",
-                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
-        assertEquals(
-                "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
-                mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
-        assertEquals(
-                "{\"$code\": \"javascript\"}",
+                ALL_JAVASCRIPT_COL_VAL,
                 mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_COL_LABEL));
+        assertEquals(ALL_SYMBOL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL));
         assertEquals(
-                "{\"$symbol\": \"sym\"}",
-                mongoSQLResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL));
-        assertEquals(
-                "{\"$code\": \"code\", \"$scope\": {\"x\": 1}}",
+                ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL,
                 mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL));
-        assertEquals("3", mongoSQLResultSetAllTypes.getString(ALL_INT_COL_LABEL));
+        assertEquals(ALL_INT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_INT_COL_LABEL));
         assertEquals(
-                "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}",
+                ALL_TIMESTAMP_COL_VAL,
                 mongoSQLResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL));
+        assertEquals(
+                ALL_DECIMAL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
+        assertEquals(
+                ALL_MIN_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
+        assertEquals(
+                ALL_MAX_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
+
+        // Note that for "string" and "long", the ALL_X_COL_VAL must use extended json style-syntax in the
+        // Mock class, but the output for these types is not extended json style, by design.
+        assertEquals("str", mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
         assertEquals("5", mongoSQLResultSetAllTypes.getString(ALL_LONG_COL_LABEL));
-        assertEquals(
-                "{\"$numberDecimal\": \"21.2\"}",
-                mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
-        assertEquals(
-                "{\"$minKey\": 1}", mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
-        assertEquals(
-                "{\"$maxKey\": 1}", mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
-                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
+                "{\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}",
                 mongoSQLResultSetAllTypes.getString(ALL_DB_POINTER_COL_LABEL));
 
         // Note that getString() returns null for NULL and UNDEFINED BSON values
@@ -379,57 +371,66 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     @Test
     public void testGetObjectToStringAllTypes() throws Exception {
         // Test getObject().toString() result for each BSON type
-        assertEquals("1.0", mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
-        assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
         assertEquals(
-                "{\"x\": 10, \"y\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
+                ALL_DOUBLE_COL_VAL,
+                mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
+        assertEquals(
+                ALL_OBJECT_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
         assertEquals(
-                "[7, 8, 9]", mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
+                ALL_ARRAY_COL_VAL,
+                mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
         assertEquals(
-                "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}",
+                ALL_BINARY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_BINARY_COL_LABEL).toString());
         assertEquals(
-                "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
+                ALL_OBJECT_ID_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
-        assertEquals("true", mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
         assertEquals(
-                "{\"$date\": \"2020-12-25T17:13:14Z\"}",
+                ALL_BOOL_COL_VAL,
+                mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
+        assertEquals(
+                ALL_DATE_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
-                "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
+                ALL_REGEX_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
         assertEquals(
-                "{\"$code\": \"javascript\"}",
+                ALL_JAVASCRIPT_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_JAVASCRIPT_COL_LABEL).toString());
         assertEquals(
-                "{\"$symbol\": \"sym\"}",
+                ALL_SYMBOL_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_SYMBOL_COL_LABEL).toString());
         assertEquals(
-                "{\"$code\": \"code\", \"$scope\": {\"x\": 1}}",
+                ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL,
                 mongoSQLResultSetAllTypes
                         .getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL)
                         .toString());
-        assertEquals("3", mongoSQLResultSetAllTypes.getObject(ALL_INT_COL_LABEL).toString());
         assertEquals(
-                "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}",
+                ALL_INT_COL_VAL, mongoSQLResultSetAllTypes.getObject(ALL_INT_COL_LABEL).toString());
+        assertEquals(
+                ALL_TIMESTAMP_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
-        assertEquals("5", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
         assertEquals(
-                "{\"$numberDecimal\": \"21.2\"}",
+                ALL_DECIMAL_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
         assertEquals(
-                "{\"$minKey\": 1}",
+                ALL_MIN_KEY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
         assertEquals(
-                "{\"$maxKey\": 1}",
+                ALL_MAX_KEY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
+
+        // Note that for "string" and "long", the ALL_X_COL_VAL must use extended json style-syntax in the
+        // Mock class, but the output for these types is not extended json style, by design.
+        assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
+        assertEquals("5", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
-                "{\"$ref\": \"db2\", \"$id\": {\"$oid\": \"57e193d7a9cc81b4027498b5\"}}",
+                "{\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}",
                 mongoSQLResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
 
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
