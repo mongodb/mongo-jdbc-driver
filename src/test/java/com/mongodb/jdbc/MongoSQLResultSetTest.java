@@ -431,9 +431,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
         // manually that their stringification returns what is expected.
         assertNull(mongoSQLResultSetAllTypes.getObject(ALL_UNDEFINED_COL_LABEL));
-        assertNull(new MongoSQLValue(new BsonUndefined()).toString());
+        assertNull(new MongoSQLBsonValue(new BsonUndefined()).toString());
         assertNull(mongoSQLResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
-        assertNull(new MongoSQLValue(new BsonNull()).toString());
+        assertNull(new MongoSQLBsonValue(new BsonNull()).toString());
     }
 
     @Test
@@ -634,7 +634,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(2.4, mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoSQLResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                new MongoSQLValue(new BsonInt32(3)),
+                new MongoSQLBsonValue(new BsonInt32(3)),
                 mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoSQLResultSet.getObject(NULL_COL));
@@ -646,11 +646,11 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        assertEquals(new MongoSQLValue(array), mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(new MongoSQLBsonValue(array), mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
-        assertEquals(new MongoSQLValue(doc), mongoSQLResultSet.getObject(DOC_COL_LABEL));
+        assertEquals(new MongoSQLBsonValue(doc), mongoSQLResultSet.getObject(DOC_COL_LABEL));
 
         byte binary[] = {10, 20, 30};
         assertEquals(new BsonBinary(binary), mongoSQLResultSet.getObject(BINARY_COL_LABEL));

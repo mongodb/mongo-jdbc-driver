@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mongodb.jdbc.MongoColumnInfo;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
-import com.mongodb.jdbc.MongoSQLValue;
+import com.mongodb.jdbc.MongoSQLBsonValue;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -681,8 +681,8 @@ public class IntegrationTestUtils {
                         }
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
-                        MongoSQLValue expectedAsExtJsonValue =
-                                new MongoSQLValue((BsonValue) expected_obj);
+                        MongoSQLBsonValue expectedAsExtJsonValue =
+                                new MongoSQLBsonValue((BsonValue) expected_obj);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             return "Expected Bson Other BsonValue value "
                                     + expected_obj

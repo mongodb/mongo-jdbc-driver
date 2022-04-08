@@ -144,10 +144,10 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
                 if (o.getBsonType() == BsonType.NULL) {
                     return null;
                 }
-                // These types are wrapped in MongoSQLValue so that if
-                // they are stringified via toString() they will be
-                // represented by extended JSON.
-                return new MongoSQLValue(o);
+                // These types are wrapped in MongoSQLBsonValue so that
+                // if they are stringified via toString() they will be
+                // represented as extended JSON.
+                return new MongoSQLBsonValue(o);
 
             case Types.ARRAY:
             case Types.BLOB:
@@ -294,7 +294,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (checkNull(o)) {
             return null;
         }
-        return new MongoSQLValue(o).toString();
+        return new MongoSQLBsonValue(o).toString();
     }
 
     @Override
