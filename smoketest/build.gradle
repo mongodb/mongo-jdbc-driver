@@ -10,4 +10,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
+test.onlyIf { project.hasProperty("smoketest") }

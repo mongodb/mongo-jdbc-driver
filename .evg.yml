@@ -127,7 +127,7 @@ functions:
         ./resources/run_adl.sh start &&
         ./gradlew runDataLoader &&
         ./gradlew clean shadowJar &&
-        ./gradlew :smoketest:test
+        ./gradlew :smoketest:test -Psmoketest
         EXITCODE=$?
         ./resources/run_adl.sh stop
         exit $EXITCODE
