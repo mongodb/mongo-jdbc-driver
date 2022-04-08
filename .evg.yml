@@ -36,12 +36,14 @@ buildvariants:
       - name: "build"
       - name: "test-unit"
       - name: "test-integration"
+
   - name: release
     display_name: "Release"
     expansions:
       _platform: ubuntu1804-64-jdk-8
     run_on: ubuntu1804-build
     tasks:
+      - name: "test-smoke"
       - name: "publish-maven"
 
 tasks:
@@ -57,7 +59,14 @@ tasks:
     commands:
       - func: "run integration test"
 
+  - name: "test-smoke"
+    commands:
+      - func: "run smoke test"
+
   - name: "publish-maven"
+    depends_on:
+      - name: "test-smoke"
+        variant: "release"
     commands:
       - func: "publish maven"
 
@@ -107,6 +116,21 @@ functions:
           EXITCODE=$?
           ./resources/run_adl.sh stop
           exit $EXITCODE
+
+  "run smoke test":
+    command: shell.exec
+    type: test
+    params:
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        ./resources/run_adl.sh start &&
+        ./gradlew runDataLoader &&
+        ./gradlew clean shadowJar &&
+        ./gradlew :smoketest:test -Psmoketest
+        EXITCODE=$?
+        ./resources/run_adl.sh stop
+        exit $EXITCODE
 
   "export variables":
     - command: shell.exec
