@@ -336,10 +336,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
                 mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL));
         assertEquals("true", mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
-        // TODO: timezone seems incorrect
-        //        assertEquals(
-        //                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
-        //                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
+        assertEquals(
+                "{\"$date\": \"2020-12-25T17:13:14Z\"}",
+                mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
                 mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
@@ -394,10 +393,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}",
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals("true", mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
-        // TODO: timezone seems incorrect
-        //        assertEquals(
-        //                "{\"$date\": \"2020-12-25T12:13:14.000Z\"}",
-        //                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+        assertEquals(
+                "{\"$date\": \"2020-12-25T17:13:14Z\"}",
+                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
         assertEquals(
                 "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}",
                 mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
