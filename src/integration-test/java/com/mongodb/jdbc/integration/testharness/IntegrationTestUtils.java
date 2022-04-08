@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mongodb.jdbc.MongoColumnInfo;
-import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.MongoSQLBsonValue;
+import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
