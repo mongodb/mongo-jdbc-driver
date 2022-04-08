@@ -113,105 +113,62 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             return null;
         }
         switch (columnType) {
-            case Types.ARRAY:
-                // not supported
-                break;
             case Types.BIGINT:
+            case Types.INTEGER:
+            case Types.SMALLINT:
+            case Types.TINYINT:
                 return getInt(o);
-            case Types.BINARY:
-                return new MongoSQLValue(o.asBinary());
             case Types.BIT:
-                return getBoolean(o);
-            case Types.BLOB:
-                // not supported
-                break;
             case Types.BOOLEAN:
                 return getBoolean(o);
             case Types.CHAR:
-                return getString(o);
-            case Types.CLOB:
-                // not supported
-                break;
-            case Types.DATALINK:
-                // not supported
-                break;
-            case Types.DATE:
-                // not supported
-                break;
-            case Types.DECIMAL:
-                return new MongoSQLValue(o.asDecimal128());
-            case Types.DISTINCT:
-                // not supported
-                break;
             case Types.DOUBLE:
-                return getDouble(o);
             case Types.FLOAT:
-                return getDouble(o);
-            case Types.INTEGER:
-                return getInt(o);
-            case Types.JAVA_OBJECT:
-                // not supported
-                break;
-            case Types.LONGNVARCHAR:
-                return getString(o);
-            case Types.LONGVARBINARY:
-                // not supported
-                break;
-            case Types.LONGVARCHAR:
-                return getString(o);
-            case Types.NCHAR:
-                return getString(o);
-            case Types.NCLOB:
-                // not supported
-                break;
-            case Types.NULL:
-                return null;
             case Types.NUMERIC:
                 return getDouble(o);
+            case Types.LONGNVARCHAR:
+            case Types.LONGVARCHAR:
+            case Types.NCHAR:
             case Types.NVARCHAR:
+            case Types.VARCHAR:
                 return getString(o);
+            case Types.REAL:
+                return getFloat(o);
+            case Types.NULL:
+                return null;
+
+            case Types.BINARY:
+            case Types.DECIMAL:
             case Types.OTHER:
+            case Types.TIMESTAMP:
                 if (o.getBsonType() == BsonType.NULL) {
                     return null;
                 }
+                // These types are wrapped in MongoSQLValue so that if
+                // they are stringified via toString() they will be
+                // represented by extended JSON.
                 return new MongoSQLValue(o);
-            case Types.REAL:
-                return getFloat(o);
+
+            case Types.ARRAY:
+            case Types.BLOB:
+            case Types.CLOB:
+            case Types.DATALINK:
+            case Types.DATE:
+            case Types.DISTINCT:
+            case Types.JAVA_OBJECT:
+            case Types.LONGVARBINARY:
+            case Types.NCLOB:
             case Types.REF:
-                // not supported
-                break;
             case Types.REF_CURSOR:
-                // not supported
-                break;
             case Types.ROWID:
-                // not supported
-                break;
-            case Types.SMALLINT:
-                return getInt(o);
             case Types.SQLXML:
-                // not supported
-                break;
             case Types.STRUCT:
-                // not supported
-                break;
             case Types.TIME:
-                // not supported
-                break;
             case Types.TIME_WITH_TIMEZONE:
-                // not supported
-                break;
-            case Types.TIMESTAMP:
-                return new MongoSQLValue(o.asDateTime());
             case Types.TIMESTAMP_WITH_TIMEZONE:
-                // not supported
-                break;
-            case Types.TINYINT:
-                return getInt(o);
             case Types.VARBINARY:
                 // not supported
                 break;
-            case Types.VARCHAR:
-                return getString(o);
         }
         throw new SQLException("getObject not supported for column type " + columnType);
     }
