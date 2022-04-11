@@ -19,12 +19,17 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
+import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
 import org.bson.BsonInt32;
 import org.bson.BsonNull;
 import org.bson.BsonString;
 import org.bson.BsonUndefined;
+import org.bson.codecs.BsonDateTimeCodec;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.json.JsonReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -431,11 +436,16 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         //   - Types.BINARY    => byte[]
         //   - Types.TIMESTAMP => java.sql.Timestamp
         // Therefore, the getObject().toString() representations are not extended JSON.
-        // Since Types.BINARY maps to an array, we omit the getObject().toString() test.
+        // Since Types.BINARY maps to an array, we omit its getObject().toString() test.
         assertEquals("21.2", mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
+
+        Codec<BsonDateTime> c = new BsonDateTimeCodec();
+        BsonDateTime d =
+                c.decode(new JsonReader(ALL_DATE_COL_VAL), DecoderContext.builder().build());
+        Timestamp t = new Timestamp(d.getValue());
+
         assertEquals(
-                "2020-12-25 12:13:14.0",
-                mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+                t.toString(), mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
     }
 
     @Test
