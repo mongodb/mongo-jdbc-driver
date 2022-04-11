@@ -115,22 +115,25 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         }
         switch (columnType) {
             case Types.BIGINT:
+                return getLong(o);
             case Types.INTEGER:
             case Types.SMALLINT:
             case Types.TINYINT:
                 return getInt(o);
             case Types.BINARY:
+            case Types.LONGVARBINARY:
+            case Types.VARBINARY:
                 return o.asBinary().getData();
             case Types.BIT:
             case Types.BOOLEAN:
                 return getBoolean(o);
-            case Types.CHAR:
             case Types.DOUBLE:
             case Types.FLOAT:
                 return getDouble(o);
             case Types.DECIMAL:
             case Types.NUMERIC:
                 return o.asDecimal128().decimal128Value().bigDecimalValue();
+            case Types.CHAR:
             case Types.LONGNVARCHAR:
             case Types.LONGVARCHAR:
             case Types.NCHAR:
@@ -160,7 +163,6 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.DATE:
             case Types.DISTINCT:
             case Types.JAVA_OBJECT:
-            case Types.LONGVARBINARY:
             case Types.NCLOB:
             case Types.REF:
             case Types.REF_CURSOR:
@@ -170,7 +172,6 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             case Types.TIME:
             case Types.TIME_WITH_TIMEZONE:
             case Types.TIMESTAMP_WITH_TIMEZONE:
-            case Types.VARBINARY:
                 // not supported
                 break;
         }
