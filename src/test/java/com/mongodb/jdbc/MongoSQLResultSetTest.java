@@ -324,6 +324,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     public void testGetStringAllTypes() throws Exception {
         // non-null types
         assertEquals(ALL_DOUBLE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
+        assertEquals(ALL_STRING_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
         assertEquals(ALL_OBJECT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
         assertEquals(ALL_ARRAY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
         assertEquals(ALL_BINARY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
@@ -344,17 +345,13 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_TIMESTAMP_COL_VAL,
                 mongoSQLResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL));
+        assertEquals(ALL_LONG_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_LONG_COL_LABEL));
         assertEquals(
                 ALL_DECIMAL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
         assertEquals(
                 ALL_MIN_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
         assertEquals(
                 ALL_MAX_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
-
-        // Note that for "string" and "long", the ALL_X_COL_VAL must use extended json style-syntax in the
-        // Mock class, but the output for these types is not extended json style, by design.
-        assertEquals("str", mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
-        assertEquals("5", mongoSQLResultSetAllTypes.getString(ALL_LONG_COL_LABEL));
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
@@ -374,6 +371,9 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_DOUBLE_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
+        assertEquals(
+                ALL_STRING_COL_VAL,
+                mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
         assertEquals(
                 ALL_OBJECT_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
@@ -412,11 +412,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                 ALL_MAX_KEY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
 
-        // Note that for "string" and "long", the ALL_X_COL_VAL must use extended json style-syntax in the
-        // Mock class, but the output for these types is not extended json style, by design.
-        assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
-        assertEquals("5", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
-
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
@@ -432,11 +427,13 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertNull(new MongoSQLBsonValue(new BsonNull()).toString());
 
         // Note that getObject() must return the following classes for the following types:
+        //   - Types.BIGINT    => long
         //   - Types.DECIMAL   => java.math.BigDecimal
         //   - Types.BINARY    => byte[]
         //   - Types.TIMESTAMP => java.sql.Timestamp
         // Therefore, the getObject().toString() representations are not extended JSON.
         // Since Types.BINARY maps to an array, we omit its getObject().toString() test.
+        assertEquals("2147483648", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
         assertEquals("21.2", mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
 
         Codec<BsonDateTime> c = new BsonDateTimeCodec();

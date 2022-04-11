@@ -125,8 +125,7 @@ public abstract class MongoSQLMock {
     protected static String ALL_INT_COL_VAL = "3";
     protected static String ALL_TIMESTAMP_COL_VAL =
             "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}";
-    protected static String ALL_LONG_COL_VAL =
-            "{\"$numberLong\": \"5\"}"; // must use extended JSON here to distinguish this from the int 5
+    protected static String ALL_LONG_COL_VAL = "2147483648";
     protected static String ALL_DECIMAL_COL_VAL = "{\"$numberDecimal\": \"21.2\"}";
     protected static String ALL_MIN_KEY_COL_VAL = "{\"$minKey\": 1}";
     protected static String ALL_MAX_KEY_COL_VAL = "{\"$maxKey\": 1}";
