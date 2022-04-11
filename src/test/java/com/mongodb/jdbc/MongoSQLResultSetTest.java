@@ -433,7 +433,8 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         //   - Types.TIMESTAMP => java.sql.Timestamp
         // Therefore, the getObject().toString() representations are not extended JSON.
         // Since Types.BINARY maps to an array, we omit its getObject().toString() test.
-        assertEquals("2147483648", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
+        assertEquals(
+                "2147483648", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
         assertEquals("21.2", mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
 
         Codec<BsonDateTime> c = new BsonDateTimeCodec();

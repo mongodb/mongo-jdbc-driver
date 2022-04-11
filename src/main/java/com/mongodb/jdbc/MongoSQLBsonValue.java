@@ -1,7 +1,6 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
-
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.BsonValueCodec;
@@ -11,8 +10,8 @@ import org.bson.json.JsonWriterSettings;
 
 /**
  * MongoSQLBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
- * toString() method to produce the extended JSON representation of a BsonValue rather than
- * the java driver's default BsonValue.toString() output.
+ * toString() method to produce the extended JSON representation of a BsonValue rather than the java
+ * driver's default BsonValue.toString() output.
  *
  * <p>The driver's BsonValue class is abstract and intentionally cannot be extended by third
  * parties. The driver explains this is to keep the BSON type system closed. Therefore, this class
@@ -83,7 +82,7 @@ public class MongoSQLBsonValue {
                 // actual value's serialization starts at position 6.
                 // The actual value's serialization ends 1 character
                 // before the end, to account for the closing '}'.
-                return s.substring(6, s.length()-1);
+                return s.substring(6, s.length() - 1);
 
             case END_OF_DOCUMENT:
             default:
@@ -94,10 +93,7 @@ public class MongoSQLBsonValue {
     private String toExtendedJson(BsonValue v) {
         BsonValueCodec c = new BsonValueCodec();
         StringWriter w = new StringWriter();
-        c.encode(
-                new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS),
-                v,
-                ENCODER_CONTEXT);
+        c.encode(new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS), v, ENCODER_CONTEXT);
         w.flush();
         return w.toString();
     }
