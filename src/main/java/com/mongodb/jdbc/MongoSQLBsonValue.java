@@ -1,6 +1,8 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
+
+import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.BsonValueCodec;
 import org.bson.codecs.EncoderContext;
@@ -9,9 +11,8 @@ import org.bson.json.JsonWriterSettings;
 
 /**
  * MongoSQLBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
- * toString() method to produce the extended JSON representation of a BsonValue for types that
- * correspond to JDBC Types.OTHER, rather than the java driver's default BsonValue.toString()
- * output.
+ * toString() method to produce the extended JSON representation of a BsonValue rather than
+ * the java driver's default BsonValue.toString() output.
  *
  * <p>The driver's BsonValue class is abstract and intentionally cannot be extended by third
  * parties. The driver explains this is to keep the BSON type system closed. Therefore, this class
@@ -40,28 +41,18 @@ public class MongoSQLBsonValue {
         }
 
         switch (this.v.getBsonType()) {
-            case BOOLEAN:
-                return this.v.asBoolean().getValue() ? "true" : "false";
-            case DOCUMENT:
-                return this.v.asDocument().toJson(JSON_WRITER_SETTINGS);
-            case DOUBLE:
-                return Double.toString(this.v.asDouble().getValue());
-            case INT32:
-                return Integer.toString(this.v.asInt32().getValue());
-            case INT64:
-                return Long.toString(this.v.asInt64().getValue());
             case NULL:
                 return null;
-            case STRING:
-                return this.v.asString().getValue();
             case UNDEFINED:
                 // this is consistent with $convert in mongodb.
                 return null;
+
             case ARRAY:
             case BINARY:
             case DATE_TIME:
             case DB_POINTER:
             case DECIMAL128:
+            case DOCUMENT:
             case JAVASCRIPT:
             case JAVASCRIPT_WITH_SCOPE:
             case MAX_KEY:
@@ -71,18 +62,44 @@ public class MongoSQLBsonValue {
             case SYMBOL:
             case TIMESTAMP:
                 // These types are stringified in extended JSON format.
-                BsonValueCodec c = new BsonValueCodec();
-                StringWriter w = new StringWriter();
-                c.encode(
-                        new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS),
-                        this.v,
-                        ENCODER_CONTEXT);
-                w.flush();
-                return w.toString();
+                return toExtendedJson(this.v);
+
+            case BOOLEAN:
+            case DOUBLE:
+            case INT32:
+            case INT64:
+            case STRING:
+                // These types are also stringified in extended JSON
+                // format. However, they cannot be written by the Java
+                // driver's JsonWriter as top-level values, so we must
+                // nest them in a document.
+                BsonValue v = new BsonDocument("v", this.v);
+                String s = toExtendedJson(v);
+
+                // Substring starts at 6 because the extended JSON for
+                // the document is:
+                //   {"v": <this.v as extJSON>}
+                // so the first 5 characters are '{"v": ' and the
+                // actual value's serialization starts at position 6.
+                // The actual value's serialization ends 1 character
+                // before the end, to account for the closing '}'.
+                return s.substring(6, s.length()-1);
+
             case END_OF_DOCUMENT:
             default:
                 return this.v.toString();
         }
+    }
+
+    private String toExtendedJson(BsonValue v) {
+        BsonValueCodec c = new BsonValueCodec();
+        StringWriter w = new StringWriter();
+        c.encode(
+                new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS),
+                v,
+                ENCODER_CONTEXT);
+        w.flush();
+        return w.toString();
     }
 
     @Override
