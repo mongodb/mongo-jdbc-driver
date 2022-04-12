@@ -324,7 +324,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
     public void testGetStringAllTypes() throws Exception {
         // non-null types
         assertEquals(ALL_DOUBLE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
-        assertEquals(ALL_STRING_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
         assertEquals(ALL_OBJECT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
         assertEquals(ALL_ARRAY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
         assertEquals(ALL_BINARY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
@@ -353,6 +352,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_MAX_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
 
+        // Note that the extended JSON representation of a string value is double quote delimited,
+        // but we do not want to return quotes as part of the String.
+        assertEquals("str", mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
+
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
@@ -371,9 +374,6 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_DOUBLE_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
-        assertEquals(
-                ALL_STRING_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
         assertEquals(
                 ALL_OBJECT_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
@@ -411,6 +411,10 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertEquals(
                 ALL_MAX_KEY_COL_VAL,
                 mongoSQLResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
+
+        // Note that the extended JSON representation of a string value is double quote delimited,
+        // but we do not want to return quotes as part of the String.
+        assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.

@@ -46,6 +46,13 @@ public class MongoSQLBsonValue {
                 // this is consistent with $convert in mongodb.
                 return null;
 
+            case STRING:
+                // The extended JSON representation of a string value is
+                // delimited by double quotes. We do not want to include
+                // those quotes in the output of this method, so we simply
+                // return the underlying String value.
+                return this.v.asString().getValue();
+
             case ARRAY:
             case BINARY:
             case DATE_TIME:
@@ -67,7 +74,6 @@ public class MongoSQLBsonValue {
             case DOUBLE:
             case INT32:
             case INT64:
-            case STRING:
                 // These types are also stringified in extended JSON
                 // format. However, they cannot be written by the Java
                 // driver's JsonWriter as top-level values, so we must
