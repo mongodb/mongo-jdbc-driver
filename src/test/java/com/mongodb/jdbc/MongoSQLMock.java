@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import org.bson.*;
+import org.bson.codecs.BsonDocumentCodec;
+import org.bson.codecs.DecoderContext;
+import org.bson.json.JsonReader;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
@@ -35,21 +38,97 @@ public abstract class MongoSQLMock {
     protected static int INT_COL = 6;
     // foo.d
     protected static int ANY_COL = 7;
+    // foo.doc
+    protected static int DOC_COL = 8;
     // foo.null
-    protected static int NULL_COL = 8;
+    protected static int NULL_COL = 9;
     // foo.vec
-    protected static int ARRAY_COL = 9;
+    protected static int ARRAY_COL = 10;
 
+    // __bot fields
     protected static String DOUBLE_COL_LABEL = "a";
     protected static String BINARY_COL_LABEL = "binary";
     protected static String STRING_COL_LABEL = "str";
 
+    // foo fields
     protected static String ANY_OF_INT_STRING_COL_LABEL = "a";
     protected static String INT_NULLABLE_COL_LABEL = "b";
     protected static String INT_COL_LABEL = "c";
     protected static String ANY_COL_LABEL = "d";
+    protected static String DOC_COL_LABEL = "doc";
     protected static String NULL_COL_LABEL = "null";
     protected static String ARRAY_COL_LABEL = "vec";
+
+    // all.double
+    protected static String ALL_DOUBLE_COL_LABEL = "double";
+    // all.string
+    protected static String ALL_STRING_COL_LABEL = "string";
+    // all.object
+    protected static String ALL_OBJECT_COL_LABEL = "object";
+    // all.array
+    protected static String ALL_ARRAY_COL_LABEL = "array";
+    // all.binary
+    protected static String ALL_BINARY_COL_LABEL = "binData";
+    // all.undefined
+    protected static String ALL_UNDEFINED_COL_LABEL = "undefined";
+    // all.objectId
+    protected static String ALL_OBJECT_ID_COL_LABEL = "objectId";
+    // all.bool
+    protected static String ALL_BOOL_COL_LABEL = "bool";
+    // all.date
+    protected static String ALL_DATE_COL_LABEL = "date";
+    // all.null
+    protected static String ALL_NULL_COL_LABEL = "null";
+    // all.regex
+    protected static String ALL_REGEX_COL_LABEL = "regex";
+    // all.dbPointer
+    protected static String ALL_DB_POINTER_COL_LABEL = "dbPointer";
+    // all.javascript
+    protected static String ALL_JAVASCRIPT_COL_LABEL = "javascript";
+    // all.symbol
+    protected static String ALL_SYMBOL_COL_LABEL = "symbol";
+    // all.javascriptWithScope
+    protected static String ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL = "javascriptWithScope";
+    // all.int
+    protected static String ALL_INT_COL_LABEL = "int";
+    // all.timestamp
+    protected static String ALL_TIMESTAMP_COL_LABEL = "timestamp";
+    // all.long
+    protected static String ALL_LONG_COL_LABEL = "long";
+    // all.decimal
+    protected static String ALL_DECIMAL_COL_LABEL = "decimal";
+    // all.minKey
+    protected static String ALL_MIN_KEY_COL_LABEL = "minKey";
+    // all.maxKey
+    protected static String ALL_MAX_KEY_COL_LABEL = "maxKey";
+
+    protected static String ALL_DOUBLE_COL_VAL = "1.0";
+    protected static String ALL_STRING_COL_VAL = "\"str\"";
+    protected static String ALL_OBJECT_ID_COL_VAL = "{\"$oid\": \"57e193d7a9cc81b4027498b5\"}";
+    protected static String ALL_OBJECT_COL_VAL =
+            "{\"x\": 10, \"y\": " + ALL_OBJECT_ID_COL_VAL + "}";
+    protected static String ALL_ARRAY_COL_VAL = "[7, 8, 9]";
+    protected static String ALL_BINARY_COL_VAL =
+            "{\"$binary\": {\"base64\": \"\", \"subType\": \"00\"}}";
+    protected static String ALL_UNDEFINED_COL_VAL = "{\"$undefined\": true}";
+    protected static String ALL_BOOL_COL_VAL = "true";
+    protected static String ALL_DATE_COL_VAL = "{\"$date\": \"2020-12-25T17:13:14Z\"}";
+    protected static String ALL_NULL_COL_VAL = "null";
+    protected static String ALL_REGEX_COL_VAL =
+            "{\"$regularExpression\": {\"pattern\": \"abc\", \"options\": \"i\"}}";
+    protected static String ALL_DB_POINTER_COL_VAL =
+            "{\"$dbPointer\": {\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}}";
+    protected static String ALL_JAVASCRIPT_COL_VAL = "{\"$code\": \"javascript\"}";
+    protected static String ALL_SYMBOL_COL_VAL = "{\"$symbol\": \"sym\"}";
+    protected static String ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL =
+            "{\"$code\": \"code\", \"$scope\": {\"x\": 1}}";
+    protected static String ALL_INT_COL_VAL = "3";
+    protected static String ALL_TIMESTAMP_COL_VAL =
+            "{\"$timestamp\": {\"t\": 1412180887, \"i\": 1}}";
+    protected static String ALL_LONG_COL_VAL = "2147483648";
+    protected static String ALL_DECIMAL_COL_VAL = "{\"$numberDecimal\": \"21.2\"}";
+    protected static String ALL_MIN_KEY_COL_VAL = "{\"$minKey\": 1}";
+    protected static String ALL_MAX_KEY_COL_VAL = "{\"$maxKey\": 1}";
 
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
@@ -139,9 +218,18 @@ public abstract class MongoSQLMock {
                         },
                         null: {
                            bsonType: NULL
+                        },
+                        doc: {
+                           bsonType: object,
+                           properties: {
+                              c: {
+                                 bsonType: int
+                              }
+                           },
+                           required: [c]
                         }
                     },
-                    required: [a, b, vec],
+                    required: [a, b, vec, doc],
                 },
                 "": {
                    bsonType: object,
@@ -172,6 +260,7 @@ public abstract class MongoSQLMock {
         fooSchema.required.add(ANY_OF_INT_STRING_COL_LABEL);
         fooSchema.required.add(INT_NULLABLE_COL_LABEL);
         fooSchema.required.add(ARRAY_COL_LABEL);
+        fooSchema.required.add(DOC_COL_LABEL);
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
@@ -202,6 +291,11 @@ public abstract class MongoSQLMock {
         MongoJsonSchema nullSchema = new MongoJsonSchema();
         nullSchema.bsonType = "null";
 
+        // For the doc schema, we reuse the foo.c INT field variables
+        MongoJsonSchema docSchema = MongoJsonSchema.createEmptyObjectSchema();
+        docSchema.required.add(INT_COL_LABEL);
+        docSchema.properties.put(INT_COL_LABEL, cSchema);
+
         fooSchema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         fooSchema.properties.put(INT_COL_LABEL, cSchema);
         fooSchema.properties.put(ANY_OF_INT_STRING_COL_LABEL, aSchema);
@@ -210,6 +304,7 @@ public abstract class MongoSQLMock {
         fooSchema.properties.put(INT_NULLABLE_COL_LABEL, bSchema);
         fooSchema.properties.put(ARRAY_COL_LABEL, vecSchema);
         fooSchema.properties.put(NULL_COL_LABEL, nullSchema);
+        fooSchema.properties.put(DOC_COL_LABEL, docSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
@@ -233,21 +328,24 @@ public abstract class MongoSQLMock {
     BsonDocument generateRow() {
         /*
         {
-            "foo.a":1,
-            "foo.b":null,
-            "foo.c":2,
-            "foo.d":{
+            "foo.a": 1,
+            "foo.b": null,
+            "foo.c": 2,
+            "foo.d": {
                 "$undefined":true
             },
-             "foo.null": null
-             "foo.vec":[
+            "foo.null": null
+            "foo.vec": [
                 1,
                 2,
                 3
             ],
-            "__bot.a":1.2,
+            "foo.doc": {
+                "c": 5
+            }
+            "__bot.a": 1.2,
             "__bot.binary": <binary data>
-            "__bot.str":"a"
+            "__bot.str": "a"
         }
         */
         BsonDocument document = new BsonDocument();
@@ -266,6 +364,10 @@ public abstract class MongoSQLMock {
         array.add(new BsonInt32(3));
         foo.put(ARRAY_COL_LABEL, array);
 
+        BsonDocument fooSubDoc = new BsonDocument();
+        fooSubDoc.put(INT_COL_LABEL, new BsonInt32(5));
+        foo.put(DOC_COL_LABEL, fooSubDoc);
+
         bot.put(DOUBLE_COL_LABEL, new BsonDouble(1.2));
         byte binary[] = {10, 20, 30};
         bot.put(BINARY_COL_LABEL, new BsonBinary(binary));
@@ -283,5 +385,217 @@ public abstract class MongoSQLMock {
         schemaResult.schema = new MongoVersionedJsonSchema();
         schemaResult.schema.mongoJsonSchema = generateMongoJsonSchema();
         return schemaResult;
+    }
+
+    protected static MongoJsonSchema generateMongoJsonSchemaAllTypes() {
+        String schema =
+                "{"
+                        + "    \"bsonType\": \"object\""
+                        + "    \"properties\": {"
+                        + "        \"all\": {"
+                        + "            \"bsonType\": \"object\","
+                        + "            \"properties\": {"
+                        + "                \"double\": {"
+                        + "                    \"bsonType\": \"double\""
+                        + "                },"
+                        + "                \"string\": {"
+                        + "                    \"bsonType\": \"string\""
+                        + "                },"
+                        + "                \"object\": {"
+                        + "                    \"bsonType\": \"object\","
+                        + "                    \"properties\": {"
+                        + "                        \"x\": {"
+                        + "                            \"bsonType\": \"int\""
+                        + "                        },"
+                        + "                        \"y\": {"
+                        + "                            \"bsonType\": \"objectId\""
+                        + "                        }"
+                        + "                    }"
+                        + "                },"
+                        + "                \"array\": {"
+                        + "                    \"bsonType\": \"array\","
+                        + "                    \"items\": {"
+                        + "                        \"bsonType\": \"int\""
+                        + "                    }"
+                        + "                },"
+                        + "                \"binData\": {"
+                        + "                    \"bsonType\": \"binData\""
+                        + "                },"
+                        + "                \"undefined\": {"
+                        + "                    \"bsonType\": \"undefined\""
+                        + "                },"
+                        + "                \"objectId\": {"
+                        + "                    \"bsonType\": \"objectId\""
+                        + "                },"
+                        + "                \"bool\": {"
+                        + "                    \"bsonType\": \"bool\""
+                        + "                },"
+                        + "                \"date\": {"
+                        + "                    \"bsonType\": \"date\""
+                        + "                },"
+                        + "                \"null\": {"
+                        + "                    \"bsonType\": \"null\""
+                        + "                },"
+                        + "                \"regex\": {"
+                        + "                    \"bsonType\": \"regex\""
+                        + "                },"
+                        + "                \"dbPointer\": {"
+                        + "                    \"bsonType\": \"dbPointer\""
+                        + "                },"
+                        + "                \"javascript\": {"
+                        + "                    \"bsonType\": \"javascript\""
+                        + "                },"
+                        + "                \"symbol\": {"
+                        + "                    \"bsonType\": \"symbol\""
+                        + "                },"
+                        + "                \"javascriptWithScope\": {"
+                        + "                    \"bsonType\": \"javascriptWithScope\""
+                        + "                },"
+                        + "                \"int\": {"
+                        + "                    \"bsonType\": \"int\""
+                        + "                },"
+                        + "                \"timestamp\": {"
+                        + "                    \"bsonType\": \"timestamp\""
+                        + "                },"
+                        + "                \"long\": {"
+                        + "                    \"bsonType\": \"long\""
+                        + "                },"
+                        + "                \"decimal\": {"
+                        + "                    \"bsonType\": \"decimal\""
+                        + "                },"
+                        + "                \"minKey\": {"
+                        + "                    \"bsonType\": \"minKey\""
+                        + "                },"
+                        + "                \"maxKey\": {"
+                        + "                    \"bsonType\": \"maxKey\""
+                        + "                }"
+                        + "            },"
+                        + "            \"required\": ["
+                        + "                \"double\", \"string\", \"object\", \"array\", \"binData\", \"undefined\","
+                        + "                \"objectId\", \"bool\", \"date\", \"null\", \"regex\", \"dbPointer\","
+                        + "                \"javascript\", \"symbol\", \"javascriptWithScope\", \"int\","
+                        + "                \"timestamp\", \"long\", \"decimal\", \"minKey\", \"maxKey\""
+                        + "            ]"
+                        + "        }"
+                        + "    },"
+                        + "    \"required\": [\"all\"]"
+                        + "}";
+
+        return MongoDriver.registry
+                .get(MongoJsonSchema.class)
+                .decode(new JsonReader(schema), DecoderContext.builder().build());
+    }
+
+    static BsonDocument generateRowAllTypes() {
+        String doc =
+                "{\"all\": {"
+                        + "\""
+                        + ALL_DOUBLE_COL_LABEL
+                        + "\": "
+                        + ALL_DOUBLE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_STRING_COL_LABEL
+                        + "\": "
+                        + ALL_STRING_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_OBJECT_COL_LABEL
+                        + "\": "
+                        + ALL_OBJECT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_ARRAY_COL_LABEL
+                        + "\": "
+                        + ALL_ARRAY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_BINARY_COL_LABEL
+                        + "\": "
+                        + ALL_BINARY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_UNDEFINED_COL_LABEL
+                        + "\": "
+                        + ALL_UNDEFINED_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_OBJECT_ID_COL_LABEL
+                        + "\": "
+                        + ALL_OBJECT_ID_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_BOOL_COL_LABEL
+                        + "\": "
+                        + ALL_BOOL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DATE_COL_LABEL
+                        + "\": "
+                        + ALL_DATE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_NULL_COL_LABEL
+                        + "\": "
+                        + ALL_NULL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_REGEX_COL_LABEL
+                        + "\": "
+                        + ALL_REGEX_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DB_POINTER_COL_LABEL
+                        + "\": "
+                        + ALL_DB_POINTER_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_JAVASCRIPT_COL_LABEL
+                        + "\": "
+                        + ALL_JAVASCRIPT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_SYMBOL_COL_LABEL
+                        + "\": "
+                        + ALL_SYMBOL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL
+                        + "\": "
+                        + ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_INT_COL_LABEL
+                        + "\": "
+                        + ALL_INT_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_TIMESTAMP_COL_LABEL
+                        + "\": "
+                        + ALL_TIMESTAMP_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_LONG_COL_LABEL
+                        + "\": "
+                        + ALL_LONG_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_DECIMAL_COL_LABEL
+                        + "\": "
+                        + ALL_DECIMAL_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_MIN_KEY_COL_LABEL
+                        + "\": "
+                        + ALL_MIN_KEY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_MAX_KEY_COL_LABEL
+                        + "\": "
+                        + ALL_MAX_KEY_COL_VAL
+                        + "}}";
+
+        return new BsonDocumentCodec()
+                .decode(new JsonReader(doc), DecoderContext.builder().build());
     }
 }

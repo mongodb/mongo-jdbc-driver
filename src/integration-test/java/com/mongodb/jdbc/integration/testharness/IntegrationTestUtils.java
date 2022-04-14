@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mongodb.jdbc.MongoColumnInfo;
+import com.mongodb.jdbc.MongoSQLBsonValue;
 import com.mongodb.jdbc.MongoSQLResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -677,16 +679,21 @@ public class IntegrationTestUtils {
                                     + " for column "
                                     + (i + 1);
                         }
-                    } else {
+                    } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
-                        if (!expected_obj.equals(actual_obj)) {
-                            return "Expected Bson Other value "
+                        MongoSQLBsonValue expectedAsExtJsonValue =
+                                new MongoSQLBsonValue((BsonValue) expected_obj);
+                        if (!expectedAsExtJsonValue.equals(actual_obj)) {
+                            return "Expected Bson Other BsonValue value "
                                     + expected_obj
                                     + " but is "
                                     + actual_obj
                                     + " for column "
                                     + (i + 1);
                         }
+                    } else {
+                        throw new IllegalArgumentException(
+                                "unsupported expected value class: " + expected_obj.getClass());
                     }
                     break;
                 default:

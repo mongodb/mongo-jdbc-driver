@@ -1,41 +1,23 @@
 package com.mongodb.jdbc;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-
 import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.ParseException;
-import org.bson.BsonArray;
 import org.bson.BsonDocument;
-import org.bson.BsonMaxKey;
-import org.bson.BsonMinKey;
-import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
-import org.bson.BsonUndefined;
 import org.bson.BsonValue;
-import org.bson.codecs.BsonValueCodecProvider;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.json.JsonMode;
-import org.bson.json.JsonWriterSettings;
 import org.bson.types.Decimal128;
 
 @AutoLoggable
 public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements ResultSet {
-    static final JsonWriterSettings JSON_WRITER_SETTINGS =
-            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
-    static final CodecRegistry CODEC_REGISTRY = fromProviders(new BsonValueCodecProvider());
-    static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
-
     /**
      * Constructor for a MongoSQLResultSet not tied to a statement used for
      * MongoSQLDatabaseMetaData.
@@ -132,136 +114,66 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
             return null;
         }
         switch (columnType) {
-            case Types.ARRAY:
-                // not supported
-                break;
             case Types.BIGINT:
+                return getLong(o);
+            case Types.INTEGER:
+            case Types.SMALLINT:
+            case Types.TINYINT:
                 return getInt(o);
             case Types.BINARY:
-                return o.asBinary();
+            case Types.LONGVARBINARY:
+            case Types.VARBINARY:
+                return o.asBinary().getData();
             case Types.BIT:
-                return getBoolean(o);
-            case Types.BLOB:
-                // not supported
-                break;
             case Types.BOOLEAN:
                 return getBoolean(o);
-            case Types.CHAR:
-                return getString(o);
-            case Types.CLOB:
-                // not supported
-                break;
-            case Types.DATALINK:
-                // not supported
-                break;
-            case Types.DATE:
-                // not supported
-                break;
-            case Types.DECIMAL:
-                return getBigDecimal(o);
-            case Types.DISTINCT:
-                // not supported
-                break;
             case Types.DOUBLE:
-                return getDouble(o);
             case Types.FLOAT:
-                return getFloat(o);
-            case Types.INTEGER:
-                return getInt(o);
-            case Types.JAVA_OBJECT:
-                // not supported
-                break;
+                return getDouble(o);
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+                return o.asDecimal128().decimal128Value().bigDecimalValue();
+            case Types.CHAR:
             case Types.LONGNVARCHAR:
-                return getString(o);
-            case Types.LONGVARBINARY:
-                // not supported
-                break;
             case Types.LONGVARCHAR:
-                return getString(o);
             case Types.NCHAR:
+            case Types.NVARCHAR:
+            case Types.VARCHAR:
                 return getString(o);
-            case Types.NCLOB:
-                // not supported
-                break;
+            case Types.REAL:
+                return getFloat(o);
+            case Types.TIMESTAMP:
+                return new Timestamp(o.asDateTime().getValue());
             case Types.NULL:
                 return null;
-            case Types.NUMERIC:
-                return getDouble(o);
-            case Types.NVARCHAR:
-                return getString(o);
+
             case Types.OTHER:
-                switch (o.getBsonType()) {
-                    case ARRAY:
-                        return o.asArray();
-                    case DOCUMENT:
-                        return o.asDocument();
-                    case OBJECT_ID:
-                        return o.asObjectId();
-                    case DB_POINTER:
-                        return o.asDBPointer();
-                    case INT32:
-                        return o.asInt32();
-                    case INT64:
-                        return o.asInt64();
-                    case JAVASCRIPT:
-                        return o.asJavaScript();
-                    case JAVASCRIPT_WITH_SCOPE:
-                        return o.asJavaScriptWithScope();
-                    case MAX_KEY:
-                        return (BsonMaxKey) o;
-                    case MIN_KEY:
-                        return (BsonMinKey) o;
-                    case REGULAR_EXPRESSION:
-                        return (BsonRegularExpression) o;
-                    case SYMBOL:
-                        return o.asSymbol();
-                    case TIMESTAMP:
-                        return o.asTimestamp();
-                    case UNDEFINED:
-                        return (BsonUndefined) o;
-                    case NULL:
-                        return null;
-                    default:
-                        return o;
+                if (o.getBsonType() == BsonType.NULL) {
+                    return null;
                 }
-            case Types.REAL:
-                // not supported
-                break;
+                // These types are wrapped in MongoSQLBsonValue so that
+                // if they are stringified via toString() they will be
+                // represented as extended JSON.
+                return new MongoSQLBsonValue(o);
+
+            case Types.ARRAY:
+            case Types.BLOB:
+            case Types.CLOB:
+            case Types.DATALINK:
+            case Types.DATE:
+            case Types.DISTINCT:
+            case Types.JAVA_OBJECT:
+            case Types.NCLOB:
             case Types.REF:
-                // not supported
-                break;
             case Types.REF_CURSOR:
-                // not supported
-                break;
             case Types.ROWID:
-                // not supported
-                break;
-            case Types.SMALLINT:
-                return getInt(o);
             case Types.SQLXML:
-                // not supported
-                break;
             case Types.STRUCT:
-                // not supported
-                break;
             case Types.TIME:
-                // not supported
-                break;
             case Types.TIME_WITH_TIMEZONE:
-                // not supported
-                break;
-            case Types.TIMESTAMP:
-                return getTimestamp(o);
             case Types.TIMESTAMP_WITH_TIMEZONE:
                 // not supported
                 break;
-            case Types.TINYINT:
-                return getInt(o);
-            case Types.VARBINARY:
-                // not supported
-                break;
-            case Types.VARCHAR:
-                return getString(o);
         }
         throw new SQLException("getObject not supported for column type " + columnType);
     }
@@ -387,62 +299,7 @@ public class MongoSQLResultSet extends MongoResultSet<BsonDocument> implements R
         if (checkNull(o)) {
             return null;
         }
-        switch (o.getBsonType()) {
-            case ARRAY:
-                Codec codec = CODEC_REGISTRY.get(BsonArray.class);
-                StringWriter writer = new StringWriter();
-                codec.encode(
-                        new NoCheckStateJsonWriter(writer, JSON_WRITER_SETTINGS),
-                        o.asArray(),
-                        ENCODER_CONTEXT);
-                writer.flush();
-                return writer.toString();
-            case BINARY:
-                return handleStringConversionFailure(BINARY);
-            case BOOLEAN:
-                return o.asBoolean().getValue() ? "true" : "false";
-            case DATE_TIME:
-                Date d = new Date(o.asDateTime().getValue());
-                return dateFormat.format(d);
-            case DB_POINTER:
-                return handleStringConversionFailure(DB_POINTER);
-            case DECIMAL128:
-                return o.asDecimal128().getValue().toString();
-            case DOCUMENT:
-                return o.asDocument().toJson(JSON_WRITER_SETTINGS);
-            case DOUBLE:
-                return Double.toString(o.asDouble().getValue());
-            case END_OF_DOCUMENT:
-                return handleStringConversionFailure(END_OF_DOCUMENT);
-            case INT32:
-                return Integer.toString(o.asInt32().getValue());
-            case INT64:
-                return Long.toString(o.asInt64().getValue());
-            case JAVASCRIPT:
-                return handleStringConversionFailure(JAVASCRIPT);
-            case JAVASCRIPT_WITH_SCOPE:
-                return handleStringConversionFailure(JAVASCRIPT_WITH_CODE);
-            case MAX_KEY:
-                return handleStringConversionFailure(MAX_KEY);
-            case MIN_KEY:
-                return handleStringConversionFailure(MIN_KEY);
-            case NULL:
-                return null;
-            case OBJECT_ID:
-                return o.asObjectId().getValue().toString();
-            case REGULAR_EXPRESSION:
-                return handleStringConversionFailure(REGEX);
-            case STRING:
-                return o.asString().getValue();
-            case SYMBOL:
-                return handleStringConversionFailure(SYMBOL);
-            case TIMESTAMP:
-                return handleStringConversionFailure(TIMESTAMP);
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb.
-                return null;
-        }
-        throw new SQLException("Unknown BSON type: " + o.getBsonType() + ".");
+        return new MongoSQLBsonValue(o).toString();
     }
 
     @Override
