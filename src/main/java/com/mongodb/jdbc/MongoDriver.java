@@ -30,10 +30,12 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -137,7 +139,13 @@ public class MongoDriver implements Driver {
         // (cases where multiple jdbc drivers are present and the program is checking which driver
         // to use), so it is possible for conn to be null at this point.
         if (conn != null) {
-            conn.isValid(conn.getDefaultConnectionValidationTimeoutSeconds());
+            try {
+                conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+            } catch (TimeoutException te) {
+                throw new SQLTimeoutException("Timeout. Can't connect.");
+            } catch (Exception e) {
+                throw new SQLException("Connection failed.", e);
+            }
         }
         return conn;
     }
@@ -475,7 +483,7 @@ public class MongoDriver implements Driver {
             String val = info.getProperty(key);
             if (options.containsKey(normalizedKey)) {
                 if (!options.getProperty(normalizedKey).equals(val)) {
-                    throw new SQLException("uri and properties disagree on %s", key);
+                    throw new SQLException("uri and properties disagree on " + key);
                 }
             } else {
                 options.setProperty(normalizedKey, val);

@@ -421,38 +421,39 @@ public abstract class MongoConnection implements Connection {
         }
     }
 
-    @Override
-    public boolean isValid(int timeout) throws SQLException {
+    /**
+     * Executes a dummy query to test the connection.
+     *
+     * @param timeout The query timeout.
+     * @throws Exception If an error occurs.
+     */
+    protected void testConnection(int timeout)
+            throws SQLException, InterruptedException, ExecutionException, TimeoutException {
         if (timeout < 0) {
             throw new SQLException("Input is invalid.");
         }
 
         if (isClosed) {
-            return false;
+            throw new SQLException("Connection is closed.");
         }
         // We use createStatement to test the connection. Since we are not allowed
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
-
         Future<Void> future = executor.submit(new ConnValidation());
+        if (timeout > 0) {
+            future.get(timeout, TimeUnit.SECONDS);
+        } else {
+            future.get();
+        }
+    }
+
+    @Override
+    public boolean isValid(int timeout) throws SQLException {
         try {
-            if (timeout > 0) {
-                future.get(timeout, TimeUnit.SECONDS);
-            } else {
-                future.get();
-            }
-        } catch (TimeoutException ex) {
-            // handle the timeout
+            testConnection(timeout);
+        } catch (Exception ex) {
+            // Invalid connection, the dummy query failed
             return false;
-        } catch (InterruptedException e) {
-            // handle the interrupt
-            return false;
-        } catch (ExecutionException e) {
-            // handle connection error
-            return false;
-        } finally {
-            future.cancel(true);
-            executor.shutdown();
         }
         return true;
     }
