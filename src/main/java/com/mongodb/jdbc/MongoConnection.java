@@ -436,14 +436,21 @@ public abstract class MongoConnection implements Connection {
         if (isClosed) {
             throw new SQLException("Connection is closed.");
         }
+
         // We use createStatement to test the connection. Since we are not allowed
         // to set the timeout adhoc on the calls, we use Executor to run a blocked call with timeout.
         ExecutorService executor = Executors.newCachedThreadPool();
         Future<Void> future = executor.submit(new ConnValidation());
-        if (timeout > 0) {
-            future.get(timeout, TimeUnit.SECONDS);
-        } else {
-            future.get();
+
+        try {
+            if (timeout > 0) {
+                future.get(timeout, TimeUnit.SECONDS);
+            } else {
+                future.get();
+            }
+        } finally {
+            future.cancel(true);
+            executor.shutdown();
         }
     }
 
@@ -451,8 +458,8 @@ public abstract class MongoConnection implements Connection {
     public boolean isValid(int timeout) throws SQLException {
         try {
             testConnection(timeout);
-        } catch (Exception ex) {
-            // Invalid connection, the dummy query failed
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+            // Only propagate the SQLException
             return false;
         }
         return true;
