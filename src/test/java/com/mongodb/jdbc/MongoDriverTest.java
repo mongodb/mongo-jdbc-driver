@@ -72,7 +72,7 @@ class MongoDriverTest {
 
         // once property is set, it should be fine.
         p.setProperty(PWD_CONN_KEY, "pwd");
-        assertNotNull(d.connect(basicURL, p));
+        assertNotNull(d.getUnvalidatedConnection(basicURL, p));
     }
 
     @Test
