@@ -72,7 +72,7 @@ class MongoDriverTest {
 
         // once property is set, it should be fine.
         p.setProperty(PWD_CONN_KEY, "pwd");
-        assertNotNull(d.connect(basicURL, p));
+        assertNotNull(d.getUnvalidatedConnection(basicURL, p));
     }
 
     @Test
@@ -127,14 +127,14 @@ class MongoDriverTest {
     void testJDBCURL() throws SQLException {
         MongoDriver d = new MongoDriver();
 
-        assertNotNull(d.connect(jdbcUserURL, mandatoryProperties));
+        assertNotNull(d.getUnvalidatedConnection(jdbcUserURL, mandatoryProperties));
 
         // changing user name from `jdbc` should throw.
         Properties p = (Properties) mandatoryProperties.clone();
         p.setProperty(USER_CONN_KEY, "jdbc2");
         assertThrows(
                 SQLException.class,
-                () -> d.connect(jdbcUserURL, p),
+                () -> d.getUnvalidatedConnection(jdbcUserURL, p),
                 "The connection should fail because of a user mismatch between the URI and the properties");
     }
 
@@ -146,20 +146,20 @@ class MongoDriverTest {
         Properties p = new Properties();
         missingConnectionSettings(d, userURL, p);
         p = (Properties) mandatoryProperties.clone();
-        assertNotNull(d.connect(userURL, p));
+        assertNotNull(d.getUnvalidatedConnection(userURL, p));
 
         // This is not a mismatch, because we assume that if an auth database is missing
         // in the URI, even though default is admin, the user would prefer whatever is in
         // the passed Properties.
         p.setProperty("authDatabase", "admin2");
-        assertNotNull(d.connect(userURL, p));
+        assertNotNull(d.getUnvalidatedConnection(userURL, p));
 
         Properties p2 = (Properties) mandatoryProperties.clone();
         p2.setProperty(USER_CONN_KEY, "dfasdfds");
         // user mismatch should throw.
         assertThrows(
                 SQLException.class,
-                () -> d.connect(userURL, p2),
+                () -> d.getUnvalidatedConnection(userURL, p2),
                 "The connection should fail because of a user mismatch between the URI and the properties");
 
         Properties p3 = (Properties) mandatoryProperties.clone();
@@ -167,7 +167,7 @@ class MongoDriverTest {
         // pwd mismatch should throw.
         assertThrows(
                 SQLException.class,
-                () -> d.connect(userURL, p3),
+                () -> d.getUnvalidatedConnection(userURL, p3),
                 "The connection should fail because of a password mismatch between the URI and the properties");
     }
 
@@ -179,14 +179,14 @@ class MongoDriverTest {
         Properties p = new Properties();
         missingConnectionSettings(d, replURL, p);
         p = (Properties) mandatoryProperties.clone();
-        assertNotNull(d.connect(replURL, p));
+        assertNotNull(d.getUnvalidatedConnection(replURL, p));
 
         Properties p2 = (Properties) mandatoryProperties.clone();
         p2.setProperty(USER_CONN_KEY, "dfasdfds");
         // user mismatch should throw.
         assertThrows(
                 SQLException.class,
-                () -> d.connect(replURL, p2),
+                () -> d.getUnvalidatedConnection(replURL, p2),
                 "The connection should fail because of a user mismatch between the URI and the properties");
 
         Properties p3 = (Properties) mandatoryProperties.clone();
@@ -194,7 +194,7 @@ class MongoDriverTest {
         // pwd mismatch should throw.
         assertThrows(
                 SQLException.class,
-                () -> d.connect(replURL, p3),
+                () -> d.getUnvalidatedConnection(replURL, p3),
                 "The connection should fail because of a password mismatch between the URI and the properties");
     }
 
@@ -265,7 +265,7 @@ class MongoDriverTest {
         p.setProperty("conversionMode", "relaxed");
         assertThrows(
                 SQLException.class,
-                () -> d.connect(basicURL, p),
+                () -> d.getUnvalidatedConnection(basicURL, p),
                 "The connection should fail because conversionMode does not apply to mongosql dialect");
 
         // dialect set to invalid dialect results in Exception
@@ -273,7 +273,7 @@ class MongoDriverTest {
         p.setProperty("dialect", "invalid");
         assertThrows(
                 SQLException.class,
-                () -> d.connect(basicURL, p),
+                () -> d.getUnvalidatedConnection(basicURL, p),
                 "The connection should fail because dialect is invalid");
     }
 
