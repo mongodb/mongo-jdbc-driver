@@ -137,7 +137,7 @@ public abstract class MongoSQLMock {
 
     @InjectMocks
     protected static MongoConnection mongoConnection =
-            new MongoSQLConnection(uri, database, null, null);
+            new MongoSQLConnection(uri, database, null, null, null);
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {

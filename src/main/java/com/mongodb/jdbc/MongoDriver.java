@@ -59,6 +59,7 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
+    public static final String CLIENT_INFO = "ClientInfo";
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     public static final String DATABASE = "database";
@@ -246,10 +247,26 @@ public class MongoDriver implements Driver {
                             + logDirVal
                             + ". It must be a directory.");
         }
+        String clientInfoVal = info.getProperty(CLIENT_INFO);
+        String[] clientInfo = (clientInfoVal == null) ? null : clientInfoVal.split("\\|");
+        if (clientInfo != null && clientInfo.length != 2) {
+            throw new SQLException(
+                    "Invalid "
+                            + CLIENT_INFO
+                            + " property value : "
+                            + clientInfoVal
+                            + ". Expected format <name>|<version>.");
+        }
+
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
                 return new MySQLConnection(
-                        cs, database, info.getProperty(CONVERSION_MODE), logLevel, logDir);
+                        cs,
+                        database,
+                        info.getProperty(CONVERSION_MODE),
+                        logLevel,
+                        logDir,
+                        clientInfo);
             case MONGOSQL_DIALECT:
                 if (info.containsKey(CONVERSION_MODE)) {
                     throw new SQLException(
@@ -260,7 +277,7 @@ public class MongoDriver implements Driver {
                                     + " is "
                                     + MONGOSQL_DIALECT);
                 }
-                return new MongoSQLConnection(cs, database, logLevel, logDir);
+                return new MongoSQLConnection(cs, database, logLevel, logDir, clientInfo);
             default:
                 throw new SQLException(
                         "Invalid dialect "

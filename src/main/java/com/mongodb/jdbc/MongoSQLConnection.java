@@ -13,8 +13,13 @@ import java.util.logging.Level;
 @AutoLoggable
 public class MongoSQLConnection extends MongoConnection implements Connection {
 
-    public MongoSQLConnection(ConnectionString cs, String database, Level logLevel, File logDir) {
-        super(cs, database, logLevel, logDir);
+    public MongoSQLConnection(
+            ConnectionString cs,
+            String database,
+            Level logLevel,
+            File logDir,
+            String[] clientInfo) {
+        super(cs, database, logLevel, logDir, clientInfo);
         super.getLogger().log(Level.INFO, "Dialect is MongoSQL");
     }
 

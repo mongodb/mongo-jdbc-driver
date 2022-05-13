@@ -28,7 +28,7 @@ public abstract class MySQLMock {
 
     @InjectMocks
     protected static MongoConnection mongoConnection =
-            new MySQLConnection(uri, database, null, null, null);
+            new MySQLConnection(uri, database, null, null, null, null);
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {

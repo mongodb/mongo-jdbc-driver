@@ -19,8 +19,9 @@ public class MySQLConnection extends MongoConnection implements Connection {
             String database,
             String conversionMode,
             Level logLevel,
-            File logDir) {
-        super(cs, database, logLevel, logDir);
+            File logDir,
+            String[] clientInfo) {
+        super(cs, database, logLevel, logDir, clientInfo);
         super.getLogger().log(Level.INFO, "Dialect is Mysql");
         relaxed = conversionMode == null || !conversionMode.equals("strict");
     }
