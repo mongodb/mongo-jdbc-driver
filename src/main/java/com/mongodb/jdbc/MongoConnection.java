@@ -82,20 +82,20 @@ public abstract class MongoConnection implements Connection {
                                 .append(".")
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
-        StringBuilder appName = new StringBuilder(MongoDriver.NAME);
+        StringBuilder appName = new StringBuilder(MongoDriver.NAME).append("+").append(version);
 
         // Log the driver name and version
         logger.log(
                 Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
 
         MongoDriverInformation.Builder mdiBuilder;
-        if (connectionProperties.getClientInfo() != null
-                && connectionProperties.getClientInfo().length == 2) {
-            appName.append('|').append(connectionProperties.getClientInfo()[0]);
+        String[] clientInfo = connectionProperties.getClientInfo();
+        if (clientInfo != null && clientInfo.length == 2) {
+            appName.append('|').append(clientInfo[0]).append("+").append(clientInfo[1]);
             MongoDriverInformation driverInfoWithClientInfo =
                     MongoDriverInformation.builder()
-                            .driverName(connectionProperties.getClientInfo()[0])
-                            .driverVersion(connectionProperties.getClientInfo()[1])
+                            .driverName(clientInfo[0])
+                            .driverVersion(clientInfo[1])
                             .build();
             mdiBuilder = MongoDriverInformation.builder(driverInfoWithClientInfo);
         } else {
