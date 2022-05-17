@@ -1,8 +1,6 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.ConnectionString;
 import com.mongodb.jdbc.logging.AutoLoggable;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -13,13 +11,8 @@ import java.util.logging.Level;
 @AutoLoggable
 public class MongoSQLConnection extends MongoConnection implements Connection {
 
-    public MongoSQLConnection(
-            ConnectionString cs,
-            String database,
-            Level logLevel,
-            File logDir,
-            String[] clientInfo) {
-        super(cs, database, logLevel, logDir, clientInfo);
+    public MongoSQLConnection(MongoConnectionProperties mongoConnectionProperties) {
+        super(mongoConnectionProperties);
         super.getLogger().log(Level.INFO, "Dialect is MongoSQL");
     }
 

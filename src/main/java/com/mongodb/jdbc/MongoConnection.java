@@ -1,7 +1,6 @@
 package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
-import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
@@ -66,19 +65,15 @@ public abstract class MongoConnection implements Connection {
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
     private String logDirPath;
 
-    public MongoConnection(
-            ConnectionString cs,
-            String database,
-            Level logLevel,
-            File logDir,
-            String[] clientInfo) {
-        Preconditions.checkNotNull(cs);
+    public MongoConnection(MongoConnectionProperties connectionProperties) {
+        Preconditions.checkNotNull(connectionProperties.getConnectionString());
         this.connectionId = connectionCounter.incrementAndGet();
         // Initializes a parent logger for the connection
-        initConnectionLogger(connectionId, logLevel, logDir);
-        this.url = cs.getConnectionString();
-        this.user = cs.getUsername();
-        this.currentDB = database;
+        initConnectionLogger(
+                connectionId, connectionProperties.getLogLevel(), connectionProperties.getLogDir());
+        this.url = connectionProperties.getConnectionString().getConnectionString();
+        this.user = connectionProperties.getConnectionString().getUsername();
+        this.currentDB = connectionProperties.getDatabase();
         String version =
                 MongoDriver.VERSION != null
                         ? MongoDriver.VERSION
@@ -87,32 +82,33 @@ public abstract class MongoConnection implements Connection {
                                 .append(".")
                                 .append(MongoDriver.MINOR_VERSION)
                                 .toString();
+        StringBuilder appName = new StringBuilder(MongoDriver.NAME);
 
         // Log the driver name and version
         logger.log(
                 Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
 
-        MongoDriverInformation mongoDriverInformation;
-        if (clientInfo != null && clientInfo.length == 2) {
+        MongoDriverInformation.Builder mdiBuilder;
+        if (connectionProperties.getClientInfo() != null
+                && connectionProperties.getClientInfo().length == 2) {
+            appName.append('|').append(connectionProperties.getClientInfo()[0]);
             MongoDriverInformation driverInfoWithClientInfo =
                     MongoDriverInformation.builder()
-                            .driverName(clientInfo[0])
-                            .driverVersion(clientInfo[1])
+                            .driverName(connectionProperties.getClientInfo()[0])
+                            .driverVersion(connectionProperties.getClientInfo()[1])
                             .build();
-            mongoDriverInformation =
-                    MongoDriverInformation.builder(driverInfoWithClientInfo)
-                            .driverName(MongoDriver.NAME)
-                            .driverVersion(version)
-                            .build();
+            mdiBuilder = MongoDriverInformation.builder(driverInfoWithClientInfo);
         } else {
-            mongoDriverInformation =
-                    MongoDriverInformation.builder()
-                            .driverName(MongoDriver.NAME)
-                            .driverVersion(version)
-                            .build();
+            mdiBuilder = MongoDriverInformation.builder();
         }
+        MongoDriverInformation mongoDriverInformation =
+                mdiBuilder.driverName(MongoDriver.NAME).driverVersion(version).build();
 
-        this.mongoClientSettings = MongoClientSettings.builder().applyConnectionString(cs).build();
+        this.mongoClientSettings =
+                MongoClientSettings.builder()
+                        .applicationName(appName.toString())
+                        .applyConnectionString(connectionProperties.getConnectionString())
+                        .build();
         mongoClient = MongoClients.create(mongoClientSettings, mongoDriverInformation);
 
         isClosed = false;

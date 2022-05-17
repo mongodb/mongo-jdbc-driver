@@ -317,7 +317,8 @@ class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
         return new MySQLDatabaseMetaData(
-                new MySQLConnection(uri, database, null, null, null, null));
+                new MySQLConnection(
+                        new MongoConnectionProperties(uri, database, null, null, null), null));
     }
 
     @Test
@@ -390,7 +391,8 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     @Override
     protected DatabaseMetaData createDatabaseMetaData() {
         return new MongoSQLDatabaseMetaData(
-                new MongoSQLConnection(uri, database, null, null, null));
+                new MongoSQLConnection(
+                        new MongoConnectionProperties(uri, database, null, null, null)));
     }
 
     @Test

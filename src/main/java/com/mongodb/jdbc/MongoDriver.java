@@ -258,15 +258,12 @@ public class MongoDriver implements Driver {
                             + ". Expected format <name>|<version>.");
         }
 
+        MongoConnectionProperties mongoConnectionProperties =
+                new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo);
         switch (dialect.toLowerCase()) {
             case MYSQL_DIALECT:
                 return new MySQLConnection(
-                        cs,
-                        database,
-                        info.getProperty(CONVERSION_MODE),
-                        logLevel,
-                        logDir,
-                        clientInfo);
+                        mongoConnectionProperties, info.getProperty(CONVERSION_MODE));
             case MONGOSQL_DIALECT:
                 if (info.containsKey(CONVERSION_MODE)) {
                     throw new SQLException(
@@ -277,7 +274,7 @@ public class MongoDriver implements Driver {
                                     + " is "
                                     + MONGOSQL_DIALECT);
                 }
-                return new MongoSQLConnection(cs, database, logLevel, logDir, clientInfo);
+                return new MongoSQLConnection(mongoConnectionProperties);
             default:
                 throw new SQLException(
                         "Invalid dialect "
