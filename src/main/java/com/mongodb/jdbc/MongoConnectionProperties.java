@@ -5,11 +5,11 @@ import java.io.File;
 import java.util.logging.Level;
 
 public class MongoConnectionProperties {
-    private ConnectionString connectionString;
-    private String database;
-    private Level logLevel;
-    private File logDir;
-    private String[] clientInfo;
+    protected ConnectionString connectionString;
+    protected String database;
+    protected Level logLevel;
+    protected File logDir;
+    protected String[] clientInfo;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
