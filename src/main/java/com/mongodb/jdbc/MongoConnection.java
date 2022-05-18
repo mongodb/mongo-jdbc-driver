@@ -89,13 +89,14 @@ public abstract class MongoConnection implements Connection {
                 Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
 
         MongoDriverInformation.Builder mdiBuilder;
-        String[] clientInfo = connectionProperties.getClientInfo();
-        if (clientInfo != null && clientInfo.length == 2) {
-            appName.append('|').append(clientInfo[0]).append("+").append(clientInfo[1]);
+        String clientInfo = connectionProperties.getClientInfo();
+        String[] clientInfoSplit = (clientInfo == null) ? null : clientInfo.split("\\+");
+        if (clientInfoSplit != null && clientInfoSplit.length == 2) {
+            appName.append('|').append(clientInfo);
             MongoDriverInformation driverInfoWithClientInfo =
                     MongoDriverInformation.builder()
-                            .driverName(clientInfo[0])
-                            .driverVersion(clientInfo[1])
+                            .driverName(clientInfoSplit[0])
+                            .driverVersion(clientInfoSplit[1])
                             .build();
             mdiBuilder = MongoDriverInformation.builder(driverInfoWithClientInfo);
         } else {

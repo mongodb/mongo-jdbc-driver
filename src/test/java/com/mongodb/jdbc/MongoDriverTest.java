@@ -628,9 +628,9 @@ class MongoDriverTest {
         assertThrows(
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(basicURL, p),
-                "The connection should fail because expected format is <name>|<version>.");
+                "The connection should fail because expected format is <name>+<version>.");
 
-        p.setProperty(MongoDriver.CLIENT_INFO, "name|version");
+        p.setProperty(MongoDriver.CLIENT_INFO, "name+version");
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
     }

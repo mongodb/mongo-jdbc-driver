@@ -247,15 +247,14 @@ public class MongoDriver implements Driver {
                             + logDirVal
                             + ". It must be a directory.");
         }
-        String clientInfoVal = info.getProperty(CLIENT_INFO);
-        String[] clientInfo = (clientInfoVal == null) ? null : clientInfoVal.split("\\|");
-        if (clientInfo != null && clientInfo.length != 2) {
+        String clientInfo = info.getProperty(CLIENT_INFO);
+        if (clientInfo != null && clientInfo.split("\\+").length != 2) {
             throw new SQLException(
                     "Invalid "
                             + CLIENT_INFO
                             + " property value : "
-                            + clientInfoVal
-                            + ". Expected format <name>|<version>.");
+                            + clientInfo
+                            + ". Expected format <name>+<version>.");
         }
 
         MongoConnectionProperties mongoConnectionProperties =

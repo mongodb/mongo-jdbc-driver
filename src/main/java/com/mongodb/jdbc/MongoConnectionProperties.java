@@ -5,18 +5,18 @@ import java.io.File;
 import java.util.logging.Level;
 
 public class MongoConnectionProperties {
-    protected ConnectionString connectionString;
-    protected String database;
-    protected Level logLevel;
-    protected File logDir;
-    protected String[] clientInfo;
+    private ConnectionString connectionString;
+    private String database;
+    private Level logLevel;
+    private File logDir;
+    private String clientInfo;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
             String database,
             Level logLevel,
             File logDir,
-            String[] clientInfo) {
+            String clientInfo) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
@@ -40,27 +40,7 @@ public class MongoConnectionProperties {
         return logDir;
     }
 
-    public String[] getClientInfo() {
+    public String getClientInfo() {
         return clientInfo;
-    }
-
-    public void setConnectionString(ConnectionString connectionString) {
-        this.connectionString = connectionString;
-    }
-
-    public void setDatabase(String database) {
-        this.database = database;
-    }
-
-    public void setLogLevel(Level logLevel) {
-        this.logLevel = logLevel;
-    }
-
-    public void setLogDir(File logDir) {
-        this.logDir = logDir;
-    }
-
-    public void setClientInfo(String[] clientInfo) {
-        this.clientInfo = clientInfo;
     }
 }
