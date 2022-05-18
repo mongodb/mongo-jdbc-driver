@@ -59,7 +59,7 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-    public static final String CLIENT_INFO = "ClientInfo";
+    public static final String CLIENT_INFO = "clientInfo";
     static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     public static final String DATABASE = "database";
