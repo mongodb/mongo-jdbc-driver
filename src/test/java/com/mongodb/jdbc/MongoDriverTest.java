@@ -611,4 +611,27 @@ class MongoDriverTest {
             // Ignore clean-up error if any
         }
     }
+
+    @Test
+    void testClientInfoProperty() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        Connection c;
+        p.setProperty("database", "test");
+
+        // ClientInfo not set succeeds
+        c = d.getUnvalidatedConnection(basicURL, p);
+        assertNotNull(c);
+
+        // Invalid ClientInfo property results in Exception
+        p.setProperty(MongoDriver.CLIENT_INFO, "InvalidFormat");
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(basicURL, p),
+                "The connection should fail because expected format is <name>+<version>.");
+
+        p.setProperty(MongoDriver.CLIENT_INFO, "name+version");
+        c = d.getUnvalidatedConnection(basicURL, p);
+        assertNotNull(c);
+    }
 }

@@ -1,8 +1,6 @@
 package com.mongodb.jdbc;
 
-import com.mongodb.ConnectionString;
 import com.mongodb.jdbc.logging.AutoLoggable;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -15,12 +13,8 @@ public class MySQLConnection extends MongoConnection implements Connection {
     private boolean relaxed;
 
     public MySQLConnection(
-            ConnectionString cs,
-            String database,
-            String conversionMode,
-            Level logLevel,
-            File logDir) {
-        super(cs, database, logLevel, logDir);
+            MongoConnectionProperties mongoConnectionProperties, String conversionMode) {
+        super(mongoConnectionProperties);
         super.getLogger().log(Level.INFO, "Dialect is Mysql");
         relaxed = conversionMode == null || !conversionMode.equals("strict");
     }
