@@ -239,45 +239,6 @@ class MongoDriverTest {
     }
 
     @Test
-    void testDialectProperty() throws SQLException {
-        MongoDriver d = new MongoDriver();
-        Properties p = (Properties) mandatoryProperties.clone();
-        Connection c;
-
-        // dialect not set defaults to MongoSQLConnection
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MongoSQLConnection);
-
-        // dialect set to "mysql" results in MySQLConnection
-        p.setProperty("dialect", "MySQL");
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MySQLConnection);
-
-        // dialect set to "mongosql" results in MongoSQLConnection
-        p.setProperty("dialect", "MongoSQL");
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MongoSQLConnection);
-
-        // dialect set to "mongosql" and conversionMode set results in Exception
-        p.setProperty("conversionMode", "relaxed");
-        assertThrows(
-                SQLException.class,
-                () -> d.getUnvalidatedConnection(basicURL, p),
-                "The connection should fail because conversionMode does not apply to mongosql dialect");
-
-        // dialect set to invalid dialect results in Exception
-        p.remove("conversionMode");
-        p.setProperty("dialect", "invalid");
-        assertThrows(
-                SQLException.class,
-                () -> d.getUnvalidatedConnection(basicURL, p),
-                "The connection should fail because dialect is invalid");
-    }
-
-    @Test
     void testInvalidLoggingLevel() throws Exception {
         // Default connection settings.
         // No logging. No files are created, nothing is logged.
@@ -536,7 +497,6 @@ class MongoDriverTest {
     private MongoConnection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
             throws Exception {
         MongoDriver d = new MongoDriver();
-        loggingTestProps.setProperty("dialect", "MongoSQL");
         loggingTestProps.setProperty("database", "admin");
 
         MongoConnection connection = d.getUnvalidatedConnection(userURL, loggingTestProps);
