@@ -60,7 +60,6 @@ public class MongoDriver implements Driver {
     public static final String USER = "user";
     public static final String PASSWORD = "password";
     public static final String CLIENT_INFO = "clientInfo";
-    static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     public static final String DATABASE = "database";
     public static final String LOG_LEVEL = "LogLevel";
@@ -525,10 +524,7 @@ public class MongoDriver implements Driver {
         StringBuilder buff = new StringBuilder();
         if (options != null) {
             for (String key : options.stringPropertyNames()) {
-                if (!key.equals(USER)
-                        && !key.equals(PASSWORD)
-                        && !key.equals(CONVERSION_MODE)
-                        && !key.equals(DATABASE)) {
+                if (!key.equals(USER) && !key.equals(PASSWORD) && !key.equals(DATABASE)) {
                     if (buff.length() > 0) {
                         buff.append("&");
                     }
