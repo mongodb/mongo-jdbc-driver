@@ -60,14 +60,10 @@ public class MongoDriver implements Driver {
     public static final String USER = "user";
     public static final String PASSWORD = "password";
     public static final String CLIENT_INFO = "clientInfo";
-    static final String CONVERSION_MODE = "conversionMode";
     // database is the database to switch to.
     public static final String DATABASE = "database";
-    static final String DIALECT = "dialect";
     public static final String LOG_LEVEL = "LogLevel";
     public static final String LOG_DIR = "LogDir";
-    static final String MYSQL_DIALECT = "mysql";
-    static final String MONGOSQL_DIALECT = "mongosql";
     static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
     static final String MONGOSQL_DRIVER_NAME =
             MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
@@ -215,8 +211,6 @@ public class MongoDriver implements Driver {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE);
 
-        // attempt to get DIALECT property, and default to "mongosql" if none is present
-        String dialect = info.getProperty(DIALECT, MONGOSQL_DIALECT);
         // Default log level is OFF
         String logLevelVal = info.getProperty(LOG_LEVEL, Level.OFF.getName());
         Level logLevel;
@@ -259,30 +253,8 @@ public class MongoDriver implements Driver {
 
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo);
-        switch (dialect.toLowerCase()) {
-            case MYSQL_DIALECT:
-                return new MySQLConnection(
-                        mongoConnectionProperties, info.getProperty(CONVERSION_MODE));
-            case MONGOSQL_DIALECT:
-                if (info.containsKey(CONVERSION_MODE)) {
-                    throw new SQLException(
-                            "Must not set"
-                                    + CONVERSION_MODE
-                                    + " if "
-                                    + DIALECT
-                                    + " is "
-                                    + MONGOSQL_DIALECT);
-                }
-                return new MongoSQLConnection(mongoConnectionProperties);
-            default:
-                throw new SQLException(
-                        "Invalid dialect "
-                                + dialect
-                                + ". Valid values are "
-                                + MONGOSQL_DIALECT
-                                + " and "
-                                + MYSQL_DIALECT);
-        }
+
+        return new MongoSQLConnection(mongoConnectionProperties);
     }
 
     @Override
@@ -552,10 +524,7 @@ public class MongoDriver implements Driver {
         StringBuilder buff = new StringBuilder();
         if (options != null) {
             for (String key : options.stringPropertyNames()) {
-                if (!key.equals(USER)
-                        && !key.equals(PASSWORD)
-                        && !key.equals(CONVERSION_MODE)
-                        && !key.equals(DATABASE)) {
+                if (!key.equals(USER) && !key.equals(PASSWORD) && !key.equals(DATABASE)) {
                     if (buff.length() > 0) {
                         buff.append("&");
                     }

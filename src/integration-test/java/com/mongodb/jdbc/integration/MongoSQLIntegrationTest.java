@@ -34,7 +34,6 @@ public class MongoSQLIntegrationTest extends MongoIntegrationTest {
             throws SQLException {
 
         Properties p = new java.util.Properties(extraProps);
-        p.setProperty("dialect", MONGOSQL);
         p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
