@@ -1,4 +1,4 @@
-<img height="100" alt="MongoDB Atlas JDBC Driver" align="right" src="resources/media/MongoDBAtlasJDBC.png" />
+<img height="90" alt="MongoDB Atlas JDBC Driver" align="right" src="resources/media/MongoDBAtlasJDBC.png" />
 
 # MongoDB Atlas JDBC Driver
 
