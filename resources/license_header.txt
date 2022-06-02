@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-present MongoDB, Inc.
+ * Copyright $YEAR-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,3 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc;
-
-public class MongoListTablesResult {
-    public static final String TABLE = "table";
-    public static final String COLLECTION = "collection";
-
-    public String name;
-    public String type;
-
-    public void setType(String type) {
-        // If mongodb type is COLLECTION, map it as TABLE.
-        // Otherwise, keep the type as is.
-        this.type = type.equalsIgnoreCase(COLLECTION) ? TABLE : type;
-    }
-}
