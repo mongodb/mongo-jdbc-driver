@@ -20,54 +20,65 @@ To build and test the driver run the following commands from root dir.
 ```
 ./gradlew clean build
 ```
+
 #### To run demo locally
 ```
 ./gradlew clean :demo:run
 ```
+
 #### To generate the source Jar
 ```
 ./gradlew clean :sourceJar  
 ```
 You can find the generated jar in build/libs/
+
 #### To generate the fat Jar which includes all the dependencies
 ```
 ./gradlew clean :shadowJar
 ```
 You can find the generated jar in build/libs/
+
 #### To generate the test Jar
 ```
 ./gradlew clean :testJar  
 ```
-You can find the generated jar in build/libs/ 
+You can find the generated jar in build/libs/
+
 #### To run the unit tests
 ```
 ./gradlew clean test
 ```
+
 #### To fix lint problem
 ```
 ./gradlew spotlessApply
 ```
+
 ## Usage
 
 ### Connection URL and properties
 
 #### Connection URL
-The connection URL is based of MongoDB connection string and has the `jdbc:` prefix.
+The connection URL is based on MongoDB connection string and has the `jdbc:` prefix.
 The general format for the connection URL is as follows, with items in square brackets ([ ]) being optional:
 ```
-jdbc:mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?property1=value1[&property2=value2]...]
+jdbc:mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?option1=value1[&option2=value2]...]
 ```
 
-See [https://www.mongodb.com/docs/manual/reference/connection-string/](https://www.mongodb.com/docs/manual/reference/connection-string/) for the URI format 
-and [https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-connection-options](https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-connection-options) for the supported options..
+For more details :
+- URI format: [https://www.mongodb.com/docs/manual/reference/connection-string/](https://www.mongodb.com/docs/manual/reference/connection-string/)
+- Supported options: [https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-connection-options](https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-connection-options)
 
 ##### Notes
 - Special characters in the JDBC url have to be URL encoded.
-- The driver can not connect to a local mongod instance
+- The driver can not connect to a mongod instance, only to Atlas.
 
 #### Connection Properties
-In addition to the standard MongoDB connection options the driver supports a number of additional properties specific to the JDBC driver. 
-These properties have to be specified using an additional Properties object parameter to DriverManager.getConnection.
+All connection options can also be specified through a Properties object parameter instead of the being directly in the URL.
+However, if an option is in both the URL and the Properties object, the connection will fail.
+
+In addition to the standard MongoDB connection options there are a number of additional properties specific to the JDBC driver. 
+These properties can only be specified using an additional Properties object parameter and not in the URL.
 
 | Property                      | Type    | Required | Default | Description   |
 | ----------------------------- | ------- | -------- | :-----: | ------------- |
@@ -75,6 +86,21 @@ These properties have to be specified using an additional Properties object para
 | LogLevel                      | String  | No       | OFF     | The log level used for logging. Supported levels by increasing verbosity are 'OFF', 'SEVERE', 'WARNING', 'FINE', 'INFO' and 'FINER' |
 | LogDir                        | String  | No       | Null    | The directory to use for log files. If not logging directory is specified, the logs are sent to the console |
 
+The following example demonstrates how to open a connection specifying :
+- The standard options `user` and `password` via a Properties object and ssl and authSource via the URL.
+- The JDBC specific options `database` (mandatory) and `LogLevel` via a Properties object. 
+```
+         java.util.Properties p = new java.util.Properties();
+         p.setProperty("user", "user");
+         p.setProperty("password", "foo");
+         p.setProperty("database", "test");
+         p.setProperty("LogLevel", Level.FINER.getName());
+         System.out.println("Connecting to database test...");
+         Connection conn = DriverManager.getConnection("mongodb://mydatalake-xxxx.a.query.mongodb.net/?ssl=true&authSource=admin", p);
+```
+
+##### Notes
+Properties names are case-sensitive.
 
 ## Integration Testing
 Integration testing requires a local MongoDB and Atlas Data Lake instance to be running
