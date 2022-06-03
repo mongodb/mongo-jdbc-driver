@@ -100,7 +100,7 @@ class MongoDriverTest {
         Properties p = new Properties();
         missingConnectionSettings(d, authDBURL, p);
 
-        p.setProperty("DATABASE.getPropertyName()", "admin2");
+        p.setProperty(DATABASE.getPropertyName(), "admin2");
 
         // DATABASE.getPropertyName() is not the same as the authDATABASE.getPropertyName() in the uri.
         // So this is safe and should not throw.
