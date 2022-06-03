@@ -83,8 +83,8 @@ These properties can only be specified using an additional Properties object par
 | Property                      | Type    | Required | Default | Description   |
 | ----------------------------- | ------- | -------- | :-----: | ------------- |
 | database                      | String  | Yes      | Null    | The name of the database used when querying |
-| LogLevel                      | String  | No       | OFF     | The log level used for logging. Supported levels by increasing verbosity are 'OFF', 'SEVERE', 'WARNING', 'FINE', 'INFO' and 'FINER' |
-| LogDir                        | String  | No       | Null    | The directory to use for log files. If not logging directory is specified, the logs are sent to the console |
+| loglevel                      | String  | No       | OFF     | The log level used for logging. Supported levels by increasing verbosity are 'OFF', 'SEVERE', 'WARNING', 'FINE', 'INFO' and 'FINER' |
+| logdir                        | String  | No       | Null    | The directory to use for log files. If not logging directory is specified, the logs are sent to the console |
 
 The following example demonstrates how to open a connection specifying :
 - The standard options `user` and `password` via a Properties object and ssl and authSource via the URL.
@@ -98,9 +98,6 @@ The following example demonstrates how to open a connection specifying :
          System.out.println("Connecting to database test...");
          Connection conn = DriverManager.getConnection("mongodb://mydatalake-xxxx.a.query.mongodb.net/?ssl=true&authSource=admin", p);
 ```
-
-##### Notes
-Properties names are case-sensitive.
 
 ## Integration Testing
 Integration testing requires a local MongoDB and Atlas Data Lake instance to be running

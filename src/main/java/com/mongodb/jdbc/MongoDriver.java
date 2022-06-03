@@ -64,8 +64,8 @@ public class MongoDriver implements Driver {
     // database is the database to switch to.
     public static final String DATABASE = "database";
     static final String DIALECT = "dialect";
-    public static final String LOG_LEVEL = "LogLevel";
-    public static final String LOG_DIR = "LogDir";
+    public static final String LOG_LEVEL = "loglevel";
+    public static final String LOG_DIR = "logdir";
     static final String MYSQL_DIALECT = "mysql";
     static final String MONGOSQL_DIALECT = "mongosql";
     static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
@@ -135,7 +135,14 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        MongoConnection conn = getUnvalidatedConnection(url, info);
+        Properties lowerCaseprops = new Properties();
+        // Normalize all properties key to lower case to make all connection settings case-insensitive
+        if (info != null) {
+            for (Object key : info.keySet()) {
+                lowerCaseprops.put(key.toString().toLowerCase(), info.get(key));
+            }
+        }
+        MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
         // to use), so it is possible for conn to be null at this point.
