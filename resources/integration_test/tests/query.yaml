@@ -2,8 +2,36 @@ tests:
   - description: select_star_ordered
     db: integration_test
     sql: SELECT * FROM grades ORDER BY _id
+    expected_result:
+      - [0, 84.5, 303, 3]
+      - [1, 97.4, 10329, 3]
+      - [2, 89.3, 342, 3]
+      - [3, 91.9, 204323, 3]
+      - [4, 87.5, 303, 5]
+      - [5, 74.4, 10329, 5]
+      - [6, 80.1, 342, 5]
+      - [7, 83.3, 204323, 5]
+      - [8, 78.5, 200, 5]
+    row_count: 9
     ordered: true
-    skip_reason: SQL-659
+    expected_sql_type: [INTEGER, DOUBLE, INTEGER, INTEGER]
+    expected_bson_type: [int, double, int, int]
+    expected_catalog_name: ['', '', '', '']
+    expected_column_class_name: [int, double, int, int]
+    expected_column_label: [_id, score, studentid, testid]
+    expected_column_display_size: [10, 15, 10, 10]
+    expected_precision: [10, 15, 10, 10]
+    expected_scale: [0, 15, 0, 0]
+    expected_schema_name: ['', '', '', '']
+    expected_is_auto_increment: [false, false, false, false]
+    expected_is_case_sensitive: [false, false, false, false]
+    expected_is_currency: [false, false, false, false]
+    expected_is_definitely_writable: [false, false, false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true, true]
+    expected_is_searchable: [true, true, true, true]
+    expected_is_signed: [true, true, true, true]
+    expected_is_writable: [false, false, false, false]
 
   - description: select_star_unordered
     db: integration_test
@@ -71,25 +99,124 @@ tests:
     db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
       = class.studentid"
+    expected_result:
+      - [Mike, 84.5, 3]
+      - [John, 97.4, 3]
+      - [Jane, 89.3, 3]
+      - [Mary, 91.9, 3]
+      - [Mike, 87.5, 5]
+      - [John, 74.4, 5]
+      - [Jane, 80.1, 5]
+      - [Mary, 83.3, 5]
+    row_count: 8
     ordered: false
-    skip_reason: SQL-659
+    expected_sql_type: [LONGVARCHAR, DOUBLE, INTEGER]
+    expected_bson_type: [string, double, int]
+    expected_catalog_name: ['', '', '']
+    expected_column_class_name: [java.lang.String, double, int]
+    expected_column_label: [name, score, testid]
+    expected_column_display_size: [0, 15, 10]
+    expected_precision: [0, 15, 10]
+    expected_scale: [0, 15, 0]
+    expected_schema_name: ['', '', '']
+    expected_is_auto_increment: [false, false, false]
+    expected_is_case_sensitive: [true, false, false]
+    expected_is_currency: [false, false, false]
+    expected_is_definitely_writable: [false, false, false]
+    expected_is_nullable: [columnNullable, columnNullable, columnNullable]
+    expected_is_read_only: [true, true, true]
+    expected_is_searchable: [true, true, true]
+    expected_is_signed: [false, true, true]
+    expected_is_writable: [false, false, false]
 
   - description: subquery
     db: integration_test
     sql: SELECT studentid FROM (SELECT * FROM class WHERE enrolled = TRUE) AS foo
+    expected_result:
+      - [10329]
+      - [303]
+    row_count: 2
     ordered: false
-    skip_reason: SQL-659
+    expected_sql_type: [INTEGER]
+    expected_bson_type: [int]
+    expected_catalog_name: ['']
+    expected_column_class_name: [int]
+    expected_column_label: [studentid]
+    expected_column_display_size: [10]
+    expected_precision: [10]
+    expected_scale: [0]
+    expected_schema_name: ['']
+    expected_is_auto_increment: [false]
+    expected_is_case_sensitive: [false]
+    expected_is_currency: [false]
+    expected_is_definitely_writable: [false]
+    expected_is_nullable: [columnNullable]
+    expected_is_read_only: [true]
+    expected_is_searchable: [true]
+    expected_is_signed: [true]
+    expected_is_writable: [false]
 
   - description: driver_does_not_alter_result_set_row_order
     db: integration_test
     sql: SELECT grades.score AS score FROM grades ORDER BY score DESC
+    expected_result:
+      - [97.4]
+      - [91.9]
+      - [89.3]
+      - [87.5]
+      - [84.5]
+      - [83.3]
+      - [80.1]
+      - [78.5]
+      - [74.4]
+    row_count: 9
     ordered: true
-    skip_reason: SQL-659
+    expected_sql_type: [DOUBLE]
+    expected_bson_type: [double]
+    expected_catalog_name: ['']
+    expected_column_class_name: [double]
+    expected_column_label: [score]
+    expected_column_display_size: [15]
+    expected_precision: [15]
+    expected_scale: [15]
+    expected_schema_name: ['']
+    expected_is_auto_increment: [false]
+    expected_is_case_sensitive: [false]
+    expected_is_currency: [false]
+    expected_is_definitely_writable: [false]
+    expected_is_nullable: [columnNullable]
+    expected_is_read_only: [true]
+    expected_is_searchable: [true]
+    expected_is_signed: [true]
+    expected_is_writable: [false]
 
   - description: select_star_from_anyof
     db: integration_test
     sql: SELECT * FROM anyof_collection
-    skip_reason: SQL-668
+    expected_result:
+      - [ 0, !!org.bson.BsonInt32  3 ]
+      - [ 1, !!org.bson.BsonInt64  3000000000 ]
+      - [ 2, !!org.bson.BsonDouble  4.5 ]
+    row_count: 3
+    ordered: false
+    expected_sql_type: [INTEGER, OTHER]
+    expected_bson_type: [int, bson]
+    expected_catalog_name: ['', '']
+    expected_column_class_name: [int, org.bson.BsonValue]
+    expected_column_label: [_id, a]
+    expected_column_display_size: [10, 0]
+    expected_precision: [10, 0]
+    expected_scale: [0, 0]
+    expected_schema_name: ['', '']
+    expected_is_auto_increment: [false, false]
+    expected_is_case_sensitive: [false, true]
+    expected_is_currency: [false, false]
+    expected_is_definitely_writable: [false, false]
+    expected_is_nullable: [columnNullable, columnNullable]
+    expected_is_read_only: [true, true]
+    expected_is_searchable: [true, true]
+    expected_is_signed: [true, true]
+    expected_is_writable: [false, false]
 
   - description: select_star_from_any
     db: integration_test
