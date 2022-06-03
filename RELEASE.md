@@ -52,28 +52,6 @@ To speed up release tasks, you can set the task priority for any variant to 101 
 If you do not have permissions to set priority above 100, ask the project manager to set the
 priority.
 
-#### Manual release
-If Evergreen is unavailable and a release has to be created manually, first run the smoke tests and then if no issues are found publish the driver
-
-##### Smoke test
-Make sure that you have a local ADL running (See [Running Local mongod and Atlas Data Lake](https://github.com/mongodb/mongo-jdbc-driver#running-local-mongod-and-atlas-data-lake)):
-```
-./gradlew clean shadowJar && ./gradlew :smoketest:test -Psmoketest
-```
-
-##### Publish
-Make sure the following environment variables are set:
-- NEXUS_USERNAME
-- NEXUS_PASSWORD
-- NEXUS_PROFILE_ID
-- NEXUS_URL
-- SIGNING_KEY_ID
-- SIGNING_PASSWORD
-- RING_FILE_GPG_BASE64
-```
-./gradle/publish.sh 
-```
-
 ### Post-Release Tasks
 
 #### Wait for evergreen

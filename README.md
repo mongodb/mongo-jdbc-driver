@@ -1,60 +1,20 @@
 <img height="90" alt="MongoDB Atlas JDBC Driver" align="right" src="resources/media/MongoDBAtlasJDBC.png" />
 
-# MongoDB Atlas JDBC Driver
+# MongoDB Atlas SQL JDBC Driver
 
-MongoDB Atlas JDBC provides SQL connectivity to [Atlas](https://www.mongodb.com/atlas) databases and datalakes for client applications developed in Java.
-MongoDB Atlas JDBC is a JDBC Type 4 driver compatible with the JDBC 4.2 specification.
+The MongoDB Atlas SQL JDBC Driver provides SQL connectivity to [MongoDB Atlas](https://www.mongodb.com/atlas) for client applications developed in Java.  
+See the [Atlas SQL Documentation](https://www.mongodb.com/docs/datalake/admin/query-with-sql/) for more information.
 
-### Prerequisites
-MongoDB Atlas JDBC driver requires Java 1.8 or higher.
-
-## Getting the Driver
-
-### Download and Install
-You can download the precompiled driver (jar) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).
-
-### Build From Source
-To build and test the driver run the following commands from root dir.
-
-#### To build the lean jar which does not include the dependencies
-```
-./gradlew clean build
-```
-
-#### To run demo locally
-```
-./gradlew clean :demo:run
-```
-
-#### To generate the source Jar
-```
-./gradlew clean :sourceJar  
-```
-You can find the generated jar in build/libs/
-
-#### To generate the fat Jar which includes all the dependencies
-```
-./gradlew clean :shadowJar
-```
-You can find the generated jar in build/libs/
-
-#### To generate the test Jar
-```
-./gradlew clean :testJar  
-```
-You can find the generated jar in build/libs/
-
-#### To run the unit tests
-```
-./gradlew clean test
-```
-
-#### To fix lint problem
-```
-./gradlew spotlessApply
-```
+MongoDB Atlas SQL JDBC is a JDBC Type 4 driver compatible with the JDBC 4.2 specification.
 
 ## Usage
+
+### Prerequisites
+MongoDB Atlas SQL JDBC driver requires Java 1.8 or higher.
+
+### Download and Install
+You can download the precompiled driver (jars) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).
+Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundle inside the jar).
 
 ### Connection URL and properties
 
@@ -77,7 +37,7 @@ For more details :
 All connection options can also be specified through a Properties object parameter instead of the being directly in the URL.
 However, if an option is in both the URL and the Properties object, the connection will fail.
 
-In addition to the standard MongoDB connection options there are a number of additional properties specific to the JDBC driver. 
+In addition to the standard MongoDB connection options there are a number of additional properties specific to the JDBC driver.  
 These properties can only be specified using an additional Properties object parameter and not in the URL.
 
 | Property                      | Type    | Required | Default | Description   |
@@ -88,17 +48,55 @@ These properties can only be specified using an additional Properties object par
 
 The following example demonstrates how to open a connection specifying :
 - The standard options `user` and `password` via a Properties object and ssl and authSource via the URL.
-- The JDBC specific options `database` (mandatory) and `LogLevel` via a Properties object. 
+- The JDBC specific options `database` (mandatory) and `loglevel` via a Properties object.
 ```
          java.util.Properties p = new java.util.Properties();
          p.setProperty("user", "user");
          p.setProperty("password", "foo");
          p.setProperty("database", "test");
-         p.setProperty("LogLevel", Level.FINER.getName());
+         p.setProperty("loglevel", Level.SEVERE.getName());
          System.out.println("Connecting to database test...");
          Connection conn = DriverManager.getConnection("mongodb://mydatalake-xxxx.a.query.mongodb.net/?ssl=true&authSource=admin", p);
 ```
 
+## Development
+
+### Build From Source
+To build and test the driver run the following commands from root dir.
+
+#### To build the lean jar which does not include the dependencies
+```
+./gradlew clean build
+```
+#### To run demo locally
+```
+./gradlew clean :demo:run
+```
+#### To generate the source Jar
+```
+./gradlew clean :sourceJar
+```
+You can find the generated jar in build/libs/
+#### To generate the fat Jar which includes all the dependencies
+#### To generate the fat Jar which includes all the dependencies
+```
+./gradlew clean :shadowJar
+```
+You can find the generated jar in build/libs/
+#### To generate the test Jar
+```
+./gradlew clean :testJar
+```
+You can find the generated jar in build/libs/
+
+#### To run the unit tests
+```
+./gradlew clean test
+```
+#### To fix lint problem
+```
+./gradlew spotlessApply
+```
 ## Integration Testing
 Integration testing requires a local MongoDB and Atlas Data Lake instance to be running
 #### Environment Variables
@@ -116,7 +114,7 @@ Integration testing requires a local MongoDB and Atlas Data Lake instance to be 
 ```
 #### To generate integration test baseline configuration files
 ```
-./gradlew runTestGenerator  
+./gradlew runTestGenerator
 ```
 
 ### Running Local mongod and Atlas Data Lake
