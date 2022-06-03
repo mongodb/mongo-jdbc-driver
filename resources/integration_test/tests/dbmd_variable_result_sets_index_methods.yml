@@ -4,12 +4,12 @@ tests:
   - description: getBestRowIdentifier no catalog filter returns results for all matching tables
     db: integration_test
     meta_function: ["getBestRowIdentifier", null, null, "foo", 0, false]
-    skip_reason: "SQL-668, MHOUSE-1459: fix MongoJsonSchema bsonType String/Array conflict. also expose indexes from mongo-based sources"
+    skip_reason: "MHOUSE-1459: expose indexes from mongo-based sources"
 
   - description: getBestRowIdentifier exact catalog and table filter
     db: integration_test
     meta_function: ["getBestRowIdentifier", "integration_test", null, "foo", 0, false]
-    skip_reason: "SQL-668, MHOUSE-1459: fix MongoJsonSchema bsonType String/Array conflict. also expose indexes from mongo-based sources"
+    skip_reason: "MHOUSE-1459: expose indexes from mongo-based sources"
 
   # getPrimaryKeys(catalog, schema, table)
   - description: getPrimaryKeys_resultset_metadata_validation
