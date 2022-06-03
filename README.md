@@ -13,8 +13,8 @@ MongoDB Atlas SQL JDBC is a JDBC Type 4 driver compatible with the JDBC 4.2 spec
 MongoDB Atlas SQL JDBC driver requires Java 1.8 or higher.
 
 ### Download and Install
-You can download the precompiled driver (jars) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).
-Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundle inside the jar).
+You can download the precompiled driver (jars) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).  
+Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundled inside the jar).
 
 ### Connection URL and properties
 
@@ -31,7 +31,7 @@ For more details :
 
 ##### Notes
 - Special characters in the JDBC url have to be URL encoded.
-- The driver can not connect to a mongod instance, only to Atlas.
+- The driver can not connect to a mongod instance, only to MongoDB Atlas.
 
 #### Connection Properties
 All connection options can also be specified through a Properties object parameter instead of the being directly in the URL.
@@ -76,18 +76,20 @@ To build and test the driver run the following commands from root dir.
 ```
 ./gradlew clean :sourceJar
 ```
-You can find the generated jar in build/libs/
-#### To generate the fat Jar which includes all the dependencies
+You can find the generated jar in build/libs/  
+
 #### To generate the fat Jar which includes all the dependencies
 ```
 ./gradlew clean :shadowJar
 ```
-You can find the generated jar in build/libs/
+You can find the generated jar in build/libs/  
+
 #### To generate the test Jar
 ```
 ./gradlew clean :testJar
 ```
-You can find the generated jar in build/libs/
+You can find the generated jar in build/libs/  
+
 
 #### To run the unit tests
 ```
