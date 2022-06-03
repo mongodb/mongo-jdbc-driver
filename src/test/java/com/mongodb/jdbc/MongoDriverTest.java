@@ -514,7 +514,7 @@ class MongoDriverTest {
     private MongoConnection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
             throws Exception {
         MongoDriver d = new MongoDriver();
-        loggingTestProps.setProperty("DATABASE.getPropertyName()", "admin");
+        loggingTestProps.setProperty(DATABASE.getPropertyName(), "admin");
 
         MongoConnection connection = d.getUnvalidatedConnection(userURL, loggingTestProps);
         assertNotNull(connection);
