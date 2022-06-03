@@ -18,6 +18,7 @@ ext {
 spotless {
     java {
         googleJavaFormat('1.1').aosp()
+        licenseHeaderFile('resources/license_header.txt')
     }
 }
 
@@ -27,7 +28,6 @@ sourceSets {
             compileClasspath += main.output
             runtimeClasspath += main.output
             srcDir file('src/integration-test/java')
-            exclude '**/MySQLIntegrationTest.java'
         }
         resources.srcDir file('src/integration-test/resources')
     }

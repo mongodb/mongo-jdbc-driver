@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
@@ -237,45 +253,6 @@ class MongoDriverTest {
         res = d.getPropertyInfo(basicURL, p);
         assertEquals(1, res.length);
         assertEquals("user", res[0].name);
-    }
-
-    @Test
-    void testDialectProperty() throws SQLException {
-        MongoDriver d = new MongoDriver();
-        Properties p = (Properties) mandatoryProperties.clone();
-        Connection c;
-
-        // dialect not set defaults to MongoSQLConnection
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MongoSQLConnection);
-
-        // dialect set to "mysql" results in MySQLConnection
-        p.setProperty("dialect", "MySQL");
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MySQLConnection);
-
-        // dialect set to "mongosql" results in MongoSQLConnection
-        p.setProperty("dialect", "MongoSQL");
-        c = d.getUnvalidatedConnection(basicURL, p);
-        assertNotNull(c);
-        assertTrue(c instanceof MongoSQLConnection);
-
-        // dialect set to "mongosql" and conversionMode set results in Exception
-        p.setProperty("conversionMode", "relaxed");
-        assertThrows(
-                SQLException.class,
-                () -> d.getUnvalidatedConnection(basicURL, p),
-                "The connection should fail because conversionMode does not apply to mongosql dialect");
-
-        // dialect set to invalid dialect results in Exception
-        p.remove("conversionMode");
-        p.setProperty("dialect", "invalid");
-        assertThrows(
-                SQLException.class,
-                () -> d.getUnvalidatedConnection(basicURL, p),
-                "The connection should fail because dialect is invalid");
     }
 
     @Test
@@ -537,7 +514,6 @@ class MongoDriverTest {
     private MongoConnection createConnectionAndVerifyLogFileExists(Properties loggingTestProps)
             throws Exception {
         MongoDriver d = new MongoDriver();
-        loggingTestProps.setProperty("dialect", "MongoSQL");
         loggingTestProps.setProperty("DATABASE.getPropertyName()", "admin");
 
         MongoConnection connection = d.getUnvalidatedConnection(userURL, loggingTestProps);

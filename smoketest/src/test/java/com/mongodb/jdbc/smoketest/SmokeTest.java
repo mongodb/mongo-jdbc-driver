@@ -20,14 +20,12 @@ import java.util.Properties;
 public class SmokeTest {
     static final String URL = "jdbc:mongodb://localhost";
     static final String DB = "integration_test";
-    static final String MONGOSQL = "mongosql";
 
     private Connection conn;
 
     public static Connection getBasicConnection(String url, String db)
             throws SQLException {
         Properties p = new java.util.Properties();
-        p.setProperty("dialect", MONGOSQL);
         p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));

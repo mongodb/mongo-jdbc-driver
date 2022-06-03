@@ -6,7 +6,6 @@ import java.sql.Statement;
 
 public class MongoSQLTestUtils extends TestUtils {
     static final String URL = "jdbc:mongodb://localhost";
-    public static final String MONGOSQL = "mongosql";
     public static final String TEST_DB = "integration_test";
     public static final String DEFAULT_TEST_COLLECTION = "test_collection";
 
@@ -14,7 +13,6 @@ public class MongoSQLTestUtils extends TestUtils {
     protected Connection connect() throws Exception {
         // Connects to local ADL instance
         java.util.Properties p = new java.util.Properties();
-        p.setProperty("dialect", MONGOSQL);
         p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));

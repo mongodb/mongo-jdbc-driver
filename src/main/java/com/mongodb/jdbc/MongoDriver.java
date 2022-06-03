@@ -84,11 +84,6 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-    static final String CONVERSION_MODE = "conversionMode";
-    // database is the database to switch to.
-    static final String DIALECT = "dialect";
-    static final String MYSQL_DIALECT = "mysql";
-    static final String MONGOSQL_DIALECT = "mongosql";
     static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
     static final String MONGOSQL_DRIVER_NAME =
             MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
@@ -245,8 +240,6 @@ public class MongoDriver implements Driver {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
 
-        // attempt to get DIALECT property, and default to "mongosql" if none is present
-        String dialect = info.getProperty(DIALECT, MONGOSQL_DIALECT);
         // Default log level is OFF
         String logLevelVal = info.getProperty(LOG_LEVEL.getPropertyName(), Level.OFF.getName());
         Level logLevel;
@@ -289,31 +282,8 @@ public class MongoDriver implements Driver {
 
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo);
-        System.out.println(mongoConnectionProperties);
-        switch (dialect.toLowerCase()) {
-            case MYSQL_DIALECT:
-                return new MySQLConnection(
-                        mongoConnectionProperties, info.getProperty(CONVERSION_MODE));
-            case MONGOSQL_DIALECT:
-                if (info.containsKey(CONVERSION_MODE)) {
-                    throw new SQLException(
-                            "Must not set"
-                                    + CONVERSION_MODE
-                                    + " if "
-                                    + DIALECT
-                                    + " is "
-                                    + MONGOSQL_DIALECT);
-                }
-                return new MongoSQLConnection(mongoConnectionProperties);
-            default:
-                throw new SQLException(
-                        "Invalid dialect "
-                                + dialect
-                                + ". Valid values are "
-                                + MONGOSQL_DIALECT
-                                + " and "
-                                + MYSQL_DIALECT);
-        }
+
+        return new MongoSQLConnection(mongoConnectionProperties);
     }
 
     @Override
@@ -523,10 +493,7 @@ public class MongoDriver implements Driver {
 
         for (String key : info.stringPropertyNames()) {
             String normalizedKey = key.toLowerCase();
-            // Only add keys which are part of the standard MongoDB URI (except user and password) and skip JDBC specific properties which can't be specified via the connection string'
-            if (normalizedKey.equals(USER)
-                    || normalizedKey.equals(PASSWORD)
-                    || isMongoJDBCProperty(normalizedKey)) {
+            if (normalizedKey.equals(USER) || normalizedKey.equals(PASSWORD)) {
                 continue;
             }
             String val = info.getProperty(key);
@@ -599,10 +566,10 @@ public class MongoDriver implements Driver {
         StringBuilder buff = new StringBuilder();
         if (options != null) {
             for (String key : options.stringPropertyNames()) {
-                if (!key.equals(USER)
-                        && !key.equals(PASSWORD)
-                        && !key.equals(CONVERSION_MODE)
-                        && !key.equals(DATABASE.getPropertyName())) {
+
+                // Only add keys which are part of the standard MongoDB URI (except user and password) and skip JDBC
+                // //specific properties which can't be specified via the connection string
+                if (!key.equals(USER) && !key.equals(PASSWORD) && !isMongoJDBCProperty(key)) {
                     if (buff.length() > 0) {
                         buff.append("&");
                     }
