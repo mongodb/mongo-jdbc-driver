@@ -1,5 +1,6 @@
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -46,7 +47,7 @@ class MongoDriverTest {
 
     private static Properties setProperties() {
         Properties props = new Properties();
-        props.setProperty(MongoDriver.DATABASE, "test");
+        props.setProperty(DATABASE.getPropertyName(), "test");
 
         return props;
     }
@@ -59,7 +60,7 @@ class MongoDriverTest {
     @Test
     void testBasicURL() throws SQLException {
         MongoDriver d = new MongoDriver();
-        // Missing mandatory 'database' property
+        // Missing mandatory 'DATABASE.getPropertyName()' property
         missingConnectionSettings(d, basicURL, null);
 
         Properties p = new Properties();
@@ -83,9 +84,9 @@ class MongoDriverTest {
         Properties p = new Properties();
         missingConnectionSettings(d, authDBURL, p);
 
-        p.setProperty("database", "admin2");
+        p.setProperty("DATABASE.getPropertyName()", "admin2");
 
-        // Database is not the same as the authDatabase in the uri.
+        // DATABASE.getPropertyName() is not the same as the authDATABASE.getPropertyName() in the uri.
         // So this is safe and should not throw.
         assertNotNull(d.getUnvalidatedConnection(authDBURL, p));
     }
@@ -148,10 +149,10 @@ class MongoDriverTest {
         p = (Properties) mandatoryProperties.clone();
         assertNotNull(d.getUnvalidatedConnection(userURL, p));
 
-        // This is not a mismatch, because we assume that if an auth database is missing
+        // This is not a mismatch, because we assume that if an auth DATABASE.getPropertyName() is missing
         // in the URI, even though default is admin, the user would prefer whatever is in
         // the passed Properties.
-        p.setProperty("authDatabase", "admin2");
+        p.setProperty("authDATABASE.getPropertyName()", "admin2");
         assertNotNull(d.getUnvalidatedConnection(userURL, p));
 
         Properties p2 = (Properties) mandatoryProperties.clone();
@@ -205,17 +206,17 @@ class MongoDriverTest {
         // Should not throw, even with null for Properties.
         DriverPropertyInfo[] res = d.getPropertyInfo(basicURL, null);
         assertEquals(1, res.length);
-        assertEquals(MongoDriver.DATABASE, res[0].name);
+        assertEquals(DATABASE.getPropertyName(), res[0].name);
 
         Properties p = new Properties();
         res = d.getPropertyInfo(basicURL, p);
         assertEquals(1, res.length);
-        assertEquals(MongoDriver.DATABASE, res[0].name);
+        assertEquals(DATABASE.getPropertyName(), res[0].name);
 
         p.setProperty(USER_CONN_KEY, "hello");
         res = d.getPropertyInfo(basicURL, p);
         assertEquals(2, res.length);
-        assertEquals(MongoDriver.DATABASE, res[0].name);
+        assertEquals(DATABASE.getPropertyName(), res[0].name);
         assertEquals("password", res[1].name);
 
         p = (Properties) mandatoryProperties.clone();
@@ -228,7 +229,7 @@ class MongoDriverTest {
         p.setProperty(PWD_CONN_KEY, "hello");
         res = d.getPropertyInfo(basicURL, p);
         assertEquals(2, res.length);
-        assertEquals(MongoDriver.DATABASE, res[0].name);
+        assertEquals(DATABASE.getPropertyName(), res[0].name);
         assertEquals("user", res[1].name);
 
         p = (Properties) mandatoryProperties.clone();
@@ -282,7 +283,7 @@ class MongoDriverTest {
         // Default connection settings.
         // No logging. No files are created, nothing is logged.
         Properties props = new Properties();
-        props.setProperty(MongoDriver.LOG_LEVEL, "NOT_A_LOG_LEVEL");
+        props.setProperty(LOG_LEVEL.getPropertyName(), "NOT_A_LOG_LEVEL.getPropertyName()");
         assertThrows(
                 SQLException.class,
                 () -> createConnectionAndVerifyLogFileExists(props),
@@ -307,7 +308,7 @@ class MongoDriverTest {
         // Connection is successful, the log file will be empty.
         Properties props = new Properties();
         setLogDir(props);
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.SEVERE.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props);
         conn.getMetaData();
@@ -323,7 +324,7 @@ class MongoDriverTest {
         // Connection is successful, the log file will be empty.
         Properties props = new Properties();
         setLogDir(props);
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.SEVERE.getName());
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.SEVERE.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         try {
             conn.getTypeMap(); // Call will fail with a SQLFeatureNotSupportedException
@@ -351,7 +352,7 @@ class MongoDriverTest {
         // Connection is successful, the log file will contain logs.
         Properties props = new Properties();
         setLogDir(props);
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.FINER.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props);
         conn.getMetaData();
@@ -372,12 +373,12 @@ class MongoDriverTest {
         // Log public method entries.
         // Connection is successful, the log file will contain logs.
         Properties props = new Properties();
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.FINER.getName());
         File specialLogDir = new File(new File(".").getAbsolutePath(), "customLogDir");
         if (!specialLogDir.exists()) {
             specialLogDir.mkdir();
         }
-        props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
+        props.setProperty(LOG_DIR.getPropertyName(), specialLogDir.getAbsolutePath());
 
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         File logFile = getLogFile(props);
@@ -398,7 +399,7 @@ class MongoDriverTest {
         // Connection is not successful.
         Properties props = new Properties();
         File specialLogDir = new File(new File("."), "ThisIsNotAValidPath");
-        props.setProperty(MongoDriver.LOG_DIR, specialLogDir.getAbsolutePath());
+        props.setProperty(LOG_DIR.getPropertyName(), specialLogDir.getAbsolutePath());
         assertThrows(
                 SQLException.class,
                 () -> createConnectionAndVerifyLogFileExists(props),
@@ -409,8 +410,8 @@ class MongoDriverTest {
     void testLogDirIsConsole() throws Exception {
 
         Properties props = new Properties();
-        props.setProperty(MongoDriver.LOG_DIR, MongoDriver.LOG_TO_CONSOLE);
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        props.setProperty(LOG_DIR.getPropertyName(), MongoDriver.LOG_TO_CONSOLE);
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.FINER.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
         try {
             getLogFile(props);
@@ -430,12 +431,12 @@ class MongoDriverTest {
         Properties props = new Properties();
         setLogDir(props);
         // Create a first connection with level FINER
-        props.setProperty(MongoDriver.LOG_LEVEL, Level.FINER.getName());
+        props.setProperty(LOG_LEVEL.getPropertyName(), Level.FINER.getName());
         MongoConnection conn = createConnectionAndVerifyLogFileExists(props);
 
         // Create a first connection with level FINER
         Properties props2 = new Properties(props);
-        props2.setProperty(MongoDriver.LOG_LEVEL, Level.INFO.getName());
+        props2.setProperty(LOG_LEVEL.getPropertyName(), Level.INFO.getName());
         MongoConnection conn2 = createConnectionAndVerifyLogFileExists(props2);
 
         // Validate log content
@@ -505,7 +506,7 @@ class MongoDriverTest {
         String logDirPath = CURRENT_DIR + File.separator + connectionCounter.incrementAndGet();
         File logDir = new File(logDirPath);
         logDir.mkdir();
-        props.setProperty(MongoDriver.LOG_DIR, logDirPath);
+        props.setProperty(LOG_DIR.getPropertyName(), logDirPath);
     }
 
     /**
@@ -537,13 +538,15 @@ class MongoDriverTest {
             throws Exception {
         MongoDriver d = new MongoDriver();
         loggingTestProps.setProperty("dialect", "MongoSQL");
-        loggingTestProps.setProperty("database", "admin");
+        loggingTestProps.setProperty("DATABASE.getPropertyName()", "admin");
 
         MongoConnection connection = d.getUnvalidatedConnection(userURL, loggingTestProps);
         assertNotNull(connection);
 
-        if (null != loggingTestProps.getProperty(MongoDriver.LOG_LEVEL)
-                && !loggingTestProps.getProperty(MongoDriver.LOG_LEVEL).equals(Level.OFF.getName())
+        if (null != loggingTestProps.getProperty(LOG_LEVEL.getPropertyName())
+                && !loggingTestProps
+                        .getProperty(LOG_LEVEL.getPropertyName())
+                        .equals(Level.OFF.getName())
                 && !logToConsole(loggingTestProps)) {
             assertTrue(getLogFile(loggingTestProps).exists());
         }
@@ -564,7 +567,7 @@ class MongoDriverTest {
 
         File logFile =
                 new File(
-                        loggingTestProps.getProperty(MongoDriver.LOG_DIR)
+                        loggingTestProps.getProperty(LOG_DIR.getPropertyName())
                                 + File.separator
                                 + "connection.log");
         return logFile;
@@ -581,9 +584,9 @@ class MongoDriverTest {
         if (loggingTestProps == null) {
             throw new Exception("Logging not enabled.");
         } else {
-            return loggingTestProps.getProperty(MongoDriver.LOG_DIR) == null
+            return loggingTestProps.getProperty(LOG_DIR.getPropertyName()) == null
                     || loggingTestProps
-                            .getProperty(MongoDriver.LOG_DIR)
+                            .getProperty(LOG_DIR.getPropertyName())
                             .equalsIgnoreCase(MongoDriver.LOG_TO_CONSOLE);
         }
     }
@@ -597,7 +600,7 @@ class MongoDriverTest {
     private void cleanupLoggingTest(MongoConnection conn, Properties props) {
         try {
             conn.close();
-            File logDir = new File(props.getProperty(MongoDriver.LOG_DIR));
+            File logDir = new File(props.getProperty(LOG_DIR.getPropertyName()));
             if (logDir.exists()) {
                 for (File file : logDir.listFiles()) {
                     // Delete log file before delete directory because
@@ -617,20 +620,20 @@ class MongoDriverTest {
         MongoDriver d = new MongoDriver();
         Properties p = new Properties();
         Connection c;
-        p.setProperty("database", "test");
+        p.setProperty(DATABASE.getPropertyName(), "test");
 
         // ClientInfo not set succeeds
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
 
         // Invalid ClientInfo property results in Exception
-        p.setProperty(MongoDriver.CLIENT_INFO, "InvalidFormat");
+        p.setProperty(CLIENT_INFO.getPropertyName(), "InvalidFormat");
         assertThrows(
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(basicURL, p),
                 "The connection should fail because expected format is <name>+<version>.");
 
-        p.setProperty(MongoDriver.CLIENT_INFO, "name+version");
+        p.setProperty(CLIENT_INFO.getPropertyName(), "name+version");
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
     }
