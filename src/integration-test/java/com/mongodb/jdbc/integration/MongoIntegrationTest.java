@@ -16,10 +16,10 @@
 
 package com.mongodb.jdbc.integration;
 
+import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.mongodb.jdbc.MongoConnection;
-import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -131,11 +131,11 @@ public abstract class MongoIntegrationTest {
     private MongoConnection connect(Level logLevel) throws SQLException {
         Properties loggingProps = new Properties();
         if (null != logLevel) {
-            loggingProps.setProperty(MongoDriver.LOG_LEVEL, logLevel.getName());
+            loggingProps.setProperty(LOG_LEVEL.getPropertyName(), logLevel.getName());
         }
 
         // Log files will be created in the current directory
-        loggingProps.setProperty(MongoDriver.LOG_DIR, CURRENT_DIR);
+        loggingProps.setProperty(LOG_DIR.getPropertyName(), CURRENT_DIR);
         return getBasicConnection(loggingProps);
     }
 

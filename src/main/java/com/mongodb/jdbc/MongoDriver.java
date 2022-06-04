@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
@@ -33,11 +34,13 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -52,6 +55,28 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  * @since 1.0.0
  */
 public class MongoDriver implements Driver {
+
+    /**
+     * The list of connection options specific to the JDBC driver which can only be provided through
+     * a Properties Object.
+     */
+    public enum MongoJDBCProperty {
+        DATABASE("database"),
+        CLIENT_INFO("clientinfo"),
+        LOG_LEVEL("loglevel"),
+        LOG_DIR("logdir");
+
+        private final String propertyName;
+
+        MongoJDBCProperty(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+    }
+
     /** All MongoDB SQL URLs must begin with jdbc:mongodb: */
     static final String JDBC = "jdbc:";
 
@@ -59,11 +84,6 @@ public class MongoDriver implements Driver {
     static final String MONGODB_SRV_URL_PREFIX = JDBC + "mongodb+srv:";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-    public static final String CLIENT_INFO = "clientInfo";
-    // database is the database to switch to.
-    public static final String DATABASE = "database";
-    public static final String LOG_LEVEL = "LogLevel";
-    public static final String LOG_DIR = "LogDir";
     static final String MONGOSQL_DB_PRODUCT_NAME = "MongoDB Atlas";
     static final String MONGOSQL_DRIVER_NAME =
             MONGOSQL_DB_PRODUCT_NAME + " SQL interface JDBC Driver";
@@ -131,7 +151,16 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        MongoConnection conn = getUnvalidatedConnection(url, info);
+        Properties lowerCaseprops = new Properties();
+        // Normalize all properties key to lower case to make all connection settings case-insensitive
+        if (info != null) {
+            Enumeration keys = info.propertyNames();
+            while (keys.hasMoreElements()) {
+                String key = keys.nextElement().toString();
+                lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
+            }
+        }
+        MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
         // to use), so it is possible for conn to be null at this point.
@@ -189,9 +218,9 @@ public class MongoDriver implements Driver {
                 sb.append("User specified without password. Please provide '");
                 sb.append(PASSWORD);
                 sb.append("' property value.\n");
-            } else if (info.name.equals(DATABASE)) {
+            } else if (info.name.equals(DATABASE.getPropertyName())) {
                 sb.append("Mandatory property '");
-                sb.append(DATABASE);
+                sb.append(DATABASE.getPropertyName());
                 sb.append("' is missing.\n");
             } else {
                 propertyNames.add(info.name);
@@ -209,24 +238,24 @@ public class MongoDriver implements Driver {
     private MongoConnection createConnection(ConnectionString cs, Properties info)
             throws SQLException {
         // Database from the properties must be present
-        String database = info.getProperty(DATABASE);
+        String database = info.getProperty(DATABASE.getPropertyName());
 
         // Default log level is OFF
-        String logLevelVal = info.getProperty(LOG_LEVEL, Level.OFF.getName());
+        String logLevelVal = info.getProperty(LOG_LEVEL.getPropertyName(), Level.OFF.getName());
         Level logLevel;
         try {
             logLevel = Level.parse(logLevelVal.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new SQLException(
                     "Invalid "
-                            + LOG_LEVEL
+                            + LOG_LEVEL.getPropertyName()
                             + " property value : "
                             + logLevelVal
                             + ". Valid values are : "
                             + LEVELS
                             + ".");
         }
-        String logDirVal = info.getProperty(LOG_DIR);
+        String logDirVal = info.getProperty(LOG_DIR.getPropertyName());
         if ((logDirVal != null) && LOG_TO_CONSOLE.equalsIgnoreCase(logDirVal.trim())) {
             // If logDir is "console" then remove the value since the logger
             // will default to a console handler if no logDir is specified
@@ -236,16 +265,16 @@ public class MongoDriver implements Driver {
         if (logDir != null && !logDir.isDirectory()) {
             throw new SQLException(
                     "Invalid "
-                            + LOG_DIR
+                            + LOG_DIR.getPropertyName()
                             + " property value : "
                             + logDirVal
                             + ". It must be a directory.");
         }
-        String clientInfo = info.getProperty(CLIENT_INFO);
+        String clientInfo = info.getProperty(CLIENT_INFO.getPropertyName());
         if (clientInfo != null && clientInfo.split("\\+").length != 2) {
             throw new SQLException(
                     "Invalid "
-                            + CLIENT_INFO
+                            + CLIENT_INFO.getPropertyName()
                             + " property value : "
                             + clientInfo
                             + ". Expected format <name>+<version>.");
@@ -334,10 +363,12 @@ public class MongoDriver implements Driver {
         char[] password = result.password;
 
         List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
-        if (!info.containsKey(DATABASE) || info.getProperty(DATABASE).isEmpty()) {
+        if (!info.containsKey(DATABASE.getPropertyName())
+                || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
             // Missing required database used for querying (as opposed to the authentication
             // database which can be provided in the connection string)
-            mandatoryConnectionProperties.add(new DriverPropertyInfo(DATABASE, null));
+            mandatoryConnectionProperties.add(
+                    new DriverPropertyInfo(DATABASE.getPropertyName(), null));
         }
 
         if (user == null && password != null) {
@@ -488,6 +519,17 @@ public class MongoDriver implements Driver {
     }
 
     /**
+     * Return true if the given key is a JDBC specific property, false otherwise.
+     *
+     * @param key The key to check.
+     * @return true if the given key is a JDBC specific property, false otherwise.
+     */
+    private static boolean isMongoJDBCProperty(String key) {
+        return Stream.of(MongoJDBCProperty.values())
+                .anyMatch(v -> v.getPropertyName().equalsIgnoreCase(key));
+    }
+
+    /**
      * This function builds a new uri from the original clientURI, adding user, password, options,
      * and database, if necessary.
      *
@@ -524,7 +566,10 @@ public class MongoDriver implements Driver {
         StringBuilder buff = new StringBuilder();
         if (options != null) {
             for (String key : options.stringPropertyNames()) {
-                if (!key.equals(USER) && !key.equals(PASSWORD) && !key.equals(DATABASE)) {
+
+                // Only add keys which are part of the standard MongoDB URI (except user and password) and skip JDBC
+                // //specific properties which can't be specified via the connection string
+                if (!key.equals(USER) && !key.equals(PASSWORD) && !isMongoJDBCProperty(key)) {
                     if (buff.length() > 0) {
                         buff.append("&");
                     }
