@@ -182,6 +182,26 @@ class MongoSQLStatementTest extends MongoSQLMock {
     }
 
     @Test
+    void testCloseOnCompletion() throws SQLException {
+        when(mongoCursor.hasNext()).thenReturn(true);
+        when(mongoCursor.next()).thenReturn(generateRow());
+        when(mongoDatabase.runCommand(any(), eq(MongoJsonSchemaResult.class)))
+                .thenReturn(generateSchema());
+
+        assertFalse(mongoStatement.isClosed());
+        mongoStatement.closeOnCompletion = true;
+        ResultSet rs = mongoStatement.executeQuery("select * from test");
+        rs.close();
+        assertTrue(rs.isClosed());
+        assertTrue(mongoStatement.isClosed());
+
+        // No-op since the statement has been closed
+        // automatically when closing the resutlset
+        mongoStatement.close();
+        assertTrue(mongoStatement.isClosed());
+    }
+
+    @Test
     void testGetMaxFieldSize() throws SQLException {
         assertEquals(0, mongoStatement.getMaxFieldSize());
         testExceptionAfterConnectionClosed(() -> mongoStatement.setMaxFieldSize(0));
