@@ -159,7 +159,7 @@ public abstract class MongoResultSet<T> implements ResultSet {
         }
         cursor.close();
         closed = true;
-        if (statement != null && statement.isCloseOnCompletion()) {
+        if (statement != null && !statement.isClosed && statement.isCloseOnCompletion()) {
             statement.close();
         }
     }
