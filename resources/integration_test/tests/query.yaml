@@ -44,7 +44,7 @@ tests:
       - [ 4, false, Pete, 2000-01-01, 10 ]
     row_count: 5
     ordered: false
-    expected_sql_type: [ INTEGER, BIT, LONGVARCHAR, TIMESTAMP, INTEGER ]
+    expected_sql_type: [ INTEGER, BOOLEAN, LONGVARCHAR, TIMESTAMP, INTEGER ]
     expected_bson_type: [int, bool, string, date, int]
     expected_catalog_name: [ '', '', '', '', '' ]
     expected_column_class_name: [ int, boolean, java.lang.String, java.sql.Timestamp,
@@ -76,7 +76,7 @@ tests:
       - [ false, Pete, 10 ]
     row_count: 5
     ordered: false
-    expected_sql_type: [ BIT, LONGVARCHAR, INTEGER ]
+    expected_sql_type: [ BOOLEAN, LONGVARCHAR, INTEGER ]
     expected_bson_type: [bool, string, int]
     expected_catalog_name: [ '', '', '' ]
     expected_column_class_name: [ boolean, java.lang.String, int ]

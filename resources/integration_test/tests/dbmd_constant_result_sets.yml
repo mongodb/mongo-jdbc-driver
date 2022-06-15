@@ -32,7 +32,7 @@ tests:
     db: integration_test
     meta_function: [ getTypeInfo ]
     expected_sql_type: [ LONGVARCHAR, INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, LONGVARCHAR,
-                         INTEGER, BIT, INTEGER, BIT, BIT, BIT, LONGVARCHAR, INTEGER, INTEGER, INTEGER,
+                         INTEGER, BOOLEAN, INTEGER, BOOLEAN, BOOLEAN, BOOLEAN, LONGVARCHAR, INTEGER, INTEGER, INTEGER,
                          INTEGER, INTEGER ]
     expected_catalog_name: [ '', '', '', '', '', '', '', '', '', '', '', '', '', '',
                              '', '', '', '' ]

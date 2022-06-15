@@ -59,7 +59,7 @@ tests:
   - description: getIndexInfo_resultset_metadata_validation
     db: integration_test
     meta_function: [ getIndexInfo, null, null, foo, false, false ]
-    expected_sql_type: [ LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, BIT, LONGVARCHAR, LONGVARCHAR,
+    expected_sql_type: [ LONGVARCHAR, LONGVARCHAR, LONGVARCHAR, BOOLEAN, LONGVARCHAR, LONGVARCHAR,
                          INTEGER, INTEGER, LONGVARCHAR, LONGVARCHAR, BIGINT, BIGINT, BIGINT ]
     expected_catalog_name: [ '', '', '', '', '', '', '', '', '', '', '', '', '' ]
     expected_column_class_name: [ java.lang.String, java.lang.String, java.lang.String,
