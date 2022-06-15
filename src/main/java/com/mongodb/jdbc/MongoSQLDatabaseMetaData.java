@@ -50,10 +50,11 @@ import org.bson.Document;
 @AutoLoggable
 public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements DatabaseMetaData {
 
-    private static final BsonInt32 BSON_ZERO_INT_VALUE  = new BsonInt32(0);
+    private static final BsonInt32 BSON_ZERO_INT_VALUE = new BsonInt32(0);
     private static final BsonInt32 BSON_TYPE_SEARCHABLE_INT_VALUE = new BsonInt32(typeSearchable);
     private static final BsonInt32 BSON_OTHER_INT_VALUE = new BsonInt32(Types.OTHER);
-    private static final BsonInt32 BSON_COLUMN_NULLABLE_INT_VALUE = new BsonInt32(ResultSetMetaData.columnNullable);
+    private static final BsonInt32 BSON_COLUMN_NULLABLE_INT_VALUE =
+            new BsonInt32(ResultSetMetaData.columnNullable);
     private static final BsonString BSON_EMPTY_STR_VALUE = new BsonString("");
     private static final BsonString BSON_YES_STR_VALUE = new BsonString("YES");
     private static final BsonString BSON_NO_STR_VALUE = new BsonString("NO");
@@ -494,7 +495,9 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         BsonValue isNullable =
                 i.nullability == columnNoNulls
                         ? BSON_NO_STR_VALUE
-                        : i.nullability == columnNullable ? BSON_YES_STR_VALUE : BSON_EMPTY_STR_VALUE;
+                        : i.nullability == columnNullable
+                                ? BSON_YES_STR_VALUE
+                                : BSON_EMPTY_STR_VALUE;
 
         return createSortableBottomBson(
                 // Per JDBC spec, sort by  TABLE_CAT, TABLE_SCHEM (omitted), TABLE_NAME and
@@ -507,7 +510,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(DATA_TYPE, new BsonInt32(i.columnBsonTypeInfo.getJdbcType())),
                 new BsonElement(TYPE_NAME, new BsonString(i.columnBsonTypeInfo.getBsonName())),
                 new BsonElement(COLUMN_SIZE, BsonNull.VALUE),
-                new BsonElement(BUFFER_LENGTH, BSON_ZERO_INT_VALUE ),
+                new BsonElement(BUFFER_LENGTH, BSON_ZERO_INT_VALUE),
                 new BsonElement(
                         DECIMAL_DIGITS, asBsonIntOrNull(i.columnBsonTypeInfo.getDecimalDigits())),
                 new BsonElement(
@@ -515,8 +518,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(NULLABLE, new BsonInt32(i.nullability)),
                 new BsonElement(REMARKS, BSON_EMPTY_STR_VALUE),
                 new BsonElement(COLUMN_DEF, BsonNull.VALUE),
-                new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                 new BsonElement(
                         CHAR_OCTET_LENGTH,
                         asBsonIntOrNull(i.columnBsonTypeInfo.getCharOctetLength())),
@@ -525,7 +528,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                 new BsonElement(SCOPE_CATALOG, BsonNull.VALUE),
                 new BsonElement(SCOPE_SCHEMA, BsonNull.VALUE),
                 new BsonElement(SCOPE_TABLE, BsonNull.VALUE),
-                new BsonElement(SOURCE_DATA_TYPE, BSON_ZERO_INT_VALUE ),
+                new BsonElement(SOURCE_DATA_TYPE, BSON_ZERO_INT_VALUE),
                 new BsonElement(IS_AUTOINCREMENT, BSON_NO_STR_VALUE),
                 new BsonElement(IS_GENERATEDCOLUMN, BSON_EMPTY_STR_VALUE));
     }
@@ -1137,8 +1140,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_BINDATA.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_BINDATA.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_BINDATA.getNumPrecRadix()))));
 
@@ -1160,8 +1163,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_BOOL.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_BOOL.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_BOOL.getNumPrecRadix()))));
 
@@ -1183,8 +1186,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_DATE.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_DATE.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_DATE.getNumPrecRadix()))));
 
@@ -1206,8 +1209,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_DECIMAL.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_DECIMAL.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_DECIMAL.getNumPrecRadix()))));
 
@@ -1229,8 +1232,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_DOUBLE.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_DOUBLE.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_DOUBLE.getNumPrecRadix()))));
 
@@ -1252,8 +1255,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_INT.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_INT.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_INT.getNumPrecRadix()))));
 
@@ -1275,8 +1278,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_LONG.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_LONG.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_LONG.getNumPrecRadix()))));
 
@@ -1298,8 +1301,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_STRING.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_STRING.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_STRING.getNumPrecRadix()))));
 
@@ -1321,8 +1324,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_ARRAY.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_ARRAY.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_ARRAY.getNumPrecRadix()))));
 
@@ -1344,8 +1347,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_OBJECT.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_OBJECT.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_OBJECT.getNumPrecRadix()))));
 
@@ -1368,8 +1371,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_OBJECTID.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_OBJECTID.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_OBJECTID.getNumPrecRadix()))));
 
@@ -1392,8 +1395,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_DBPOINTER.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_DBPOINTER.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_DBPOINTER.getNumPrecRadix()))));
 
@@ -1418,8 +1421,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                                 MINIMUM_SCALE, new BsonInt32(BSON_JAVASCRIPT.getMinScale())),
                         new BsonElement(
                                 MAXIMUM_SCALE, new BsonInt32(BSON_JAVASCRIPT.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_JAVASCRIPT.getNumPrecRadix()))));
 
@@ -1449,8 +1452,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(
                                 MAXIMUM_SCALE,
                                 new BsonInt32(BSON_JAVASCRIPTWITHSCOPE.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX,
                                 new BsonInt32(BSON_JAVASCRIPTWITHSCOPE.getNumPrecRadix()))));
@@ -1473,8 +1476,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_MAXKEY.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_MAXKEY.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_MAXKEY.getNumPrecRadix()))));
 
@@ -1496,8 +1499,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_MINKEY.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_MINKEY.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_MINKEY.getNumPrecRadix()))));
 
@@ -1519,8 +1522,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_REGEX.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_REGEX.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_REGEX.getNumPrecRadix()))));
 
@@ -1542,8 +1545,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_SYMBOL.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_SYMBOL.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_SYMBOL.getNumPrecRadix()))));
 
@@ -1566,8 +1569,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_TIMESTAMP.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_TIMESTAMP.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_TIMESTAMP.getNumPrecRadix()))));
 
@@ -1590,8 +1593,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_UNDEFINED.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_UNDEFINED.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_UNDEFINED.getNumPrecRadix()))));
 
@@ -1613,8 +1616,8 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
                         new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_BSON.getMinScale())),
                         new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_BSON.getMaxScale())),
-                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE ),
-                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE ),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_BSON.getNumPrecRadix()))));
 
