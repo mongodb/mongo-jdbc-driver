@@ -317,7 +317,7 @@ tests:
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
          0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, -7, bool, null, 0, null, 0, 1, '', null,
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
          0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
@@ -331,7 +331,7 @@ tests:
          null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, -7, bool, null, 0, null, 0, 1, '',
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
          null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
          null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
@@ -430,7 +430,7 @@ tests:
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
          0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, -7, bool, null, 0, null, 0, 1, '', null,
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
          0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
@@ -444,7 +444,7 @@ tests:
          null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, -7, bool, null, 0, null, 0, 1, '',
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
          null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
          null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
@@ -539,7 +539,7 @@ tests:
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
          0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, -7, bool, null, 0, null, 0, 1, '', null,
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
          0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
@@ -553,7 +553,7 @@ tests:
          null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, -7, bool, null, 0, null, 0, 1, '',
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
          null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
          null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
@@ -627,7 +627,7 @@ tests:
           '' ]
       - [ integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
           0, null, 0, 'YES', null, null, null, 0, 'NO', '' ]
-      - [ integration_test, null, bar, b, -7, bool, null, 0, null, 0, 1, '', null,
+      - [ integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
           0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '' ]
       - [ integration_test, null, baz, a, 4, int, null, 0, null, 2, 1, '', null, 0,
           0, null, 0, 'YES', null, null, null, 0, 'NO', '' ]
