@@ -1148,7 +1148,7 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         docs.add(
                 createBottomBson(
                         new BsonElement(TYPE_NAME, new BsonString(BSON_BOOL.getBsonName())),
-                        new BsonElement(DATA_TYPE, new BsonInt32(Types.BIT)),
+                        new BsonElement(DATA_TYPE, new BsonInt32(BSON_BOOL.getJdbcType())),
                         new BsonElement(PRECISION, asBsonIntOrNull(BSON_BOOL.getPrecision())),
                         new BsonElement(LITERAL_PREFIX, BsonNull.VALUE),
                         new BsonElement(LITERAL_SUFFIX, BsonNull.VALUE),
@@ -1503,6 +1503,29 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_MINKEY.getNumPrecRadix()))));
+
+        docs.add(
+                createBottomBson(
+                        new BsonElement(TYPE_NAME, new BsonString(BSON_NULL.getBsonName())),
+                        new BsonElement(DATA_TYPE, new BsonInt32(BSON_NULL.getJdbcType())),
+                        new BsonElement(PRECISION, asBsonIntOrNull(BSON_NULL.getPrecision())),
+                        new BsonElement(LITERAL_PREFIX, BsonNull.VALUE),
+                        new BsonElement(LITERAL_SUFFIX, BsonNull.VALUE),
+                        new BsonElement(CREATE_PARAMS, BsonNull.VALUE),
+                        new BsonElement(NULLABLE, BSON_COLUMN_NULLABLE_INT_VALUE),
+                        new BsonElement(
+                                CASE_SENSITIVE, new BsonBoolean(BSON_NULL.getCaseSensitivity())),
+                        new BsonElement(SEARCHABLE, BSON_TYPE_SEARCHABLE_INT_VALUE),
+                        new BsonElement(UNSIGNED_ATTRIBUTE, BsonBoolean.FALSE),
+                        new BsonElement(FIXED_PREC_SCALE, BsonBoolean.FALSE),
+                        new BsonElement(AUTO_INCREMENT, BsonBoolean.FALSE),
+                        new BsonElement(LOCAL_TYPE_NAME, BsonNull.VALUE),
+                        new BsonElement(MINIMUM_SCALE, new BsonInt32(BSON_NULL.getMinScale())),
+                        new BsonElement(MAXIMUM_SCALE, new BsonInt32(BSON_NULL.getMaxScale())),
+                        new BsonElement(SQL_DATA_TYPE, BSON_ZERO_INT_VALUE),
+                        new BsonElement(SQL_DATETIME_SUB, BSON_ZERO_INT_VALUE),
+                        new BsonElement(
+                                NUM_PREC_RADIX, new BsonInt32(BSON_NULL.getNumPrecRadix()))));
 
         docs.add(
                 createBottomBson(
