@@ -510,13 +510,20 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
 
     @Test
     void testToJavaPattern() throws SQLException {
-        final String originalString = ".^$*+?(){}|[]\\";
-        final String escapedString = "\\.\\^\\$\\*\\+\\?\\(\\)\\{\\}\\|\\[\\]\\\\";
+        final String specialCharacters = ".^$*+?(){}|[]\\";
+        final String escapedSpecialCharacters = "\\.\\^\\$\\*\\+\\?\\(\\)\\{\\}\\|\\[\\]\\\\";
 
-        assertEquals(escapedString, MongoDatabaseMetaData.toJavaPattern(originalString).toString());
+        assertEquals(
+                escapedSpecialCharacters,
+                MongoDatabaseMetaData.toJavaPattern(specialCharacters).toString());
         assertEquals("\\\\%", MongoDatabaseMetaData.toJavaPattern("\\%").toString());
         assertEquals(".*", MongoDatabaseMetaData.toJavaPattern("%").toString());
         assertEquals("\\\\_", MongoDatabaseMetaData.toJavaPattern("\\_").toString());
         assertEquals(".", MongoDatabaseMetaData.toJavaPattern("_").toString());
+        assertEquals(
+                "nothingToEscape",
+                MongoDatabaseMetaData.toJavaPattern("nothingToEscape").toString());
+        assertEquals(
+                "a\\\\_.b\\\\%.*", MongoDatabaseMetaData.toJavaPattern("a\\__b\\%%").toString());
     }
 }
