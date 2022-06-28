@@ -283,7 +283,7 @@ public class MongoDriver implements Driver {
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo);
 
-        return new MongoSQLConnection(mongoConnectionProperties);
+        return new MongoConnection(mongoConnectionProperties);
     }
 
     @Override

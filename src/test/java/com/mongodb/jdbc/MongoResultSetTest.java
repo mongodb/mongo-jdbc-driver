@@ -60,23 +60,23 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MongoSQLResultSetTest extends MongoSQLMock {
+class MongoResultSetTest extends MongoMock {
     @Mock MongoCursor<BsonDocument> cursor;
-    MongoSQLResultSet mockResultSet;
-    static MongoSQLResultSet mongoSQLResultSet;
-    static MongoSQLResultSet mongoSQLResultSetAllTypes;
-    static MongoSQLResultSet closedMongoSQLResultSet;
+    MongoResultSet mockResultSet;
+    static MongoResultSet mongoResultSet;
+    static MongoResultSet mongoResultSetAllTypes;
+    static MongoResultSet closedMongoResultSet;
 
-    private static MongoSQLResultSetMetaData resultSetMetaData;
-    private static MongoSQLStatement mongoStatement;
+    private static MongoResultSetMetaData resultSetMetaData;
+    private static MongoStatement mongoStatement;
     private static MongoJsonSchema schema;
 
     static {
         try {
             schema = generateMongoJsonSchema();
             resultSetMetaData =
-                    new MongoSQLResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
-            mongoStatement = new MongoSQLStatement(mongoConnection, "test");
+                    new MongoResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
+            mongoStatement = new MongoStatement(mongoConnection, "test");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -120,20 +120,20 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         MongoJsonSchema schemaAllTypes = generateMongoJsonSchemaAllTypes();
 
         try {
-            mongoSQLResultSet =
-                    new MongoSQLResultSet(
+            mongoResultSet =
+                    new MongoResultSet(
                             mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
-            mongoSQLResultSetAllTypes =
-                    new MongoSQLResultSet(
+            mongoResultSetAllTypes =
+                    new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocsAllTypes),
                             schemaAllTypes);
-            closedMongoSQLResultSet =
-                    new MongoSQLResultSet(
+            closedMongoResultSet =
+                    new MongoResultSet(
                             mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
-            mongoSQLResultSet.next();
-            mongoSQLResultSetAllTypes.next();
-            closedMongoSQLResultSet.next();
+            mongoResultSet.next();
+            mongoResultSetAllTypes.next();
+            closedMongoResultSet.next();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -146,7 +146,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
     @BeforeEach
     void setup() throws NoSuchFieldException {
-        MongoSQLMock.resetMockObjs();
+        MongoMock.resetMockObjs();
     }
 
     @Test
@@ -155,149 +155,144 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBoolean(BINARY_COL);
+                    mongoResultSet.getBoolean(BINARY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getLong(BINARY_COL);
+                    mongoResultSet.getLong(BINARY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getDouble(BINARY_COL);
+                    mongoResultSet.getDouble(BINARY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBigDecimal(BINARY_COL);
+                    mongoResultSet.getBigDecimal(BINARY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getTimestamp(BINARY_COL);
+                    mongoResultSet.getTimestamp(BINARY_COL);
                 });
 
         // Test wasNull.
-        mongoSQLResultSet.getString(INT_OR_NULL_COL);
-        assertTrue(mongoSQLResultSet.wasNull());
-        mongoSQLResultSet.getString(DOUBLE_COL);
-        assertFalse(mongoSQLResultSet.wasNull());
+        mongoResultSet.getString(INT_OR_NULL_COL);
+        assertTrue(mongoResultSet.wasNull());
+        mongoResultSet.getString(DOUBLE_COL);
+        assertFalse(mongoResultSet.wasNull());
 
-        mongoSQLResultSet.getString(ANY_COL);
-        assertTrue(mongoSQLResultSet.wasNull());
+        mongoResultSet.getString(ANY_COL);
+        assertTrue(mongoResultSet.wasNull());
 
         // Only Binary and null values can be gotten from getBlob
-        assertNotNull(mongoSQLResultSet.getBlob(BINARY_COL_LABEL));
+        assertNotNull(mongoResultSet.getBlob(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBlob(STRING_COL_LABEL);
+                    mongoResultSet.getBlob(STRING_COL_LABEL);
                 });
-        assertNull(mongoSQLResultSet.getBlob(NULL_COL));
+        assertNull(mongoResultSet.getBlob(NULL_COL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBlob(DOUBLE_COL);
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    mongoSQLResultSet.getBlob(ARRAY_COL);
+                    mongoResultSet.getBlob(DOUBLE_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBlob(DOC_COL);
+                    mongoResultSet.getBlob(ARRAY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBlob(INT_COL);
+                    mongoResultSet.getBlob(DOC_COL);
+                });
+        assertThrows(
+                SQLException.class,
+                () -> {
+                    mongoResultSet.getBlob(INT_COL);
                 });
 
         // Only Binary and null values can be gotten from getBinaryStream
-        assertNotNull(mongoSQLResultSet.getBinaryStream(BINARY_COL_LABEL));
+        assertNotNull(mongoResultSet.getBinaryStream(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(STRING_COL_LABEL);
+                    mongoResultSet.getBinaryStream(STRING_COL_LABEL);
                 });
 
-        assertNull(mongoSQLResultSet.getBinaryStream(NULL_COL));
+        assertNull(mongoResultSet.getBinaryStream(NULL_COL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(DOUBLE_COL);
+                    mongoResultSet.getBinaryStream(DOUBLE_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(STRING_COL);
+                    mongoResultSet.getBinaryStream(STRING_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(INT_COL);
+                    mongoResultSet.getBinaryStream(INT_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(ARRAY_COL);
+                    mongoResultSet.getBinaryStream(ARRAY_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBinaryStream(DOC_COL);
+                    mongoResultSet.getBinaryStream(DOC_COL);
                 });
 
         // Only Binary and null values can be gotten from getBytes
-        assertNotNull(mongoSQLResultSet.getBinaryStream(BINARY_COL_LABEL));
+        assertNotNull(mongoResultSet.getBinaryStream(BINARY_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBytes(STRING_COL_LABEL);
+                    mongoResultSet.getBytes(STRING_COL_LABEL);
                 });
-        assertNull(mongoSQLResultSet.getBytes(NULL_COL));
+        assertNull(mongoResultSet.getBytes(NULL_COL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBytes(DOUBLE_COL);
+                    mongoResultSet.getBytes(DOUBLE_COL);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBytes(INT_COL);
+                    mongoResultSet.getBytes(INT_COL);
                 });
     }
 
     @Test
     void testGetColumnByIdAndName() throws Exception {
-        assertEquals(DOUBLE_COL, mongoSQLResultSet.findColumn(DOUBLE_COL_LABEL));
-        assertEquals(STRING_COL, mongoSQLResultSet.findColumn(STRING_COL_LABEL));
-        assertEquals(INT_OR_NULL_COL, mongoSQLResultSet.findColumn(INT_NULLABLE_COL_LABEL));
-        assertEquals(INT_COL, mongoSQLResultSet.findColumn(INT_COL_LABEL));
-        assertEquals(ANY_COL, mongoSQLResultSet.findColumn(ANY_COL_LABEL));
-        assertEquals(ARRAY_COL, mongoSQLResultSet.findColumn(ARRAY_COL_LABEL));
-        assertEquals(DOC_COL, mongoSQLResultSet.findColumn(DOC_COL_LABEL));
+        assertEquals(DOUBLE_COL, mongoResultSet.findColumn(DOUBLE_COL_LABEL));
+        assertEquals(STRING_COL, mongoResultSet.findColumn(STRING_COL_LABEL));
+        assertEquals(INT_OR_NULL_COL, mongoResultSet.findColumn(INT_NULLABLE_COL_LABEL));
+        assertEquals(INT_COL, mongoResultSet.findColumn(INT_COL_LABEL));
+        assertEquals(ANY_COL, mongoResultSet.findColumn(ANY_COL_LABEL));
+        assertEquals(ARRAY_COL, mongoResultSet.findColumn(ARRAY_COL_LABEL));
+        assertEquals(DOC_COL, mongoResultSet.findColumn(DOC_COL_LABEL));
 
         // Test that the IDX and LABELS are working together correctly.
         assertEquals(
-                mongoSQLResultSet.getString(DOUBLE_COL),
-                mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
+                mongoResultSet.getString(DOUBLE_COL), mongoResultSet.getString(DOUBLE_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(STRING_COL),
-                mongoSQLResultSet.getString(STRING_COL_LABEL));
+                mongoResultSet.getString(STRING_COL), mongoResultSet.getString(STRING_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(INT_OR_NULL_COL),
-                mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
+                mongoResultSet.getString(INT_OR_NULL_COL),
+                mongoResultSet.getString(INT_NULLABLE_COL_LABEL));
+        assertEquals(mongoResultSet.getString(INT_COL), mongoResultSet.getString(INT_COL_LABEL));
+        assertEquals(mongoResultSet.getString(ANY_COL), mongoResultSet.getString(ANY_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getString(INT_COL), mongoSQLResultSet.getString(INT_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getString(ANY_COL), mongoSQLResultSet.getString(ANY_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getBytes(BINARY_COL),
-                mongoSQLResultSet.getBytes(BINARY_COL_LABEL));
+                mongoResultSet.getBytes(BINARY_COL), mongoResultSet.getBytes(BINARY_COL_LABEL));
     }
 
     @Test
@@ -314,74 +309,67 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // DOC_COL                 {"c": 5}
 
         //Test String values are as expected
-        assertEquals("2.4", mongoSQLResultSet.getString(DOUBLE_COL_LABEL));
-        assertEquals("b", mongoSQLResultSet.getString(STRING_COL_LABEL));
-        assertNull(mongoSQLResultSet.getString(INT_NULLABLE_COL_LABEL));
-        assertNull(mongoSQLResultSet.getString(NULL_COL));
-        assertEquals("4", mongoSQLResultSet.getString(INT_COL_LABEL));
-        assertNull(mongoSQLResultSet.getString(ANY_COL_LABEL));
-        assertEquals("[5, 6, 7]", mongoSQLResultSet.getString(ARRAY_COL_LABEL));
-        assertEquals("{\"c\": 5}", mongoSQLResultSet.getString(DOC_COL_LABEL));
+        assertEquals("2.4", mongoResultSet.getString(DOUBLE_COL_LABEL));
+        assertEquals("b", mongoResultSet.getString(STRING_COL_LABEL));
+        assertNull(mongoResultSet.getString(INT_NULLABLE_COL_LABEL));
+        assertNull(mongoResultSet.getString(NULL_COL));
+        assertEquals("4", mongoResultSet.getString(INT_COL_LABEL));
+        assertNull(mongoResultSet.getString(ANY_COL_LABEL));
+        assertEquals("[5, 6, 7]", mongoResultSet.getString(ARRAY_COL_LABEL));
+        assertEquals("{\"c\": 5}", mongoResultSet.getString(DOC_COL_LABEL));
 
         // Check getAsciiStream and getUnicodeStream output are non-null.
-        assertNotNull(mongoSQLResultSet.getAsciiStream(STRING_COL_LABEL));
-        assertNotNull(mongoSQLResultSet.getUnicodeStream(STRING_COL_LABEL));
+        assertNotNull(mongoResultSet.getAsciiStream(STRING_COL_LABEL));
+        assertNotNull(mongoResultSet.getUnicodeStream(STRING_COL_LABEL));
 
         // Actually check getAsciiStream and getUnicodeStream output. We just check
         // that the length is what is expected.
         assertEquals(
-                1, mongoSQLResultSet.getAsciiStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
+                1, mongoResultSet.getAsciiStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
         assertEquals(
-                1,
-                mongoSQLResultSet.getUnicodeStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
+                1, mongoResultSet.getUnicodeStream(STRING_COL_LABEL).read(new byte[100], 0, 100));
     }
 
     @Test
     public void testGetStringAllTypes() throws Exception {
         // non-null types
-        assertEquals(ALL_DOUBLE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
-        assertEquals(ALL_OBJECT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
-        assertEquals(ALL_ARRAY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
-        assertEquals(ALL_BINARY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
+        assertEquals(ALL_DOUBLE_COL_VAL, mongoResultSetAllTypes.getString(ALL_DOUBLE_COL_LABEL));
+        assertEquals(ALL_OBJECT_COL_VAL, mongoResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL));
+        assertEquals(ALL_ARRAY_COL_VAL, mongoResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL));
+        assertEquals(ALL_BINARY_COL_VAL, mongoResultSetAllTypes.getString(ALL_BINARY_COL_LABEL));
         assertEquals(
-                ALL_OBJECT_ID_COL_VAL,
-                mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL));
-        assertEquals(ALL_BOOL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
-        assertEquals(ALL_DATE_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
-        assertEquals(ALL_REGEX_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
+                ALL_OBJECT_ID_COL_VAL, mongoResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL));
+        assertEquals(ALL_BOOL_COL_VAL, mongoResultSetAllTypes.getString(ALL_BOOL_COL_LABEL));
+        assertEquals(ALL_DATE_COL_VAL, mongoResultSetAllTypes.getString(ALL_DATE_COL_LABEL));
+        assertEquals(ALL_REGEX_COL_VAL, mongoResultSetAllTypes.getString(ALL_REGEX_COL_LABEL));
         assertEquals(
-                ALL_JAVASCRIPT_COL_VAL,
-                mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_COL_LABEL));
-        assertEquals(ALL_SYMBOL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL));
+                ALL_JAVASCRIPT_COL_VAL, mongoResultSetAllTypes.getString(ALL_JAVASCRIPT_COL_LABEL));
+        assertEquals(ALL_SYMBOL_COL_VAL, mongoResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL));
         assertEquals(
                 ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL,
-                mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL));
-        assertEquals(ALL_INT_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_INT_COL_LABEL));
+                mongoResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL));
+        assertEquals(ALL_INT_COL_VAL, mongoResultSetAllTypes.getString(ALL_INT_COL_LABEL));
         assertEquals(
-                ALL_TIMESTAMP_COL_VAL,
-                mongoSQLResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL));
-        assertEquals(ALL_LONG_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_LONG_COL_LABEL));
-        assertEquals(
-                ALL_DECIMAL_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
-        assertEquals(
-                ALL_MIN_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
-        assertEquals(
-                ALL_MAX_KEY_COL_VAL, mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
+                ALL_TIMESTAMP_COL_VAL, mongoResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL));
+        assertEquals(ALL_LONG_COL_VAL, mongoResultSetAllTypes.getString(ALL_LONG_COL_LABEL));
+        assertEquals(ALL_DECIMAL_COL_VAL, mongoResultSetAllTypes.getString(ALL_DECIMAL_COL_LABEL));
+        assertEquals(ALL_MIN_KEY_COL_VAL, mongoResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL));
+        assertEquals(ALL_MAX_KEY_COL_VAL, mongoResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL));
 
         // Note that the extended JSON representation of a string value is double quote delimited,
         // but we do not want to return quotes as part of the String.
-        assertEquals("str", mongoSQLResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
+        assertEquals("str", mongoResultSetAllTypes.getString(ALL_STRING_COL_LABEL));
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
                 "{\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}",
-                mongoSQLResultSetAllTypes.getString(ALL_DB_POINTER_COL_LABEL));
+                mongoResultSetAllTypes.getString(ALL_DB_POINTER_COL_LABEL));
 
         // Note that getString() returns null for NULL and UNDEFINED BSON values
-        assertNull(mongoSQLResultSetAllTypes.getString(ALL_UNDEFINED_COL_LABEL));
-        assertNull(mongoSQLResultSetAllTypes.getString(ALL_NULL_COL_LABEL));
+        assertNull(mongoResultSetAllTypes.getString(ALL_UNDEFINED_COL_LABEL));
+        assertNull(mongoResultSetAllTypes.getString(ALL_NULL_COL_LABEL));
     }
 
     @Test
@@ -389,62 +377,59 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // Test getObject().toString() result for each BSON type.
         assertEquals(
                 ALL_DOUBLE_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_DOUBLE_COL_LABEL).toString());
         assertEquals(
                 ALL_OBJECT_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
         assertEquals(
                 ALL_ARRAY_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
         assertEquals(
                 ALL_OBJECT_ID_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals(
-                ALL_BOOL_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
+                ALL_BOOL_COL_VAL, mongoResultSetAllTypes.getObject(ALL_BOOL_COL_LABEL).toString());
         assertEquals(
                 ALL_REGEX_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
         assertEquals(
                 ALL_JAVASCRIPT_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_JAVASCRIPT_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_JAVASCRIPT_COL_LABEL).toString());
         assertEquals(
                 ALL_SYMBOL_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_SYMBOL_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_SYMBOL_COL_LABEL).toString());
         assertEquals(
                 ALL_JAVASCRIPT_WITH_SCOPE_COL_VAL,
-                mongoSQLResultSetAllTypes
-                        .getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL)
-                        .toString());
+                mongoResultSetAllTypes.getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL).toString());
         assertEquals(
-                ALL_INT_COL_VAL, mongoSQLResultSetAllTypes.getObject(ALL_INT_COL_LABEL).toString());
+                ALL_INT_COL_VAL, mongoResultSetAllTypes.getObject(ALL_INT_COL_LABEL).toString());
         assertEquals(
                 ALL_TIMESTAMP_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
         assertEquals(
                 ALL_MIN_KEY_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
         assertEquals(
                 ALL_MAX_KEY_COL_VAL,
-                mongoSQLResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
 
         // Note that the extended JSON representation of a string value is double quote delimited,
         // but we do not want to return quotes as part of the String.
-        assertEquals("str", mongoSQLResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
+        assertEquals("str", mongoResultSetAllTypes.getObject(ALL_STRING_COL_LABEL).toString());
 
         // Note that the Java driver still outputs the legacy representation for DBPointer, as
         // opposed to the new standard representation: { $dbPointer: { $ref: <namespace>, $id: <oid> } }.
         // This is sufficient for our purposes, though.
         assertEquals(
                 "{\"$ref\": \"db2\", \"$id\": " + ALL_OBJECT_ID_COL_VAL + "}",
-                mongoSQLResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
+                mongoResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
 
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
         // manually that their stringification returns what is expected.
-        assertNull(mongoSQLResultSetAllTypes.getObject(ALL_UNDEFINED_COL_LABEL));
-        assertNull(new MongoSQLBsonValue(new BsonUndefined()).toString());
-        assertNull(mongoSQLResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
-        assertNull(new MongoSQLBsonValue(new BsonNull()).toString());
+        assertNull(mongoResultSetAllTypes.getObject(ALL_UNDEFINED_COL_LABEL));
+        assertNull(new MongoBsonValue(new BsonUndefined()).toString());
+        assertNull(mongoResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
+        assertNull(new MongoBsonValue(new BsonNull()).toString());
 
         // Note that getObject() must return the following classes for the following types:
         //   - Types.BIGINT    => long
@@ -453,17 +438,15 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         //   - Types.TIMESTAMP => java.sql.Timestamp
         // Therefore, the getObject().toString() representations are not extended JSON.
         // Since Types.BINARY maps to an array, we omit its getObject().toString() test.
-        assertEquals(
-                "2147483648", mongoSQLResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
-        assertEquals("21.2", mongoSQLResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
+        assertEquals("2147483648", mongoResultSetAllTypes.getObject(ALL_LONG_COL_LABEL).toString());
+        assertEquals("21.2", mongoResultSetAllTypes.getObject(ALL_DECIMAL_COL_LABEL).toString());
 
         Codec<BsonDateTime> c = new BsonDateTimeCodec();
         BsonDateTime d =
                 c.decode(new JsonReader(ALL_DATE_COL_VAL), DecoderContext.builder().build());
         Timestamp t = new Timestamp(d.getValue());
 
-        assertEquals(
-                t.toString(), mongoSQLResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+        assertEquals(t.toString(), mongoResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
     }
 
     @Test
@@ -471,553 +454,545 @@ class MongoSQLResultSetTest extends MongoSQLMock {
         // Assert that getObject().toString() matches getString() for BSON types
         // that map to JDBC Types.OTHER.
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_OBJECT_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_OBJECT_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_ARRAY_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_ARRAY_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_OBJECT_ID_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_OBJECT_ID_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_REGEX_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_REGEX_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_REGEX_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_DB_POINTER_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_DB_POINTER_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_DB_POINTER_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_JAVASCRIPT_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_JAVASCRIPT_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_JAVASCRIPT_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_SYMBOL_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_SYMBOL_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_SYMBOL_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL),
-                mongoSQLResultSetAllTypes
-                        .getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL)
-                        .toString());
+                mongoResultSetAllTypes.getString(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_JAVASCRIPT_WITH_SCOPE_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_TIMESTAMP_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_TIMESTAMP_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_MIN_KEY_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_MIN_KEY_COL_LABEL).toString());
         assertEquals(
-                mongoSQLResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL),
-                mongoSQLResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
+                mongoResultSetAllTypes.getString(ALL_MAX_KEY_COL_LABEL),
+                mongoResultSetAllTypes.getObject(ALL_MAX_KEY_COL_LABEL).toString());
     }
 
     @Test
     void testGetArithmeticValues() throws Exception {
         // Test Double values are as expected
-        assertEquals(0.0, mongoSQLResultSet.getDouble(INT_NULLABLE_COL_LABEL));
-        assertEquals(2.4, mongoSQLResultSet.getDouble(DOUBLE_COL_LABEL));
+        assertEquals(0.0, mongoResultSet.getDouble(INT_NULLABLE_COL_LABEL));
+        assertEquals(2.4, mongoResultSet.getDouble(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getDouble(STRING_COL_LABEL);
+                    mongoResultSet.getDouble(STRING_COL_LABEL);
                 });
-        assertEquals(4.0, mongoSQLResultSet.getDouble(INT_COL_LABEL));
-        assertEquals(3.0, mongoSQLResultSet.getDouble(ANY_OF_INT_STRING_COL));
+        assertEquals(4.0, mongoResultSet.getDouble(INT_COL_LABEL));
+        assertEquals(3.0, mongoResultSet.getDouble(ANY_OF_INT_STRING_COL));
 
         // Test BigDecimal values are as expected
-        assertEquals(BigDecimal.ZERO, mongoSQLResultSet.getBigDecimal(INT_NULLABLE_COL_LABEL));
-        assertEquals(new BigDecimal(2.4), mongoSQLResultSet.getBigDecimal(DOUBLE_COL_LABEL));
+        assertEquals(BigDecimal.ZERO, mongoResultSet.getBigDecimal(INT_NULLABLE_COL_LABEL));
+        assertEquals(new BigDecimal(2.4), mongoResultSet.getBigDecimal(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getBigDecimal(STRING_COL_LABEL);
+                    mongoResultSet.getBigDecimal(STRING_COL_LABEL);
                 });
-        assertEquals(new BigDecimal(4.0), mongoSQLResultSet.getBigDecimal(INT_COL_LABEL));
-        assertEquals(new BigDecimal(3.0), mongoSQLResultSet.getBigDecimal(ANY_OF_INT_STRING_COL));
+        assertEquals(new BigDecimal(4.0), mongoResultSet.getBigDecimal(INT_COL_LABEL));
+        assertEquals(new BigDecimal(3.0), mongoResultSet.getBigDecimal(ANY_OF_INT_STRING_COL));
 
         // Test Long values are as expected
-        assertEquals(0L, mongoSQLResultSet.getLong(INT_NULLABLE_COL_LABEL));
-        assertEquals(2, mongoSQLResultSet.getLong(DOUBLE_COL_LABEL));
+        assertEquals(0L, mongoResultSet.getLong(INT_NULLABLE_COL_LABEL));
+        assertEquals(2, mongoResultSet.getLong(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getLong(STRING_COL_LABEL);
+                    mongoResultSet.getLong(STRING_COL_LABEL);
                 });
-        assertEquals(4L, mongoSQLResultSet.getLong(INT_COL_LABEL));
-        assertEquals(3L, mongoSQLResultSet.getLong(ANY_OF_INT_STRING_COL));
+        assertEquals(4L, mongoResultSet.getLong(INT_COL_LABEL));
+        assertEquals(3L, mongoResultSet.getLong(ANY_OF_INT_STRING_COL));
 
         // Test Int values are as expected
-        assertEquals(0, mongoSQLResultSet.getInt(INT_NULLABLE_COL_LABEL));
-        assertEquals(2, mongoSQLResultSet.getInt(DOUBLE_COL_LABEL));
+        assertEquals(0, mongoResultSet.getInt(INT_NULLABLE_COL_LABEL));
+        assertEquals(2, mongoResultSet.getInt(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getInt(STRING_COL_LABEL);
+                    mongoResultSet.getInt(STRING_COL_LABEL);
                 });
-        assertEquals(4, mongoSQLResultSet.getInt(INT_COL_LABEL));
-        assertEquals(3, mongoSQLResultSet.getInt(ANY_OF_INT_STRING_COL));
+        assertEquals(4, mongoResultSet.getInt(INT_COL_LABEL));
+        assertEquals(3, mongoResultSet.getInt(ANY_OF_INT_STRING_COL));
     }
 
     @Test
     void testGetByteValues() throws Exception {
         // Test Byte values are as expected
-        assertEquals(0, mongoSQLResultSet.getByte(INT_NULLABLE_COL_LABEL));
-        assertEquals(2, mongoSQLResultSet.getByte(DOUBLE_COL_LABEL));
+        assertEquals(0, mongoResultSet.getByte(INT_NULLABLE_COL_LABEL));
+        assertEquals(2, mongoResultSet.getByte(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getByte(STRING_COL_LABEL);
+                    mongoResultSet.getByte(STRING_COL_LABEL);
                 });
 
-        assertEquals(4, mongoSQLResultSet.getByte(INT_COL_LABEL));
-        assertEquals(3, mongoSQLResultSet.getByte(ANY_OF_INT_STRING_COL));
+        assertEquals(4, mongoResultSet.getByte(INT_COL_LABEL));
+        assertEquals(3, mongoResultSet.getByte(ANY_OF_INT_STRING_COL));
     }
 
     @Test
     void testGetBooleanValues() throws Exception {
         // Test Boolean values are as expected
-        assertEquals(false, mongoSQLResultSet.getBoolean(INT_NULLABLE_COL_LABEL));
-        assertEquals(true, mongoSQLResultSet.getBoolean(DOUBLE_COL_LABEL));
+        assertEquals(false, mongoResultSet.getBoolean(INT_NULLABLE_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(DOUBLE_COL_LABEL));
         // MongoDB converts all strings to true, even ""
-        assertEquals(true, mongoSQLResultSet.getBoolean(STRING_COL_LABEL));
-        assertEquals(true, mongoSQLResultSet.getBoolean(INT_COL_LABEL));
-        assertEquals(true, mongoSQLResultSet.getBoolean(ANY_OF_INT_STRING_COL));
+        assertEquals(true, mongoResultSet.getBoolean(STRING_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(INT_COL_LABEL));
+        assertEquals(true, mongoResultSet.getBoolean(ANY_OF_INT_STRING_COL));
     }
 
     @Test
     void testGetTimestampValues() throws Exception {
 
-        assertNull(mongoSQLResultSet.getTimestamp(NULL_COL_LABEL));
-        assertEquals(new Timestamp(2), mongoSQLResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertNull(mongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(2), mongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getTimestamp(STRING_COL_LABEL);
+                    mongoResultSet.getTimestamp(STRING_COL_LABEL);
                 });
-        assertEquals(new Timestamp(4L), mongoSQLResultSet.getTimestamp(INT_COL_LABEL));
-        assertEquals(new Timestamp(3L), mongoSQLResultSet.getTimestamp(ANY_OF_INT_STRING_COL));
+        assertEquals(new Timestamp(4L), mongoResultSet.getTimestamp(INT_COL_LABEL));
+        assertEquals(new Timestamp(3L), mongoResultSet.getTimestamp(ANY_OF_INT_STRING_COL));
 
-        assertNull(mongoSQLResultSet.getTime(NULL_COL_LABEL));
-        assertEquals(new Time(2), mongoSQLResultSet.getTime(DOUBLE_COL_LABEL));
+        assertNull(mongoResultSet.getTime(NULL_COL_LABEL));
+        assertEquals(new Time(2), mongoResultSet.getTime(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getTime(STRING_COL_LABEL);
+                    mongoResultSet.getTime(STRING_COL_LABEL);
                 });
-        assertEquals(new Time(4L), mongoSQLResultSet.getTime(INT_COL_LABEL));
-        assertEquals(new Time(3L), mongoSQLResultSet.getTime(ANY_OF_INT_STRING_COL));
+        assertEquals(new Time(4L), mongoResultSet.getTime(INT_COL_LABEL));
+        assertEquals(new Time(3L), mongoResultSet.getTime(ANY_OF_INT_STRING_COL));
 
-        assertNull(mongoSQLResultSet.getTimestamp(NULL_COL_LABEL));
-        assertEquals(new Timestamp(2), mongoSQLResultSet.getTimestamp(DOUBLE_COL_LABEL));
+        assertNull(mongoResultSet.getTimestamp(NULL_COL_LABEL));
+        assertEquals(new Timestamp(2), mongoResultSet.getTimestamp(DOUBLE_COL_LABEL));
         assertThrows(
                 SQLException.class,
                 () -> {
-                    mongoSQLResultSet.getTimestamp(STRING_COL_LABEL);
+                    mongoResultSet.getTimestamp(STRING_COL_LABEL);
                 });
-        assertEquals(new Timestamp(4L), mongoSQLResultSet.getTimestamp(INT_COL_LABEL));
-        assertEquals(new Timestamp(3L), mongoSQLResultSet.getTimestamp(ANY_OF_INT_STRING_COL));
+        assertEquals(new Timestamp(4L), mongoResultSet.getTimestamp(INT_COL_LABEL));
+        assertEquals(new Timestamp(3L), mongoResultSet.getTimestamp(ANY_OF_INT_STRING_COL));
     }
 
     @Test
     void testGetObject() throws Exception {
         // test that the index and label versions of getObject have matching results
         assertEquals(
-                mongoSQLResultSet.getObject(DOUBLE_COL),
-                mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
+                mongoResultSet.getObject(DOUBLE_COL), mongoResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(STRING_COL),
-                mongoSQLResultSet.getObject(STRING_COL_LABEL));
+                mongoResultSet.getObject(STRING_COL), mongoResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(INT_OR_NULL_COL),
-                mongoSQLResultSet.getObject(INT_NULLABLE_COL_LABEL));
+                mongoResultSet.getObject(INT_OR_NULL_COL),
+                mongoResultSet.getObject(INT_NULLABLE_COL_LABEL));
+        assertEquals(mongoResultSet.getObject(INT_COL), mongoResultSet.getObject(INT_COL_LABEL));
+        assertEquals(mongoResultSet.getObject(ANY_COL), mongoResultSet.getObject(ANY_COL_LABEL));
         assertEquals(
-                mongoSQLResultSet.getObject(INT_COL), mongoSQLResultSet.getObject(INT_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getObject(ANY_COL), mongoSQLResultSet.getObject(ANY_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getObject(ARRAY_COL),
-                mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
-        assertEquals(
-                mongoSQLResultSet.getObject(DOC_COL), mongoSQLResultSet.getObject(DOC_COL_LABEL));
+                mongoResultSet.getObject(ARRAY_COL), mongoResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(mongoResultSet.getObject(DOC_COL), mongoResultSet.getObject(DOC_COL_LABEL));
 
         // test that getObject returns the expected java object for each bson type
-        assertNull(mongoSQLResultSet.getObject(NULL_COL_LABEL));
-        assertEquals(2.4, mongoSQLResultSet.getObject(DOUBLE_COL_LABEL));
-        assertEquals("b", mongoSQLResultSet.getObject(STRING_COL_LABEL));
+        assertNull(mongoResultSet.getObject(NULL_COL_LABEL));
+        assertEquals(2.4, mongoResultSet.getObject(DOUBLE_COL_LABEL));
+        assertEquals("b", mongoResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                new MongoSQLBsonValue(new BsonInt32(3)),
-                mongoSQLResultSet.getObject(ANY_OF_INT_STRING_COL));
+                new MongoBsonValue(new BsonInt32(3)),
+                mongoResultSet.getObject(ANY_OF_INT_STRING_COL));
 
-        assertNull(mongoSQLResultSet.getObject(NULL_COL));
-        assertEquals(4, mongoSQLResultSet.getObject(INT_COL_LABEL));
+        assertNull(mongoResultSet.getObject(NULL_COL));
+        assertEquals(4, mongoResultSet.getObject(INT_COL_LABEL));
 
-        assertNull(mongoSQLResultSet.getObject(ANY_COL_LABEL));
+        assertNull(mongoResultSet.getObject(ANY_COL_LABEL));
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        assertEquals(new MongoSQLBsonValue(array), mongoSQLResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(new MongoBsonValue(array), mongoResultSet.getObject(ARRAY_COL_LABEL));
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
-        assertEquals(new MongoSQLBsonValue(doc), mongoSQLResultSet.getObject(DOC_COL_LABEL));
+        assertEquals(new MongoBsonValue(doc), mongoResultSet.getObject(DOC_COL_LABEL));
 
         byte[] binary = {10, 20, 30};
-        assertArrayEquals(binary, (byte[]) mongoSQLResultSet.getObject(BINARY_COL_LABEL));
+        assertArrayEquals(binary, (byte[]) mongoResultSet.getObject(BINARY_COL_LABEL));
     }
 
     @SuppressWarnings("deprecation")
     @Test
     void closedResultSets() throws Exception {
         try {
-            closedMongoSQLResultSet.close();
+            closedMongoResultSet.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        assertTrue(closedMongoSQLResultSet.isClosed());
+        assertTrue(closedMongoResultSet.isClosed());
 
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.next();
+                    closedMongoResultSet.next();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.wasNull();
+                    closedMongoResultSet.wasNull();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBigDecimal(0);
+                    closedMongoResultSet.getBigDecimal(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBytes(0);
+                    closedMongoResultSet.getBytes(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBytes("f");
+                    closedMongoResultSet.getBytes("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getAsciiStream(0);
+                    closedMongoResultSet.getAsciiStream(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getAsciiStream("f");
+                    closedMongoResultSet.getAsciiStream("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getUnicodeStream(0);
+                    closedMongoResultSet.getUnicodeStream(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getUnicodeStream("f");
+                    closedMongoResultSet.getUnicodeStream("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBinaryStream(0);
+                    closedMongoResultSet.getBinaryStream(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBinaryStream("f");
+                    closedMongoResultSet.getBinaryStream("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getString(0);
+                    closedMongoResultSet.getString(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getString("f");
+                    closedMongoResultSet.getString("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBoolean(0);
+                    closedMongoResultSet.getBoolean(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBoolean("f");
+                    closedMongoResultSet.getBoolean("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getByte(0);
+                    closedMongoResultSet.getByte(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getByte("f");
+                    closedMongoResultSet.getByte("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getShort(0);
+                    closedMongoResultSet.getShort(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getShort("f");
+                    closedMongoResultSet.getShort("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getInt(0);
+                    closedMongoResultSet.getInt(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getInt("f");
+                    closedMongoResultSet.getInt("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getLong(0);
+                    closedMongoResultSet.getLong(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getLong("f");
+                    closedMongoResultSet.getLong("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getFloat(0);
+                    closedMongoResultSet.getFloat(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getFloat("f");
+                    closedMongoResultSet.getFloat("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDouble(0);
+                    closedMongoResultSet.getDouble(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDouble("f");
+                    closedMongoResultSet.getDouble("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBigDecimal(0);
+                    closedMongoResultSet.getBigDecimal(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBigDecimal("f");
+                    closedMongoResultSet.getBigDecimal("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getWarnings();
+                    closedMongoResultSet.getWarnings();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.clearWarnings();
+                    closedMongoResultSet.clearWarnings();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getCursorName();
+                    closedMongoResultSet.getCursorName();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getMetaData();
+                    closedMongoResultSet.getMetaData();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.findColumn("f");
+                    closedMongoResultSet.findColumn("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getCharacterStream(0);
+                    closedMongoResultSet.getCharacterStream(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getCharacterStream("f");
+                    closedMongoResultSet.getCharacterStream("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.isFirst();
+                    closedMongoResultSet.isFirst();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.isLast();
+                    closedMongoResultSet.isLast();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getRow();
+                    closedMongoResultSet.getRow();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.previous();
+                    closedMongoResultSet.previous();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getFetchDirection();
+                    closedMongoResultSet.getFetchDirection();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getType();
+                    closedMongoResultSet.getType();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getConcurrency();
+                    closedMongoResultSet.getConcurrency();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.rowUpdated();
+                    closedMongoResultSet.rowUpdated();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.rowInserted();
+                    closedMongoResultSet.rowInserted();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.rowDeleted();
+                    closedMongoResultSet.rowDeleted();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.insertRow();
+                    closedMongoResultSet.insertRow();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.deleteRow();
+                    closedMongoResultSet.deleteRow();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.refreshRow();
+                    closedMongoResultSet.refreshRow();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getStatement();
+                    closedMongoResultSet.getStatement();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBlob(0);
+                    closedMongoResultSet.getBlob(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getBlob("f");
+                    closedMongoResultSet.getBlob("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getClob(0);
+                    closedMongoResultSet.getClob(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getClob("f");
+                    closedMongoResultSet.getClob("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDate(0);
+                    closedMongoResultSet.getDate(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDate("f");
+                    closedMongoResultSet.getDate("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDate(0);
+                    closedMongoResultSet.getDate(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getDate("f");
+                    closedMongoResultSet.getDate("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getTime(0);
+                    closedMongoResultSet.getTime(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getTime("f");
+                    closedMongoResultSet.getTime("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getTimestamp(0);
+                    closedMongoResultSet.getTimestamp(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getTimestamp("f");
+                    closedMongoResultSet.getTimestamp("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getHoldability();
+                    closedMongoResultSet.getHoldability();
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNClob(0);
+                    closedMongoResultSet.getNClob(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNClob("f");
+                    closedMongoResultSet.getNClob("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNString(0);
+                    closedMongoResultSet.getNString(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNString("f");
+                    closedMongoResultSet.getNString("f");
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNCharacterStream(0);
+                    closedMongoResultSet.getNCharacterStream(0);
                 });
         assertThrows(
                 SQLException.class,
                 () -> {
-                    closedMongoSQLResultSet.getNCharacterStream("f");
+                    closedMongoResultSet.getNCharacterStream("f");
                 });
     }
 
@@ -1036,7 +1011,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return generateRow();
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1056,7 +1031,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -1093,7 +1068,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -1127,7 +1102,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
 
         assertEquals(10, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -1187,7 +1162,7 @@ class MongoSQLResultSetTest extends MongoSQLMock {
                             return doc;
                         });
 
-        mockResultSet = new MongoSQLResultSet(mongoStatement, cursor, sameMetadataSchema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());

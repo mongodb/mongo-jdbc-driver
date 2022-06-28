@@ -23,24 +23,19 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class MongoDatabaseMetaDataTest {
+public class MongoDatabaseMetaDataTest {
     protected static final ConnectionString uri =
             new ConnectionString("mongodb://localhost:27017/admin");
     protected static final String database = "mock";
 
-    protected DatabaseMetaData databaseMetaData;
-
-    protected abstract DatabaseMetaData createDatabaseMetaData();
-
-    @BeforeAll
-    public void setUp() {
-        databaseMetaData = createDatabaseMetaData();
-    }
+    protected DatabaseMetaData databaseMetaData =
+            new MongoDatabaseMetaData(
+                    new MongoConnection(
+                            new MongoConnectionProperties(uri, database, null, null, null)));
 
     protected int countRows(ResultSet rs) throws SQLException {
         for (int i = 0; ; ++i) {
@@ -325,93 +320,6 @@ abstract class MongoDatabaseMetaDataTest {
     }
 
     @Test
-    /** Test the DatabaseMetadata.getFunctions method. */
-    abstract void testGetFunctions() throws SQLException;
-}
-
-class MySQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
-    @Override
-    protected DatabaseMetaData createDatabaseMetaData() {
-        return new MySQLDatabaseMetaData(
-                new MySQLConnection(
-                        new MongoConnectionProperties(uri, database, null, null, null), null));
-    }
-
-    @Test
-    void testGetTableTypes() throws SQLException {
-        String[] columns =
-                new String[] {
-                    "TABLE_TYPE",
-                };
-
-        ResultSet rs = databaseMetaData.getTableTypes();
-        validateResultSet(rs, 1, columns);
-    }
-
-    @Test
-    void testGetTypeInfo() throws SQLException {
-        String[] columns =
-                new String[] {
-                    "TYPE_NAME",
-                    "DATA_TYPE",
-                    "PRECISION",
-                    "LITERAL_PREFIX",
-                    "LITERAL_SUFFIX",
-                    "CREATE_PARAMS",
-                    "NULLABLE",
-                    "CASE_SENSITIVE",
-                    "SEARCHABLE",
-                    "UNSIGNED_ATTRIBUTE",
-                    "FIXED_PREC_SCALE",
-                    "AUTO_INCREMENT",
-                    "LOCAL_TYPE_NAME",
-                    "MINIMUM_SCALE",
-                    "MAXIMUM_SCALE",
-                    "SQL_DATA_TYPE",
-                    "SQL_DATETIME_SUB",
-                    "NUM_PREC_RADIX",
-                };
-
-        ResultSet rs = databaseMetaData.getTypeInfo();
-        validateResultSet(rs, 8, columns);
-    }
-
-    @Test
-    void testGetClientInfoProperties() throws SQLException {
-        String[] columns =
-                new String[] {
-                    "NAME", "MAX_LEN", "DEFAULT_VALUE", "DESCRIPTION",
-                };
-
-        ResultSet rs = databaseMetaData.getClientInfoProperties();
-        validateResultSet(rs, 4, columns);
-    }
-
-    @Test
-    @Override
-    void testGetFunctions() throws SQLException {
-        // All function(s)
-        testGetFunctionsHelper("%", 120);
-        // All function(s) with a 'S'
-        testGetFunctionsHelper("%S%", 48);
-        // All function(s) with a 's'
-        testGetFunctionsHelper("%s%", 0);
-        // The 'SUBSTRING' function(s)
-        testGetFunctionsHelper("SUBSTRING", 2);
-        // The 'SUBS(any character)RING' function(s)
-        testGetFunctionsHelper("SUBS_RING", 2);
-    }
-}
-
-class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
-    @Override
-    protected DatabaseMetaData createDatabaseMetaData() {
-        return new MongoSQLDatabaseMetaData(
-                new MongoSQLConnection(
-                        new MongoConnectionProperties(uri, database, null, null, null)));
-    }
-
-    @Test
     void testGetSchemas() throws SQLException {
         String[] columns =
                 new String[] {
@@ -428,7 +336,7 @@ class MongoSQLDatabaseMetaDataTest extends MongoDatabaseMetaDataTest {
     }
 
     @Test
-    @Override
+    /** Test the DatabaseMetadata.getFunctions method. */
     void testGetFunctions() throws SQLException {
         // All function(s)
         testGetFunctionsHelper("%", 15);

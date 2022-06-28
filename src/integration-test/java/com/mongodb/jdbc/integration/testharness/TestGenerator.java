@@ -16,8 +16,8 @@
 
 package com.mongodb.jdbc.integration.testharness;
 
-import com.mongodb.jdbc.MongoSQLResultSetMetaData;
-import com.mongodb.jdbc.integration.MongoSQLIntegrationTest;
+import com.mongodb.jdbc.MongoResultSetMetaData;
+import com.mongodb.jdbc.integration.MongoIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.File;
 import java.io.FileWriter;
@@ -64,8 +64,7 @@ public class TestGenerator {
 
         File directory = new File(GENERATED_TEST_DIR);
         ResultSetMetaData resultSetMetadata = rs.getMetaData();
-        MongoSQLResultSetMetaData mongoSQLResultSetMetaData =
-                (MongoSQLResultSetMetaData) resultSetMetadata;
+        MongoResultSetMetaData MongoResultSetMetaData = (MongoResultSetMetaData) resultSetMetadata;
         Map<String, Object> tests = new LinkedHashMap<String, Object>();
         List<Map<String, Object>> testCases = new ArrayList<>();
         Map<String, Object> testCase = new LinkedHashMap<String, Object>();
@@ -107,7 +106,7 @@ public class TestGenerator {
             expectedIsSearchable.add(resultSetMetadata.isSearchable(i));
             expectedIsSigned.add(resultSetMetadata.isSigned(i));
             expectedIsWritable.add(resultSetMetadata.isWritable(i));
-            expectedBsonType.add(mongoSQLResultSetMetaData.getColumnInfo(i).getBsonTypeName());
+            expectedBsonType.add(MongoResultSetMetaData.getColumnInfo(i).getBsonTypeName());
         }
 
         testCase.put("description", description);
@@ -152,9 +151,9 @@ public class TestGenerator {
 
     public static void main(String[] args)
             throws SQLException, IOException, InvocationTargetException, IllegalAccessException {
-        MongoSQLIntegrationTest integrationTest = new MongoSQLIntegrationTest();
+        MongoIntegrationTest integrationTest = new MongoIntegrationTest();
         List<TestEntry> tests =
-                IntegrationTestUtils.loadTestConfigs(MongoSQLIntegrationTest.TEST_DIRECTORY);
+                IntegrationTestUtils.loadTestConfigs(MongoIntegrationTest.TEST_DIRECTORY);
         for (TestEntry testEntry : tests) {
             try (Connection conn = integrationTest.getBasicConnection(testEntry.db, null)) {
                 if (testEntry.skip_reason != null) {

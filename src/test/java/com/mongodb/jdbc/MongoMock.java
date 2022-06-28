@@ -37,7 +37,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 
-public abstract class MongoSQLMock {
+public abstract class MongoMock {
     static ConnectionString uri = new ConnectionString("mongodb://localhost:27017/admin");
     protected static String database = "test";
     // __bot.a
@@ -153,7 +153,7 @@ public abstract class MongoSQLMock {
 
     @InjectMocks
     protected static MongoConnection mongoConnection =
-            new MongoSQLConnection(new MongoConnectionProperties(uri, database, null, null, null));
+            new MongoConnection(new MongoConnectionProperties(uri, database, null, null, null));
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {

@@ -16,7 +16,7 @@
 
 package com.mongodb.jdbc;
 
-public abstract class MongoFunctions {
+public class MongoFunctions {
     public enum FunctionCategory {
         STRING_FUNC,
         NUM_FUNC,
@@ -55,6 +55,7 @@ public abstract class MongoFunctions {
         }
     }
 
+    private static MongoFunctions instance;
     public MongoFunction[] functions;
     public String numericFunctionsString;
     public String stringFunctionsString;
@@ -68,9 +69,127 @@ public abstract class MongoFunctions {
     protected static final String EXTRACT = "EXTRACT";
     protected static final String NULLIF = "NULLIF";
 
-    protected MongoFunctions(MongoFunction[] functions) {
+    private MongoFunctions(MongoFunction[] functions) {
         this.functions = functions;
         initCategorizedFunctionsList();
+    }
+
+    public static MongoFunctions getInstance() {
+        if (null == instance) {
+            instance =
+                    new MongoFunctions(
+                            new MongoFunction[] {
+                                new MongoFunction(
+                                        "BIT_LENGTH",
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns length of string in bits",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                new MongoFunction(
+                                        "CHAR_LENGTH",
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns length of string",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()},
+                                        FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        CURRENT_TIMESTAMP,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the current date and time.",
+                                        new String[] {},
+                                        FunctionCategory.TIME_DATE_FUNC),
+                                new MongoFunction(
+                                        CURRENT_TIMESTAMP,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the current date and time.",
+                                        // Timestamp precision
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()}),
+                                /**
+                                 * Note EXTRACT supports more than YEAR, MONTH, DAY, HOUR, MINUTE,
+                                 * SECOND for the unit. It also supports TIMEZONE_HOUR |
+                                 * TIMEZONE_MINUTE.
+                                 */
+                                new MongoFunction(
+                                        EXTRACT,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the value of the specified unit from the provided date.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        },
+                                        FunctionCategory.TIME_DATE_FUNC),
+                                new MongoFunction(
+                                        "LOWER",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns the provided string with all characters changed to lowercase.",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                new MongoFunction(
+                                        "OCTET_LENGTH",
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns length of string in bytes",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()},
+                                        FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        "POSITION",
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the position of the first occurrence of substring substr in string str.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        },
+                                        FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        "SIZE",
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the size of an array.",
+                                        new String[] {BsonTypeInfo.BSON_ARRAY.getBsonName()}),
+                                new MongoFunction(
+                                        SUBSTRING,
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "takes a substring from a string",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        SUBSTRING,
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "takes a substring from a string",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        "TRIM",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns the string str with all remstr prefixes and/or suffixes removed.",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                new MongoFunction(
+                                        "TRIM",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns the string str with all remstr prefixes and/or suffixes removed.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        "TRIM",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns the string str with all remstr prefixes and/or suffixes removed.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        "UPPER",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns the provided string with all characters changed to uppercase.",
+                                        new String[] {BsonTypeInfo.BSON_STRING.getBsonName()})
+                            });
+        }
+
+        return instance;
     }
 
     // Build the list of numeric, string, dateTime and system functions.

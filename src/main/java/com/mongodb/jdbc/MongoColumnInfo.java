@@ -16,26 +16,117 @@
 
 package com.mongodb.jdbc;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonType;
 
-public interface MongoColumnInfo {
-    public boolean isPolymorphic();
+public class MongoColumnInfo {
+    private final String datasource;
+    private final String field;
+    private final BsonTypeInfo bsonTypeInfo;
+    private final boolean isPolymorphic;
+    private final int nullable;
 
-    public BsonType getBsonTypeEnum();
+    MongoColumnInfo(String datasource, String field, BsonTypeInfo bsonTypeInfo, int nullability) {
+        this.datasource = datasource;
+        this.field = field;
+        this.bsonTypeInfo = bsonTypeInfo;
+        this.nullable = nullability;
+        this.isPolymorphic = bsonTypeInfo == BsonTypeInfo.BSON_BSON;
+    }
 
-    public String getBsonTypeName();
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 
-    public int getJDBCType();
+    /**
+     * * Returns true if a column is polymorphic, false otherwise.
+     *
+     * @return true if a column is polymorphic, false otherwise.
+     */
+    public boolean isPolymorphic() {
+        return isPolymorphic;
+    }
 
-    public int getNullability();
+    /**
+     * Return the column BSON type enum value.
+     *
+     * @return the column BSON type enum value.
+     */
+    public BsonType getBsonTypeEnum() {
+        return bsonTypeInfo.getBsonType();
+    }
 
-    public String getColumnName();
+    /**
+     * Return the column BSON type name.
+     *
+     * @return the column BSON type name.
+     */
+    public String getBsonTypeName() {
+        return bsonTypeInfo.getBsonName();
+    }
 
-    public String getColumnAlias();
+    /**
+     * Return the column JDBC type.
+     *
+     * @return the column JDBC type.
+     */
+    public int getJDBCType() {
+        return bsonTypeInfo.getJdbcType();
+    }
 
-    public String getDatabase();
+    /**
+     * Return the column nullability.
+     *
+     * @return the column nullability.
+     */
+    public int getNullability() {
+        return nullable;
+    }
 
-    public String getTableName();
+    /**
+     * Return the column name.
+     *
+     * @return the column name.
+     */
+    public String getColumnName() {
+        return field;
+    }
 
-    public String getTableAlias();
+    /**
+     * Return the column alias.
+     *
+     * @return the column alias.
+     */
+    public String getColumnAlias() {
+        return field;
+    }
+
+    /**
+     * Return the column's parent table name.
+     *
+     * @return the column's parent table name.
+     */
+    public String getTableName() {
+        return datasource;
+    }
+
+    /**
+     * Return the column's parent table alias.
+     *
+     * @return the column's parent table alias.
+     */
+    public String getTableAlias() {
+        return datasource;
+    }
+
+    /**
+     * Return the column's parent database.
+     *
+     * @return the column's parent database.
+     */
+    public String getDatabase() {
+        return "";
+    }
 }
