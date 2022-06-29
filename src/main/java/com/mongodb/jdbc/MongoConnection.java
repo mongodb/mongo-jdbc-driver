@@ -102,8 +102,7 @@ public class MongoConnection implements Connection {
         StringBuilder appName = new StringBuilder(MongoDriver.NAME).append("+").append(version);
 
         // Log the driver name and version
-        logger.log(
-                Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
+        logger.log(Level.INFO, "Connecting using " + MongoDriver.MONGO_DRIVER_NAME + " " + version);
 
         MongoDriverInformation.Builder mdiBuilder;
         String clientInfo = connectionProperties.getClientInfo();

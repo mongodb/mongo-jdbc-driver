@@ -337,7 +337,7 @@ class MongoDriverTest {
                 logFile,
                 "[FINER] [c-"
                         + conn.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()",
+                        + "] com.mongodb.jdbc.MongoConnection: >> getMetaData()",
                 1);
 
         // Clean-up
@@ -364,7 +364,7 @@ class MongoDriverTest {
                 logFile,
                 "[FINER] [c-"
                         + conn.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()",
+                        + "] com.mongodb.jdbc.MongoConnection: >> getMetaData()",
                 1);
         // Clean-up
         cleanupLoggingTest((MongoConnection) conn, props);

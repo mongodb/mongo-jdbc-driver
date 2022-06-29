@@ -123,8 +123,7 @@ public class MongoResultSet implements ResultSet {
     }
 
     /**
-     * Constructor for a MongoSQLResultSet not tied to a statement used for
-     * MongoSQLDatabaseMetaData.
+     * Constructor for a MongoResultSet not tied to a statement used for MongoDatabaseMetaData.
      *
      * @param parentLogger The parent connection logger.
      * @param cursor The resultset cursor.
@@ -794,7 +793,7 @@ public class MongoResultSet implements ResultSet {
                 if (o.getBsonType() == BsonType.NULL) {
                     return null;
                 }
-                // These types are wrapped in MongoSQLBsonValue so that
+                // These types are wrapped in MongoBsonValue so that
                 // if they are stringified via toString() they will be
                 // represented as extended JSON.
                 return new MongoBsonValue(o);

@@ -25,7 +25,7 @@ import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
 /**
- * MongoSQLBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
+ * MongoBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
  * toString() method to produce the extended JSON representation of a BsonValue rather than the java
  * driver's default BsonValue.toString() output.
  *

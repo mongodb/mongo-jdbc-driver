@@ -132,7 +132,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     };
 
     // This gets the datasource for a given columnLabel, and is used
-    // in MongoSQLResultSet to retrieve data by label.
+    // in MongoResultSet to retrieve data by label.
     protected String getDatasource(String columnLabel) {
         return columnLabels.get(columnLabel).datasource;
     }

@@ -79,12 +79,6 @@ public class MongoDatabaseMetaDataTest {
         assertEquals(expectedNumRows, countRows(rs));
     }
 
-    // Most DatabaseMetaData tests require connection to an ADL cluster. These are
-    // just simple tests for things that return empty result sets.  Since they are
-    // the same tests for both MySQLDatabaseMetaData and MongoSQLDatabaseMetaData,
-    // these tests are implemented in this abstract class which has two concrete
-    // implementations at the end of the file. The concrete implementations have
-    // some additional tests of their own.
     @Test
     void testGetProcedures() throws SQLException {
         String[] columns =
