@@ -69,14 +69,12 @@ public class MongoStatement<T> implements Statement {
         return statementId;
     }
 
-    protected BsonDocument constructQueryDocument(
-            String sql, String dialect, BsonInt32 formatVersion) {
+    protected BsonDocument constructQueryDocument(String sql, BsonInt32 formatVersion) {
         BsonDocument stage = new BsonDocument();
         BsonDocument sqlDoc = new BsonDocument();
         sqlDoc.put("statement", new BsonString(sql));
         sqlDoc.put("formatVersion", formatVersion);
         sqlDoc.put("format", new BsonString("jdbc"));
-        sqlDoc.put("dialect", new BsonString(dialect));
         stage.put("$sql", sqlDoc);
         return stage;
     }
@@ -195,7 +193,7 @@ public class MongoStatement<T> implements Statement {
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql, "mongosql", formatVersion);
+        BsonDocument stage = constructQueryDocument(sql, formatVersion);
         BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
             MongoIterable<BsonDocument> iterable =
