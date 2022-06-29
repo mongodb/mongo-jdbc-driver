@@ -420,32 +420,30 @@ class MongoDriverTest {
         File logFile = getLogFile(props);
         File logFile2 = getLogFile(props2);
         assertEquals(logFile.getAbsolutePath(), logFile2.getAbsolutePath());
+        String connInitPattern =
+                "[INFO] [c-{connectionId}] com.mongodb.jdbc.MongoConnection <init>: Connecting using MongoDB Atlas SQL interface JDBC Driver";
         checkLogContent(
                 logFile,
-                "[INFO] [c-"
-                        + conn.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection <init>: Dialect is MongoSQL",
+                connInitPattern.replace("{connectionId}", String.valueOf(conn.connectionId)),
                 1);
 
         checkLogContent(
                 logFile,
-                "[INFO] [c-"
-                        + conn2.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection <init>: Dialect is MongoSQL",
+                connInitPattern.replace("{connectionId}", String.valueOf(conn2.connectionId)),
                 1);
 
         conn.getMetaData();
+        String connGetMetadataPattern =
+                "[FINER] [c-{connectionId}] com.mongodb.jdbc.MongoConnection: >> getMetaData()";
+
         checkLogContent(
                 logFile,
-                "[FINER] [c-"
-                        + conn.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()",
+                connGetMetadataPattern.replace("{connectionId}", String.valueOf(conn.connectionId)),
                 1);
         checkLogContent(
                 logFile,
-                "[FINER] [c-"
-                        + conn2.connectionId
-                        + "] com.mongodb.jdbc.MongoSQLConnection: >> getMetaData()",
+                connGetMetadataPattern.replace(
+                        "{connectionId}", String.valueOf(conn2.connectionId)),
                 0);
 
         try {
@@ -455,18 +453,16 @@ class MongoDriverTest {
             // Expected. Keep going.
         }
 
+        String errPattern =
+                "[SEVERE] [c-{connectionId}] com.mongodb.jdbc.MongoConnection: Error in MongoConnection.getTypeMap()";
         checkLogContent(
                 logFile,
-                "[SEVERE] [c-"
-                        + conn.connectionId
-                        + "] com.mongodb.jdbc.MongoConnection: Error in MongoConnection.getTypeMap()",
+                errPattern.replace("{connectionId}", String.valueOf(conn.connectionId)),
                 0);
 
         checkLogContent(
                 logFile,
-                "[SEVERE] [c-"
-                        + conn2.connectionId
-                        + "] com.mongodb.jdbc.MongoConnection: Error in MongoConnection.getTypeMap()",
+                errPattern.replace("{connectionId}", String.valueOf(conn2.connectionId)),
                 1);
 
         // Clean-up
