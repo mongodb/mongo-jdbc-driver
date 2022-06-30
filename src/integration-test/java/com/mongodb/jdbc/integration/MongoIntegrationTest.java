@@ -45,7 +45,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MongoIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
@@ -54,7 +56,7 @@ public class MongoIntegrationTest {
     static final String DEFAULT_TEST_DB = "integration_test";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
 
-    private List<TestEntry> testEntries;
+    private static List<TestEntry> testEntries;
 
     /**
      * Creates a new connection.
@@ -81,7 +83,7 @@ public class MongoIntegrationTest {
     }
 
     @BeforeAll
-    public void loadTestConfigs() throws IOException {
+    public static void loadTestConfigs() throws IOException {
         testEntries = IntegrationTestUtils.loadTestConfigs(TEST_DIRECTORY);
     }
 
