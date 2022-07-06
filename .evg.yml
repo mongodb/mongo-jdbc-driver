@@ -83,7 +83,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean -x test -x tdvtTest -x integrationTest spotlessApply build --rerun-tasks
+          ./gradlew clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
     command: shell.exec

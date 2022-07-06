@@ -31,15 +31,6 @@ sourceSets {
         }
         resources.srcDir file('src/integration-test/resources')
     }
-
-    tdvtTest {
-        java {
-            compileClasspath += main.output
-            runtimeClasspath += main.output
-            srcDir file('src/tdvt/java')
-        }
-        resources.srcDir file('src/tdvt/resources')
-    }
 }
 
 allprojects {
@@ -72,7 +63,6 @@ allprojects {
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
         ajc "org.aspectj:aspectjtools:$aspectjVersion"
-        testCompile group: 'junit', name: 'junit', version: junitVersion
 
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
@@ -130,8 +120,6 @@ allprojects {
 configurations {
     integrationTestImplementation.extendsFrom implementation
     integrationTestRuntimeOnly.extendsFrom runtimeOnly
-    tdvtTestImplementation.extendsFrom implementation
-    tdvtTestRuntimeOnly.extendsFrom runtimeOnly
 
     // Use the release version instead of gitVersion for the produced jar
     jar.archiveVersion = releaseVersion
@@ -149,15 +137,6 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
-
-task tdvtTest(type: Test) {
-    description = 'Runs tdvt tests.'
-    group = 'verification'
-
-    testClassesDirs = sourceSets.tdvtTest.output.classesDirs
-    classpath = sourceSets.tdvtTest.runtimeClasspath
-    shouldRunAfter test
-}
 
 task runTestGenerator(type: JavaExec) {
     group = "Execution"
@@ -186,8 +165,6 @@ dependencies {
     api "org.mongodb:mongodb-driver:$mongodbDriverVersion"
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    tdvtTestImplementation "junit:junit:$junitVersion"
-    tdvtTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
 def getReleaseVersion() {
