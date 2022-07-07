@@ -465,8 +465,8 @@ public class IntegrationTestUtils {
         if (test.expected_bson_type != null) {
             assertEquals(test.expected_bson_type.size(), columnCount);
             for (int i = 0; i < columnCount; i++) {
-                MongoResultSetMetaData MongoResultSetMetadata = (MongoResultSetMetaData) rsMetaData;
-                MongoColumnInfo columnInfo = MongoResultSetMetadata.getColumnInfo(i + 1);
+                MongoResultSetMetaData mongoResultSetMetadata = (MongoResultSetMetaData) rsMetaData;
+                MongoColumnInfo columnInfo = mongoResultSetMetadata.getColumnInfo(i + 1);
                 assertEquals(
                         test.expected_bson_type.get(i),
                         columnInfo.getBsonTypeName(),

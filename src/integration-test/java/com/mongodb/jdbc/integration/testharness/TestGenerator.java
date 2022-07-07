@@ -64,7 +64,7 @@ public class TestGenerator {
 
         File directory = new File(GENERATED_TEST_DIR);
         ResultSetMetaData resultSetMetadata = rs.getMetaData();
-        MongoResultSetMetaData MongoResultSetMetaData = (MongoResultSetMetaData) resultSetMetadata;
+        MongoResultSetMetaData mongoResultSetMetaData = (MongoResultSetMetaData) resultSetMetadata;
         Map<String, Object> tests = new LinkedHashMap<String, Object>();
         List<Map<String, Object>> testCases = new ArrayList<>();
         Map<String, Object> testCase = new LinkedHashMap<String, Object>();
@@ -106,7 +106,7 @@ public class TestGenerator {
             expectedIsSearchable.add(resultSetMetadata.isSearchable(i));
             expectedIsSigned.add(resultSetMetadata.isSigned(i));
             expectedIsWritable.add(resultSetMetadata.isWritable(i));
-            expectedBsonType.add(MongoResultSetMetaData.getColumnInfo(i).getBsonTypeName());
+            expectedBsonType.add(mongoResultSetMetaData.getColumnInfo(i).getBsonTypeName());
         }
 
         testCase.put("description", description);

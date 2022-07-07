@@ -17,6 +17,11 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_ARRAY;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_DOUBLE;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_INT;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_LONG;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_STRING;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
@@ -68,117 +73,117 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
 
-    protected static final String PROCEDURE_CAT = "PROCEDURE_CAT";
-    protected static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
-    protected static final String PROCEDURE_NAME = "PROCEDURE_NAME";
-    protected static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
-    protected static final String REMARKS = "REMARKS";
-    protected static final String SPECIFIC_NAME = "SPECIFIC_NAME";
-    protected static final String FUNCTION_CAT = "FUNCTION_CAT";
-    protected static final String FUNCTION_SCHEM = "FUNCTION_SCHEM";
-    protected static final String FUNCTION_NAME = "FUNCTION_NAME";
-    protected static final String FUNCTION_TYPE = "FUNCTION_TYPE";
+    private static final String PROCEDURE_CAT = "PROCEDURE_CAT";
+    private static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+    private static final String PROCEDURE_NAME = "PROCEDURE_NAME";
+    private static final String PROCEDURE_TYPE = "PROCEDURE_TYPE";
+    private static final String REMARKS = "REMARKS";
+    private static final String SPECIFIC_NAME = "SPECIFIC_NAME";
+    private static final String FUNCTION_CAT = "FUNCTION_CAT";
+    private static final String FUNCTION_SCHEM = "FUNCTION_SCHEM";
+    private static final String FUNCTION_NAME = "FUNCTION_NAME";
+    private static final String FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    protected static final String AUTO_INCREMENT = "AUTO_INCREMENT";
-    protected static final String CASE_SENSITIVE = "CASE_SENSITIVE";
-    protected static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
-    protected static final String COLUMN_DEF = "COLUMN_DEF";
-    protected static final String COLUMN_NAME = "COLUMN_NAME";
-    protected static final String COLUMN_TYPE = "COLUMN_TYPE";
-    protected static final String CREATE_PARAMS = "CREATE_PARAMS";
-    protected static final String DATA_TYPE = "DATA_TYPE";
-    protected static final String DEFAULT_VALUE = "DEFAULT_VALUE";
-    protected static final String DESCRIPTION = "DESCRIPTION";
-    protected static final String FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
-    protected static final String FIX_PREC_SCALE = "FIX_PREC_SCALE";
-    protected static final String IS_NULLABLE = "IS_NULLABLE";
-    protected static final String LENGTH = "LENGTH";
-    protected static final String LITERAL_PREFIX = "LITERAL_PREFIX";
-    protected static final String LITERAL_SUFFIX = "LITERAL_SUFFIX";
-    protected static final String LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
-    protected static final String MAXIMUM_SCALE = "MAXIMUM_SCALE";
-    protected static final String MAX_LEN = "MAX_LEN";
-    protected static final String MINIMUM_SCALE = "MINIMUM_SCALE";
-    protected static final String NAME = "NAME";
-    protected static final String NULLABLE = "NULLABLE";
-    protected static final String ORDINAL_POSITION = "ORDINAL_POSITION";
-    protected static final String PRECISION = "PRECISION";
-    protected static final String RADIX = "RADIX";
-    protected static final String SCALE = "SCALE";
-    protected static final String SEARCHABLE = "SEARCHABLE";
-    protected static final String SQL_DATA_TYPE = "SQL_DATA_TYPE";
-    protected static final String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
-    protected static final String TABLE_TYPE = "TABLE_TYPE";
-    protected static final String TYPE_NAME = "TYPE_NAME";
-    protected static final String UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
+    private static final String AUTO_INCREMENT = "AUTO_INCREMENT";
+    private static final String CASE_SENSITIVE = "CASE_SENSITIVE";
+    private static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+    private static final String COLUMN_DEF = "COLUMN_DEF";
+    private static final String COLUMN_NAME = "COLUMN_NAME";
+    private static final String COLUMN_TYPE = "COLUMN_TYPE";
+    private static final String CREATE_PARAMS = "CREATE_PARAMS";
+    private static final String DATA_TYPE = "DATA_TYPE";
+    private static final String DEFAULT_VALUE = "DEFAULT_VALUE";
+    private static final String DESCRIPTION = "DESCRIPTION";
+    private static final String FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
+    private static final String FIX_PREC_SCALE = "FIX_PREC_SCALE";
+    private static final String IS_NULLABLE = "IS_NULLABLE";
+    private static final String LENGTH = "LENGTH";
+    private static final String LITERAL_PREFIX = "LITERAL_PREFIX";
+    private static final String LITERAL_SUFFIX = "LITERAL_SUFFIX";
+    private static final String LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
+    private static final String MAXIMUM_SCALE = "MAXIMUM_SCALE";
+    private static final String MAX_LEN = "MAX_LEN";
+    private static final String MINIMUM_SCALE = "MINIMUM_SCALE";
+    private static final String NAME = "NAME";
+    private static final String NULLABLE = "NULLABLE";
+    private static final String ORDINAL_POSITION = "ORDINAL_POSITION";
+    private static final String PRECISION = "PRECISION";
+    private static final String RADIX = "RADIX";
+    private static final String SCALE = "SCALE";
+    private static final String SEARCHABLE = "SEARCHABLE";
+    private static final String SQL_DATA_TYPE = "SQL_DATA_TYPE";
+    private static final String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+    private static final String TABLE_TYPE = "TABLE_TYPE";
+    private static final String TYPE_NAME = "TYPE_NAME";
+    private static final String UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
 
-    protected static final String TABLE_SCHEM = "TABLE_SCHEM";
-    protected static final String TABLE_CATALOG = "TABLE_CATALOG";
+    private static final String TABLE_SCHEM = "TABLE_SCHEM";
+    private static final String TABLE_CATALOG = "TABLE_CATALOG";
 
-    protected static final String SCOPE = "SCOPE";
-    protected static final String COLUMN_SIZE = "COLUMN_SIZE";
-    protected static final String BUFFER_LENGTH = "BUFFER_LENGTH";
-    protected static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
-    protected static final String PSEUDO_COLUMN = "PSEUDO_COLUMN";
+    private static final String SCOPE = "SCOPE";
+    private static final String COLUMN_SIZE = "COLUMN_SIZE";
+    private static final String BUFFER_LENGTH = "BUFFER_LENGTH";
+    private static final String DECIMAL_DIGITS = "DECIMAL_DIGITS";
+    private static final String PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
-    protected static final String PKTABLE_CAT = "PKTABLE_CAT";
-    protected static final String PKTABLE_SCHEM = "PKTABLE_SCHEM";
-    protected static final String PKTABLE_NAME = "PKTABLE_NAME";
-    protected static final String PKCOLUMN_NAME = "PKCOLUMN_NAME";
-    protected static final String FKTABLE_CAT = "FKTABLE_CAT";
-    protected static final String FKTABLE_SCHEM = "FKTABLE_SCHEM";
-    protected static final String FKTABLE_NAME = "FKTABLE_NAME";
-    protected static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
-    protected static final String KEY_SEQ = "KEY_SEQ";
-    protected static final String UPDATE_RULE = "UPDATE_RULE";
-    protected static final String DELETE_RULE = "DELETE_RULE";
-    protected static final String FK_NAME = "FK_NAME";
-    protected static final String PK_NAME = "PK_NAME";
-    protected static final String DEFERRABILITY = "DEFERRABILITY";
+    private static final String PKTABLE_CAT = "PKTABLE_CAT";
+    private static final String PKTABLE_SCHEM = "PKTABLE_SCHEM";
+    private static final String PKTABLE_NAME = "PKTABLE_NAME";
+    private static final String PKCOLUMN_NAME = "PKCOLUMN_NAME";
+    private static final String FKTABLE_CAT = "FKTABLE_CAT";
+    private static final String FKTABLE_SCHEM = "FKTABLE_SCHEM";
+    private static final String FKTABLE_NAME = "FKTABLE_NAME";
+    private static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
+    private static final String KEY_SEQ = "KEY_SEQ";
+    private static final String UPDATE_RULE = "UPDATE_RULE";
+    private static final String DELETE_RULE = "DELETE_RULE";
+    private static final String FK_NAME = "FK_NAME";
+    private static final String PK_NAME = "PK_NAME";
+    private static final String DEFERRABILITY = "DEFERRABILITY";
 
-    protected static final String TYPE_CAT = "TYPE_CAT";
-    protected static final String TYPE_SCHEM = "TYPE_SCHEM";
-    protected static final String CLASS_NAME = "CLASS_NAME";
-    protected static final String BASE_TYPE = "BASE_TYPE";
+    private static final String TYPE_CAT = "TYPE_CAT";
+    private static final String TYPE_SCHEM = "TYPE_SCHEM";
+    private static final String CLASS_NAME = "CLASS_NAME";
+    private static final String BASE_TYPE = "BASE_TYPE";
 
-    protected static final String SUPERTYPE_CAT = "SUPERTYPE_CAT";
-    protected static final String SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
-    protected static final String SUPERTYPE_NAME = "SUPERTYPE_NAME";
+    private static final String SUPERTYPE_CAT = "SUPERTYPE_CAT";
+    private static final String SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+    private static final String SUPERTYPE_NAME = "SUPERTYPE_NAME";
 
-    protected static final String TABLE_CAT = "TABLE_CAT";
-    protected static final String TABLE_NAME = "TABLE_NAME";
-    protected static final String SUPERTABLE_NAME = "SUPERTABLE_NAME";
+    private static final String TABLE_CAT = "TABLE_CAT";
+    private static final String TABLE_NAME = "TABLE_NAME";
+    private static final String SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    protected static final String ATTR_NAME = "ATTR_NAME";
-    protected static final String ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
-    protected static final String ATTR_SIZE = "ATTR_SIZE";
-    protected static final String NUM_PREC_RADIX = "NUM_PREC_RADIX";
-    protected static final String ATTR_DEF = "ATTR_DEF";
-    protected static final String SCOPE_CATALOG = "SCOPE_CATALOG";
-    protected static final String SCOPE_SCHEMA = "SCOPE_SCHEMA";
-    protected static final String SCOPE_TABLE = "SCOPE_TABLE";
-    protected static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
-    protected static final String COLUMN_USAGE = "COLUMN_USAGE";
+    private static final String ATTR_NAME = "ATTR_NAME";
+    private static final String ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
+    private static final String ATTR_SIZE = "ATTR_SIZE";
+    private static final String NUM_PREC_RADIX = "NUM_PREC_RADIX";
+    private static final String ATTR_DEF = "ATTR_DEF";
+    private static final String SCOPE_CATALOG = "SCOPE_CATALOG";
+    private static final String SCOPE_SCHEMA = "SCOPE_SCHEMA";
+    private static final String SCOPE_TABLE = "SCOPE_TABLE";
+    private static final String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+    private static final String COLUMN_USAGE = "COLUMN_USAGE";
 
-    protected static final String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
-    protected static final String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+    private static final String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+    private static final String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    protected static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
-    protected static final String REF_GENERATION = "REF_GENERATION";
+    private static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
+    private static final String REF_GENERATION = "REF_GENERATION";
 
-    protected static final String GRANTOR = "GRANTOR";
-    protected static final String GRANTEE = "GRANTEE";
-    protected static final String PRIVILEGE = "PRIVILEGE";
-    protected static final String IS_GRANTABLE = "IS_GRANTABLE";
+    private static final String GRANTOR = "GRANTOR";
+    private static final String GRANTEE = "GRANTEE";
+    private static final String PRIVILEGE = "PRIVILEGE";
+    private static final String IS_GRANTABLE = "IS_GRANTABLE";
 
-    protected static final String NON_UNIQUE = "NON_UNIQUE";
-    protected static final String INDEX_QUALIFIER = "INDEX_QUALIFIER";
-    protected static final String INDEX_NAME = "INDEX_NAME";
-    protected static final String TYPE = "TYPE";
-    protected static final String ASC_OR_DESC = "ASC_OR_DESC";
-    protected static final String CARDINALITY = "CARDINALITY";
-    protected static final String PAGES = "PAGES";
-    protected static final String FILTER_CONDITION = "FILTER_CONDITION";
+    private static final String NON_UNIQUE = "NON_UNIQUE";
+    private static final String INDEX_QUALIFIER = "INDEX_QUALIFIER";
+    private static final String INDEX_NAME = "INDEX_NAME";
+    private static final String TYPE = "TYPE";
+    private static final String ASC_OR_DESC = "ASC_OR_DESC";
+    private static final String CARDINALITY = "CARDINALITY";
+    private static final String PAGES = "PAGES";
+    private static final String FILTER_CONDITION = "FILTER_CONDITION";
 
     // Actual max size is 16777216, we reserve 216 for other bits of encoding,
     // since this value is used to set limits on literals and field names.
@@ -273,7 +278,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return bot;
     }
 
-    protected BsonValue asBsonIntOrNull(Integer i) {
+    private BsonValue asBsonIntOrNull(Integer i) {
         return asBsonIntOrDefault(i, null);
     }
 

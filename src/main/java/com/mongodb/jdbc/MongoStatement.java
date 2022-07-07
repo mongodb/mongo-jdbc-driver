@@ -30,7 +30,9 @@ import org.bson.BsonInt32;
 import org.bson.BsonString;
 
 @AutoLoggable
-public class MongoStatement<T> implements Statement {
+public class MongoStatement implements Statement {
+    private static final BsonInt32 BSON_ONE_INT_VALUE = new BsonInt32(1);
+
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
@@ -87,9 +89,9 @@ public class MongoStatement<T> implements Statement {
 
     private BsonDocument constructSQLGetResultSchemaDocument(String sql) {
         BsonDocument command = new BsonDocument();
-        command.put("sqlGetResultSchema", new BsonInt32(1));
+        command.put("sqlGetResultSchema", BSON_ONE_INT_VALUE);
         command.put("query", new BsonString(sql));
-        command.put("schemaVersion", new BsonInt32(1));
+        command.put("schemaVersion", BSON_ONE_INT_VALUE);
         return command;
     }
 

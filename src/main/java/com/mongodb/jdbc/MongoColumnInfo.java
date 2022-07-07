@@ -40,92 +40,42 @@ public class MongoColumnInfo {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
-    /**
-     * * Returns true if a column is polymorphic, false otherwise.
-     *
-     * @return true if a column is polymorphic, false otherwise.
-     */
     public boolean isPolymorphic() {
         return isPolymorphic;
     }
 
-    /**
-     * Return the column BSON type enum value.
-     *
-     * @return the column BSON type enum value.
-     */
     public BsonType getBsonTypeEnum() {
         return bsonTypeInfo.getBsonType();
     }
 
-    /**
-     * Return the column BSON type name.
-     *
-     * @return the column BSON type name.
-     */
     public String getBsonTypeName() {
         return bsonTypeInfo.getBsonName();
     }
 
-    /**
-     * Return the column JDBC type.
-     *
-     * @return the column JDBC type.
-     */
     public int getJDBCType() {
         return bsonTypeInfo.getJdbcType();
     }
 
-    /**
-     * Return the column nullability.
-     *
-     * @return the column nullability.
-     */
     public int getNullability() {
         return nullable;
     }
 
-    /**
-     * Return the column name.
-     *
-     * @return the column name.
-     */
     public String getColumnName() {
         return field;
     }
 
-    /**
-     * Return the column alias.
-     *
-     * @return the column alias.
-     */
     public String getColumnAlias() {
         return field;
     }
 
-    /**
-     * Return the column's parent table name.
-     *
-     * @return the column's parent table name.
-     */
     public String getTableName() {
         return datasource;
     }
 
-    /**
-     * Return the column's parent table alias.
-     *
-     * @return the column's parent table alias.
-     */
     public String getTableAlias() {
         return datasource;
     }
 
-    /**
-     * Return the column's parent database.
-     *
-     * @return the column's parent database.
-     */
     public String getDatabase() {
         return "";
     }
