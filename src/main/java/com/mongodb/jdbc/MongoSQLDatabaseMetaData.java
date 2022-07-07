@@ -1550,7 +1550,6 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
                         new BsonElement(
                                 NUM_PREC_RADIX, new BsonInt32(BSON_OBJECTID.getNumPrecRadix()))));
 
-
         docs.add(
                 createBottomBson(
                         new BsonElement(TYPE_NAME, new BsonString(BSON_REGEX.getBsonName())),
