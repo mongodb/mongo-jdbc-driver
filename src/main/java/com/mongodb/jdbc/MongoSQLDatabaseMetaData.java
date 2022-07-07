@@ -1122,6 +1122,10 @@ public class MongoSQLDatabaseMetaData extends MongoDatabaseMetaData implements D
         ArrayList<BsonDocument> docs = new ArrayList<>();
         MongoJsonSchema schema = getTypeInfoJsonSchema();
 
+        // The following BSON Types are mostly ordered to follow the javadoc (i.e., they are ordered by DATA_TYPE).
+        // However, instead of ordering all the BSON Types with DATA_TYPE == 1111 by how closely they map to the
+        // corresponding JDBC SQL type (as the javadocs say), we order them alphabetically since "closest to JDBC
+        // SQL type" is meaningless in this case (as all 1111 types are inaccurate).
         docs.add(
                 createBottomBson(
                         new BsonElement(TYPE_NAME, new BsonString(BSON_LONG.getBsonName())),
