@@ -46,7 +46,6 @@ public class MongoStatement implements Statement {
     private String currentDBName;
     private MongoLogger logger;
     private int statementId;
-    private final BsonInt32 formatVersion = new BsonInt32(1);
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
@@ -195,7 +194,7 @@ public class MongoStatement implements Statement {
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql, formatVersion);
+        BsonDocument stage = constructQueryDocument(sql, BSON_ONE_INT_VALUE);
         BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
             MongoIterable<BsonDocument> iterable =
