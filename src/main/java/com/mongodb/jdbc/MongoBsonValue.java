@@ -25,7 +25,7 @@ import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
 /**
- * MongoSQLBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
+ * MongoBsonValue is a wrapper for BsonValue. The purpose of this class is to override the
  * toString() method to produce the extended JSON representation of a BsonValue rather than the java
  * driver's default BsonValue.toString() output.
  *
@@ -33,14 +33,14 @@ import org.bson.json.JsonWriterSettings;
  * parties. The driver explains this is to keep the BSON type system closed. Therefore, this class
  * does not extend BsonValue, instead it contains a BsonValue member.
  */
-public class MongoSQLBsonValue {
+public class MongoBsonValue {
     static final JsonWriterSettings JSON_WRITER_SETTINGS =
             JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private BsonValue v;
 
-    public MongoSQLBsonValue(BsonValue v) {
+    public MongoBsonValue(BsonValue v) {
         this.v = v;
     }
 
@@ -131,6 +131,6 @@ public class MongoSQLBsonValue {
         if (o == null || getClass() != o.getClass()) return false;
 
         // Compare the wrapped BsonValue for equality
-        return this.v.equals(((MongoSQLBsonValue) o).v);
+        return this.v.equals(((MongoBsonValue) o).v);
     }
 }

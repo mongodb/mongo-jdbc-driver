@@ -23,33 +23,129 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 
 @AutoLoggable
-public abstract class MongoResultSetMetaData implements ResultSetMetaData {
+public class MongoResultSetMetaData implements ResultSetMetaData {
+
+    private static class NameSpace {
+        String datasource;
+        String columnLabel;
+
+        NameSpace(String datasource, String columnLabel) {
+            this.datasource = datasource;
+            this.columnLabel = columnLabel;
+        }
+    }
+
+    private static class DatasourceAndIndex {
+        String datasource;
+        int index;
+
+        DatasourceAndIndex(String datasource, int index) {
+            this.datasource = datasource;
+            this.index = index;
+        }
+    }
+
+    // A mapping from columnLabel name to datasource name and index.
+    private Map<String, DatasourceAndIndex> columnLabels;
+    // A mapping from index position to NameSpace (datasource, columnLabel).
+    private List<NameSpace> columnIndices;
+    // A mapping from index position to ColumnTypeInfo.
+    private List<MongoColumnInfo> columnInfo;
     protected final int UNKNOWN_LENGTH = 0;
     protected MongoLogger logger;
 
     /**
      * Constructor.
      *
+     * @param schema The resultset schema.
+     * @param sortFieldsAlphabetically Flag to set the fields sort order. True if fields must be
+     *     sorted alphabetically. False otherwise.
      * @param parentLogger The parent connection logger.
      * @param statementId The statement id for the logger or null if this resultset is not tied to a
      *     statement.
      */
-    public MongoResultSetMetaData(MongoLogger parentLogger, Integer statementId) {
+    public MongoResultSetMetaData(
+            MongoJsonSchema schema,
+            boolean sortFieldsAlphabetically,
+            MongoLogger parentLogger,
+            Integer statementId)
+            throws SQLException {
         this.logger =
                 (statementId == null)
                         ? new MongoLogger(this.getClass().getCanonicalName(), parentLogger)
                         : new MongoLogger(
                                 this.getClass().getCanonicalName(), parentLogger, statementId);
+
+        assertDatasourceSchema(schema);
+
+        columnLabels = new HashMap<String, DatasourceAndIndex>();
+        columnIndices = new ArrayList<NameSpace>();
+        columnInfo = new ArrayList<MongoColumnInfo>();
+
+        String[] datasources = schema.properties.keySet().toArray(new String[0]);
+        Arrays.sort(datasources);
+
+        for (String datasource : datasources) {
+            processDataSource(schema, datasource, sortFieldsAlphabetically);
+        }
+    }
+
+    private void assertDatasourceSchema(MongoJsonSchema schema) throws SQLException {
+        // A Datasource Schema must be an Object Schema, and unlike Object Schemata in general,
+        // the properties field cannot be null.
+        if (!schema.isObject() || schema.properties == null) {
+            throw new SQLException("ResultSetMetaData json schema must be object with properties");
+        }
+    }
+
+    private void processDataSource(
+            MongoJsonSchema schema, String datasource, boolean sortFieldsAlphabetically)
+            throws SQLException {
+        MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
+        assertDatasourceSchema(datasourceSchema);
+
+        String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
+        if (sortFieldsAlphabetically) {
+            Arrays.sort(fields);
+        }
+
+        for (String field : fields) {
+            MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
+            BsonTypeInfo columnBsonTypeInfo = columnSchema.getBsonTypeInfo();
+            int nullability = datasourceSchema.getColumnNullability(field);
+            columnIndices.add(new NameSpace(datasource, field));
+            columnInfo.add(new MongoColumnInfo(datasource, field, columnBsonTypeInfo, nullability));
+            if (!columnLabels.containsKey(field)) {
+                columnLabels.put(
+                        field, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
+            }
+        }
+    };
+
+    // This gets the datasource for a given columnLabel, and is used
+    // in MongoResultSet to retrieve data by label.
+    protected String getDatasource(String columnLabel) {
+        return columnLabels.get(columnLabel).datasource;
     }
 
     protected void checkBounds(int i) throws SQLException {
         if (i > getColumnCount()) {
             throw new SQLException("Index out of bounds: '" + i + "'.");
         }
+    }
+
+    public MongoColumnInfo getColumnInfo(int column) throws SQLException {
+        checkBounds(column);
+        return columnInfo.get(column - 1);
     }
 
     @Override
@@ -76,11 +172,18 @@ public abstract class MongoResultSetMetaData implements ResultSetMetaData {
         return "";
     }
 
-    public abstract MongoColumnInfo getColumnInfo(int column) throws SQLException;
+    @Override
+    public int getColumnCount() throws SQLException {
+        return columnIndices.size();
+    }
 
-    public abstract boolean hasColumnWithLabel(String label) throws SQLException;
+    public boolean hasColumnWithLabel(String label) {
+        return columnLabels.containsKey(label);
+    }
 
-    public abstract int getColumnPositionFromLabel(String label) throws SQLException;
+    public int getColumnPositionFromLabel(String label) {
+        return columnLabels.get(label).index;
+    }
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {

@@ -37,7 +37,7 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
-class MongoConnectionTest extends MySQLMock {
+class MongoConnectionTest extends MongoMock {
     @BeforeAll
     protected void initMocks() {
         MockitoAnnotations.initMocks(this);

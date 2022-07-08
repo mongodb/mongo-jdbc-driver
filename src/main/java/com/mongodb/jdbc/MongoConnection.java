@@ -32,6 +32,7 @@ import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +66,7 @@ import org.bson.BsonInt32;
 import org.bson.Document;
 
 @AutoLoggable
-public abstract class MongoConnection implements Connection {
+public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
     protected String currentDB;
@@ -101,8 +102,7 @@ public abstract class MongoConnection implements Connection {
         StringBuilder appName = new StringBuilder(MongoDriver.NAME).append("+").append(version);
 
         // Log the driver name and version
-        logger.log(
-                Level.INFO, "Connecting using " + MongoDriver.MONGOSQL_DRIVER_NAME + " " + version);
+        logger.log(Level.INFO, "Connecting using " + MongoDriver.MONGO_DRIVER_NAME + " " + version);
 
         MongoDriverInformation.Builder mdiBuilder;
         String clientInfo = connectionProperties.getClientInfo();
@@ -146,6 +146,16 @@ public abstract class MongoConnection implements Connection {
         }
     }
 
+    @Override
+    public Statement createStatement() throws SQLException {
+        checkConnection();
+        try {
+            return new MongoStatement(this, currentDB);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
+    }
+
     protected int getDefaultConnectionValidationTimeoutSeconds() {
         return this.mongoClientSettings.getSocketSettings().getConnectTimeout(TimeUnit.SECONDS);
     }
@@ -176,15 +186,29 @@ public abstract class MongoConnection implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return new MongoDatabaseMetaData(this);
     }
 
     @Override
     public String nativeSQL(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException(
                 Thread.currentThread().getStackTrace()[1].toString());
+    }
+
+    @Override
+    public CallableStatement prepareCall(String sql) throws SQLException {
+        throw new SQLFeatureNotSupportedException(
+                Thread.currentThread().getStackTrace()[1].toString());
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        try {
+            return new MongoPreparedStatement(sql, new MongoStatement(this, currentDB));
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e);
+        }
     }
 
     @Override

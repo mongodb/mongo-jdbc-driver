@@ -31,20 +31,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
-    private static MongoSQLResultSetMetaData resultSetMetaData;
+class MongoResultSetMetaDataTest extends MongoMock {
+    private static MongoResultSetMetaData resultSetMetaData;
 
     static {
         try {
             resultSetMetaData =
-                    new MongoSQLResultSetMetaData(
+                    new MongoResultSetMetaData(
                             generateMongoJsonSchema(), true, mongoConnection.getLogger(), 0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
-    MongoSQLResultSet mongoResultSet;
 
     @BeforeAll
     void initMocks() {
@@ -53,7 +51,7 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
 
     @Test
     void testGetColumnCount() throws SQLException {
-        assertEquals(10, MongoSQLResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+        assertEquals(10, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
@@ -65,10 +63,10 @@ class MongoSQLResultSetMetaDataTest extends MongoSQLMock {
         String[] expected_original_columns =
                 new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null", "doc"};
         MongoJsonSchema schema = generateMongoJsonSchema();
-        MongoSQLResultSetMetaData unsortedMedata =
-                new MongoSQLResultSetMetaData(schema, false, mongoConnection.getLogger(), 0);
-        MongoSQLResultSetMetaData sortedMedata =
-                new MongoSQLResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
+        MongoResultSetMetaData unsortedMedata =
+                new MongoResultSetMetaData(schema, false, mongoConnection.getLogger(), 0);
+        MongoResultSetMetaData sortedMedata =
+                new MongoResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
 
         assertEquals(
                 expected_original_columns.length,

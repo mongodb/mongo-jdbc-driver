@@ -20,14 +20,19 @@ import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.mongodb.jdbc.MongoConnection;
+import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
+import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -36,11 +41,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
 
-public abstract class MongoIntegrationTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class MongoIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
+
+    static final String URL = "jdbc:mongodb://localhost";
+    static final String DEFAULT_TEST_DB = "integration_test";
+    public static final String TEST_DIRECTORY = "resources/integration_test/tests";
+
+    private static List<TestEntry> testEntries;
 
     /**
      * Creates a new connection.
@@ -50,7 +66,45 @@ public abstract class MongoIntegrationTest {
      * @return The connection.
      * @throws SQLException If the connection can not be created.
      */
-    public abstract MongoConnection getBasicConnection(Properties extraProps) throws SQLException;
+    public MongoConnection getBasicConnection(Properties extraProps) throws SQLException {
+        return getBasicConnection(DEFAULT_TEST_DB, extraProps);
+    }
+
+    public MongoConnection getBasicConnection(String db, Properties extraProps)
+            throws SQLException {
+
+        Properties p = new java.util.Properties(extraProps);
+        p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
+        p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
+        p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
+        p.setProperty("database", db);
+        p.setProperty("ssl", "false");
+        return (MongoConnection) DriverManager.getConnection(URL, p);
+    }
+
+    @BeforeAll
+    public static void loadTestConfigs() throws IOException {
+        testEntries = IntegrationTestUtils.loadTestConfigs(TEST_DIRECTORY);
+    }
+
+    @TestFactory
+    Collection<DynamicTest> runIntegrationTests() throws SQLException {
+        List<DynamicTest> dynamicTests = new ArrayList<>();
+        for (TestEntry testEntry : testEntries) {
+            if (testEntry.skip_reason != null) {
+                continue;
+            }
+            dynamicTests.add(
+                    DynamicTest.dynamicTest(
+                            testEntry.description,
+                            () -> {
+                                try (Connection conn = getBasicConnection(testEntry.db, null)) {
+                                    IntegrationTestUtils.runTest(testEntry, conn, false);
+                                }
+                            }));
+        }
+        return dynamicTests;
+    }
 
     /** Simple callable used to spawn a new statement and execute a query. */
     public class SimpleQueryExecutor implements Callable<Void> {

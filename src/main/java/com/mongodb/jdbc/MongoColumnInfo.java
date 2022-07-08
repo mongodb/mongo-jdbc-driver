@@ -16,26 +16,67 @@
 
 package com.mongodb.jdbc;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonType;
 
-public interface MongoColumnInfo {
-    public boolean isPolymorphic();
+public class MongoColumnInfo {
+    private final String datasource;
+    private final String field;
+    private final BsonTypeInfo bsonTypeInfo;
+    private final boolean isPolymorphic;
+    private final int nullable;
 
-    public BsonType getBsonTypeEnum();
+    MongoColumnInfo(String datasource, String field, BsonTypeInfo bsonTypeInfo, int nullability) {
+        this.datasource = datasource;
+        this.field = field;
+        this.bsonTypeInfo = bsonTypeInfo;
+        this.nullable = nullability;
+        this.isPolymorphic = bsonTypeInfo == BsonTypeInfo.BSON_BSON;
+    }
 
-    public String getBsonTypeName();
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 
-    public int getJDBCType();
+    public boolean isPolymorphic() {
+        return isPolymorphic;
+    }
 
-    public int getNullability();
+    public BsonType getBsonTypeEnum() {
+        return bsonTypeInfo.getBsonType();
+    }
 
-    public String getColumnName();
+    public String getBsonTypeName() {
+        return bsonTypeInfo.getBsonName();
+    }
 
-    public String getColumnAlias();
+    public int getJDBCType() {
+        return bsonTypeInfo.getJdbcType();
+    }
 
-    public String getDatabase();
+    public int getNullability() {
+        return nullable;
+    }
 
-    public String getTableName();
+    public String getColumnName() {
+        return field;
+    }
 
-    public String getTableAlias();
+    public String getColumnAlias() {
+        return field;
+    }
+
+    public String getTableName() {
+        return datasource;
+    }
+
+    public String getTableAlias() {
+        return datasource;
+    }
+
+    public String getDatabase() {
+        return "";
+    }
 }

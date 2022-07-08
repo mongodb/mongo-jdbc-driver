@@ -17,29 +17,35 @@
 package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
+import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
 @AutoLoggable
-public abstract class MongoStatement<T> implements Statement {
+public class MongoStatement implements Statement {
+    private static final BsonInt32 BSON_ONE_INT_VALUE = new BsonInt32(1);
+
     // Likely, the actual mongo sql command will not
     // need a database or collection, since those
     // must be parsed from the query.
-    protected MongoDatabase currentDB;
-    protected MongoResultSet<T> resultSet;
-    protected MongoConnection conn;
+    private MongoDatabase currentDB;
+    private MongoResultSet resultSet;
+    private MongoConnection conn;
     protected boolean isClosed = false;
     protected boolean closeOnCompletion = false;
-    protected int fetchSize = 0;
-    protected int maxQuerySec = 0;
-    protected String currentDBName;
-    protected MongoLogger logger;
-    protected int statementId;
+    private int fetchSize = 0;
+    private int maxQuerySec = 0;
+    private String currentDBName;
+    private MongoLogger logger;
+    private int statementId;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
@@ -64,14 +70,12 @@ public abstract class MongoStatement<T> implements Statement {
         return statementId;
     }
 
-    protected BsonDocument constructQueryDocument(
-            String sql, String dialect, BsonInt32 formatVersion) {
+    protected BsonDocument constructQueryDocument(String sql, BsonInt32 formatVersion) {
         BsonDocument stage = new BsonDocument();
         BsonDocument sqlDoc = new BsonDocument();
         sqlDoc.put("statement", new BsonString(sql));
         sqlDoc.put("formatVersion", formatVersion);
         sqlDoc.put("format", new BsonString("jdbc"));
-        sqlDoc.put("dialect", new BsonString(dialect));
         stage.put("$sql", sqlDoc);
         return stage;
     }
@@ -81,6 +85,16 @@ public abstract class MongoStatement<T> implements Statement {
             throw new SQLException("Connection is closed.");
         }
     }
+
+    private BsonDocument constructSQLGetResultSchemaDocument(String sql) {
+        BsonDocument command = new BsonDocument();
+        command.put("sqlGetResultSchema", BSON_ONE_INT_VALUE);
+        command.put("query", new BsonString(sql));
+        command.put("schemaVersion", BSON_ONE_INT_VALUE);
+        return command;
+    }
+
+    // ----------------------------------------------------------------------
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
@@ -97,8 +111,6 @@ public abstract class MongoStatement<T> implements Statement {
         isClosed = true;
         closeExistingResultSet();
     }
-
-    // ----------------------------------------------------------------------
 
     @Override
     public int getMaxFieldSize() throws SQLException {
@@ -174,6 +186,37 @@ public abstract class MongoStatement<T> implements Statement {
     public boolean execute(String sql) throws SQLException {
         executeQuery(sql);
         return resultSet != null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResultSet executeQuery(String sql) throws SQLException {
+        checkClosed();
+        closeExistingResultSet();
+
+        BsonDocument stage = constructQueryDocument(sql, BSON_ONE_INT_VALUE);
+        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
+        try {
+            MongoIterable<BsonDocument> iterable =
+                    currentDB
+                            .withCodecRegistry(MongoDriver.registry)
+                            .aggregate(Collections.singletonList(stage), BsonDocument.class)
+                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
+            if (fetchSize != 0) {
+                iterable = iterable.batchSize(fetchSize);
+            }
+
+            MongoJsonSchemaResult schemaResult =
+                    currentDB
+                            .withCodecRegistry(MongoDriver.registry)
+                            .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+
+            MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
+            resultSet = new MongoResultSet(this, iterable.cursor(), schema);
+            return resultSet;
+        } catch (MongoExecutionTimeoutException e) {
+            throw new SQLTimeoutException(e);
+        }
     }
 
     @Override

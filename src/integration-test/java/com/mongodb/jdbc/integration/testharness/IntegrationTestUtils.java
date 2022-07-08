@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.mongodb.jdbc.MongoBsonValue;
 import com.mongodb.jdbc.MongoColumnInfo;
-import com.mongodb.jdbc.MongoSQLBsonValue;
-import com.mongodb.jdbc.MongoSQLResultSetMetaData;
+import com.mongodb.jdbc.MongoResultSetMetaData;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import com.mongodb.jdbc.integration.testharness.models.Tests;
 import java.io.File;
@@ -465,9 +465,8 @@ public class IntegrationTestUtils {
         if (test.expected_bson_type != null) {
             assertEquals(test.expected_bson_type.size(), columnCount);
             for (int i = 0; i < columnCount; i++) {
-                MongoSQLResultSetMetaData mongoSQLResultSetMetadata =
-                        (MongoSQLResultSetMetaData) rsMetaData;
-                MongoColumnInfo columnInfo = mongoSQLResultSetMetadata.getColumnInfo(i + 1);
+                MongoResultSetMetaData mongoResultSetMetadata = (MongoResultSetMetaData) rsMetaData;
+                MongoColumnInfo columnInfo = mongoResultSetMetadata.getColumnInfo(i + 1);
                 assertEquals(
                         test.expected_bson_type.get(i),
                         columnInfo.getBsonTypeName(),
@@ -697,8 +696,8 @@ public class IntegrationTestUtils {
                         }
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
-                        MongoSQLBsonValue expectedAsExtJsonValue =
-                                new MongoSQLBsonValue((BsonValue) expected_obj);
+                        MongoBsonValue expectedAsExtJsonValue =
+                                new MongoBsonValue((BsonValue) expected_obj);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             return "Expected Bson Other BsonValue value "
                                     + expected_obj
