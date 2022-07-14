@@ -51,7 +51,9 @@ public class MongoBsonValue {
 
     public void setJsonWriterSettings(boolean isRelaxed) {
         this.JSON_WRITER_SETTINGS =
-                JsonWriterSettings.builder().outputMode(isRelaxed? JsonMode.RELAXED : JsonMode.EXTENDED).build();
+                JsonWriterSettings.builder()
+                        .outputMode(isRelaxed ? JsonMode.RELAXED : JsonMode.EXTENDED)
+                        .build();
     }
 
     /** @return The underlying BsonValue */
