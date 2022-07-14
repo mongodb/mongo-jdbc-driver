@@ -34,14 +34,24 @@ import org.bson.json.JsonWriterSettings;
  * does not extend BsonValue, instead it contains a BsonValue member.
  */
 public class MongoBsonValue {
-    static final JsonWriterSettings JSON_WRITER_SETTINGS =
-            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
+    private JsonWriterSettings JSON_WRITER_SETTINGS;
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private BsonValue v;
 
     public MongoBsonValue(BsonValue v) {
         this.v = v;
+        this.setJsonWriterSettings(true);
+    }
+
+    public MongoBsonValue(BsonValue v, boolean isRelaxed) {
+        this.v = v;
+        this.setJsonWriterSettings(false);
+    }
+
+    public void setJsonWriterSettings(boolean isRelaxed) {
+        this.JSON_WRITER_SETTINGS =
+                JsonWriterSettings.builder().outputMode(isRelaxed? JsonMode.RELAXED : JsonMode.EXTENDED).build();
     }
 
     /** @return The underlying BsonValue */
