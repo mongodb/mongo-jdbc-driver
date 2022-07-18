@@ -41,18 +41,18 @@ public class MongoBsonValue {
 
     public MongoBsonValue(BsonValue v) {
         this.v = v;
-        this.setJsonWriterSettings(true);
-    }
-
-    public MongoBsonValue(BsonValue v, boolean isRelaxed) {
-        this.v = v;
         this.setJsonWriterSettings(false);
     }
 
-    public void setJsonWriterSettings(boolean isRelaxed) {
+    public MongoBsonValue(BsonValue v, boolean isExt) {
+        this.v = v;
+        this.setJsonWriterSettings(isExt);
+    }
+
+    public void setJsonWriterSettings(boolean isExt) {
         this.JSON_WRITER_SETTINGS =
                 JsonWriterSettings.builder()
-                        .outputMode(isRelaxed ? JsonMode.RELAXED : JsonMode.EXTENDED)
+                        .outputMode(isExt ? JsonMode.EXTENDED : JsonMode.RELAXED)
                         .build();
     }
 
