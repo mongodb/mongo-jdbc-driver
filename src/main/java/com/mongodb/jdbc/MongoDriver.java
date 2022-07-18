@@ -64,7 +64,8 @@ public class MongoDriver implements Driver {
         DATABASE("database"),
         CLIENT_INFO("clientinfo"),
         LOG_LEVEL("loglevel"),
-        LOG_DIR("logdir");
+        LOG_DIR("logdir"),
+        EXT_JSON_MODE("extjsonmode");
 
         private final String propertyName;
 
@@ -279,8 +280,10 @@ public class MongoDriver implements Driver {
                             + ". Expected format <name>+<version>.");
         }
 
+        boolean extJsonMode = Boolean.parseBoolean(info.getProperty(EXT_JSON_MODE.getPropertyName()));
+
         MongoConnectionProperties mongoConnectionProperties =
-                new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo);
+                new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo, extJsonMode);
 
         return new MongoConnection(mongoConnectionProperties);
     }
