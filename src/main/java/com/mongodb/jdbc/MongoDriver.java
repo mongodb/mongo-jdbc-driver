@@ -280,10 +280,12 @@ public class MongoDriver implements Driver {
                             + ". Expected format <name>+<version>.");
         }
 
-        boolean extJsonMode = Boolean.parseBoolean(info.getProperty(EXT_JSON_MODE.getPropertyName()));
+        boolean extJsonMode =
+                Boolean.parseBoolean(info.getProperty(EXT_JSON_MODE.getPropertyName()));
 
         MongoConnectionProperties mongoConnectionProperties =
-                new MongoConnectionProperties(cs, database, logLevel, logDir, clientInfo, extJsonMode);
+                new MongoConnectionProperties(
+                        cs, database, logLevel, logDir, clientInfo, extJsonMode);
 
         return new MongoConnection(mongoConnectionProperties);
     }

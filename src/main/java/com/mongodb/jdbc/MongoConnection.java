@@ -81,6 +81,7 @@ public class MongoConnection implements Connection {
     private static Map<String, Integer> handlerCount = new HashMap<String, Integer>();
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
     private String logDirPath;
+    private boolean extJsonMode;
 
     public MongoConnection(MongoConnectionProperties connectionProperties) {
         Preconditions.checkNotNull(connectionProperties.getConnectionString());
@@ -91,6 +92,7 @@ public class MongoConnection implements Connection {
         this.url = connectionProperties.getConnectionString().getConnectionString();
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
+        this.extJsonMode = connectionProperties.getExtJsonMode();
         String version =
                 MongoDriver.VERSION != null
                         ? MongoDriver.VERSION
@@ -158,6 +160,10 @@ public class MongoConnection implements Connection {
 
     protected int getDefaultConnectionValidationTimeoutSeconds() {
         return this.mongoClientSettings.getSocketSettings().getConnectTimeout(TimeUnit.SECONDS);
+    }
+
+    boolean getExtJsonMode() {
+        return extJsonMode;
     }
 
     String getURL() {

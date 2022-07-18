@@ -62,5 +62,8 @@ public class MongoConnectionProperties {
     public String getClientInfo() {
         return clientInfo;
     }
-    public boolean getExtJsonMode(){ return extJsonMode;}
+
+    public boolean getExtJsonMode() {
+        return extJsonMode;
+    }
 }
