@@ -99,6 +99,7 @@ public class MongoResultSet implements ResultSet {
     protected boolean wasNull = false;
     protected MongoResultSetMetaData rsMetaData;
     protected MongoLogger logger;
+    protected boolean extJsonMode;
 
     /**
      * Constructor for a MongoResultset tied to a connection and statement.
@@ -109,7 +110,10 @@ public class MongoResultSet implements ResultSet {
      * @throws SQLException
      */
     public MongoResultSet(
-            MongoStatement statement, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoStatement statement,
+            MongoCursor<BsonDocument> cursor,
+            MongoJsonSchema schema,
+            boolean extJsonMode)
             throws SQLException {
         Preconditions.checkNotNull(statement);
         this.statement = statement;
@@ -118,6 +122,7 @@ public class MongoResultSet implements ResultSet {
                         this.getClass().getCanonicalName(),
                         statement.getParentLogger(),
                         statement.getStatementId());
+        this.extJsonMode = extJsonMode;
         setUpResultset(
                 cursor, schema, true, statement.getParentLogger(), statement.getStatementId());
     }
@@ -403,7 +408,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return null;
         }
-        return new MongoBsonValue(o).toString();
+        return new MongoBsonValue(o, extJsonMode).toString();
     }
 
     @Override
@@ -796,7 +801,7 @@ public class MongoResultSet implements ResultSet {
                 // These types are wrapped in MongoBsonValue so that
                 // if they are stringified via toString() they will be
                 // represented as extended JSON.
-                return new MongoBsonValue(o);
+                return new MongoBsonValue(o, extJsonMode);
 
             case Types.ARRAY:
             case Types.BLOB:

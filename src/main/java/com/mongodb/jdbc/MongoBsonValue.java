@@ -39,11 +39,6 @@ public class MongoBsonValue {
 
     private BsonValue v;
 
-    public MongoBsonValue(BsonValue v) {
-        this.v = v;
-        this.setJsonWriterSettings(false);
-    }
-
     public MongoBsonValue(BsonValue v, boolean isExt) {
         this.v = v;
         this.setJsonWriterSettings(isExt);
