@@ -39,15 +39,15 @@ public class MongoBsonValue {
 
     private BsonValue v;
 
-    public MongoBsonValue(BsonValue v, boolean isExt) {
+    public MongoBsonValue(BsonValue v, boolean isExtended) {
         this.v = v;
-        this.setJsonWriterSettings(isExt);
+        this.setJsonWriterSettings(isExtended);
     }
 
-    public void setJsonWriterSettings(boolean isExt) {
+    public void setJsonWriterSettings(boolean isExtended) {
         this.JSON_WRITER_SETTINGS =
                 JsonWriterSettings.builder()
-                        .outputMode(isExt ? JsonMode.EXTENDED : JsonMode.RELAXED)
+                        .outputMode(isExtended ? JsonMode.EXTENDED : JsonMode.RELAXED)
                         .build();
     }
 
