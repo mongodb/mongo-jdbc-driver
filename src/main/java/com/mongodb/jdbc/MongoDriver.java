@@ -102,6 +102,8 @@ public class MongoDriver implements Driver {
                         Level.FINE.getName(),
                         Level.WARNING.getName()
                     });
+    static final String RELAXED = "RELAXED";
+    static final String EXTENDED = "EXTENDED";
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
 
@@ -280,8 +282,16 @@ public class MongoDriver implements Driver {
                             + ". Expected format <name>+<version>.");
         }
 
-        boolean extJsonMode =
-                Boolean.parseBoolean(info.getProperty(EXT_JSON_MODE.getPropertyName()));
+        String extJsonModeVal = info.getProperty(EXT_JSON_MODE.getPropertyName());
+        boolean extJsonMode = false;
+        if (extJsonModeVal != null) {
+            extJsonModeVal = extJsonModeVal.toUpperCase().trim();
+            if (extJsonModeVal == EXTENDED) {
+                extJsonMode = true;
+            } else if (extJsonModeVal != RELAXED) {
+                throw new SQLException("Invalid JSON mode: " + extJsonModeVal);
+            }
+        }
 
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
