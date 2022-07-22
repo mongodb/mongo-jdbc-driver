@@ -26,18 +26,21 @@ public class MongoConnectionProperties {
     private Level logLevel;
     private File logDir;
     private String clientInfo;
+    private boolean extJsonMode;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
             String database,
             Level logLevel,
             File logDir,
-            String clientInfo) {
+            String clientInfo,
+            boolean extJsonMode) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
         this.logDir = logDir;
         this.clientInfo = clientInfo;
+        this.extJsonMode = extJsonMode;
     }
 
     public ConnectionString getConnectionString() {
@@ -58,5 +61,9 @@ public class MongoConnectionProperties {
 
     public String getClientInfo() {
         return clientInfo;
+    }
+
+    public boolean getExtJsonMode() {
+        return extJsonMode;
     }
 }

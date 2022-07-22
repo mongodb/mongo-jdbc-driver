@@ -609,4 +609,31 @@ class MongoDriverTest {
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
     }
+
+    @Test
+    void testExtJsonModeProperty() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        Connection c;
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        // ExtJsonMode not set succeeds
+        c = d.getUnvalidatedConnection(basicURL, p);
+        assertNotNull(c);
+
+        // Invalid ExtJsonMode property results in Exception
+        p.setProperty(EXT_JSON_MODE.getPropertyName(), "InvalidMode");
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(basicURL, p),
+                "The connection should fail because expected input is RELAXED or EXTENDED.");
+
+        p.setProperty(EXT_JSON_MODE.getPropertyName(), "EXTENDED");
+        c = d.getUnvalidatedConnection(basicURL, p);
+        assertNotNull(c);
+
+        p.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
+        c = d.getUnvalidatedConnection(basicURL, p);
+        assertNotNull(c);
+    }
 }

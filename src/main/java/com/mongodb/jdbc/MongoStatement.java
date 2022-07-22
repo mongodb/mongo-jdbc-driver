@@ -212,7 +212,7 @@ public class MongoStatement implements Statement {
                             .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
 
             MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
-            resultSet = new MongoResultSet(this, iterable.cursor(), schema);
+            resultSet = new MongoResultSet(this, iterable.cursor(), schema, conn.getExtJsonMode());
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);

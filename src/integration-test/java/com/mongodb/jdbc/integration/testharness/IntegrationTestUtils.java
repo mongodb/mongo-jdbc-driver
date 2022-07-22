@@ -697,7 +697,7 @@ public class IntegrationTestUtils {
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
                         MongoBsonValue expectedAsExtJsonValue =
-                                new MongoBsonValue((BsonValue) expected_obj);
+                                new MongoBsonValue((BsonValue) expected_obj, false);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             return "Expected Bson Other BsonValue value "
                                     + expected_obj

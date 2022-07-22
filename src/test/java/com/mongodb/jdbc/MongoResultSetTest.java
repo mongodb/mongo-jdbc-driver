@@ -66,6 +66,7 @@ class MongoResultSetTest extends MongoMock {
     static MongoResultSet mongoResultSet;
     static MongoResultSet mongoResultSetAllTypes;
     static MongoResultSet closedMongoResultSet;
+    static MongoResultSet mongoResultSetExtended;
 
     private static MongoResultSetMetaData resultSetMetaData;
     private static MongoStatement mongoStatement;
@@ -122,18 +123,23 @@ class MongoResultSetTest extends MongoMock {
         try {
             mongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, false);
             mongoResultSetAllTypes =
                     new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocsAllTypes),
-                            schemaAllTypes);
+                            schemaAllTypes,
+                            false);
             closedMongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema);
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, false);
+            mongoResultSetExtended =
+                    new MongoResultSet(
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, true);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
             closedMongoResultSet.next();
+            mongoResultSetExtended.next();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -427,9 +433,9 @@ class MongoResultSetTest extends MongoMock {
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
         // manually that their stringification returns what is expected.
         assertNull(mongoResultSetAllTypes.getObject(ALL_UNDEFINED_COL_LABEL));
-        assertNull(new MongoBsonValue(new BsonUndefined()).toString());
+        assertNull(new MongoBsonValue(new BsonUndefined(), false).toString());
         assertNull(mongoResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
-        assertNull(new MongoBsonValue(new BsonNull()).toString());
+        assertNull(new MongoBsonValue(new BsonNull(), false).toString());
 
         // Note that getObject() must return the following classes for the following types:
         //   - Types.BIGINT    => long
@@ -447,6 +453,34 @@ class MongoResultSetTest extends MongoMock {
         Timestamp t = new Timestamp(d.getValue());
 
         assertEquals(t.toString(), mongoResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+
+        // test that the string values match for the objects with EXTENDED and RELAXED json modes
+        assertEquals(
+                new MongoBsonValue(new BsonInt32(3), true).toString(),
+                mongoResultSetExtended.getObject(ANY_OF_INT_STRING_COL).toString());
+        assertEquals(
+                new MongoBsonValue(new BsonInt32(3), false).toString(),
+                mongoResultSet.getObject(ANY_OF_INT_STRING_COL).toString());
+
+        BsonDocument doc = new BsonDocument();
+        doc.put(INT_COL_LABEL, new BsonInt32(5));
+        assertEquals(
+                new MongoBsonValue(doc, true).toString(),
+                mongoResultSetExtended.getObject(DOC_COL_LABEL).toString());
+        assertEquals(
+                new MongoBsonValue(doc, false).toString(),
+                mongoResultSet.getObject(DOC_COL_LABEL).toString());
+
+        BsonArray array = new BsonArray();
+        array.add(new BsonInt32(5));
+        array.add(new BsonInt32(6));
+        array.add(new BsonInt32(7));
+        assertEquals(
+                (new MongoBsonValue(array, true)).toString(),
+                mongoResultSetExtended.getObject(ARRAY_COL_LABEL).toString());
+        assertEquals(
+                (new MongoBsonValue(array, false)).toString(),
+                mongoResultSet.getObject(ARRAY_COL_LABEL).toString());
     }
 
     @Test
@@ -616,7 +650,7 @@ class MongoResultSetTest extends MongoMock {
         assertEquals(2.4, mongoResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                new MongoBsonValue(new BsonInt32(3)),
+                new MongoBsonValue(new BsonInt32(3), false),
                 mongoResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoResultSet.getObject(NULL_COL));
@@ -628,11 +662,11 @@ class MongoResultSetTest extends MongoMock {
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        assertEquals(new MongoBsonValue(array), mongoResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(new MongoBsonValue(array, false), mongoResultSet.getObject(ARRAY_COL_LABEL));
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
-        assertEquals(new MongoBsonValue(doc), mongoResultSet.getObject(DOC_COL_LABEL));
+        assertEquals(new MongoBsonValue(doc, false), mongoResultSet.getObject(DOC_COL_LABEL));
 
         byte[] binary = {10, 20, 30};
         assertArrayEquals(binary, (byte[]) mongoResultSet.getObject(BINARY_COL_LABEL));
@@ -1011,7 +1045,7 @@ class MongoResultSetTest extends MongoMock {
                             return generateRow();
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1031,7 +1065,7 @@ class MongoResultSetTest extends MongoMock {
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -1068,7 +1102,7 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -1102,7 +1136,7 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
 
         assertEquals(10, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -1162,7 +1196,7 @@ class MongoResultSetTest extends MongoMock {
                             return doc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema, false);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());
