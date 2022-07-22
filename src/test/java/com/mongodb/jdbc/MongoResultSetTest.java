@@ -66,6 +66,7 @@ class MongoResultSetTest extends MongoMock {
     static MongoResultSet mongoResultSet;
     static MongoResultSet mongoResultSetAllTypes;
     static MongoResultSet closedMongoResultSet;
+    static MongoResultSet mongoResultSetExtended;
 
     private static MongoResultSetMetaData resultSetMetaData;
     private static MongoStatement mongoStatement;
@@ -132,9 +133,13 @@ class MongoResultSetTest extends MongoMock {
             closedMongoResultSet =
                     new MongoResultSet(
                             mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, false);
+            mongoResultSetExtended =
+                    new MongoResultSet(
+                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, true);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
             closedMongoResultSet.next();
+            mongoResultSetExtended.next();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -448,6 +453,34 @@ class MongoResultSetTest extends MongoMock {
         Timestamp t = new Timestamp(d.getValue());
 
         assertEquals(t.toString(), mongoResultSetAllTypes.getObject(ALL_DATE_COL_LABEL).toString());
+
+        // test that the string values match for the objects with EXTENDED and RELAXED json modes
+        assertEquals(
+                new MongoBsonValue(new BsonInt32(3), true).toString(),
+                mongoResultSetExtended.getObject(ANY_OF_INT_STRING_COL).toString());
+        assertEquals(
+                new MongoBsonValue(new BsonInt32(3), false).toString(),
+                mongoResultSet.getObject(ANY_OF_INT_STRING_COL).toString());
+
+        BsonDocument doc = new BsonDocument();
+        doc.put(INT_COL_LABEL, new BsonInt32(5));
+        assertEquals(
+                new MongoBsonValue(doc, true).toString(),
+                mongoResultSetExtended.getObject(DOC_COL_LABEL).toString());
+        assertEquals(
+                new MongoBsonValue(doc, false).toString(),
+                mongoResultSet.getObject(DOC_COL_LABEL).toString());
+
+        BsonArray array = new BsonArray();
+        array.add(new BsonInt32(5));
+        array.add(new BsonInt32(6));
+        array.add(new BsonInt32(7));
+        assertEquals(
+                (new MongoBsonValue(array, true)).toString(),
+                mongoResultSetExtended.getObject(ARRAY_COL_LABEL).toString());
+        assertEquals(
+                (new MongoBsonValue(array, false)).toString(),
+                mongoResultSet.getObject(ARRAY_COL_LABEL).toString());
     }
 
     @Test
