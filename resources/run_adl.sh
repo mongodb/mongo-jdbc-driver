@@ -171,7 +171,7 @@ if [[ $? -ne 0 ]]; then
     # Install and start mongod
     (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_LINK)
 
-    # Uncompressed the archive
+    # Uncompress the archive
     if [[ $OS =~ ^CYGWIN ]]; then
       unzip -o $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE -d $LOCAL_INSTALL_DIR
 
