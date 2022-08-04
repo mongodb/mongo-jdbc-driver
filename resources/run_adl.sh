@@ -236,7 +236,7 @@ if [[ $? -ne 0 ]]; then
     # Set relevant environment variables
     export MONGOHOUSE_ENVIRONMENT="local"
     if [[ $OS =~ ^CYGWIN ]]; then
-      export MONGOHOUSE_MQLRUN=$(cygpath -m $(pwd)/artifacts/mqlrun)
+      export MONGOHOUSE_MQLRUN=$(cygpath -m $(pwd)/artifacts/mqlrun.exe)
       export LIBRARY_PATH=$(cygpath -m $(pwd)/artifacts)
       MONGOSQL_LIB=$(cygpath -m $(pwd)/mongosql.dll)
     else
