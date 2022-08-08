@@ -4,7 +4,7 @@
 # operation: 'start' or 'stop'
 #
 # This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
-# The supported platforms are macos, ubuntu1804, and rhel7.
+# The supported platforms are windows, macos, ubuntu1804, and rhel7.
 #
 # - To skip the download of ADL, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
 #   and set the environment variable LOCAL_MONGOHOUSE_DIR to the root directory of the
@@ -28,14 +28,13 @@ GO_VERSION="go1.17"
 if [ -d "/opt/golang/$GO_VERSION" ]; then
   GOROOT="/opt/golang/$GO_VERSION"
   GOBINDIR="$GOROOT"/bin
-  PATH=$GOBINDIR:$PATH
 elif [ -d "C:\golang\\$GO_VERSION" ]; then
   GOROOT="C:\golang\\$GO_VERSION"
   GOBINDIR="$GOROOT"\\bin
-  PATH=$GOBINDIR:$PATH
   export GOCACHE=$(cygpath -m $HOME/gocache)
   export GOPATH=$(cygpath -m $HOME/go)
 fi
+PATH=$GOBINDIR:$PATH
 
 TMP_DIR="/tmp/run_adl/"
 LOCAL_INSTALL_DIR=$(pwd)/local_adl
@@ -171,6 +170,8 @@ if [[ $? -ne 0 ]]; then
     # Install and start mongod
     (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_LINK)
 
+    # Note: ADL has a storage.json file that generates configs for us.
+    # The mongodb source is on port $MONGOD_PORT so we use that here.
     # Uncompress the archive
     if [[ $OS =~ ^CYGWIN ]]; then
       unzip -o $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE -d $LOCAL_INSTALL_DIR
@@ -186,8 +187,6 @@ if [[ $? -ne 0 ]]; then
       echo $! > $TMP_DIR/${MONGOD}.pid
     else
       tar zxvf $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE --directory $LOCAL_INSTALL_DIR
-      # Note: ADL has a storage.json file that generates configs for us.
-      # The mongodb source is on port $MONGOD_PORT so we use that here.
       MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/${MONGO_DOWNLOAD_FILE:0:$((${#MONGO_DOWNLOAD_FILE} - 4))}
       $MONGO_DOWNLOAD_DIR/bin/mongod --port $MONGOD_PORT --dbpath $MONGO_DB_PATH \
         --logpath $LOGS_PATH/mongodb_test.log --pidfilepath $TMP_DIR/${MONGOD}.pid --fork
