@@ -4,7 +4,7 @@
 # operation: 'start' or 'stop'
 #
 # This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
-# The supported platforms are macos, ubuntu1804, and rhel7.
+# The supported platforms are windows, macos, ubuntu1804, and rhel7.
 #
 # - To skip the download of ADL, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
 #   and set the environment variable LOCAL_MONGOHOUSE_DIR to the root directory of the
@@ -28,8 +28,13 @@ GO_VERSION="go1.17"
 if [ -d "/opt/golang/$GO_VERSION" ]; then
   GOROOT="/opt/golang/$GO_VERSION"
   GOBINDIR="$GOROOT"/bin
-  PATH=$GOBINDIR:$PATH
+elif [ -d "C:\golang\\$GO_VERSION" ]; then
+  GOROOT="C:\golang\\$GO_VERSION"
+  GOBINDIR="$GOROOT"\\bin
+  export GOCACHE=$(cygpath -m $HOME/gocache)
+  export GOPATH=$(cygpath -m $HOME/go)
 fi
+PATH=$GOBINDIR:$PATH
 
 TMP_DIR="/tmp/run_adl/"
 LOCAL_INSTALL_DIR=$(pwd)/local_adl
@@ -46,6 +51,7 @@ MONGOHOUSED="mongohoused"
 TENANT_CONFIG="./testdata/config/mongodb_local/tenant-config.json"
 MONGO_DOWNLOAD_LINK=
 MONGO_DOWNLOAD_DIR=
+MONGO_DOWNLOAD_FILE=
 OS=$(uname)
 TIMEOUT=120
 
@@ -56,6 +62,8 @@ MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu1804-5.0.4.tgz
 MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-5.0.4.tgz
 # macOS
 MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-5.0.4.tgz
+# Windows
+MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-5.0.4.zip
 
 mkdir -p $LOCAL_INSTALL_DIR
 
@@ -100,8 +108,10 @@ get_jq() {
   if [[ $? -ne 0 ]]; then
     if [ $OS = "Linux" ]; then
       curl -L -o $TMP_DIR/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-    else
+    elif [ $OS = "Darwin" ]; then
       curl -L -o $TMP_DIR/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
+    else
+      curl -L -o $TMP_DIR/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe
     fi
     chmod +x $TMP_DIR/jq
     export PATH=$PATH:$TMP_DIR
@@ -127,16 +137,22 @@ if [ $OS = "Linux" ]; then
   if [ "$distro" = "\"Red Hat Enterprise Linux\"" ] ||
 [ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
     export VARIANT=rhel7
-    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_REDHAT
+    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT
+    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_REDHAT
   elif [ "$distro" = "\"Ubuntu\"" ]; then
-    export VARIANT=ubuntu1804  
-    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_UBUNTU
+    export VARIANT=ubuntu1804
+    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_UBUNTU
+    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU
   else
     echo ${distro} not supported
     exit 1
   fi
 elif [ $OS = "Darwin" ]; then
-  MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_MAC
+  MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_MAC
+  MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_MAC
+elif [[ $OS =~ ^CYGWIN ]]; then
+  MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/windows/$MONGO_DOWNLOAD_WIN
+  MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_WIN
 else
   echo $(uname) not supported
   exit 1
@@ -146,25 +162,35 @@ check_mongod
 if [[ $? -ne 0 ]]; then
   if [ $ARG = $START ]; then
     echo "Starting $MONGOD"
-    # Install and start mongod
-    if [ $OS = "Linux" ]; then
-      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_LINK)
-    else
-      (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_LINK)
-    fi
-
-    # Uncompressed the archive
-    tar zxvf $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_LINK --directory $LOCAL_INSTALL_DIR
-    MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/${MONGO_DOWNLOAD_LINK:0:$((${#MONGO_DOWNLOAD_LINK} - 4))}
 
     mkdir -p $MONGO_DB_PATH
     mkdir -p $LOGS_PATH
     mkdir -p $TMP_DIR
 
+    # Install and start mongod
+    (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_LINK)
+
     # Note: ADL has a storage.json file that generates configs for us.
     # The mongodb source is on port $MONGOD_PORT so we use that here.
-    $MONGO_DOWNLOAD_DIR/bin/mongod --port $MONGOD_PORT --dbpath $MONGO_DB_PATH \
-      --logpath $LOGS_PATH/mongodb_test.log --pidfilepath $TMP_DIR/${MONGOD}.pid --fork
+    # Uncompress the archive
+    if [[ $OS =~ ^CYGWIN ]]; then
+      unzip -o $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE -d $LOCAL_INSTALL_DIR
+
+      # Obtain unzipped directory name
+      MONGO_UNZIP_DIR=$(unzip -l $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE | grep mongod.exe | tr -s ' ' \
+	          | cut -d ' ' -f 5 | cut -d/ -f1)
+      chmod +x $LOCAL_INSTALL_DIR/$MONGO_UNZIP_DIR/bin/mongod.exe
+      MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/$MONGO_UNZIP_DIR
+      # mongod does not have --fork option on Windows, using nohup
+      nohup $MONGO_DOWNLOAD_DIR/bin/mongod --port $MONGOD_PORT --dbpath $(cygpath -m ${MONGO_DB_PATH}) \
+              --logpath $(cygpath -m $LOGS_PATH/mongodb_test.log) &
+      echo $! > $TMP_DIR/${MONGOD}.pid
+    else
+      tar zxvf $LOCAL_INSTALL_DIR/$MONGO_DOWNLOAD_FILE --directory $LOCAL_INSTALL_DIR
+      MONGO_DOWNLOAD_DIR=$LOCAL_INSTALL_DIR/${MONGO_DOWNLOAD_FILE:0:$((${#MONGO_DOWNLOAD_FILE} - 4))}
+      $MONGO_DOWNLOAD_DIR/bin/mongod --port $MONGOD_PORT --dbpath $MONGO_DB_PATH \
+        --logpath $LOGS_PATH/mongodb_test.log --pidfilepath $TMP_DIR/${MONGOD}.pid --fork
+    fi
   fi
 else
   if [ $ARG = $STOP ]; then
@@ -188,7 +214,11 @@ if [[ $? -ne 0 ]]; then
         cd $LOCAL_MONGOHOUSE_DIR
     else
         echo "Downloading mongohouse"
-        MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
+        if [[ $OS =~ ^CYGWIN ]]; then
+          MONGOHOUSE_DIR=$(cygpath -m $LOCAL_INSTALL_DIR/mongohouse)
+        else
+          MONGOHOUSE_DIR=$LOCAL_INSTALL_DIR/mongohouse
+        fi
         # Install and start mongohoused
         git config --global url.git@github.com:.insteadOf https://github.com/
         # Clone the mongohouse repo
@@ -204,11 +234,17 @@ if [[ $? -ne 0 ]]; then
 
     # Set relevant environment variables
     export MONGOHOUSE_ENVIRONMENT="local"
-    export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
-    export LIBRARY_PATH="$(pwd)/artifacts"
+    if [[ $OS =~ ^CYGWIN ]]; then
+      export MONGOHOUSE_MQLRUN=$(cygpath -m $(pwd)/artifacts/mqlrun.exe)
+      export LIBRARY_PATH=$(cygpath -m $(pwd)/artifacts)
+      MONGOSQL_LIB=$(cygpath -m $(pwd)/mongosql.dll)
+    else
+      export MONGOHOUSE_MQLRUN="$(pwd)/artifacts/mqlrun"
+      export LIBRARY_PATH="$(pwd)/artifacts"
+      MONGOSQL_LIB=$(pwd)/artifacts/libmongosql.a
+    fi
 
     # Download latest versions of external dependencies
-    MONGOSQL_LIB=$(pwd)/artifacts/libmongosql.a
     if [[ $HAVE_LOCAL_MONGOHOUSE -eq 1 && -f "$MOGOHOUSE_MQLRUN" ]]; then
         cp ${MONGOHOUSE_MQLRUN} ${MOGOHOUSE_MQLRUN}.orig
     fi
