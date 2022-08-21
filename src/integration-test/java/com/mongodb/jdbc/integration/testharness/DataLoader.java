@@ -16,9 +16,11 @@
 
 package com.mongodb.jdbc.integration.testharness;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.Pair;
@@ -60,15 +62,15 @@ public class DataLoader {
     private List<TestDataEntry> datasets;
     private Set<Pair<String, String>> collections;
     private Set<String> databases;
-    private MongoClientURI mdbUri;
-    private MongoClientURI adlUri;
+    private ConnectionString mdbUri;
+    private ConnectionString adlUri;
 
     public DataLoader(String dataDirectory) throws IOException {
         this.datasets = new ArrayList<>();
         this.collections = new HashSet<>();
         this.databases = new HashSet<>();
-        this.mdbUri = new MongoClientURI(LOCAL_MDB_URL);
-        this.adlUri = new MongoClientURI(LOCAL_ADL_URL);
+        this.mdbUri = new ConnectionString(LOCAL_MDB_URL);
+        this.adlUri = new ConnectionString(LOCAL_ADL_URL);
 
         readDataFiles(dataDirectory);
     }
@@ -103,7 +105,7 @@ public class DataLoader {
 
     /** Drops collections specified in test data files */
     public void dropCollections() {
-        try (MongoClient mongoClient = new MongoClient(mdbUri)) {
+        try (MongoClient mongoClient = MongoClients.create(mdbUri)) {
             for (Pair<String, String> collection : collections) {
                 MongoDatabase database = mongoClient.getDatabase(collection.left());
                 database.getCollection(collection.right()).drop();
@@ -123,8 +125,8 @@ public class DataLoader {
         Document doc = new Document(jsonSchema);
         schema.put(
                 "jsonSchema",
-                doc.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry()));
-        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+                doc.toBsonDocument(BsonDocument.class, MongoClientSettings.getDefaultCodecRegistry()));
+        try (MongoClient mongoClient = MongoClients.create(adlUri)) {
             MongoDatabase db = mongoClient.getDatabase(database);
             db.runCommand(command);
         }
@@ -140,7 +142,7 @@ public class DataLoader {
         coll.add(new BsonString(database + "." + collection));
         command.put("sampleNamespaces", coll);
 
-        try (MongoClient mongoClient = new MongoClient(adlUri)) {
+        try (MongoClient mongoClient = MongoClients.create(adlUri)) {
             MongoDatabase db = mongoClient.getDatabase("admin");
             db.runCommand(command);
         }
@@ -155,7 +157,7 @@ public class DataLoader {
     @SuppressWarnings("unchecked")
     public void loadTestData() throws IOException {
         try {
-            try (MongoClient mongoClient = new MongoClient(mdbUri)) {
+            try (MongoClient mongoClient = MongoClients.create(mdbUri)) {
                 Map<String, String> views = new HashMap<>();
                 for (TestDataEntry entry : datasets) {
                     MongoDatabase database = mongoClient.getDatabase(entry.db);

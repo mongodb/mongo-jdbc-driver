@@ -61,6 +61,11 @@ public class BsonExplicitCursor implements MongoCursor<BsonDocument> {
     }
 
     @Override
+    public int available() {
+        return docs.size() - rowNum;
+    }
+
+    @Override
     public BsonDocument tryNext() {
         if (hasNext()) {
             return next();
