@@ -18,8 +18,8 @@ package com.mongodb.jdbc.integration.testharness;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -125,7 +125,8 @@ public class DataLoader {
         Document doc = new Document(jsonSchema);
         schema.put(
                 "jsonSchema",
-                doc.toBsonDocument(BsonDocument.class, MongoClientSettings.getDefaultCodecRegistry()));
+                doc.toBsonDocument(
+                        BsonDocument.class, MongoClientSettings.getDefaultCodecRegistry()));
         try (MongoClient mongoClient = MongoClients.create(adlUri)) {
             MongoDatabase db = mongoClient.getDatabase(database);
             db.runCommand(command);
