@@ -475,7 +475,7 @@ public class MongoConnection implements Connection {
         @Override
         public Void call() throws SQLException {
             Statement statement = createStatement();
-            boolean resultExists = statement.execute("SELECT 1 from DUAL");
+            boolean resultExists = statement.execute("SELECT 1");
             if (!resultExists) {
                 // no resultSet returned
                 throw new SQLException("Connection error");
