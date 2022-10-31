@@ -160,13 +160,11 @@ jar {
 }
 
 shadowJar {
-    relocate('org.aspectj', 'shadow.org.aspectj')
     relocate('com.google', 'shadow.com.google')
     relocate('com.mongodb', 'shadow.com.mongodb') {
         exclude 'com.mongodb.jdbc'
         exclude 'com.mongodb.jdbc.**'
     }
-    relocate('javax', 'shadow.javax')
     relocate('org', 'shadow.org')
 }
 
