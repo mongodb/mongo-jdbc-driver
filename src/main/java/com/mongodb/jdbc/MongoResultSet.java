@@ -1261,7 +1261,10 @@ public class MongoResultSet implements ResultSet {
     }
 
     protected Clob getClob(BsonValue o) throws SQLException {
-        return new SerialClob(Objects.requireNonNull(getString(o)).toCharArray());
+        if (checkNull(o)) {
+            return null;
+        }
+        return new SerialClob(getString(o).toCharArray());
     }
 
     @Override
