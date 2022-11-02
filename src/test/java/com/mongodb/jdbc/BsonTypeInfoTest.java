@@ -20,7 +20,15 @@ import static com.mongodb.jdbc.BsonTypeInfo.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.util.Date;
+
+import org.bson.*;
+import org.bson.types.Decimal128;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
 public class BsonTypeInfoTest {
@@ -47,11 +55,36 @@ public class BsonTypeInfoTest {
         assertEquals(BSON_SYMBOL, getBsonTypeInfoByName("symbol"));
         assertEquals(BSON_TIMESTAMP, getBsonTypeInfoByName("timestamp"));
         assertEquals(BSON_UNDEFINED, getBsonTypeInfoByName("undefined"));
+        assertEquals(BSON_DOCUMENT, getBsonTypeInfoByName("document"));
 
         // Test invalid type name
         assertThrows(
                 SQLException.class,
                 () -> getBsonTypeInfoByName("invalid"),
                 "invalid BSON type name expected to throw exception");
+    }
+    @Test
+    void testGetBsonTypeInfoByValue() throws SQLException {
+        assertEquals(BSON_ARRAY, getBsonTypeInfoFromBson(new BsonArray()));
+        assertEquals(BSON_BOOL, getBsonTypeInfoFromBson(new BsonBoolean(true)));
+        assertEquals(BSON_BINDATA, getBsonTypeInfoFromBson(new BsonBinary("a".getBytes(StandardCharsets.UTF_8))));
+        assertEquals(BSON_DATE, getBsonTypeInfoFromBson(new BsonDateTime(1)));
+        assertEquals(BSON_DBPOINTER, getBsonTypeInfoFromBson(new BsonDbPointer("test", new ObjectId())));
+        assertEquals(BSON_DECIMAL, getBsonTypeInfoFromBson(new BsonDecimal128(new Decimal128(1))));
+        assertEquals(BSON_DOUBLE, getBsonTypeInfoFromBson(new BsonDouble(2.2)));
+        assertEquals(BSON_INT, getBsonTypeInfoFromBson(new BsonInt32(1)));
+        assertEquals(BSON_JAVASCRIPT, getBsonTypeInfoFromBson(new BsonJavaScript("")));
+        assertEquals(BSON_JAVASCRIPTWITHSCOPE, getBsonTypeInfoFromBson(new BsonJavaScriptWithScope("", new BsonDocument())));
+        assertEquals(BSON_LONG, getBsonTypeInfoFromBson(new BsonInt64(1)));
+        assertEquals(BSON_MAXKEY, getBsonTypeInfoFromBson(new BsonMaxKey()));
+        assertEquals(BSON_MINKEY, getBsonTypeInfoFromBson(new BsonMinKey()));
+        assertEquals(BSON_NULL, getBsonTypeInfoFromBson(new BsonNull()));
+        assertEquals(BSON_OBJECTID, getBsonTypeInfoFromBson(new BsonObjectId()));
+        assertEquals(BSON_REGEX, getBsonTypeInfoFromBson(new BsonRegularExpression("")));
+        assertEquals(BSON_STRING, getBsonTypeInfoFromBson(new BsonString("")));
+        assertEquals(BSON_SYMBOL, getBsonTypeInfoFromBson(new BsonSymbol("")));
+        assertEquals(BSON_TIMESTAMP, getBsonTypeInfoFromBson(new BsonTimestamp()));
+        assertEquals(BSON_UNDEFINED, getBsonTypeInfoFromBson(new BsonUndefined()));
+        assertEquals(BSON_DOCUMENT, getBsonTypeInfoFromBson(new BsonDocument()));
     }
 }
