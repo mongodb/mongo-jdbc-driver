@@ -16,16 +16,59 @@
 
 package com.mongodb.jdbc;
 
-import static com.mongodb.jdbc.BsonTypeInfo.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import org.bson.*;
+import org.bson.BsonArray;
+import org.bson.BsonBinary;
+import org.bson.BsonBoolean;
+import org.bson.BsonDateTime;
+import org.bson.BsonDbPointer;
+import org.bson.BsonDecimal128;
+import org.bson.BsonDocument;
+import org.bson.BsonDouble;
+import org.bson.BsonInt32;
+import org.bson.BsonInt64;
+import org.bson.BsonJavaScript;
+import org.bson.BsonJavaScriptWithScope;
+import org.bson.BsonMaxKey;
+import org.bson.BsonMinKey;
+import org.bson.BsonNull;
+import org.bson.BsonObjectId;
+import org.bson.BsonRegularExpression;
+import org.bson.BsonString;
+import org.bson.BsonSymbol;
+import org.bson.BsonTimestamp;
+import org.bson.BsonUndefined;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_ARRAY;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_BINDATA;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_BOOL;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_DATE;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_DBPOINTER;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_DECIMAL;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_DOUBLE;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_INT;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_JAVASCRIPT;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_JAVASCRIPTWITHSCOPE;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_LONG;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_MAXKEY;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_MINKEY;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_NULL;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_OBJECT;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_OBJECTID;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_REGEX;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_STRING;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_SYMBOL;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_TIMESTAMP;
+import static com.mongodb.jdbc.BsonTypeInfo.BSON_UNDEFINED;
+import static com.mongodb.jdbc.BsonTypeInfo.getBsonTypeInfoByName;
+import static com.mongodb.jdbc.BsonTypeInfo.getBsonTypeInfoFromBsonValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BsonTypeInfoTest {
     @Test
@@ -51,7 +94,6 @@ public class BsonTypeInfoTest {
         assertEquals(BSON_SYMBOL, getBsonTypeInfoByName("symbol"));
         assertEquals(BSON_TIMESTAMP, getBsonTypeInfoByName("timestamp"));
         assertEquals(BSON_UNDEFINED, getBsonTypeInfoByName("undefined"));
-        assertEquals(BSON_DOCUMENT, getBsonTypeInfoByName("document"));
 
         // Test invalid type name
         assertThrows(
@@ -89,6 +131,6 @@ public class BsonTypeInfoTest {
         assertEquals(BSON_SYMBOL, getBsonTypeInfoFromBsonValue(new BsonSymbol("")));
         assertEquals(BSON_TIMESTAMP, getBsonTypeInfoFromBsonValue(new BsonTimestamp()));
         assertEquals(BSON_UNDEFINED, getBsonTypeInfoFromBsonValue(new BsonUndefined()));
-        assertEquals(BSON_DOCUMENT, getBsonTypeInfoFromBsonValue(new BsonDocument()));
+        assertEquals(BSON_OBJECT, getBsonTypeInfoFromBsonValue(new BsonDocument()));
     }
 }
