@@ -57,8 +57,7 @@ public enum BsonTypeInfo {
     BSON_DECIMAL("decimal", BsonType.DECIMAL128, Types.DECIMAL, false, 34, 34, 10, 34, 34, 16),
     BSON_MINKEY("minKey", BsonType.MIN_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
     BSON_MAXKEY("maxKey", BsonType.MAX_KEY, Types.OTHER, false, 0, 0, 0, null, null, null),
-    BSON_BSON("bson", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null),
-    BSON_DOCUMENT("document", BsonType.DOCUMENT, Types.OTHER, false, 0, 0, 0, null, null, null);
+    BSON_BSON("bson", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null);
 
     // BSON_TYPE_NAMES is the set of all valid BSON type names as listed
     // here: https://mongodb.github.io/mongo-java-driver/3.12/javadoc/org/bson/BsonType.html
@@ -68,7 +67,6 @@ public enum BsonTypeInfo {
     private static final Set<String> BSON_TYPE_NAMES =
             new HashSet<>(
                     Arrays.asList(
-                            BSON_DOCUMENT.bsonName,
                             BSON_DOUBLE.bsonName,
                             BSON_STRING.bsonName,
                             BSON_OBJECT.bsonName,
@@ -213,7 +211,9 @@ public enum BsonTypeInfo {
             case STRING:
                 return BSON_STRING;
             case DOCUMENT:
-                return BSON_DOCUMENT;
+                // BsonDocument and BSON_OBJECT are synonymous. To maintain consistency within ADL,
+                // BsonDocuments will be treated as BSON_OBJECTs
+                return BSON_OBJECT;
             case ARRAY:
                 return BSON_ARRAY;
             case BINARY:
@@ -291,8 +291,6 @@ public enum BsonTypeInfo {
                         return BSON_DOUBLE;
                     case 7:
                         return BSON_DECIMAL;
-                    case 8:
-                        return BSON_DOCUMENT;
                     case 9:
                         return BSON_DBPOINTER;
                 }
