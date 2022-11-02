@@ -195,13 +195,14 @@ public enum BsonTypeInfo {
         }
     }
 
-  /**
-   * Converts a bson value to a BsonTypeInfo
-   * @param obj is the Bson value to convert.
-   * @return BsonTypeInfo object corresponding to the Bson type.
-   * @throws SQLException
-   */
-  public static BsonTypeInfo getBsonTypeInfoFromBson(BsonValue obj) throws SQLException {
+    /**
+     * Converts a bson value to a BsonTypeInfo
+     *
+     * @param obj is the Bson value to convert.
+     * @return BsonTypeInfo object corresponding to the Bson type.
+     * @throws SQLException
+     */
+    public static BsonTypeInfo getBsonTypeInfoFromBson(BsonValue obj) throws SQLException {
         if (obj == null) {
             throw new SQLException("Missing bson type name. Value is Null");
         }

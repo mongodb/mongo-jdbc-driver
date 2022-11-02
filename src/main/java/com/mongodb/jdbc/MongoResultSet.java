@@ -377,10 +377,11 @@ public class MongoResultSet implements ResultSet {
             case BOOLEAN:
                 return o.asBoolean().getValue();
             case DECIMAL128:
-            {
-                Decimal128 v = o.asDecimal128().getValue();
-                return !Objects.equals(v, Decimal128.POSITIVE_ZERO) && !Objects.equals(v, Decimal128.NEGATIVE_ZERO);
-            }
+                {
+                    Decimal128 v = o.asDecimal128().getValue();
+                    return !Objects.equals(v, Decimal128.POSITIVE_ZERO)
+                            && !Objects.equals(v, Decimal128.NEGATIVE_ZERO);
+                }
             case DOUBLE:
                 return o.asDouble().getValue() != 0.0;
             case INT32:
@@ -804,8 +805,8 @@ public class MongoResultSet implements ResultSet {
                     throw new SQLException(e);
                 }
             default:
-        return handleBigDecimalConversionFailure(bsonType.getBsonName());
-       }
+                return handleBigDecimalConversionFailure(bsonType.getBsonName());
+        }
     }
 
     @Override
