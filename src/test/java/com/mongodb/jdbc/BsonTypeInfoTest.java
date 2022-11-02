@@ -16,34 +16,6 @@
 
 package com.mongodb.jdbc;
 
-import org.bson.BsonArray;
-import org.bson.BsonBinary;
-import org.bson.BsonBoolean;
-import org.bson.BsonDateTime;
-import org.bson.BsonDbPointer;
-import org.bson.BsonDecimal128;
-import org.bson.BsonDocument;
-import org.bson.BsonDouble;
-import org.bson.BsonInt32;
-import org.bson.BsonInt64;
-import org.bson.BsonJavaScript;
-import org.bson.BsonJavaScriptWithScope;
-import org.bson.BsonMaxKey;
-import org.bson.BsonMinKey;
-import org.bson.BsonNull;
-import org.bson.BsonObjectId;
-import org.bson.BsonRegularExpression;
-import org.bson.BsonString;
-import org.bson.BsonSymbol;
-import org.bson.BsonTimestamp;
-import org.bson.BsonUndefined;
-import org.bson.types.Decimal128;
-import org.bson.types.ObjectId;
-import org.junit.jupiter.api.Test;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-
 import static com.mongodb.jdbc.BsonTypeInfo.BSON_ARRAY;
 import static com.mongodb.jdbc.BsonTypeInfo.BSON_BINDATA;
 import static com.mongodb.jdbc.BsonTypeInfo.BSON_BOOL;
@@ -69,6 +41,33 @@ import static com.mongodb.jdbc.BsonTypeInfo.getBsonTypeInfoByName;
 import static com.mongodb.jdbc.BsonTypeInfo.getBsonTypeInfoFromBsonValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import org.bson.BsonArray;
+import org.bson.BsonBinary;
+import org.bson.BsonBoolean;
+import org.bson.BsonDateTime;
+import org.bson.BsonDbPointer;
+import org.bson.BsonDecimal128;
+import org.bson.BsonDocument;
+import org.bson.BsonDouble;
+import org.bson.BsonInt32;
+import org.bson.BsonInt64;
+import org.bson.BsonJavaScript;
+import org.bson.BsonJavaScriptWithScope;
+import org.bson.BsonMaxKey;
+import org.bson.BsonMinKey;
+import org.bson.BsonNull;
+import org.bson.BsonObjectId;
+import org.bson.BsonRegularExpression;
+import org.bson.BsonString;
+import org.bson.BsonSymbol;
+import org.bson.BsonTimestamp;
+import org.bson.BsonUndefined;
+import org.bson.types.Decimal128;
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Test;
 
 public class BsonTypeInfoTest {
     @Test
