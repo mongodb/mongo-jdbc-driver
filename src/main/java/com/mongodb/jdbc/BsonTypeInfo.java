@@ -202,7 +202,7 @@ public enum BsonTypeInfo {
      * @return BsonTypeInfo object corresponding to the Bson type.
      * @throws SQLException
      */
-    public static BsonTypeInfo getBsonTypeInfoFromBson(BsonValue obj) throws SQLException {
+    public static BsonTypeInfo getBsonTypeInfoFromBsonValue(BsonValue obj) throws SQLException {
         if (obj == null) {
             throw new SQLException("Missing bson type name. Value is Null");
         }

@@ -61,32 +61,34 @@ public class BsonTypeInfoTest {
     }
 
     @Test
-    void testGetBsonTypeInfoByValue() throws SQLException {
-        assertEquals(BSON_ARRAY, getBsonTypeInfoFromBson(new BsonArray()));
-        assertEquals(BSON_BOOL, getBsonTypeInfoFromBson(new BsonBoolean(true)));
+    void testGetBsonTypeInfoFromBsonValue() throws SQLException {
+        assertEquals(BSON_ARRAY, getBsonTypeInfoFromBsonValue(new BsonArray()));
+        assertEquals(BSON_BOOL, getBsonTypeInfoFromBsonValue(new BsonBoolean(true)));
         assertEquals(
                 BSON_BINDATA,
-                getBsonTypeInfoFromBson(new BsonBinary("a".getBytes(StandardCharsets.UTF_8))));
-        assertEquals(BSON_DATE, getBsonTypeInfoFromBson(new BsonDateTime(1)));
+                getBsonTypeInfoFromBsonValue(new BsonBinary("a".getBytes(StandardCharsets.UTF_8))));
+        assertEquals(BSON_DATE, getBsonTypeInfoFromBsonValue(new BsonDateTime(1)));
         assertEquals(
-                BSON_DBPOINTER, getBsonTypeInfoFromBson(new BsonDbPointer("test", new ObjectId())));
-        assertEquals(BSON_DECIMAL, getBsonTypeInfoFromBson(new BsonDecimal128(new Decimal128(1))));
-        assertEquals(BSON_DOUBLE, getBsonTypeInfoFromBson(new BsonDouble(2.2)));
-        assertEquals(BSON_INT, getBsonTypeInfoFromBson(new BsonInt32(1)));
-        assertEquals(BSON_JAVASCRIPT, getBsonTypeInfoFromBson(new BsonJavaScript("")));
+                BSON_DBPOINTER,
+                getBsonTypeInfoFromBsonValue(new BsonDbPointer("test", new ObjectId())));
+        assertEquals(
+                BSON_DECIMAL, getBsonTypeInfoFromBsonValue(new BsonDecimal128(new Decimal128(1))));
+        assertEquals(BSON_DOUBLE, getBsonTypeInfoFromBsonValue(new BsonDouble(2.2)));
+        assertEquals(BSON_INT, getBsonTypeInfoFromBsonValue(new BsonInt32(1)));
+        assertEquals(BSON_JAVASCRIPT, getBsonTypeInfoFromBsonValue(new BsonJavaScript("")));
         assertEquals(
                 BSON_JAVASCRIPTWITHSCOPE,
-                getBsonTypeInfoFromBson(new BsonJavaScriptWithScope("", new BsonDocument())));
-        assertEquals(BSON_LONG, getBsonTypeInfoFromBson(new BsonInt64(1)));
-        assertEquals(BSON_MAXKEY, getBsonTypeInfoFromBson(new BsonMaxKey()));
-        assertEquals(BSON_MINKEY, getBsonTypeInfoFromBson(new BsonMinKey()));
-        assertEquals(BSON_NULL, getBsonTypeInfoFromBson(new BsonNull()));
-        assertEquals(BSON_OBJECTID, getBsonTypeInfoFromBson(new BsonObjectId()));
-        assertEquals(BSON_REGEX, getBsonTypeInfoFromBson(new BsonRegularExpression("")));
-        assertEquals(BSON_STRING, getBsonTypeInfoFromBson(new BsonString("")));
-        assertEquals(BSON_SYMBOL, getBsonTypeInfoFromBson(new BsonSymbol("")));
-        assertEquals(BSON_TIMESTAMP, getBsonTypeInfoFromBson(new BsonTimestamp()));
-        assertEquals(BSON_UNDEFINED, getBsonTypeInfoFromBson(new BsonUndefined()));
-        assertEquals(BSON_DOCUMENT, getBsonTypeInfoFromBson(new BsonDocument()));
+                getBsonTypeInfoFromBsonValue(new BsonJavaScriptWithScope("", new BsonDocument())));
+        assertEquals(BSON_LONG, getBsonTypeInfoFromBsonValue(new BsonInt64(1)));
+        assertEquals(BSON_MAXKEY, getBsonTypeInfoFromBsonValue(new BsonMaxKey()));
+        assertEquals(BSON_MINKEY, getBsonTypeInfoFromBsonValue(new BsonMinKey()));
+        assertEquals(BSON_NULL, getBsonTypeInfoFromBsonValue(new BsonNull()));
+        assertEquals(BSON_OBJECTID, getBsonTypeInfoFromBsonValue(new BsonObjectId()));
+        assertEquals(BSON_REGEX, getBsonTypeInfoFromBsonValue(new BsonRegularExpression("")));
+        assertEquals(BSON_STRING, getBsonTypeInfoFromBsonValue(new BsonString("")));
+        assertEquals(BSON_SYMBOL, getBsonTypeInfoFromBsonValue(new BsonSymbol("")));
+        assertEquals(BSON_TIMESTAMP, getBsonTypeInfoFromBsonValue(new BsonTimestamp()));
+        assertEquals(BSON_UNDEFINED, getBsonTypeInfoFromBsonValue(new BsonUndefined()));
+        assertEquals(BSON_DOCUMENT, getBsonTypeInfoFromBsonValue(new BsonDocument()));
     }
 }

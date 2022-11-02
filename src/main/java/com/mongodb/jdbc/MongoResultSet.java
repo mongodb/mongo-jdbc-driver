@@ -229,7 +229,7 @@ public class MongoResultSet implements ResultSet {
             wasNull = true;
             return true;
         }
-        switch (BsonTypeInfo.getBsonTypeInfoFromBson(obj).getBsonType()) {
+        switch (BsonTypeInfo.getBsonTypeInfoFromBsonValue(obj).getBsonType()) {
             case NULL:
             case UNDEFINED:
                 wasNull = true;
@@ -256,7 +256,7 @@ public class MongoResultSet implements ResultSet {
         // we only allow getting Strings and Binaries as Bytes so that
         // we can conveniently ignore Endianess issues. Null and undefined
         // are still supported because Bytes's can be null.
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (bsonType.getBsonType()) {
             case BINARY:
                 return o.asBinary().getData();
@@ -372,7 +372,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return false;
         }
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (bsonType.getBsonType()) {
             case BOOLEAN:
                 return o.asBoolean().getValue();
@@ -389,16 +389,13 @@ public class MongoResultSet implements ResultSet {
             case INT64:
                 return o.asInt64().getValue() != 0;
             case NULL:
+            case UNDEFINED:
                 // this is consistent with $convert in mongodb insofar as getBoolean
                 // returns false for null values.
                 return false;
             case STRING:
                 // mongodb $convert converts all strings to true, even the empty string.
                 return true;
-            case UNDEFINED:
-                // this is consistent with $convert in mongodb insofar as getBoolean
-                // returns false for null values.
-                return false;
             default:
                 return handleBooleanConversionFailure(bsonType.getBsonName());
         }
@@ -479,7 +476,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return 0L;
         }
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (o.getBsonType()) {
             case BOOLEAN:
                 return o.asBoolean().getValue() ? 1 : 0;
@@ -547,7 +544,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return 0.0;
         }
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (o.getBsonType()) {
             case BOOLEAN:
                 return o.asBoolean().getValue() ? 1.0 : 0.0;
@@ -562,14 +559,13 @@ public class MongoResultSet implements ResultSet {
                 return o.asInt32().getValue();
             case INT64:
                 return (double) o.asInt64().getValue();
-            case NULL:
-                return 0.0;
             case STRING:
                 try {
                     return Double.parseDouble(o.asString().getValue());
                 } catch (NumberFormatException e) {
                     throw new SQLException(e);
                 }
+            case NULL:
             case UNDEFINED:
                 // this is consistent with $convert in mongodb insofar as getDouble
                 // returns 0.0 for null values.
@@ -778,7 +774,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return BigDecimal.ZERO;
         }
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (o.getBsonType()) {
             case BOOLEAN:
                 return o.asBoolean().getValue() ? BigDecimal.ONE : BigDecimal.ZERO;
@@ -1306,7 +1302,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return null;
         }
-        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBson(o);
+        BsonTypeInfo bsonType = BsonTypeInfo.getBsonTypeInfoFromBsonValue(o);
         switch (o.getBsonType()) {
             case DATE_TIME:
                 return new java.util.Date(o.asDateTime().getValue());
