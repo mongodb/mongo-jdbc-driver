@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.bson.BsonType;
+import org.bson.BsonValue;
 
 public enum BsonTypeInfo {
     BSON_DOUBLE("double", BsonType.DOUBLE, Types.DOUBLE, false, 15, 15, 2, 15, 15, 8),
@@ -59,7 +60,7 @@ public enum BsonTypeInfo {
     BSON_BSON("bson", BsonType.UNDEFINED, Types.OTHER, false, 0, 0, 0, null, null, null);
 
     // BSON_TYPE_NAMES is the set of all valid BSON type names as listed
-    // here: https://docs.mongodb.com/manual/reference/bson-types/#bson-types
+    // here: https://mongodb.github.io/mongo-java-driver/3.12/javadoc/org/bson/BsonType.html
     // Note that BsonTypeInfo contains a BSON_BSON variant which is intentionally
     // omitted from this set. That is because "bson" is our catch-all for a
     // value that has "any" type, but is not an actual specific BSON type.
@@ -189,6 +190,68 @@ public enum BsonTypeInfo {
                 return this.precision;
             default:
                 return null;
+        }
+    }
+
+    /**
+     * Converts a bson value to a BsonTypeInfo
+     *
+     * @param obj is the Bson value to convert.
+     * @return BsonTypeInfo object corresponding to the Bson type.
+     * @throws SQLException
+     */
+    public static BsonTypeInfo getBsonTypeInfoFromBsonValue(BsonValue obj) throws SQLException {
+        if (obj == null) {
+            throw new SQLException("Missing bson type name. Value is Null");
+        }
+        BsonType type = obj.getBsonType();
+        switch (type) {
+            case DOUBLE:
+                return BSON_DOUBLE;
+            case STRING:
+                return BSON_STRING;
+            case DOCUMENT:
+                // BsonDocument and BSON_OBJECT are synonymous. To maintain consistency within ADL,
+                // BsonDocuments will be treated as BSON_OBJECTs
+                return BSON_OBJECT;
+            case ARRAY:
+                return BSON_ARRAY;
+            case BINARY:
+                return BSON_BINDATA;
+            case UNDEFINED:
+                return BSON_UNDEFINED;
+            case OBJECT_ID:
+                return BSON_OBJECTID;
+            case BOOLEAN:
+                return BSON_BOOL;
+            case DATE_TIME:
+                return BSON_DATE;
+            case NULL:
+                return BSON_NULL;
+            case REGULAR_EXPRESSION:
+                return BSON_REGEX;
+            case DB_POINTER:
+                return BSON_DBPOINTER;
+            case JAVASCRIPT:
+                return BSON_JAVASCRIPT;
+            case SYMBOL:
+                return BSON_SYMBOL;
+            case JAVASCRIPT_WITH_SCOPE:
+                return BSON_JAVASCRIPTWITHSCOPE;
+            case INT32:
+                return BSON_INT;
+            case TIMESTAMP:
+                return BSON_TIMESTAMP;
+            case INT64:
+                return BSON_LONG;
+            case DECIMAL128:
+                return BSON_DECIMAL;
+            case MIN_KEY:
+                return BSON_MINKEY;
+            case MAX_KEY:
+                return BSON_MAXKEY;
+            default:
+                throw new SQLException("Unknown bson type name: \"" + type.name() + "\"");
         }
     }
 
