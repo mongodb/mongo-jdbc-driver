@@ -377,10 +377,14 @@ public class MongoDriver implements Driver {
         char[] password = result.password;
 
         List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
+
+        // A database to connect to is required. If they have not specified one, look in the connection string for a
+        // database. The specified database in the connect window will always override the uri database.
+        if ((!info.containsKey(DATABASE.getPropertyName()) || info.getProperty(DATABASE.getPropertyName()).isEmpty()) && originalConnectionString.getDatabase() != null) {
+            info.setProperty(DATABASE.getPropertyName(), originalConnectionString.getDatabase());
+        }
         if (!info.containsKey(DATABASE.getPropertyName())
                 || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
-            // Missing required database used for querying (as opposed to the authentication
-            // database which can be provided in the connection string)
             mandatoryConnectionProperties.add(
                     new DriverPropertyInfo(DATABASE.getPropertyName(), null));
         }

@@ -45,6 +45,7 @@ class MongoDriverTest {
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
+    static final String dbInURL = "jdbc:mongodb://localhost/foo?authSource=admin";
     // Even though ADL does not support replSets, this tests that we handle these URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
@@ -105,6 +106,15 @@ class MongoDriverTest {
         // DATABASE.getPropertyName() is not the same as the authDATABASE.getPropertyName() in the uri.
         // So this is safe and should not throw.
         assertNotNull(d.getUnvalidatedConnection(authDBURL, p));
+    }
+
+    @Test
+    void testURIDBURL() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(USER_CONN_KEY, "AzureDiamond");
+        p.setProperty(PWD_CONN_KEY, "hunter2");
+        assertNotNull(d.getUnvalidatedConnection(dbInURL, p));
     }
 
     private void missingConnectionSettings(
