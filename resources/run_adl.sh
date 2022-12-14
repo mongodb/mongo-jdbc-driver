@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # Usage: run_adl.sh <operation>
 # operation: 'start' or 'stop'
 #
@@ -68,12 +68,12 @@ MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-5.0.4.zip
 mkdir -p $LOCAL_INSTALL_DIR
 
 check_procname() {
-  ps -ef 2>/dev/null | grep $1 | grep -v grep >/dev/null 
+  ps -ef 2>/dev/null | grep $1 | grep -v grep >/dev/null
   result=$?
-  
+
   if [[ result -eq 0 ]]; then
     return 0
-  else 
+  else
     return 1
   fi
 }
@@ -81,10 +81,10 @@ check_procname() {
 check_port() {
   netstat -van 2>/dev/null | grep LISTEN | grep $1 >/dev/null
   result=$?
-  
+
   if [[ result -eq 0 ]]; then
     return 0
-  else 
+  else
     return 1
   fi
 }
@@ -253,7 +253,7 @@ if [[ $? -ne 0 ]]; then
     fi
     rm -f $MONGOHOUSE_MQLRUN
     go run cmd/buildscript/build.go tools:download:mqlrun
-    rm -f $MONGOSQL_LIB
+    # rm -f $MONGOSQL_LIB
     go run cmd/buildscript/build.go tools:download:mongosql
 
     get_jq
