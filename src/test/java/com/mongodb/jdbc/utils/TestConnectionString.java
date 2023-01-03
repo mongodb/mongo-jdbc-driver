@@ -9,7 +9,7 @@ import java.util.Properties;
 import static com.mongodb.jdbc.MongoDriver.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TestJavaDriver {
+class TestConnectionString {
   static final String localhost = "mongodb://localhost";
   static final String localhostWithOnlyDB = "mongodb://localhost/authDB";
   static final String onlyAuthSource = "mongodb://localhost/?authSource=authDB";
