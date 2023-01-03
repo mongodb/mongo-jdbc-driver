@@ -370,7 +370,6 @@ public class MongoDriver implements Driver {
             throw new SQLException(e);
         }
 
-
         ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
         String user = result.user;
         char[] password = result.password;
