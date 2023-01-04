@@ -37,6 +37,7 @@ class TestConnectionString {
     static final String DATABASE = "database";
     static final String DB = "foo";
     static final String AUTHDB = "authDB";
+    static final String POUET = "pouet";
 
     @Test
     void testLocalHost() throws Exception {
@@ -47,8 +48,8 @@ class TestConnectionString {
 
         Pair<ConnectionString, DriverPropertyInfo[]> result = getConnectionSettings(localhost, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), DB);
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(DB, result.left().getCredential().getSource());
     }
 
     @Test
@@ -60,8 +61,8 @@ class TestConnectionString {
         Pair<ConnectionString, DriverPropertyInfo[]> result =
                 getConnectionSettings(localhostWithOnlyDB, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), "authDB");
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(AUTHDB, result.left().getCredential().getSource());
     }
 
     @Test
@@ -74,9 +75,9 @@ class TestConnectionString {
         Pair<ConnectionString, DriverPropertyInfo[]> result =
                 getConnectionSettings(localhostWithOnlyDB, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), DB);
-        assertEquals(result.left().getDatabase(), DB);
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(DB, result.left().getCredential().getSource());
+        assertEquals(DB, result.left().getDatabase());
     }
 
     @Test
@@ -89,9 +90,9 @@ class TestConnectionString {
         Pair<ConnectionString, DriverPropertyInfo[]> result =
                 getConnectionSettings(onlyAuthSource, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), AUTHDB);
-        assertEquals(result.left().getDatabase(), DB);
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(AUTHDB, result.left().getCredential().getSource());
+        assertEquals(DB, result.left().getDatabase());
     }
 
     @Test
@@ -103,9 +104,9 @@ class TestConnectionString {
         Pair<ConnectionString, DriverPropertyInfo[]> result =
                 getConnectionSettings(dbAndAuthSource, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), AUTHDB);
-        assertEquals(result.left().getDatabase(), "pouet");
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(AUTHDB, result.left().getCredential().getSource());
+        assertEquals(POUET, result.left().getDatabase());
     }
 
     @Test
@@ -117,8 +118,8 @@ class TestConnectionString {
         Pair<ConnectionString, DriverPropertyInfo[]> result =
                 getConnectionSettings(dbAndAuthSource, p);
 
-        assertEquals(result.left().getCredential().getUserName(), USER);
-        assertEquals(result.left().getCredential().getSource(), AUTHDB);
-        assertEquals(result.left().getDatabase(), DB);
+        assertEquals(USER, result.left().getCredential().getUserName());
+        assertEquals(AUTHDB, result.left().getCredential().getSource());
+        assertEquals(DB, result.left().getDatabase());
     }
 }
