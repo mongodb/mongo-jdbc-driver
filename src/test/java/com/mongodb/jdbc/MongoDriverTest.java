@@ -41,13 +41,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoDriverTest {
     static final String basicURL = "jdbc:mongodb://localhost";
-    static final String authDBURL = "jdbc:mongodb://localhost/admin";
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
+    static final String dbInURL = "jdbc:mongodb://localhost/foo?authSource=admin";
     // Even though ADL does not support replSets, this tests that we handle these URLs properly
     // for the future.
-    static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910/admin";
+    static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910";
 
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
@@ -93,18 +93,12 @@ class MongoDriverTest {
     }
 
     @Test
-    void testDBURL() throws SQLException {
+    void testURIDBURL() throws SQLException {
         MongoDriver d = new MongoDriver();
-        missingConnectionSettings(d, authDBURL, null);
-
         Properties p = new Properties();
-        missingConnectionSettings(d, authDBURL, p);
-
-        p.setProperty(DATABASE.getPropertyName(), "admin2");
-
-        // DATABASE.getPropertyName() is not the same as the authDATABASE.getPropertyName() in the uri.
-        // So this is safe and should not throw.
-        assertNotNull(d.getUnvalidatedConnection(authDBURL, p));
+        p.setProperty(USER_CONN_KEY, "AzureDiamond");
+        p.setProperty(PWD_CONN_KEY, "hunter2");
+        assertNotNull(d.getUnvalidatedConnection(dbInURL, p));
     }
 
     private void missingConnectionSettings(

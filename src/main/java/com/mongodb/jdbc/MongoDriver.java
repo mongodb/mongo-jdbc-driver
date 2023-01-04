@@ -356,7 +356,7 @@ public class MongoDriver implements Driver {
 
     // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    private Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
+    public static Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
             String url, Properties info) throws SQLException {
         if (info == null) {
             info = new Properties();
@@ -370,20 +370,25 @@ public class MongoDriver implements Driver {
             throw new SQLException(e);
         }
 
-        String authDatabase = originalConnectionString.getDatabase();
-
         ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
         String user = result.user;
         char[] password = result.password;
 
         List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
+
+        // A database to connect to is required. If they have not specified one, look in the connection string for a
+        // database. The specified database in the connect window will always override the uri database.
+        if ((!info.containsKey(DATABASE.getPropertyName())
+                        || info.getProperty(DATABASE.getPropertyName()).isEmpty())
+                && originalConnectionString.getDatabase() != null) {
+            info.setProperty(DATABASE.getPropertyName(), originalConnectionString.getDatabase());
+        }
         if (!info.containsKey(DATABASE.getPropertyName())
                 || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
-            // Missing required database used for querying (as opposed to the authentication
-            // database which can be provided in the connection string)
             mandatoryConnectionProperties.add(
                     new DriverPropertyInfo(DATABASE.getPropertyName(), null));
         }
+        String authDatabase = info.getProperty(DATABASE.getPropertyName());
 
         if (user == null && password != null) {
             // user is null, but password is not, we must prompt for the user.
