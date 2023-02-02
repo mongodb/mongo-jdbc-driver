@@ -63,11 +63,25 @@ public class MongoFunctions {
     public String systemFunctionsString;
 
     // Common and repeated function names.
+    protected static final String ABS = "ABS";
+    protected static final String CEIL = "CEIL";
+    protected static final String COS = "COS";
+    protected static final String DEGREES = "DEGREES";
+    protected static final String FLOOR = "FLOOR";
+    protected static final String LOG = "LOG";
+    protected static final String MOD = "MOD";
+    protected static final String POW = "POW";
+    protected static final String RADIANS = "RADIANS";
+    protected static final String ROUND = "ROUND";
+    protected static final String SIN = "SIN";
+    protected static final String SQRT = "SQRT";
+    protected static final String TAN = "TAN";
     protected static final String CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
-    protected static final String SUBSTRING = "SUBSTRING";
-    protected static final String COALESCE = "COALESCE";
+    protected static final String DATEADD = "DATEADD";
+    protected static final String DATEDIFF = "DATEDIFF";
+    protected static final String DATETRUNC = "DATETRUNC";
     protected static final String EXTRACT = "EXTRACT";
-    protected static final String NULLIF = "NULLIF";
+    protected static final String SUBSTRING = "SUBSTRING";
 
     private MongoFunctions(MongoFunction[] functions) {
         this.functions = functions;
@@ -80,16 +94,84 @@ public class MongoFunctions {
                     new MongoFunctions(
                             new MongoFunction[] {
                                 new MongoFunction(
+                                        ABS,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns the absolute value of the given number.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ABS,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the absolute value of the given number.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ABS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the absolute value of the given number.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ABS,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the absolute value of the given number.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
                                         "BIT_LENGTH",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns length of string in bits",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                new MongoFunction(
+                                        CEIL,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or greater value.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()}),
+                                new MongoFunction(
+                                        CEIL,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or greater value.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()}),
+                                new MongoFunction(
+                                        CEIL,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or greater value.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()}),
+                                new MongoFunction(
+                                        CEIL,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or greater value.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()}),
                                 new MongoFunction(
                                         "CHAR_LENGTH",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
                                         "returns length of string",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()},
                                         FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        COS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the cosine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        COS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the cosine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        COS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the cosine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        COS,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the cosine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         CURRENT_TIMESTAMP,
                                         BsonTypeInfo.BSON_DATE.getBsonName(),
@@ -102,6 +184,84 @@ public class MongoFunctions {
                                         "returns the current date and time.",
                                         // Timestamp precision
                                         new String[] {BsonTypeInfo.BSON_INT.getBsonName()}),
+                                new MongoFunction(
+                                        DATEADD,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the specified date with the specified number interval added to the specified date_part of that date.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DATEADD,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the specified date with the specified number interval added to the specified date_part of that date.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DATEDIFF,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the difference between date1 and date2 expressed in units of date_part.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DATEDIFF,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "returns the difference between date1 and date2 expressed in units of date_part.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DATETRUNC,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "truncates the specified date to the accuracy specified by date_part.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DATETRUNC,
+                                        BsonTypeInfo.BSON_DATE.getBsonName(),
+                                        "truncates the specified date to the accuracy specified by date_part.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_DATE.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        DEGREES,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from radians to degrees.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        DEGREES,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from radians to degrees.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        DEGREES,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from radians to degrees.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        DEGREES,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the given number converted from radians to degrees.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
                                 /**
                                  * Note EXTRACT supports more than YEAR, MONTH, DAY, HOUR, MINUTE,
                                  * SECOND for the unit. It also supports TIMEZONE_HOUR |
@@ -117,10 +277,306 @@ public class MongoFunctions {
                                         },
                                         FunctionCategory.TIME_DATE_FUNC),
                                 new MongoFunction(
+                                        FLOOR,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or lesser value.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        FLOOR,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or lesser value.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        FLOOR,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or lesser value.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        FLOOR,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns a number to the nearest whole number of equal or lesser value.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        LOG,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the logarithm of a number for the given base.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
                                         "LOWER",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
                                         "returns the provided string with all characters changed to lowercase.",
                                         new String[] {BsonTypeInfo.BSON_STRING.getBsonName()}),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        MOD,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "divides number by divisor and returns the remainder.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "OCTET_LENGTH",
                                         BsonTypeInfo.BSON_LONG.getBsonName(),
@@ -137,10 +593,292 @@ public class MongoFunctions {
                                         },
                                         FunctionCategory.STRING_FUNC),
                                 new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        POW,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the number raised to the specified exponent.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName()
+                                        }),
+                                new MongoFunction(
+                                        RADIANS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from degrees to radians.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        RADIANS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from degrees to radians.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        RADIANS,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the given number converted from degrees to radians.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        RADIANS,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the given number converted from degrees to radians.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_INT.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_INT.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_LONG.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_LONG.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        ROUND,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "rounds number to a specified number of digits.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                            BsonTypeInfo.BSON_LONG.getBsonName()
+                                        },
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SIN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the sine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SIN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the sine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SIN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the sine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SIN,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the sine of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
                                         "SIZE",
                                         BsonTypeInfo.BSON_DECIMAL.getBsonName(),
                                         "returns the size of an array.",
                                         new String[] {BsonTypeInfo.BSON_ARRAY.getBsonName()}),
+                                new MongoFunction(
+                                        "SPLIT",
+                                        BsonTypeInfo.BSON_STRING.getBsonName(),
+                                        "returns a substring from a string, using a delimiter character to divide the string into a sequence of tokens.",
+                                        new String[] {
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_STRING.getBsonName(),
+                                            BsonTypeInfo.BSON_INT.getBsonName()
+                                        },
+                                        FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        SQRT,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the square root of a positive number.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SQRT,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the square root of a positive number.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SQRT,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the square root of a positive number.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        SQRT,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the square root of a positive number.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         SUBSTRING,
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
@@ -159,6 +897,30 @@ public class MongoFunctions {
                                             BsonTypeInfo.BSON_LONG.getBsonName()
                                         },
                                         FunctionCategory.STRING_FUNC),
+                                new MongoFunction(
+                                        TAN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the tangent of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_INT.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        TAN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the tangent of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_LONG.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        TAN,
+                                        BsonTypeInfo.BSON_DOUBLE.getBsonName(),
+                                        "returns the tangent of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DOUBLE.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
+                                new MongoFunction(
+                                        TAN,
+                                        BsonTypeInfo.BSON_DECIMAL.getBsonName(),
+                                        "returns the tangent of an angle specified in radians.",
+                                        new String[] {BsonTypeInfo.BSON_DECIMAL.getBsonName()},
+                                        FunctionCategory.NUM_FUNC),
                                 new MongoFunction(
                                         "TRIM",
                                         BsonTypeInfo.BSON_STRING.getBsonName(),
