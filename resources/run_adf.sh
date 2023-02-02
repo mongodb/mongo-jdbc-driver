@@ -1,18 +1,18 @@
 #!/bin/bash
 # 
-# Usage: run_adl.sh <operation>
+# Usage: run_adf.sh <operation>
 # operation: 'start' or 'stop'
 #
 # This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
 # The supported platforms are windows, macos, ubuntu1804, and rhel7.
 #
-# - To skip the download of ADL, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
+# - To skip the download of ADF, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
 #   and set the environment variable LOCAL_MONGOHOUSE_DIR to the root directory of the
 #   mongohouse source tree.
-# - To skip the operations of this script, set the environment variable SKIP_RUN_ADL to 1.
+# - To skip the operations of this script, set the environment variable SKIP_RUN_ADF to 1.
 
 NAME=`basename "$0"`
-if [[ $SKIP_RUN_ADL -eq 1 ]]; then
+if [[ $SKIP_RUN_ADF -eq 1 ]]; then
   echo "Skipping $NAME"
   exit 0
 fi
@@ -36,12 +36,12 @@ elif [ -d "C:\golang\\$GO_VERSION" ]; then
 fi
 PATH=$GOBINDIR:$PATH
 
-TMP_DIR="/tmp/run_adl/"
-LOCAL_INSTALL_DIR=$(pwd)/local_adl
+TMP_DIR="/tmp/run_adf/"
+LOCAL_INSTALL_DIR=$(pwd)/local_adf
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
 MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
 LOGS_PATH=$LOCAL_INSTALL_DIR/logs
-DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adl_db_config.json
+DB_CONFIG_PATH=$(pwd)/resources/integration_test/testdata/adf_db_config.json
 MONGOD_PORT=28017
 MONGOHOUSED_PORT=27017
 START="start"
@@ -170,7 +170,7 @@ if [[ $? -ne 0 ]]; then
     # Install and start mongod
     (cd $LOCAL_INSTALL_DIR && curl -O $MONGO_DOWNLOAD_LINK)
 
-    # Note: ADL has a storage.json file that generates configs for us.
+    # Note: ADF has a storage.json file that generates configs for us.
     # The mongodb source is on port $MONGOD_PORT so we use that here.
     # Uncompress the archive
     if [[ $OS =~ ^CYGWIN ]]; then
@@ -286,7 +286,7 @@ if [[ $? -ne 0 ]]; then
             break
         fi
         if [[ "$waitCounter" -gt $TIMEOUT ]]; then
-            echo "ERROR: Local ADL did not start under $TIMEOUT seconds"
+            echo "ERROR: Local ADF did not start under $TIMEOUT seconds"
             exit 1
         fi
         let waitCounter=waitCounter+1

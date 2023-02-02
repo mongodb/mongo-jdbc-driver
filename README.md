@@ -102,9 +102,9 @@ You can find the generated jar in build/libs/
 ## Integration Testing
 Integration testing requires a local MongoDB and Atlas Data Lake instance to be running
 #### Environment Variables
-**ADL_TEST_LOCAL_USER**: Local ADL username  
-**ADL_TEST_LOCAL_PWD**: Local ADL password  
-**ADL_TEST_LOCAL_AUTH_DB**: Local ADL authentication database  
+**ADF_TEST_LOCAL_USER**: Local ADF username  
+**ADF_TEST_LOCAL_PWD**: Local ADF password  
+**ADF_TEST_LOCAL_AUTH_DB**: Local ADF authentication database  
 **HAVE_LOCAL_MONGOHOUSE**: "1" if using local mongohouse source  
 **LOCAL_MONGOHOUSE_DIR**: Path to local mongohouse source
 
@@ -120,17 +120,17 @@ Integration testing requires a local MongoDB and Atlas Data Lake instance to be 
 ```
 
 ### Running Local mongod and Atlas Data Lake
-`run_adl.sh` is a helper script that will start a local mongod and Atlas Data Lake instance, used for integration testing.
+`run_adf.sh` is a helper script that will start a local mongod and Atlas Data Lake instance, used for integration testing.
 #### Start 
 ```
-./resources/run_adl.sh start
+./resources/run_adf.sh start
 ```
 #### Stop
 ```
-./resources/run_adl.sh stop
+./resources/run_adf.sh stop
 ```
 #### Skip
-Use the `SKIP_RUN_ADL` option to skip the start and stop operations for those managing their own local instances.
+Use the `SKIP_RUN_ADF` option to skip the start and stop operations for those managing their own local instances.
 ```
-export SKIP_RUN_ADL=1
+export SKIP_RUN_ADF=1
 ```

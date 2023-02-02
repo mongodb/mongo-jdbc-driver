@@ -11,11 +11,11 @@ public class MongoSQLTestUtils extends TestUtils {
 
     @Override
     protected Connection connect() throws Exception {
-        // Connects to local ADL instance
+        // Connects to local ADF instance
         java.util.Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
-        p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
+        p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
+        p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
+        p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", TEST_DB);
         p.setProperty("ssl", "false");
         Connection conn = DriverManager.getConnection(URL, p);

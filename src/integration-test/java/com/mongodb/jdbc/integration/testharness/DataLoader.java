@@ -51,11 +51,11 @@ public class DataLoader {
     public static final String TEST_DATA_DIRECTORY = "resources/integration_test/testdata";
     public static final String LOCAL_MDB_URL =
             "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
-    public static final String LOCAL_ADL_URL =
+    public static final String LOCAL_ADF_URL =
             "mongodb://"
-                    + System.getenv("ADL_TEST_LOCAL_USER")
+                    + System.getenv("ADF_TEST_LOCAL_USER")
                     + ":"
-                    + System.getenv("ADL_TEST_LOCAL_PWD")
+                    + System.getenv("ADF_TEST_LOCAL_PWD")
                     + "@localhost";
     private static Yaml yaml = new Yaml(new Constructor(TestData.class));
 
@@ -63,14 +63,14 @@ public class DataLoader {
     private Set<Pair<String, String>> collections;
     private Set<String> databases;
     private ConnectionString mdbUri;
-    private ConnectionString adlUri;
+    private ConnectionString adfUri;
 
     public DataLoader(String dataDirectory) throws IOException {
         this.datasets = new ArrayList<>();
         this.collections = new HashSet<>();
         this.databases = new HashSet<>();
         this.mdbUri = new ConnectionString(LOCAL_MDB_URL);
-        this.adlUri = new ConnectionString(LOCAL_ADL_URL);
+        this.adfUri = new ConnectionString(LOCAL_ADF_URL);
 
         readDataFiles(dataDirectory);
     }
@@ -127,7 +127,7 @@ public class DataLoader {
                 "jsonSchema",
                 doc.toBsonDocument(
                         BsonDocument.class, MongoClientSettings.getDefaultCodecRegistry()));
-        try (MongoClient mongoClient = MongoClients.create(adlUri)) {
+        try (MongoClient mongoClient = MongoClients.create(adfUri)) {
             MongoDatabase db = mongoClient.getDatabase(database);
             db.runCommand(command);
         }
@@ -143,7 +143,7 @@ public class DataLoader {
         coll.add(new BsonString(database + "." + collection));
         command.put("sampleNamespaces", coll);
 
-        try (MongoClient mongoClient = MongoClients.create(adlUri)) {
+        try (MongoClient mongoClient = MongoClients.create(adfUri)) {
             MongoDatabase db = mongoClient.getDatabase("admin");
             db.runCommand(command);
         }
