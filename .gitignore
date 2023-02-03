@@ -11,3 +11,6 @@ demo/src/test/
 # Still retaining old "adl" name in gitignore for older setups
 local_adl
 local_adf
+
+# Ignore generated tests
+resources/generated_test
