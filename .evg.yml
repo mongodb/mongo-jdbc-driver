@@ -175,15 +175,14 @@ functions:
           MDBJDBC_VER: "$MDBJDBC_VER"
           JAVA_HOME: "$JAVA_HOME"
           PREPARE_SHELL: |
-            export ADF_TEST_LOCAL_USER=${adl_test_local_user}
-            export ADF_TEST_LOCAL_PWD=${adl_test_local_pwd}
-            export ADF_TEST_LOCAL_HOST=${adl_test_local_host}
-            export ADF_TEST_LOCAL_AUTH_DB=${adl_test_local_auth_db}
+            export ADF_TEST_LOCAL_USER=${adf_test_local_user}
+            export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
+            export ADF_TEST_LOCAL_AUTH_DB=${adf_test_local_auth_db}
             export MDB_TEST_LOCAL_PORT=${mdb_test_local_port}
-            export ADF_TEST_USER=${adl_test_user}
-            export ADF_TEST_PWD=${adl_test_pwd}
-            export ADF_TEST_HOST=${adl_test_host}
-            export ADF_TEST_AUTH_DB=${adl_test_auth_db}
+            export ADF_TEST_USER=${adf_test_user}
+            export ADF_TEST_PWD=${adf_test_pwd}
+            export ADF_TEST_HOST=${adf_test_host}
+            export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
           EOT
