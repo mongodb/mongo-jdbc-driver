@@ -100,7 +100,7 @@ You can find the generated jar in build/libs/
 ./gradlew spotlessApply
 ```
 ## Integration Testing
-Integration testing requires a local MongoDB and Atlas Data Lake instance to be running
+Integration testing requires a local MongoDB and Atlas Data Federation instance to be running
 #### Environment Variables
 **ADF_TEST_LOCAL_USER**: Local ADF username  
 **ADF_TEST_LOCAL_PWD**: Local ADF password  
@@ -119,8 +119,8 @@ Integration testing requires a local MongoDB and Atlas Data Lake instance to be 
 ./gradlew runTestGenerator
 ```
 
-### Running Local mongod and Atlas Data Lake
-`run_adf.sh` is a helper script that will start a local mongod and Atlas Data Lake instance, used for integration testing.
+### Running Local mongod and Atlas Data Federation
+`run_adf.sh` is a helper script that will start a local mongod and Atlas Data Federation instance, used for integration testing.
 #### Start 
 ```
 ./resources/run_adf.sh start

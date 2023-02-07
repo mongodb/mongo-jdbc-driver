@@ -3,7 +3,7 @@
 # Usage: run_adf.sh <operation>
 # operation: 'start' or 'stop'
 #
-# This script will start a local mongod and Atlas Data Lake instance, used for integration testing.
+# This script will start a local mongod and Atlas Data Federation instance, used for integration testing.
 # The supported platforms are windows, macos, ubuntu1804, and rhel7.
 #
 # - To skip the download of ADF, set the environment variable HAVE_LOCAL_MONGOHOUSE to 1
