@@ -853,8 +853,7 @@ public class MongoFunctions {
                                             BsonTypeInfo.BSON_STRING.getBsonName(),
                                             BsonTypeInfo.BSON_STRING.getBsonName(),
                                             BsonTypeInfo.BSON_INT.getBsonName()
-                                        },
-                                        FunctionCategory.STRING_FUNC),
+                                        }),
                                 new MongoFunction(
                                         SQRT,
                                         BsonTypeInfo.BSON_DOUBLE.getBsonName(),

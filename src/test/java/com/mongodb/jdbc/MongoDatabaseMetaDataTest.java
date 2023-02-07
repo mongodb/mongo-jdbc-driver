@@ -401,7 +401,7 @@ public class MongoDatabaseMetaDataTest {
     @Test
     void testGetStringFunctions() throws SQLException {
         final String expectedFunctions =
-                "CHAR_LENGTH," + "OCTET_LENGTH," + "POSITION," + "SPLIT," + "SUBSTRING";
+                "CHAR_LENGTH," + "OCTET_LENGTH," + "POSITION," + "SUBSTRING";
 
         assertEquals(expectedFunctions, databaseMetaData.getStringFunctions());
     }
