@@ -384,16 +384,16 @@ public class MongoDatabaseMetaDataTest {
     @Test
     void testGetNumericFunctions() throws SQLException {
         final String expectedFunctions =
-                "ABS,ABS,ABS,ABS,"
-                        + "COS,COS,COS,COS,"
-                        + "DEGREES,DEGREES,DEGREES,DEGREES,"
-                        + "FLOOR,FLOOR,FLOOR,FLOOR,"
-                        + "MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,MOD,"
-                        + "RADIANS,RADIANS,RADIANS,RADIANS,"
-                        + "ROUND,ROUND,ROUND,ROUND,ROUND,ROUND,ROUND,ROUND,"
-                        + "SIN,SIN,SIN,SIN,"
-                        + "SQRT,SQRT,SQRT,SQRT,"
-                        + "TAN,TAN,TAN,TAN";
+                "ABS,"
+                        + "COS,"
+                        + "DEGREES,"
+                        + "FLOOR,"
+                        + "MOD,"
+                        + "RADIANS,"
+                        + "ROUND,"
+                        + "SIN,"
+                        + "SQRT,"
+                        + "TAN";
 
         assertEquals(expectedFunctions, databaseMetaData.getNumericFunctions());
     }

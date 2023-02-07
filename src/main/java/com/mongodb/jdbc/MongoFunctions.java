@@ -16,6 +16,9 @@
 
 package com.mongodb.jdbc;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MongoFunctions {
     public enum FunctionCategory {
         STRING_FUNC,
@@ -960,6 +963,8 @@ public class MongoFunctions {
         StringBuilder dateTimeFunctionsBuilder = new StringBuilder();
         StringBuilder systemFunctionsBuilder = new StringBuilder();
 
+        Set<String> seenFunctions = new HashSet<>();
+
         StringBuilder currBuilder = null;
         for (MongoFunction currFunc : functions) {
             switch (currFunc.functionCategory) {
@@ -998,11 +1003,12 @@ public class MongoFunctions {
                     }
             }
 
-            if (null != currBuilder) {
+            if (null != currBuilder && !seenFunctions.contains(currFunc.name)) {
                 if (currBuilder.length() > 0) {
                     currBuilder.append(',');
                 }
                 currBuilder.append(currFunc.name);
+                seenFunctions.add(currFunc.name);
             }
         }
         numericFunctionsString = numericFunctionsBuilder.toString();
