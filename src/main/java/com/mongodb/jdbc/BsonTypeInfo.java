@@ -211,7 +211,7 @@ public enum BsonTypeInfo {
             case STRING:
                 return BSON_STRING;
             case DOCUMENT:
-                // BsonDocument and BSON_OBJECT are synonymous. To maintain consistency within ADL,
+                // BsonDocument and BSON_OBJECT are synonymous. To maintain consistency within ADF,
                 // BsonDocuments will be treated as BSON_OBJECTs
                 return BSON_OBJECT;
             case ARRAY:

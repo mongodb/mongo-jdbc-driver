@@ -74,9 +74,9 @@ public class MongoIntegrationTest {
             throws SQLException {
 
         Properties p = new java.util.Properties(extraProps);
-        p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
-        p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
+        p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
+        p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
+        p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
         return (MongoConnection) DriverManager.getConnection(URL, p);

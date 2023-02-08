@@ -302,7 +302,7 @@ public class MongoPreparedStatement implements PreparedStatement {
         return rs.getMetaData();
     }
 
-    // Supporting any of these set methods will require adding that functionality to ADL or
+    // Supporting any of these set methods will require adding that functionality to ADF or
     // having a SQL parser in Java.
     @Override
     public ParameterMetaData getParameterMetaData() throws SQLException {

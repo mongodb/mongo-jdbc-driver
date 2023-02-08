@@ -7,5 +7,10 @@ build
 # Ignore debugging helpers
 demo/src/test/
 
-# Ignore local ADL directory
+# Ignore local ADF directory
+# Still retaining old "adl" name in gitignore for older setups
 local_adl
+local_adf
+
+# Ignore generated tests
+resources/generated_test

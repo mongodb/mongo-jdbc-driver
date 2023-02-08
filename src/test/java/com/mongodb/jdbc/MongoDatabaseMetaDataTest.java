@@ -333,9 +333,9 @@ public class MongoDatabaseMetaDataTest {
     /** Test the DatabaseMetadata.getFunctions method. */
     void testGetFunctions() throws SQLException {
         // All function(s)
-        testGetFunctionsHelper("%", 15);
+        testGetFunctionsHelper("%", 114);
         // All function(s) with a 'S'
-        testGetFunctionsHelper("%S%", 6);
+        testGetFunctionsHelper("%S%", 31);
         // All function(s) with a 's'
         testGetFunctionsHelper("%s%", 0);
         // The 'SUBSTRING' function(s)
@@ -383,7 +383,17 @@ public class MongoDatabaseMetaDataTest {
 
     @Test
     void testGetNumericFunctions() throws SQLException {
-        final String expectedFunctions = "";
+        final String expectedFunctions =
+                "ABS,"
+                        + "COS,"
+                        + "DEGREES,"
+                        + "FLOOR,"
+                        + "MOD,"
+                        + "RADIANS,"
+                        + "ROUND,"
+                        + "SIN,"
+                        + "SQRT,"
+                        + "TAN";
 
         assertEquals(expectedFunctions, databaseMetaData.getNumericFunctions());
     }

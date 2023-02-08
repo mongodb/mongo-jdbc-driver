@@ -26,9 +26,9 @@ public class SmokeTest {
     public static Connection getBasicConnection(String url, String db)
             throws SQLException {
         Properties p = new java.util.Properties();
-        p.setProperty("user", System.getenv("ADL_TEST_LOCAL_USER"));
-        p.setProperty("password", System.getenv("ADL_TEST_LOCAL_PWD"));
-        p.setProperty("authSource", System.getenv("ADL_TEST_LOCAL_AUTH_DB"));
+        p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
+        p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
+        p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("ssl", "false");
         p.setProperty("database", db);
         return DriverManager.getConnection(URL, p);

@@ -30,42 +30,258 @@ tests:
     db: integration_test
     meta_function: [ getFunctions, integration_test, null, '%' ]
     expected_result:
-      - [ def, null, BIT_LENGTH, returns length of string in bits, 1, BIT_LENGTH ]
-      - [ def, null, CHAR_LENGTH, returns length of string, 1, CHAR_LENGTH ]
-      - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
-      - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
-      - [ def, null, EXTRACT, returns the value of the specified unit from the provided
-                                date., 1, EXTRACT ]
-      - [ def, null, LOWER, returns the provided string with all characters changed
-                              to lowercase., 1, LOWER ]
-      - [ def, null, OCTET_LENGTH, returns length of string in bytes, 1, OCTET_LENGTH ]
-      - [ def, null, POSITION, returns the position of the first occurrence of substring
-                                 substr in string str., 1, POSITION ]
-      - [ def, null, SIZE, returns the size of an array., 1, SIZE ]
-      - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
-      - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
-      - [ def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
-                             removed., 1, TRIM ]
-      - [ def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
-                             removed., 1, TRIM ]
-      - [ def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
-                             removed., 1, TRIM ]
-      - [ def, null, UPPER, returns the provided string with all characters changed
-                              to uppercase., 1, UPPER ]
-    row_count: 15
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, BIT_LENGTH, returns length of string in bits, 1, BIT_LENGTH]
+      - [def, null, CEIL, returns a number to the nearest whole number of equal or
+        greater value., 1, CEIL]
+      - [def, null, CEIL, returns a number to the nearest whole number of equal or
+        greater value., 1, CEIL]
+      - [def, null, CEIL, returns a number to the nearest whole number of equal or
+        greater value., 1, CEIL]
+      - [def, null, CEIL, returns a number to the nearest whole number of equal or
+        greater value., 1, CEIL]
+      - [def, null, CHAR_LENGTH, returns length of string, 1, CHAR_LENGTH]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP]
+      - [def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP]
+      - [def, null, DATEADD, returns the specified date with the specified number
+        interval added to the specified date_part of that date., 1, DATEADD]
+      - [def, null, DATEADD, returns the specified date with the specified number
+        interval added to the specified date_part of that date., 1, DATEADD]
+      - [def, null, DATEDIFF, returns the difference between date1 and date2 expressed
+        in units of date_part., 1, DATEDIFF]
+      - [def, null, DATEDIFF, returns the difference between date1 and date2 expressed
+        in units of date_part., 1, DATEDIFF]
+      - [def, null, DATETRUNC, truncates the specified date to the accuracy specified
+        by date_part., 1, DATETRUNC]
+      - [def, null, DATETRUNC, truncates the specified date to the accuracy specified
+        by date_part., 1, DATETRUNC]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, EXTRACT, returns the value of the specified unit from the provided
+        date., 1, EXTRACT]
+      - [def, null, FLOOR, returns a number to the nearest whole number of equal or
+        lesser value., 1, FLOOR]
+      - [def, null, FLOOR, returns a number to the nearest whole number of equal or
+        lesser value., 1, FLOOR]
+      - [def, null, FLOOR, returns a number to the nearest whole number of equal or
+        lesser value., 1, FLOOR]
+      - [def, null, FLOOR, returns a number to the nearest whole number of equal or
+        lesser value., 1, FLOOR]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOG, returns the logarithm of a number for the given base., 1,
+         LOG]
+      - [def, null, LOWER, returns the provided string with all characters changed
+        to lowercase., 1, LOWER]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, MOD, divides number by divisor and returns the remainder., 1,
+         MOD]
+      - [def, null, OCTET_LENGTH, returns length of string in bytes, 1, OCTET_LENGTH]
+      - [def, null, POSITION, returns the position of the first occurrence of substring
+        substr in string str., 1, POSITION]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, POW, returns the number raised to the specified exponent., 1,
+         POW]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, ROUND, rounds number to a specified number of digits., 1, ROUND]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIZE, returns the size of an array., 1, SIZE]
+      - [def, null, SPLIT, 'returns a substring from a string, using a delimiter character
+          to divide the string into a sequence of tokens.', 1, SPLIT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
+      - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
+      - [def, null, TAN, returns the tangent of an angle specified in radians., 1,
+         TAN]
+      - [def, null, TAN, returns the tangent of an angle specified in radians., 1,
+         TAN]
+      - [def, null, TAN, returns the tangent of an angle specified in radians., 1,
+         TAN]
+      - [def, null, TAN, returns the tangent of an angle specified in radians., 1,
+         TAN]
+      - [def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
+        removed., 1, TRIM]
+      - [def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
+        removed., 1, TRIM]
+      - [def, null, TRIM, returns the string str with all remstr prefixes and/or suffixes
+        removed., 1, TRIM]
+      - [def, null, UPPER, returns the provided string with all characters changed
+        to uppercase., 1, UPPER]
+    row_count: 114
 
   - description: getFunctions_partial_filter_with_wildcard_substrings_returns_matching_functions
     db: integration_test
     meta_function: [ getFunctions, integration_test, null, '%S%' ]
     expected_result:
-      - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
-      - [ def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP ]
-      - [ def, null, POSITION, returns the position of the first occurrence of substring
-                                 substr in string str., 1, POSITION ]
-      - [ def, null, SIZE, returns the size of an array., 1, SIZE ]
-      - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
-      - [ def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING ]
-    row_count: 6
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, ABS, returns the absolute value of the given number., 1, ABS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, COS, returns the cosine of an angle specified in radians., 1,
+         COS]
+      - [def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP]
+      - [def, null, CURRENT_TIMESTAMP, returns the current date and time., 1, CURRENT_TIMESTAMP]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, DEGREES, returns the given number converted from radians to degrees.,
+         1, DEGREES]
+      - [def, null, POSITION, returns the position of the first occurrence of substring
+        substr in string str., 1, POSITION]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, RADIANS, returns the given number converted from degrees to radians.,
+         1, RADIANS]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIN, returns the sine of an angle specified in radians., 1, SIN]
+      - [def, null, SIZE, returns the size of an array., 1, SIZE]
+      - [def, null, SPLIT, 'returns a substring from a string, using a delimiter character
+          to divide the string into a sequence of tokens.', 1, SPLIT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SQRT, returns the square root of a positive number., 1, SQRT]
+      - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
+      - [def, null, SUBSTRING, takes a substring from a string, 1, SUBSTRING]
+    row_count: 31
 
   - description: getFunctions_partial_filter_with_wildcard_characters_returns_matching_functions
     db: integration_test
@@ -133,114 +349,740 @@ tests:
     db: integration_test
     meta_function: [ "getFunctionColumns", "integration_test", null, "%", "%" ]
     expected_result:
-      - [def, null, BIT_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
-          length of string in bits, null, 1, 'YES', BIT_LENGTH]
-      - [def, null, BIT_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
-          length of string in bits, null, 1, 'YES', BIT_LENGTH]
-      - [def, null, CHAR_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
-          length of string, null, 1, 'YES', CHAR_LENGTH]
-      - [def, null, CHAR_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
-          length of string, null, 1, 'YES', CHAR_LENGTH]
-      - [def, null, CURRENT_TIMESTAMP, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns
-          the current date and time., null, 0, 'YES', CURRENT_TIMESTAMP]
-      - [def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
-          the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP]
-      - [def, null, CURRENT_TIMESTAMP, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns
-          the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP]
-      - [def, null, EXTRACT, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
-          value of the specified unit from the provided date., null, 1, 'YES', EXTRACT]
-      - [def, null, EXTRACT, arg2, 1, 93, date, 24, 8, 3, 0, 1, returns the value
-          of the specified unit from the provided date., null, 2, 'YES', EXTRACT]
-      - [def, null, EXTRACT, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the
-          value of the specified unit from the provided date., null, 2, 'YES', EXTRACT]
-      - [def, null, LOWER, arg1, 1, -1, string, null, 0, null, 0, 1, returns the provided
-          string with all characters changed to lowercase., null, 1, 'YES', LOWER]
-      - [def, null, LOWER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
-          the provided string with all characters changed to lowercase., null, 1,
-        'YES', LOWER]
-      - [def, null, OCTET_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
-          length of string in bytes, null, 1, 'YES', OCTET_LENGTH]
-      - [def, null, OCTET_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
-          length of string in bytes, null, 1, 'YES', OCTET_LENGTH]
-      - [def, null, POSITION, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
-          position of the first occurrence of substring substr in string str., null,
-        1, 'YES', POSITION]
-      - [def, null, POSITION, arg2, 1, -1, string, null, 0, null, 0, 1, returns the
-          position of the first occurrence of substring substr in string str., null,
-        2, 'YES', POSITION]
-      - [def, null, POSITION, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the
-          position of the first occurrence of substring substr in string str., null,
-        2, 'YES', POSITION]
-      - [def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
-          of an array., null, 1, 'YES', SIZE]
-      - [def, null, SIZE, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
-          size of an array., null, 1, 'YES', SIZE]
-      - [def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
-          from a string, null, 1, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 2, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, argReturn, 4, -1, string, null, 0, null, 0, 1, takes
-          a substring from a string, null, 2, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
-          from a string, null, 1, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 2, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg3, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 3, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, argReturn, 4, -1, string, null, 0, null, 0, 1, takes
-          a substring from a string, null, 3, 'YES', SUBSTRING]
-      - [def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM]
-      - [def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
-          string str with all remstr prefixes and/or suffixes removed., null, 1, 'YES',
-        TRIM]
-      - [def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM]
-      - [def, null, TRIM, arg2, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 2, 'YES', TRIM]
-      - [def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
-          string str with all remstr prefixes and/or suffixes removed., null, 2, 'YES',
-        TRIM]
-      - [def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM]
-      - [def, null, TRIM, arg2, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 2, 'YES', TRIM]
-      - [def, null, TRIM, arg3, 1, -1, string, null, 0, null, 0, 1, returns the string
-          str with all remstr prefixes and/or suffixes removed., null, 3, 'YES', TRIM]
-      - [def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
-          string str with all remstr prefixes and/or suffixes removed., null, 3, 'YES',
-        TRIM]
-      - [def, null, UPPER, arg1, 1, -1, string, null, 0, null, 0, 1, returns the provided
-          string with all characters changed to uppercase., null, 1, 'YES', UPPER]
-      - [def, null, UPPER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
-          the provided string with all characters changed to uppercase., null, 1,
-        'YES', UPPER]
-    row_count: 37
+      - [ def, null, ABS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        absolute value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, BIT_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
+        length of string in bits, null, 1, 'YES', BIT_LENGTH ]
+      - [ def, null, BIT_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
+        length of string in bits, null, 1, 'YES', BIT_LENGTH ]
+      - [ def, null, CEIL, arg1, 1, 4, int, 10, 4, null, 2, 1, returns a number to
+        the nearest whole number of equal or greater value., null, 1, 'YES', CEIL ]
+      - [ def, null, CEIL, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns a number
+        to the nearest whole number of equal or greater value., null, 1, 'YES',
+        CEIL ]
+      - [ def, null, CEIL, arg1, 1, -5, long, 19, 8, null, 2, 1, returns a number to
+        the nearest whole number of equal or greater value., null, 1, 'YES', CEIL ]
+      - [ def, null, CEIL, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns a number
+        to the nearest whole number of equal or greater value., null, 1, 'YES',
+        CEIL ]
+      - [ def, null, CEIL, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns a number to
+        the nearest whole number of equal or greater value., null, 1, 'YES', CEIL ]
+      - [ def, null, CEIL, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns a number
+        to the nearest whole number of equal or greater value., null, 1, 'YES',
+        CEIL ]
+      - [ def, null, CEIL, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns a number
+        to the nearest whole number of equal or greater value., null, 1, 'YES',
+        CEIL ]
+      - [ def, null, CEIL, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns a number
+        to the nearest whole number of equal or greater value., null, 1, 'YES',
+        CEIL ]
+      - [ def, null, CHAR_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
+        length of string, null, 1, 'YES', CHAR_LENGTH ]
+      - [ def, null, CHAR_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
+        length of string, null, 1, 'YES', CHAR_LENGTH ]
+      - [ def, null, COS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the cosine of
+        an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the cosine of
+        an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        cosine of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, CURRENT_TIMESTAMP, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns
+        the current date and time., null, 0, 'YES', CURRENT_TIMESTAMP ]
+      - [ def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
+        the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP ]
+      - [ def, null, CURRENT_TIMESTAMP, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns
+        the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP ]
+      - [ def, null, DATEADD, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        specified date with the specified number interval added to the specified
+        date_part of that date., null, 1, 'YES', DATEADD ]
+      - [ def, null, DATEADD, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 2, 'YES', DATEADD ]
+      - [ def, null, DATEADD, arg3, 1, 93, date, 24, 8, 3, 0, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 3, 'YES', DATEADD ]
+      - [ def, null, DATEADD, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 3, 'YES', DATEADD ]
+      - [ def, null, DATEADD, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        specified date with the specified number interval added to the specified
+        date_part of that date., null, 1, 'YES', DATEADD ]
+      - [ def, null, DATEADD, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 2, 'YES', DATEADD ]
+      - [ def, null, DATEADD, arg3, 1, 93, date, 24, 8, 3, 0, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 3, 'YES', DATEADD ]
+      - [ def, null, DATEADD, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns the specified
+        date with the specified number interval added to the specified date_part
+        of that date., null, 3, 'YES', DATEADD ]
+      - [ def, null, DATEDIFF, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        difference between date1 and date2 expressed in units of date_part., null,
+        1, 'YES', DATEDIFF ]
+      - [ def, null, DATEDIFF, arg2, 1, 93, date, 24, 8, 3, 0, 1, returns the difference
+        between date1 and date2 expressed in units of date_part., null, 2, 'YES',
+        DATEDIFF ]
+      - [ def, null, DATEDIFF, arg3, 1, 93, date, 24, 8, 3, 0, 1, returns the difference
+        between date1 and date2 expressed in units of date_part., null, 3, 'YES',
+        DATEDIFF ]
+      - [ def, null, DATEDIFF, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns the
+        difference between date1 and date2 expressed in units of date_part., null,
+        3, 'YES', DATEDIFF ]
+      - [ def, null, DATEDIFF, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        difference between date1 and date2 expressed in units of date_part., null,
+        1, 'YES', DATEDIFF ]
+      - [ def, null, DATEDIFF, arg2, 1, 93, date, 24, 8, 3, 0, 1, returns the difference
+        between date1 and date2 expressed in units of date_part., null, 2, 'YES',
+        DATEDIFF ]
+      - [ def, null, DATEDIFF, arg3, 1, 93, date, 24, 8, 3, 0, 1, returns the difference
+        between date1 and date2 expressed in units of date_part., null, 3, 'YES',
+        DATEDIFF ]
+      - [ def, null, DATEDIFF, arg4, 1, -1, string, null, 0, null, 0, 1, returns the
+        difference between date1 and date2 expressed in units of date_part., null,
+        4, 'YES', DATEDIFF ]
+      - [ def, null, DATEDIFF, argReturn, 4, 93, date, 24, 8, 3, 0, 1, returns the
+        difference between date1 and date2 expressed in units of date_part., null,
+        4, 'YES', DATEDIFF ]
+      - [ def, null, DATETRUNC, arg1, 1, -1, string, null, 0, null, 0, 1, truncates
+        the specified date to the accuracy specified by date_part., null, 1, 'YES',
+        DATETRUNC ]
+      - [ def, null, DATETRUNC, arg2, 1, 93, date, 24, 8, 3, 0, 1, truncates the specified
+        date to the accuracy specified by date_part., null, 2, 'YES', DATETRUNC ]
+      - [ def, null, DATETRUNC, argReturn, 4, 93, date, 24, 8, 3, 0, 1, truncates the
+        specified date to the accuracy specified by date_part., null, 2, 'YES',
+        DATETRUNC ]
+      - [ def, null, DATETRUNC, arg1, 1, -1, string, null, 0, null, 0, 1, truncates
+        the specified date to the accuracy specified by date_part., null, 1, 'YES',
+        DATETRUNC ]
+      - [ def, null, DATETRUNC, arg2, 1, 93, date, 24, 8, 3, 0, 1, truncates the specified
+        date to the accuracy specified by date_part., null, 2, 'YES', DATETRUNC ]
+      - [ def, null, DATETRUNC, arg3, 1, -1, string, null, 0, null, 0, 1, truncates
+        the specified date to the accuracy specified by date_part., null, 3, 'YES',
+        DATETRUNC ]
+      - [ def, null, DATETRUNC, argReturn, 4, 93, date, 24, 8, 3, 0, 1, truncates the
+        specified date to the accuracy specified by date_part., null, 3, 'YES',
+        DATETRUNC ]
+      - [ def, null, DEGREES, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns
+        the given number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, EXTRACT, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        value of the specified unit from the provided date., null, 1, 'YES', EXTRACT ]
+      - [ def, null, EXTRACT, arg2, 1, 93, date, 24, 8, 3, 0, 1, returns the value
+        of the specified unit from the provided date., null, 2, 'YES', EXTRACT ]
+      - [ def, null, EXTRACT, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the
+        value of the specified unit from the provided date., null, 2, 'YES', EXTRACT ]
+      - [ def, null, FLOOR, arg1, 1, 4, int, 10, 4, null, 2, 1, returns a number to
+        the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns a number
+        to the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, arg1, 1, -5, long, 19, 8, null, 2, 1, returns a number
+        to the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns a number
+        to the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns a number to
+        the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns a number
+        to the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns a number
+        to the nearest whole number of equal or lesser value., null, 1, 'YES', FLOOR ]
+      - [ def, null, FLOOR, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns a
+        number to the nearest whole number of equal or lesser value., null, 1, 'YES',
+        FLOOR ]
+      - [ def, null, LOG, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 1, 'YES', LOG ]
+      - [ def, null, LOG, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the logarithm
+        of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOG, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        logarithm of a number for the given base., null, 2, 'YES', LOG ]
+      - [ def, null, LOWER, arg1, 1, -1, string, null, 0, null, 0, 1, returns the provided
+        string with all characters changed to lowercase., null, 1, 'YES', LOWER ]
+      - [ def, null, LOWER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
+        the provided string with all characters changed to lowercase., null, 1,
+        'YES', LOWER ]
+      - [ def, null, MOD, arg1, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 4, int, 10, 4, null, 2, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 4, int, 10, 4, null, 2, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 8, double, 15, 8, 15, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, -5, long, 19, 8, null, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, -5, long, 19, 8, null, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 8, double, 15, 8, 15, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 8, double, 15, 8, 15, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 8, double, 15, 8, 15, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 8, double, 15, 8, 15, 2, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 4, int, 10, 4, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, -5, long, 19, 8, null, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 8, double, 15, 8, 15, 2, 1, divides number by divisor
+        and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 1, 'YES', MOD ]
+      - [ def, null, MOD, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, divides number by
+        divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, MOD, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, divides number
+        by divisor and returns the remainder., null, 2, 'YES', MOD ]
+      - [ def, null, OCTET_LENGTH, arg1, 1, -1, string, null, 0, null, 0, 1, returns
+        length of string in bytes, null, 1, 'YES', OCTET_LENGTH ]
+      - [ def, null, OCTET_LENGTH, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns
+        length of string in bytes, null, 1, 'YES', OCTET_LENGTH ]
+      - [ def, null, POSITION, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        position of the first occurrence of substring substr in string str., null,
+        1, 'YES', POSITION ]
+      - [ def, null, POSITION, arg2, 1, -1, string, null, 0, null, 0, 1, returns the
+        position of the first occurrence of substring substr in string str., null,
+        2, 'YES', POSITION ]
+      - [ def, null, POSITION, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the
+        position of the first occurrence of substring substr in string str., null,
+        2, 'YES', POSITION ]
+      - [ def, null, POW, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 4, int, 10, 4, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        number raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 4, int, 10, 4, null, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        number raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, -5, long, 19, 8, null, 2, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        number raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 8, double, 15, 8, 15, 2, 1, returns the number raised
+        to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        number raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 1, 'YES', POW ]
+      - [ def, null, POW, arg2, 1, 3, decimal, 34, 16, 34, 10, 1, returns the number
+        raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, POW, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        number raised to the specified exponent., null, 2, 'YES', POW ]
+      - [ def, null, RADIANS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the
+        given number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns
+        the given number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, ROUND, arg1, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 4, int, 10, 4, null, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 4, int, 10, 4, null, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, -5, long, 19, 8, null, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, -5, long, 19, 8, null, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, 8, double, 15, 8, 15, 2, 1, rounds number to a
+        specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 8, double, 15, 8, 15, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, 8, double, 15, 8, 15, 2, 1, rounds number to a
+        specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 8, double, 15, 8, 15, 2, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, rounds number to
+        a specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, 4, int, 10, 4, null, 2, 1, rounds number to a
+        specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, rounds number to
+        a specified number of digits., null, 1, 'YES', ROUND ]
+      - [ def, null, ROUND, arg2, 1, -5, long, 19, 8, null, 2, 1, rounds number to
+        a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, ROUND, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, rounds number
+        to a specified number of digits., null, 2, 'YES', ROUND ]
+      - [ def, null, SIN, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the sine of an
+        angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the sine
+        of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the sine of
+        an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the sine
+        of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the sine of
+        an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the sine
+        of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the sine
+        of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        sine of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
+        of an array., null, 1, 'YES', SIZE ]
+      - [ def, null, SIZE, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        size of an array., null, 1, 'YES', SIZE ]
+      - [ def, null, SPLIT, arg1, 1, -1, string, null, 0, null, 0, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 1, 'YES', SPLIT ]
+      - [ def, null, SPLIT, arg2, 1, -1, string, null, 0, null, 0, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 2, 'YES', SPLIT ]
+      - [ def, null, SPLIT, arg3, 1, 4, int, 10, 4, null, 2, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 3, 'YES', SPLIT ]
+      - [ def, null, SPLIT, argReturn, 4, -1, string, null, 0, null, 0, 1, 'returns
+          a substring from a string, using a delimiter character to divide the string
+          into a sequence of tokens.', null, 3, 'YES', SPLIT ]
+      - [ def, null, SQRT, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the square root
+        of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        square root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
+        from a string, null, 1, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 2, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, argReturn, 4, -1, string, null, 0, null, 0, 1, takes
+        a substring from a string, null, 2, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
+        from a string, null, 1, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 2, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg3, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 3, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, argReturn, 4, -1, string, null, 0, null, 0, 1, takes
+        a substring from a string, null, 3, 'YES', SUBSTRING ]
+      - [ def, null, TAN, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the tangent of
+        an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, argReturn, 4, 8, double, 15, 8, 15, 2, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the tangent
+        of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TAN, argReturn, 4, 3, decimal, 34, 16, 34, 10, 1, returns the
+        tangent of an angle specified in radians., null, 1, 'YES', TAN ]
+      - [ def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM ]
+      - [ def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
+        string str with all remstr prefixes and/or suffixes removed., null, 1, 'YES',
+        TRIM ]
+      - [ def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM ]
+      - [ def, null, TRIM, arg2, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 2, 'YES', TRIM ]
+      - [ def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
+        string str with all remstr prefixes and/or suffixes removed., null, 2, 'YES',
+        TRIM ]
+      - [ def, null, TRIM, arg1, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 1, 'YES', TRIM ]
+      - [ def, null, TRIM, arg2, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 2, 'YES', TRIM ]
+      - [ def, null, TRIM, arg3, 1, -1, string, null, 0, null, 0, 1, returns the string
+        str with all remstr prefixes and/or suffixes removed., null, 3, 'YES', TRIM ]
+      - [ def, null, TRIM, argReturn, 4, -1, string, null, 0, null, 0, 1, returns the
+        string str with all remstr prefixes and/or suffixes removed., null, 3, 'YES',
+        TRIM ]
+      - [ def, null, UPPER, arg1, 1, -1, string, null, 0, null, 0, 1, returns the provided
+        string with all characters changed to uppercase., null, 1, 'YES', UPPER ]
+      - [ def, null, UPPER, argReturn, 4, -1, string, null, 0, null, 0, 1, returns
+        the provided string with all characters changed to uppercase., null, 1,
+        'YES', UPPER ]
+    row_count: 305
+
   - description: getFunctionColumns partial function and column filters returns matching args
     db: integration_test
     meta_function: [ "getFunctionColumns", "integration_test", null, "%S%", "arg_" ]
     expected_result:
-      - [def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
-          the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP]
-      - [def, null, POSITION, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
-          position of the first occurrence of substring substr in string str., null,
-        1, 'YES', POSITION]
-      - [def, null, POSITION, arg2, 1, -1, string, null, 0, null, 0, 1, returns the
-          position of the first occurrence of substring substr in string str., null,
-        2, 'YES', POSITION]
-      - [def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
-          of an array., null, 1, 'YES', SIZE]
-      - [def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
-          from a string, null, 1, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 2, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
-          from a string, null, 1, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 2, 'YES', SUBSTRING]
-      - [def, null, SUBSTRING, arg3, 1, -5, long, 19, 8, null, 2, 1, takes a substring
-          from a string, null, 3, 'YES', SUBSTRING]
-    row_count: 9
+      - [ def, null, ABS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, ABS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the absolute
+        value of the given number., null, 1, 'YES', ABS ]
+      - [ def, null, COS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the cosine of
+        an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the cosine of
+        an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, COS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the cosine
+        of an angle specified in radians., null, 1, 'YES', COS ]
+      - [ def, null, CURRENT_TIMESTAMP, arg1, 1, 4, int, 10, 4, null, 2, 1, returns
+        the current date and time., null, 1, 'YES', CURRENT_TIMESTAMP ]
+      - [ def, null, DEGREES, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, DEGREES, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the given
+        number converted from radians to degrees., null, 1, 'YES', DEGREES ]
+      - [ def, null, POSITION, arg1, 1, -1, string, null, 0, null, 0, 1, returns the
+        position of the first occurrence of substring substr in string str., null,
+        1, 'YES', POSITION ]
+      - [ def, null, POSITION, arg2, 1, -1, string, null, 0, null, 0, 1, returns the
+        position of the first occurrence of substring substr in string str., null,
+        2, 'YES', POSITION ]
+      - [ def, null, RADIANS, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, RADIANS, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the given
+        number converted from degrees to radians., null, 1, 'YES', RADIANS ]
+      - [ def, null, SIN, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the sine of an
+        angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the sine of
+        an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the sine of
+        an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIN, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the sine
+        of an angle specified in radians., null, 1, 'YES', SIN ]
+      - [ def, null, SIZE, arg1, 1, 1111, array, null, 0, null, 0, 1, returns the size
+        of an array., null, 1, 'YES', SIZE ]
+      - [ def, null, SPLIT, arg1, 1, -1, string, null, 0, null, 0, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 1, 'YES', SPLIT ]
+      - [ def, null, SPLIT, arg2, 1, -1, string, null, 0, null, 0, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 2, 'YES', SPLIT ]
+      - [ def, null, SPLIT, arg3, 1, 4, int, 10, 4, null, 2, 1, 'returns a substring
+          from a string, using a delimiter character to divide the string into a sequence
+          of tokens.', null, 3, 'YES', SPLIT ]
+      - [ def, null, SQRT, arg1, 1, 4, int, 10, 4, null, 2, 1, returns the square root
+        of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, -5, long, 19, 8, null, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, 8, double, 15, 8, 15, 2, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SQRT, arg1, 1, 3, decimal, 34, 16, 34, 10, 1, returns the square
+        root of a positive number., null, 1, 'YES', SQRT ]
+      - [ def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
+        from a string, null, 1, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 2, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg1, 1, -1, string, null, 0, null, 0, 1, takes a substring
+        from a string, null, 1, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg2, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 2, 'YES', SUBSTRING ]
+      - [ def, null, SUBSTRING, arg3, 1, -5, long, 19, 8, null, 2, 1, takes a substring
+        from a string, null, 3, 'YES', SUBSTRING ]
+    row_count: 36
 
   - description: getFunctionColumns exact function and column filters returns matching args
     db: integration_test
