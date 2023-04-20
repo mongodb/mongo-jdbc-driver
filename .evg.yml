@@ -413,7 +413,7 @@ functions:
         aws_key: ${release_aws_key}
         aws_secret: ${release_aws_secret}
         local_file: mongo-jdbc-driver/mongo-jdbc-downloads_template.json
-        remote_file: ${S3_ARTIFACTS_DIR}/mongo-jdbc-downloads.json
+        remote_file: mongo-jdbc-driver/mongo-jdbc-downloads.json
         bucket: translators-connectors-releases
         permissions: public-read
         content_type: application/json
