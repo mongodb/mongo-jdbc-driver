@@ -406,19 +406,38 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     // Helper for getting a stream of all database names.
     private Stream<String> getDatabaseNames() {
-        return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
+        return this.conn
+                .mongoClient
+                .listDatabaseNames()
+                .into(new ArrayList<>())
+                .stream()
+                .filter(dbName -> !dbName.isEmpty());
+    }
+
+    // Helper for getting a list of collection names from the db
+    // Using runCommand instead of listCollections as listCollections does not support authorizedCollections option
+    private ArrayList<Document> getCollectionsFromRunCommand(MongoDatabase db) {
+        Document listCollectionsResult =
+                db.runCommand(
+                        new Document("listCollections", 1)
+                                .append("authorizedCollections", true)
+                                .append("nameOnly", true));
+        ArrayList<Document> firstBatch =
+                (ArrayList<Document>)
+                        listCollectionsResult
+                                .get("cursor", Document.class)
+                                .getList("firstBatch", Document.class);
+
+        return firstBatch;
     }
 
     // Helper for getting a stream of MongoListCollectionsResults from the argued db that match
     // the argued filter.
     private Stream<MongoListTablesResult> getTableDataFromDB(
             String dbName, Function<MongoListTablesResult, Boolean> filter) {
-        return this.conn
-                .getDatabase(dbName)
-                .withCodecRegistry(MongoDriver.registry)
-                .listCollections(MongoListTablesResult.class)
-                .into(new ArrayList<>())
+        return getCollectionsFromRunCommand(this.conn.getDatabase(dbName))
                 .stream()
+                .map(MongoListTablesResult::new)
                 .filter(filter::apply);
     }
 
@@ -1522,10 +1541,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
             Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
-
-        return db.listCollectionNames()
-                .into(new ArrayList<>())
+        MongoDatabase db = this.conn.getDatabase(dbName);
+        return getCollectionsFromRunCommand(db)
+                .stream()
+                .map(collection -> collection.get("name", String.class))
+                .collect(Collectors.toList())
                 .stream()
 
                 // filter only for collections matching the pattern
@@ -1539,10 +1559,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                         tableName ->
                                 new Pair<>(
                                         new Pair<>(dbName, tableName),
-                                        db.runCommand(
-                                                new BsonDocument(
-                                                        "sqlGetSchema", new BsonString(tableName)),
-                                                MongoJsonSchemaResult.class)))
+                                        db.withCodecRegistry(MongoDriver.registry)
+                                                .runCommand(
+                                                        new BsonDocument(
+                                                                "sqlGetSchema",
+                                                                new BsonString(tableName)),
+                                                        MongoJsonSchemaResult.class)))
 
                 // filter only for collections that have schemas
                 .filter(p -> isValidSchema(p.right()))

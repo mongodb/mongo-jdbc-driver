@@ -16,12 +16,21 @@
 
 package com.mongodb.jdbc;
 
+import org.bson.Document;
+
 public class MongoListTablesResult {
     public static final String TABLE = "table";
     public static final String COLLECTION = "collection";
 
     public String name;
     public String type;
+
+    public MongoListTablesResult() {}
+
+    public MongoListTablesResult(Document document) {
+        this.name = document.getString("name");
+        setType(document.getString("type"));
+    }
 
     public void setType(String type) {
         // If mongodb type is COLLECTION, map it as TABLE.
