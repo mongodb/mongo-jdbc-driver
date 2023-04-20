@@ -1,6 +1,6 @@
 {
   "manual_link": "https://www.mongodb.com/docs/atlas/data-federation/query/query-with-sql/",
-  "release_notes_link": "https://www.mongodb.com/docs/atlas/data-federation/query/sql/release-notes/",
+  "release_notes_link": "https://www.mongodb.com/docs/atlas/release-notes/sql/",
   "versions": [
     {
       "version": "{RELEASE_VERSION}",
