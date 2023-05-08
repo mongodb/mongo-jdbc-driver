@@ -1,0 +1,10 @@
+{
+  "manual_link": "https://www.mongodb.com/docs/atlas/data-federation/query/query-with-sql/",
+  "release_notes_link": "https://www.mongodb.com/docs/atlas/release-notes/sql/",
+  "versions": [
+    {
+      "version": "{RELEASE_VERSION}",
+      "download_link": "https://repo1.maven.org/maven2/org/mongodb/mongodb-jdbc/{RELEASE_VERSION}"
+    }
+  ]
+}
