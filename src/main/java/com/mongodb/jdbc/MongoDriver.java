@@ -20,6 +20,7 @@ import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,6 +124,7 @@ public class MongoDriver implements Driver {
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
+                    MongoClientSettings.getDefaultCodecRegistry(),
                     PojoCodecProvider.builder().automatic(true).build());
 
     static {
