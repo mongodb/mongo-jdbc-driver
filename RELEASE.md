@@ -61,6 +61,10 @@ Wait for the evergreen version to finish, and ensure that the release task compl
 Check that the version just released is available in the [Sonatype Nexus Repo Manager](https://oss.sonatype.org/#nexus-search;quick~mongodb-jdbc).  
 The release artifacts should appear on [Maven Central](https://search.maven.org/search?q=g:org.mongodb%20AND%20a:mongodb-jdbc) after a while.
 
+#### Notify the Web team about the new release
+Create a ticket through the [service desk](https://jira.mongodb.org/plugins/servlet/desk/portal/61) and request the link to the Maven download on the Download center page to be updated.  
+You can find the link in the [json feed](https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongo-jdbc-downloads.json) under `versions[0].download_link`.
+
 #### Close Release Ticket
 Move the JIRA ticket tracking this release to the "Closed" state.
 
