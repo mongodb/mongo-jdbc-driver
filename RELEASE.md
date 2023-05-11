@@ -62,7 +62,7 @@ Check that the version just released is available in the [Sonatype Nexus Repo Ma
 The release artifacts should appear on [Maven Central](https://search.maven.org/search?q=g:org.mongodb%20AND%20a:mongodb-jdbc) after a while.
 
 #### Notify the Web team about the new release
-Create a ticket through the [service desk](https://jira.mongodb.org/plugins/servlet/desk/portal/61) and request the link to the Maven download on the Download center page to be updated.  
+Create a ticket through the [service desk](https://jira.mongodb.org/plugins/servlet/desk/portal/61/create/926) and request the link for the `Download from Maven` button on the Download Center page `https://www.mongodb.com/try/download/jdbc-driver` to be updated.  
 You can find the link in the [json feed](https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongo-jdbc-downloads.json) under `versions[0].download_link`.
 
 #### Close Release Ticket
