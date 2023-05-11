@@ -63,7 +63,7 @@ The release artifacts should appear on [Maven Central](https://search.maven.org/
 
 #### Notify the Web team about the new release
 Create a ticket through the [service desk](https://jira.mongodb.org/plugins/servlet/desk/portal/61/create/926) and request the link for the `Download from Maven` button on the Download Center page `https://www.mongodb.com/try/download/jdbc-driver` to be updated.  
-You can find the link in the [json feed](https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongo-jdbc-downloads.json) under `versions[0].download_link`.
+You can find the new link in the [json feed](https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongo-jdbc-downloads.json) under `versions[0].download_link`. Include this link in your ticket.
 
 #### Close Release Ticket
 Move the JIRA ticket tracking this release to the "Closed" state.
