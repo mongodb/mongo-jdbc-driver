@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.jdbc.MongoDatabaseMetaData.filterEmptiesAndAdmin;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.ConnectionString;
@@ -23,6 +24,9 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -437,5 +441,16 @@ public class MongoDatabaseMetaDataTest {
                 MongoDatabaseMetaData.toJavaPattern("nothingToEscape").toString());
         assertEquals(
                 "a\\\\_.b\\\\%.*", MongoDatabaseMetaData.toJavaPattern("a\\__b\\%%").toString());
+    }
+
+    @Test
+    void testFilterEmptiesAndAdmin() {
+        final ArrayList<String> input = new ArrayList<>(Arrays.asList("foo", "bar", "", "admin"));
+        final ArrayList<String> expected = new ArrayList<>(Arrays.asList("foo", "bar"));
+        assertEquals(
+                expected,
+                input.stream()
+                        .filter(dbName -> filterEmptiesAndAdmin(dbName))
+                        .collect(Collectors.toList()));
     }
 }

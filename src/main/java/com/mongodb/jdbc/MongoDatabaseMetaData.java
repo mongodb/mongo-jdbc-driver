@@ -404,6 +404,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(conn.getLogger(), new BsonExplicitCursor(docs), botSchema);
     }
 
+    // MHOUSE-7119: ADF quickstarts return empty strings and the admin database, so we filter them out
+    static boolean filterEmptiesAndAdmin(String dbName) {
+        return !dbName.isEmpty() && !dbName.equals("admin");
+    }
+
     // Helper for getting a stream of all database names.
     private Stream<String> getDatabaseNames() {
         return this.conn
@@ -411,7 +416,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 .listDatabaseNames()
                 .into(new ArrayList<>())
                 .stream()
-                .filter(dbName -> !dbName.isEmpty());
+                .filter(dbName -> filterEmptiesAndAdmin(dbName));
     }
 
     // Helper for getting a list of collection names from the db
