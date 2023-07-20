@@ -23,15 +23,15 @@ buildvariants:
 
   - name: static-analysis
     display_name: "Static Analysis"
-    run_on: [ ubuntu2004-test ]
+    run_on: [ ubuntu2204-test ]
     tasks:
       - spotless
 
-  - name: ubuntu1804-64-jdk-8
-    display_name: Ubuntu 18.04 jdk-8
+  - name: ubuntu2204-64-jdk-8
+    display_name: Ubuntu 22.04 jdk-8
     expansions:
-      _platform: ubuntu1804-64-jdk-8
-    run_on: ubuntu1804-large
+      _platform: ubuntu2204-64-jdk-8
+    run_on: ubuntu2204-large
     tasks:
       - name: "build"
       - name: "test-unit"
@@ -40,8 +40,8 @@ buildvariants:
   - name: release
     display_name: "Release"
     expansions:
-      _platform: ubuntu1804-64-jdk-8
-    run_on: ubuntu1804-build
+      _platform: ubuntu2204-64-jdk-8
+    run_on: ubuntu2204-build
     tasks:
       - name: "test-smoke"
       - name: "publish-maven"
@@ -159,15 +159,15 @@ functions:
           fi
 
           case '${_platform}' in
-          ubuntu1804-64-jdk-8)
+          ubuntu2204-64-jdk-8)
                JAVA_HOME=/opt/java/jdk8
           ;;
-          ubuntu1804-64-jdk-11)
+          ubuntu2204-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
           ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11'"
+               echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
                exit 1
           ;;
           esac
