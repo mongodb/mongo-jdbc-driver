@@ -247,9 +247,10 @@ install_mongosh() {
     fi
 }
 
+MONGO_DOWNLOAD_DIR=$(install_mongodb)
+MONGOSH_DOWNLOAD_DIR=$(install_mongosh)
+
 if [ $ARG = $START ]; then
-  MONGO_DOWNLOAD_DIR=$(install_mongodb)
-  MONGOSH_DOWNLOAD_DIR=$(install_mongosh)
   check_mongod $MONGO_DOWNLOAD_DIR
   if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOD"
@@ -326,17 +327,16 @@ manage_compute_node() {
           sleep 1
       done
     fi
-  else
-    if [ $ARG = $STOP ]; then
-      MONGOD_PID=$(< $TMP_DIR/compute_node.pid)
-      echo "Stopping compute $MONGOD, pid $MONGOD_PID"
-      kill "$(< $TMP_DIR/compute_node.pid)"
-    fi
+  fi
+  if [ $ARG = $STOP ]; then
+    MONGOD_PID=$(< $TMP_DIR/compute_node.pid)
+    echo "Stopping compute $MONGOD, pid $MONGOD_PID"
+    kill "$(< $TMP_DIR/compute_node.pid)"
   fi
 }
 
 if [ $ARG = $START ]; then
-check_mongohoused
+  check_mongohoused
   if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOHOUSED"
     $GO version
@@ -459,3 +459,4 @@ if [ $ARG = $STOP ]; then
       fi
   fi
 fi
+
