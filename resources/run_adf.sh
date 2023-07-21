@@ -247,12 +247,11 @@ install_mongosh() {
     fi
 }
 
-MONGO_DOWNLOAD_DIR=$(install_mongodb)
-MONGOSH_DOWNLOAD_DIR=$(install_mongosh)
-
-check_mongod $MONGO_DOWNLOAD_DIR
-if [[ $? -ne 0 ]]; then
-  if [ $ARG = $START ]; then
+if [ $ARG = $START ]; then
+  MONGO_DOWNLOAD_DIR=$(install_mongodb)
+  MONGOSH_DOWNLOAD_DIR=$(install_mongosh)
+  check_mongod $MONGO_DOWNLOAD_DIR
+  if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOD"
 
     mkdir -p $MONGO_DB_PATH
@@ -292,7 +291,7 @@ if [[ $? -ne 0 ]]; then
 else
   if [ $ARG = $STOP ]; then
     MONGOD_PID=$(< $TMP_DIR/${MONGOD}.pid)
-    echo "Stopping $MONGOD, pid $MONGOD_PID"
+    echo "Stopping data $MONGOD, pid $MONGOD_PID"
     kill "$(< $TMP_DIR/${MONGOD}.pid)"
   fi
 fi
@@ -300,43 +299,45 @@ fi
 manage_compute_node() {
   if [ $ARG = $START ]; then
     check_compute_node $MONGO_DOWNLOAD_DIR
-    echo "Starting a compute $MONGOD"
-    mkdir -p ./artifacts/compute-mode-mongod-data
+    if [[ $? -ne 0 ]]; then
+      echo "Starting a compute $MONGOD"
+      mkdir -p ./artifacts/compute-mode-mongod-data
 
-    # Start compute mongod
-    if [[ $OS =~ ^CYGWIN ]]; then
-      # mongod does not have --fork option on Windows, using nohup
-      nohup $MONGO_DOWNLOAD_DIR/bin/mongod -f ./testdata/config/mongod.conf --logpath $(cygpath -m $LOGS_PATH/compute_mongod.log) &
-      echo $! > $TMP_DIR/compute_node.pid
-    else
-      $MONGO_DOWNLOAD_DIR/bin/mongod -f ./testdata/config/mongod.conf --logpath $LOGS_PATH/compute_mongod.log  --pidfilepath $TMP_DIR/compute_node.pid --fork
+      # Start compute mongod
+      if [[ $OS =~ ^CYGWIN ]]; then
+        # mongod does not have --fork option on Windows, using nohup
+        nohup $MONGO_DOWNLOAD_DIR/bin/mongod -f ./testdata/config/mongod.conf --logpath $(cygpath -m $LOGS_PATH/compute_mongod.log) &
+        echo $! > $TMP_DIR/compute_node.pid
+      else
+        $MONGO_DOWNLOAD_DIR/bin/mongod -f ./testdata/config/mongod.conf --logpath $LOGS_PATH/compute_mongod.log  --pidfilepath $TMP_DIR/compute_node.pid --fork
+      fi
+
+      waitCounter=0
+      while : ; do
+          check_compute_node
+          if [[ $? -eq 0 ]]; then
+              break
+          fi
+          if [[ "$waitCounter" -gt $TIMEOUT ]]; then
+              echo "ERROR: Local mongod did not start under $TIMEOUT seconds"
+              exit 1
+          fi
+          let waitCounter=waitCounter+1
+          sleep 1
+      done
     fi
-
-    waitCounter=0
-    while : ; do
-        check_compute_node
-        if [[ $? -eq 0 ]]; then
-            break
-        fi
-        if [[ "$waitCounter" -gt $TIMEOUT ]]; then
-            echo "ERROR: Local mongod did not start under $TIMEOUT seconds"
-            exit 1
-        fi
-        let waitCounter=waitCounter+1
-        sleep 1
-    done
   else
     if [ $ARG = $STOP ]; then
-      MONGOD_PID=$(< $TMP_DIR/$compute_node.pid)
-      echo "Stopping $MONGOD, pid $MONGOD_PID"
+      MONGOD_PID=$(< $TMP_DIR/compute_node.pid)
+      echo "Stopping compute $MONGOD, pid $MONGOD_PID"
       kill "$(< $TMP_DIR/compute_node.pid)"
     fi
   fi
 }
 
+if [ $ARG = $START ]; then
 check_mongohoused
-if [[ $? -ne 0 ]]; then
-  if [ $ARG = $START ]; then
+  if [[ $? -ne 0 ]]; then
     echo "Starting $MONGOHOUSED"
     $GO version
 
