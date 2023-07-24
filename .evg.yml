@@ -23,7 +23,7 @@ buildvariants:
 
   - name: static-analysis
     display_name: "Static Analysis"
-    run_on: [ ubuntu2204-test ]
+    run_on: [ ubuntu2204-small ]
     tasks:
       - spotless
 
@@ -41,7 +41,7 @@ buildvariants:
     display_name: "Release"
     expansions:
       _platform: ubuntu2204-64-jdk-8
-    run_on: ubuntu2204-build
+    run_on: ubuntu2204-small
     tasks:
       - name: "test-smoke"
       - name: "publish-maven"

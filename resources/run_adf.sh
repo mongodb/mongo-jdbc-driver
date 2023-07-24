@@ -282,7 +282,7 @@ if [ $ARG = $START ]; then
             break
         fi
         if [[ "$waitCounter" -gt $TIMEOUT ]]; then
-            echo "ERROR: Local mongod did not start under $TIMEOUT seconds"
+            echo "ERROR: Local data mongod did not start under $TIMEOUT seconds"
             exit 1
         fi
         let waitCounter=waitCounter+1
@@ -320,7 +320,7 @@ manage_compute_node() {
               break
           fi
           if [[ "$waitCounter" -gt $TIMEOUT ]]; then
-              echo "ERROR: Local mongod did not start under $TIMEOUT seconds"
+              echo "ERROR: Local compute mongod did not start under $TIMEOUT seconds"
               exit 1
           fi
           let waitCounter=waitCounter+1
