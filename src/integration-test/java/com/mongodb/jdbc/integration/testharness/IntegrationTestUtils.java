@@ -609,10 +609,10 @@ public class IntegrationTestUtils {
                                     : ((Integer) expectedInt).intValue();
                     if (actualInt != expectedIntVal) {
                         return "Expected numeric value "
-                                + actualInt
-                                + " but it "
                                 + expectedIntVal
-                                + "for column "
+                                + " but it is "
+                                + actualInt
+                                + " for column "
                                 + (i + 1);
                     }
                     break;
@@ -627,7 +627,7 @@ public class IntegrationTestUtils {
                     if (!(expected_str).equals(actual_str)) {
                         return "Expected String value "
                                 + expected_str
-                                + " but is "
+                                + " but it is "
                                 + actual_str
                                 + " for column "
                                 + (i + 1);
@@ -640,7 +640,7 @@ public class IntegrationTestUtils {
                     if (expected_bool != actual_bool) {
                         return "Expected boolean value "
                                 + expected_bool
-                                + " but is "
+                                + " but it is "
                                 + actual_bool
                                 + " for column "
                                 + (i + 1);
@@ -652,7 +652,7 @@ public class IntegrationTestUtils {
                     if (expected_double != actual_double) {
                         return "Expected double value "
                                 + expected_double
-                                + " but is "
+                                + " but it is "
                                 + actual_double
                                 + " for column "
                                 + (i + 1);
