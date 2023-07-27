@@ -172,7 +172,9 @@ public class MongoDriver implements Driver {
             try {
                 conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
             } catch (TimeoutException te) {
-                throw new SQLTimeoutException("Timeout. Can't connect.");
+                throw new SQLTimeoutException(
+                        "Couldn't connect due to a timeout. Please check your hostname and port. If necessary, set a "
+                                + "longer connection timeout in the MongoDB URI.");
             } catch (Exception e) {
                 throw new SQLException("Connection failed.", e);
             }
