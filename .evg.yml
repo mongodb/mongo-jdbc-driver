@@ -76,10 +76,11 @@ tasks:
     commands:
       - func: "check spotless"
 
-  - name : download-center-update
+  - name: download-center-update
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
+        variant: "release"
     commands:
       - func: "update download center feed"
 
