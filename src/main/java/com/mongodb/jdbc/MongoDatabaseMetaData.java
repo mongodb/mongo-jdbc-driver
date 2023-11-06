@@ -404,22 +404,39 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         return new MongoResultSet(conn.getLogger(), new BsonExplicitCursor(docs), botSchema);
     }
 
+    // MHOUSE-7119: ADF quickstarts return empty strings and the admin database, so we filter them out
+    static boolean filterEmptiesAndAdmin(String dbName) {
+        return !dbName.isEmpty() && !dbName.equals("admin");
+    }
+
     // Helper for getting a stream of all database names.
     private Stream<String> getDatabaseNames() {
-        return this.conn.mongoClient.listDatabaseNames().into(new ArrayList<>()).stream();
+        return this.conn
+                .mongoClient
+                .listDatabaseNames()
+                .into(new ArrayList<>())
+                .stream()
+                .filter(dbName -> filterEmptiesAndAdmin(dbName));
+    }
+
+    // Helper for getting a list of collection names from the db
+    // Using runCommand instead of listCollections as listCollections does not support authorizedCollections option
+    private ArrayList<MongoListTablesResult> getCollectionsFromRunCommand(MongoDatabase db) {
+        MongoRunCmdListTablesResult mongoRunCmdListTablesResult =
+                db.runCommand(
+                        new Document("listCollections", 1)
+                                .append("authorizedCollections", true)
+                                .append("nameOnly", true),
+                        MongoRunCmdListTablesResult.class);
+        return mongoRunCmdListTablesResult.getCursor().getFirstBatch();
     }
 
     // Helper for getting a stream of MongoListCollectionsResults from the argued db that match
     // the argued filter.
     private Stream<MongoListTablesResult> getTableDataFromDB(
             String dbName, Function<MongoListTablesResult, Boolean> filter) {
-        return this.conn
-                .getDatabase(dbName)
-                .withCodecRegistry(MongoDriver.registry)
-                .listCollections(MongoListTablesResult.class)
-                .into(new ArrayList<>())
-                .stream()
-                .filter(filter::apply);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        return getCollectionsFromRunCommand(db).stream().filter(filter::apply);
     }
 
     // Helper for creating BSON documents for the getTables method. Intended for use
@@ -1523,9 +1540,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             Pattern columnNamePatternRE,
             Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
         MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
-
-        return db.listCollectionNames()
-                .into(new ArrayList<>())
+        return getCollectionsFromRunCommand(db)
+                .stream()
+                .map(collection -> collection.name)
+                .collect(Collectors.toList())
                 .stream()
 
                 // filter only for collections matching the pattern

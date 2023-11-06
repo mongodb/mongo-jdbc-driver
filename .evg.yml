@@ -23,15 +23,15 @@ buildvariants:
 
   - name: static-analysis
     display_name: "Static Analysis"
-    run_on: [ ubuntu2004-test ]
+    run_on: [ ubuntu2204-small ]
     tasks:
       - spotless
 
-  - name: ubuntu1804-64-jdk-8
-    display_name: Ubuntu 18.04 jdk-8
+  - name: ubuntu2204-64-jdk-8
+    display_name: Ubuntu 22.04 jdk-8
     expansions:
-      _platform: ubuntu1804-64-jdk-8
-    run_on: ubuntu1804-large
+      _platform: ubuntu2204-64-jdk-8
+    run_on: ubuntu2204-large
     tasks:
       - name: "build"
       - name: "test-unit"
@@ -40,11 +40,12 @@ buildvariants:
   - name: release
     display_name: "Release"
     expansions:
-      _platform: ubuntu1804-64-jdk-8
-    run_on: ubuntu1804-build
+      _platform: ubuntu2204-64-jdk-8
+    run_on: ubuntu2204-small
     tasks:
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "download-center-update"
 
 tasks:
   - name: "build"
@@ -64,6 +65,7 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
+    git_tag_only: true
     depends_on:
       - name: "test-smoke"
         variant: "release"
@@ -73,6 +75,14 @@ tasks:
   - name: spotless
     commands:
       - func: "check spotless"
+
+  - name: download-center-update
+    git_tag_only: true
+    depends_on:
+      - name: "publish-maven"
+        variant: "release"
+    commands:
+      - func: "update download center feed"
 
 functions:
 
@@ -140,22 +150,25 @@ functions:
 
           # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
-          S3_ARTIFACTS_DIR='adl-sql-driver/artifacts/${version_id}/${build_variant}'
-          S3_RELEASES_DIR='adl-sql-driver/releases/${version_id}/${build_variant}'
+          S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
 
           # get the version from the gradle.properties file, so we don't need to update in two places.
-          MDBJDBC_VER="$(cat "gradle.properties" | head -n 1 | sed  s'/version\s*=\s*//')"
+          if [[ "${triggered_by_git_tag}" != "" ]]; then
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+          else
+            export MDBJDBC_VER=snapshot
+          fi
 
           case '${_platform}' in
-          ubuntu1804-64-jdk-8)
+          ubuntu2204-64-jdk-8)
                JAVA_HOME=/opt/java/jdk8
           ;;
-          ubuntu1804-64-jdk-11)
+          ubuntu2204-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
           ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu1604-64-jdk-8', 'ubuntu1604-64-jdk-11'"
+               echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
                exit 1
           ;;
           esac
@@ -171,7 +184,6 @@ functions:
           mkdir -p $ARTIFACTS_DIR
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
-          S3_RELEASES_DIR: "$S3_RELEASES_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
           JAVA_HOME: "$JAVA_HOME"
           PREPARE_SHELL: |
@@ -185,6 +197,7 @@ functions:
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
+            export MDBJDBC_VER=${MDBJDBC_VER}
           EOT
 
     - command: expansions.update
@@ -363,7 +376,6 @@ functions:
         silent: true
         file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
 
-
   "upload jar file":
     - command: s3.put
       params:
@@ -384,3 +396,25 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_USERNAME=${NEXUS_USERNAME} NEXUS_PASSWORD=${NEXUS_PASSWORD} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh
+
+  "update download center feed":
+    - command: shell.exec
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${prepare_shell}
+          echo "Version = ${MDBJDBC_VER}"
+          sed -i "s@{RELEASE_VERSION}@${MDBJDBC_VER}@" mongo-jdbc-downloads_template.json
+          echo "-------------------------"
+          cat mongo-jdbc-downloads_template.json
+          echo "-------------------------"
+    - command: s3.put
+      params:
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/mongo-jdbc-downloads_template.json
+        remote_file: mongo-jdbc-driver/mongo-jdbc-downloads.json
+        bucket: translators-connectors-releases
+        permissions: public-read
+        content_type: application/json

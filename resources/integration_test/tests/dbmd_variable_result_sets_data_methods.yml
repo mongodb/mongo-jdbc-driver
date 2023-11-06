@@ -276,30 +276,30 @@ tests:
     db: integration_test
     meta_function: [ "getColumns", null, null, null, null ]
     expected_result:
-      - [db2, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null, 0, 0, null, 0,
-         'YES', null, null, null, 0, 'NO', '']
-      - [db2, null, foo, b, 4, int, null, 0, null, 2, 1, '', null, 0, 0, null, 1,
-         'YES', null, null, null, 0, 'NO', '']
+      - [db2, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 0,
+         'NO', null, null, null, 0, 'NO', '']
+      - [db2, null, foo, b, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 1,
+         'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
@@ -308,80 +308,80 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
-      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
-         0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 0, '', null,
+         0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, _id, 4, int, null, 0, null, 2,
-         1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, a, 1111, timestamp, null, 0, null,
          0, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, array, 1111, array, null, 0, null, 0,
-         1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0,
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
          'NO', '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, object, 1111, object, null, 0, null,
-         0, 1, '', null, 0, 0, null, 7, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 7, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
-         0, 1, '', null, 0, 0, null, 8, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 1, '', null, 0, 0, null, 9, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
-         0, 1, '', null, 0, 0, null, 10, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 11, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
     row_count: 47
     ordered: true
 
@@ -389,30 +389,30 @@ tests:
     db: integration_test
     meta_function: ["getColumns", null, null, "%", "%"]
     expected_result:
-      - [db2, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null, 0, 0, null, 0,
-         'YES', null, null, null, 0, 'NO', '']
-      - [db2, null, foo, b, 4, int, null, 0, null, 2, 1, '', null, 0, 0, null, 1,
-         'YES', null, null, null, 0, 'NO', '']
+      - [db2, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 0,
+         'NO', null, null, null, 0, 'NO', '']
+      - [db2, null, foo, b, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 1,
+         'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
@@ -421,80 +421,80 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
-      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
-         0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 0, '', null,
+         0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, _id, 4, int, null, 0, null, 2,
-         1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, a, 1111, timestamp, null, 0, null,
          0, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, array, 1111, array, null, 0, null, 0,
-         1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0,
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
          'NO', '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, object, 1111, object, null, 0, null,
-         0, 1, '', null, 0, 0, null, 7, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 7, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
-         0, 1, '', null, 0, 0, null, 8, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 1, '', null, 0, 0, null, 9, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
-         0, 1, '', null, 0, 0, null, 10, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 11, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
     row_count: 47
     ordered: true
 
@@ -503,25 +503,25 @@ tests:
     meta_function: ["getColumns", "integration_test", null, "%", "%"]
     expected_result:
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
@@ -530,80 +530,80 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO',
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
          '']
-      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
-         0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, bar, b, 16, bool, null, 0, null, 0, 0, '', null,
+         0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, xyz, -1, string, null, 0, null, 0, 1, '', null,
          0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 4, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-         0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 1, '', null,
-         0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 1, '',
-         null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_string, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, baz, a_type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, enrolled, 16, bool, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, name, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, startdate, 93, date, null, 0, 3, 0, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, class, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, foo, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+         0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, score, 8, double, null, 0, 15, 2, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, studentid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, grades, testid, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, _id, 4, int, null, 0, null, 2,
-         1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, null_and_missing, a, 1111, timestamp, null, 0, null,
          0, 1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
-      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 1, '',
-         null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
+      - [integration_test, null, types_other, _id, 4, int, null, 0, null, 2, 0, '',
+         null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, array, 1111, array, null, 0, null, 0,
-         1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
+         0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 2, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 1, '', null, 0, 0, null, 3, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 1, '', null, 0, 0, null, 4, 'YES', null, null, null, 0,
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
          'NO', '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 5, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
-         0, 1, '', null, 0, 0, null, 6, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, object, 1111, object, null, 0, null,
-         0, 1, '', null, 0, 0, null, 7, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 7, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
-         0, 1, '', null, 0, 0, null, 8, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 1, '', null, 0, 0, null, 9, 'YES', null, null, null, 0, 'NO',
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
          '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
-         0, 1, '', null, 0, 0, null, 10, 'YES', null, null, null, 0, 'NO', '']
+         0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
-         null, 0, 1, '', null, 0, 0, null, 11, 'YES', null, null, null, 0, 'NO', '']
+         null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
     row_count: 45
     ordered: true
 
@@ -611,10 +611,10 @@ tests:
     db: integration_test
     meta_function: ["getColumns", "integration_test", null, "foo", "%"]
     expected_result:
-      - [ integration_test, null, foo, _id, 4, int, null, 0, null, 2, 1, '', null,
-          0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '' ]
-      - [ integration_test, null, foo, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-          0, null, 1, 'YES', null, null, null, 0, 'NO', '' ]
+      - [ integration_test, null, foo, _id, 4, int, null, 0, null, 2, 0, '', null,
+          0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '' ]
+      - [ integration_test, null, foo, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+          0, null, 1, 'NO', null, null, null, 0, 'NO', '' ]
     row_count: 2
     ordered: true
 
@@ -623,14 +623,14 @@ tests:
     meta_function: ["getColumns", "integration_test", null, "b%", "_"]
     expected_result:
       - [ integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-          0, null, 2, 1, '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO',
+          0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
           '' ]
-      - [ integration_test, null, bar, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-          0, null, 0, 'YES', null, null, null, 0, 'NO', '' ]
-      - [ integration_test, null, bar, b, 16, bool, null, 0, null, 0, 1, '', null,
-          0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '' ]
-      - [ integration_test, null, baz, a, 4, int, null, 0, null, 2, 1, '', null, 0,
-          0, null, 0, 'YES', null, null, null, 0, 'NO', '' ]
+      - [ integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+          0, null, 0, 'NO', null, null, null, 0, 'NO', '' ]
+      - [ integration_test, null, bar, b, 16, bool, null, 0, null, 0, 0, '', null,
+          0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '' ]
+      - [ integration_test, null, baz, a, 4, int, null, 0, null, 2, 0, '', null, 0,
+          0, null, 0, 'NO', null, null, null, 0, 'NO', '' ]
     row_count: 4
     ordered: true
 

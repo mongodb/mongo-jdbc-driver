@@ -20,6 +20,7 @@ import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,6 +124,7 @@ public class MongoDriver implements Driver {
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
+                    MongoClientSettings.getDefaultCodecRegistry(),
                     PojoCodecProvider.builder().automatic(true).build());
 
     static {
@@ -170,7 +172,9 @@ public class MongoDriver implements Driver {
             try {
                 conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
             } catch (TimeoutException te) {
-                throw new SQLTimeoutException("Timeout. Can't connect.");
+                throw new SQLTimeoutException(
+                        "Couldn't connect due to a timeout. Please check your hostname and port. If necessary, set a "
+                                + "longer connection timeout in the MongoDB URI.");
             } catch (Exception e) {
                 throw new SQLException("Connection failed.", e);
             }

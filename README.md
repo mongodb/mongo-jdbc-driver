@@ -14,7 +14,7 @@ MongoDB Atlas SQL JDBC driver requires Java 1.8 or higher.
 
 ### Download and Install
 You can download the precompiled driver (jars) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).  
-Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundled inside the jar).
+Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundled inside the jar). The name of the driver class is `com.mongodb.jdbc.MongoDriver`.
 
 ### Connection URL and properties
 
