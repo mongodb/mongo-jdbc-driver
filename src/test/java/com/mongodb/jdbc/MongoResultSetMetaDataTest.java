@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Arrays;
+import java.util.List;
 import org.bson.BsonValue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -61,12 +63,29 @@ class MongoResultSetMetaDataTest extends MongoMock {
         String[] expected_sorted_columns =
                 new String[] {"a", "binary", "str", "a", "b", "c", "d", "doc", "null", "vec"};
         String[] expected_original_columns =
-                new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null", "doc"};                
+                new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null", "doc"};
+        String[] expected_select_order_columns =
+                new String[] {"binary", "str", "a", "b", "c", "d", "doc", "null", "vec", "a"};
+        List<List<String>> selectOrder =
+                Arrays.asList(
+                        Arrays.asList("", "binary"),
+                        Arrays.asList("", "str"),
+                        Arrays.asList("foo", "a"),
+                        Arrays.asList("foo", "b"),
+                        Arrays.asList("foo", "c"),
+                        Arrays.asList("foo", "d"),
+                        Arrays.asList("foo", "doc"),
+                        Arrays.asList("foo", "null"),
+                        Arrays.asList("foo", "vec"),
+                        Arrays.asList("", "a"));
         MongoJsonSchema schema = generateMongoJsonSchema();
         MongoResultSetMetaData unsortedMedata =
                 new MongoResultSetMetaData(schema, null, false, mongoConnection.getLogger(), 0);
         MongoResultSetMetaData sortedMedata =
                 new MongoResultSetMetaData(schema, null, true, mongoConnection.getLogger(), 0);
+        MongoResultSetMetaData selectOrderedMetadata =
+                new MongoResultSetMetaData(
+                        schema, selectOrder, false, mongoConnection.getLogger(), 0);
 
         assertEquals(
                 expected_original_columns.length,
@@ -82,6 +101,15 @@ class MongoResultSetMetaDataTest extends MongoMock {
                 "The number of expected columns doesn't match the actual number of columns");
         for (int i = 0; i < sortedMedata.getColumnCount(); i++) {
             assertEquals(expected_sorted_columns[i], sortedMedata.getColumnName(i + 1));
+        }
+
+        assertEquals(
+                expected_select_order_columns.length,
+                selectOrderedMetadata.getColumnCount(),
+                "The number of expected columns doesn't match the actual number of columns");
+        for (int i = 0; i < selectOrderedMetadata.getColumnCount(); i++) {
+            assertEquals(
+                    expected_select_order_columns[i], selectOrderedMetadata.getColumnName(i + 1));
         }
     }
 

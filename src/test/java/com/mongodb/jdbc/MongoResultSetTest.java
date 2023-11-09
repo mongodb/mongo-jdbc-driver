@@ -123,7 +123,11 @@ class MongoResultSetTest extends MongoMock {
         try {
             mongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, null, false);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            false);
             mongoResultSetAllTypes =
                     new MongoResultSet(
                             mongoStatement,
@@ -133,10 +137,18 @@ class MongoResultSetTest extends MongoMock {
                             false);
             closedMongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, null, false);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            false);
             mongoResultSetExtended =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, null, true);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            true);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
             closedMongoResultSet.next();

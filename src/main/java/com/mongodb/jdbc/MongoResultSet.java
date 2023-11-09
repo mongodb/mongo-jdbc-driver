@@ -104,7 +104,12 @@ public class MongoResultSet implements ResultSet {
                         statement.getStatementId());
         this.extJsonMode = extJsonMode;
         setUpResultset(
-                cursor, schema, selectOrder, true, statement.getParentLogger(), statement.getStatementId());
+                cursor,
+                schema,
+                selectOrder,
+                true,
+                statement.getParentLogger(),
+                statement.getStatementId());
     }
 
     /**
@@ -116,7 +121,9 @@ public class MongoResultSet implements ResultSet {
      * @throws SQLException
      */
     public MongoResultSet(
-            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema, 
+            MongoLogger parentLogger,
+            MongoCursor<BsonDocument> cursor,
+            MongoJsonSchema schema,
             List<List<String>> selectOrder)
             throws SQLException {
         this.logger = new MongoLogger(this.getClass().getCanonicalName(), parentLogger);
