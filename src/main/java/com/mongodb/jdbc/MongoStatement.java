@@ -24,6 +24,7 @@ import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
@@ -212,9 +213,10 @@ public class MongoStatement implements Statement {
                             .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
 
             MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
+            List<List<String>> selectOrder = schemaResult.selectOrder;
             resultSet =
                     new MongoResultSet(
-                            this, iterable.cursor(), schema, null, conn.getExtJsonMode());
+                            this, iterable.cursor(), schema, selectOrder, conn.getExtJsonMode());
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
