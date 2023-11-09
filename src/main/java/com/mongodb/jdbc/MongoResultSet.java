@@ -121,13 +121,10 @@ public class MongoResultSet implements ResultSet {
      * @throws SQLException
      */
     public MongoResultSet(
-            MongoLogger parentLogger,
-            MongoCursor<BsonDocument> cursor,
-            MongoJsonSchema schema,
-            List<List<String>> selectOrder)
+            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
             throws SQLException {
         this.logger = new MongoLogger(this.getClass().getCanonicalName(), parentLogger);
-        setUpResultset(cursor, schema, selectOrder, false, parentLogger, null);
+        setUpResultset(cursor, schema, null, false, parentLogger, null);
     }
 
     private void setUpResultset(
