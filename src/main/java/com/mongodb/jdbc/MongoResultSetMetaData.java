@@ -75,6 +75,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
      */
     public MongoResultSetMetaData(
             MongoJsonSchema schema,
+            List<List<String>> selectOrder,
             boolean sortFieldsAlphabetically,
             MongoLogger parentLogger,
             Integer statementId)

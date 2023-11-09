@@ -46,6 +46,7 @@ import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 import javax.sql.rowset.serial.SerialBlob;
@@ -91,6 +92,7 @@ public class MongoResultSet implements ResultSet {
             MongoStatement statement,
             MongoCursor<BsonDocument> cursor,
             MongoJsonSchema schema,
+            List<List<String>> selectOrder,
             boolean extJsonMode)
             throws SQLException {
         Preconditions.checkNotNull(statement);
@@ -102,7 +104,7 @@ public class MongoResultSet implements ResultSet {
                         statement.getStatementId());
         this.extJsonMode = extJsonMode;
         setUpResultset(
-                cursor, schema, true, statement.getParentLogger(), statement.getStatementId());
+                cursor, schema, selectOrder, true, statement.getParentLogger(), statement.getStatementId());
     }
 
     /**
@@ -114,15 +116,17 @@ public class MongoResultSet implements ResultSet {
      * @throws SQLException
      */
     public MongoResultSet(
-            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema)
+            MongoLogger parentLogger, MongoCursor<BsonDocument> cursor, MongoJsonSchema schema, 
+            List<List<String>> selectOrder)
             throws SQLException {
         this.logger = new MongoLogger(this.getClass().getCanonicalName(), parentLogger);
-        setUpResultset(cursor, schema, false, parentLogger, null);
+        setUpResultset(cursor, schema, selectOrder, false, parentLogger, null);
     }
 
     private void setUpResultset(
             MongoCursor<BsonDocument> cursor,
             MongoJsonSchema schema,
+            List<List<String>> selectOrder,
             boolean sortFieldsAlphabetically,
             MongoLogger parentLogger,
             Integer statementId)
@@ -137,7 +141,7 @@ public class MongoResultSet implements ResultSet {
 
         this.rsMetaData =
                 new MongoResultSetMetaData(
-                        schema, sortFieldsAlphabetically, parentLogger, statementId);
+                        schema, selectOrder, sortFieldsAlphabetically, parentLogger, statementId);
     }
 
     // This is only used for testing, and that is why it has package level access, and the
