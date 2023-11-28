@@ -75,6 +75,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
      */
     public MongoResultSetMetaData(
             MongoJsonSchema schema,
+            List<List<String>> selectOrder,
             boolean sortFieldsAlphabetically,
             MongoLogger parentLogger,
             Integer statementId)
@@ -96,6 +97,10 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
         for (String datasource : datasources) {
             processDataSource(schema, datasource, sortFieldsAlphabetically);
+        }
+
+        if (selectOrder != null) {
+            processSelectOrder(selectOrder);
         }
     }
 
@@ -130,6 +135,29 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             }
         }
     };
+
+    private void processSelectOrder(List<List<String>> selectOrder) throws SQLException {
+        // turn columnIndices into a map
+        HashMap<List<String>, NameSpace> columnIndexMap = new HashMap<List<String>, NameSpace>();
+        for (NameSpace n : columnIndices) {
+            columnIndexMap.put(Arrays.asList(n.datasource, n.columnLabel), n);
+        }
+
+        // turn columnInfo into a map as well
+        HashMap<List<String>, MongoColumnInfo> columnInfoMap =
+                new HashMap<List<String>, MongoColumnInfo>();
+        for (MongoColumnInfo t : columnInfo) {
+            columnInfoMap.put(Arrays.asList(t.getTableName(), t.getColumnName()), t);
+        }
+
+        // reset columnIndices and columnInfo to empty lists and populate in select order
+        columnIndices = new ArrayList<NameSpace>();
+        columnInfo = new ArrayList<MongoColumnInfo>();
+        for (List<String> column : selectOrder) {
+            columnIndices.add(columnIndexMap.remove(column));
+            columnInfo.add(columnInfoMap.remove(column));
+        }
+    }
 
     // This gets the datasource for a given columnLabel, and is used
     // in MongoResultSet to retrieve data by label.

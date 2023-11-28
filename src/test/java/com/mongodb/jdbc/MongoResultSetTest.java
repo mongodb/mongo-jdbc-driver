@@ -76,7 +76,7 @@ class MongoResultSetTest extends MongoMock {
         try {
             schema = generateMongoJsonSchema();
             resultSetMetaData =
-                    new MongoResultSetMetaData(schema, true, mongoConnection.getLogger(), 0);
+                    new MongoResultSetMetaData(schema, null, true, mongoConnection.getLogger(), 0);
             mongoStatement = new MongoStatement(mongoConnection, "test");
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -123,19 +123,32 @@ class MongoResultSetTest extends MongoMock {
         try {
             mongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, false);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            false);
             mongoResultSetAllTypes =
                     new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocsAllTypes),
                             schemaAllTypes,
+                            null,
                             false);
             closedMongoResultSet =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, false);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            false);
             mongoResultSetExtended =
                     new MongoResultSet(
-                            mongoStatement, new BsonExplicitCursor(mongoResultDocs), schema, true);
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            true);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
             closedMongoResultSet.next();
@@ -1045,7 +1058,7 @@ class MongoResultSetTest extends MongoMock {
                             return generateRow();
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1065,7 +1078,7 @@ class MongoResultSetTest extends MongoMock {
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -1102,7 +1115,7 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -1136,7 +1149,7 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
 
         assertEquals(10, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -1196,7 +1209,7 @@ class MongoResultSetTest extends MongoMock {
                             return doc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema, false);
+        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema, null, false);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());

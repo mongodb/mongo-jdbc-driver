@@ -69,30 +69,30 @@ tests:
     db: integration_test
     sql: SELECT enrolled AS e, studentid AS s, name AS n FROM class
     expected_result:
-      - [ true, John, 10329 ]
-      - [ false, Jane, 342 ]
-      - [ true, Mike, 303 ]
-      - [ false, Mary, 204323 ]
-      - [ false, Pete, 10 ]
+      - [ true, 10329, John ]
+      - [ false, 342, Jane ]
+      - [ true, 303, Mike ]
+      - [ false, 204323, Mary ]
+      - [ false, 10, Pete ]
     row_count: 5
     ordered: false
-    expected_sql_type: [ BOOLEAN, LONGVARCHAR, INTEGER ]
-    expected_bson_type: [bool, string, int]
+    expected_sql_type: [ BOOLEAN, INTEGER, LONGVARCHAR ]
+    expected_bson_type: [bool, int, string]
     expected_catalog_name: [ '', '', '' ]
-    expected_column_class_name: [ boolean, java.lang.String, int ]
-    expected_column_label: [ e, n, s ]
-    expected_column_display_size: [ 1, 0, 10 ]
-    expected_precision: [ 1, 0, 10 ]
+    expected_column_class_name: [ boolean, int, java.lang.String ]
+    expected_column_label: [ e, s, n ]
+    expected_column_display_size: [ 1, 10, 0 ]
+    expected_precision: [ 1, 10, 0 ]
     expected_scale: [ 0, 0, 0 ]
     expected_schema_name: [ '', '', '' ]
     expected_is_auto_increment: [ false, false, false ]
-    expected_is_case_sensitive: [ false, true, false ]
+    expected_is_case_sensitive: [ false, false, true ]
     expected_is_currency: [ false, false, false ]
     expected_is_definitely_writable: [ false, false, false ]
     expected_is_nullable: [ columnNoNulls, columnNoNulls, columnNoNulls ]
     expected_is_read_only: [ true, true, true ]
     expected_is_searchable: [ true, true, true ]
-    expected_is_signed: [ false, false, true ]
+    expected_is_signed: [ false, true, false ]
     expected_is_writable: [ false, false, false ]
 
   - description: inner_join
@@ -100,24 +100,24 @@ tests:
     sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
       = class.studentid"
     expected_result:
-      - [Mike, 84.5, 3]
-      - [John, 97.4, 3]
-      - [Jane, 89.3, 3]
-      - [Mary, 91.9, 3]
-      - [Mike, 87.5, 5]
-      - [John, 74.4, 5]
-      - [Jane, 80.1, 5]
-      - [Mary, 83.3, 5]
+      - [Mike, 3, 84.5]
+      - [John, 3, 97.4]
+      - [Jane, 3, 89.3]
+      - [Mary, 3, 91.9]
+      - [Mike, 5, 87.5]
+      - [John, 5, 74.4]
+      - [Jane, 5, 80.1]
+      - [Mary, 5, 83.3]
     row_count: 8
     ordered: false
-    expected_sql_type: [LONGVARCHAR, DOUBLE, INTEGER]
-    expected_bson_type: [string, double, int]
+    expected_sql_type: [LONGVARCHAR, INTEGER, DOUBLE]
+    expected_bson_type: [string, int, double]
     expected_catalog_name: ['', '', '']
-    expected_column_class_name: [java.lang.String, double, int]
-    expected_column_label: [name, score, testid]
-    expected_column_display_size: [0, 15, 10]
-    expected_precision: [0, 15, 10]
-    expected_scale: [0, 15, 0]
+    expected_column_class_name: [java.lang.String, int, double]
+    expected_column_label: [name, testid, score]
+    expected_column_display_size: [0, 10, 15]
+    expected_precision: [0, 10, 15]
+    expected_scale: [0, 0, 15]
     expected_schema_name: ['', '', '']
     expected_is_auto_increment: [false, false, false]
     expected_is_case_sensitive: [true, false, false]
@@ -373,4 +373,3 @@ tests:
       - ['[1, 2, 3, {"$oid": "000000000000000000000003"}, {"$timestamp": {"t": 200, "i": 0}}]',
          '{"foo": "bar", "objId": {"$oid": "000000000000000000000002"}, "value": 3, "time": {"$timestamp": {"t": 200, "i": 0}}}']
     row_count: 1
-
