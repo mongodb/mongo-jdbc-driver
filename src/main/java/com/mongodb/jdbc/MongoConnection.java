@@ -25,6 +25,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.DisableAutoLogging;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Array;
@@ -88,7 +89,10 @@ public class MongoConnection implements Connection {
         this.connectionId = connectionCounter.incrementAndGet();
         // Initializes a parent logger for the connection
         initConnectionLogger(
-                connectionId, connectionProperties.getLogLevel(), connectionProperties.getLogDir());
+                connectionId,
+                hashCode(),
+                connectionProperties.getLogLevel(),
+                connectionProperties.getLogDir());
         this.url = connectionProperties.getConnectionString().getConnectionString();
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
@@ -618,9 +622,19 @@ public class MongoConnection implements Connection {
         return (T) this;
     }
 
-    private void initConnectionLogger(Integer connection_id, Level logLevel, File logDir) {
+    private void initConnectionLogger(
+            Integer connection_id, Integer connectionHashCode, Level logLevel, File logDir) {
+        // Adding the connection hashcode as part of the logger name to differentiate the connections when the driver
+        // is loaded multiple times from different classloader (there will then be multiple connections #1, #2, etc..).
+        // Otherwise, a new handler will be added to the existing connection with the same id and info will be logged in
+        // 2 files, potentially at different levels.
         Logger logger =
-                Logger.getLogger(connection_id + "_" + MongoConnection.class.getCanonicalName());
+                Logger.getLogger(
+                        connectionHashCode
+                                + "_"
+                                + connection_id
+                                + "_"
+                                + MongoConnection.class.getCanonicalName());
         try {
             if (logLevel != null) {
                 // If log level is not OFF, create a new handler.
@@ -633,9 +647,13 @@ public class MongoConnection implements Connection {
                         synchronized (this) {
                             if (!fileHandlers.containsKey(logDirPath)) {
                                 String logPath = logDirPath + File.separator + "connection.log";
-                                FileHandler fileHandler = new FileHandler(logPath);
+                                // Create a new file handler with the configuration provided instead of relying on
+                                // properties. This way, our handler configuration is not affected by other application
+                                // using JUL
+                                FileHandler fileHandler =
+                                        new FileHandler(logPath, 10000000, 1, true);
                                 fileHandler.setLevel(logLevel);
-                                fileHandler.setFormatter(new SimpleFormatter());
+                                fileHandler.setFormatter(new MongoSimpleFormatter());
                                 fileHandlers.put(logDirPath, fileHandler);
                                 if (handlerCount.containsKey(logDirPath)) {
                                     handlerCount.put(logDirPath, handlerCount.get(logDirPath) + 1);
