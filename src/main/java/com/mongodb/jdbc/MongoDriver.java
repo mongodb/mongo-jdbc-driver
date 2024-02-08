@@ -22,8 +22,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Connection;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -107,18 +104,6 @@ public class MongoDriver implements Driver {
     static final String EXTENDED = "EXTENDED";
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
-
-    // Load logging.properties
-    static {
-        InputStream stream =
-                MongoDriver.class.getClassLoader().getResourceAsStream("logging.properties");
-        try {
-            LogManager.getLogManager().reset();
-            LogManager.getLogManager().readConfiguration(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     static CodecRegistry registry =
             fromProviders(
