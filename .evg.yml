@@ -111,7 +111,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean test 
+          ./gradlew clean test
 
   "run integration test":
     command: shell.exec
@@ -176,10 +176,6 @@ functions:
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
-          # dump env, but redact S3_KEY and S3_SECRET.
-          echo '****************************ENV******************************'
-          env | sed 's/S3_SECRET=.*$/REDACTED/' | sed 's/S3_KEY=.*$/REDACTED/'
-          echo '*************************************************************'
 
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
