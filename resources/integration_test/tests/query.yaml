@@ -95,6 +95,36 @@ tests:
     expected_is_signed: [ false, true, false ]
     expected_is_writable: [ false, false, false ]
 
+  - description: select_list_order
+    db: integration_test
+    sql: SELECT studentid AS s, name AS n, enrolled AS e FROM class
+    expected_result:
+      - [ 10329, John, true ]
+      - [ 342, Jane, false ]
+      - [ 303, Mike, true ]
+      - [ 204323, Mary, false ]
+      - [ 10, Pete, false ]
+    row_count: 5
+    ordered: false
+    expected_sql_type: [ INTEGER, LONGVARCHAR, BOOLEAN ]
+    expected_bson_type: [ int, string, bool ]
+    expected_catalog_name: [ '', '', '' ]
+    expected_column_class_name: [ int, java.lang.String, boolean ]
+    expected_column_label: [ s, n, e ]
+    expected_column_display_size: [ 10, 0, 1 ]
+    expected_precision: [ 10, 0, 1 ]
+    expected_scale: [ 0, 0, 0 ]
+    expected_schema_name: [ '', '', '' ]
+    expected_is_auto_increment: [ false, false, false ]
+    expected_is_case_sensitive: [ false, true, false ]
+    expected_is_currency: [ false, false, false ]
+    expected_is_definitely_writable: [ false, false, false ]
+    expected_is_nullable: [ columnNoNulls, columnNoNulls, columnNoNulls ]
+    expected_is_read_only: [ true, true, true ]
+    expected_is_searchable: [ true, true, true ]
+    expected_is_signed: [ true, false, false ]
+    expected_is_writable: [ false, false, false ]
+
   - description: inner_join
     db: integration_test
     sql: "SELECT class.name, grades.testid, grades.score FROM grades INNER JOIN class ON grades.studentid\
@@ -284,6 +314,7 @@ tests:
     expected_result:
       - [1, 2, 3, 4, 5, 6, 7, 8, 9]
     row_count: 1
+    duplicated_columns_names: [_id, a]
     expected_sql_type: [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER,
                         INTEGER, INTEGER]
     expected_bson_type: [int, int, int, int, int, int, int, int, int]

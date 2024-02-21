@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 
@@ -55,7 +56,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     }
 
     // A mapping from columnLabel name to datasource name and index.
-    private Map<String, DatasourceAndIndex> columnLabels;
+    private Map<String, List<DatasourceAndIndex>> columnLabels;
     // A mapping from index position to NameSpace (datasource, columnLabel).
     private List<NameSpace> columnIndices;
     // A mapping from index position to ColumnTypeInfo.
@@ -88,19 +89,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
 
         assertDatasourceSchema(schema);
 
-        columnLabels = new HashMap<String, DatasourceAndIndex>();
+        columnLabels = new HashMap<String, List<DatasourceAndIndex>>();
         columnIndices = new ArrayList<NameSpace>();
         columnInfo = new ArrayList<MongoColumnInfo>();
 
-        String[] datasources = schema.properties.keySet().toArray(new String[0]);
-        Arrays.sort(datasources);
+        if (selectOrder == null) {
+            String[] datasources = schema.properties.keySet().toArray(new String[0]);
+            Arrays.sort(datasources);
 
-        for (String datasource : datasources) {
-            processDataSource(schema, datasource, sortFieldsAlphabetically);
-        }
-
-        if (selectOrder != null) {
-            processSelectOrder(selectOrder);
+            for (String datasource : datasources) {
+                processDataSource(schema, datasource, sortFieldsAlphabetically);
+            }
+        } else {
+            processSelectOrder(selectOrder, schema);
         }
     }
 
@@ -118,51 +119,68 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
         assertDatasourceSchema(datasourceSchema);
 
-        String[] fields = datasourceSchema.properties.keySet().toArray(new String[0]);
+        List<String> fields = null;
         if (sortFieldsAlphabetically) {
-            Arrays.sort(fields);
+            fields =
+                    datasourceSchema
+                            .properties
+                            .keySet()
+                            .stream()
+                            .sorted()
+                            .collect(Collectors.toList());
+        } else {
+            fields = datasourceSchema.properties.keySet().stream().collect(Collectors.toList());
         }
 
         for (String field : fields) {
-            MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
-            BsonTypeInfo columnBsonTypeInfo = columnSchema.getBsonTypeInfo();
-            int nullability = datasourceSchema.getColumnNullability(field);
-            columnIndices.add(new NameSpace(datasource, field));
-            columnInfo.add(new MongoColumnInfo(datasource, field, columnBsonTypeInfo, nullability));
-            if (!columnLabels.containsKey(field)) {
-                columnLabels.put(
-                        field, new DatasourceAndIndex(datasource, columnIndices.size() - 1));
-            }
+            processColumnInfo(datasource, field, datasourceSchema);
         }
     };
 
-    private void processSelectOrder(List<List<String>> selectOrder) throws SQLException {
-        // turn columnIndices into a map
-        HashMap<List<String>, NameSpace> columnIndexMap = new HashMap<List<String>, NameSpace>();
-        for (NameSpace n : columnIndices) {
-            columnIndexMap.put(Arrays.asList(n.datasource, n.columnLabel), n);
-        }
-
-        // turn columnInfo into a map as well
-        HashMap<List<String>, MongoColumnInfo> columnInfoMap =
-                new HashMap<List<String>, MongoColumnInfo>();
-        for (MongoColumnInfo t : columnInfo) {
-            columnInfoMap.put(Arrays.asList(t.getTableName(), t.getColumnName()), t);
-        }
+    private void processSelectOrder(List<List<String>> selectOrder, MongoJsonSchema schema)
+            throws SQLException {
 
         // reset columnIndices and columnInfo to empty lists and populate in select order
         columnIndices = new ArrayList<NameSpace>();
         columnInfo = new ArrayList<MongoColumnInfo>();
         for (List<String> column : selectOrder) {
-            columnIndices.add(columnIndexMap.remove(column));
-            columnInfo.add(columnInfoMap.remove(column));
+            String datasource = column.get(0);
+            String field = column.get(1);
+            MongoJsonSchema datasourceSchema = schema.properties.get(datasource);
+            assertDatasourceSchema(datasourceSchema);
+            processColumnInfo(datasource, field, datasourceSchema);
         }
     }
 
-    // This gets the datasource for a given columnLabel, and is used
-    // in MongoResultSet to retrieve data by label.
-    protected String getDatasource(String columnLabel) {
-        return columnLabels.get(columnLabel).datasource;
+    private void processColumnInfo(
+            String datasource, String field, MongoJsonSchema datasourceSchema) throws SQLException {
+        MongoJsonSchema columnSchema = datasourceSchema.properties.get(field);
+        BsonTypeInfo columnBsonTypeInfo = columnSchema.getBsonTypeInfo();
+        int nullability = datasourceSchema.getColumnNullability(field);
+        columnIndices.add(new NameSpace(datasource, field));
+        columnInfo.add(new MongoColumnInfo(datasource, field, columnBsonTypeInfo, nullability));
+        if (!columnLabels.containsKey(field)) {
+            List<DatasourceAndIndex> datasourceAndIndexList = new ArrayList<>();
+            datasourceAndIndexList.add(
+                    new DatasourceAndIndex(datasource, columnIndices.size() - 1));
+            columnLabels.put(field, datasourceAndIndexList);
+        } else {
+            columnLabels
+                    .get(field)
+                    .add(new DatasourceAndIndex(datasource, columnIndices.size() - 1));
+        }
+    }
+
+    // This gets the datasource for a given columnLabel.
+    // It is only used in our unit tests.
+    protected String getDatasource(String columnLabel) throws Exception {
+        List<DatasourceAndIndex> columnsForLabel = columnLabels.get(columnLabel);
+        if (columnsForLabel.size() > 1) {
+            throw new Exception(
+                    "Multiple columns with the same label exists. Please use indexes instead.");
+        } else {
+            return columnsForLabel.get(0).datasource;
+        }
     }
 
     protected void checkBounds(int i) throws SQLException {
@@ -209,8 +227,14 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         return columnLabels.containsKey(label);
     }
 
-    public int getColumnPositionFromLabel(String label) {
-        return columnLabels.get(label).index;
+    public int getColumnPositionFromLabel(String label) throws Exception {
+        List<DatasourceAndIndex> columnsForLabel = columnLabels.get(label);
+        if (columnsForLabel.size() > 1) {
+            throw new Exception(
+                    "Multiple columns with the same label exists. Please use indexes instead.");
+        } else {
+            return columnsForLabel.get(0).index;
+        }
     }
 
     @Override

@@ -44,8 +44,11 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 import org.bson.Document;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.inspector.TagInspector;
+import org.yaml.snakeyaml.nodes.Tag;
 
 public class DataLoader {
     public static final String TEST_DATA_DIRECTORY = "resources/integration_test/testdata";
@@ -57,7 +60,20 @@ public class DataLoader {
                     + ":"
                     + System.getenv("ADF_TEST_LOCAL_PWD")
                     + "@localhost";
-    private static Yaml yaml = new Yaml(new Constructor(TestData.class));
+    private static Yaml yaml;
+
+    static {
+        TagInspector allowGlobalTags =
+                new TagInspector() {
+                    @Override
+                    public boolean isGlobalTagAllowed(Tag tag) {
+                        return true;
+                    }
+                };
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setTagInspector(allowGlobalTags);
+        yaml = new Yaml(new Constructor(TestData.class, loaderOptions));
+    };
 
     private List<TestDataEntry> datasets;
     private Set<Pair<String, String>> collections;
