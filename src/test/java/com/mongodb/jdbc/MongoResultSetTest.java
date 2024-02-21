@@ -299,6 +299,8 @@ class MongoResultSetTest extends MongoMock {
         assertEquals(ANY_COL, mongoResultSet.findColumn(ANY_COL_LABEL));
         assertEquals(ARRAY_COL, mongoResultSet.findColumn(ARRAY_COL_LABEL));
         assertEquals(DOC_COL, mongoResultSet.findColumn(DOC_COL_LABEL));
+        assertThrows(SQLException.class, () -> mongoResultSet.findColumn(BOT_DUP_COL_LABEL));
+        assertThrows(SQLException.class, () -> mongoResultSet.findColumn(FOO_DUP_COL_LABEL));
 
         // Test that the IDX and LABELS are working together correctly.
         assertEquals(
@@ -1124,7 +1126,7 @@ class MongoResultSetTest extends MongoMock {
         // For empty result set, isFirst should always be false
         assertFalse(mockResultSet.isFirst());
         assertTrue(mockResultSet.isLast());
-        assertEquals(10, mockResultSet.getMetaData().getColumnCount());
+        assertEquals(12, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.next());
         // query value for existing column in empty result should result to exception
         assertThrows(
@@ -1151,7 +1153,7 @@ class MongoResultSetTest extends MongoMock {
 
         mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
 
-        assertEquals(10, mockResultSet.getMetaData().getColumnCount());
+        assertEquals(12, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
         assertTrue(mockResultSet.isLast());
         assertFalse(mockResultSet.next());

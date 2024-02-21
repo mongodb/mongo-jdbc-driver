@@ -158,7 +158,7 @@ jar {
 }
 
 dependencies {
-    implementation "org.yaml:snakeyaml:$snakeYamlVersion"
+    integrationTestImplementation "org.yaml:snakeyaml:$snakeYamlVersion"
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion

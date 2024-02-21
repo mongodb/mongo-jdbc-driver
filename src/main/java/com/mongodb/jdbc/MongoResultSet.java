@@ -205,12 +205,15 @@ public class MongoResultSet implements ResultSet {
     private BsonValue getBsonValue(String columnLabel) throws SQLException {
         int columnIndex;
         if (rsMetaData.hasColumnWithLabel(columnLabel)) {
-            columnIndex = rsMetaData.getColumnPositionFromLabel(columnLabel);
+            try {
+                columnIndex = rsMetaData.getColumnPositionFromLabel(columnLabel);
+                return getBsonValue(columnIndex + 1);
+            } catch (Exception e) {
+                throw new SQLException(e.getMessage());
+            }
         } else {
-
             throw new SQLException(String.format("column label '%s' not found", columnLabel));
         }
-        return getBsonValue(columnIndex + 1);
     }
 
     private void checkClosed() throws SQLException {
@@ -753,7 +756,11 @@ public class MongoResultSet implements ResultSet {
         if (!rsMetaData.hasColumnWithLabel(columnLabel)) {
             throw new SQLException("No such column: '" + columnLabel + "'.");
         }
-        return rsMetaData.getColumnPositionFromLabel(columnLabel) + 1;
+        try {
+            return rsMetaData.getColumnPositionFromLabel(columnLabel) + 1;
+        } catch (Exception e) {
+            throw new SQLException(e.getMessage());
+        }
     }
 
     // --------------------------JDBC 2.0-----------------------------------

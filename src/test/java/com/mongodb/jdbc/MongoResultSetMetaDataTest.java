@@ -53,7 +53,7 @@ class MongoResultSetMetaDataTest extends MongoMock {
 
     @Test
     void testGetColumnCount() throws SQLException {
-        assertEquals(10, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
+        assertEquals(12, MongoResultSetMetaDataTest.resultSetMetaData.getColumnCount());
     }
 
     @Test
@@ -61,23 +61,65 @@ class MongoResultSetMetaDataTest extends MongoMock {
 
         // Verify that the columns are sorted alphabetically when the sortFieldsAlphabetically is true and that the original order is kept when it's false.
         String[] expected_sorted_columns =
-                new String[] {"a", "binary", "str", "a", "b", "c", "d", "doc", "null", "vec"};
+                new String[] {
+                    "a",
+                    "binary",
+                    "dup",
+                    "str",
+                    "anyOfStrOrInt",
+                    "b",
+                    "c",
+                    "d",
+                    "doc",
+                    "dup",
+                    "null",
+                    "vec"
+                };
         String[] expected_original_columns =
-                new String[] {"a", "binary", "str", "c", "a", "d", "b", "vec", "null", "doc"};
+                new String[] {
+                    "a",
+                    "binary",
+                    "str",
+                    "dup",
+                    "c",
+                    "anyOfStrOrInt",
+                    "d",
+                    "b",
+                    "vec",
+                    "null",
+                    "doc",
+                    "dup"
+                };
         String[] expected_select_order_columns =
-                new String[] {"binary", "str", "a", "b", "c", "d", "doc", "null", "vec", "a"};
+                new String[] {
+                    "binary",
+                    "anyOfStrOrInt",
+                    "b",
+                    "dup",
+                    "c",
+                    "d",
+                    "doc",
+                    "null",
+                    "vec",
+                    "a",
+                    "dup",
+                    "str"
+                };
         List<List<String>> selectOrder =
                 Arrays.asList(
                         Arrays.asList("", "binary"),
-                        Arrays.asList("", "str"),
-                        Arrays.asList("foo", "a"),
+                        Arrays.asList("foo", "anyOfStrOrInt"),
                         Arrays.asList("foo", "b"),
+                        Arrays.asList("foo", "dup"),
                         Arrays.asList("foo", "c"),
                         Arrays.asList("foo", "d"),
                         Arrays.asList("foo", "doc"),
                         Arrays.asList("foo", "null"),
                         Arrays.asList("foo", "vec"),
-                        Arrays.asList("", "a"));
+                        Arrays.asList("", "a"),
+                        Arrays.asList("", "dup"),
+                        Arrays.asList("", "str"));
+
         MongoJsonSchema schema = generateMongoJsonSchema();
         MongoResultSetMetaData unsortedMedata =
                 new MongoResultSetMetaData(schema, null, false, mongoConnection.getLogger(), 0);
@@ -132,6 +174,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(NULL_COL_LABEL, resultSetMetaData.getColumnName(NULL_COL));
         assertEquals(ARRAY_COL_LABEL, resultSetMetaData.getColumnName(ARRAY_COL));
         assertEquals(DOC_COL_LABEL, resultSetMetaData.getColumnName(DOC_COL));
+        assertEquals(BOT_DUP_COL_LABEL, resultSetMetaData.getColumnName(BOT_DUP_COL));
+        assertEquals(FOO_DUP_COL_LABEL, resultSetMetaData.getColumnName(FOO_DUP_COL));
     }
 
     @Test
@@ -147,12 +191,15 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(NULL_COL_LABEL, resultSetMetaData.getColumnName(NULL_COL));
         assertEquals(ARRAY_COL_LABEL, resultSetMetaData.getColumnLabel(ARRAY_COL));
         assertEquals(DOC_COL_LABEL, resultSetMetaData.getColumnLabel(DOC_COL));
+        assertEquals(BOT_DUP_COL_LABEL, resultSetMetaData.getColumnName(BOT_DUP_COL));
+        assertEquals(FOO_DUP_COL_LABEL, resultSetMetaData.getColumnName(FOO_DUP_COL));
     }
 
     @Test
     void testGetTableName() throws SQLException {
         assertEquals("", resultSetMetaData.getTableName(DOUBLE_COL));
         assertEquals("", resultSetMetaData.getTableName(STRING_COL));
+        assertEquals("", resultSetMetaData.getTableName(BOT_DUP_COL));
         assertEquals("foo", resultSetMetaData.getTableName(ANY_OF_INT_STRING_COL));
         assertEquals("foo", resultSetMetaData.getTableName(INT_OR_NULL_COL));
         assertEquals("foo", resultSetMetaData.getTableName(INT_COL));
@@ -160,6 +207,7 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals("foo", resultSetMetaData.getTableName(NULL_COL));
         assertEquals("foo", resultSetMetaData.getTableName(ARRAY_COL));
         assertEquals("foo", resultSetMetaData.getTableName(DOC_COL));
+        assertEquals("foo", resultSetMetaData.getTableName(FOO_DUP_COL));
     }
 
     @Test
@@ -173,6 +221,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(false, resultSetMetaData.isCaseSensitive(NULL_COL));
         assertEquals(false, resultSetMetaData.isCaseSensitive(ARRAY_COL));
         assertEquals(false, resultSetMetaData.isCaseSensitive(DOC_COL));
+        assertEquals(true, resultSetMetaData.isCaseSensitive(BOT_DUP_COL));
+        assertEquals(false, resultSetMetaData.isCaseSensitive(FOO_DUP_COL));
     }
 
     @Test
@@ -189,6 +239,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(NULL_COL));
         assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(ARRAY_COL));
         assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(DOC_COL));
+        assertEquals(ResultSetMetaData.columnNullable, resultSetMetaData.isNullable(BOT_DUP_COL));
+        assertEquals(ResultSetMetaData.columnNoNulls, resultSetMetaData.isNullable(FOO_DUP_COL));
     }
 
     @Test
@@ -202,6 +254,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(false, resultSetMetaData.isSigned(NULL_COL));
         assertEquals(false, resultSetMetaData.isSigned(ARRAY_COL));
         assertEquals(false, resultSetMetaData.isSigned(DOC_COL));
+        assertEquals(false, resultSetMetaData.isSigned(BOT_DUP_COL));
+        assertEquals(true, resultSetMetaData.isSigned(FOO_DUP_COL));
     }
 
     @Test
@@ -215,6 +269,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(NULL_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(ARRAY_COL));
         assertEquals(0, resultSetMetaData.getColumnDisplaySize(DOC_COL));
+        assertEquals(0, resultSetMetaData.getColumnDisplaySize(BOT_DUP_COL));
+        assertEquals(10, resultSetMetaData.getColumnDisplaySize(FOO_DUP_COL));
     }
 
     @Test
@@ -228,6 +284,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(0, resultSetMetaData.getPrecision(NULL_COL));
         assertEquals(0, resultSetMetaData.getPrecision(ARRAY_COL));
         assertEquals(0, resultSetMetaData.getPrecision(DOC_COL));
+        assertEquals(0, resultSetMetaData.getPrecision(BOT_DUP_COL));
+        assertEquals(10, resultSetMetaData.getPrecision(FOO_DUP_COL));
     }
 
     @Test
@@ -241,6 +299,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(0, resultSetMetaData.getScale(NULL_COL));
         assertEquals(0, resultSetMetaData.getScale(ARRAY_COL));
         assertEquals(0, resultSetMetaData.getScale(DOC_COL));
+        assertEquals(0, resultSetMetaData.getScale(BOT_DUP_COL));
+        assertEquals(0, resultSetMetaData.getScale(FOO_DUP_COL));
     }
 
     @Test
@@ -254,6 +314,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(Types.NULL, resultSetMetaData.getColumnType(NULL_COL));
         assertEquals(Types.OTHER, resultSetMetaData.getColumnType(ARRAY_COL));
         assertEquals(Types.OTHER, resultSetMetaData.getColumnType(DOC_COL));
+        assertEquals(Types.LONGVARCHAR, resultSetMetaData.getColumnType(BOT_DUP_COL));
+        assertEquals(Types.INTEGER, resultSetMetaData.getColumnType(FOO_DUP_COL));
     }
 
     @Test
@@ -269,6 +331,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals(null, resultSetMetaData.getColumnClassName(NULL_COL));
         assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnClassName(ARRAY_COL));
         assertEquals(BsonValue.class.getName(), resultSetMetaData.getColumnClassName(DOC_COL));
+        assertEquals(String.class.getName(), resultSetMetaData.getColumnClassName(BOT_DUP_COL));
+        assertEquals(int.class.getName(), resultSetMetaData.getColumnClassName(FOO_DUP_COL));
     }
 
     @Test
@@ -282,11 +346,12 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals("null", resultSetMetaData.getColumnTypeName(NULL_COL));
         assertEquals("array", resultSetMetaData.getColumnTypeName(ARRAY_COL));
         assertEquals("object", resultSetMetaData.getColumnTypeName(DOC_COL));
+        assertEquals("string", resultSetMetaData.getColumnTypeName(BOT_DUP_COL));
+        assertEquals("int", resultSetMetaData.getColumnTypeName(FOO_DUP_COL));
     }
 
     @Test
-    void testGetDatasource() throws SQLException {
-        // note, we cannot get foo.a using the label a.
+    void testGetDatasource() throws Exception {
         assertEquals("", resultSetMetaData.getDatasource(DOUBLE_COL_LABEL));
         assertEquals("", resultSetMetaData.getDatasource(STRING_COL_LABEL));
         assertEquals("foo", resultSetMetaData.getDatasource(INT_NULLABLE_COL_LABEL));
@@ -295,5 +360,8 @@ class MongoResultSetMetaDataTest extends MongoMock {
         assertEquals("foo", resultSetMetaData.getDatasource(NULL_COL_LABEL));
         assertEquals("foo", resultSetMetaData.getDatasource(ARRAY_COL_LABEL));
         assertEquals("foo", resultSetMetaData.getDatasource(DOC_COL_LABEL));
+        // Duplicated column names fail
+        assertThrows(Exception.class, () -> resultSetMetaData.getDatasource(FOO_DUP_COL_LABEL));
+        assertThrows(Exception.class, () -> resultSetMetaData.getDatasource(BOT_DUP_COL_LABEL));
     }
 }

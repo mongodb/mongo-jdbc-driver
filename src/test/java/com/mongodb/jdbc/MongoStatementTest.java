@@ -103,7 +103,7 @@ class MongoStatementTest extends MongoMock {
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         ResultSetMetaData metaData = rs.getMetaData();
-        assertEquals(10, metaData.getColumnCount());
+        assertEquals(12, metaData.getColumnCount());
 
         rs.next();
         assertThrows(
@@ -137,7 +137,7 @@ class MongoStatementTest extends MongoMock {
 
         ResultSet rs = mongoStatement.executeQuery("select * from foo");
         ResultSetMetaData metaData = rs.getMetaData();
-        assertEquals(10, metaData.getColumnCount());
+        assertEquals(12, metaData.getColumnCount());
         // need to call next() first
         assertThrows(
                 SQLException.class,
@@ -147,7 +147,7 @@ class MongoStatementTest extends MongoMock {
 
         assertTrue(rs.next());
         assertEquals(1, rs.getInt(1));
-        assertEquals("a", rs.getString(3));
+        assertEquals("a", rs.getString(4));
         assertFalse(rs.next());
         assertTrue(rs.isLast());
     }

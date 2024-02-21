@@ -44,36 +44,44 @@ public abstract class MongoMock {
     protected static int DOUBLE_COL = 1;
     // __bot.binary
     protected static int BINARY_COL = 2;
+    // __bot.dup
+    protected static int BOT_DUP_COL = 3;
     // __bot.str
-    protected static int STRING_COL = 3;
+    protected static int STRING_COL = 4;
     // foo.a
-    protected static int ANY_OF_INT_STRING_COL = 4;
+    protected static int ANY_OF_INT_STRING_COL = 5;
     // foo.b
-    protected static int INT_OR_NULL_COL = 5;
+    protected static int INT_OR_NULL_COL = 6;
     // foo.c
-    protected static int INT_COL = 6;
+    protected static int INT_COL = 7;
     // foo.d
-    protected static int ANY_COL = 7;
+    protected static int ANY_COL = 8;
     // foo.doc
-    protected static int DOC_COL = 8;
+    protected static int DOC_COL = 9;
+    // foo.dup
+    protected static int FOO_DUP_COL = 10;
     // foo.null
-    protected static int NULL_COL = 9;
+    protected static int NULL_COL = 11;
     // foo.vec
-    protected static int ARRAY_COL = 10;
+    protected static int ARRAY_COL = 12;
 
     // __bot fields
     protected static String DOUBLE_COL_LABEL = "a";
     protected static String BINARY_COL_LABEL = "binary";
     protected static String STRING_COL_LABEL = "str";
 
+    protected static String BOT_DUP_COL_LABEL = "dup";
+
     // foo fields
-    protected static String ANY_OF_INT_STRING_COL_LABEL = "a";
+    protected static String ANY_OF_INT_STRING_COL_LABEL = "anyOfStrOrInt";
     protected static String INT_NULLABLE_COL_LABEL = "b";
     protected static String INT_COL_LABEL = "c";
     protected static String ANY_COL_LABEL = "d";
     protected static String DOC_COL_LABEL = "doc";
     protected static String NULL_COL_LABEL = "null";
     protected static String ARRAY_COL_LABEL = "vec";
+
+    protected static String FOO_DUP_COL_LABEL = "dup";
 
     // all.double
     protected static String ALL_DOUBLE_COL_LABEL = "double";
@@ -214,7 +222,7 @@ public abstract class MongoMock {
                         c: {
                             bsonType: int
                         },
-                        a: {
+                        anyOfStrOrInt: {
                             anyOf: [
                                 {bsonType: int},
                                 {bsonType: string},
@@ -244,9 +252,12 @@ public abstract class MongoMock {
                               }
                            },
                            required: [c]
-                        }
+                        },
+                        dup: {
+                            bsonType: int
+                       }
                     },
-                    required: [a, b, vec, doc],
+                    required: [anyOfStrOrInt, b, vec, doc, dup],
                 },
                 "": {
                    bsonType: object,
@@ -259,6 +270,9 @@ public abstract class MongoMock {
                        }
                        str: {
                            bsonType: string
+                       }
+                       dup: {
+                            bsonType: string
                        }
                    }
                 },
@@ -278,6 +292,7 @@ public abstract class MongoMock {
         fooSchema.required.add(INT_NULLABLE_COL_LABEL);
         fooSchema.required.add(ARRAY_COL_LABEL);
         fooSchema.required.add(DOC_COL_LABEL);
+        fooSchema.required.add(FOO_DUP_COL_LABEL);
 
         MongoJsonSchema aSchema = new MongoJsonSchema();
         aSchema.anyOf = new HashSet<MongoJsonSchema>();
@@ -308,6 +323,9 @@ public abstract class MongoMock {
         MongoJsonSchema nullSchema = new MongoJsonSchema();
         nullSchema.bsonType = "null";
 
+        MongoJsonSchema fooDupSchema = new MongoJsonSchema();
+        fooDupSchema.bsonType = "int";
+
         // For the doc schema, we reuse the foo.c INT field variables
         MongoJsonSchema docSchema = MongoJsonSchema.createEmptyObjectSchema();
         docSchema.required.add(INT_COL_LABEL);
@@ -322,6 +340,7 @@ public abstract class MongoMock {
         fooSchema.properties.put(ARRAY_COL_LABEL, vecSchema);
         fooSchema.properties.put(NULL_COL_LABEL, nullSchema);
         fooSchema.properties.put(DOC_COL_LABEL, docSchema);
+        fooSchema.properties.put(FOO_DUP_COL_LABEL, fooDupSchema);
 
         MongoJsonSchema botSchema = new MongoJsonSchema();
         botSchema.bsonType = "object";
@@ -335,6 +354,9 @@ public abstract class MongoMock {
         MongoJsonSchema strSchema = new MongoJsonSchema();
         strSchema.bsonType = "string";
         botSchema.properties.put("str", strSchema);
+        MongoJsonSchema botDupSchema = new MongoJsonSchema();
+        botDupSchema.bsonType = "string";
+        botSchema.properties.put(BOT_DUP_COL_LABEL, botDupSchema);
 
         schema.properties = new LinkedHashMap<String, MongoJsonSchema>();
         schema.properties.put("foo", fooSchema);
@@ -374,6 +396,7 @@ public abstract class MongoMock {
         foo.put(INT_COL_LABEL, new BsonInt32(2));
         foo.put(ANY_COL_LABEL, new BsonUndefined());
         foo.put(NULL_COL_LABEL, new BsonNull());
+        foo.put(FOO_DUP_COL_LABEL, new BsonInt32(8));
 
         BsonArray array = new BsonArray();
         array.add(new BsonInt32(1));
@@ -389,6 +412,7 @@ public abstract class MongoMock {
         byte binary[] = {10, 20, 30};
         bot.put(BINARY_COL_LABEL, new BsonBinary(binary));
         bot.put(STRING_COL_LABEL, new BsonString("a"));
+        bot.put(BOT_DUP_COL_LABEL, new BsonString("dupCol"));
 
         document.put("", bot);
         document.put("foo", foo);

@@ -28,6 +28,7 @@ public class TestEntry {
     public Integer row_count;
     public Boolean row_count_gte;
     public Boolean ordered;
+    public List<String> duplicated_columns_names;
     public List<Object> expected_result;
     public List<Map<String, Object>> expected_result_extended_json;
     public List<String> expected_sql_type;
