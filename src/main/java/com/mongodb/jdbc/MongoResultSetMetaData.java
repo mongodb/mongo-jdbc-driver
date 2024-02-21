@@ -176,8 +176,8 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
     protected String getDatasource(String columnLabel) throws Exception {
         List<DatasourceAndIndex> columnsForLabel = columnLabels.get(columnLabel);
         if (columnsForLabel.size() > 1) {
-            throw new Exception(
-                    "Multiple columns with the same label exists. Please use indexes instead.");
+throw new Exception(String.format(
+            "Multiple columns with the label '%s' exist. Use indexes to avoid ambiguity.", columnLabel));
         } else {
             return columnsForLabel.get(0).datasource;
         }
