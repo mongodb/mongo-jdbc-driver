@@ -111,7 +111,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean test 
+          ./gradlew clean test
 
   "run integration test":
     command: shell.exec
@@ -145,6 +145,7 @@ functions:
   "export variables":
     - command: shell.exec
       params:
+        silent: true
         working_dir: mongo-jdbc-driver
         script: |
 
@@ -175,10 +176,6 @@ functions:
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
-          # dump env, but redact S3_KEY and S3_SECRET.
-          echo '****************************ENV******************************'
-          env | sed 's/S3_SECRET=.*$/REDACTED/' | sed 's/S3_KEY=.*$/REDACTED/'
-          echo '*************************************************************'
 
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
@@ -393,6 +390,7 @@ functions:
     - command: shell.exec
       type: test
       params:
+        silent: true
         working_dir: mongo-jdbc-driver
         script: |
           PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_USERNAME=${NEXUS_USERNAME} NEXUS_PASSWORD=${NEXUS_PASSWORD} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh
