@@ -150,6 +150,11 @@ task runDataLoader(type: JavaExec) {
     main = javaDataLoader
 }
 
+task runServer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.RFC252ServerMain'
+}
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -162,6 +167,7 @@ dependencies {
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
 }
 
 def getReleaseVersion() {
