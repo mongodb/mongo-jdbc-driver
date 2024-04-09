@@ -30,12 +30,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The RFC8252HttpServer class implements an OIDC (OpenID Connect) server based on RFC 8252. It
@@ -224,7 +223,7 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Puts the OIDC response into the blocking queue.  If the queue is full, an error response is
+     * Puts the OIDC response into the blocking queue. If the queue is full, an error response is
      * sent to the client and the HttpExchange is closed.
      *
      * @param exchange the HTTP exchange
@@ -257,7 +256,8 @@ public class RFC8252HttpServer {
             throws IOException {
         exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
         try {
-            exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
+            exchange.sendResponseHeaders(
+                    statusCode, response.getBytes(StandardCharsets.UTF_8).length);
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes(StandardCharsets.UTF_8));
             }

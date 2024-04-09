@@ -116,7 +116,6 @@ class RFC8252HttpServerTest {
         assert (oidcResponse.getErrorDescription().equals("Not found. Parameters: foo=bar"));
     }
 
-
     @Test
     void testAmpersandInParameterValue() throws IOException, InterruptedException {
         URL url =
