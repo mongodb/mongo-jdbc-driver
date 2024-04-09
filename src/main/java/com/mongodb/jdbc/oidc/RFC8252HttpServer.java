@@ -34,6 +34,9 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * The RFC8252HttpServer class implements an OIDC (OpenID Connect) server based on RFC 8252. It
  * handles the OIDC authorization code flow by providing endpoints for the callback and redirection.
@@ -138,9 +141,7 @@ public class RFC8252HttpServer {
                 // This will hide the code and state from the URL bar by doing a redirect
                 // to the /accepted page rather than rendering the accepted page directly
                 exchange.getResponseHeaders().set(LOCATION, ACCEPTED_ENDPOINT);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
-                exchange.close();
-
+                sendResponse(exchange, "", HttpURLConnection.HTTP_MOVED_TEMP);
             } else if (queryParams.containsKey(ERROR_KEY)) {
                 oidcResponse.setError(queryParams.get(ERROR_KEY));
                 oidcResponse.setErrorDescription(
@@ -178,7 +179,6 @@ public class RFC8252HttpServer {
                 String notFoundHtml = templateEngine.process("OIDCNotFoundTemplate", context);
                 sendResponse(exchange, notFoundHtml, HttpURLConnection.HTTP_NOT_FOUND);
             }
-            exchange.close();
         }
     }
 
@@ -191,7 +191,6 @@ public class RFC8252HttpServer {
             context.setVariable(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
             String acceptedHtml = templateEngine.process("OIDCAcceptedTemplate", context);
             sendResponse(exchange, acceptedHtml, HttpURLConnection.HTTP_OK);
-            exchange.close();
         }
     }
 
@@ -205,14 +204,19 @@ public class RFC8252HttpServer {
     private Map<String, String> parseQueryParams(HttpExchange exchange)
             throws UnsupportedEncodingException {
         Map<String, String> queryParams = new HashMap<>();
-        String query = exchange.getRequestURI().getQuery();
-        if (query != null) {
-            for (String param : query.split("&")) {
-                String[] keyValue = param.split("=");
-                if (keyValue.length > 1) {
-                    queryParams.put(keyValue[0], URLDecoder.decode(keyValue[1], "UTF-8"));
+        String rawQuery = exchange.getRequestURI().getRawQuery();
+
+        if (rawQuery != null) {
+            String[] params = rawQuery.split("&");
+            for (String param : params) {
+                int equalsIndex = param.indexOf('=');
+                if (equalsIndex > 0) {
+                    String key = param.substring(0, equalsIndex);
+                    String encodedValue = param.substring(equalsIndex + 1);
+                    String value = URLDecoder.decode(encodedValue, "UTF-8");
+                    queryParams.put(key, value);
                 } else {
-                    queryParams.put(keyValue[0], "");
+                    queryParams.put(param, "");
                 }
             }
         }
@@ -220,7 +224,8 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Puts the OIDC response into the blocking queue.
+     * Puts the OIDC response into the blocking queue.  If the queue is full, an error response is
+     * sent to the client and the HttpExchange is closed.
      *
      * @param exchange the HTTP exchange
      * @param oidcResponse the OIDC response to put into the queue
@@ -234,6 +239,7 @@ public class RFC8252HttpServer {
             return true;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            // sendResponse will close the exchange
             sendResponse(exchange, "<html><body><h1>Internal Server Error</h1></body></html>", 500);
             return false;
         }
@@ -250,9 +256,17 @@ public class RFC8252HttpServer {
     private void sendResponse(HttpExchange exchange, String response, int statusCode)
             throws IOException {
         exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
-        exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes(StandardCharsets.UTF_8));
-        os.close();
+        try {
+            exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(RFC8252HttpServer.class.getName());
+            logger.log(Level.SEVERE, "Error sending response", e);
+            throw e;
+        } finally {
+            exchange.close();
+        }
     }
 }

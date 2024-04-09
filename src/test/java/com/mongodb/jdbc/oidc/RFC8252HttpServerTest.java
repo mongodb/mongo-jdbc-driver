@@ -115,4 +115,39 @@ class RFC8252HttpServerTest {
         assert (oidcResponse.getError().equals("Not found"));
         assert (oidcResponse.getErrorDescription().equals("Not found. Parameters: foo=bar"));
     }
+
+
+    @Test
+    void testAmpersandInParameterValue() throws IOException, InterruptedException {
+        URL url =
+                new URL(
+                        "http://localhost:"
+                                + RFC8252HttpServer.DEFAULT_REDIRECT_PORT
+                                + "/callback?code=1234&state=foo%26bar");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+
+        assertEquals(200, connection.getResponseCode());
+        OidcResponse oidcResponse = server.getOidcResponse();
+        assertEquals("1234", oidcResponse.getCode());
+        assertEquals("foo&bar", oidcResponse.getState());
+    }
+
+    @Test
+    void testEqualsInParameterValue() throws IOException, InterruptedException {
+        URL url =
+                new URL(
+                        "http://localhost:"
+                                + RFC8252HttpServer.DEFAULT_REDIRECT_PORT
+                                + "/callback?code=1234&state=foo%3Dbar");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+
+        assertEquals(200, connection.getResponseCode());
+        OidcResponse oidcResponse = server.getOidcResponse();
+        assertEquals("1234", oidcResponse.getCode());
+        assertEquals("foo=bar", oidcResponse.getState());
+    }
 }
