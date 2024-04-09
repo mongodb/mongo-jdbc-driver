@@ -135,6 +135,8 @@ public class RFC8252HttpServer {
                 if (!putOidcResponse(exchange, oidcResponse)) {
                     return;
                 }
+                // This will hide the code and state from the URL bar by doing a redirect
+                // to the /accepted page rather than rendering the accepted page directly
                 exchange.getResponseHeaders().set(LOCATION, ACCEPTED_ENDPOINT);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
                 exchange.close();
