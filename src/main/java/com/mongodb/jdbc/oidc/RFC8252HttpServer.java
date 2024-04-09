@@ -45,7 +45,7 @@ public class RFC8252HttpServer {
     // SQL-2008: make sure this page exists and possibly update the link if the
     // docs team has a preference
     private static final String LOGIN_ERROR_URI =
-            "https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect/oidc_login_error";
+            "https://www.mongodb.com/docs/atlas/security-oidc";
     private static final String PRODUCT_DOCS_LINK =
             "https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect";
     private static final String PRODUCT_DOCS_NAME = "Atlas SQL ODBC Driver";
