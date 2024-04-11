@@ -5,19 +5,6 @@ pre:
   - func: "fetch source"
   - func: "export variables"
 
-post:
-  - func: "upload jar file"
-  - func: "upload unit test classes"
-  - func: "upload integration test classes"
-  - func: "upload unit test packages"
-  - func: "upload integration test packages"
-  - func: "upload unit test js"
-  - func: "upload integration test js"
-  - func: "upload unit test css "
-  - func: "upload integration test css "
-  - func: "upload unit test index"
-  - func: "upload integration test index"
-  - func: "upload xunit test results"
 
 buildvariants:
 
@@ -27,73 +14,29 @@ buildvariants:
     tasks:
       - spotless
 
-  - name: ubuntu2204-64-jdk-8
-    display_name: Ubuntu 22.04 jdk-8
-    expansions:
-      _platform: ubuntu2204-64-jdk-8
-    run_on: ubuntu2204-large
-    tasks:
-      - name: "build"
-      - name: "test-unit"
-      - name: "test-integration"
-
   - name: release
     display_name: "Release"
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-small
     tasks:
-      - name: "test-smoke"
-      - name: "publish-maven"
-      - name: "download-center-update"
+      - name: "release-smoke"
 
 tasks:
-  - name: "build"
-    commands:
-      - func: "build jdbc driver"
-
-  - name: "test-unit"
-    commands:
-      - func: "run unit test"
-
-  - name: "test-integration"
-    commands:
-      - func: "run integration test"
-
-  - name: "test-smoke"
-    commands:
-      - func: "run smoke test"
-
-  - name: "publish-maven"
-    git_tag_only: true
-    depends_on:
-      - name: "test-smoke"
-        variant: "release"
-    commands:
-      - func: "publish maven"
 
   - name: spotless
     commands:
       - func: "check spotless"
 
-  - name: download-center-update
-    git_tag_only: true
+  - name: "release-smoke"
+    #git_tag_only: true
     depends_on:
-      - name: "publish-maven"
-        variant: "release"
+      - name: "spotless"
+        variant: "static-analysis"
     commands:
       - func: "update download center feed"
 
 functions:
-
-  "build jdbc driver":
-    command: shell.exec
-    type: test
-    params:
-      working_dir: mongo-jdbc-driver
-      script: |
-          ${PREPARE_SHELL}
-          ./gradlew clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -102,63 +45,29 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          echo "-------- ENV spotless -------"
+          echo "$(env)"
+          echo "------------------------------"
           ./gradlew spotlessCheck
 
-  "run unit test":
-    command: shell.exec
-    type: test
-    params:
-      working_dir: mongo-jdbc-driver
-      script: |
-          ${PREPARE_SHELL}
-          ./gradlew clean test
-
-  "run integration test":
-    command: shell.exec
-    type: test
-    params:
-      working_dir: mongo-jdbc-driver
-      script: |
-          ${PREPARE_SHELL}
-          ./resources/run_adf.sh start &&
-          ./gradlew runDataLoader &&
-          ./gradlew clean integrationTest -x test
-          EXITCODE=$?
-          ./resources/run_adf.sh stop
-          exit $EXITCODE
-
-  "run smoke test":
-    command: shell.exec
-    type: test
-    params:
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        ./resources/run_adf.sh start &&
-        ./gradlew runDataLoader &&
-        ./gradlew clean shadowJar &&
-        ./gradlew :smoketest:test -Psmoketest
-        EXITCODE=$?
-        ./resources/run_adf.sh stop
-        exit $EXITCODE
 
   "export variables":
     - command: shell.exec
       params:
-        silent: true
+        silent: false
         working_dir: mongo-jdbc-driver
         script: |
-
           # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
 
           # get the version from the gradle.properties file, so we don't need to update in two places.
-          if [[ "${triggered_by_git_tag}" != "" ]]; then
+          if [ "${triggered_by_git_tag}" != "" ]; then
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
             export MDBJDBC_VER=snapshot
           fi
+          echo "MDBJDBC_VER = $MDBJDBC_VER"
 
           case '${_platform}' in
           ubuntu2204-64-jdk-8)
@@ -201,16 +110,6 @@ functions:
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
-  "fetch jdbc files":
-    - command: s3.get
-      params:
-        working_dir: mongo-jdbc-driver
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        bucket: mciuploads
-
   "fetch source":
     - command: shell.exec
       params:
@@ -221,180 +120,6 @@ functions:
       params:
         directory: mongo-jdbc-driver
 
-  "upload unit test classes":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Unit Test Classes"
-        visibility: none
-
-  "upload integration test classes":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Integration Test Classes"
-        visibility: none
-
-  "upload unit test packages":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Unit Test Packages"
-        visibility: none
-
-  "upload integration test packages":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Integration Test Packages"
-        visibility: none
-
-  "upload unit test index":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Unit Test Results"
-
-  "upload integration test index":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
-        content_type: text/html
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Integration Test Results"
-
-  "upload unit test css ":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/css/*.css
-        remote_file: ${S3_ARTIFACTS_DIR}/test/css/
-        content_type: text/css
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Unit Test CSS"
-        visibility: none
-
-  "upload integration test css ":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
-        content_type: text/css
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Integration Test CSS"
-        visibility: none
-
-  "upload unit test js":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/js/*.js
-        remote_file: ${S3_ARTIFACTS_DIR}/test/js/
-        content_type: application/javascript
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Unit Test JS"
-        visibility: none
-
-  "upload integration test js":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
-        content_type: application/javascript
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "Integration Test JS"
-        visibility: none
-
-  "upload xunit test results":
-    - command: attach.xunit_results
-      params:
-        silent: true
-        file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
-
-  "upload jar file":
-    - command: s3.put
-      params:
-        silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        content_type: application/java-archive
-        bucket: mciuploads
-        permissions: public-read
-        display_name: "JDBC Driver (.jar)"
-
-  "publish maven":
-    - command: shell.exec
-      type: test
-      params:
-        silent: true
-        working_dir: mongo-jdbc-driver
-        script: |
-          PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_USERNAME=${NEXUS_USERNAME} NEXUS_PASSWORD=${NEXUS_PASSWORD} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh
-
   "update download center feed":
     - command: shell.exec
       params:
@@ -402,17 +127,12 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           ${prepare_shell}
+          echo "-------- ENV update -------"
+          echo "$(env)"
+          echo "------------------------------"
           echo "Version = ${MDBJDBC_VER}"
+          echo "sed -i "s@{RELEASE_VERSION}@${MDBJDBC_VER}@" mongo-jdbc-downloads_template.json"
           sed -i "s@{RELEASE_VERSION}@${MDBJDBC_VER}@" mongo-jdbc-downloads_template.json
           echo "-------------------------"
           cat mongo-jdbc-downloads_template.json
           echo "-------------------------"
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: mongo-jdbc-driver/mongo-jdbc-downloads_template.json
-        remote_file: mongo-jdbc-driver/mongo-jdbc-downloads.json
-        bucket: translators-connectors-releases
-        permissions: public-read
-        content_type: application/json
