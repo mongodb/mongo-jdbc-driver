@@ -48,6 +48,7 @@ functions:
           echo "-------- ENV spotless -------"
           echo "$(env)"
           echo "------------------------------"
+          echo "MDBJDBC_VER : ${MDBJDBC_VER}"
           ./gradlew spotlessCheck
 
 
