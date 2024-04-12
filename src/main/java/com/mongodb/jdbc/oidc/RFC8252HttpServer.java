@@ -30,12 +30,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The RFC8252HttpServer class implements an OIDC (OpenID Connect) server based on RFC 8252. It
@@ -95,7 +95,8 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Attempts to retrieve an OIDC response from the queue, waiting up to a default timeout of 300 seconds.
+     * Attempts to retrieve an OIDC response from the queue, waiting up to a default timeout of 300
+     * seconds.
      *
      * @return the OIDC response, if available within the default timeout period
      * @throws InterruptedException if no response is available within the default timeout period
@@ -105,13 +106,13 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Attempts to retrieve an OIDC response from the queue, waiting up to the specified timeout.
-     * If no response is available within the timeout period, an InterruptedException is thrown.
+     * Attempts to retrieve an OIDC response from the queue, waiting up to the specified timeout. If
+     * no response is available within the timeout period, an InterruptedException is thrown.
      *
      * @param timeout the maximum time to wait for an OIDC response, in seconds
      * @return the OIDC response, if available within the timeout period
-     * @throws InterruptedException if no response is available within the timeout period or
-     *         if the current thread is interrupted while waiting
+     * @throws InterruptedException if no response is available within the timeout period or if the
+     *     current thread is interrupted while waiting
      */
     public OIDCResponse getOidcResponse(long timeout) throws InterruptedException {
         OIDCResponse response = oidcResponseQueue.poll(timeout, TimeUnit.SECONDS);

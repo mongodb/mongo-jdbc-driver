@@ -71,7 +71,7 @@ public class OIDCAuthFlow {
         RFC8252HttpServer server = new RFC8252HttpServer();
         try {
             // Resolve OIDC provider metadata using the issuer URI and
-            // extract authorization and token endpoint URIs
+            // extract authorization and token endpoint URIs.
             OIDCProviderMetadata providerMetadata =
                     OIDCProviderMetadata.resolve(new Issuer(issuerURI));
             URI authorizationEndpoint = providerMetadata.getAuthorizationEndpointURI();
@@ -88,7 +88,7 @@ public class OIDCAuthFlow {
             State state = new State();
             CodeVerifier codeVerifier = new CodeVerifier();
 
-            // Build the authorization request URI
+            // Build the authorization request URI.
             AuthorizationRequest request =
                     new AuthorizationRequest.Builder(
                                     new ResponseType(ResponseType.Value.CODE),
@@ -100,7 +100,7 @@ public class OIDCAuthFlow {
                             .endpointURI(authorizationEndpoint)
                             .build();
 
-            // Open the browser to the authorization request URI
+            // Open the browser to the authorization request URI.
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().browse(request.toURI());
             } else {
@@ -108,14 +108,14 @@ public class OIDCAuthFlow {
                 return null;
             }
 
-            // Wait for the authorization response from the local HTTP server
+            // Wait for the authorization response from the local HTTP server.
             OIDCResponse response = server.getOidcResponse();
             if (response == null || !state.getValue().equals(response.getState())) {
                 logger.severe("OIDC response is null or returned an invalid state");
                 return null;
             }
 
-            // Exchange the authorization code for tokens using the PKCE verifier
+            // Generate token request from the authorization code and PKCE verifier.
             AuthorizationCode code = new AuthorizationCode(response.getCode());
             AuthorizationCodeGrant codeGrant =
                     new AuthorizationCodeGrant(code, redirectURI, codeVerifier);
