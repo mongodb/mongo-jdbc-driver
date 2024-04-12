@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The RFC8252HttpServer class implements an OIDC (OpenID Connect) server based on RFC 8252. It
@@ -71,7 +72,7 @@ public class RFC8252HttpServer {
 
     private HttpServer server;
     private final TemplateEngine templateEngine;
-    private final BlockingQueue<OidcResponse> oidcResponseQueue;
+    private final BlockingQueue<OIDCResponse> oidcResponseQueue;
 
     public RFC8252HttpServer() {
         templateEngine = createTemplateEngine();
@@ -94,13 +95,30 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Blocks until an OIDC response is available in the queue.
+     * Attempts to retrieve an OIDC response from the queue, waiting up to a default timeout of 300 seconds.
      *
-     * @return the OIDC response
-     * @throws InterruptedException if the current thread is interrupted while waiting
+     * @return the OIDC response, if available within the default timeout period
+     * @throws InterruptedException if no response is available within the default timeout period
      */
-    public OidcResponse getOidcResponse() throws InterruptedException {
-        return oidcResponseQueue.take();
+    public OIDCResponse getOidcResponse() throws InterruptedException {
+        return getOidcResponse(300);
+    }
+
+    /**
+     * Attempts to retrieve an OIDC response from the queue, waiting up to the specified timeout.
+     * If no response is available within the timeout period, an InterruptedException is thrown.
+     *
+     * @param timeout the maximum time to wait for an OIDC response, in seconds
+     * @return the OIDC response, if available within the timeout period
+     * @throws InterruptedException if no response is available within the timeout period or
+     *         if the current thread is interrupted while waiting
+     */
+    public OIDCResponse getOidcResponse(long timeout) throws InterruptedException {
+        OIDCResponse response = oidcResponseQueue.poll(timeout, TimeUnit.SECONDS);
+        if (response == null) {
+            throw new InterruptedException("Timeout waiting for OIDC response");
+        }
+        return response;
     }
 
     public void stop() {
@@ -129,7 +147,7 @@ public class RFC8252HttpServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             Map<String, String> queryParams = parseQueryParams(exchange);
-            OidcResponse oidcResponse = new OidcResponse();
+            OIDCResponse oidcResponse = new OIDCResponse();
 
             if (queryParams.containsKey(CODE)) {
                 oidcResponse.setCode(queryParams.get(CODE));
@@ -231,7 +249,7 @@ public class RFC8252HttpServer {
      * @return true if the response was successfully put into the queue, false otherwise
      * @throws IOException if an I/O error occurs while sending a response
      */
-    private boolean putOidcResponse(HttpExchange exchange, OidcResponse oidcResponse)
+    private boolean putOidcResponse(HttpExchange exchange, OIDCResponse oidcResponse)
             throws IOException {
         try {
             oidcResponseQueue.put(oidcResponse);

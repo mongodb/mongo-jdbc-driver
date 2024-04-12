@@ -152,7 +152,12 @@ task runDataLoader(type: JavaExec) {
 
 task runServer(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.mongodb.jdbc.oidc.TestRFC8252ServerMain'
+    main = 'com.mongodb.jdbc.oidc.TestRFC8252Server'
+}
+
+task runAuthFlow(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.TestOIDCAuthFlow'
 }
 
 jar {
@@ -168,6 +173,7 @@ dependencies {
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: thymeLeafVersion
+    implementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: oath2OIDCVersion
 }
 
 def getReleaseVersion() {

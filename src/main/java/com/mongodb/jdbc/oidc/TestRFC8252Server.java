@@ -21,7 +21,7 @@ import java.io.IOException;
  * Main class to start the RFC8252HttpServer and wait for the OIDC response Used for testing the
  * serving of the HTML pages and the OIDC response
  */
-public class TestRFC8252ServerMain {
+public class TestRFC8252Server {
     public static void main(String[] args) {
         int port = RFC8252HttpServer.DEFAULT_REDIRECT_PORT;
         RFC8252HttpServer server = new RFC8252HttpServer();
@@ -30,7 +30,7 @@ public class TestRFC8252ServerMain {
             System.out.println("Server started on port " + port);
 
             // Wait for the OIDC response
-            OidcResponse oidcResponse = server.getOidcResponse();
+            OIDCResponse oidcResponse = server.getOidcResponse();
             System.out.println("Server Result:\n" + oidcResponse.toString());
 
             Thread.sleep(2000);
