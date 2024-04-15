@@ -18,23 +18,24 @@ package com.mongodb.jdbc.oidc;
 
 import java.util.Collections;
 
-public class TestOIDCAuthFlow {
+public class TestOidcAuthFlow {
     public static void main(String[] args) {
-        OIDCAuthFlow authFlow = new OIDCAuthFlow();
+        OidcAuthFlow authFlow = new OidcAuthFlow();
 
-        IdpServerInfo idpServerInfo =
-                new IdpServerInfo(
+        IdpInfo idpInfo =
+                new IdpInfo(
                         "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357",
                         "0oarvap2r7PmNIBsS357",
                         Collections.singletonList("openid"));
-        CallbackContext callbackContext = new CallbackContext(null, 1, null, idpServerInfo);
+
+        OidcCallbackContext callbackContext = new OidcCallbackContext(null, 1, null, idpInfo);
 
         try {
-            OIDCCredential response = authFlow.doAuthCodeFlow(callbackContext);
-            if (response != null) {
-                System.out.println("Access Token: " + response.getAccessToken());
-                System.out.println("Expires: " + response.getExpires());
-                System.out.println("Refresh Token: " + response.getRefreshToken());
+            OidcCallbackResult result = authFlow.doAuthCodeFlow(callbackContext);
+            if (result != null) {
+                System.out.println("Access Token: " + result.getAccessToken());
+                System.out.println("Expires In: " + result.getExpiresIn());
+                System.out.println("Refresh Token: " + result.getRefreshToken());
             } else {
                 System.out.println("Authentication failed.");
             }

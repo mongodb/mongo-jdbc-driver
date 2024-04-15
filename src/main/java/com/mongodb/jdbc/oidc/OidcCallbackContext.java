@@ -16,35 +16,37 @@
 
 package com.mongodb.jdbc.oidc;
 
-// TODO: This class is a placeholder for the CallbackContext,
+import java.time.Duration;
+
+// TODO: This class is a placeholder for the OidcCallbackContext,
 //       it will be removed when Java Driver OIDC support is added.
-public class CallbackContext {
-    private Long timeoutSeconds;
+public class OidcCallbackContext {
+    private Duration timeout;
     private int version;
     private String refreshToken;
-    private IdpServerInfo idpInfo;
+    private IdpInfo idpInfo;
 
-    public CallbackContext(
-            Long timeoutSeconds, int version, String refreshToken, IdpServerInfo idpInfo) {
-        this.timeoutSeconds = timeoutSeconds;
+    public OidcCallbackContext(
+            Duration timeout, int version, String refreshToken, IdpInfo idpInfo) {
+        this.timeout = timeout;
         this.version = version;
         this.refreshToken = refreshToken;
         this.idpInfo = idpInfo;
     }
 
-    public Long getTimeoutSeconds() {
-        return timeoutSeconds;
+    public Duration getTimeout() {
+        return this.timeout;
     }
 
     public int getVersion() {
-        return version;
+        return this.version;
     }
 
     public String getRefreshToken() {
-        return refreshToken;
+        return this.refreshToken;
     }
 
-    public IdpServerInfo getIdpInfo() {
-        return idpInfo;
+    public IdpInfo getIdpInfo() {
+        return this.idpInfo;
     }
 }

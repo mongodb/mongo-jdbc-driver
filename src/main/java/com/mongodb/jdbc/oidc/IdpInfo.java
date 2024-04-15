@@ -18,28 +18,28 @@ package com.mongodb.jdbc.oidc;
 
 import java.util.List;
 
-// TODO: This class is a placeholder for the IdpServerInfo,
+// TODO: This class is a placeholder for the IdpInfo,
 //       it will be removed when Java Driver OIDC support is added.
-public class IdpServerInfo {
-    private String issuer;
-    private String clientId;
-    private List<String> requestScopes;
+public class IdpInfo {
+    private final String issuer;
+    private final String clientId;
+    private final List<String> requestScopes;
 
-    public IdpServerInfo(String issuer, String clientId, List<String> requestScopes) {
+    public IdpInfo(String issuer, String clientId, List<String> requestScopes) {
         this.issuer = issuer;
         this.clientId = clientId;
         this.requestScopes = requestScopes;
     }
 
     public String getIssuer() {
-        return issuer;
+        return this.issuer;
     }
 
     public String getClientId() {
-        return clientId;
+        return this.clientId;
     }
 
     public List<String> getRequestScopes() {
-        return requestScopes;
+        return this.requestScopes;
     }
 }

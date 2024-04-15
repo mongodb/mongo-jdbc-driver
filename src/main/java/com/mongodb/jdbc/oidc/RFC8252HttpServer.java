@@ -72,7 +72,7 @@ public class RFC8252HttpServer {
 
     private HttpServer server;
     private final TemplateEngine templateEngine;
-    private final BlockingQueue<OIDCResponse> oidcResponseQueue;
+    private final BlockingQueue<OidcResponse> oidcResponseQueue;
 
     public RFC8252HttpServer() {
         templateEngine = createTemplateEngine();
@@ -101,7 +101,7 @@ public class RFC8252HttpServer {
      * @return the OIDC response, if available within the default timeout period
      * @throws InterruptedException if no response is available within the default timeout period
      */
-    public OIDCResponse getOidcResponse() throws InterruptedException {
+    public OidcResponse getOidcResponse() throws InterruptedException {
         return getOidcResponse(300);
     }
 
@@ -114,8 +114,8 @@ public class RFC8252HttpServer {
      * @throws InterruptedException if no response is available within the timeout period or if the
      *     current thread is interrupted while waiting
      */
-    public OIDCResponse getOidcResponse(long timeout) throws InterruptedException {
-        OIDCResponse response = oidcResponseQueue.poll(timeout, TimeUnit.SECONDS);
+    public OidcResponse getOidcResponse(long timeout) throws InterruptedException {
+        OidcResponse response = oidcResponseQueue.poll(timeout, TimeUnit.SECONDS);
         if (response == null) {
             throw new InterruptedException("Timeout waiting for OIDC response");
         }
@@ -148,7 +148,7 @@ public class RFC8252HttpServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             Map<String, String> queryParams = parseQueryParams(exchange);
-            OIDCResponse oidcResponse = new OIDCResponse();
+            OidcResponse oidcResponse = new OidcResponse();
 
             if (queryParams.containsKey(CODE)) {
                 oidcResponse.setCode(queryParams.get(CODE));
@@ -250,7 +250,7 @@ public class RFC8252HttpServer {
      * @return true if the response was successfully put into the queue, false otherwise
      * @throws IOException if an I/O error occurs while sending a response
      */
-    private boolean putOidcResponse(HttpExchange exchange, OIDCResponse oidcResponse)
+    private boolean putOidcResponse(HttpExchange exchange, OidcResponse oidcResponse)
             throws IOException {
         try {
             oidcResponseQueue.put(oidcResponse);

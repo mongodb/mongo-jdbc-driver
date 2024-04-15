@@ -16,27 +16,36 @@
 
 package com.mongodb.jdbc.oidc;
 
-// TODO: This class is a placeholder for the OIDC Credential,
-//       it will be removed when Java Driver OIDC support is added.
-public class OIDCCredential {
-    private final String accessToken;
-    private final Long expires;
-    private final String refreshToken;
+import java.time.Duration;
+import javax.annotation.Nullable;
 
-    public OIDCCredential(String accessToken, Long expires, String refreshToken) {
+// TODO: This class is a placeholder for the OidcCallbackResult,
+//       it will be removed when Java Driver OIDC support is added.
+public class OidcCallbackResult {
+    private final String accessToken;
+    private final Duration expiresIn;
+    @Nullable private final String refreshToken;
+
+    public OidcCallbackResult(
+            String accessToken, Duration expiresIn, @Nullable String refreshToken) {
         this.accessToken = accessToken;
-        this.expires = expires;
+        this.expiresIn = expiresIn;
         this.refreshToken = refreshToken;
+    }
+
+    public OidcCallbackResult(String accessToken, Duration expiresIn) {
+        this(accessToken, expiresIn, null);
     }
 
     public String getAccessToken() {
         return accessToken;
     }
 
-    public Long getExpires() {
-        return expires;
+    public Duration getExpiresIn() {
+        return expiresIn;
     }
 
+    @Nullable
     public String getRefreshToken() {
         return refreshToken;
     }

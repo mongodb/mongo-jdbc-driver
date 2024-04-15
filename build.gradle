@@ -157,7 +157,7 @@ task runServer(type: JavaExec) {
 
 task runAuthFlow(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.mongodb.jdbc.oidc.TestOIDCAuthFlow'
+    main = 'com.mongodb.jdbc.oidc.TestOidcAuthFlow'
 }
 
 jar {

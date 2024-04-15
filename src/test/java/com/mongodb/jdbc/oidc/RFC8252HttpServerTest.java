@@ -53,7 +53,7 @@ class RFC8252HttpServerTest {
         assertEquals(200, connection.getResponseCode());
         assertNull(connection.getHeaderField("Location"));
 
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getCode());
         assertEquals("foo", oidcResponse.getState());
     }
@@ -71,7 +71,7 @@ class RFC8252HttpServerTest {
 
         assertEquals(400, connection.getResponseCode());
 
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getError());
         assertEquals("foo", oidcResponse.getErrorDescription());
     }
@@ -89,7 +89,7 @@ class RFC8252HttpServerTest {
 
         assertEquals(404, connection.getResponseCode());
 
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertNull(oidcResponse.getCode());
         assertNull(oidcResponse.getState());
         assert (oidcResponse.getError().equals("Not found"));
@@ -109,7 +109,7 @@ class RFC8252HttpServerTest {
 
         assertEquals(404, connection.getResponseCode());
 
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertNull(oidcResponse.getCode());
         assertNull(oidcResponse.getState());
         assert (oidcResponse.getError().equals("Not found"));
@@ -128,7 +128,7 @@ class RFC8252HttpServerTest {
         connection.connect();
 
         assertEquals(200, connection.getResponseCode());
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getCode());
         assertEquals("foo&bar", oidcResponse.getState());
     }
@@ -145,7 +145,7 @@ class RFC8252HttpServerTest {
         connection.connect();
 
         assertEquals(200, connection.getResponseCode());
-        OIDCResponse oidcResponse = server.getOidcResponse();
+        OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getCode());
         assertEquals("foo=bar", oidcResponse.getState());
     }

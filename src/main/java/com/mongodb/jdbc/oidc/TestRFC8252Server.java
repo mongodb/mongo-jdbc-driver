@@ -30,7 +30,7 @@ public class TestRFC8252Server {
             System.out.println("Server started on port " + port);
 
             // Wait for the OIDC response
-            OIDCResponse oidcResponse = server.getOidcResponse();
+            OidcResponse oidcResponse = server.getOidcResponse();
             System.out.println("Server Result:\n" + oidcResponse.toString());
 
             Thread.sleep(2000);

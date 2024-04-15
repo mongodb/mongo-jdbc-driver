@@ -18,7 +18,7 @@ package com.mongodb.jdbc.oidc;
 
 // TODO: This class is a placeholder for the OIDC response,
 //       it will be removed when Java Driver OIDC support is added.
-public class OIDCResponse {
+public class OidcResponse {
     private String code;
     private String state;
     private String error;

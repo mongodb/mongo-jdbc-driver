@@ -35,16 +35,17 @@ import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.awt.*;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class OIDCAuthFlow {
+public class OidcAuthFlow {
 
-    private static final Logger logger = Logger.getLogger(OIDCAuthFlow.class.getName());
+    private static final Logger logger = Logger.getLogger(OidcAuthFlow.class.getName());
 
-    public OIDCCredential doAuthCodeFlow(CallbackContext callbackContext) {
-        IdpServerInfo idpServerInfo = callbackContext.getIdpInfo();
+    public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) {
+        IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         if (idpServerInfo == null) {
             logger.severe("IdpServerInfo is null");
             return null;
@@ -109,7 +110,7 @@ public class OIDCAuthFlow {
             }
 
             // Wait for the authorization response from the local HTTP server.
-            OIDCResponse response = server.getOidcResponse();
+            OidcResponse response = server.getOidcResponse();
             if (response == null || !state.getValue().equals(response.getState())) {
                 logger.severe("OIDC response is null or returned an invalid state");
                 return null;
@@ -134,9 +135,9 @@ public class OIDCAuthFlow {
             String accessToken = tokens.getAccessToken().getValue();
             String refreshToken =
                     tokens.getRefreshToken() != null ? tokens.getRefreshToken().getValue() : null;
-            long expiresIn = tokens.getAccessToken().getLifetime();
+            Duration expiresIn = Duration.ofSeconds(tokens.getAccessToken().getLifetime());
 
-            return new OIDCCredential(accessToken, expiresIn, refreshToken);
+            return new OidcCallbackResult(accessToken, expiresIn, refreshToken);
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error during OIDC authentication", e);
