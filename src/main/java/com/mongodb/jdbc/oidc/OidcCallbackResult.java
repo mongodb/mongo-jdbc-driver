@@ -17,7 +17,7 @@
 package com.mongodb.jdbc.oidc;
 
 import java.time.Duration;
-import javax.annotation.Nullable;
+import com.mongodb.lang.Nullable;
 
 // TODO: This class is a placeholder for the OidcCallbackResult,
 //       it will be removed when Java Driver OIDC support is added.

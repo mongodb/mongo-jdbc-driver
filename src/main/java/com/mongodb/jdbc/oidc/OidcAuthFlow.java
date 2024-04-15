@@ -51,13 +51,18 @@ public class OidcAuthFlow {
             return null;
         }
 
+        String clientID = idpServerInfo.getClientId();
+        if (clientID == null || clientID.isEmpty()) {
+            logger.severe("Client ID is null or empty");
+            return null;
+        }
+
         String issuerURI = idpServerInfo.getIssuer();
         if (!issuerURI.startsWith("https")) {
             logger.severe("Issuer URI must be HTTPS");
             return null;
         }
 
-        String clientID = idpServerInfo.getClientId();
         List<String> scopesList = idpServerInfo.getRequestScopes();
         Scope scopes = new Scope();
         if (scopesList != null) {
@@ -146,7 +151,7 @@ public class OidcAuthFlow {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, "Thread interrupted", e);
+                logger.log(Level.WARNING, "Thread interrupted", e);
             }
             server.stop();
         }

@@ -16,12 +16,16 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.mongodb.lang.Nullable;
+
 import java.util.List;
 
 // TODO: This class is a placeholder for the IdpInfo,
 //       it will be removed when Java Driver OIDC support is added.
 public class IdpInfo {
     private final String issuer;
+
+    @Nullable
     private final String clientId;
     private final List<String> requestScopes;
 
@@ -35,6 +39,7 @@ public class IdpInfo {
         return this.issuer;
     }
 
+    @Nullable
     public String getClientId() {
         return this.clientId;
     }
