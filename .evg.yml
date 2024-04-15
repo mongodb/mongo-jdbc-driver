@@ -90,6 +90,7 @@ functions:
     command: shell.exec
     type: test
     params:
+      shell: bash
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
@@ -99,6 +100,7 @@ functions:
     command: shell.exec
     type: test
     params:
+      shell: bash
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
@@ -108,6 +110,7 @@ functions:
     command: shell.exec
     type: test
     params:
+      shell: bash
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
@@ -145,6 +148,7 @@ functions:
   "export variables":
     - command: shell.exec
       params:
+        shell: bash
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
@@ -153,7 +157,9 @@ functions:
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
 
-          # get the version from the gradle.properties file, so we don't need to update in two places.
+          # Get the version from trigger.
+          # Tag triggered runs are releases and the version is set in the tag.
+          # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
@@ -214,6 +220,7 @@ functions:
   "fetch source":
     - command: shell.exec
       params:
+        shell: bash
         silent: true
         script: |
           rm -rf mongo-jdbc-driver
@@ -390,6 +397,7 @@ functions:
     - command: shell.exec
       type: test
       params:
+        shell: bash
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
