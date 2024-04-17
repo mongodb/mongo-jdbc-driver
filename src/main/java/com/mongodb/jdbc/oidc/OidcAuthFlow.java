@@ -33,7 +33,7 @@ import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.awt.*;
+import java.awt.Desktop;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 public class OidcAuthFlow {
 
     private static final Logger logger = Logger.getLogger(OidcAuthFlow.class.getName());
+    private static final String OFFLINE_ACCESS = "offline_access";
 
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
@@ -53,7 +54,7 @@ public class OidcAuthFlow {
 
         String clientID = idpServerInfo.getClientId();
         if (clientID == null || clientID.isEmpty()) {
-            logger.severe("Client ID is null or empty");
+            logger.severe("Human flow is not supported, Client ID is null or empty");
             return null;
         }
 
@@ -63,17 +64,6 @@ public class OidcAuthFlow {
             return null;
         }
 
-        List<String> scopesList = idpServerInfo.getRequestScopes();
-        Scope scopes = new Scope();
-        if (scopesList != null) {
-            for (String scope : scopesList) {
-                scopes.add(new Scope.Value(scope));
-            }
-        }
-        // mongodb is not configured to ask for offline_access by default. We prefer always getting a
-        // refresh token when the server allows it.
-        scopes.add(new Scope.Value("offline_access"));
-
         RFC8252HttpServer server = new RFC8252HttpServer();
         try {
             // Resolve OIDC provider metadata using the issuer URI and
@@ -82,6 +72,28 @@ public class OidcAuthFlow {
                     OIDCProviderMetadata.resolve(new Issuer(issuerURI));
             URI authorizationEndpoint = providerMetadata.getAuthorizationEndpointURI();
             URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
+
+            Scope supportedScopes = providerMetadata.getScopes();
+            List<String> scopesList = idpServerInfo.getRequestScopes();
+            Scope requestedScopes = new Scope();
+            if (scopesList != null) {
+                for (String scope : scopesList) {
+                    if (supportedScopes != null && supportedScopes.contains(scope)) {
+                        requestedScopes.add(new Scope.Value(scope));
+                    } else {
+                        logger.warning("Requested scope '" + scope + "' is not supported by the IdP");
+                    }
+                }
+            }
+            // mongodb is not configured to ask for offline_access by default. We prefer always getting a
+            // refresh token when the server allows it.
+            if (!scopesList.contains(OFFLINE_ACCESS)) {
+                if (supportedScopes != null && supportedScopes.contains(OFFLINE_ACCESS)) {
+                    requestedScopes.add(new Scope.Value(OFFLINE_ACCESS));
+                } else {
+                    logger.info("Offline access (refresh token) is not supported by the OIDC provider");
+                }
+            }
 
             // Start the local RFC8252 HTTP server to receive the redirect.
             server.start();
@@ -99,7 +111,7 @@ public class OidcAuthFlow {
                     new AuthorizationRequest.Builder(
                                     new ResponseType(ResponseType.Value.CODE),
                                     new ClientID(clientID))
-                            .scope(scopes)
+                            .scope(requestedScopes)
                             .redirectionURI(redirectURI)
                             .state(state)
                             .codeChallenge(codeVerifier, CodeChallengeMethod.S256)
@@ -115,7 +127,7 @@ public class OidcAuthFlow {
             }
 
             // Wait for the authorization response from the local HTTP server.
-            OidcResponse response = server.getOidcResponse();
+            OidcResponse response = server.getOidcResponse(Duration.ofMinutes(5));
             if (response == null || !state.getValue().equals(response.getState())) {
                 logger.severe("OIDC response is null or returned an invalid state");
                 return null;
@@ -149,6 +161,8 @@ public class OidcAuthFlow {
             return null;
         } finally {
             try {
+                // Sleeping to ensure the server stays up long enough to respond to the browser's
+                // request after the redirect.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 logger.log(Level.WARNING, "Thread interrupted", e);

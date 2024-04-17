@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.oidc;
 
+import java.time.Duration;
 import java.util.Collections;
 
 public class TestOidcAuthFlow {
@@ -28,7 +29,8 @@ public class TestOidcAuthFlow {
                         "0oarvap2r7PmNIBsS357",
                         Collections.singletonList("openid"));
 
-        OidcCallbackContext callbackContext = new OidcCallbackContext(null, 1, null, idpInfo);
+        Duration timeout = Duration.ofMinutes(5);
+        OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, idpInfo);
 
         try {
             OidcCallbackResult result = authFlow.doAuthCodeFlow(callbackContext);

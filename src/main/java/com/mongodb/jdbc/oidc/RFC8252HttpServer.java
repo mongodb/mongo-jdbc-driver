@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -102,7 +103,7 @@ public class RFC8252HttpServer {
      * @throws InterruptedException if no response is available within the default timeout period
      */
     public OidcResponse getOidcResponse() throws InterruptedException {
-        return getOidcResponse(300);
+        return getOidcResponse(Duration.ofSeconds(300));
     }
 
     /**
@@ -114,8 +115,8 @@ public class RFC8252HttpServer {
      * @throws InterruptedException if no response is available within the timeout period or if the
      *     current thread is interrupted while waiting
      */
-    public OidcResponse getOidcResponse(long timeout) throws InterruptedException {
-        OidcResponse response = oidcResponseQueue.poll(timeout, TimeUnit.SECONDS);
+    public OidcResponse getOidcResponse(Duration timeout) throws InterruptedException {
+        OidcResponse response = oidcResponseQueue.poll(timeout.getSeconds(), TimeUnit.SECONDS);
         if (response == null) {
             throw new InterruptedException("Timeout waiting for OIDC response");
         }
