@@ -129,7 +129,7 @@ public class OidcAuthFlow {
             }
 
             // Wait for the authorization response from the local HTTP server.
-            OidcResponse response = server.getOidcResponse(Duration.ofMinutes(5));
+            OidcResponse response = server.getOidcResponse(callbackContext.getTimeout());
             if (response == null || !state.getValue().equals(response.getState())) {
                 logger.severe("OIDC response is null or returned an invalid state");
                 return null;

@@ -116,6 +116,9 @@ public class RFC8252HttpServer {
      *     current thread is interrupted while waiting
      */
     public OidcResponse getOidcResponse(Duration timeout) throws InterruptedException {
+        if (timeout == null) {
+            return getOidcResponse();
+        }
         OidcResponse response = oidcResponseQueue.poll(timeout.getSeconds(), TimeUnit.SECONDS);
         if (response == null) {
             throw new InterruptedException("Timeout waiting for OIDC response");
