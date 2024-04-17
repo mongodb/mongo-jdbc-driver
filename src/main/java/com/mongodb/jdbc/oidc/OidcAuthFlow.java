@@ -81,7 +81,8 @@ public class OidcAuthFlow {
                     if (supportedScopes != null && supportedScopes.contains(scope)) {
                         requestedScopes.add(new Scope.Value(scope));
                     } else {
-                        logger.warning("Requested scope '" + scope + "' is not supported by the IdP");
+                        logger.warning(
+                                "Requested scope '" + scope + "' is not supported by the IdP");
                     }
                 }
             }
@@ -91,7 +92,8 @@ public class OidcAuthFlow {
                 if (supportedScopes != null && supportedScopes.contains(OFFLINE_ACCESS)) {
                     requestedScopes.add(new Scope.Value(OFFLINE_ACCESS));
                 } else {
-                    logger.info("Offline access (refresh token) is not supported by the OIDC provider");
+                    logger.info(
+                            "Offline access (refresh token) is not supported by the OIDC provider");
                 }
             }
 

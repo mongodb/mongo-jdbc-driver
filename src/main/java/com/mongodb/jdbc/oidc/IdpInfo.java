@@ -17,7 +17,6 @@
 package com.mongodb.jdbc.oidc;
 
 import com.mongodb.lang.Nullable;
-
 import java.util.List;
 
 // TODO: This class is a placeholder for the IdpInfo,
@@ -25,8 +24,7 @@ import java.util.List;
 public class IdpInfo {
     private final String issuer;
 
-    @Nullable
-    private final String clientId;
+    @Nullable private final String clientId;
     private final List<String> requestScopes;
 
     public IdpInfo(String issuer, String clientId, List<String> requestScopes) {
