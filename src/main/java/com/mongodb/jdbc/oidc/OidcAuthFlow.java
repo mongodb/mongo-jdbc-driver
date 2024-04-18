@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.mongodb.jdbc.logging.MongoLogger;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationRequest;
@@ -43,24 +44,31 @@ import java.util.logging.Logger;
 public class OidcAuthFlow {
 
     private static final Logger logger = Logger.getLogger(OidcAuthFlow.class.getName());
+    private MongoLogger mongoLogger;
     private static final String OFFLINE_ACCESS = "offline_access";
+
+    public OidcAuthFlow() {}
+
+    public OidcAuthFlow(MongoLogger parentLogger) {
+        this.mongoLogger = new MongoLogger(OidcAuthFlow.class.getName(), parentLogger);
+    }
 
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         if (idpServerInfo == null) {
-            logger.severe("IdpServerInfo is null");
+            log(Level.SEVERE, "IdpServerInfo is null");
             return null;
         }
 
         String clientID = idpServerInfo.getClientId();
         if (clientID == null || clientID.isEmpty()) {
-            logger.severe("Human flow is not supported, Client ID is null or empty");
+            log(Level.SEVERE, "Human flow is not supported, Client ID is null or empty");
             return null;
         }
 
         String issuerURI = idpServerInfo.getIssuer();
         if (!issuerURI.startsWith("https")) {
-            logger.severe("Issuer URI must be HTTPS");
+            log(Level.SEVERE, "Issuer URI must be HTTPS");
             return null;
         }
 
@@ -124,14 +132,14 @@ public class OidcAuthFlow {
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().browse(request.toURI());
             } else {
-                logger.severe("Desktop operations not supported");
+                log(Level.SEVERE, "Desktop operations not supported");
                 return null;
             }
 
             // Wait for the authorization response from the local HTTP server.
             OidcResponse response = server.getOidcResponse(callbackContext.getTimeout());
             if (response == null || !state.getValue().equals(response.getState())) {
-                logger.severe("OIDC response is null or returned an invalid state");
+                log(Level.SEVERE, "OIDC response is null or returned an invalid state");
                 return null;
             }
 
@@ -146,7 +154,7 @@ public class OidcAuthFlow {
             HTTPResponse httpResponse = tokenRequest.toHTTPRequest().send();
             TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
             if (!tokenResponse.indicatesSuccess()) {
-                logger.severe("Token request failed with response: " + httpResponse.getBody());
+                log(Level.SEVERE, "Token request failed with response: " + httpResponse.getBody());
                 return null;
             }
 
@@ -159,7 +167,7 @@ public class OidcAuthFlow {
             return new OidcCallbackResult(accessToken, expiresIn, refreshToken);
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error during OIDC authentication", e);
+            log(Level.SEVERE, "Error during OIDC authentication " + e.getMessage());
             return null;
         } finally {
             try {
@@ -167,9 +175,17 @@ public class OidcAuthFlow {
                 // request after the redirect.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                logger.log(Level.WARNING, "Thread interrupted", e);
+                log(Level.WARNING, "Thread interrupted " + e.getMessage());
             }
             server.stop();
+        }
+    }
+
+    private void log(Level level, String message) {
+        if (mongoLogger != null) {
+            mongoLogger.log(level, message);
+        } else {
+            logger.log(level, message);
         }
     }
 }
