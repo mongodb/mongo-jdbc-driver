@@ -26,10 +26,12 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.thymeleaf.TemplateEngine;
@@ -94,13 +96,34 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Blocks until an OIDC response is available in the queue.
+     * Attempts to retrieve an OIDC response from the queue, waiting up to a default timeout of 300
+     * seconds.
      *
-     * @return the OIDC response
-     * @throws InterruptedException if the current thread is interrupted while waiting
+     * @return the OIDC response, if available within the default timeout period
+     * @throws InterruptedException if no response is available within the default timeout period
      */
     public OidcResponse getOidcResponse() throws InterruptedException {
-        return oidcResponseQueue.take();
+        return getOidcResponse(Duration.ofSeconds(300));
+    }
+
+    /**
+     * Attempts to retrieve an OIDC response from the queue, waiting up to the specified timeout. If
+     * no response is available within the timeout period, an InterruptedException is thrown.
+     *
+     * @param timeout the maximum time to wait for an OIDC response, in seconds
+     * @return the OIDC response, if available within the timeout period
+     * @throws InterruptedException if no response is available within the timeout period or if the
+     *     current thread is interrupted while waiting
+     */
+    public OidcResponse getOidcResponse(Duration timeout) throws InterruptedException {
+        if (timeout == null) {
+            return getOidcResponse();
+        }
+        OidcResponse response = oidcResponseQueue.poll(timeout.getSeconds(), TimeUnit.SECONDS);
+        if (response == null) {
+            throw new InterruptedException("Timeout waiting for OIDC response");
+        }
+        return response;
     }
 
     public void stop() {
