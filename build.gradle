@@ -160,6 +160,11 @@ task runAuthFlow(type: JavaExec) {
     main = 'com.mongodb.jdbc.oidc.TestOidcAuthFlow'
 }
 
+task runAuthFlowAndRefresh(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.TestOidcAuthFlowAndRefresh'
+}
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
