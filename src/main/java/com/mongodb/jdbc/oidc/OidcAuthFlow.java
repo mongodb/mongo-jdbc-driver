@@ -18,13 +18,13 @@ package com.mongodb.jdbc.oidc;
 
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
-import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationRequest;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -247,11 +247,11 @@ public class OidcAuthFlow {
             return false;
         }
         if (clientID == null || clientID.isEmpty()) {
-            log(Level.SEVERE,"Client ID is null or empty");
+            log(Level.SEVERE, "Client ID is null or empty");
             return false;
         }
         if (!issuerURI.startsWith("https")) {
-            log(Level.SEVERE,"Issuer URI must be HTTPS");
+            log(Level.SEVERE, "Issuer URI must be HTTPS");
             return false;
         }
         return true;
