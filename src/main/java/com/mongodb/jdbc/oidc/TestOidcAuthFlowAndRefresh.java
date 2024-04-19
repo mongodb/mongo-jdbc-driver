@@ -19,41 +19,38 @@ package com.mongodb.jdbc.oidc;
 import java.time.Duration;
 import java.util.Collections;
 
-public class TestOidcAuthFlow {
+public class TestOidcAuthFlowAndRefresh {
     public static void main(String[] args) {
         OidcAuthFlow authFlow = new OidcAuthFlow();
-
         IdpInfo idpInfo =
                 new IdpInfo(
                         "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357",
                         "0oarvap2r7PmNIBsS357",
                         Collections.singletonList("openid"));
-
         Duration timeout = Duration.ofMinutes(5);
         OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, idpInfo);
 
-        testAuthCodeFlow(callbackContext, authFlow);
-    }
-
-    public static OidcCallbackResult testAuthCodeFlow(
-            OidcCallbackContext callbackContext, OidcAuthFlow authFlow) {
-
-        try {
-            OidcCallbackResult result = authFlow.doAuthCodeFlow(callbackContext);
-            if (result != null) {
-                System.out.println("Access Token: " + result.getAccessToken());
-                System.out.println("Expires In: " + result.getExpiresIn());
-                System.out.println("Refresh Token: " + result.getRefreshToken());
-                return result;
-            } else {
-                System.out.println("Authentication failed.");
+        OidcCallbackResult result = TestOidcAuthFlow.testAuthCodeFlow(callbackContext, authFlow);
+        if (result != null) {
+            // get refresh token from the AuthCodeFLow result
+            OidcCallbackContext refreshContext =
+                    new OidcCallbackContext(timeout, 1, result.getRefreshToken(), idpInfo);
+            try {
+                OidcCallbackResult refreshResult = authFlow.doRefresh(refreshContext);
+                if (refreshResult != null) {
+                    System.out.println("Refreshed Access Token: " + refreshResult.getAccessToken());
+                    System.out.println("Refreshed Expires In: " + refreshResult.getExpiresIn());
+                    System.out.println(
+                            "Refreshed Refresh Token: " + refreshResult.getRefreshToken());
+                } else {
+                    System.out.println("Refresh token flow failed.");
+                }
+            } catch (Exception e) {
+                System.err.println(
+                        "An error occurred while running the refresh token flow: "
+                                + e.getMessage());
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.err.println(
-                    "An error occurred while running the OIDC authentication flow: "
-                            + e.getMessage());
-            e.printStackTrace();
         }
-        return null;
     }
 }

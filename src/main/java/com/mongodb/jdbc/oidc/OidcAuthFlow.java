@@ -18,6 +18,9 @@ package com.mongodb.jdbc.oidc;
 
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationRequest;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -30,6 +33,7 @@ import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
+import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
@@ -40,6 +44,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.RefreshFailedException;
 
 public class OidcAuthFlow {
 
@@ -55,20 +60,11 @@ public class OidcAuthFlow {
 
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
-        if (idpServerInfo == null) {
-            log(Level.SEVERE, "IdpServerInfo is null");
-            return null;
-        }
-
         String clientID = idpServerInfo.getClientId();
-        if (clientID == null || clientID.isEmpty()) {
-            log(Level.SEVERE, "Human flow is not supported, Client ID is null or empty");
-            return null;
-        }
-
         String issuerURI = idpServerInfo.getIssuer();
-        if (!issuerURI.startsWith("https")) {
-            log(Level.SEVERE, "Issuer URI must be HTTPS");
+
+        // Check that the IdP information is valid
+        if (!validateIdpInfo(idpServerInfo, clientID, issuerURI)) {
             return null;
         }
 
@@ -158,14 +154,7 @@ public class OidcAuthFlow {
                 return null;
             }
 
-            Tokens tokens = ((OIDCTokenResponse) tokenResponse).getOIDCTokens();
-            String accessToken = tokens.getAccessToken().getValue();
-            String refreshToken =
-                    tokens.getRefreshToken() != null ? tokens.getRefreshToken().getValue() : null;
-            Duration expiresIn = Duration.ofSeconds(tokens.getAccessToken().getLifetime());
-
-            return new OidcCallbackResult(accessToken, expiresIn, refreshToken);
-
+            return getOidcCallbackResultFromTokenResponse((OIDCTokenResponse) tokenResponse);
         } catch (Exception e) {
             log(Level.SEVERE, "Error during OIDC authentication " + e.getMessage());
             return null;
@@ -187,5 +176,95 @@ public class OidcAuthFlow {
         } else {
             logger.log(level, message);
         }
+    }
+
+    public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext) {
+        IdpInfo idpServerInfo = callbackContext.getIdpInfo();
+        String clientID = idpServerInfo.getClientId();
+        String issuerURI = idpServerInfo.getIssuer();
+
+        // Check that the IdP information is valid
+        if (!validateIdpInfo(idpServerInfo, clientID, issuerURI)) {
+            return null;
+        }
+        try {
+            // Use OpenID Connect Discovery to fetch the provider metadata
+            OIDCProviderMetadata providerMetadata =
+                    OIDCProviderMetadata.resolve(new Issuer(issuerURI));
+            URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
+
+            // This function will never be called without a refresh token (to be checked in the driver function),
+            // but we throw an exception to be explicit about the fact that we expect a refresh token.
+            String refreshToken = callbackContext.getRefreshToken();
+            if (refreshToken == null) {
+                throw new IllegalArgumentException("Refresh token is required");
+            }
+
+            RefreshTokenGrant refreshTokenGrant =
+                    new RefreshTokenGrant(new RefreshToken(refreshToken));
+            TokenRequest tokenRequest =
+                    new TokenRequest(tokenEndpoint, new ClientID(clientID), refreshTokenGrant);
+            HTTPResponse httpResponse = tokenRequest.toHTTPRequest().send();
+
+            try {
+                TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
+                if (!tokenResponse.indicatesSuccess()) {
+                    TokenErrorResponse errorResponse = tokenResponse.toErrorResponse();
+                    String errorCode =
+                            errorResponse.getErrorObject() != null
+                                    ? errorResponse.getErrorObject().getCode()
+                                    : null;
+                    String errorDescription =
+                            errorResponse.getErrorObject() != null
+                                    ? errorResponse.getErrorObject().getDescription()
+                                    : null;
+                    throw new RefreshFailedException(
+                            "Token refresh failed with error: "
+                                    + "code="
+                                    + errorCode
+                                    + ", description="
+                                    + errorDescription);
+                }
+                return getOidcCallbackResultFromTokenResponse((OIDCTokenResponse) tokenResponse);
+            } catch (ParseException e) {
+                throw new RefreshFailedException(
+                        "Failed to parse server response: "
+                                + e.getMessage()
+                                + " [response="
+                                + httpResponse.getBody()
+                                + "]");
+            }
+
+        } catch (Exception e) {
+            log(Level.SEVERE, "OpenID Connect: Error during token refresh. " + e.getMessage());
+            return null;
+        }
+    }
+
+    private boolean validateIdpInfo(IdpInfo idpInfo, String clientID, String issuerURI) {
+        if (idpInfo == null) {
+            log(Level.SEVERE, "IdpServerInfo is null");
+            return false;
+        }
+        if (clientID == null || clientID.isEmpty()) {
+            log(Level.SEVERE,"Client ID is null or empty");
+            return false;
+        }
+        if (!issuerURI.startsWith("https")) {
+            log(Level.SEVERE,"Issuer URI must be HTTPS");
+            return false;
+        }
+        return true;
+    }
+
+    private OidcCallbackResult getOidcCallbackResultFromTokenResponse(
+            OIDCTokenResponse tokenResponse) {
+        Tokens tokens = tokenResponse.getOIDCTokens();
+        String accessToken = tokens.getAccessToken().getValue();
+        String refreshToken =
+                tokens.getRefreshToken() != null ? tokens.getRefreshToken().getValue() : null;
+        Duration expiresIn = Duration.ofSeconds(tokens.getAccessToken().getLifetime());
+
+        return new OidcCallbackResult(accessToken, expiresIn, refreshToken);
     }
 }
