@@ -152,17 +152,32 @@ task runDataLoader(type: JavaExec) {
 
 task runServer(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.mongodb.jdbc.oidc.TestRFC8252Server'
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestRFC8252Server'
 }
 
 task runAuthFlow(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.mongodb.jdbc.oidc.TestOidcAuthFlow'
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcAuthFlow'
 }
 
 task runAuthFlowAndRefresh(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.mongodb.jdbc.oidc.TestOidcAuthFlowAndRefresh'
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcAuthFlowAndRefresh'
+}
+
+task runCallback(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcCallback'
+}
+
+task runCallbackWithShortTimeout(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcCallbackWithShortTimeout'
+}
+
+task runCallbackWithBadRefreshToken(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcCallbackWithBadRefreshToken'
 }
 
 jar {

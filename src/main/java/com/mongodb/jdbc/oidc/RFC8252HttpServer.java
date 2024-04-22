@@ -102,7 +102,7 @@ public class RFC8252HttpServer {
      * @return the OIDC response, if available within the default timeout period
      * @throws InterruptedException if no response is available within the default timeout period
      */
-    public OidcResponse getOidcResponse() throws InterruptedException {
+    public OidcResponse getOidcResponse() throws InterruptedException, OidcTimeoutException {
         return getOidcResponse(Duration.ofSeconds(300));
     }
 
@@ -115,13 +115,13 @@ public class RFC8252HttpServer {
      * @throws InterruptedException if no response is available within the timeout period or if the
      *     current thread is interrupted while waiting
      */
-    public OidcResponse getOidcResponse(Duration timeout) throws InterruptedException {
+    public OidcResponse getOidcResponse(Duration timeout) throws OidcTimeoutException, InterruptedException {
         if (timeout == null) {
             return getOidcResponse();
         }
         OidcResponse response = oidcResponseQueue.poll(timeout.getSeconds(), TimeUnit.SECONDS);
         if (response == null) {
-            throw new InterruptedException("Timeout waiting for OIDC response");
+            throw new OidcTimeoutException("Timeout waiting for OIDC response");
         }
         return response;
     }
