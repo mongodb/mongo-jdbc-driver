@@ -89,9 +89,13 @@ class MongoConnectionTest extends MongoMock {
     }
 
     @Test
-    void testSetAutoCommit() {
-        testNoop(() -> mongoConnection.setAutoCommit(false));
+    void testSetAutoCommitTrue() {
         testNoop(() -> mongoConnection.setAutoCommit(true));
+    }
+
+    @Test
+    void testSetAutoCommitFalse() {
+        testNoop(() -> mongoConnection.setAutoCommit(false));
     }
 
     @Test
