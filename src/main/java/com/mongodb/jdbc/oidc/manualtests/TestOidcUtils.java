@@ -1,10 +1,25 @@
+/*
+ * Copyright 2024-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mongodb.jdbc.oidc.manualtests;
 
 import com.mongodb.jdbc.oidc.IdpInfo;
 import com.mongodb.jdbc.oidc.OidcAuthFlow;
 import com.mongodb.jdbc.oidc.OidcCallbackContext;
 import com.mongodb.jdbc.oidc.OidcCallbackResult;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -15,8 +30,6 @@ public class TestOidcUtils {
     public static final List<String> OPENID_SCOPE = Collections.singletonList("openid");
 
     public static final IdpInfo IDP_INFO = new IdpInfo(OIDC_ISSUER, OIDC_CLIENT_ID, OPENID_SCOPE);
-
-
 
     public static OidcCallbackResult testAuthCodeFlow(
             OidcCallbackContext callbackContext, OidcAuthFlow authFlow) {

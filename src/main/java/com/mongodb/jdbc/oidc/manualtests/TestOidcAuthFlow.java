@@ -18,7 +18,6 @@ package com.mongodb.jdbc.oidc.manualtests;
 
 import com.mongodb.jdbc.oidc.OidcAuthFlow;
 import com.mongodb.jdbc.oidc.OidcCallbackContext;
-
 import java.time.Duration;
 
 public class TestOidcAuthFlow {
@@ -26,7 +25,8 @@ public class TestOidcAuthFlow {
         OidcAuthFlow authFlow = new OidcAuthFlow();
 
         Duration timeout = Duration.ofMinutes(5);
-        OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
+        OidcCallbackContext callbackContext =
+                new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
 
         TestOidcUtils.testAuthCodeFlow(callbackContext, authFlow);
     }

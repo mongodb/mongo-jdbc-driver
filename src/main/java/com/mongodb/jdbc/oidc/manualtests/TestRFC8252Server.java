@@ -19,7 +19,6 @@ package com.mongodb.jdbc.oidc.manualtests;
 import com.mongodb.jdbc.oidc.OidcResponse;
 import com.mongodb.jdbc.oidc.OidcTimeoutException;
 import com.mongodb.jdbc.oidc.RFC8252HttpServer;
-
 import java.io.IOException;
 /**
  * Main class to start the RFC8252HttpServer and wait for the OIDC response Used for testing the

@@ -58,7 +58,8 @@ public class OidcAuthFlow {
         this.mongoLogger = new MongoLogger(OidcAuthFlow.class.getName(), parentLogger);
     }
 
-    public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) throws OidcTimeoutException {
+    public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext)
+            throws OidcTimeoutException {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();
@@ -181,7 +182,8 @@ public class OidcAuthFlow {
         }
     }
 
-    public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext) throws RefreshFailedException {
+    public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext)
+            throws RefreshFailedException {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();

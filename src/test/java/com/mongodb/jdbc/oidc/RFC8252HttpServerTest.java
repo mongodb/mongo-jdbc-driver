@@ -97,7 +97,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testRedirectUnknownParameters() throws OidcTimeoutException, IOException, InterruptedException {
+    void testRedirectUnknownParameters()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -117,7 +118,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testAmpersandInParameterValue() throws OidcTimeoutException, IOException, InterruptedException {
+    void testAmpersandInParameterValue()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -134,7 +136,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testEqualsInParameterValue() throws OidcTimeoutException, IOException, InterruptedException {
+    void testEqualsInParameterValue()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"

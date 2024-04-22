@@ -19,7 +19,6 @@ package com.mongodb.jdbc.oidc.manualtests;
 import com.mongodb.jdbc.oidc.OidcAuthFlow;
 import com.mongodb.jdbc.oidc.OidcCallbackContext;
 import com.mongodb.jdbc.oidc.OidcCallbackResult;
-
 import java.time.Duration;
 
 public class TestOidcAuthFlowAndRefresh {
@@ -27,13 +26,15 @@ public class TestOidcAuthFlowAndRefresh {
         OidcAuthFlow authFlow = new OidcAuthFlow();
 
         Duration timeout = Duration.ofMinutes(5);
-        OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
+        OidcCallbackContext callbackContext =
+                new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
 
         OidcCallbackResult result = TestOidcUtils.testAuthCodeFlow(callbackContext, authFlow);
         if (result != null) {
             // get refresh token from the AuthCodeFLow result
             OidcCallbackContext refreshContext =
-                    new OidcCallbackContext(timeout, 1, result.getRefreshToken(), TestOidcUtils.IDP_INFO);
+                    new OidcCallbackContext(
+                            timeout, 1, result.getRefreshToken(), TestOidcUtils.IDP_INFO);
             try {
                 OidcCallbackResult refreshResult = authFlow.doRefresh(refreshContext);
                 if (refreshResult != null) {

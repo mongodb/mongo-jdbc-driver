@@ -115,7 +115,8 @@ public class RFC8252HttpServer {
      * @throws InterruptedException if no response is available within the timeout period or if the
      *     current thread is interrupted while waiting
      */
-    public OidcResponse getOidcResponse(Duration timeout) throws OidcTimeoutException, InterruptedException {
+    public OidcResponse getOidcResponse(Duration timeout)
+            throws OidcTimeoutException, InterruptedException {
         if (timeout == null) {
             return getOidcResponse();
         }
