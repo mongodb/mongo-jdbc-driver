@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import org.junit.jupiter.api.BeforeAll;
@@ -91,14 +90,13 @@ class MongoConnectionTest extends MongoMock {
 
     @Test
     void testSetAutoCommit() {
-        assertThrows(
-                SQLFeatureNotSupportedException.class, () -> mongoConnection.setAutoCommit(true));
         testNoop(() -> mongoConnection.setAutoCommit(false));
+        testNoop(() -> mongoConnection.setAutoCommit(true));
     }
 
     @Test
     void testGetAutoCommit() throws SQLException {
-        assertFalse(mongoConnection.getAutoCommit());
+        assertTrue(mongoConnection.getAutoCommit());
     }
 
     @Test

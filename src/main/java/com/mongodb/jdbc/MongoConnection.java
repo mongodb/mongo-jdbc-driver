@@ -223,26 +223,31 @@ public class MongoConnection implements Connection {
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
+        // no-op, we only check that the connection is open
         checkConnection();
-        if (autoCommit) {
-            throw new SQLFeatureNotSupportedException(
-                    Thread.currentThread().getStackTrace()[1].toString());
-        }
+        logger.log(
+                Level.WARNING,
+                "Changing the auto-commit mode has no effect. The driver doesn't support transactions and is read-only."
+                        + "It will always report auto-commit true. Calling Commit() or Rollback() also has no effect");
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
         checkConnection();
-        return false;
+        // By default, new connections are in auto-commit mode
+        // and since we don't support transactions, changing the auto-commit mode is a no-op
+        return true;
     }
 
     @Override
     public void commit() throws SQLException {
+        // no-op, we only check that the connection is open
         checkConnection();
     }
 
     @Override
     public void rollback() throws SQLException {
+        // no-op, we only check that the connection is open
         checkConnection();
     }
 
