@@ -227,7 +227,7 @@ public class MongoConnection implements Connection {
         checkConnection();
         logger.log(
                 Level.WARNING,
-                "Changing the auto-commit mode has no effect. The driver doesn't support transactions and is read-only."
+                "Changing the auto-commit mode has no effect. The driver doesn't support transactions and is read-only. "
                         + "It will always report auto-commit true. Calling Commit() or Rollback() also has no effect");
     }
 
