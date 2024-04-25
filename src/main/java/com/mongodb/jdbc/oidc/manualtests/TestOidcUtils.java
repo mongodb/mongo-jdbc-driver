@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.oidc;
+package com.mongodb.jdbc.oidc.manualtests;
 
-import java.time.Duration;
+import com.mongodb.jdbc.oidc.IdpInfo;
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
+import com.mongodb.jdbc.oidc.OidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcCallbackResult;
 import java.util.Collections;
+import java.util.List;
 
-public class TestOidcAuthFlow {
-    public static void main(String[] args) {
-        OidcAuthFlow authFlow = new OidcAuthFlow();
+public class TestOidcUtils {
 
-        IdpInfo idpInfo =
-                new IdpInfo(
-                        "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357",
-                        "0oarvap2r7PmNIBsS357",
-                        Collections.singletonList("openid"));
+    public static String OIDC_ISSUER = "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357";
+    public static String OIDC_CLIENT_ID = "0oarvap2r7PmNIBsS357";
+    public static final List<String> OPENID_SCOPE = Collections.singletonList("openid");
 
-        Duration timeout = Duration.ofMinutes(5);
-        OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, idpInfo);
-
-        testAuthCodeFlow(callbackContext, authFlow);
-    }
+    public static final IdpInfo IDP_INFO = new IdpInfo(OIDC_ISSUER, OIDC_CLIENT_ID, OPENID_SCOPE);
 
     public static OidcCallbackResult testAuthCodeFlow(
             OidcCallbackContext callbackContext, OidcAuthFlow authFlow) {

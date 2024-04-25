@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.oidc;
+package com.mongodb.jdbc.oidc.manualtests;
 
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
+import com.mongodb.jdbc.oidc.OidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcCallbackResult;
 import java.time.Duration;
-import java.util.Collections;
 
 public class TestOidcAuthFlowAndRefresh {
     public static void main(String[] args) {
         OidcAuthFlow authFlow = new OidcAuthFlow();
-        IdpInfo idpInfo =
-                new IdpInfo(
-                        "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357",
-                        "0oarvap2r7PmNIBsS357",
-                        Collections.singletonList("openid"));
-        Duration timeout = Duration.ofMinutes(5);
-        OidcCallbackContext callbackContext = new OidcCallbackContext(timeout, 1, null, idpInfo);
 
-        OidcCallbackResult result = TestOidcAuthFlow.testAuthCodeFlow(callbackContext, authFlow);
+        Duration timeout = Duration.ofMinutes(5);
+        OidcCallbackContext callbackContext =
+                new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
+
+        OidcCallbackResult result = TestOidcUtils.testAuthCodeFlow(callbackContext, authFlow);
         if (result != null) {
             // get refresh token from the AuthCodeFLow result
             OidcCallbackContext refreshContext =
-                    new OidcCallbackContext(timeout, 1, result.getRefreshToken(), idpInfo);
+                    new OidcCallbackContext(
+                            timeout, 1, result.getRefreshToken(), TestOidcUtils.IDP_INFO);
             try {
                 OidcCallbackResult refreshResult = authFlow.doRefresh(refreshContext);
                 if (refreshResult != null) {

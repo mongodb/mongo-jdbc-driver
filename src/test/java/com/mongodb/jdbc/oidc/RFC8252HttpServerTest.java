@@ -40,7 +40,7 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testAcceptedResponse() throws IOException, InterruptedException {
+    void testAcceptedResponse() throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -59,7 +59,7 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testErrorResponse() throws IOException, InterruptedException {
+    void testErrorResponse() throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -77,7 +77,7 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testMissingParameters() throws IOException, InterruptedException {
+    void testMissingParameters() throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -97,7 +97,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testRedirectUnknownParameters() throws IOException, InterruptedException {
+    void testRedirectUnknownParameters()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -117,7 +118,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testAmpersandInParameterValue() throws IOException, InterruptedException {
+    void testAmpersandInParameterValue()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"
@@ -134,7 +136,8 @@ class RFC8252HttpServerTest {
     }
 
     @Test
-    void testEqualsInParameterValue() throws IOException, InterruptedException {
+    void testEqualsInParameterValue()
+            throws OidcTimeoutException, IOException, InterruptedException {
         URL url =
                 new URL(
                         "http://localhost:"

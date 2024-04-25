@@ -58,7 +58,8 @@ public class OidcAuthFlow {
         this.mongoLogger = new MongoLogger(OidcAuthFlow.class.getName(), parentLogger);
     }
 
-    public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext) {
+    public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext)
+            throws OidcTimeoutException {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();
@@ -157,6 +158,9 @@ public class OidcAuthFlow {
             return getOidcCallbackResultFromTokenResponse((OIDCTokenResponse) tokenResponse);
         } catch (Exception e) {
             log(Level.SEVERE, "Error during OIDC authentication " + e.getMessage());
+            if (e instanceof OidcTimeoutException) {
+                throw (OidcTimeoutException) e;
+            }
             return null;
         } finally {
             try {
@@ -178,7 +182,8 @@ public class OidcAuthFlow {
         }
     }
 
-    public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext) {
+    public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext)
+            throws RefreshFailedException {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();
@@ -237,6 +242,9 @@ public class OidcAuthFlow {
 
         } catch (Exception e) {
             log(Level.SEVERE, "OpenID Connect: Error during token refresh. " + e.getMessage());
+            if (e instanceof RefreshFailedException) {
+                throw (RefreshFailedException) e;
+            }
             return null;
         }
     }

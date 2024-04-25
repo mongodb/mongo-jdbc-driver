@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.oidc;
+package com.mongodb.jdbc.oidc.manualtests;
 
+import com.mongodb.jdbc.oidc.OidcResponse;
+import com.mongodb.jdbc.oidc.OidcTimeoutException;
+import com.mongodb.jdbc.oidc.RFC8252HttpServer;
 import java.io.IOException;
 /**
  * Main class to start the RFC8252HttpServer and wait for the OIDC response Used for testing the
@@ -34,9 +37,10 @@ public class TestRFC8252Server {
             System.out.println("Server Result:\n" + oidcResponse.toString());
 
             Thread.sleep(2000);
-            server.stop();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | OidcTimeoutException | InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            server.stop();
         }
     }
 }
