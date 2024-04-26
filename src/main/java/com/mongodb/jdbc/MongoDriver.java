@@ -19,8 +19,10 @@ package com.mongodb.jdbc;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
+import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -36,6 +38,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.stream.Stream;
@@ -63,7 +66,8 @@ public class MongoDriver implements Driver {
         CLIENT_INFO("clientinfo"),
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
-        EXT_JSON_MODE("extjsonmode");
+        EXT_JSON_MODE("extjsonmode"),
+        AUTH_MECHANISM("authMechanism");
 
         private final String propertyName;
 
@@ -102,8 +106,17 @@ public class MongoDriver implements Driver {
                     });
     static final String RELAXED = "RELAXED";
     static final String EXTENDED = "EXTENDED";
+    static final String MONGODB_OIDC = AuthenticationMechanism.MONGODB_OIDC.toString();
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
+
+    // The cache of MongoClient instances, keyed by the connection properties.
+    private static ConcurrentHashMap<String, MongoClient> mongoClientCache =
+            new ConcurrentHashMap<>();
+
+    public static String getVersion() {
+        return VERSION != null ? VERSION : MAJOR_VERSION + "." + MINOR_VERSION;
+    }
 
     static CodecRegistry registry =
             fromProviders(
@@ -136,6 +149,7 @@ public class MongoDriver implements Driver {
         }
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
+        Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
     }
 
     @Override
@@ -282,11 +296,29 @@ public class MongoDriver implements Driver {
             }
         }
 
+        String authMechanism = info.getProperty(AUTH_MECHANISM.getPropertyName());
+
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
-                        cs, database, logLevel, logDir, clientInfo, extJsonMode);
+                        cs, database, logLevel, logDir, clientInfo, extJsonMode, authMechanism);
 
-        return new MongoConnection(mongoConnectionProperties);
+        String key = mongoConnectionProperties.generateKey();
+        MongoClient client = mongoClientCache.get(key);
+
+        if (client != null) {
+            return new MongoConnection(client, mongoConnectionProperties);
+        } else {
+            MongoConnection newConnection = new MongoConnection(mongoConnectionProperties);
+            mongoClientCache.put(key, newConnection.getMongoClient());
+            return newConnection;
+        }
+    }
+
+    public static void closeAllClients() {
+        for (MongoClient client : mongoClientCache.values()) {
+            client.close();
+        }
+        mongoClientCache.clear();
     }
 
     @Override
@@ -332,11 +364,13 @@ public class MongoDriver implements Driver {
     }
 
     private static class ParseResult {
+        boolean useOidcAuthentication;
         String user;
         char[] password;
         Properties normalizedOptions;
 
-        ParseResult(String u, char[] p, Properties options) {
+        ParseResult(boolean useOidc, String u, char[] p, Properties options) {
+            useOidcAuthentication = useOidc;
             user = u;
             password = p;
             normalizedOptions = options;
@@ -400,6 +434,9 @@ public class MongoDriver implements Driver {
 
         // If we are here, we must have all the required connection information. So we have a valid URI state,
         // go ahead and construct it and prompt for nothing.
+        // TODO: connection string with OIDC authentication
+        //       authMechanism=MONGODB-OIDC
+        //       java driver allows username, do we want to pass that in if specified or keep it simple and disallow it?
         ConnectionString c =
                 new ConnectionString(
                         buildNewURI(
@@ -421,6 +458,8 @@ public class MongoDriver implements Driver {
     // throws SQLException if url and options properties disagree on the value
     private static ParseResult normalizeConnectionOptions(
             ConnectionString clientURI, Properties info) throws SQLException {
+        String user = null;
+        char[] password = null;
 
         if (info == null) {
             info = new Properties();
@@ -445,6 +484,9 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
+        // get the authMechanism
+        String authMechanism = info.getProperty(AUTH_MECHANISM.getPropertyName());
+        boolean useOidcAuthentication = MONGODB_OIDC.equalsIgnoreCase(authMechanism);
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
@@ -452,27 +494,34 @@ public class MongoDriver implements Driver {
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
         // handle disagreements on user.
-        if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
-            throw new SQLException(
-                    "uri and properties disagree on user: '"
-                            + uriUser
-                            + ", and "
-                            + propertyUser
-                            + " respectively");
+        if (useOidcAuthentication) {
+            if (uriUser != null || propertyUser != null || uriPWD != null || propertyPWD != null) {
+                throw new SQLException(
+                        "Username and/or Password should not be specified when using MONGODB-OIDC authentication");
+            }
+        } else {
+            if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
+                throw new SQLException(
+                        "uri and properties disagree on user: '"
+                                + uriUser
+                                + ", and "
+                                + propertyUser
+                                + " respectively");
+            }
+            // set the user
+            user = s.coalesce(uriUser, propertyUser);
+            if (user != null) {
+                // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
+                // know this.
+                info.setProperty(USER, user);
+            }
+            // handle disagreements on password.
+            if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
+                throw new SQLException("uri and properties disagree on password");
+            }
+            // set the password
+            password = c.coalesce(uriPWD, propertyPWD);
         }
-        // set the user
-        String user = s.coalesce(uriUser, propertyUser);
-        if (user != null) {
-            // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
-            // know this.
-            info.setProperty(USER, user);
-        }
-        // handle disagreements on password.
-        if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
-            throw new SQLException("uri and properties disagree on password");
-        }
-        // set the password
-        char[] password = c.coalesce(uriPWD, propertyPWD);
 
         String optionString = null;
         String[] optionSplit =
@@ -514,7 +563,7 @@ public class MongoDriver implements Driver {
             }
         }
 
-        return new ParseResult(user, password, options);
+        return new ParseResult(useOidcAuthentication, user, password, options);
     }
 
     // This is just a clean abstraction around URLEncode.

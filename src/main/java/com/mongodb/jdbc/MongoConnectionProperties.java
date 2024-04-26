@@ -27,6 +27,7 @@ public class MongoConnectionProperties {
     private File logDir;
     private String clientInfo;
     private boolean extJsonMode;
+    private final String authMechanism;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -34,13 +35,15 @@ public class MongoConnectionProperties {
             Level logLevel,
             File logDir,
             String clientInfo,
-            boolean extJsonMode) {
+            boolean extJsonMode,
+            String authMechanism) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
         this.logDir = logDir;
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
+        this.authMechanism = authMechanism;
     }
 
     public ConnectionString getConnectionString() {
@@ -65,5 +68,28 @@ public class MongoConnectionProperties {
 
     public boolean getExtJsonMode() {
         return extJsonMode;
+    }
+
+    public String getAuthMechanism() {
+        return authMechanism;
+    }
+
+    /*
+     * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
+     * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.
+     */
+    // TODO: double-check what is in connectionString, may contain more than what we want in the key
+    public String generateKey() {
+        StringBuilder keyBuilder = new StringBuilder();
+        keyBuilder.append(connectionString.toString());
+        keyBuilder.append(":db=").append(database);
+        if (clientInfo != null) {
+            keyBuilder.append(":clientInfo=").append(clientInfo);
+        }
+        if (authMechanism != null) {
+            keyBuilder.append(":authMechanism=").append(authMechanism);
+        }
+
+        return keyBuilder.toString().hashCode() + "";
     }
 }

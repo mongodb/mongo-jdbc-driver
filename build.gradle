@@ -57,7 +57,9 @@ allprojects {
         // MongoDB
         ajc "org.aspectj:aspectjtools:$aspectjVersion"
         implementation "org.aspectj:aspectjrt:$aspectjVersion"
-        implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
+        // implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: mongodbDriverVersion
+        // TODO: Set to OIDC driver version once their OIDC changes are merged
+        implementation fileTree(dir: 'java_driver_oidc', include: '*.jar')
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
         ajc "org.aspectj:aspectjtools:$aspectjVersion"
@@ -189,7 +191,8 @@ jar {
 
 dependencies {
     integrationTestImplementation "org.yaml:snakeyaml:$snakeYamlVersion"
-    api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
+    // api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
+    api fileTree(dir: 'java_driver_oidc', include: '*.jar')
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: thymeLeafVersion

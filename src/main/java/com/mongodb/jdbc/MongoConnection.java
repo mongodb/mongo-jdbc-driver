@@ -18,6 +18,7 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -26,6 +27,7 @@ import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.DisableAutoLogging;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.logging.MongoSimpleFormatter;
+import com.mongodb.jdbc.oidc.OidcCallback;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Array;
@@ -83,9 +85,9 @@ public class MongoConnection implements Connection {
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
     private String logDirPath;
     private boolean extJsonMode;
+    private boolean useOidcAuthentication = false;
 
     public MongoConnection(MongoConnectionProperties connectionProperties) {
-        Preconditions.checkNotNull(connectionProperties.getConnectionString());
         this.connectionId = connectionCounter.incrementAndGet();
         // Initializes a parent logger for the connection
         initConnectionLogger(
@@ -93,22 +95,44 @@ public class MongoConnection implements Connection {
                 hashCode(),
                 connectionProperties.getLogLevel(),
                 connectionProperties.getLogDir());
+        initializeConnection(connectionProperties);
+        this.mongoClientSettings = createMongoClientSettings(connectionProperties);
+        this.mongoClient = createMongoClient(connectionProperties);
+    }
+
+    public MongoConnection(
+            MongoClient mongoClient, MongoConnectionProperties connectionProperties) {
+        // TODO: Refactor constructors, call this from the other constructor
+        this.connectionId = connectionCounter.incrementAndGet();
+        // Initializes a parent logger for the connection
+        initConnectionLogger(
+                connectionId,
+                hashCode(),
+                connectionProperties.getLogLevel(),
+                connectionProperties.getLogDir());
+        Preconditions.checkNotNull(mongoClient);
+        initializeConnection(connectionProperties);
+        this.mongoClientSettings = createMongoClientSettings(connectionProperties);
+        this.mongoClient = mongoClient;
+    }
+
+    private void initializeConnection(MongoConnectionProperties connectionProperties) {
+        Preconditions.checkNotNull(connectionProperties.getConnectionString());
+        // Log the driver name and version
+        this.logger.log(Level.INFO, "Connecting using " + MongoDriver.MONGO_DRIVER_NAME + " " + MongoDriver.getVersion());
+
         this.url = connectionProperties.getConnectionString().getConnectionString();
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
         this.extJsonMode = connectionProperties.getExtJsonMode();
-        String version =
-                MongoDriver.VERSION != null
-                        ? MongoDriver.VERSION
-                        : new StringBuilder()
-                                .append(MongoDriver.MAJOR_VERSION)
-                                .append(".")
-                                .append(MongoDriver.MINOR_VERSION)
-                                .toString();
-        StringBuilder appName = new StringBuilder(MongoDriver.NAME).append("+").append(version);
+        this.useOidcAuthentication =
+                MongoDriver.MONGODB_OIDC.equalsIgnoreCase(connectionProperties.getAuthMechanism());
+        this.isClosed = false;
+    }
 
-        // Log the driver name and version
-        logger.log(Level.INFO, "Connecting using " + MongoDriver.MONGO_DRIVER_NAME + " " + version);
+    private MongoClient createMongoClient(MongoConnectionProperties connectionProperties) {
+        StringBuilder appName =
+                new StringBuilder(MongoDriver.NAME).append("+").append(MongoDriver.getVersion());
 
         MongoDriverInformation.Builder mdiBuilder;
         String clientInfo = connectionProperties.getClientInfo();
@@ -125,16 +149,36 @@ public class MongoConnection implements Connection {
             mdiBuilder = MongoDriverInformation.builder();
         }
         MongoDriverInformation mongoDriverInformation =
-                mdiBuilder.driverName(MongoDriver.NAME).driverVersion(version).build();
-
-        this.mongoClientSettings =
-                MongoClientSettings.builder()
-                        .applicationName(appName.toString())
-                        .applyConnectionString(connectionProperties.getConnectionString())
+                mdiBuilder
+                        .driverName(MongoDriver.NAME)
+                        .driverVersion(MongoDriver.getVersion())
                         .build();
-        mongoClient = MongoClients.create(mongoClientSettings, mongoDriverInformation);
 
-        isClosed = false;
+        return MongoClients.create(this.mongoClientSettings, mongoDriverInformation);
+    }
+
+    private MongoClientSettings createMongoClientSettings(
+            MongoConnectionProperties connectionProperties) {
+        String appName = MongoDriver.NAME + "+" + MongoDriver.getVersion();
+
+        MongoClientSettings.Builder settingsBuilder =
+                MongoClientSettings.builder()
+                        .applicationName(appName)
+                        .applyConnectionString(connectionProperties.getConnectionString());
+
+        if (this.useOidcAuthentication) {
+            OidcCallback oidcCallback = new OidcCallback(this.logger);
+            MongoCredential credential =
+                    MongoCredential.createOidcCredential(null)
+                            .withMechanismProperty(MongoCredential.OIDC_CALLBACK_KEY, oidcCallback);
+            settingsBuilder.credential(credential);
+        }
+
+        return settingsBuilder.build();
+    }
+
+    protected MongoClient getMongoClient() {
+        return mongoClient;
     }
 
     @DisableAutoLogging
@@ -256,7 +300,6 @@ public class MongoConnection implements Connection {
         if (isClosed()) {
             return;
         }
-        mongoClient.close();
 
         // Decrement fileHandlerCount and delete entry
         // if no more connections are using it.
