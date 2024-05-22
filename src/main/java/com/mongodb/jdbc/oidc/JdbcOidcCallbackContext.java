@@ -16,22 +16,26 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.mongodb.MongoCredential.IdpInfo;
+import com.mongodb.MongoCredential.OidcCallbackContext;
 import java.time.Duration;
 
-// TODO: This class is a placeholder for the OidcCallbackContext,
-//       it will be removed when Java Driver OIDC support is added.
-public class OidcCallbackContext {
+public class JdbcOidcCallbackContext implements OidcCallbackContext {
     private Duration timeout;
     private int version;
     private String refreshToken;
     private IdpInfo idpInfo;
 
-    public OidcCallbackContext(
+    public JdbcOidcCallbackContext(
             Duration timeout, int version, String refreshToken, IdpInfo idpInfo) {
         this.timeout = timeout;
         this.version = version;
         this.refreshToken = refreshToken;
         this.idpInfo = idpInfo;
+    }
+
+    public String getUserName() {
+        return "";
     }
 
     public Duration getTimeout() {

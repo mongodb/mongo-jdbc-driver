@@ -16,9 +16,10 @@
 
 package com.mongodb.jdbc.oidc.manualtests;
 
+import com.mongodb.MongoCredential.OidcCallbackContext;
+import com.mongodb.MongoCredential.OidcCallbackResult;
+import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
 import com.mongodb.jdbc.oidc.OidcAuthFlow;
-import com.mongodb.jdbc.oidc.OidcCallbackContext;
-import com.mongodb.jdbc.oidc.OidcCallbackResult;
 import java.time.Duration;
 
 public class TestOidcAuthFlowAndRefresh {
@@ -27,19 +28,18 @@ public class TestOidcAuthFlowAndRefresh {
 
         Duration timeout = Duration.ofMinutes(5);
         OidcCallbackContext callbackContext =
-                new OidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
+                new JdbcOidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
 
         OidcCallbackResult result = TestOidcUtils.testAuthCodeFlow(callbackContext, authFlow);
         if (result != null) {
             // get refresh token from the AuthCodeFLow result
             OidcCallbackContext refreshContext =
-                    new OidcCallbackContext(
+                    new JdbcOidcCallbackContext(
                             timeout, 1, result.getRefreshToken(), TestOidcUtils.IDP_INFO);
             try {
                 OidcCallbackResult refreshResult = authFlow.doRefresh(refreshContext);
                 if (refreshResult != null) {
                     System.out.println("Refreshed Access Token: " + refreshResult.getAccessToken());
-                    System.out.println("Refreshed Expires In: " + refreshResult.getExpiresIn());
                     System.out.println(
                             "Refreshed Refresh Token: " + refreshResult.getRefreshToken());
                 } else {

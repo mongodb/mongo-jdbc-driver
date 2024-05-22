@@ -45,6 +45,13 @@ class MongoDriverTest {
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
     static final String dbInURL = "jdbc:mongodb://localhost/foo?authSource=admin";
+    static final String userOIDCURL =
+            "jdbc:mongodb://foo@localhost/admin?authMechanism=MONGODB-OIDC";
+    static final String oidcURL =
+            "jdbc:mongodb://localhost/foo?authMechanism=MONGODB-OIDC&authSource=admin";
+    static final String userPwdOIDCURL =
+            "jdbc:mongodb://foo:bar@localhost?authMechanism=MONGODB-OIDC";
+
     // Even though ADF does not support replSets, this tests that we handle these URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910";
@@ -207,6 +214,33 @@ class MongoDriverTest {
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(replURL, p3),
                 "The connection should fail because of a password mismatch between the URI and the properties");
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithUsername() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertNotNull(d.getUnvalidatedConnection(userOIDCURL, p));
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithoutUsername() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertNotNull(d.getUnvalidatedConnection(oidcURL, p));
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithPassword() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(userPwdOIDCURL, p),
+                "The connection should fail because password is not allowed with MONGODB-OIDC authentication.");
     }
 
     @Test

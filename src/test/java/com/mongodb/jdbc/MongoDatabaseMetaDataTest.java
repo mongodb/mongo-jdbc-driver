@@ -39,8 +39,7 @@ public class MongoDatabaseMetaDataTest {
     protected DatabaseMetaData databaseMetaData =
             new MongoDatabaseMetaData(
                     new MongoConnection(
-                            new MongoConnectionProperties(
-                                    uri, database, null, null, null, false, null)));
+                            new MongoConnectionProperties(uri, database, null, null, null, false)));
 
     protected int countRows(ResultSet rs) throws SQLException {
         for (int i = 0; ; ++i) {
