@@ -25,6 +25,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -40,6 +41,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -110,9 +113,9 @@ public class MongoDriver implements Driver {
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
 
-    // The cache of MongoClient instances, keyed on the connection properties.
-    private static ConcurrentHashMap<Integer, MongoClient> mongoClientCache =
+    private static ConcurrentHashMap<Integer, WeakReference<MongoClient>> mongoClientCache =
             new ConcurrentHashMap<>();
+    private static final ReadWriteLock mongoClientCacheLock = new ReentrantReadWriteLock();
 
     public static String getVersion() {
         return VERSION != null ? VERSION : MAJOR_VERSION + "." + MINOR_VERSION;
@@ -301,22 +304,49 @@ public class MongoDriver implements Driver {
                         cs, database, logLevel, logDir, clientInfo, extJsonMode);
 
         Integer key = mongoConnectionProperties.generateKey();
-        MongoClient client = mongoClientCache.get(key);
 
-        if (client != null) {
-            return new MongoConnection(client, mongoConnectionProperties);
-        } else {
+        mongoClientCacheLock.readLock().lock();
+        try {
+            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
+            MongoClient client = (clientRef != null) ? clientRef.get() : null;
+
+            if (client != null) {
+                return new MongoConnection(client, mongoConnectionProperties);
+            }
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
+        }
+
+        // Acquire write lock to create and cache a new MongoClient if it wasn't found
+        mongoClientCacheLock.writeLock().lock();
+        try {
+            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
+            MongoClient client = (clientRef != null) ? clientRef.get() : null;
+            // Check for client again to handle race conditions
+            if (client != null) {
+                return new MongoConnection(client, mongoConnectionProperties);
+            }
             MongoConnection newConnection = new MongoConnection(mongoConnectionProperties);
-            mongoClientCache.put(key, newConnection.getMongoClient());
+            mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
             return newConnection;
+        } finally {
+            mongoClientCacheLock.writeLock().unlock();
         }
     }
 
     public static void closeAllClients() {
-        for (MongoClient client : mongoClientCache.values()) {
-            client.close();
+        mongoClientCacheLock.writeLock().lock();
+        try {
+            for (WeakReference<MongoClient> clientRef : mongoClientCache.values()) {
+                MongoClient client = clientRef.get();
+                if (client != null) {
+                    client.close();
+                }
+            }
+            mongoClientCache.clear();
+        } finally {
+            mongoClientCacheLock.writeLock().unlock();
         }
-        mongoClientCache.clear();
     }
 
     @Override

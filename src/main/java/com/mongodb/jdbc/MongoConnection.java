@@ -113,14 +113,6 @@ public class MongoConnection implements Connection {
     }
 
     private void initializeConnection(MongoConnectionProperties connectionProperties) {
-        // Log the driver name and version
-        this.logger.log(
-                Level.INFO,
-                "Connecting using "
-                        + MongoDriver.MONGO_DRIVER_NAME
-                        + " "
-                        + MongoDriver.getVersion());
-
         this.url = connectionProperties.getConnectionString().getConnectionString();
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
@@ -735,5 +727,12 @@ public class MongoConnection implements Connection {
         }
 
         this.logger = new MongoLogger(logger, connectionId);
+        // Log the driver name and version
+        this.logger.log(
+                Level.INFO,
+                "Connecting using "
+                        + MongoDriver.MONGO_DRIVER_NAME
+                        + " "
+                        + MongoDriver.getVersion());
     }
 }

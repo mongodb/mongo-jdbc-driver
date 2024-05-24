@@ -449,7 +449,7 @@ class MongoDriverTest {
         File logFile2 = getLogFile(props2);
         assertEquals(logFile.getAbsolutePath(), logFile2.getAbsolutePath());
         String connInitPattern =
-                "[INFO] [c-{connectionId}] com.mongodb.jdbc.MongoConnection <init>: Connecting using MongoDB Atlas SQL interface JDBC Driver";
+                "[INFO] [c-{connectionId}] com.mongodb.jdbc.MongoConnection initConnectionLogger: Connecting using MongoDB Atlas SQL interface JDBC Driver";
         checkLogContent(
                 logFile,
                 connInitPattern.replace("{connectionId}", String.valueOf(conn.connectionId)),
@@ -663,5 +663,60 @@ class MongoDriverTest {
         p.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
+    }
+
+    @Test
+    void testClientCaching() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        // Create three connections with the same properties
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn3 = d.getUnvalidatedConnection(basicURL, p);
+
+        // Verify that the connections share the same MongoClient instance
+        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
+        assertSame(conn1.getMongoClient(), conn3.getMongoClient());
+    }
+
+    @Test
+    void testClientCachingWithDifferentKeyedProperties() throws Exception {
+        MongoDriver d = new MongoDriver();
+
+        Properties p1 = new Properties();
+        p1.setProperty(DATABASE.getPropertyName(), "test");
+        p1.setProperty(CLIENT_INFO.getPropertyName(), "app1+1.0");
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
+
+        Properties p2 = new Properties();
+        p2.setProperty(DATABASE.getPropertyName(), "test");
+        p2.setProperty(CLIENT_INFO.getPropertyName(), "app2+1.0");
+        // Create connection with different client info
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
+
+        assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
+    }
+
+    @Test
+    void testClientCachingWithDifferentUnkeyedProperties() throws Exception {
+        // Testing with different JSON modes, a property that is not part of the unique key used
+        // for caching.
+        MongoDriver d = new MongoDriver();
+
+        // Create connections with different extended JSON mode
+        Properties p1 = new Properties();
+        p1.setProperty(DATABASE.getPropertyName(), "test");
+        p1.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
+
+        Properties p2 = new Properties();
+        p2.setProperty(DATABASE.getPropertyName(), "test");
+        p2.setProperty(EXT_JSON_MODE.getPropertyName(), "EXTENDED");
+
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
+
+        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
     }
 }
