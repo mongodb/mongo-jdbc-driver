@@ -25,17 +25,19 @@ public class JdbcOidcCallbackContext implements OidcCallbackContext {
     private int version;
     private String refreshToken;
     private IdpInfo idpInfo;
+    private String userName;
 
     public JdbcOidcCallbackContext(
-            Duration timeout, int version, String refreshToken, IdpInfo idpInfo) {
+            Duration timeout, int version, String refreshToken, IdpInfo idpInfo, String userName) {
         this.timeout = timeout;
         this.version = version;
         this.refreshToken = refreshToken;
         this.idpInfo = idpInfo;
+        this.userName = userName;
     }
 
     public String getUserName() {
-        return null;
+        return this.userName;
     }
 
     public Duration getTimeout() {

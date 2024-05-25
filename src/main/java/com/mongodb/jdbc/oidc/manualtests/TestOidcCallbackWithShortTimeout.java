@@ -31,7 +31,7 @@ public class TestOidcCallbackWithShortTimeout {
 
         Duration shortTimeout = Duration.ofSeconds(2); // intentionally short to trigger timeout
         OidcCallbackContext context =
-                new JdbcOidcCallbackContext(shortTimeout, 1, null, TestOidcUtils.IDP_INFO);
+                new JdbcOidcCallbackContext(shortTimeout, 1, null, TestOidcUtils.IDP_INFO, null);
 
         try {
             OidcCallbackResult result = oidcCallback.onRequest(context);
@@ -43,7 +43,8 @@ public class TestOidcCallbackWithShortTimeout {
             System.out.println(result);
         } catch (Exception e) {
             if (e.getCause() instanceof OidcTimeoutException) {
-                System.err.println("Expected OidcTimeoutException occurred: " + e.getCause().getMessage());
+                System.err.println(
+                        "Expected OidcTimeoutException occurred: " + e.getCause().getMessage());
             } else {
                 System.err.println("Unexpected error: " + e.getMessage());
             }

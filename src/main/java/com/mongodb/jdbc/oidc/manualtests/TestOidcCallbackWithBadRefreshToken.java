@@ -21,8 +21,6 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
-import com.mongodb.jdbc.oidc.OidcTimeoutException;
-
 import javax.security.auth.RefreshFailedException;
 
 public class TestOidcCallbackWithBadRefreshToken {
@@ -32,7 +30,7 @@ public class TestOidcCallbackWithBadRefreshToken {
 
         String badRefreshToken = "bad-refresh-token";
         OidcCallbackContext context =
-                new JdbcOidcCallbackContext(null, 1, badRefreshToken, TestOidcUtils.IDP_INFO);
+                new JdbcOidcCallbackContext(null, 1, badRefreshToken, TestOidcUtils.IDP_INFO, null);
 
         try {
             OidcCallbackResult result = oidcCallback.onRequest(context);
@@ -40,9 +38,11 @@ public class TestOidcCallbackWithBadRefreshToken {
             System.out.println(result);
         } catch (Exception e) {
             if (e.getCause() instanceof RefreshFailedException) {
-                System.err.println("Expected RefreshFailedException occurred: " + e.getCause().getMessage());
+                System.err.println(
+                        "Expected RefreshFailedException occurred: " + e.getCause().getMessage());
             } else {
                 System.err.println("Unexpected error: " + e.getMessage());
-            }        }
+            }
+        }
     }
 }

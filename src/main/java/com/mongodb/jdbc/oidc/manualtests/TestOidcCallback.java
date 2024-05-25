@@ -28,7 +28,7 @@ public class TestOidcCallback {
         OidcCallback oidcCallback = new JdbcOidcCallback();
 
         OidcCallbackContext initialContext =
-                new JdbcOidcCallbackContext(null, 1, null, TestOidcUtils.IDP_INFO);
+                new JdbcOidcCallbackContext(null, 1, null, TestOidcUtils.IDP_INFO, null);
         try {
             OidcCallbackResult initialResult = oidcCallback.onRequest(initialContext);
             if (initialResult != null) {
@@ -39,7 +39,7 @@ public class TestOidcCallback {
             }
             OidcCallbackContext refreshContext =
                     new JdbcOidcCallbackContext(
-                            null, 1, initialResult.getRefreshToken(), TestOidcUtils.IDP_INFO);
+                            null, 1, initialResult.getRefreshToken(), TestOidcUtils.IDP_INFO, null);
             OidcCallbackResult refreshResult = oidcCallback.onRequest(refreshContext);
             if (refreshResult != null) {
                 System.out.println("Refreshed Access Token: " + refreshResult.getAccessToken());

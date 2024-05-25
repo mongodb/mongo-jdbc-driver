@@ -27,7 +27,7 @@ public class TestOidcAuthFlow {
 
         Duration timeout = Duration.ofMinutes(5);
         OidcCallbackContext callbackContext =
-                new JdbcOidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO);
+                new JdbcOidcCallbackContext(timeout, 1, null, TestOidcUtils.IDP_INFO, null);
 
         TestOidcUtils.testAuthCodeFlow(callbackContext, authFlow);
     }
