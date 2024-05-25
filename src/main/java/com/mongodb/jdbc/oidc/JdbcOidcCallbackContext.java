@@ -35,7 +35,7 @@ public class JdbcOidcCallbackContext implements OidcCallbackContext {
     }
 
     public String getUserName() {
-        return "";
+        return null;
     }
 
     public Duration getTimeout() {

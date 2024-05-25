@@ -18,6 +18,7 @@ package com.mongodb.jdbc.integration;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
@@ -46,13 +47,17 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
+import java.sql.DatabaseMetaData;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MongoIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
 
-    static final String URL = "jdbc:mongodb://localhost";
+    private static final String LOCAL_HOST = "localhost";
+    private static final String URL = System.getenv("ADF_TEST_LOCAL_HOST") != null
+            ? System.getenv("ADF_TEST_LOCAL_HOST")
+            : LOCAL_HOST;
     static final String DEFAULT_TEST_DB = "integration_test";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
 

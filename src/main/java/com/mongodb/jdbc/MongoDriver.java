@@ -69,8 +69,7 @@ public class MongoDriver implements Driver {
         CLIENT_INFO("clientinfo"),
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
-        EXT_JSON_MODE("extjsonmode"),
-        AUTH_MECHANISM("authMechanism");
+        EXT_JSON_MODE("extjsonmode");
 
         private final String propertyName;
 
@@ -398,9 +397,9 @@ public class MongoDriver implements Driver {
         Properties normalizedOptions;
 
         ParseResult(String u, char[] p, String a, Properties options) {
-            authMechanism = a;
             user = u;
             password = p;
+            authMechanism = a;
             normalizedOptions = options;
         }
     }
@@ -512,11 +511,8 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
-        // get the authMechanism
-        String authMechanism = info.getProperty(AUTH_MECHANISM.getPropertyName());
-        String connectionStringAuthMechanism =
+        String authMechanism =
                 clientURI.getCredential() != null ? clientURI.getCredential().getMechanism() : null;
-        authMechanism = s.coalesce(connectionStringAuthMechanism, authMechanism);
 
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
@@ -677,14 +673,6 @@ public class MongoDriver implements Driver {
                     }
                 }
             }
-        }
-
-        // Add the authMechanism to the connection string if it is provided
-        if (authMechanism != null) {
-            if (buff.length() > 0) {
-                buff.append("&");
-            }
-            buff.append(AUTH_MECHANISM.getPropertyName()).append("=").append(authMechanism);
         }
 
         if (buff.length() > 0) {
