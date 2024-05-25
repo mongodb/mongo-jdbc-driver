@@ -21,6 +21,7 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcTimeoutException;
 import java.time.Duration;
 
 public class TestOidcCallbackWithShortTimeout {
@@ -37,10 +38,15 @@ public class TestOidcCallbackWithShortTimeout {
             // Timeout is expected when user input is required as it should take longer than 2 second.
             // It may pass if the user is already signed in and credentials are saved in the browser.
             System.out.println(
-                    "This should not print, timeout expected. Sign out of the IdP to trigger a timeout.");
+                    "This should not print, timeout expected. Sign out of the IdP or clear the browser cache "
+                            + "to trigger a timeout.");
             System.out.println(result);
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
+            if (e.getCause() instanceof OidcTimeoutException) {
+                System.err.println("Expected OidcTimeoutException occurred: " + e.getCause().getMessage());
+            } else {
+                System.err.println("Unexpected error: " + e.getMessage());
+            }
         }
     }
 }
