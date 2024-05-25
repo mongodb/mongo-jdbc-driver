@@ -52,7 +52,7 @@ public class MongoIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
 
-    private static final String LOCAL_HOST = "localhost";
+    private static final String LOCAL_HOST = "jdbc:mongodb://localhost";
     private static final String URL =
             System.getenv("ADF_TEST_LOCAL_HOST") != null
                     ? System.getenv("ADF_TEST_LOCAL_HOST")
