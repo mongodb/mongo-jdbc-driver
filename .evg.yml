@@ -27,6 +27,12 @@ buildvariants:
     tasks:
       - spotless
 
+  - name: code-quality-and-correctness
+    display_name: "Code Quality and Correctness"
+    run_on: [ ubuntu2204-small ]
+    tasks:
+      - name: semgrep
+
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
     expansions:
@@ -83,6 +89,11 @@ tasks:
         variant: "release"
     commands:
       - func: "update download center feed"
+
+  - name: semgrep
+    exec_timeout_secs: 3600 # 1h 
+    commands:
+      - func: "static code analysis"
 
 functions:
 
@@ -416,3 +427,48 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         content_type: application/json
+
+  "static code analysis":
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${prepare_shell}
+          echo "Running static code analysis with Semgrep..."
+          cat mongo-jdbc-driver/artifacts/${version_id}/${build_variant}/ssdlc/mongo-jdbc-driver.sast.sarif
+
+          venv='venv'
+          # Setup or use the existing virtualenv for semgrep
+          if [[ -f "$venv/bin/activate" ]]; then
+            echo 'using existing virtualenv'
+            . "$venv"/bin/activate
+          else
+            echo 'Creating new virtualenv'
+            python3 -m virtualenv "$venv"
+            echo 'Activating new virtualenv'
+            . "$venv"/bin/activate
+          fi
+
+          python3 -m pip install semgrep
+
+          # confirm
+          semgrep --version
+          set +e
+          semgrep --config p/java --exclude "vendor" --error --severity=ERROR --sarif-output=mongo-jdbc-driver.sast.sarif
+          SCAN_RESULT=$?
+          set -e
+          
+          # Exit with a failure if the scan found an issue
+          exit $SCAN_RESULT
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - mongo-jdbc-driver.sast.sarif
+        remote_file: mongo-jdbc-driver/artifacts/${version_id}/${build_variant}/ssdlc/
+        content_type: text/plain
+        bucket: mciuploads
+        permissions: public-read
