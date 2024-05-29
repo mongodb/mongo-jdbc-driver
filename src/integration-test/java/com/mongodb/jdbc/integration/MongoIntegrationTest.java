@@ -52,7 +52,11 @@ public class MongoIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
 
-    static final String URL = "jdbc:mongodb://localhost";
+    private static final String LOCAL_HOST = "jdbc:mongodb://localhost";
+    private static final String URL =
+            System.getenv("ADF_TEST_LOCAL_HOST") != null
+                    ? System.getenv("ADF_TEST_LOCAL_HOST")
+                    : LOCAL_HOST;
     static final String DEFAULT_TEST_DB = "integration_test";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
 

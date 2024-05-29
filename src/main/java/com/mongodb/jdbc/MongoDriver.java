@@ -19,10 +19,13 @@ package com.mongodb.jdbc;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
+import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -36,7 +39,10 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -102,8 +108,17 @@ public class MongoDriver implements Driver {
                     });
     static final String RELAXED = "RELAXED";
     static final String EXTENDED = "EXTENDED";
+    static final String MONGODB_OIDC = AuthenticationMechanism.MONGODB_OIDC.toString();
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
+
+    private static ConcurrentHashMap<Integer, WeakReference<MongoClient>> mongoClientCache =
+            new ConcurrentHashMap<>();
+    private static final ReadWriteLock mongoClientCacheLock = new ReentrantReadWriteLock();
+
+    public static String getVersion() {
+        return VERSION != null ? VERSION : MAJOR_VERSION + "." + MINOR_VERSION;
+    }
 
     static CodecRegistry registry =
             fromProviders(
@@ -136,6 +151,7 @@ public class MongoDriver implements Driver {
         }
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
+        Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
     }
 
     @Override
@@ -286,7 +302,50 @@ public class MongoDriver implements Driver {
                 new MongoConnectionProperties(
                         cs, database, logLevel, logDir, clientInfo, extJsonMode);
 
-        return new MongoConnection(mongoConnectionProperties);
+        Integer key = mongoConnectionProperties.generateKey();
+
+        mongoClientCacheLock.readLock().lock();
+        try {
+            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
+            MongoClient client = (clientRef != null) ? clientRef.get() : null;
+
+            if (client != null) {
+                return new MongoConnection(client, mongoConnectionProperties);
+            }
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
+        }
+
+        // Acquire write lock to create and cache a new MongoClient if it wasn't found
+        mongoClientCacheLock.writeLock().lock();
+        try {
+            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
+            MongoClient client = (clientRef != null) ? clientRef.get() : null;
+            // Check for client again to handle race conditions
+            if (client != null) {
+                return new MongoConnection(client, mongoConnectionProperties);
+            }
+            MongoConnection newConnection = new MongoConnection(mongoConnectionProperties);
+            mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
+            return newConnection;
+        } finally {
+            mongoClientCacheLock.writeLock().unlock();
+        }
+    }
+
+    public static void closeAllClients() {
+        mongoClientCacheLock.writeLock().lock();
+        try {
+            for (WeakReference<MongoClient> clientRef : mongoClientCache.values()) {
+                MongoClient client = clientRef.get();
+                if (client != null) {
+                    client.close();
+                }
+            }
+            mongoClientCache.clear();
+        } finally {
+            mongoClientCacheLock.writeLock().unlock();
+        }
     }
 
     @Override
@@ -334,11 +393,13 @@ public class MongoDriver implements Driver {
     private static class ParseResult {
         String user;
         char[] password;
+        String authMechanism;
         Properties normalizedOptions;
 
-        ParseResult(String u, char[] p, Properties options) {
+        ParseResult(String u, char[] p, String a, Properties options) {
             user = u;
             password = p;
+            authMechanism = a;
             normalizedOptions = options;
         }
     }
@@ -385,7 +446,9 @@ public class MongoDriver implements Driver {
             // with null values, this is not a bug.
             mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
         }
-        if (password == null && user != null) {
+        if (password == null
+                && user != null
+                && !MONGODB_OIDC.equalsIgnoreCase(result.authMechanism)) {
             // password is null, but user is not, we must prompt for the password.
             mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
         }
@@ -407,6 +470,7 @@ public class MongoDriver implements Driver {
                                 user,
                                 password,
                                 authDatabase,
+                                result.authMechanism,
                                 result.normalizedOptions));
         return new Pair<>(c, new DriverPropertyInfo[] {});
     }
@@ -421,6 +485,8 @@ public class MongoDriver implements Driver {
     // throws SQLException if url and options properties disagree on the value
     private static ParseResult normalizeConnectionOptions(
             ConnectionString clientURI, Properties info) throws SQLException {
+        String user = null;
+        char[] password = null;
 
         if (info == null) {
             info = new Properties();
@@ -445,34 +511,46 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
+        String authMechanism =
+                clientURI.getCredential() != null ? clientURI.getCredential().getMechanism() : null;
+
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
         char[] uriPWD = clientURI.getPassword();
         String propertyUser = info.getProperty(USER);
         String propertyPWDStr = info.getProperty(PASSWORD);
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
+
         // handle disagreements on user.
-        if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
-            throw new SQLException(
-                    "uri and properties disagree on user: '"
-                            + uriUser
-                            + ", and "
-                            + propertyUser
-                            + " respectively");
+        if (MONGODB_OIDC.equalsIgnoreCase(authMechanism)) {
+            if (uriPWD != null || propertyPWD != null) {
+                throw new SQLException(
+                        "Password should not be specified when using MONGODB-OIDC authentication");
+            }
+            user = s.coalesce(uriUser, propertyUser);
+        } else {
+            if (uriUser != null && propertyUser != null && !uriUser.equals(propertyUser)) {
+                throw new SQLException(
+                        "uri and properties disagree on user: '"
+                                + uriUser
+                                + ", and "
+                                + propertyUser
+                                + " respectively");
+            }
+            // set the user
+            user = s.coalesce(uriUser, propertyUser);
+            if (user != null) {
+                // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
+                // know this.
+                info.setProperty(USER, user);
+            }
+            // handle disagreements on password.
+            if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
+                throw new SQLException("uri and properties disagree on password");
+            }
+            // set the password
+            password = c.coalesce(uriPWD, propertyPWD);
         }
-        // set the user
-        String user = s.coalesce(uriUser, propertyUser);
-        if (user != null) {
-            // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
-            // know this.
-            info.setProperty(USER, user);
-        }
-        // handle disagreements on password.
-        if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
-            throw new SQLException("uri and properties disagree on password");
-        }
-        // set the password
-        char[] password = c.coalesce(uriPWD, propertyPWD);
 
         String optionString = null;
         String[] optionSplit =
@@ -514,7 +592,7 @@ public class MongoDriver implements Driver {
             }
         }
 
-        return new ParseResult(user, password, options);
+        return new ParseResult(user, password, authMechanism, options);
     }
 
     // This is just a clean abstraction around URLEncode.
@@ -553,15 +631,20 @@ public class MongoDriver implements Driver {
             String user,
             char[] password,
             String authDatabase,
+            String authMechanism,
             Properties options)
             throws SQLException {
         // The returned URI should be of the following format:
         //"mongodb://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
         String ret = "mongodb://";
         if (user != null) {
-            // Note: if user is not null, we already know that password must also be not null.
-            ret += sqlURLEncode(user) + ":" + sqlURLEncode(String.valueOf(password)) + "@";
+            ret += sqlURLEncode(user);
+            if (password != null) {
+                ret += ":" + sqlURLEncode(String.valueOf(password));
+            }
+            ret += "@";
         }
+
         // Now add hosts.
         ret += String.join(",", hosts);
         // Now add authDatabase, if necessary.
@@ -591,8 +674,9 @@ public class MongoDriver implements Driver {
                 }
             }
         }
+
         if (buff.length() > 0) {
-            ret += "?" + buff.toString();
+            ret += "?" + buff;
         }
         return ret;
     }

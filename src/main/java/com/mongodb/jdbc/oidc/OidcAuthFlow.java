@@ -16,6 +16,9 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.mongodb.MongoCredential.IdpInfo;
+import com.mongodb.MongoCredential.OidcCallbackContext;
+import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;

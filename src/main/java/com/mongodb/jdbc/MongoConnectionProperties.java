@@ -66,4 +66,17 @@ public class MongoConnectionProperties {
     public boolean getExtJsonMode() {
         return extJsonMode;
     }
+
+    /*
+     * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
+     * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.
+     */
+    public Integer generateKey() {
+        StringBuilder keyBuilder = new StringBuilder();
+        keyBuilder.append(connectionString.toString());
+        if (clientInfo != null) {
+            keyBuilder.append(":clientInfo=").append(clientInfo);
+        }
+        return keyBuilder.toString().hashCode();
+    }
 }

@@ -45,6 +45,13 @@ class MongoDriverTest {
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
     static final String jdbcUserURL = "jdbc:mongodb://jdbc:bar@localhost";
     static final String dbInURL = "jdbc:mongodb://localhost/foo?authSource=admin";
+    static final String userOIDCURL =
+            "jdbc:mongodb://foo@localhost/admin?authMechanism=MONGODB-OIDC";
+    static final String oidcURL =
+            "jdbc:mongodb://localhost/foo?authMechanism=MONGODB-OIDC&authSource=admin";
+    static final String userPwdOIDCURL =
+            "jdbc:mongodb://foo:bar@localhost?authMechanism=MONGODB-OIDC";
+
     // Even though ADF does not support replSets, this tests that we handle these URLs properly
     // for the future.
     static final String replURL = "jdbc:mongodb://foo:bar@localhost:27017,localhost:28910";
@@ -207,6 +214,33 @@ class MongoDriverTest {
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(replURL, p3),
                 "The connection should fail because of a password mismatch between the URI and the properties");
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithUsername() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertNotNull(d.getUnvalidatedConnection(userOIDCURL, p));
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithoutUsername() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertNotNull(d.getUnvalidatedConnection(oidcURL, p));
+    }
+
+    @Test
+    void testMongoDBOIDCAuthMechanismWithPassword() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(userPwdOIDCURL, p),
+                "The connection should fail because password is not allowed with MONGODB-OIDC authentication.");
     }
 
     @Test
@@ -415,7 +449,7 @@ class MongoDriverTest {
         File logFile2 = getLogFile(props2);
         assertEquals(logFile.getAbsolutePath(), logFile2.getAbsolutePath());
         String connInitPattern =
-                "[INFO] [c-{connectionId}] com.mongodb.jdbc.MongoConnection <init>: Connecting using MongoDB Atlas SQL interface JDBC Driver";
+                "[INFO] [c-{connectionId}] com.mongodb.jdbc.MongoConnection initConnectionLogger: Connecting using MongoDB Atlas SQL interface JDBC Driver";
         checkLogContent(
                 logFile,
                 connInitPattern.replace("{connectionId}", String.valueOf(conn.connectionId)),
@@ -629,5 +663,60 @@ class MongoDriverTest {
         p.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
         c = d.getUnvalidatedConnection(basicURL, p);
         assertNotNull(c);
+    }
+
+    @Test
+    void testClientCaching() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        // Create three connections with the same properties
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn3 = d.getUnvalidatedConnection(basicURL, p);
+
+        // Verify that the connections share the same MongoClient instance
+        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
+        assertSame(conn1.getMongoClient(), conn3.getMongoClient());
+    }
+
+    @Test
+    void testClientCachingWithDifferentKeyedProperties() throws Exception {
+        MongoDriver d = new MongoDriver();
+
+        Properties p1 = new Properties();
+        p1.setProperty(DATABASE.getPropertyName(), "test");
+        p1.setProperty(CLIENT_INFO.getPropertyName(), "app1+1.0");
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
+
+        Properties p2 = new Properties();
+        p2.setProperty(DATABASE.getPropertyName(), "test");
+        p2.setProperty(CLIENT_INFO.getPropertyName(), "app2+1.0");
+        // Create connection with different client info
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
+
+        assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
+    }
+
+    @Test
+    void testClientCachingWithDifferentUnkeyedProperties() throws Exception {
+        // Testing with different JSON modes, a property that is not part of the unique key used
+        // for caching.
+        MongoDriver d = new MongoDriver();
+
+        // Create connections with different extended JSON mode
+        Properties p1 = new Properties();
+        p1.setProperty(DATABASE.getPropertyName(), "test");
+        p1.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
+
+        Properties p2 = new Properties();
+        p2.setProperty(DATABASE.getPropertyName(), "test");
+        p2.setProperty(EXT_JSON_MODE.getPropertyName(), "EXTENDED");
+
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
+
+        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
     }
 }

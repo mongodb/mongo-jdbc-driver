@@ -16,10 +16,11 @@
 
 package com.mongodb.jdbc.oidc.manualtests;
 
-import com.mongodb.jdbc.oidc.IdpInfo;
+import com.mongodb.MongoCredential.IdpInfo;
+import com.mongodb.MongoCredential.OidcCallbackContext;
+import com.mongodb.MongoCredential.OidcCallbackResult;
+import com.mongodb.jdbc.oidc.JdbcIdpInfo;
 import com.mongodb.jdbc.oidc.OidcAuthFlow;
-import com.mongodb.jdbc.oidc.OidcCallbackContext;
-import com.mongodb.jdbc.oidc.OidcCallbackResult;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,8 @@ public class TestOidcUtils {
     public static String OIDC_CLIENT_ID = "0oarvap2r7PmNIBsS357";
     public static final List<String> OPENID_SCOPE = Collections.singletonList("openid");
 
-    public static final IdpInfo IDP_INFO = new IdpInfo(OIDC_ISSUER, OIDC_CLIENT_ID, OPENID_SCOPE);
+    public static final IdpInfo IDP_INFO =
+            new JdbcIdpInfo(OIDC_ISSUER, OIDC_CLIENT_ID, OPENID_SCOPE);
 
     public static OidcCallbackResult testAuthCodeFlow(
             OidcCallbackContext callbackContext, OidcAuthFlow authFlow) {
@@ -38,7 +40,6 @@ public class TestOidcUtils {
             OidcCallbackResult result = authFlow.doAuthCodeFlow(callbackContext);
             if (result != null) {
                 System.out.println("Access Token: " + result.getAccessToken());
-                System.out.println("Expires In: " + result.getExpiresIn());
                 System.out.println("Refresh Token: " + result.getRefreshToken());
                 return result;
             } else {

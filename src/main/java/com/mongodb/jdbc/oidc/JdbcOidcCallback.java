@@ -16,29 +16,37 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.mongodb.MongoCredential.OidcCallback;
+import com.mongodb.MongoCredential.OidcCallbackContext;
+import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.logging.MongoLogger;
 import javax.security.auth.RefreshFailedException;
 
-// TODO: This class is a placeholder for the OidcCallback,
-//       it will be removed when Java Driver OIDC support is added.
-public class OidcCallback {
+public class JdbcOidcCallback implements OidcCallback {
     private final OidcAuthFlow oidcAuthFlow;
 
-    public OidcCallback() {
+    public JdbcOidcCallback() {
         this.oidcAuthFlow = new OidcAuthFlow();
     }
 
-    public OidcCallback(MongoLogger parentLogger) {
+    public JdbcOidcCallback(MongoLogger parentLogger) {
         this.oidcAuthFlow = new OidcAuthFlow(parentLogger);
     }
 
-    public OidcCallbackResult onRequest(OidcCallbackContext callbackContext)
-            throws RefreshFailedException, OidcTimeoutException {
+    public OidcCallbackResult onRequest(OidcCallbackContext callbackContext) {
         String refreshToken = callbackContext.getRefreshToken();
         if (refreshToken != null && !refreshToken.isEmpty()) {
-            return oidcAuthFlow.doRefresh(callbackContext);
+            try {
+                return oidcAuthFlow.doRefresh(callbackContext);
+            } catch (RefreshFailedException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            return oidcAuthFlow.doAuthCodeFlow(callbackContext);
+            try {
+                return oidcAuthFlow.doAuthCodeFlow(callbackContext);
+            } catch (OidcTimeoutException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
