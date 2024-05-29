@@ -74,7 +74,6 @@ public class MongoConnectionProperties {
     public Integer generateKey() {
         StringBuilder keyBuilder = new StringBuilder();
         keyBuilder.append(connectionString.toString());
-        keyBuilder.append(":db=").append(database);
         if (clientInfo != null) {
             keyBuilder.append(":clientInfo=").append(clientInfo);
         }
