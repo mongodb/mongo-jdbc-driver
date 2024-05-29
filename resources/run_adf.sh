@@ -24,7 +24,7 @@ if [[ -z $ARG ]]; then
   exit 0
 fi
 
-GO_VERSION="go1.20"
+GO_VERSION="go1.22"
 if [ -d "/opt/golang/$GO_VERSION" ]; then
   GOROOT="/opt/golang/$GO_VERSION"
   GOBINDIR="$GOROOT"/bin
@@ -416,7 +416,7 @@ if [ $ARG = $START ]; then
     mkdir -p $LOGS_PATH
     # Start mongohoused with appropriate config
     $GO run -tags mongosql ./cmd/mongohoused/mongohoused.go \
-      --config ./testdata/config/inline_local/frontend-agent-backend.yaml >> $LOGS_PATH/${MONGOHOUSED}.log &
+      --config ./testdata/config/inline_local/frontend-agent-backend-crm.yaml >> $LOGS_PATH/${MONGOHOUSED}.log &
     echo $! > $TMP_DIR/${MONGOHOUSED}.pid
 
     waitCounter=0

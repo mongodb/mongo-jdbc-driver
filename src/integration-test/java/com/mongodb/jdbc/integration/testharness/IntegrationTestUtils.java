@@ -18,6 +18,7 @@ package com.mongodb.jdbc.integration.testharness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -49,8 +50,11 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonValue;
 import org.bson.Document;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.inspector.TagInspector;
+import org.yaml.snakeyaml.nodes.Tag;
 
 public class IntegrationTestUtils {
     public static int countRows(ResultSet rs) throws SQLException {
@@ -61,7 +65,20 @@ public class IntegrationTestUtils {
         }
     }
 
-    private static Yaml yaml = new Yaml(new Constructor(Tests.class));
+    private static Yaml yaml;
+
+    static {
+        TagInspector allowGlobalTags =
+                new TagInspector() {
+                    @Override
+                    public boolean isGlobalTagAllowed(Tag tag) {
+                        return true;
+                    }
+                };
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setTagInspector(allowGlobalTags);
+        yaml = new Yaml(new Constructor(Tests.class, loaderOptions));
+    };
 
     /**
      * loadTestConfigs will process all test yaml files in provided directory.
@@ -510,7 +527,8 @@ public class IntegrationTestUtils {
                             (List<Object>) testEntry.expected_result.get(actualRowCounter);
                 }
 
-                String compOutcome = compareRow(expectedResults, rs);
+                String compOutcome =
+                        compareRow(expectedResults, testEntry.duplicated_columns_names, rs);
                 if (compOutcome != null) {
                     fail("Row " + actualRowCounter + " does not match. " + compOutcome);
                 }
@@ -532,22 +550,35 @@ public class IntegrationTestUtils {
             while (rs.next()) {
                 actualRowCounter++;
                 boolean found = false;
+                String compOutcome = null;
                 if (testEntry.expected_result_extended_json != null) {
                     for (Map<String, Object> entry : testEntry.expected_result_extended_json) {
-                        if (compareRow(processExtendedJson(entry), rs) == null) {
+                        compOutcome =
+                                compareRow(
+                                        processExtendedJson(entry),
+                                        testEntry.duplicated_columns_names,
+                                        rs);
+                        if (compOutcome == null) {
                             found = true;
                             break;
                         }
                     }
                 } else {
                     for (Object expectedRow : testEntry.expected_result) {
-                        if (compareRow((List<Object>) expectedRow, rs) == null) {
+                        compOutcome =
+                                compareRow(
+                                        (List<Object>) expectedRow,
+                                        testEntry.duplicated_columns_names,
+                                        rs);
+                        if (compOutcome == null) {
                             found = true;
                             break;
                         }
                     }
                 }
-                assertTrue(found, "Invalid row " + actualRowCounter + ". No match found.");
+                assertTrue(
+                        found,
+                        "Invalid row " + actualRowCounter + ". No match found." + compOutcome);
             }
         }
         if (testEntry.row_count != null) {
@@ -576,7 +607,8 @@ public class IntegrationTestUtils {
      * @return either null is the rows are identical or a message describing the difference.
      * @throws SQLException If an error occurs.
      */
-    public static String compareRow(List<Object> expectedRow, ResultSet actualRow)
+    public static String compareRow(
+            List<Object> expectedRow, List<String> duplicatedColumnNames, ResultSet actualRow)
             throws SQLException {
         ResultSetMetaData rsMetadata = actualRow.getMetaData();
         assertEquals(
@@ -596,6 +628,7 @@ public class IntegrationTestUtils {
             }
 
             int columnType = rsMetadata.getColumnType(i + 1);
+            String columnName = rsMetadata.getColumnName(i + 1);
             switch (columnType) {
                 case Types.BIGINT:
                 case Types.SMALLINT:
@@ -713,6 +746,28 @@ public class IntegrationTestUtils {
                     break;
                 default:
                     throw new IllegalArgumentException("unsupported column type:" + columnType);
+            }
+
+            // Verify that getting the value by id or name yield the same result
+            if (duplicatedColumnNames != null
+                    && duplicatedColumnNames.size() > 0
+                    && duplicatedColumnNames.contains(columnName)) {
+                assertThrows(SQLException.class, () -> actualRow.getString(columnName));
+            } else {
+                String valById = actualRow.getString(i + 1);
+                String valByColName = actualRow.getString(columnName);
+                if (!valById.equals(valByColName)) {
+                    return "Value doesn't match between get by id and get by name. By id "
+                            + (i + 1)
+                            + " is '"
+                            + valById
+                            + " ' and by name "
+                            + columnName
+                            + " is ' "
+                            + valByColName
+                            + " ' for column "
+                            + (i + 1);
+                }
             }
         }
         return null;
