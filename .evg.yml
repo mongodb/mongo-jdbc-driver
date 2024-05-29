@@ -480,7 +480,7 @@ functions:
         aws_secret: ${AWS_SECRET_ACCESS_KEY}
         aws_session_token: ${AWS_SESSION_TOKEN}
         local_files_include_filter:
-          - mongo-jdbc-driver.sast.sarif
+          - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/${build_variant}/ssdlc/
         content_type: text/plain
         bucket: evg-bucket-mongo-jdbc-driver
