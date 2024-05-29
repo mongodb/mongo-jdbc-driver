@@ -429,6 +429,10 @@ functions:
         content_type: application/json
 
   "static code analysis":
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
     - command: shell.exec
       type: test
       params:
@@ -456,7 +460,7 @@ functions:
           # confirm
           semgrep --version
           set +e
-          semgrep --config p/java --exclude "vendor" --error --severity=ERROR --sarif-output=mongo-jdbc-driver.sast.sarif
+          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=mongo-jdbc-driver.sast.sarif > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
           SCAN_RESULT=$?
           set -e
           
@@ -464,11 +468,12 @@ functions:
           exit $SCAN_RESULT
     - command: s3.put
       params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        aws_key: ${AWS_ACCESS_KEY_ID}
+        aws_secret: ${AWS_SECRET_ACCESS_KEY}
+        aws_session_token: ${AWS_SESSION_TOKEN}
         local_files_include_filter:
           - mongo-jdbc-driver.sast.sarif
-        remote_file: mongo-jdbc-driver/artifacts/${version_id}/${build_variant}/ssdlc/
+        remote_file: artifacts/${version_id}/${build_variant}/ssdlc/
         content_type: text/plain
-        bucket: mciuploads
+        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
