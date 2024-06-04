@@ -416,7 +416,7 @@ if [ $ARG = $START ]; then
     mkdir -p $LOGS_PATH
     # Start mongohoused with appropriate config
     $GO run -tags mongosql ./cmd/mongohoused/mongohoused.go \
-      --config ./testdata/config/inline_local/frontend-agent-backend-crm.yaml >> $LOGS_PATH/${MONGOHOUSED}.log &
+      --config ./testdata/config/inline_local/frontend-agent-backend-resource-manager.yaml >> $LOGS_PATH/${MONGOHOUSED}.log &
     echo $! > $TMP_DIR/${MONGOHOUSED}.pid
 
     waitCounter=0
