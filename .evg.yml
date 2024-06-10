@@ -101,7 +101,6 @@ tasks:
   - name: sbom
     commands:
       - func: "generate sbom"
-      - func: "add team name to sbom"
       - func: "upload sbom"
       - func: "scan sbom"
 
@@ -123,8 +122,6 @@ functions:
           echo "Generating SBOM"
           echo "------------------------------------"
           ./gradlew cyclonedxBom
-
-  "add team name to sbom":
     - command: shell.exec
       type: test
       params:
@@ -148,7 +145,7 @@ functions:
           echo "------------------------------------"
           echo "Adding team name to SBOM"
           echo "------------------------------------"
-          jq '.components[].properties += [{"name": "internal:team_responsible", "value": "Atlas SQL"}]' $SBOM_WITHOUT_TEAM_NAME > $SBOM_FINAL
+          jq '.components[].properties += [{"name": "internal:team_responsible", "value": "Atlas SQL"}]' $SBOM_WITHOUT_TEAM_NAME > $SBOM_LITE
           
           echo "------------------------------------"
           echo "Done generating SBOM"
@@ -187,7 +184,7 @@ functions:
         echo "------------------------------------"
         
         echo "-- Scanning dependency for vulnerabilities --"
-        ./$SBOM_TOOL_DIR/grype sbom:$SBOM_FINAL --fail-on low
+        ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
@@ -310,7 +307,7 @@ functions:
             # sbom relevant variables
             export SBOM_TOOL_DIR=sbom_generations
             export SBOM_DIR=$ARTIFACTS_DIR/sboms
-            export SBOM_FINAL=$ARTIFACTS_DIR/sboms/mongo-jdbc-driver.cdx.json
+            export SBOM_LITE=$ARTIFACTS_DIR/sboms/mongo-jdbc-driver.cdx.json
             export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/sboms/sbom_without_team_name.json
           EOT
 

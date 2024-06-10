@@ -43,9 +43,7 @@ cyclonedxBom {
     // Exclude BOM Serial Number. Defaults to 'true'
     includeBomSerialNumber = false
     // Exclude License Text. Defaults to 'true'
-    includeLicenseText = true
-    // Override component version. Defaults to the project version
-    componentVersion = "2.0.0"
+    includeLicenseText = false
 }
 
 sourceSets {
