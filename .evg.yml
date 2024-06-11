@@ -121,7 +121,7 @@ functions:
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
-          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SBOM_DIR -PcyclonedxBomName=$SBOM_NAME
+          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SBOM_DIR -PcyclonedxBomName=sbom_without_team_name
     - command: shell.exec
       type: test
       params:
@@ -307,9 +307,8 @@ functions:
             # sbom relevant variables
             export SBOM_TOOL_DIR=sbom_generations
             export SBOM_DIR=$ARTIFACTS_DIR/sboms
-            export SBOM_NAME=sbom_without_team_name
-            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/sboms/$SBOM_NAME.json
             export SBOM_LITE=$ARTIFACTS_DIR/sboms/mongo-jdbc-driver.cdx.json
+            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/sboms/sbom_without_team_name.json
           EOT
 
     - command: expansions.update
