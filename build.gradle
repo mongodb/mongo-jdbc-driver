@@ -35,9 +35,9 @@ cyclonedxBom {
     // Specified the version of the CycloneDX specification to use. Defaults to '1.5'
     schemaVersion = "1.5"
     // Boms destination directory. Defaults to 'build/reports'
-    destination = file("artifacts/sboms")
+    destination = file(cyclonedxBomDestination)
     // The file name for the generated BOMs (before the file format suffix). Defaults to 'bom'
-    outputName = "sbom_without_team_name"
+    outputName = cyclonedxBomName
     // The file format generated, can be xml, json or all for generating both. Defaults to 'all'
     outputFormat = "json"
     // Exclude BOM Serial Number. Defaults to 'true'

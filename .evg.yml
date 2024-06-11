@@ -121,7 +121,7 @@ functions:
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
-          ./gradlew cyclonedxBom
+          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SBOM_DIR -PcyclonedxBomName=sbom_without_team_name
     - command: shell.exec
       type: test
       params:
