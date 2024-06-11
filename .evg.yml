@@ -29,9 +29,12 @@ buildvariants:
 
   - name: code-quality-and-correctness
     display_name: "Code Quality and Correctness"
+    expansions:
+      _platform: ubuntu2204-64-jdk-8
     run_on: [ ubuntu2204-small ]
     tasks:
       - name: semgrep
+      - name: sbom
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -95,7 +98,95 @@ tasks:
     commands:
       - func: "static code analysis"
 
+  - name: sbom
+    commands:
+      - func: "generate sbom"
+      - func: "upload sbom"
+      - func: "scan sbom"
+
 functions:
+  "generate sbom":
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          set -o errexit
+          
+          mkdir -p $SBOM_TOOL_DIR
+          mkdir -p $SBOM_DIR
+          
+          echo "------------------------------------"
+          echo "Generating SBOM"
+          echo "------------------------------------"
+          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SBOM_DIR -PcyclonedxBomName=sbom_without_team_name
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          set -o errexit
+          
+          JQ_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
+          
+          echo "-- Downloading JQ $JQ_URL --"
+          curl -L -o $SBOM_TOOL_DIR/jq "$JQ_URL" \
+            --silent \
+            --fail \
+            --max-time 60 \
+            --retry 5 \
+            --retry-delay 0
+          chmod +x ./$SBOM_TOOL_DIR/jq
+          
+          echo "------------------------------------"
+          echo "Adding team name to SBOM"
+          echo "------------------------------------"
+          jq '.components[].properties += [{"name": "internal:team_responsible", "value": "Atlas SQL"}]' $SBOM_WITHOUT_TEAM_NAME > $SBOM_LITE
+          
+          echo "------------------------------------"
+          echo "Done generating SBOM"
+          echo "------------------------------------"
+
+  "upload sbom":
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.put
+      params:
+        aws_key: ${AWS_ACCESS_KEY_ID}
+        aws_secret: ${AWS_SECRET_ACCESS_KEY}
+        aws_session_token: ${AWS_SESSION_TOKEN}
+        local_files_include_filter:
+          - mongo-jdbc-driver.cdx.json
+        remote_file: artifacts/${version_id}/${build_variant}/ssdlc/
+        content_type: text/plain
+        bucket: evg-bucket-mongo-jdbc-driver
+        permissions: public-read
+
+  "scan sbom":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        set -o errexit
+        
+        # Install Grype
+        echo "-- Downloading Grype --"
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_TOOL_DIR
+        echo "------------------------------------"
+        
+        echo "-- Scanning dependency for vulnerabilities --"
+        ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
+        echo "---------------------------------------------"
+        echo "<<<< Done scanning SBOM"
 
   "build jdbc driver":
     command: shell.exec
@@ -212,6 +303,12 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
+          
+            # sbom relevant variables
+            export SBOM_TOOL_DIR=sbom_generations
+            export SBOM_DIR=$ARTIFACTS_DIR/sboms
+            export SBOM_LITE=$ARTIFACTS_DIR/sboms/mongo-jdbc-driver.cdx.json
+            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/sboms/sbom_without_team_name.json
           EOT
 
     - command: expansions.update
