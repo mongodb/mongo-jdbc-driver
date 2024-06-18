@@ -97,7 +97,7 @@ tasks:
   - name: trace-artifacts
     git_tag_only: true
     depends_on:
-      - name: "download-center-update"
+      - name: "publish-maven"
         variant: "release"
     commands:
       - func: "trace artifacts"
