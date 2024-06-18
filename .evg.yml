@@ -425,10 +425,8 @@ functions:
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
           
-            # sbom relevant variables
-            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-          
             # ssdlc relevant variables
+            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
             export SBOM_TOOL_DIR="sbom_generations"
             export SBOM_LITE_NAME="$SBOM_LITE_NAME"
             export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
