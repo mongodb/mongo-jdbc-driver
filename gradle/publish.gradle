@@ -38,8 +38,8 @@ publishing {
 nexusStaging {
     def nexusUrl = project.hasProperty('nexus_url') ? project.getProperty('nexus_url') : nexusDomain
     serverUrl "$nexusUrl/service/local/"
-    username project.hasProperty('nexus_username') ? project.getProperty('nexus_username') : ""
-    password project.hasProperty('nexus_password') ? project.getProperty('nexus_password') : ""
+    username project.hasProperty('nexus_token_name') ? project.getProperty('nexus_token_name') : ""
+    password project.hasProperty('nexus_token') ? project.getProperty('nexus_token') : ""
     packageGroup project.getGroup()
     stagingProfileId project.hasProperty('nexus_profile_id') ? project.getProperty('nexus_profile_id') : ''
     numberOfRetries 40
