@@ -23,7 +23,7 @@ To verify the integrity of the JDBC Driver packages, the artifact signature need
 - To import the key, run the following command: `gpg --keyserver <server url> --recv-keys 30666110`.  
 - For example, `gpg --keyserver keys.openpgp.org --recv-keys 30666110`. 
 2. Verify artifact:  
-- For this step, you will need to create a copy of the `.jar.asc` file from Maven in addition to downloading the `.jar` file.  
+- For this step, you will need to create a local copy of the `.jar.asc` file from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc) in addition to downloading the `.jar` file.  
 - To verify the signature, run the following command `gpg --verify mongodb-jdbc-<version>.jar.asc mongodb-jdbc-<version>.jar`  
 - For example, `gpg --verify mongodb-jdbc-2.1.2.jar.asc mongodb-jdbc-2.1.2.jar`.
 
