@@ -56,6 +56,7 @@ buildvariants:
       - name: "publish-maven"
       - name: "download-center-update"
       - name: "ssdlc-artifacts"
+      - name: "publish-augmented-sbom"
       - name: "trace-artifacts"
 
 tasks:
@@ -113,6 +114,7 @@ tasks:
       - func: "generate sbom"
       - func: "upload sbom"
       - func: "push SBOM Lite to Silk"
+      - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts
@@ -123,23 +125,21 @@ tasks:
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "pull augmented SBOM from Silk"
+
+  - name: publish-augmented-sbom
+    run_on: ubuntu2204-small
+    git_tag_only: true
+    depends_on:
+      - name: "publish-maven"
+        variant: "release"
+      - name: ssdlc-artifacts
+        variant: "release"
+    exec_timeout_secs: 300 # 5m
+    commands:
       - func: "publish augmented SBOM"
 
 functions:
   "push SBOM Lite to Silk":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
-    - command: s3.get
-      params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
-        local_file: artifacts/ssdlc/${SBOM_LITE_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${SBOM_LITE_NAME}
-        content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: shell.exec
       type: test
       params:
@@ -220,13 +220,12 @@ functions:
         bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: mongodb-jdbc/v2/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
+        remote_file: mongodb-jdbc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
+        bucket: translators-connectors-releases
         permissions: public-read
         display_name: mongodb-jdbc-${MDBJDBC_VER}.sbom.json
 
@@ -287,7 +286,7 @@ functions:
         aws_secret: ${AWS_SECRET_ACCESS_KEY}
         aws_session_token: ${AWS_SESSION_TOKEN}
         local_files_include_filter:
-          - mongo-jdbc-driver.cdx.json
+          - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
         bucket: evg-bucket-mongo-jdbc-driver
