@@ -13,8 +13,8 @@ echo ${RING_FILE_GPG_BASE64} | base64 --decode > ${PROJECT_DIRECTORY}/secring.gp
 
 trap "rm ${PROJECT_DIRECTORY}/secring.gpg; exit" EXIT HUP
 
-export ORG_GRADLE_PROJECT_nexus_username=${NEXUS_USERNAME}
-export ORG_GRADLE_PROJECT_nexus_password=${NEXUS_PASSWORD}
+export ORG_GRADLE_PROJECT_nexus_token_name=${NEXUS_TOKEN_NAME}
+export ORG_GRADLE_PROJECT_nexus_token=${NEXUS_TOKEN}
 export ORG_GRADLE_PROJECT_signing_key_id=${SIGNING_KEY_ID}
 export ORG_GRADLE_PROJECT_signing_password=${SIGNING_PASSWORD}
 export ORG_GRADLE_PROJECT_signing_secretKeyRingFile=${PROJECT_DIRECTORY}/secring.gpg
