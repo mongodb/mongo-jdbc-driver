@@ -56,6 +56,7 @@ buildvariants:
       - name: "publish-maven"
       - name: "download-center-update"
       - name: "ssdlc-artifacts"
+      - name: "trace-artifacts"
 
 tasks:
   - name: "build"
@@ -93,6 +94,14 @@ tasks:
         variant: "release"
     commands:
       - func: "update download center feed"
+
+  - name: trace-artifacts
+    git_tag_only: true
+    depends_on:
+      - name: "publish-maven"
+        variant: "release"
+    commands:
+      - func: "trace artifacts"
 
   - name: semgrep
     exec_timeout_secs: 3600 # 1h 
@@ -347,6 +356,17 @@ functions:
           EXITCODE=$?
           ./resources/run_adf.sh stop
           exit $EXITCODE
+
+  "trace artifacts":
+    command: papertrail.trace
+    params:
+      work_dir: mongo-jdbc-driver
+      key_id: ${papertrail_id}
+      secret_key: ${papertrail_key}
+      product: mongo-jdbc-driver
+      version: ${MDBJDBC_VER}
+      filenames:
+        - "build/libs/*.jar"
 
   "run smoke test":
     command: shell.exec
