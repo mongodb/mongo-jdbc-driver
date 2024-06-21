@@ -55,6 +55,7 @@ buildvariants:
     tasks:
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
 
 tasks:
