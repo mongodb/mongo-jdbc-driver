@@ -17,7 +17,7 @@ You can download the precompiled driver (jars) from [Maven Central](https://sear
 Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundled inside the jar). The name of the driver class is `com.mongodb.jdbc.MongoDriver`.
 
 ### Verify Integrity of MongoDB JDBC Driver Packages
-To verify the integrity of the JDBC Driver packages, the artifact signature needs to be verified. To do this, there are two steps:
+To verify the integrity of the JDBC Driver packages, follow the steps below:
 1. Import the public key:  
 - You will need to import the key from one of the three following servers: `pgp.mit.edu`, `keys.openpgp.org`, `keyserver.ubuntu.com`.  
 - To import the key, run the following command: `gpg --keyserver <server url> --recv-keys 30666110`.  
