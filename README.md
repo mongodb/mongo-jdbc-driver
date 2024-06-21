@@ -27,9 +27,10 @@ Replace <server url> with one of the current GPG Keyservers supported by Maven C
     - keys.openpgp.org
     - pgp.mit.edu
 2. Verify artifact:  
-- For this step, you will need to create a local copy of the `.jar.asc` file from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc) in addition to downloading the `.jar` file.  
-- To verify the signature, run the following command `gpg --verify mongodb-jdbc-<version>.jar.asc mongodb-jdbc-<version>.jar`  
-- For example, `gpg --verify mongodb-jdbc-2.1.2.jar.asc mongodb-jdbc-2.1.2.jar`.
+- Download the artifact you want to verify along with the matching detached signature `.asc` file, from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).
+ For example, mongodb-jdbc-2.1.2.jar and mongodb-jdbc-2.1.2.jar.asc.
+- To verify the signature, run the following command `gpg --verify <detached_signature_file> <artifact_to_verify>`.
+ For example, `gpg --verify mongodb-jdbc-2.1.2.jar.asc mongodb-jdbc-2.1.2.jar`.
 
 ### Connection URL and properties
 
