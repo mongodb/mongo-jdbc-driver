@@ -19,9 +19,13 @@ Choose `jar` in the Download dropdown for the lean jar (dependencies not include
 ### Verify Integrity of MongoDB JDBC Driver Packages
 To verify the integrity of the JDBC Driver packages, follow the steps below:
 1. Import the public key:  
-- You will need to import the key from one of the three following servers: `pgp.mit.edu`, `keys.openpgp.org`, `keyserver.ubuntu.com`.  
-- To import the key, run the following command: `gpg --keyserver <server url> --recv-keys 30666110`.  
-- For example, `gpg --keyserver keys.openpgp.org --recv-keys 30666110`. 
+The public key ID is 91A2157730666110.   
+
+To import the key, run the following command: `gpg --keyserver <server url> --recv-keys 91A2157730666110`. 
+Replace <server url> with one of the current GPG Keyservers supported by Maven Central Servers:
+    - keyserver.ubuntu.com
+    - keys.openpgp.org
+    - pgp.mit.edu
 2. Verify artifact:  
 - For this step, you will need to create a local copy of the `.jar.asc` file from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc) in addition to downloading the `.jar` file.  
 - To verify the signature, run the following command `gpg --verify mongodb-jdbc-<version>.jar.asc mongodb-jdbc-<version>.jar`  
