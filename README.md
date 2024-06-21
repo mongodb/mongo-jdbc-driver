@@ -16,6 +16,21 @@ MongoDB Atlas SQL JDBC driver requires Java 1.8 or higher.
 You can download the precompiled driver (jars) from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).  
 Choose `jar` in the Download dropdown for the lean jar (dependencies not included) or `all.jar` for the fat jar (dependencies bundled inside the jar). The name of the driver class is `com.mongodb.jdbc.MongoDriver`.
 
+### Verify Integrity of MongoDB JDBC Driver Packages
+To verify the integrity of the JDBC Driver packages, follow the steps below:
+1. Import the Public Key:  
+- The public key ID is `91A2157730666110`.
+- To import the key, run the following command: `gpg --keyserver <server url> --recv-keys 91A2157730666110`.  
+- Replace `<server url>` with one of the current GPG Keyservers supported by Maven Central Servers:  
+  - `keyserver.ubuntu.com`
+  - `keys.openpgp.org`
+  - `pgp.mit.edu`
+2. Verify Artifact:  
+- Download the artifact you want to verify along with the matching detached signature (`.asc`) file from [Maven Central](https://search.maven.org/artifact/org.mongodb/mongodb-jdbc).
+  - For example, `mongodb-jdbc-2.1.2.jar` and `mongodb-jdbc-2.1.2.jar.asc`.
+- To verify the signature, run the following command `gpg --verify <detached_signature_file> <artifact_to_verify>`.
+  - For example, `gpg --verify mongodb-jdbc-2.1.2.jar.asc mongodb-jdbc-2.1.2.jar`.
+
 ### Connection URL and properties
 
 #### Connection URL
