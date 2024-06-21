@@ -419,6 +419,7 @@ functions:
           export SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
           export AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
           export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
+          mkdir -p $SSDLC_DIR
 
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
@@ -429,7 +430,6 @@ functions:
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
-          mkdir -p "$SSDLC_DIR"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
