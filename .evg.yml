@@ -35,6 +35,7 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
+      - name: ssdlc-artifacts-snapshot
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -55,8 +56,7 @@ buildvariants:
       - name: "test-smoke"
       - name: "publish-maven"
       - name: "download-center-update"
-      - name: "ssdlc-artifacts"
-      - name: "publish-augmented-sbom"
+      - name: "ssdlc-artifacts-release"
       - name: "trace-artifacts"
 
 tasks:
@@ -117,23 +117,23 @@ tasks:
       - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
-  - name: ssdlc-artifacts
-    run_on: ubuntu2204-small
-    depends_on:
-      - name: sbom
-        variant: code-quality-and-correctness
-    exec_timeout_secs: 300 # 5m
-    commands:
-      - func: "pull augmented SBOM from Silk"
-
-  - name: publish-augmented-sbom
+  - name: ssdlc-artifacts-release
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
         variant: "release"
-      - name: ssdlc-artifacts
-        variant: "release"
+      - name: sbom
+        variant: code-quality-and-correctness
+    exec_timeout_secs: 300 # 5m
+    commands:
+      - func: "publish augmented SBOM"
+
+  - name: ssdlc-artifacts-snapshot
+    run_on: ubuntu2204-small
+    depends_on:
+      - name: sbom
+        variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
@@ -175,9 +175,6 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
-          
-          mkdir -p $SSDLC_DIR
-
           cat << EOF > silkbomb.env
           SILK_CLIENT_ID=${SILK_CLIENT_ID}
           SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET}
@@ -240,7 +237,6 @@ functions:
           set -o errexit
           
           mkdir -p $SBOM_TOOL_DIR
-          mkdir -p $SSDLC_DIR
           
           echo "------------------------------------"
           echo "Generating SBOM"
@@ -422,6 +418,7 @@ functions:
 
           export SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
           export AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
 
           # create expansions from values calculated above
           mkdir -p $ARTIFACTS_DIR
@@ -431,6 +428,8 @@ functions:
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
+          SSDLC_DIR: "$SSDLC_DIR"
+          mkdir -p $SSDLC_DIR
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -449,7 +448,7 @@ functions:
             export SBOM_TOOL_DIR="sbom_generations"
             export SBOM_LITE_NAME="$SBOM_LITE_NAME"
             export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-            export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
+            export SSDLC_DIR="$SSDLC_DIR"
             export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
           
           EOT
