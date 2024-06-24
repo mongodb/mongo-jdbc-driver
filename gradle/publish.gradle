@@ -10,6 +10,7 @@ publishing {
             }
             artifact shadowJar
             artifact javadocJar
+            artifact(file('mongo-jdbc-driver/artifacts/ssdlc/mongo-jdbc-driver.augmented.sbom.json'))
             pom {
                 name = 'JDBC Driver'
                 description = 'JDBC Driver for MongoDB Atlas SQL interface'

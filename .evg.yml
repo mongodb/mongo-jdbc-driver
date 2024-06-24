@@ -80,6 +80,8 @@ tasks:
     depends_on:
       - name: "test-smoke"
         variant: "release"
+      - name: sbom
+        variant: code-quality-and-correctness
     commands:
       - func: "publish maven"
       - func: "trace artifacts"
