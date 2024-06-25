@@ -27,7 +27,7 @@ buildvariants:
     tasks:
       - spotless
 
-  - name: code-quality-and-security
+  - name: code-quality-and-correctness
     display_name: "Code Quality and Security"
     expansions:
       _platform: ubuntu2204-64-jdk-8
@@ -116,9 +116,9 @@ tasks:
       - name: "publish-maven"
         variant: "release"
       - name: sbom
-        variant: code-quality-and-security
+        variant: code-quality-and-correctness
       - name: semgrep
-        variant: code-quality-and-security
+        variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
@@ -131,9 +131,9 @@ tasks:
     allow_for_git_tag: false
     depends_on:
       - name: sbom
-        variant: code-quality-and-security
+        variant: code-quality-and-correctness
       - name: semgrep
-        variant: code-quality-and-security
+        variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
