@@ -27,7 +27,7 @@ buildvariants:
     tasks:
       - spotless
 
-  - name: code-quality-and-correctness
+  - name: code-quality-and-security
     display_name: "Code Quality and Security"
     expansions:
       _platform: ubuntu2204-64-jdk-8
@@ -116,9 +116,9 @@ tasks:
       - name: "publish-maven"
         variant: "release"
       - name: sbom
-        variant: code-quality-and-correctness
+        variant: code-quality-and-security
       - name: semgrep
-        variant: code-quality-and-correctness
+        variant: code-quality-and-security
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
@@ -131,9 +131,9 @@ tasks:
     allow_for_git_tag: false
     depends_on:
       - name: sbom
-        variant: code-quality-and-correctness
+        variant: code-quality-and-security
       - name: semgrep
-        variant: code-quality-and-correctness
+        variant: code-quality-and-security
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
@@ -719,7 +719,7 @@ functions:
           semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
           SCAN_RESULT=$?
           set -e
-                    
+
           # Exit with a failure if the scan found an issue
           exit $SCAN_RESULT
     - command: s3.put
@@ -775,7 +775,7 @@ functions:
           echo "Sbom url = $SBOM_URL"
           echo "Sarif Url = $SARIF_URL"
           
-          echo "{COMPLIANCE_REPORT_NAME} = ${COMPLIANCE_REPORT_NAME}"
+          echo "----- Generating ${COMPLIANCE_REPORT_NAME} -----"
           
           # Copy template
           cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
@@ -803,6 +803,7 @@ functions:
           echo "update the author email"
           echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
+          echo "---------------------------"
     - command: ec2.assume_role
       params:
         role_arn: ${assume_role_arn}
