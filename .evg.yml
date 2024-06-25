@@ -28,7 +28,7 @@ buildvariants:
       - spotless
 
   - name: code-quality-and-correctness
-    display_name: "Code Quality and Correctness"
+    display_name: "Code Quality and Security"
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: [ ubuntu2204-small ]
@@ -117,18 +117,29 @@ tasks:
         variant: "release"
       - name: sbom
         variant: code-quality-and-correctness
-    exec_timeout_secs: 300 # 5m
-    commands:
-      - func: "publish augmented SBOM"
-
-  - name: ssdlc-artifacts-snapshot
-    run_on: ubuntu2204-small
-    depends_on:
-      - name: sbom
+      - name: semgrep
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
+      - func: "publish static code analysis"
+      - func: "generate compliance report"
+      - func: "publish compliance report"
+
+  - name: ssdlc-artifacts-snapshot
+    run_on: ubuntu2204-small
+    allow_for_git_tag: false
+    depends_on:
+      - name: sbom
+        variant: code-quality-and-correctness
+      - name: semgrep
+        variant: code-quality-and-correctness
+    exec_timeout_secs: 300 # 5m
+    commands:
+      - func: "publish augmented SBOM"
+      - func: "publish static code analysis"
+      - func: "generate compliance report"
+      - func: "publish compliance report"
 
 functions:
   "push SBOM Lite to Silk":
@@ -381,6 +392,9 @@ functions:
           # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
+          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
+          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
@@ -409,7 +423,10 @@ functions:
           export PROJECT_DIRECTORY="$(pwd)"
 
           export SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
-          export AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
+          export COMPLIANCE_REPORT_NAME=$COMPLIANCE_REPORT_NAME
+          export STATIC_CODE_ANALYSIS_NAME=$STATIC_CODE_ANALYSIS_NAME
+
           export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
           mkdir -p $SSDLC_DIR
 
@@ -421,6 +438,8 @@ functions:
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
+          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
+          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
@@ -442,7 +461,8 @@ functions:
             export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
             export SSDLC_DIR="$SSDLC_DIR"
             export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
-          
+            export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
+            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
           EOT
 
     - command: expansions.update
@@ -651,7 +671,6 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          ${prepare_shell}
           echo "Version = ${MDBJDBC_VER}"
           sed -i "s@{RELEASE_VERSION}@${MDBJDBC_VER}@" mongo-jdbc-downloads_template.json
           echo "-------------------------"
@@ -678,9 +697,8 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          ${prepare_shell}
           echo "Running static code analysis with Semgrep..."
-
+          
           venv='venv'
           # Setup or use the existing virtualenv for semgrep
           if [[ -f "$venv/bin/activate" ]]; then
@@ -698,10 +716,10 @@ functions:
           # confirm
           semgrep --version
           set +e
-          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=mongo-jdbc-driver.sast.sarif > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
+          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
           SCAN_RESULT=$?
           set -e
-          
+                    
           # Exit with a failure if the scan found an issue
           exit $SCAN_RESULT
     - command: s3.put
@@ -714,4 +732,112 @@ functions:
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
         bucket: evg-bucket-mongo-jdbc-driver
+        permissions: public-read
+
+  "publish static code analysis":
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.get
+      params:
+        aws_key: ${AWS_ACCESS_KEY_ID}
+        aws_secret: ${AWS_SECRET_ACCESS_KEY}
+        aws_session_token: ${AWS_SESSION_TOKEN}
+        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
+        remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
+        content_type: application/json
+        bucket: evg-bucket-mongo-jdbc-driver
+    - command: s3.put
+      params:
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
+        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
+        content_type: application/json
+        bucket: translators-connectors-releases
+        permissions: public-read
+        display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
+
+
+  "generate compliance report":
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          echo "Author = ${author}"
+          echo "Author email = ${author_email}"
+          echo "Version = ${MDBJDBC_VER}"
+          SBOM_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json"
+          SARIF_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif"
+          echo "Sbom url = $SBOM_URL"
+          echo "Sarif Url = $SARIF_URL"
+          
+          echo "{COMPLIANCE_REPORT_NAME} = ${COMPLIANCE_REPORT_NAME}"
+          
+          # Copy template
+          cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
+          
+          # Update the version
+          echo "Update the version"
+          echo "sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}"
+          sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}
+          
+          # Update the SBOM link
+          echo "Update the SBOM link"
+          echo "sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g"${COMPLIANCE_REPORT_NAME}"
+          sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g" ${COMPLIANCE_REPORT_NAME}
+          
+          # Update the SARIF link
+          echo "Update the SARIF link"
+          echo "sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}"
+          sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}
+          
+          # Update the author information
+          echo "Update the author name"
+          echo "sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}"
+          sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}
+          
+          echo "update the author email"
+          echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
+          sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.put
+      params:
+        aws_key: ${AWS_ACCESS_KEY_ID}
+        aws_secret: ${AWS_SECRET_ACCESS_KEY}
+        aws_session_token: ${AWS_SESSION_TOKEN}
+        local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
+        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
+        content_type: text/markdown
+        bucket: evg-bucket-mongo-jdbc-driver
+        permissions: public-read
+
+  "publish compliance report":
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.get
+      params:
+        aws_key: ${AWS_ACCESS_KEY_ID}
+        aws_secret: ${AWS_SECRET_ACCESS_KEY}
+        aws_session_token: ${AWS_SESSION_TOKEN}
+        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
+        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
+        content_type: text/markdown
+        bucket: evg-bucket-mongo-jdbc-driver
+    - command: s3.put
+      params:
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
+        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
+        content_type: text/markdown
+        bucket: translators-connectors-releases
         permissions: public-read
