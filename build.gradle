@@ -75,6 +75,7 @@ allprojects {
         compile {
             extendsFrom aspects
         }
+        sbom
     }
 
     dependencies {
