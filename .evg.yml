@@ -117,8 +117,6 @@ tasks:
     depends_on:
       - name: "publish-maven"
         variant: "release"
-      - name: sbom
-        variant: code-quality-and-correctness
       - name: semgrep
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
