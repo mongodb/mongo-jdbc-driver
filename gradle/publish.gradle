@@ -1,7 +1,7 @@
 apply plugin: 'signing'
 apply plugin: 'io.codearte.nexus-staging'
 
-def augmentedSbom = artifacts.add('sbom', file('artifacts/ssdlc/mongo-jdbc-driver.augmented.sbom.json'))
+def augmentedSbom = artifacts.add('sbom', file("$rootDir/artifacts/ssdlc/mongo-jdbc-driver.augmented.sbom.json"))
 
 publishing {
     publications {
