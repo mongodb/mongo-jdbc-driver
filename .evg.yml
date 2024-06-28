@@ -117,8 +117,6 @@ tasks:
     depends_on:
       - name: "publish-maven"
         variant: "release"
-      - name: sbom
-        variant: code-quality-and-correctness
       - name: semgrep
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
@@ -225,7 +223,7 @@ functions:
         aws_key: ${release_aws_key}
         aws_secret: ${release_aws_secret}
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: mongodb-jdbc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
+        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         content_type: application/json
         bucket: translators-connectors-releases
         permissions: public-read
