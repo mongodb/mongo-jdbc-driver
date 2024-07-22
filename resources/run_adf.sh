@@ -49,6 +49,7 @@ GO="$GOBINDIR/go"
 
 PATH=$GOBINDIR:$PATH
 
+MACHINE_ARCH=$(uname -m)
 LOCAL_INSTALL_DIR=$(pwd)/local_adf
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
 MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
@@ -160,7 +161,11 @@ check_mongod() {
 # Check if jq exists.  If not, download and set path
 get_jq() {
   if [ $OS = "Linux" ]; then
-    curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
+      curl -L -o $JQ https://mongosql-noexpire.s3.us-east-2.amazonaws.com/run_adf/jq-linx-arm
+    else
+      curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    fi
   elif [ $OS = "Darwin" ]; then
     curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
   else
@@ -179,7 +184,7 @@ if [ $OS = "Linux" ]; then
   distro=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
   if [ "$distro" = "\"Red Hat Enterprise Linux\"" ] ||
 [ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
       export VARIANT=rhel9
       MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT_ARM
       MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_REDHAT_ARM
@@ -193,7 +198,7 @@ if [ $OS = "Linux" ]; then
     MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
   elif [ "$distro" = "\"Ubuntu\"" ]; then
     export VARIANT=ubuntu2204
-    if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
       MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_UBUNTU_ARM
       MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU_ARM
       MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_ARM_FILE
@@ -208,7 +213,7 @@ if [ $OS = "Linux" ]; then
     exit 1
   fi
 elif [ $OS = "Darwin" ]; then
-  if [ $(uname -m) = "x86_64" ]; then
+  if [ "$MACHINE_ARCH" = "x86_64" ]; then
     MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_MAC
     MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_MAC
     MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_MAC_FILE
