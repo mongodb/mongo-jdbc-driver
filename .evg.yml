@@ -47,10 +47,10 @@ buildvariants:
       - name: "test-unit"
       - name: "test-integration"
 
-  - name: ubuntu2204-64-arm-jdk-8
+  - name: ubuntu2204-arm64-jdk-8
     display_name: Ubuntu 22.04 ARM jdk-8
     expansions:
-      _platform: ubuntu2204-64-jdk-8
+      _platform: ubuntu2204-arm64-jdk-8
     run_on: ubuntu2204-arm64-large
     tasks:
       - name: "build"
@@ -416,6 +416,9 @@ functions:
           fi
 
           case '${_platform}' in
+          ubuntu2204-arm64-jdk-8)
+               JAVA_HOME=/opt/java/jdk8
+          ;;
           ubuntu2204-64-jdk-8)
                JAVA_HOME=/opt/java/jdk8
           ;;
