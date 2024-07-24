@@ -82,11 +82,11 @@ MONGOSH_DOWNLOAD_BASE=https://downloads.mongodb.com/compass
 
 ## Linux
 # Ubuntu 22.04
-MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu2204-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu2204-7.0.0.tgz
 # Ubuntu 22.04 ARM
 MONGO_DOWNLOAD_UBUNTU_ARM=mongodb-linux-aarch64-ubuntu2204-7.0.0.tgz
 # RedHat 7
-MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-7.0.0.tgz
 # RedHat 9 ARM
 MONGO_DOWNLOAD_REDHAT_ARM=mongodb-linux-aarch64-rhel90-7.0.0.tgz
 # Amazon 2 ARM
@@ -97,15 +97,15 @@ MONGOSH_DOWNLOAD_LINUX_FILE=mongosh-1.8.0-linux-x64.tgz
 MONGOSH_DOWNLOAD_LINUX_ARM_FILE=mongosh-1.8.0-linux-arm64.tgz
 
 ## macOS
-MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-7.0.0.tgz
 MONGOSH_DOWNLOAD_MAC_FILE=mongosh-1.8.0-darwin-x64.zip
 
 ## macOS ARM64
-MONGO_DOWNLOAD_MAC_ARM=mongodb-macos-arm64-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_MAC_ARM=mongodb-macos-arm64-7.0.0.tgz
 MONGOSH_DOWNLOAD_MAC_FILE_ARM=mongosh-1.8.0-darwin-arm64.zip
 
 ## Windows
-MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-7.0.0-rc6.zip
+MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-7.0.0.zip
 MONGOSH_DOWNLOAD_WINDOWS_FILE=mongosh-1.8.0-win32-x64.zip
 
 mkdir -p $LOCAL_INSTALL_DIR
