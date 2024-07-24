@@ -89,6 +89,9 @@ MONGO_DOWNLOAD_UBUNTU_ARM=mongodb-linux-aarch64-ubuntu2204-7.0.0.tgz
 MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-7.0.0-rc6.tgz
 # RedHat 9 ARM
 MONGO_DOWNLOAD_REDHAT_ARM=mongodb-linux-aarch64-rhel90-7.0.0.tgz
+# Amazon 2 ARM
+MONGO_DOWNLOAD_AMAZON2_ARM=mongodb-linux-aarch64-amazon2-7.0.0.tgz
+
 # Shared Linux mongosh
 MONGOSH_DOWNLOAD_LINUX_FILE=mongosh-1.8.0-linux-x64.tgz
 MONGOSH_DOWNLOAD_LINUX_ARM_FILE=mongosh-1.8.0-linux-arm64.tgz
@@ -183,7 +186,7 @@ check_mongohoused() {
 if [ $OS = "Linux" ]; then
   distro=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
   if [ "$distro" = "\"Red Hat Enterprise Linux\"" ] ||
-[ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
+     [ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
     if [ "$MACHINE_ARCH" = "aarch64" ]; then
       export VARIANT=rhel9
       MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT_ARM
@@ -207,6 +210,12 @@ if [ $OS = "Linux" ]; then
       MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU
       MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_FILE
     fi
+    MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
+  elif [ "$distro" = "\"Amazon Linux\"" ] && [ "$MACHINE_ARCH" = "aarch64" ]; then
+    export VARIANT=amazon2
+    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_AMAZON2_ARM
+    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_AMAZON2_ARM
+    MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_ARM_FILE
     MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
   else
     echo ${distro} not supported
