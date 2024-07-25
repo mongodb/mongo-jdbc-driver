@@ -49,6 +49,7 @@ GO="$GOBINDIR/go"
 
 PATH=$GOBINDIR:$PATH
 
+MACHINE_ARCH=$(uname -m)
 LOCAL_INSTALL_DIR=$(pwd)/local_adf
 MONGOHOUSE_URI=git@github.com:10gen/mongohouse.git
 MONGO_DB_PATH=$LOCAL_INSTALL_DIR/test_db
@@ -81,22 +82,30 @@ MONGOSH_DOWNLOAD_BASE=https://downloads.mongodb.com/compass
 
 ## Linux
 # Ubuntu 22.04
-MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu2204-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_UBUNTU=mongodb-linux-x86_64-ubuntu2204-7.0.0.tgz
+# Ubuntu 22.04 ARM
+MONGO_DOWNLOAD_UBUNTU_ARM=mongodb-linux-aarch64-ubuntu2204-7.0.0.tgz
 # RedHat 7
-MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_REDHAT=mongodb-linux-x86_64-rhel70-7.0.0.tgz
+# RedHat 9 ARM
+MONGO_DOWNLOAD_REDHAT_ARM=mongodb-linux-aarch64-rhel90-7.0.0.tgz
+# Amazon 2 ARM
+MONGO_DOWNLOAD_AMAZON2_ARM=mongodb-linux-aarch64-amazon2-7.0.0.tgz
+
 # Shared Linux mongosh
 MONGOSH_DOWNLOAD_LINUX_FILE=mongosh-1.8.0-linux-x64.tgz
+MONGOSH_DOWNLOAD_LINUX_ARM_FILE=mongosh-1.8.0-linux-arm64.tgz
 
 ## macOS
-MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_MAC=mongodb-macos-x86_64-7.0.0.tgz
 MONGOSH_DOWNLOAD_MAC_FILE=mongosh-1.8.0-darwin-x64.zip
 
 ## macOS ARM64
-MONGO_DOWNLOAD_MAC_ARM=mongodb-macos-arm64-7.0.0-rc6.tgz
+MONGO_DOWNLOAD_MAC_ARM=mongodb-macos-arm64-7.0.0.tgz
 MONGOSH_DOWNLOAD_MAC_FILE_ARM=mongosh-1.8.0-darwin-arm64.zip
 
 ## Windows
-MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-7.0.0-rc6.zip
+MONGO_DOWNLOAD_WIN=mongodb-windows-x86_64-7.0.0.zip
 MONGOSH_DOWNLOAD_WINDOWS_FILE=mongosh-1.8.0-win32-x64.zip
 
 mkdir -p $LOCAL_INSTALL_DIR
@@ -155,7 +164,11 @@ check_mongod() {
 # Check if jq exists.  If not, download and set path
 get_jq() {
   if [ $OS = "Linux" ]; then
-    curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
+      curl -L -o $JQ https://mongosql-noexpire.s3.us-east-2.amazonaws.com/run_adf/jq-linx-arm
+    else
+      curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    fi
   elif [ $OS = "Darwin" ]; then
     curl -L -o $JQ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
   else
@@ -173,24 +186,43 @@ check_mongohoused() {
 if [ $OS = "Linux" ]; then
   distro=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
   if [ "$distro" = "\"Red Hat Enterprise Linux\"" ] ||
-[ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
-    export VARIANT=rhel7
-    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT
-    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_REDHAT
-    MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_FILE
+     [ "$distro" = "\"Red Hat Enterprise Linux Server\"" ]; then
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
+      export VARIANT=rhel9
+      MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT_ARM
+      MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_REDHAT_ARM
+      MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_ARM_FILE
+    else
+      export VARIANT=rhel7
+      MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_REDHAT
+      MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_REDHAT
+      MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_FILE
+    fi
     MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
   elif [ "$distro" = "\"Ubuntu\"" ]; then
     export VARIANT=ubuntu2204
-    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_UBUNTU
-    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU
-    MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_FILE
+    if [ "$MACHINE_ARCH" = "aarch64" ]; then
+      MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_UBUNTU_ARM
+      MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU_ARM
+      MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_ARM_FILE
+    else
+      MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_UBUNTU
+      MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_UBUNTU
+      MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_FILE
+    fi
+    MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
+  elif [ "$distro" = "\"Amazon Linux\"" ] && [ "$MACHINE_ARCH" = "aarch64" ]; then
+    export VARIANT=amazon2
+    MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/linux/$MONGO_DOWNLOAD_AMAZON2_ARM
+    MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_AMAZON2_ARM
+    MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_LINUX_ARM_FILE
     MONGOSH_DOWNLOAD_LINK=$MONGOSH_DOWNLOAD_BASE/$MONGOSH_DOWNLOAD_FILE
   else
     echo ${distro} not supported
     exit 1
   fi
 elif [ $OS = "Darwin" ]; then
-  if [ $(uname -m) = "x86_64" ]; then
+  if [ "$MACHINE_ARCH" = "x86_64" ]; then
     MONGO_DOWNLOAD_LINK=$MONGO_DOWNLOAD_BASE/osx/$MONGO_DOWNLOAD_MAC
     MONGO_DOWNLOAD_FILE=$MONGO_DOWNLOAD_MAC
     MONGOSH_DOWNLOAD_FILE=$MONGOSH_DOWNLOAD_MAC_FILE

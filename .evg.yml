@@ -47,6 +47,17 @@ buildvariants:
       - name: "test-unit"
       - name: "test-integration"
 
+  - name: amazon2-arm64-jdk-11
+    display_name: Amazon Linux 2 ARM64 jdk-11
+    expansions:
+      _platform: amazon2-arm64-jdk-11
+    run_on: amazon2-arm64-graviton3
+    tasks:
+      - name: "build"
+      - name: "test-unit"
+      # SQL-2248: Fix integration test hang
+      # - name: "test-integration"
+
   - name: release
     display_name: "Release"
     expansions:
@@ -319,7 +330,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean -x test -x integrationTest spotlessApply build --rerun-tasks
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -339,7 +350,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ./gradlew clean test
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
 
   "run integration test":
     command: shell.exec
@@ -349,8 +360,8 @@ functions:
       script: |
           ${PREPARE_SHELL}
           ./resources/run_adf.sh start &&
-          ./gradlew runDataLoader &&
-          ./gradlew clean integrationTest -x test
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest -x test
           EXITCODE=$?
           ./resources/run_adf.sh stop
           exit $EXITCODE
@@ -405,16 +416,19 @@ functions:
             export MDBJDBC_VER=snapshot
           fi
 
-          case '${_platform}' in
+          case ${_platform} in
           ubuntu2204-64-jdk-8)
                JAVA_HOME=/opt/java/jdk8
           ;;
           ubuntu2204-64-jdk-11)
                JAVA_HOME=/opt/java/jdk11
           ;;
+          amazon2-arm64-jdk-11)
+               JAVA_HOME=/usr/lib/jvm/java-11
+          ;;
           *)
                echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+               echo "Allowed values: 'amazon2-arm64-jdk-11', 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
                exit 1
           ;;
           esac
