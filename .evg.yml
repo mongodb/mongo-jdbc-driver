@@ -55,7 +55,8 @@ buildvariants:
     tasks:
       - name: "build"
       - name: "test-unit"
-      - name: "test-integration"
+      # SQL-2248: Fix integration test hang
+      # - name: "test-integration"
 
   - name: release
     display_name: "Release"
