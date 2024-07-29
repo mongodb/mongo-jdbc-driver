@@ -17,9 +17,12 @@ Follow these instructions for creating a Release Version.
 
 ### Pre-Release Tasks
 
+#### Determine the correct version to be released
+Go to the [SQL releases page](https://jira.mongodb.org/projects/SQL?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased), and check the content of the tickets that are included in the current release. The fix version by default is a patch version. If there is a backwards incompatible API change in the tickets that are set to be released, we should instead update the major version; if there are new features added in the tickets set to be released, we should instead update the minor version. To do so, update the version on the [SQL releases page](https://jira.mongodb.org/projects/SQL?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) under "Actions". This will update the fix version on all of the tickets as well.
+
 #### Start Release Ticket
 Move the JIRA ticket for the release to the "In Progress" state.
-Ensure that its fixVersion matches the version being released.
+Ensure that its fixVersion matches the version being released, and update it if it changed in the previous step.
 
 #### Ensure Evergreen Passing
 Ensure that the build you are releasing is passing the tests on the evergreen waterfall.
