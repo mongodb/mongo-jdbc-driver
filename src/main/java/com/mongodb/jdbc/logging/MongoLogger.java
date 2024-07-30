@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.logging;
 
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,11 +74,19 @@ public class MongoLogger {
                         ? className
                         : parentLogger.connectionId + "_" + className;
         this.logger = Logger.getLogger(loggername);
-        logger.setParent(parentLogger.logger);
         logger.setLevel(parentLogger.logger.getLevel());
-        // Make sure to allow using parent handler
-        logger.setUseParentHandlers(true);
 
+        // This is a work-around for the simpler logic of calling `logger.setParent(parent); logger.setUseParentHandlers(true);`
+        // after configuring the parent logger handlers for the connection.
+        // This is to avoid issue with log managers which are restricting use of setParent like JBoss Log Manager for example.
+        for (Handler handler : logger.getHandlers()) {
+            // Clean the handler list to avoid any duplication of logs from transitive handlers
+            logger.removeHandler(handler);
+        }
+        for (Handler handler : parentLogger.logger.getHandlers()) {
+            // Add all parent handlers
+            logger.addHandler(handler);
+        }
         this.connectionId = parentLogger.connectionId;
     }
 
