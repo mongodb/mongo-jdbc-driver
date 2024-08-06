@@ -26,13 +26,14 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.bson.UuidRepresentation;
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
 import org.bson.BsonDateTime;
@@ -65,6 +66,8 @@ class MongoResultSetTest extends MongoMock {
     MongoResultSet mockResultSet;
     static MongoResultSet mongoResultSet;
     static MongoResultSet mongoResultSetAllTypes;
+    static MongoResultSet mongoResultSetAllTypesLegacyUUID;
+    static MongoResultSet mongoResultSetAllTypesExtJson;
     static MongoResultSet closedMongoResultSet;
     static MongoResultSet mongoResultSetExtended;
 
@@ -127,30 +130,52 @@ class MongoResultSetTest extends MongoMock {
                             new BsonExplicitCursor(mongoResultDocs),
                             schema,
                             null,
-                            false);
+                            false,
+                            UuidRepresentation.STANDARD);
             mongoResultSetAllTypes =
                     new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocsAllTypes),
                             schemaAllTypes,
                             null,
-                            false);
+                            false,
+                            UuidRepresentation.STANDARD);
+            mongoResultSetAllTypesLegacyUUID =
+                    new MongoResultSet(
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocsAllTypes),
+                            schemaAllTypes,
+                            null,
+                            false,
+                            UuidRepresentation.JAVA_LEGACY);
+            mongoResultSetAllTypesExtJson =
+                    new MongoResultSet(
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocsAllTypes),
+                            schemaAllTypes,
+                            null,
+                            true,
+                            UuidRepresentation.STANDARD);
             closedMongoResultSet =
                     new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocs),
                             schema,
                             null,
-                            false);
+                            false,
+                            UuidRepresentation.STANDARD);
             mongoResultSetExtended =
                     new MongoResultSet(
                             mongoStatement,
                             new BsonExplicitCursor(mongoResultDocs),
                             schema,
                             null,
-                            true);
+                            true,
+                            UuidRepresentation.STANDARD);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
+            mongoResultSetAllTypesLegacyUUID.next();
+            mongoResultSetAllTypesExtJson.next();
             closedMongoResultSet.next();
             mongoResultSetExtended.next();
         } catch (Exception e) {
@@ -288,6 +313,28 @@ class MongoResultSetTest extends MongoMock {
                 () -> {
                     mongoResultSet.getBytes(INT_COL);
                 });
+    }
+
+    @Test
+    void testGetUuidValues() throws Exception {
+        // Test standard UUID
+        Object actualStandardUuid = mongoResultSetAllTypes.getObject(ALL_STANDARD_UUID_COL_LABEL);
+        assertEquals(UUID_VAL, actualStandardUuid);
+
+        // Test legacy UUID
+        Object actualLegacyUuid =
+                mongoResultSetAllTypesLegacyUUID.getObject(ALL_LEGACY_UUID_COL_LABEL);
+        assertEquals(UUID_VAL, actualLegacyUuid);
+
+        // Test UUID as string
+        assertEquals(
+                ALL_UUID_STRING_VAL, mongoResultSetAllTypes.getString(ALL_STANDARD_UUID_COL_LABEL));
+        assertEquals(
+                ALL_UUID_STRING_VAL,
+                mongoResultSetAllTypesLegacyUUID.getString(ALL_LEGACY_UUID_COL_LABEL));
+        assertEquals(
+                ALL_UUID_STRING_EXT_VAL,
+                mongoResultSetAllTypesExtJson.getString(ALL_STANDARD_UUID_COL_LABEL));
     }
 
     @Test
@@ -448,9 +495,12 @@ class MongoResultSetTest extends MongoMock {
         // Note that getObject() returns null for NULL and UNDEFINED BSON values, so we check
         // manually that their stringification returns what is expected.
         assertNull(mongoResultSetAllTypes.getObject(ALL_UNDEFINED_COL_LABEL));
-        assertNull(new MongoBsonValue(new BsonUndefined(), false).toString());
+        assertNull(
+                new MongoBsonValue(new BsonUndefined(), false, UuidRepresentation.STANDARD)
+                        .toString());
         assertNull(mongoResultSetAllTypes.getObject(ALL_NULL_COL_LABEL));
-        assertNull(new MongoBsonValue(new BsonNull(), false).toString());
+        assertNull(
+                new MongoBsonValue(new BsonNull(), false, UuidRepresentation.STANDARD).toString());
 
         // Note that getObject() must return the following classes for the following types:
         //   - Types.BIGINT    => long
@@ -471,19 +521,19 @@ class MongoResultSetTest extends MongoMock {
 
         // test that the string values match for the objects with EXTENDED and RELAXED json modes
         assertEquals(
-                new MongoBsonValue(new BsonInt32(3), true).toString(),
+                new MongoBsonValue(new BsonInt32(3), true, UuidRepresentation.STANDARD).toString(),
                 mongoResultSetExtended.getObject(ANY_OF_INT_STRING_COL).toString());
         assertEquals(
-                new MongoBsonValue(new BsonInt32(3), false).toString(),
+                new MongoBsonValue(new BsonInt32(3), false, UuidRepresentation.STANDARD).toString(),
                 mongoResultSet.getObject(ANY_OF_INT_STRING_COL).toString());
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
         assertEquals(
-                new MongoBsonValue(doc, true).toString(),
+                new MongoBsonValue(doc, true, UuidRepresentation.STANDARD).toString(),
                 mongoResultSetExtended.getObject(DOC_COL_LABEL).toString());
         assertEquals(
-                new MongoBsonValue(doc, false).toString(),
+                new MongoBsonValue(doc, false, UuidRepresentation.STANDARD).toString(),
                 mongoResultSet.getObject(DOC_COL_LABEL).toString());
 
         BsonArray array = new BsonArray();
@@ -491,10 +541,10 @@ class MongoResultSetTest extends MongoMock {
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
         assertEquals(
-                (new MongoBsonValue(array, true)).toString(),
+                (new MongoBsonValue(array, true, UuidRepresentation.STANDARD)).toString(),
                 mongoResultSetExtended.getObject(ARRAY_COL_LABEL).toString());
         assertEquals(
-                (new MongoBsonValue(array, false)).toString(),
+                (new MongoBsonValue(array, false, UuidRepresentation.STANDARD)).toString(),
                 mongoResultSet.getObject(ARRAY_COL_LABEL).toString());
     }
 
@@ -665,7 +715,7 @@ class MongoResultSetTest extends MongoMock {
         assertEquals(2.4, mongoResultSet.getObject(DOUBLE_COL_LABEL));
         assertEquals("b", mongoResultSet.getObject(STRING_COL_LABEL));
         assertEquals(
-                new MongoBsonValue(new BsonInt32(3), false),
+                new MongoBsonValue(new BsonInt32(3), false, UuidRepresentation.STANDARD),
                 mongoResultSet.getObject(ANY_OF_INT_STRING_COL));
 
         assertNull(mongoResultSet.getObject(NULL_COL));
@@ -677,11 +727,15 @@ class MongoResultSetTest extends MongoMock {
         array.add(new BsonInt32(5));
         array.add(new BsonInt32(6));
         array.add(new BsonInt32(7));
-        assertEquals(new MongoBsonValue(array, false), mongoResultSet.getObject(ARRAY_COL_LABEL));
+        assertEquals(
+                new MongoBsonValue(array, false, UuidRepresentation.STANDARD),
+                mongoResultSet.getObject(ARRAY_COL_LABEL));
 
         BsonDocument doc = new BsonDocument();
         doc.put(INT_COL_LABEL, new BsonInt32(5));
-        assertEquals(new MongoBsonValue(doc, false), mongoResultSet.getObject(DOC_COL_LABEL));
+        assertEquals(
+                new MongoBsonValue(doc, false, UuidRepresentation.STANDARD),
+                mongoResultSet.getObject(DOC_COL_LABEL));
 
         byte[] binary = {10, 20, 30};
         assertArrayEquals(binary, (byte[]) mongoResultSet.getObject(BINARY_COL_LABEL));
@@ -1060,7 +1114,9 @@ class MongoResultSetTest extends MongoMock {
                             return generateRow();
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
+        mockResultSet =
+                new MongoResultSet(
+                        mongoStatement, cursor, schema, null, false, UuidRepresentation.STANDARD);
 
         boolean hasNext = mockResultSet.next();
         assertFalse(hasNext);
@@ -1080,7 +1136,9 @@ class MongoResultSetTest extends MongoMock {
 
         BsonExplicitCursor cursor =
                 new BsonExplicitCursor(Arrays.asList(valuesDoc, valuesDoc2, valuesDoc3));
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
+        mockResultSet =
+                new MongoResultSet(
+                        mongoStatement, cursor, schema, null, false, UuidRepresentation.STANDARD);
 
         assertFalse(mockResultSet.isFirst());
         assertFalse(mockResultSet.isLast());
@@ -1117,7 +1175,9 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
+        mockResultSet =
+                new MongoResultSet(
+                        mongoStatement, cursor, schema, null, false, UuidRepresentation.STANDARD);
 
         assertFalse(mockResultSet.isFirst());
         // For empty result set, isLast should always be true
@@ -1151,7 +1211,9 @@ class MongoResultSetTest extends MongoMock {
                             return emptyResultDoc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, schema, null, false);
+        mockResultSet =
+                new MongoResultSet(
+                        mongoStatement, cursor, schema, null, false, UuidRepresentation.STANDARD);
 
         assertEquals(12, mockResultSet.getMetaData().getColumnCount());
         assertFalse(mockResultSet.isFirst());
@@ -1211,7 +1273,14 @@ class MongoResultSetTest extends MongoMock {
                             return doc;
                         });
 
-        mockResultSet = new MongoResultSet(mongoStatement, cursor, sameMetadataSchema, null, false);
+        mockResultSet =
+                new MongoResultSet(
+                        mongoStatement,
+                        cursor,
+                        sameMetadataSchema,
+                        null,
+                        false,
+                        UuidRepresentation.STANDARD);
 
         ResultSetMetaData metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());

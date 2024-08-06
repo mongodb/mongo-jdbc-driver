@@ -18,6 +18,7 @@ package com.mongodb.jdbc.integration;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.integration.testharness.IntegrationTestUtils;
@@ -31,6 +32,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,14 +78,24 @@ public class MongoIntegrationTest {
 
     public MongoConnection getBasicConnection(String db, Properties extraProps)
             throws SQLException {
+        return getBasicConnection(db, extraProps, null);
+    }
 
+    public MongoConnection getBasicConnection(String db, Properties extraProps, String uriOptions)
+            throws SQLException {
+        String fullUrl = URL;
         Properties p = new java.util.Properties(extraProps);
         p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
-        return (MongoConnection) DriverManager.getConnection(URL, p);
+
+        if (uriOptions != null && !uriOptions.isEmpty()) {
+            fullUrl += (URL.contains("?") ? "&" : "/?") + uriOptions;
+        }
+
+        return (MongoConnection) DriverManager.getConnection(fullUrl, p);
     }
 
     @BeforeAll
@@ -92,7 +104,7 @@ public class MongoIntegrationTest {
     }
 
     @TestFactory
-    Collection<DynamicTest> runIntegrationTests() throws SQLException {
+    Collection<DynamicTest> runIntegrationTests() {
         List<DynamicTest> dynamicTests = new ArrayList<>();
         for (TestEntry testEntry : testEntries) {
             if (testEntry.skip_reason != null) {
@@ -111,7 +123,7 @@ public class MongoIntegrationTest {
     }
 
     /** Simple callable used to spawn a new statement and execute a query. */
-    public class SimpleQueryExecutor implements Callable<Void> {
+    public static class SimpleQueryExecutor implements Callable<Void> {
         private final Connection conn;
         private final String query;
 
@@ -137,7 +149,7 @@ public class MongoIntegrationTest {
     @Test
     public void testLoggingWithParallelConnectionAndStatementExec() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
+        List<Callable<Void>> tasks = new ArrayList<>();
 
         // Connection with no logging.
         MongoConnection noLogging = connect(null);
@@ -229,6 +241,78 @@ public class MongoIntegrationTest {
             // Ignore clean-up exceptions
             System.out.println("Clean-up error ignored.");
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the handling of different UUID representations specified in the URI. The uuid fields
+     * have been pre-loaded into the database, stored in their respective uuid representations
+     * according to their type. This test verifies that each representation is correctly retrieved
+     * and converted to the expected string format.
+     */
+    @Test
+    public void testUUIDRepresentation() {
+        // Testing all the possible uuidRepresentations, "default" represents no uuidRepresentation option in the URI
+        String[] uuidRepresentations = {
+            "standard", "javalegacy", "csharplegacy", "pythonlegacy", "default"
+        };
+        String expectedUUID = "71bf369b-2c60-4e6f-b23f-f9e88167cc96";
+
+        for (String representation : uuidRepresentations) {
+            System.out.println("Testing with UUID representation: " + representation);
+
+            MongoConnection conn = null;
+            Statement stmt = null;
+            ResultSet rs = null;
+
+            try {
+                if (representation.equals("default")) {
+                    conn = getBasicConnection(DEFAULT_TEST_DB, null);
+                } else {
+                    String uriOptions = "uuidRepresentation=" + representation;
+                    conn = getBasicConnection(DEFAULT_TEST_DB, null, uriOptions);
+                }
+
+                stmt = conn.createStatement();
+                String type = representation.equals("default") ? "standard" : representation;
+                String query = "SELECT * FROM uuid WHERE type = '" + type + "'";
+
+                rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    System.out.println(
+                            "Representation: "
+                                    + representation
+                                    + ", Type: "
+                                    + type
+                                    + ", UUID: "
+                                    + uuid);
+                    assertEquals(
+                            expectedUUID,
+                            uuid,
+                            "Mismatch for " + representation + " representation");
+                } else {
+                    fail("No result found for type: " + type);
+                }
+            } catch (SQLException e) {
+                fail("Failed to execute query for " + representation + ": " + e.getMessage());
+            } finally {
+                if (rs != null)
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                if (stmt != null)
+                    try {
+                        stmt.close();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
         }
     }
 }

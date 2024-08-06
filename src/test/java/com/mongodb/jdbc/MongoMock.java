@@ -27,11 +27,14 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 import org.bson.*;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.DecoderContext;
+import org.bson.internal.UuidHelper;
 import org.bson.json.JsonReader;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -125,6 +128,10 @@ public abstract class MongoMock {
     protected static String ALL_MIN_KEY_COL_LABEL = "minKey";
     // all.maxKey
     protected static String ALL_MAX_KEY_COL_LABEL = "maxKey";
+    // all.standardUuid
+    protected static String ALL_STANDARD_UUID_COL_LABEL = "standardUuid";
+    // all.legacyUuid
+    protected static String ALL_LEGACY_UUID_COL_LABEL = "legacyUuid";
 
     protected static String ALL_DOUBLE_COL_VAL = "1.0";
     protected static String ALL_STRING_COL_VAL = "\"str\"";
@@ -153,6 +160,27 @@ public abstract class MongoMock {
     protected static String ALL_DECIMAL_COL_VAL = "{\"$numberDecimal\": \"21.2\"}";
     protected static String ALL_MIN_KEY_COL_VAL = "{\"$minKey\": 1}";
     protected static String ALL_MAX_KEY_COL_VAL = "{\"$maxKey\": 1}";
+
+    protected static UUID UUID_VAL = UUID.fromString("00112233-4455-6677-8899-aabbccddeeff");
+    protected static String ALL_UUID_STRING_EXT_VAL =
+            "{\"$uuid\":\"00112233-4455-6677-8899-aabbccddeeff\"}";
+    protected static String ALL_UUID_STRING_VAL = "00112233-4455-6677-8899-aabbccddeeff";
+
+    protected static String ALL_STANDARD_UUID_COL_VAL =
+            String.format(
+                    "{\"$binary\": {\"base64\": \"%s\", \"subType\": \"04\"}}",
+                    Base64.getEncoder()
+                            .encodeToString(
+                                    UuidHelper.encodeUuidToBinary(
+                                            UUID_VAL, UuidRepresentation.STANDARD)));
+
+    protected static String ALL_LEGACY_UUID_COL_VAL =
+            String.format(
+                    "{\"$binary\": {\"base64\": \"%s\", \"subType\": \"03\"}}",
+                    Base64.getEncoder()
+                            .encodeToString(
+                                    UuidHelper.encodeUuidToBinary(
+                                            UUID_VAL, UuidRepresentation.JAVA_LEGACY)));
 
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;
@@ -273,6 +301,12 @@ public abstract class MongoMock {
                        }
                        dup: {
                             bsonType: string
+                       },
+                      standardUuid: {
+                           bsonType: binData
+                       },
+                       legacyUuid: {
+                           bsonType: binData
                        }
                    }
                 },
@@ -413,7 +447,6 @@ public abstract class MongoMock {
         bot.put(BINARY_COL_LABEL, new BsonBinary(binary));
         bot.put(STRING_COL_LABEL, new BsonString("a"));
         bot.put(BOT_DUP_COL_LABEL, new BsonString("dupCol"));
-
         document.put("", bot);
         document.put("foo", foo);
 
@@ -431,7 +464,7 @@ public abstract class MongoMock {
     protected static MongoJsonSchema generateMongoJsonSchemaAllTypes() {
         String schema =
                 "{"
-                        + "    \"bsonType\": \"object\""
+                        + "    \"bsonType\": \"object\","
                         + "    \"properties\": {"
                         + "        \"all\": {"
                         + "            \"bsonType\": \"object\","
@@ -460,6 +493,12 @@ public abstract class MongoMock {
                         + "                    }"
                         + "                },"
                         + "                \"binData\": {"
+                        + "                    \"bsonType\": \"binData\""
+                        + "                },"
+                        + "                \"legacyUuid\": {"
+                        + "                    \"bsonType\": \"binData\""
+                        + "                },"
+                        + "                \"standardUuid\": {"
                         + "                    \"bsonType\": \"binData\""
                         + "                },"
                         + "                \"undefined\": {"
@@ -512,7 +551,7 @@ public abstract class MongoMock {
                         + "                }"
                         + "            },"
                         + "            \"required\": ["
-                        + "                \"double\", \"string\", \"object\", \"array\", \"binData\", \"undefined\","
+                        + "                \"double\", \"string\", \"object\", \"array\", \"binData\", \"legacyUuid\", \"standardUuid\", \"undefined\","
                         + "                \"objectId\", \"bool\", \"date\", \"null\", \"regex\", \"dbPointer\","
                         + "                \"javascript\", \"symbol\", \"javascriptWithScope\", \"int\","
                         + "                \"timestamp\", \"long\", \"decimal\", \"minKey\", \"maxKey\""
@@ -554,6 +593,16 @@ public abstract class MongoMock {
                         + ALL_BINARY_COL_LABEL
                         + "\": "
                         + ALL_BINARY_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_LEGACY_UUID_COL_LABEL
+                        + "\": "
+                        + ALL_LEGACY_UUID_COL_VAL
+                        + ","
+                        + "\""
+                        + ALL_STANDARD_UUID_COL_LABEL
+                        + "\": "
+                        + ALL_STANDARD_UUID_COL_VAL
                         + ","
                         + "\""
                         + ALL_UNDEFINED_COL_LABEL

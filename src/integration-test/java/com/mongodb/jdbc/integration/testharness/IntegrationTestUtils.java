@@ -50,6 +50,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonValue;
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -730,7 +731,10 @@ public class IntegrationTestUtils {
                     } else if (expected_obj instanceof BsonValue) {
                         Object actual_obj = actualRow.getObject(i + 1);
                         MongoBsonValue expectedAsExtJsonValue =
-                                new MongoBsonValue((BsonValue) expected_obj, false);
+                                new MongoBsonValue(
+                                        (BsonValue) expected_obj,
+                                        false,
+                                        UuidRepresentation.STANDARD);
                         if (!expectedAsExtJsonValue.equals(actual_obj)) {
                             return "Expected Bson Other BsonValue value "
                                     + expected_obj

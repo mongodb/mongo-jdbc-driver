@@ -53,8 +53,12 @@ import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 import org.bson.BsonDocument;
-import org.bson.BsonType;
+import org.bson.UuidRepresentation;
 import org.bson.BsonValue;
+import org.bson.BsonType;
+import org.bson.BsonBinary;
+import org.bson.BsonBinarySubType;
+import org.bson.internal.UuidHelper;
 import org.bson.types.Decimal128;
 
 @AutoLoggable
@@ -79,6 +83,7 @@ public class MongoResultSet implements ResultSet {
     protected MongoResultSetMetaData rsMetaData;
     protected MongoLogger logger;
     protected boolean extJsonMode;
+    protected UuidRepresentation uuidRepresentation;
 
     /**
      * Constructor for a MongoResultset tied to a connection and statement.
@@ -93,7 +98,8 @@ public class MongoResultSet implements ResultSet {
             MongoCursor<BsonDocument> cursor,
             MongoJsonSchema schema,
             List<List<String>> selectOrder,
-            boolean extJsonMode)
+            boolean extJsonMode,
+            UuidRepresentation uuidRepresentation)
             throws SQLException {
         Preconditions.checkNotNull(statement);
         this.statement = statement;
@@ -103,6 +109,7 @@ public class MongoResultSet implements ResultSet {
                         statement.getParentLogger(),
                         statement.getStatementId());
         this.extJsonMode = extJsonMode;
+        this.uuidRepresentation = uuidRepresentation;
         setUpResultset(
                 cursor,
                 schema,
@@ -360,7 +367,7 @@ public class MongoResultSet implements ResultSet {
         if (checkNull(o)) {
             return null;
         }
-        return new MongoBsonValue(o, extJsonMode).toString();
+        return new MongoBsonValue(o, extJsonMode, uuidRepresentation).toString();
     }
 
     @Override
@@ -645,6 +652,15 @@ public class MongoResultSet implements ResultSet {
             case Types.BINARY:
             case Types.LONGVARBINARY:
             case Types.VARBINARY:
+                if (o.getBsonType() == BsonType.BINARY) {
+                    BsonBinary binary = o.asBinary();
+                    if (binary.getType() == BsonBinarySubType.UUID_STANDARD.getValue()
+                            || binary.getType() == BsonBinarySubType.UUID_LEGACY.getValue()) {
+                        // Handle UUID
+                        return UuidHelper.decodeBinaryToUuid(
+                                binary.getData(), binary.getType(), uuidRepresentation);
+                    }
+                }
                 return o.asBinary().getData();
             case Types.BIT:
             case Types.BOOLEAN:
@@ -676,7 +692,7 @@ public class MongoResultSet implements ResultSet {
                 // These types are wrapped in MongoBsonValue so that
                 // if they are stringified via toString() they will be
                 // represented as extended JSON.
-                return new MongoBsonValue(o, extJsonMode);
+                return new MongoBsonValue(o, extJsonMode, uuidRepresentation);
 
             case Types.ARRAY:
             case Types.BLOB:
