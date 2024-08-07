@@ -355,6 +355,7 @@ functions:
     command: shell.exec
     type: test
     params:
+      shell: bash
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}

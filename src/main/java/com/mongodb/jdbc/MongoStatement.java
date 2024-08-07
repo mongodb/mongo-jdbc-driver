@@ -214,7 +214,12 @@ public class MongoStatement implements Statement {
             List<List<String>> selectOrder = schemaResult.selectOrder;
             resultSet =
                     new MongoResultSet(
-                            this, iterable.cursor(), schema, selectOrder, conn.getExtJsonMode());
+                            this,
+                            iterable.cursor(),
+                            schema,
+                            selectOrder,
+                            conn.getExtJsonMode(),
+                            conn.getUuidRepresentation());
             return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);

@@ -108,4 +108,20 @@ dataset:
       }
 
   - db: integration_test
+    collection: uuid
+    docsExtJson:
+      - _id: 0
+        uuid: { "$uuid": "71bf369b-2c60-4e6f-b23f-f9e88167cc96" }
+        type: "standard"
+      - _id: 1
+        uuid: { "$binary": { "base64": "b05gLJs2v3GWzGeB6Pk/sg==", "subType": "03" } }
+        type: "javalegacy"
+      - _id: 2
+        uuid: { "$binary": { "base64": "mza/cWAsb06yP/nogWfMlg==", "subType": "03" } }
+        type: "csharplegacy"
+      - _id: 3
+        uuid: { "$binary": { "base64": "cb82myxgTm+yP/nogWfMlg==", "subType": "03" } }
+        type: "pythonlegacy"
+
+  - db: integration_test
     view: baz

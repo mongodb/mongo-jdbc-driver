@@ -66,7 +66,7 @@ tests:
 
   - description: getTables_null_parameters_returns_all_tables
     db: integration_test
-    meta_function: [ getTables, null, null, null, null ]
+    meta_function: [getTables, null, null, null, null]
     expected_result:
       - [db2, null, foo, table, null, null, null, null, null, null]
       - [integration_test, null, a_non_lexicographic_field_order, table, null, null,
@@ -83,10 +83,11 @@ tests:
       - [integration_test, null, grades, table, null, null, null, null, null, null]
       - [integration_test, null, null_and_missing, table, null, null, null, null,
          null, null]
-      - [ integration_test, null, types_other, table, null, null, null, null,
-          null, null ]
+      - [integration_test, null, types_other, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, uuid, table, null, null, null, null, null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 12
+    row_count: 13
 
   - description: getTables_no_filters_returns_all_tables
     db: integration_test
@@ -107,10 +108,11 @@ tests:
       - [integration_test, null, grades, table, null, null, null, null, null, null]
       - [integration_test, null, null_and_missing, table, null, null, null, null,
          null, null]
-      - [ integration_test, null, types_other, table, null, null, null, null,
-          null, null ]
+      - [integration_test, null, types_other, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, uuid, table, null, null, null, null, null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 12
+    row_count: 13
     ordered: true
 
   - description: getTables_catalog_filter_only_returns_matching_tables
@@ -131,10 +133,11 @@ tests:
       - [integration_test, null, grades, table, null, null, null, null, null, null]
       - [integration_test, null, null_and_missing, table, null, null, null, null,
          null, null]
-      - [ integration_test, null, types_other, table, null, null, null, null,
-          null, null ]
+      - [integration_test, null, types_other, table, null, null, null, null, null,
+         null]
+      - [integration_test, null, uuid, table, null, null, null, null, null, null]
       - [integration_test, null, baz, view, null, null, null, null, null, null]
-    row_count: 11
+    row_count: 12
     ordered: true
 
 
@@ -237,7 +240,8 @@ tests:
       - [integration_test, null, grades, null, '', SELECT, null]
       - [integration_test, null, null_and_missing, null, '', SELECT, null]
       - [integration_test, null, types_other, null, '', SELECT, null]
-    row_count: 12
+      - [integration_test, null, uuid, null, '', SELECT, null]
+    row_count: 13
     ordered: true
 
   - description: getTablePrivileges_catalog_filter_only_returns_matching_tables
@@ -255,9 +259,10 @@ tests:
       - [integration_test, null, class, null, '', SELECT, null]
       - [integration_test, null, foo, null, '', SELECT, null]
       - [integration_test, null, grades, null, '', SELECT, null]
-      - [ integration_test, null, null_and_missing, null, '', SELECT, null ]
-      - [ integration_test, null, types_other, null, '', SELECT, null ]
-    row_count: 11
+      - [integration_test, null, null_and_missing, null, '', SELECT, null]
+      - [integration_test, null, types_other, null, '', SELECT, null]
+      - [integration_test, null, uuid, null, '', SELECT, null]
+    row_count: 12
     ordered: true
 
   - description: getTablePrivileges_catalog_and_table_filters_returns_matching_tables
@@ -281,26 +286,19 @@ tests:
       - [db2, null, foo, b, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 1,
          'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, anyof_collection, _id, 4, int, null, 0, null, 2,
@@ -308,11 +306,9 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
          0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
@@ -362,11 +358,10 @@ tests:
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
          null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
-         'NO', '']
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
+         '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
          0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
@@ -376,13 +371,18 @@ tests:
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
          0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
          0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
          null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
-    row_count: 47
+      - [integration_test, null, uuid, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, uuid, -2, binData, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+    row_count: 50
     ordered: true
 
   - description: getColumns no filters returns all columns
@@ -394,26 +394,19 @@ tests:
       - [db2, null, foo, b, 4, int, null, 0, null, 2, 0, '', null, 0, 0, null, 1,
          'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, anyof_collection, _id, 4, int, null, 0, null, 2,
@@ -421,11 +414,9 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
          0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
@@ -475,11 +466,10 @@ tests:
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
          null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
-         'NO', '']
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
+         '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
          0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
@@ -489,13 +479,18 @@ tests:
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
          0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
          0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
          null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
-    row_count: 47
+      - [integration_test, null, uuid, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, uuid, -2, binData, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+    row_count: 50
     ordered: true
 
   - description: getColumns catalog filter only returns all columns in database
@@ -503,26 +498,19 @@ tests:
     meta_function: ["getColumns", "integration_test", null, "%", "%"]
     expected_result:
       - [integration_test, null, a_non_lexicographic_field_order, A, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, B, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, C, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, b, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, a_non_lexicographic_field_order, c, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 6, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, any_collection, _id, 4, int, null, 0, null, 2, 1,
          '', null, 0, 0, null, 0, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, anyof_collection, _id, 4, int, null, 0, null, 2,
@@ -530,11 +518,9 @@ tests:
       - [integration_test, null, anyof_collection, a, 1111, bson, null, 0, null, 0,
          1, '', null, 0, 0, null, 1, 'YES', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, _id, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, b_non_lexicographic_field_order, a, 4, int, null,
-         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 2, 0, '', null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, _id, 4, int, null, 0, null, 2, 0, '', null,
          0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, bar, a, 4, int, null, 0, null, 2, 0, '', null, 0,
@@ -584,11 +570,10 @@ tests:
       - [integration_test, null, types_other, dbPointer, 1111, dbPointer, null, 0,
          null, 0, 0, '', null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascript, 1111, javascript, null,
-         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 3, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, javascriptWithScope, 1111, javascriptWithScope,
-         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0,
-         'NO', '']
+         null, 0, null, 0, 0, '', null, 0, 0, null, 4, 'NO', null, null, null, 0, 'NO',
+         '']
       - [integration_test, null, types_other, maxKey, 1111, maxKey, null, 0, null,
          0, 0, '', null, 0, 0, null, 5, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, minKey, 1111, minKey, null, 0, null,
@@ -598,13 +583,18 @@ tests:
       - [integration_test, null, types_other, objectId, 1111, objectId, null, 0, null,
          0, 0, '', null, 0, 0, null, 8, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, regularExpression, 1111, regex, null,
-         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO',
-         '']
+         0, null, 0, 0, '', null, 0, 0, null, 9, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, symbol, 1111, symbol, null, 0, null,
          0, 0, '', null, 0, 0, null, 10, 'NO', null, null, null, 0, 'NO', '']
       - [integration_test, null, types_other, timestamp, 1111, timestamp, null, 0,
          null, 0, 0, '', null, 0, 0, null, 11, 'NO', null, null, null, 0, 'NO', '']
-    row_count: 45
+      - [integration_test, null, uuid, _id, 4, int, null, 0, null, 2, 0, '', null,
+         0, 0, null, 0, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, type, -1, string, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 1, 'NO', null, null, null, 0, 'NO', '']
+      - [integration_test, null, uuid, uuid, -2, binData, null, 0, null, 0, 0, '',
+         null, 0, 0, null, 2, 'NO', null, null, null, 0, 'NO', '']
+    row_count: 48
     ordered: true
 
   - description: getColumns catalog and table filters only returns matching columns
@@ -640,7 +630,7 @@ tests:
     meta_function: ["getColumnPrivileges", null, null, '%', '%']
     expected_result:
       - [integration_test, null, a_non_lexicographic_field_order, A, null, '', SELECT,
-        null]
+         null]
       - [integration_test, null, a_non_lexicographic_field_order, B, null, '', SELECT,
          null]
       - [integration_test, null, a_non_lexicographic_field_order, C, null, '', SELECT,
@@ -658,6 +648,7 @@ tests:
       - [integration_test, null, grades, _id, null, '', SELECT, null]
       - [integration_test, null, null_and_missing, _id, null, '', SELECT, null]
       - [integration_test, null, types_other, _id, null, '', SELECT, null]
+      - [integration_test, null, uuid, _id, null, '', SELECT, null]
       - [integration_test, null, baz, _id, null, '', SELECT, null]
       - [integration_test, null, a_non_lexicographic_field_order, a, null, '', SELECT,
          null]
@@ -696,8 +687,10 @@ tests:
       - [integration_test, null, types_other, symbol, null, '', SELECT, null]
       - [integration_test, null, grades, testid, null, '', SELECT, null]
       - [integration_test, null, types_other, timestamp, null, '', SELECT, null]
+      - [integration_test, null, uuid, type, null, '', SELECT, null]
+      - [integration_test, null, uuid, uuid, null, '', SELECT, null]
       - [integration_test, null, bar, xyz, null, '', SELECT, null]
-    row_count: 47
+    row_count: 50
     ordered: true
 
   - description: getColumnPrivileges catalog filter only returns all columns in database
@@ -705,7 +698,7 @@ tests:
     meta_function: ["getColumnPrivileges", integration_test, null, '%', '%']
     expected_result:
       - [integration_test, null, a_non_lexicographic_field_order, A, null, '', SELECT,
-       null]
+         null]
       - [integration_test, null, a_non_lexicographic_field_order, B, null, '', SELECT,
          null]
       - [integration_test, null, a_non_lexicographic_field_order, C, null, '', SELECT,
@@ -722,6 +715,7 @@ tests:
       - [integration_test, null, grades, _id, null, '', SELECT, null]
       - [integration_test, null, null_and_missing, _id, null, '', SELECT, null]
       - [integration_test, null, types_other, _id, null, '', SELECT, null]
+      - [integration_test, null, uuid, _id, null, '', SELECT, null]
       - [integration_test, null, baz, _id, null, '', SELECT, null]
       - [integration_test, null, a_non_lexicographic_field_order, a, null, '', SELECT,
          null]
@@ -759,8 +753,10 @@ tests:
       - [integration_test, null, types_other, symbol, null, '', SELECT, null]
       - [integration_test, null, grades, testid, null, '', SELECT, null]
       - [integration_test, null, types_other, timestamp, null, '', SELECT, null]
+      - [integration_test, null, uuid, type, null, '', SELECT, null]
+      - [integration_test, null, uuid, uuid, null, '', SELECT, null]
       - [integration_test, null, bar, xyz, null, '', SELECT, null]
-    row_count: 45
+    row_count: 48
     ordered: true
 
   - description: getColumnPrivileges catalog and table filters only returns matching columns

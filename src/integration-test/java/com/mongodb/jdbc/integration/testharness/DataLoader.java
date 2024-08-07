@@ -53,7 +53,9 @@ import org.yaml.snakeyaml.nodes.Tag;
 public class DataLoader {
     public static final String TEST_DATA_DIRECTORY = "resources/integration_test/testdata";
     public static final String LOCAL_MDB_URL =
-            "mongodb://localhost:" + System.getenv("MDB_TEST_LOCAL_PORT");
+            "mongodb://localhost:"
+                    + System.getenv("MDB_TEST_LOCAL_PORT")
+                    + "/?uuidRepresentation=standard";
     public static final String LOCAL_ADF_URL =
             "mongodb://"
                     + System.getenv("ADF_TEST_LOCAL_USER")
