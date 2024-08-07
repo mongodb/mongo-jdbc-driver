@@ -52,12 +52,12 @@ import java.util.TimeZone;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
-import org.bson.BsonDocument;
-import org.bson.UuidRepresentation;
-import org.bson.BsonValue;
-import org.bson.BsonType;
 import org.bson.BsonBinary;
 import org.bson.BsonBinarySubType;
+import org.bson.BsonDocument;
+import org.bson.BsonType;
+import org.bson.BsonValue;
+import org.bson.UuidRepresentation;
 import org.bson.internal.UuidHelper;
 import org.bson.types.Decimal128;
 

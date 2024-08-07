@@ -18,11 +18,11 @@ package com.mongodb.jdbc;
 
 import java.io.StringWriter;
 import java.util.UUID;
+import org.bson.BsonBinary;
+import org.bson.BsonBinarySubType;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.UuidRepresentation;
-import org.bson.BsonBinary;
-import org.bson.BsonBinarySubType;
 import org.bson.codecs.BsonValueCodec;
 import org.bson.codecs.EncoderContext;
 import org.bson.internal.UuidHelper;
