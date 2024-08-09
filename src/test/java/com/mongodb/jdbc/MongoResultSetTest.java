@@ -319,18 +319,19 @@ class MongoResultSetTest extends MongoMock {
     void testGetUuidValues() throws Exception {
         // Test standard UUID
         Object actualStandardUuid = mongoResultSetAllTypes.getObject(ALL_STANDARD_UUID_COL_LABEL);
-        assertEquals(UUID_VAL, actualStandardUuid);
+        assertEquals(ALL_UUID_VAL, actualStandardUuid);
 
         // Test legacy UUID
         Object actualLegacyUuid =
                 mongoResultSetAllTypesLegacyUUID.getObject(ALL_LEGACY_UUID_COL_LABEL);
-        assertEquals(UUID_VAL, actualLegacyUuid);
+        assertEquals(ALL_UUID_VAL, actualLegacyUuid);
 
         // Test UUID as string
         assertEquals(
-                ALL_UUID_STRING_VAL, mongoResultSetAllTypes.getString(ALL_STANDARD_UUID_COL_LABEL));
+                ALL_UUID_STRING_EXT_VAL,
+                mongoResultSetAllTypes.getString(ALL_STANDARD_UUID_COL_LABEL));
         assertEquals(
-                ALL_UUID_STRING_VAL,
+                ALL_UUID_STRING_EXT_VAL,
                 mongoResultSetAllTypesLegacyUUID.getString(ALL_LEGACY_UUID_COL_LABEL));
         assertEquals(
                 ALL_UUID_STRING_EXT_VAL,

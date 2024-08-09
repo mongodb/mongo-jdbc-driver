@@ -18,6 +18,7 @@ package com.mongodb.jdbc.integration;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.mongodb.jdbc.MongoConnection;
@@ -35,8 +36,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,6 +64,12 @@ public class MongoIntegrationTest {
                     : LOCAL_HOST;
     static final String DEFAULT_TEST_DB = "integration_test";
     public static final String TEST_DIRECTORY = "resources/integration_test/tests";
+    private static final String EXPECTED_UUID =
+            "{\"$uuid\":\"71bf369b-2c60-4e6f-b23f-f9e88167cc96\"}";
+    private static final String[] UUID_REPRESENTATIONS = {
+        "standard", "javalegacy", "csharplegacy", "pythonlegacy", "default"
+    };
+    private static final String UUID_COLLECTION = "uuid";
 
     private static List<TestEntry> testEntries;
 
@@ -251,68 +260,134 @@ public class MongoIntegrationTest {
      * and converted to the expected string format.
      */
     @Test
-    public void testUUIDRepresentation() {
-        // Testing all the possible uuidRepresentations, "default" represents no uuidRepresentation option in the URI
-        String[] uuidRepresentations = {
-            "standard", "javalegacy", "csharplegacy", "pythonlegacy", "default"
-        };
-        String expectedUUID = "71bf369b-2c60-4e6f-b23f-f9e88167cc96";
-
-        for (String representation : uuidRepresentations) {
+    public void testUUIDRepresentationInURI() {
+        for (String representation : UUID_REPRESENTATIONS) {
             System.out.println("Testing with UUID representation: " + representation);
 
-            MongoConnection conn = null;
-            Statement stmt = null;
-            ResultSet rs = null;
+            try (MongoConnection conn =
+                            representation.equals("default")
+                                    ? getBasicConnection(DEFAULT_TEST_DB, null)
+                                    : getBasicConnection(
+                                            DEFAULT_TEST_DB,
+                                            null,
+                                            "uuidRepresentation=" + representation);
+                    Statement stmt = conn.createStatement()) {
 
-            try {
-                if (representation.equals("default")) {
-                    conn = getBasicConnection(DEFAULT_TEST_DB, null);
-                } else {
-                    String uriOptions = "uuidRepresentation=" + representation;
-                    conn = getBasicConnection(DEFAULT_TEST_DB, null, uriOptions);
-                }
+                // If no uuidRepresentation is specified in the URI, default to `pythonlegacy`
+                String type = representation.equals("default") ? "pythonlegacy" : representation;
+                String query = "SELECT * FROM " + UUID_COLLECTION + " WHERE type = '" + type + "'";
 
-                stmt = conn.createStatement();
-                String type = representation.equals("default") ? "standard" : representation;
-                String query = "SELECT * FROM uuid WHERE type = '" + type + "'";
-
-                rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    String uuid = rs.getString("uuid");
-                    System.out.println(
-                            "Representation: "
-                                    + representation
-                                    + ", Type: "
-                                    + type
-                                    + ", UUID: "
-                                    + uuid);
-                    assertEquals(
-                            expectedUUID,
-                            uuid,
-                            "Mismatch for " + representation + " representation");
-                } else {
-                    fail("No result found for type: " + type);
+                try (ResultSet rs = stmt.executeQuery(query)) {
+                    if (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        System.out.println(
+                                "Representation: "
+                                        + representation
+                                        + ", Type: "
+                                        + type
+                                        + ", UUID: "
+                                        + uuid);
+                        assertEquals(
+                                EXPECTED_UUID,
+                                uuid,
+                                "Mismatch for " + representation + " representation");
+                    } else {
+                        fail("No result found for type: " + type);
+                    }
                 }
             } catch (SQLException e) {
                 fail("Failed to execute query for " + representation + ": " + e.getMessage());
-            } finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-                if (stmt != null)
-                    try {
-                        stmt.close();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-                if (conn != null) {
-                    conn.close();
-                }
             }
         }
+    }
+
+    /**
+     * Tests the behavior of standard UUID representation when querying legacy UUID types. This test
+     * ensures that when using the standard representation, legacy UUID types are correctly
+     * retrieved and represented in the expected $binary format.
+     */
+    @Test
+    public void testStandardRepresentationWithLegacyTypes() {
+        try (MongoConnection conn =
+                        getBasicConnection(DEFAULT_TEST_DB, null, "uuidRepresentation=STANDARD");
+                Statement stmt = conn.createStatement()) {
+
+            for (String legacyType : UUID_REPRESENTATIONS) {
+                if (legacyType.equals("standard") || legacyType.equals("default")) continue;
+
+                String query =
+                        "SELECT * FROM " + UUID_COLLECTION + " WHERE type = '" + legacyType + "'";
+                try (ResultSet rs = stmt.executeQuery(query)) {
+                    if (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        System.out.println(
+                                "STANDARD representation - Type: "
+                                        + legacyType
+                                        + ", UUID: "
+                                        + uuid);
+                        assertTrue(
+                                uuid.startsWith("{\"$binary\":"),
+                                "Expected $binary format for "
+                                        + legacyType
+                                        + " type with STANDARD representation");
+                        assertTrue(
+                                uuid.contains("\"base64\":"),
+                                "Expected base64 field in $binary format");
+                        assertTrue(
+                                uuid.contains("\"subType\":"),
+                                "Expected subType field in $binary format");
+                    } else {
+                        fail("No result found for type: " + legacyType);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            fail("Failed to execute query: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tests the behavior of different UUID representations when querying the 'javalegacy' UUID
+     * type. This test verifies that each representation retrieves the 'javalegacy' UUID correctly,
+     * and that the value of the UUID are different.
+     */
+    @Test
+    public void testDifferentRepresentationsForJavaLegacy() {
+        Set<String> uuidValues = new HashSet<>();
+        for (String representation : UUID_REPRESENTATIONS) {
+            if (representation.equals("default")) continue;
+            try (MongoConnection conn =
+                            getBasicConnection(
+                                    DEFAULT_TEST_DB, null, "uuidRepresentation=" + representation);
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs =
+                            stmt.executeQuery(
+                                    "SELECT * FROM "
+                                            + UUID_COLLECTION
+                                            + " WHERE type = 'javalegacy'")) {
+                if (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    System.out.println(representation + " representation - UUID: " + uuid);
+                    if (representation.equals("standard")) {
+                        assertTrue(
+                                uuid.startsWith("{\"$binary\":"),
+                                "Expected $binary format for standard representation");
+                    } else {
+                        assertTrue(
+                                uuid.startsWith("{\"$uuid\":"),
+                                "Expected $uuid format for non-standard representation");
+                    }
+                    uuidValues.add(uuid);
+                } else {
+                    fail(
+                            "No result found for 'javalegacy' type with "
+                                    + representation
+                                    + " representation");
+                }
+            } catch (SQLException e) {
+                fail("Failed to execute query for " + representation + ": " + e.getMessage());
+            }
+        }
+        assertEquals(4, uuidValues.size(), "Expected 4 different UUID values (including standard)");
     }
 }

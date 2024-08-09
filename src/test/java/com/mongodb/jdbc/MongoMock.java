@@ -161,10 +161,9 @@ public abstract class MongoMock {
     protected static String ALL_MIN_KEY_COL_VAL = "{\"$minKey\": 1}";
     protected static String ALL_MAX_KEY_COL_VAL = "{\"$maxKey\": 1}";
 
-    protected static UUID UUID_VAL = UUID.fromString("00112233-4455-6677-8899-aabbccddeeff");
-    protected static String ALL_UUID_STRING_EXT_VAL =
-            "{\"$uuid\":\"00112233-4455-6677-8899-aabbccddeeff\"}";
     protected static String ALL_UUID_STRING_VAL = "00112233-4455-6677-8899-aabbccddeeff";
+    protected static UUID ALL_UUID_VAL = UUID.fromString(ALL_UUID_STRING_VAL);
+    protected static String ALL_UUID_STRING_EXT_VAL = "{\"$uuid\":\"" + ALL_UUID_STRING_VAL + "\"}";
 
     protected static String ALL_STANDARD_UUID_COL_VAL =
             String.format(
@@ -172,7 +171,7 @@ public abstract class MongoMock {
                     Base64.getEncoder()
                             .encodeToString(
                                     UuidHelper.encodeUuidToBinary(
-                                            UUID_VAL, UuidRepresentation.STANDARD)));
+                                            ALL_UUID_VAL, UuidRepresentation.STANDARD)));
 
     protected static String ALL_LEGACY_UUID_COL_VAL =
             String.format(
@@ -180,7 +179,7 @@ public abstract class MongoMock {
                     Base64.getEncoder()
                             .encodeToString(
                                     UuidHelper.encodeUuidToBinary(
-                                            UUID_VAL, UuidRepresentation.JAVA_LEGACY)));
+                                            ALL_UUID_VAL, UuidRepresentation.JAVA_LEGACY)));
 
     @Mock protected static MongoClient mongoClient;
     @Mock protected static MongoDatabase mongoDatabase;

@@ -17,6 +17,7 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
+import java.util.Objects;
 import java.util.UUID;
 import org.bson.BsonBinary;
 import org.bson.BsonBinarySubType;
@@ -139,25 +140,27 @@ public class MongoBsonValue {
     // Otherwise, it uses the specified or default UUID representation to decode the binary data.
     private String formatUuid(BsonBinary binary) {
         UUID uuid;
-
-        if (binary.getType() == BsonBinarySubType.UUID_STANDARD.getValue()) {
+        byte binaryType = binary.getType();
+        if (binaryType == BsonBinarySubType.UUID_STANDARD.getValue()) {
             uuid = binary.asUuid();
         } else {
-            // When UNSPECIFIED, set UuidRepresentation to STANDARD
+            // When this.uuidRepresentation is UNSPECIFIED or null, set UuidRepresentation to PYTHON_LEGACY
             UuidRepresentation representationToUse =
-                    this.uuidRepresentation != UuidRepresentation.UNSPECIFIED
+                    (Objects.nonNull(this.uuidRepresentation)
+                                    && this.uuidRepresentation != UuidRepresentation.UNSPECIFIED)
                             ? this.uuidRepresentation
-                            : UuidRepresentation.STANDARD;
+                            : UuidRepresentation.PYTHON_LEGACY;
+            if (binaryType == BsonBinarySubType.UUID_LEGACY.getValue()
+                    && representationToUse == UuidRepresentation.STANDARD) {
+                // UUID_LEGACY subtype and trying to get the standard representation causes a BSONException,
+                // So we return the binary representation extended JSON instead
+                return toExtendedJson(binary);
+            }
             uuid =
                     UuidHelper.decodeBinaryToUuid(
                             binary.getData(), binary.getType(), representationToUse);
         }
-
-        String uuidStr = uuid.toString();
-        if (this.extJsonMode) {
-            uuidStr = String.format("{\"$uuid\":\"%s\"}", uuidStr);
-        }
-        return uuidStr;
+        return String.format("{\"$uuid\":\"%s\"}", uuid.toString());
     }
 
     private String toExtendedJson(BsonValue v) {
