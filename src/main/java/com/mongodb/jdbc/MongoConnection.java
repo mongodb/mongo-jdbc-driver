@@ -68,6 +68,7 @@ import java.util.logging.SimpleFormatter;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 
 @AutoLoggable
 public class MongoConnection implements Connection {
@@ -86,6 +87,7 @@ public class MongoConnection implements Connection {
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
     private String logDirPath;
     private boolean extJsonMode;
+    private UuidRepresentation uuidRepresentation;
 
     public MongoConnection(
             MongoClient mongoClient, MongoConnectionProperties connectionProperties) {
@@ -117,6 +119,8 @@ public class MongoConnection implements Connection {
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
         this.extJsonMode = connectionProperties.getExtJsonMode();
+        this.uuidRepresentation =
+                connectionProperties.getConnectionString().getUuidRepresentation();
 
         this.isClosed = false;
     }
@@ -207,6 +211,10 @@ public class MongoConnection implements Connection {
 
     boolean getExtJsonMode() {
         return extJsonMode;
+    }
+
+    UuidRepresentation getUuidRepresentation() {
+        return uuidRepresentation;
     }
 
     String getURL() {

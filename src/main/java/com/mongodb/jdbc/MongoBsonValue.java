@@ -17,10 +17,16 @@
 package com.mongodb.jdbc;
 
 import java.io.StringWriter;
+import java.util.Objects;
+import java.util.UUID;
+import org.bson.BsonBinary;
+import org.bson.BsonBinarySubType;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
+import org.bson.UuidRepresentation;
 import org.bson.codecs.BsonValueCodec;
 import org.bson.codecs.EncoderContext;
+import org.bson.internal.UuidHelper;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
@@ -36,12 +42,16 @@ import org.bson.json.JsonWriterSettings;
 public class MongoBsonValue {
     private JsonWriterSettings JSON_WRITER_SETTINGS;
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
+    private final UuidRepresentation uuidRepresentation;
+    private final boolean extJsonMode;
 
     private BsonValue v;
 
-    public MongoBsonValue(BsonValue v, boolean isExtended) {
+    public MongoBsonValue(BsonValue v, boolean isExtended, UuidRepresentation uuidRepresentation) {
         this.v = v;
         this.setJsonWriterSettings(isExtended);
+        this.extJsonMode = isExtended;
+        this.uuidRepresentation = uuidRepresentation;
     }
 
     public void setJsonWriterSettings(boolean isExtended) {
@@ -75,9 +85,15 @@ public class MongoBsonValue {
                 // those quotes in the output of this method, so we simply
                 // return the underlying String value.
                 return this.v.asString().getValue();
+            case BINARY:
+                BsonBinary binary = this.v.asBinary();
+                if (binary.getType() == BsonBinarySubType.UUID_STANDARD.getValue()
+                        || binary.getType() == BsonBinarySubType.UUID_LEGACY.getValue()) {
+                    return formatUuid(binary);
+                }
+                // Fall through to toExtendedJson(this.v) for other binary types
 
             case ARRAY:
-            case BINARY:
             case DATE_TIME:
             case DB_POINTER:
             case DECIMAL128:
@@ -117,6 +133,34 @@ public class MongoBsonValue {
             default:
                 return this.v.toString();
         }
+    }
+
+    // Formats a BSON binary object into a JSON string representation of a UUID.
+    // If the BSON binary type is UUID_STANDARD, it directly converts it to a UUID.
+    // Otherwise, it uses the specified or default UUID representation to decode the binary data.
+    private String formatUuid(BsonBinary binary) {
+        UUID uuid;
+        byte binaryType = binary.getType();
+        if (binaryType == BsonBinarySubType.UUID_STANDARD.getValue()) {
+            uuid = binary.asUuid();
+        } else {
+            // When this.uuidRepresentation is UNSPECIFIED or null, set UuidRepresentation to PYTHON_LEGACY
+            UuidRepresentation representationToUse =
+                    (Objects.nonNull(this.uuidRepresentation)
+                                    && this.uuidRepresentation != UuidRepresentation.UNSPECIFIED)
+                            ? this.uuidRepresentation
+                            : UuidRepresentation.PYTHON_LEGACY;
+            if (binaryType == BsonBinarySubType.UUID_LEGACY.getValue()
+                    && representationToUse == UuidRepresentation.STANDARD) {
+                // UUID_LEGACY subtype and trying to get the standard representation causes a BSONException,
+                // So we return the binary representation extended JSON instead
+                return toExtendedJson(binary);
+            }
+            uuid =
+                    UuidHelper.decodeBinaryToUuid(
+                            binary.getData(), binary.getType(), representationToUse);
+        }
+        return String.format("{\"$uuid\":\"%s\"}", uuid.toString());
     }
 
     private String toExtendedJson(BsonValue v) {
