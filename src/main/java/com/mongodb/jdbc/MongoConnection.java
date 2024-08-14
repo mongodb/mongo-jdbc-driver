@@ -88,6 +88,7 @@ public class MongoConnection implements Connection {
     private String logDirPath;
     private boolean extJsonMode;
     private UuidRepresentation uuidRepresentation;
+    private String appName;
 
     public MongoConnection(
             MongoClient mongoClient, MongoConnectionProperties connectionProperties) {
@@ -104,7 +105,13 @@ public class MongoConnection implements Connection {
         this.mongoClientSettings = createMongoClientSettings(connectionProperties);
 
         if (mongoClient == null) {
-            this.mongoClient = createMongoClient(connectionProperties);
+            this.mongoClient =
+                    MongoClients.create(
+                            this.mongoClientSettings,
+                            MongoDriverInformation.builder()
+                                    .driverName(MongoDriver.NAME)
+                                    .driverVersion(MongoDriver.getVersion())
+                                    .build());
         } else {
             this.mongoClient = mongoClient;
         }
@@ -121,44 +128,32 @@ public class MongoConnection implements Connection {
         this.extJsonMode = connectionProperties.getExtJsonMode();
         this.uuidRepresentation =
                 connectionProperties.getConnectionString().getUuidRepresentation();
+        this.appName = buildAppName(connectionProperties);
 
         this.isClosed = false;
     }
 
-    private MongoClient createMongoClient(MongoConnectionProperties connectionProperties) {
-        StringBuilder appName =
+    private String buildAppName(MongoConnectionProperties connectionProperties) {
+        StringBuilder appNameBuilder =
                 new StringBuilder(MongoDriver.NAME).append("+").append(MongoDriver.getVersion());
 
-        MongoDriverInformation.Builder mdiBuilder;
         String clientInfo = connectionProperties.getClientInfo();
-        String[] clientInfoSplit = (clientInfo == null) ? null : clientInfo.split("\\+");
-        if (clientInfoSplit != null && clientInfoSplit.length == 2) {
-            appName.append('|').append(clientInfo);
-            MongoDriverInformation driverInfoWithClientInfo =
-                    MongoDriverInformation.builder()
-                            .driverName(clientInfoSplit[0])
-                            .driverVersion(clientInfoSplit[1])
-                            .build();
-            mdiBuilder = MongoDriverInformation.builder(driverInfoWithClientInfo);
-        } else {
-            mdiBuilder = MongoDriverInformation.builder();
+        if (clientInfo != null) {
+            String[] clientInfoSplit = clientInfo.split("\\+");
+            if (clientInfoSplit.length == 2) {
+                appNameBuilder.append('|').append(clientInfo);
+            }
         }
-        MongoDriverInformation mongoDriverInformation =
-                mdiBuilder
-                        .driverName(MongoDriver.NAME)
-                        .driverVersion(MongoDriver.getVersion())
-                        .build();
 
-        return MongoClients.create(this.mongoClientSettings, mongoDriverInformation);
+        return appNameBuilder.toString();
     }
 
     private MongoClientSettings createMongoClientSettings(
             MongoConnectionProperties connectionProperties) {
-        String appName = MongoDriver.NAME + "+" + MongoDriver.getVersion();
 
         MongoClientSettings.Builder settingsBuilder =
                 MongoClientSettings.builder()
-                        .applicationName(appName)
+                        .applicationName(this.appName)
                         .applyConnectionString(connectionProperties.getConnectionString());
 
         MongoCredential credential = connectionProperties.getConnectionString().getCredential();
