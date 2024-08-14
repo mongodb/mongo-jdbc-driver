@@ -19,6 +19,9 @@ package com.mongodb.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.internal.MongoClientImpl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -37,6 +41,9 @@ import org.mockito.quality.Strictness;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockitoSettings(strictness = Strictness.WARN)
 class MongoConnectionTest extends MongoMock {
+    static final String localhost = "mongodb://localhost";
+    @Mock private MongoConnectionProperties mockConnectionProperties;
+
     @BeforeAll
     protected void initMocks() {
         MockitoAnnotations.initMocks(this);
@@ -47,6 +54,52 @@ class MongoConnectionTest extends MongoMock {
     @BeforeEach
     void setupTest() throws NoSuchFieldException {
         resetMockObjs();
+    }
+
+    @BeforeEach
+    void setUp() {
+        when(mockConnectionProperties.getConnectionString())
+                .thenReturn(new ConnectionString(localhost));
+        when(mockConnectionProperties.getDatabase()).thenReturn("test");
+    }
+
+    private String getApplicationName(MongoConnection connection) {
+        MongoClientImpl mongoClientImpl = (MongoClientImpl) connection.getMongoClient();
+        MongoClientSettings mcs = mongoClientImpl.getSettings();
+        return mcs.getApplicationName();
+    }
+
+    @Test
+    void testBuildAppNameWithoutClientInfo() {
+        when(mockConnectionProperties.getClientInfo()).thenReturn(null);
+
+        mongoConnection = new MongoConnection(null, mockConnectionProperties);
+
+        String expectedAppName = MongoDriver.NAME + "+" + MongoDriver.getVersion();
+        assertEquals(expectedAppName, getApplicationName(mongoConnection));
+    }
+
+    @Test
+    void testAppNameWithValidClientInfo() {
+        String clientInfo = "test-client+1.0.0";
+        when(mockConnectionProperties.getClientInfo()).thenReturn(clientInfo);
+
+        mongoConnection = new MongoConnection(null, mockConnectionProperties);
+
+        String expectedAppName =
+                MongoDriver.NAME + "+" + MongoDriver.getVersion() + "|" + clientInfo;
+        assertEquals(expectedAppName, getApplicationName(mongoConnection));
+    }
+
+    @Test
+    void testAppNameWithInvalidClientInfo() {
+        // Client information has to be in the format 'name+version'
+        when(mockConnectionProperties.getClientInfo()).thenReturn("invalid-client-info");
+
+        mongoConnection = new MongoConnection(null, mockConnectionProperties);
+
+        String expectedAppName = MongoDriver.NAME + "+" + MongoDriver.getVersion();
+        assertEquals(expectedAppName, getApplicationName(mongoConnection));
     }
 
     // to replace lambda as input in the testExceptionAfterConnectionClosed
