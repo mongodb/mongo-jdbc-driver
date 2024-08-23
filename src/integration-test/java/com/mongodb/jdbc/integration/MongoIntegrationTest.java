@@ -398,8 +398,9 @@ public class MongoIntegrationTest {
      */
     @Test
     public void testConnectWithSRVURI() throws SQLException {
-        String mongoURI = System.getenv("SRV_TEST_HOST");
-        assertNotNull(mongoURI, "SRV_TEST_HOST variable not set in environment");
+        String mongoHost = System.getenv("SRV_TEST_HOST");
+        assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
+        String mongoURI = "mongodb+srv://" + mongoHost + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
         String fullURI = "jdbc:" + mongoURI;
 
         String user = System.getenv("SRV_TEST_USER");
