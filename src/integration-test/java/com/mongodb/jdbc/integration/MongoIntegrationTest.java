@@ -393,14 +393,15 @@ public class MongoIntegrationTest {
         assertEquals(4, uuidValues.size(), "Expected 4 different UUID values (including standard)");
     }
 
-    /**
-     * Tests that the driver can work with SRV-style URIs.
-     */
+    /** Tests that the driver can work with SRV-style URIs. */
     @Test
     public void testConnectWithSRVURI() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
-        String mongoURI = "mongodb+srv://" + mongoHost + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
+        String mongoURI =
+                "mongodb+srv://"
+                        + mongoHost
+                        + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
         String fullURI = "jdbc:" + mongoURI;
 
         String user = System.getenv("SRV_TEST_USER");
@@ -417,8 +418,11 @@ public class MongoIntegrationTest {
         p.setProperty("database", "test");
 
         // TODO: SQL-2294: Support direct cluster mode (This should no longer expect an exception after that).
-        assertThrows(java.sql.SQLException.class, () -> {
-            MongoConnection conn = (MongoConnection) DriverManager.getConnection(fullURI, p);
-        });
+        assertThrows(
+                java.sql.SQLException.class,
+                () -> {
+                    MongoConnection conn =
+                            (MongoConnection) DriverManager.getConnection(fullURI, p);
+                });
     }
 }
