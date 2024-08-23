@@ -466,6 +466,7 @@ public class MongoDriver implements Driver {
         ConnectionString c =
                 new ConnectionString(
                         buildNewURI(
+                                originalConnectionString.isSrvProtocol(),
                                 originalConnectionString.getHosts(),
                                 user,
                                 password,
@@ -627,6 +628,7 @@ public class MongoDriver implements Driver {
      *     arguments user provided,
      */
     private static String buildNewURI(
+            boolean isSrvProtocol,
             List<String> hosts,
             String user,
             char[] password,
@@ -635,8 +637,8 @@ public class MongoDriver implements Driver {
             Properties options)
             throws SQLException {
         // The returned URI should be of the following format:
-        //"mongodb://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
-        String ret = "mongodb://";
+        //"mongodb(+srv)?://[user:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[authDatabase][?options]]")
+        String ret = isSrvProtocol ? "mongodb+srv://" : "mongodb://";
         if (user != null) {
             ret += sqlURLEncode(user);
             if (password != null) {
