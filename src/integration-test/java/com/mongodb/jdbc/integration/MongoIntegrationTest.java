@@ -416,7 +416,7 @@ public class MongoIntegrationTest {
         p.setProperty("database", "test");
 
         // TODO: SQL-2294: Support direct cluster mode (This should no longer expect an exception after that).
-        assertThrows(java.util.concurrent.ExecutionException.class, () -> {
+        assertThrows(java.sql.SQLException.class, () -> {
             MongoConnection conn = (MongoConnection) DriverManager.getConnection(fullURI, p);
         });
     }
