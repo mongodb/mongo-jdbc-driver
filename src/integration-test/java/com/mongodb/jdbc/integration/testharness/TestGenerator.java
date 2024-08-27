@@ -17,7 +17,7 @@
 package com.mongodb.jdbc.integration.testharness;
 
 import com.mongodb.jdbc.MongoResultSetMetaData;
-import com.mongodb.jdbc.integration.MongoIntegrationTest;
+import com.mongodb.jdbc.integration.ADFIntegrationTest;
 import com.mongodb.jdbc.integration.testharness.models.TestEntry;
 import java.io.File;
 import java.io.FileWriter;
@@ -151,9 +151,9 @@ public class TestGenerator {
 
     public static void main(String[] args)
             throws SQLException, IOException, InvocationTargetException, IllegalAccessException {
-        MongoIntegrationTest integrationTest = new MongoIntegrationTest();
+        ADFIntegrationTest integrationTest = new ADFIntegrationTest();
         List<TestEntry> tests =
-                IntegrationTestUtils.loadTestConfigs(MongoIntegrationTest.TEST_DIRECTORY);
+                IntegrationTestUtils.loadTestConfigs(ADFIntegrationTest.TEST_DIRECTORY);
         for (TestEntry testEntry : tests) {
             try (Connection conn = integrationTest.getBasicConnection(testEntry.db, null)) {
                 if (testEntry.skip_reason != null) {
