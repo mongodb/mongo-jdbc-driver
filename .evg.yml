@@ -365,18 +365,16 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -e
-        
-        # Get current working directory
-        PWD=$(pwd)
-        
-        ls "${PWD}/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so"
+
         # Test loading library from path specified in ENV variable
-        MONGOSQL_TRANSLATE_PATH="${PWD}/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
+        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
+            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
         
         # Move library file
+        mkdir -p build/classes/java/
         mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
         
-        # Test loading library from same directory as the JDBC driver
+        # Test loading library from same directory as where the JDBC driver is located
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
   "run integration test":
