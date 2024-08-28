@@ -80,7 +80,7 @@ tasks:
 
   - name: "test-mongo-sql-translate"
     commands:
-      - func: "run mongo sql translate test"
+      - func: "run mongosqltranslate library load test"
 
   - name: "test-integration"
     commands:
@@ -356,7 +356,7 @@ functions:
           ${PREPARE_SHELL}
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
 
-  "run mongo sql translate test":
+  "run mongosqltranslate library load test":
     command: shell.exec
     type: test
     params:
