@@ -267,5 +267,29 @@ def getAbbreviatedGitVersion() {
     out.toString().substring(1).trim()
 }
 
+tasks.register('runMongoSQLTranslateLibTest', Test) {
+    description = 'Runs MongoSQLTranslateLibTest'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    useJUnitPlatform()
+
+    filter {
+        if (project.hasProperty('testMethod')) {
+            includeTestsMatching "*MongoSQLTranslateLibTest.$testMethod"
+        } else {
+            includeTestsMatching "*MongoSQLTranslateLibTest"
+        }
+    }
+}
+
+tasks.test {
+    filter {
+        excludeTestsMatching "*MongoSQLTranslateLibTest"
+    }
+}
+
 apply from: 'gradle/publish.gradle'
 apply from: 'gradle/deploy.gradle'

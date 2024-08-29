@@ -45,6 +45,7 @@ buildvariants:
     tasks:
       - name: "build"
       - name: "test-unit"
+      - name: "test-mongo-sql-translate"
       - name: "test-integration"
 
   - name: amazon2-arm64-jdk-11
@@ -76,6 +77,10 @@ tasks:
   - name: "test-unit"
     commands:
       - func: "run unit test"
+
+  - name: "test-mongo-sql-translate"
+    commands:
+      - func: "run mongosqltranslate library load test"
 
   - name: "test-integration"
     commands:
@@ -350,6 +355,27 @@ functions:
       script: |
           ${PREPARE_SHELL}
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
+
+  "run mongosqltranslate library load test":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        set -e
+        
+        # Test loading library from path specified in ENV variable
+        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
+            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
+        
+        # Move library file to where MongoDriver class is located
+        mkdir -p build/classes/java/
+        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
+        
+        # Test loading library from same directory as where the JDBC driver is located
+        ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
   "run integration test":
     command: shell.exec
