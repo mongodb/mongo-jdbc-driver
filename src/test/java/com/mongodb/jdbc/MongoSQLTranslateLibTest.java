@@ -26,6 +26,9 @@ import org.junit.jupiter.api.Test;
 public class MongoSQLTranslateLibTest {
     @BeforeEach
     void setup() throws Exception {
+        // Reset the mongoSqlTranslateLibraryLoaded flag to false before each test case.
+        // This ensures that the flag starts with a known value at the start of the test
+        // as it can be set during the static initialization or test interference.
         Field field = MongoDriver.class.getDeclaredField("mongoSqlTranslateLibraryLoaded");
         field.setAccessible(true);
         field.set(null, false);
