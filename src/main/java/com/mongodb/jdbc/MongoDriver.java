@@ -164,59 +164,32 @@ public class MongoDriver implements Driver {
     }
 
     /**
-     * Attempts to initialize the MongoSQL Translate library. This method tries to load the library
-     * from various paths and sets a flag indicating success or failure.
+     * Attempts to initialize the MongoSQL Translate library and sets mongoSqlTranslateLibraryLoaded
+     * to indicate success or failure.
      */
     private static void initializeMongoSqlTranslateLibrary() {
         try {
-            String[] libraryPaths = resolveLibraryPaths();
-            for (String path : libraryPaths) {
-                if (loadMongoSqlTranslateLibrary(path)) {
-                    mongoSqlTranslateLibraryLoaded = true;
-                    return;
-                }
+            String libraryPath = getLibraryPath();
+            if (libraryPath != null) {
+                System.load(libraryPath);
+                mongoSqlTranslateLibraryLoaded = true;
+            } else {
+                mongoSqlTranslateLibraryLoaded = false;
             }
-            mongoSqlTranslateLibraryLoaded = false;
-        } catch (Exception e) {
-            mongoSqlTranslateLibraryLoaded = false;
-        }
-    }
-
-    /**
-     * Attempts to load the MongoSQL Translate library from a specific path.
-     *
-     * @param libraryPath The path to the library file
-     * @return true if the library was successfully loaded, false otherwise
-     */
-    private static boolean loadMongoSqlTranslateLibrary(String libraryPath) {
-        try {
-            System.load(libraryPath);
-            return true;
         } catch (Throwable t) {
-            return false;
+            mongoSqlTranslateLibraryLoaded = false;
         }
     }
 
-    // Resolves the potential paths where the MongoSQL Translate library are expected be located.
-    private static String[] resolveLibraryPaths() throws Exception {
-        String driverPath = getDriverPath();
-        String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
-
-        List<String> paths = new ArrayList<>();
-        if (driverPath != null) {
-            paths.add(driverPath);
+    private static String getLibraryPath() {
+        try {
+            URL url = MongoDriver.class.getProtectionDomain().getCodeSource().getLocation();
+            Path jarPath = Paths.get(url.toURI());
+            Path jarDir = jarPath.getParent();
+            return jarDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
+        } catch (Exception e) {
+            return null;
         }
-        if (envPath != null && !envPath.isEmpty()) {
-            paths.add(envPath);
-        }
-        return paths.toArray(new String[0]);
-    }
-
-    private static String getDriverPath() throws Exception {
-        URL url = MongoDriver.class.getProtectionDomain().getCodeSource().getLocation();
-        Path jarPath = Paths.get(url.toURI());
-        Path jarDir = jarPath.getParent();
-        return jarDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
     }
 
     @Override

@@ -49,23 +49,4 @@ public class MongoSQLTranslateLibTest {
         MongosqlLibTest test = new MongosqlLibTest();
         test.testRunCommand();
     }
-
-    @Test
-    void testLibraryLoadingWithEnvironmentVariable() throws Exception {
-        String envPath = System.getenv(MongoDriver.MONGOSQL_TRANSLATE_PATH);
-        assertNotNull(envPath, "MONGOSQL_TRANSLATE_PATH should be set");
-
-        // Test initializeMongoSqlTranslateLibrary, with Environment variable set it should find the library
-        Method initMethod =
-                MongoDriver.class.getDeclaredMethod("initializeMongoSqlTranslateLibrary");
-        initMethod.setAccessible(true);
-        initMethod.invoke(null);
-
-        assertTrue(
-                MongoDriver.isMongoSqlTranslateLibraryLoaded(),
-                "Library should be loaded when MONGOSQL_TRANSLATE_PATH is set");
-
-        MongosqlLibTest test = new MongosqlLibTest();
-        test.testRunCommand();
-    }
 }
