@@ -184,9 +184,9 @@ public class MongoDriver implements Driver {
     private static String getLibraryPath() {
         try {
             URL url = MongoDriver.class.getProtectionDomain().getCodeSource().getLocation();
-            Path jarPath = Paths.get(url.toURI());
-            Path jarDir = jarPath.getParent();
-            return jarDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
+            Path driverPath = Paths.get(url.toURI());
+            Path driverDir = driverPath.getParent();
+            return driverDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
         } catch (Exception e) {
             return null;
         }
