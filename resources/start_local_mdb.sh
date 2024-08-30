@@ -46,7 +46,7 @@ start_mdb_and_create_user() {
   $5/bin/mongod --dbpath $db_path --port $2 &
 
   echo "creating user"
-  ./mongosh test --eval "db.createUser({user: '$3', pwd: '$4', roles: ['readWrite']})"
+  ./mongosh test --port $2 --eval "db.createUser({user: '$3', pwd: '$4', roles: ['readWrite']})"
 }
 
 community_mdb_version="$1"
