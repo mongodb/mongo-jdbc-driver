@@ -77,7 +77,7 @@ public class DCIntegrationTest {
         Properties p = new java.util.Properties();
         p.setProperty("user", user);
         p.setProperty("password", pwd);
-        p.setProperty("authSource", "admin");
+        p.setProperty("authSource", "test");
         p.setProperty("database", "test");
 
         return new Pair<>(uri, p);
