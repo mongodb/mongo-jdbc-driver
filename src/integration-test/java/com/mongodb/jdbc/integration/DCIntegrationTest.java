@@ -18,7 +18,7 @@ public class DCIntegrationTest {
 
     /** Tests that the driver can work with SRV-style URIs. */
     @Test
-    public void testConnectWithSRVURI() {
+    public void testConnectWithSRVURI() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
         String mongoURI =
@@ -40,13 +40,8 @@ public class DCIntegrationTest {
         p.setProperty("authSource", authSource);
         p.setProperty("database", "test");
 
-        // TODO: SQL-2294: Support direct cluster mode (This should no longer expect an exception after that).
-        assertThrows(
-                java.sql.SQLException.class,
-                () -> {
-                    MongoConnection conn =
-                            (MongoConnection) DriverManager.getConnection(fullURI, p);
-                });
+        MongoConnection conn = (MongoConnection) DriverManager.getConnection(fullURI, p);
+        conn.close();
     }
 
     /**
