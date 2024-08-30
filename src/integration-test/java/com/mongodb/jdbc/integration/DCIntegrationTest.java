@@ -56,10 +56,10 @@ public class DCIntegrationTest {
 
         String uri = "jdbc:mongodb://localhost:" + mongoPort + "/test";
 
-        String user = System.getenv("MDB_LOCAL_USER");
-        assertNotNull(user, "MDB_LOCAL_USER variable not set in environment");
-        String pwd = System.getenv("MDB_LOCAL_PWD");
-        assertNotNull(pwd, "MDB_LOCAL_PWD variable not set in environment");
+        String user = System.getenv("LOCAL_MDB_USER");
+        assertNotNull(user, "LOCAL_MDB_USER variable not set in environment");
+        String pwd = System.getenv("LOCAL_MDB_PWD");
+        assertNotNull(pwd, "LOCAL_MDB_PWD variable not set in environment");
 
         Properties p = new java.util.Properties();
         p.setProperty("user", user);
