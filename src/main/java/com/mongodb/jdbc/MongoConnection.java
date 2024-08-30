@@ -78,6 +78,7 @@ public class MongoConnection implements Connection {
     protected String url;
     protected String user;
     protected boolean isClosed;
+    protected MongoClusterType clusterType;
     private MongoLogger logger;
     protected int connectionId;
     private static AtomicInteger connectionCounter = new AtomicInteger();
@@ -89,6 +90,12 @@ public class MongoConnection implements Connection {
     private boolean extJsonMode;
     private UuidRepresentation uuidRepresentation;
     private String appName;
+
+    protected enum MongoClusterType {
+        AtlasDataFederation,
+        Community,
+        Enterprise
+    }
 
     public MongoConnection(
             MongoClient mongoClient, MongoConnectionProperties connectionProperties) {
@@ -524,6 +531,9 @@ public class MongoConnection implements Connection {
     class ConnValidation implements Callable<Void> {
         @Override
         public Void call() throws SQLException {
+            // TODO: Update this to call BuildInfo and determine the cluster type.
+            //   - Community is disallowed (throw SQLException("community disallowed"))
+            //   - Enterprise and ADF are ok; store in clusterType field
             Statement statement = createStatement();
             boolean resultExists = statement.execute("SELECT 1");
             if (!resultExists) {
