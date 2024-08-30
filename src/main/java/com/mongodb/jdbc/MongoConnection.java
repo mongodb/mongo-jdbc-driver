@@ -197,6 +197,32 @@ public class MongoConnection implements Connection {
         }
     }
 
+    private MongoClusterType determineClusterType() {
+        BsonDocument buildInfoCmd = new BsonDocument();
+        buildInfoCmd.put("buildInfo", new BsonInt32(1));
+
+        // The { buildInfo: 1 } command returns information that indicates
+        // the type of the cluster.
+        BuildInfo buildInfoRes = mongoClient
+                .getDatabase("admin")
+                .withCodecRegistry(MongoDriver.registry)
+                .runCommand(buildInfoCmd, BuildInfo.class);
+
+        // If the "dataLake" field is present, it must be an ADF cluster.
+        if (buildInfoRes.dataLake != null) {
+            return MongoClusterType.AtlasDataFederation;
+        } else if (buildInfoRes.modules != null) {
+            // Otherwise, if "modules" is present and contains "enterprise",
+            // this must be an Enterprise cluster.
+            if (buildInfoRes.modules.contains("enterprise")) {
+                return MongoClusterType.Enterprise;
+            }
+        }
+
+        // Otherwise, this is a Community cluster.
+        return MongoClusterType.Community;
+    }
+
     @Override
     public Statement createStatement() throws SQLException {
         checkConnection();
@@ -531,15 +557,15 @@ public class MongoConnection implements Connection {
     class ConnValidation implements Callable<Void> {
         @Override
         public Void call() throws SQLException {
-            // TODO: Update this to call BuildInfo and determine the cluster type.
-            //   - Community is disallowed (throw SQLException("community disallowed"))
-            //   - Enterprise and ADF are ok; store in clusterType field
-            Statement statement = createStatement();
-            boolean resultExists = statement.execute("SELECT 1");
-            if (!resultExists) {
-                // no resultSet returned
-                throw new SQLException("Connection error");
+            MongoClusterType actualClusterType = determineClusterType();
+
+            if (actualClusterType == MongoClusterType.Community) {
+                // Community edition is disallowed
+                throw new SQLException("Community edition detected. The JDBC driver is intended for use with MongoDB Enterprise edition or Atlas Data Federation.");
             }
+
+            // Set the cluster type.
+            clusterType = actualClusterType;
             return null;
         }
     }
