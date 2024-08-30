@@ -45,7 +45,10 @@ start_mdb_and_create_user() {
   mkdir -p $db_path
   $5/bin/mongod --dbpath $db_path --port $2 &
 
-  echo "creating user"
+  echo "waiting 5 seconds to allow mongod to finish starting before connecting"
+  sleep 5
+
+  echo "creating user for $1"
   ./mongosh test --port $2 --eval "db.createUser({user: '$3', pwd: '$4', roles: ['readWrite']})"
 }
 
