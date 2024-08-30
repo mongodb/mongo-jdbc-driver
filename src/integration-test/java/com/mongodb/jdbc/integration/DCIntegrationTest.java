@@ -1,17 +1,30 @@
+/*
+ * Copyright 2024-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mongodb.jdbc.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.Pair;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.function.Executable;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DCIntegrationTest {
@@ -79,7 +92,8 @@ public class DCIntegrationTest {
                 java.sql.SQLException.class,
                 () -> {
                     MongoConnection conn =
-                            (MongoConnection) DriverManager.getConnection(info.left(), info.right());
+                            (MongoConnection)
+                                    DriverManager.getConnection(info.left(), info.right());
                 });
     }
 
@@ -87,7 +101,8 @@ public class DCIntegrationTest {
     @Test
     public void testConnectionToEnterpriseServerSucceeds() throws SQLException {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
-        MongoConnection conn = (MongoConnection) DriverManager.getConnection(info.left(), info.right());
+        MongoConnection conn =
+                (MongoConnection) DriverManager.getConnection(info.left(), info.right());
         conn.close();
     }
 }

@@ -203,10 +203,11 @@ public class MongoConnection implements Connection {
 
         // The { buildInfo: 1 } command returns information that indicates
         // the type of the cluster.
-        BuildInfo buildInfoRes = mongoClient
-                .getDatabase("admin")
-                .withCodecRegistry(MongoDriver.registry)
-                .runCommand(buildInfoCmd, BuildInfo.class);
+        BuildInfo buildInfoRes =
+                mongoClient
+                        .getDatabase("admin")
+                        .withCodecRegistry(MongoDriver.registry)
+                        .runCommand(buildInfoCmd, BuildInfo.class);
 
         // If the "dataLake" field is present, it must be an ADF cluster.
         if (buildInfoRes.dataLake != null) {
@@ -559,9 +560,20 @@ public class MongoConnection implements Connection {
         public Void call() throws SQLException {
             MongoClusterType actualClusterType = determineClusterType();
 
-            if (actualClusterType == MongoClusterType.Community) {
-                // Community edition is disallowed
-                throw new SQLException("Community edition detected. The JDBC driver is intended for use with MongoDB Enterprise edition or Atlas Data Federation.");
+            switch (actualClusterType) {
+                case AtlasDataFederation:
+                    break;
+                case Community:
+                    // Community edition is disallowed.
+                    throw new SQLException(
+                            "Community edition detected. The JDBC driver is intended for use with MongoDB Enterprise edition or Atlas Data Federation.");
+                case Enterprise:
+                    // Ensure the library is loaded if Enterprise edition detected.
+                    if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
+                        throw new SQLException(
+                                "Enterprise edition detected, but mongosqltranslate library not found");
+                    }
+                    break;
             }
 
             // Set the cluster type.
