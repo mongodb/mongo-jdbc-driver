@@ -580,6 +580,10 @@ public class MongoConnection implements Connection {
                                 "Enterprise edition detected, but mongosqltranslate library not found");
                     }
                     break;
+                case UnknownTarget:
+                    // Target could not be determined.
+                    throw new SQLException(
+                            "Unknown cluster/target type detected. The JDBC driver is intended for use with MongoDB Enterprise edition or Atlas Data Federation.");
             }
 
             // Set the cluster type.
