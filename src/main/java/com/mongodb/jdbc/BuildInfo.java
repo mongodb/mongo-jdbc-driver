@@ -24,4 +24,5 @@ public class BuildInfo {
     public String version;
     public Set<String> modules;
     public BsonValue dataLake;
+    public int ok;
 }

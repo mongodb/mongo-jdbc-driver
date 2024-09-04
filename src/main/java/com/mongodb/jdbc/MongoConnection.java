@@ -94,7 +94,8 @@ public class MongoConnection implements Connection {
     protected enum MongoClusterType {
         AtlasDataFederation,
         Community,
-        Enterprise
+        Enterprise,
+        UnknownTarget
     }
 
     public MongoConnection(
@@ -208,6 +209,11 @@ public class MongoConnection implements Connection {
                         .getDatabase("admin")
                         .withCodecRegistry(MongoDriver.registry)
                         .runCommand(buildInfoCmd, BuildInfo.class);
+
+        // if "ok" is not 1, then the target type could not be determined.
+        if (buildInfoRes.ok != 1) {
+            return MongoClusterType.UnknownTarget;
+        }
 
         // If the "dataLake" field is present, it must be an ADF cluster.
         if (buildInfoRes.dataLake != null) {
