@@ -471,11 +471,15 @@ functions:
         ;;
         esac
         
+        # Move library file to where MongoDriver class is located
+        mkdir -p build/classes/java/
+        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
+        
         # Download and run local community and enterprise mongods.
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
         
         # Run the tests.
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
