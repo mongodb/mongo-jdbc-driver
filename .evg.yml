@@ -458,14 +458,9 @@ functions:
           mdb_version_ent="mongodb-linux-x86_64-enterprise-ubuntu2204-7.0.14"
           arch="x64"
         ;;
-        amazon2-arm64-jdk-11)
-          mdb_version_com="mongodb-linux-aarch64-amazon2-7.0.14"
-          mdb_version_ent="mongodb-linux-aarch64-enterprise-amazon2-7.0.14"
-          arch="arm64"
-        ;;
         *)
           echo "ERROR: invalid value for \${_platform}: '$_platform'"
-          echo "Allowed values: 'amazon2-arm64-jdk-11', 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+          echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
           exit 1
         ;;
         esac
@@ -478,47 +473,12 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
         
         # Run the tests.
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} integrationTest \
+        ./gradlew integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
+        EXITCODE=$?
 
         echo "Gradle process started with PID $GRADLE_PID"
-
-        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-        # This monitoring approach will detect build completion or failure even when the Gradle 
-        # process doesn't terminate properly and allows the task to complete.
-        SECONDS=0
-        TIMEOUT=1800  # 30 minute timeout
-
-        while true; do
-          if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
-              echo "Build successful!"
-              EXITCODE=0
-              break
-          fi
-
-          if grep -q "BUILD FAILED" gradle_output.log; then
-              echo "Build failed!"
-              EXITCODE=1
-              break
-          fi
-    
-          if (( SECONDS > TIMEOUT )); then
-              echo "$TIMEOUT second timeout reached. Exiting with failure."
-              EXITCODE=1
-              break
-          fi
-    
-          # Check if Gradle process is still running
-          if ! kill -0 $GRADLE_PID 2>/dev/null; then
-              echo "Gradle process has finished."
-              wait $GRADLE_PID
-              EXITCODE=$?
-              break
-          fi
-    
-          sleep 5
-        done
 
         cat gradle_output.log
       
