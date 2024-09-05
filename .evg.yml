@@ -46,7 +46,8 @@ buildvariants:
       - name: "build"
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
-      - name: "test-integration"
+      - name: "test-adf-integration"
+      - name: "test-dc-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -56,7 +57,7 @@ buildvariants:
     tasks:
       - name: "build"
       - name: "test-unit"
-      - name: "test-integration"
+      - name: "test-adf-integration"
 
   - name: release
     display_name: "Release"
@@ -82,9 +83,13 @@ tasks:
     commands:
       - func: "run mongosqltranslate library load test"
 
-  - name: "test-integration"
+  - name: "test-adf-integration"
     commands:
-      - func: "run integration test"
+      - func: "run adf integration test"
+
+  - name: "test-dc-integration"
+    commands:
+      - func: "run dc integration test"
 
   - name: "test-smoke"
     commands:
@@ -377,7 +382,7 @@ functions:
         # Test loading library from same directory as where the JDBC driver is located
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
-  "run integration test":
+  "run adf integration test":
     command: shell.exec
     type: test
     params:
@@ -388,7 +393,7 @@ functions:
           ./resources/run_adf.sh start &&
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
-              -x test  > gradle_output.log 2>&1 &
+              -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
           GRADLE_PID=$!
 
           echo "Gradle process started with PID $GRADLE_PID"
@@ -437,6 +442,85 @@ functions:
           
           echo "Integration test exit code: $EXITCODE"
           exit $EXITCODE
+
+  "run dc integration test":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+
+        case ${_platform} in
+        ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
+          mdb_version_com="mongodb-linux-x86_64-ubuntu2204-7.0.14"
+          mdb_version_ent="mongodb-linux-x86_64-enterprise-ubuntu2204-7.0.14"
+          arch="x64"
+        ;;
+        *)
+          echo "ERROR: invalid value for \${_platform}: '$_platform'"
+          echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+          exit 1
+        ;;
+        esac
+        
+        # Move library file to where MongoDriver class is located
+        mkdir -p build/classes/java/
+        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
+        
+        # Download and run local community and enterprise mongods.
+        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
+        
+        # Run the tests.
+        ./gradlew integrationTest \
+            -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
+
+        echo "Gradle process started with PID $GRADLE_PID"
+        
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
+        while true; do
+          if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+              echo "Build successful!"
+              EXITCODE=0
+              break
+          fi
+          if grep -q "BUILD FAILED" gradle_output.log; then
+              echo "Build failed!"
+              EXITCODE=1
+              break
+          fi
+        
+          if (( SECONDS > TIMEOUT )); then
+              echo "$TIMEOUT second timeout reached. Exiting with failure."
+              EXITCODE=1
+              break
+          fi
+
+          # Check if Gradle process is still running
+          if ! kill -0 $GRADLE_PID 2>/dev/null; then
+              echo "Gradle process has finished."
+              wait $GRADLE_PID
+              EXITCODE=$?
+              break
+          fi
+
+          sleep 5
+        done
+
+        cat gradle_output.log
+      
+        kill $GRADLE_PID 2>/dev/null || true
+      
+        pkill mongod
+      
+        echo "Integration test exit code: $EXITCODE"
+        exit $EXITCODE
 
   "trace artifacts":
     command: papertrail.trace
@@ -540,6 +624,10 @@ functions:
             export SRV_TEST_USER=${srv_test_user}
             export SRV_TEST_PWD=${srv_test_pwd}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
+            export LOCAL_MDB_PORT_COM=${local_mdb_port_com}
+            export LOCAL_MDB_PORT_ENT=${local_mdb_port_ent}
+            export LOCAL_MDB_USER=${local_mdb_user}
+            export LOCAL_MDB_PWD=${local_mdb_pwd}
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
