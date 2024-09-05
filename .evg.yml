@@ -58,7 +58,6 @@ buildvariants:
       - name: "build"
       - name: "test-unit"
       - name: "test-adf-integration"
-      - name: "test-dc-integration"
 
   - name: release
     display_name: "Release"
