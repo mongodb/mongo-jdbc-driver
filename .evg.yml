@@ -84,10 +84,12 @@ tasks:
 
   - name: "test-integration"
     commands:
+      - func: "generate github token"
       - func: "run integration test"
 
   - name: "test-smoke"
     commands:
+      - func: "generate github token"
       - func: "run smoke test"
 
   - name: "publish-maven"
@@ -377,10 +379,19 @@ functions:
         # Test loading library from same directory as where the JDBC driver is located
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
+  "generate github token":
+    command: github.generate_token
+    params:
+      owner: 10gen
+      repo: mongohouse
+      expansion_name: github_token
+
   "run integration test":
     command: shell.exec
     type: test
     params:
+      env:
+        GITHUB_TOKEN: "${github_token}"
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
@@ -453,6 +464,8 @@ functions:
     command: shell.exec
     type: test
     params:
+      env:
+        GITHUB_TOKEN: "${github_token}"
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
