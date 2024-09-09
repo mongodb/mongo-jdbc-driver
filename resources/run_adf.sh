@@ -50,7 +50,7 @@ GO="$GOBINDIR/go"
 PATH=$GOBINDIR:$PATH
 
 # GITHUB_TOKEN must be set for cloning 10gen/mongohouse repository from Evergreen hosts, and the
-# dependencies needed to built it.
+# dependencies needed to build it.
 # If unset, it will default to using the SSH private key on the local system.
 if [[ ${GITHUB_TOKEN} ]]; then
   MONGOHOUSE_URI=https://x-access-token:${GITHUB_TOKEN}@github.com/10gen/mongohouse.git
