@@ -18,8 +18,6 @@ package com.mongodb.jdbc.integration;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -55,7 +53,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MongoIntegrationTest {
+public class ADFIntegrationTest {
     private static final String CURRENT_DIR =
             Paths.get(".").toAbsolutePath().normalize().toString();
 
@@ -230,9 +228,9 @@ public class MongoIntegrationTest {
     private void addSimpleQueryExecTasks(List<Callable<Void>> tasks, Connection conn)
             throws SQLException {
         // Connection with no logging and a valid query to execute.
-        tasks.add(new MongoIntegrationTest.SimpleQueryExecutor(conn, "SELECT 1"));
+        tasks.add(new ADFIntegrationTest.SimpleQueryExecutor(conn, "SELECT 1"));
         // Connection with no logging and an invalid query to execute.
-        tasks.add(new MongoIntegrationTest.SimpleQueryExecutor(conn, "INVALID QUERY TO EXECUTE"));
+        tasks.add(new ADFIntegrationTest.SimpleQueryExecutor(conn, "INVALID QUERY TO EXECUTE"));
     }
 
     /**
@@ -391,38 +389,5 @@ public class MongoIntegrationTest {
             }
         }
         assertEquals(4, uuidValues.size(), "Expected 4 different UUID values (including standard)");
-    }
-
-    /** Tests that the driver can work with SRV-style URIs. */
-    @Test
-    public void testConnectWithSRVURI() throws SQLException {
-        String mongoHost = System.getenv("SRV_TEST_HOST");
-        assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
-        String mongoURI =
-                "mongodb+srv://"
-                        + mongoHost
-                        + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
-        String fullURI = "jdbc:" + mongoURI;
-
-        String user = System.getenv("SRV_TEST_USER");
-        assertNotNull(user, "SRV_TEST_USER variable not set in environment");
-        String pwd = System.getenv("SRV_TEST_PWD");
-        assertNotNull(pwd, "SRV_TEST_PWD variable not set in environment");
-        String authSource = System.getenv("SRV_TEST_AUTH_DB");
-        assertNotNull(authSource, "SRV_TEST_AUTH_DB variable not set in environment");
-
-        Properties p = new java.util.Properties();
-        p.setProperty("user", user);
-        p.setProperty("password", pwd);
-        p.setProperty("authSource", authSource);
-        p.setProperty("database", "test");
-
-        // TODO: SQL-2294: Support direct cluster mode (This should no longer expect an exception after that).
-        assertThrows(
-                java.sql.SQLException.class,
-                () -> {
-                    MongoConnection conn =
-                            (MongoConnection) DriverManager.getConnection(fullURI, p);
-                });
     }
 }
