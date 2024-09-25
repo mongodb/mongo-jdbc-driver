@@ -94,7 +94,8 @@ public class MongoRunCmd {
      * @throws SQLException If an error occurs during command execution.
      */
     public boolean checkDriverVersion() throws SQLException {
-        Document options = new Document("driverVersion", MongoDriver.getVersion()).append("odbcDriver", false);
+        Document options =
+                new Document("driverVersion", MongoDriver.getVersion()).append("odbcDriver", false);
         Document command = new Document("command", "checkDriverVersion").append("options", options);
 
         Document responseDoc = runCommand(command);
