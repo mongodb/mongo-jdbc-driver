@@ -191,6 +191,10 @@ public class MongoDriver implements Driver {
         }
     }
 
+    public static CodecRegistry getCodecRegistry() {
+        return registry;
+    }
+
     // Resolves the potential paths where the MongoSQL Translate library are expected be located.
     private static String[] resolveLibraryPaths() throws Exception {
         String libraryPath = getLibraryPath();

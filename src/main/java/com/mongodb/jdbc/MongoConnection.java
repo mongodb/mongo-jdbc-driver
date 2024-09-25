@@ -90,6 +90,7 @@ public class MongoConnection implements Connection {
     private boolean extJsonMode;
     private UuidRepresentation uuidRepresentation;
     private String appName;
+    private MongoRunCmd runCmd;
 
     protected enum MongoClusterType {
         AtlasDataFederation,
@@ -137,6 +138,7 @@ public class MongoConnection implements Connection {
         this.uuidRepresentation =
                 connectionProperties.getConnectionString().getUuidRepresentation();
         this.appName = buildAppName(connectionProperties);
+        this.runCmd = new MongoRunCmd(this);
 
         this.isClosed = false;
     }
@@ -177,6 +179,10 @@ public class MongoConnection implements Connection {
         }
 
         return settingsBuilder.build();
+    }
+
+    public MongoRunCmd getRunCmd() {
+        return runCmd;
     }
 
     protected MongoClient getMongoClient() {
@@ -578,6 +584,14 @@ public class MongoConnection implements Connection {
                     if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
                         throw new SQLException(
                                 "Enterprise edition detected, but mongosqltranslate library not found");
+                    }
+                    String mongosqlTranslateVersion = runCmd.getMongosqlTranslateVersion();
+                    if (!runCmd.checkDriverVersion()) {
+                        throw new SQLException(
+                                "Incompatible driver version. The JDBC driver version, "
+                                        + MongoDriver.getVersion()
+                                        + ", is not compatible with mongosqltranslate library version, "
+                                        + mongosqlTranslateVersion);
                     }
                     break;
                 case UnknownTarget:

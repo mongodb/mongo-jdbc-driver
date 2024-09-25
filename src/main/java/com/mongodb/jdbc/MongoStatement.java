@@ -18,17 +18,16 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoExecutionTimeoutException;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.sql.*;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
+import java.util.stream.Collectors;
+import org.bson.*;
 
 @AutoLoggable
 public class MongoStatement implements Statement {
@@ -187,43 +186,179 @@ public class MongoStatement implements Statement {
         return resultSet != null;
     }
 
+    private ResultSet executeAtlasDataFederationQuery(String sql) throws SQLException {
+        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
+
+        BsonDocument sqlStage = constructQueryDocument(sql);
+        MongoIterable<BsonDocument> iterable =
+                currentDB
+                        .aggregate(Collections.singletonList(sqlStage), BsonDocument.class)
+                        .maxTime(maxQuerySec, TimeUnit.SECONDS);
+
+        if (fetchSize != 0) {
+            iterable = iterable.batchSize(fetchSize);
+        }
+
+        MongoCursor<BsonDocument> cursor = iterable.cursor();
+        MongoJsonSchemaResult schemaResult =
+                currentDB.runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+        MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
+        List<List<String>> selectOrder = schemaResult.selectOrder;
+
+        resultSet =
+                new MongoResultSet(
+                        this,
+                        cursor,
+                        schema,
+                        selectOrder,
+                        conn.getExtJsonMode(),
+                        conn.getUuidRepresentation());
+
+        return resultSet;
+    }
+
+    private ResultSet executeDirectClusterQuery(String sql) throws SQLException {
+        Map<String, List<String>> namespaces =
+                conn.getRunCmd().getNamespaces(currentDB.getName(), sql);
+
+        if (namespaces.size() > 1) {
+            throw new SQLException(
+                    "Multiple databases are involved in the query. Only one database can be processed.");
+        }
+
+        String dbName = currentDB.getName();
+        List<String> collections = namespaces.get(dbName);
+        if (collections == null) {
+            throw new SQLException("No collections found for the current database: " + dbName);
+        }
+
+        Document catalogDoc = buildCatalogDocument(dbName, collections);
+        // Setting excludeNamespaces and relaxSchemaChecking to default values false. These options are not currently
+        // handled in the JDBC driver
+        Document translateResponseDoc =
+                conn.getRunCmd().translate(sql, dbName, false, false, catalogDoc);
+
+        if (translateResponseDoc.containsKey("error")) {
+            String errorMsg = translateResponseDoc.getString("error");
+            throw new SQLException("Error in translate command response: " + errorMsg);
+        }
+
+        List<BsonDocument> pipeline =
+                translateResponseDoc
+                        .getList("pipeline", Document.class)
+                        .stream()
+                        .map(Document::toBsonDocument)
+                        .collect(Collectors.toList());
+
+        Document resultSetSchemaDoc = translateResponseDoc.get("result_set_schema", Document.class);
+        MongoJsonSchema translatedSchema = MongoJsonSchema.fromDocument(resultSetSchemaDoc);
+        List<List<String>> translatedSelectOrder =
+                parseSelectOrder(translateResponseDoc.getList("select_order", Object.class));
+        String targetCollection = translateResponseDoc.getString("target_collection");
+
+        MongoIterable<BsonDocument> iterable =
+                currentDB
+                        .getCollection(targetCollection)
+                        .aggregate(pipeline, BsonDocument.class)
+                        .maxTime(maxQuerySec, TimeUnit.SECONDS);
+
+        if (fetchSize != 0) {
+            iterable = iterable.batchSize(fetchSize);
+        }
+
+        resultSet =
+                new MongoResultSet(
+                        this,
+                        iterable.cursor(),
+                        translatedSchema,
+                        translatedSelectOrder,
+                        conn.getExtJsonMode(),
+                        conn.getUuidRepresentation());
+
+        return resultSet;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql);
-        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
-            MongoIterable<BsonDocument> iterable =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), BsonDocument.class)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            if (fetchSize != 0) {
-                iterable = iterable.batchSize(fetchSize);
+            if (conn.clusterType == MongoConnection.MongoClusterType.AtlasDataFederation) {
+                return executeAtlasDataFederationQuery(sql);
+            } else if (conn.clusterType == MongoConnection.MongoClusterType.Enterprise) {
+                return executeDirectClusterQuery(sql);
+            } else {
+                throw new SQLException("Unsupported cluster type: " + conn.clusterType);
             }
-
-            MongoJsonSchemaResult schemaResult =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
-
-            MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
-            List<List<String>> selectOrder = schemaResult.selectOrder;
-            resultSet =
-                    new MongoResultSet(
-                            this,
-                            iterable.cursor(),
-                            schema,
-                            selectOrder,
-                            conn.getExtJsonMode(),
-                            conn.getUuidRepresentation());
-            return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
         }
+    }
+
+    /**
+     * Parses the select_order field from the translate response.
+     *
+     * @param selectOrderObjs The list of select order objects.
+     * @return A list of select order lists.
+     * @throws SQLException If parsing fails.
+     */
+    private List<List<String>> parseSelectOrder(List<Object> selectOrderObjs) throws SQLException {
+        if (selectOrderObjs == null) {
+            throw new SQLException("'select_order' is missing or not a list.");
+        }
+
+        List<List<String>> translatedSelectOrder = new ArrayList<>();
+        for (Object obj : selectOrderObjs) {
+            if (obj instanceof List<?>) {
+                List<?> innerList = (List<?>) obj;
+                List<String> innerStringList = new ArrayList<>();
+                for (Object item : innerList) {
+                    if (item instanceof String) {
+                        innerStringList.add((String) item);
+                    } else {
+                        throw new SQLException("Invalid type in select_order inner list.");
+                    }
+                }
+                translatedSelectOrder.add(innerStringList);
+            } else {
+                throw new SQLException("Invalid type in select_order list.");
+            }
+        }
+        return translatedSelectOrder;
+    }
+
+    private Document buildCatalogDocument(String dbName, List<String> namespaces)
+            throws SQLException {
+        Document catalogDoc = new Document();
+        Document dbDoc = new Document();
+
+        for (String collection : namespaces) {
+
+            // Fetch the schema for the collection from __sql_schemas
+            Document schemaDoc =
+                    currentDB
+                            .getCollection("__sql_schemas")
+                            .find(new Document("_id", collection))
+                            .first();
+
+            if (schemaDoc == null) {
+                throw new SQLException(
+                        "Schema information not found for collection: " + collection);
+            }
+
+            Document collectionSchema = schemaDoc.get("schema", Document.class);
+            if (collectionSchema == null) {
+                throw new SQLException(
+                        "Schema field missing in schema document for collection: " + collection);
+            }
+
+            dbDoc.append(collection, collectionSchema);
+        }
+
+        catalogDoc.append(dbName, dbDoc);
+        return catalogDoc;
     }
 
     @Override
