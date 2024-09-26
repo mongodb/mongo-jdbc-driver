@@ -47,7 +47,8 @@ buildvariants:
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
-      - name: "test-dc-integration"
+      # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
+      # - name: "test-dc-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11

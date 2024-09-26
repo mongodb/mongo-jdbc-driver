@@ -181,8 +181,12 @@ public class MongoConnection implements Connection {
         return settingsBuilder.build();
     }
 
-    public MongoRunCmd getRunCmd() {
+    protected MongoRunCmd getRunCmd() {
         return runCmd;
+    }
+
+    protected MongoClusterType getClusterType() {
+        return clusterType;
     }
 
     protected MongoClient getMongoClient() {

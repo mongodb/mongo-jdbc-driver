@@ -201,7 +201,9 @@ public class MongoStatement implements Statement {
 
         MongoCursor<BsonDocument> cursor = iterable.cursor();
         MongoJsonSchemaResult schemaResult =
-                currentDB.runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+                currentDB
+                        .withCodecRegistry(MongoDriver.registry)
+                        .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
         MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
         List<List<String>> selectOrder = schemaResult.selectOrder;
 
@@ -285,9 +287,9 @@ public class MongoStatement implements Statement {
         closeExistingResultSet();
 
         try {
-            if (conn.clusterType == MongoConnection.MongoClusterType.AtlasDataFederation) {
+            if (conn.getClusterType() == MongoConnection.MongoClusterType.AtlasDataFederation) {
                 return executeAtlasDataFederationQuery(sql);
-            } else if (conn.clusterType == MongoConnection.MongoClusterType.Enterprise) {
+            } else if (conn.getClusterType() == MongoConnection.MongoClusterType.Enterprise) {
                 return executeDirectClusterQuery(sql);
             } else {
                 throw new SQLException("Unsupported cluster type: " + conn.clusterType);
