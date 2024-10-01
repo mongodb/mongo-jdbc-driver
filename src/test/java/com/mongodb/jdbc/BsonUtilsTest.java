@@ -18,24 +18,25 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.SQLException;
-import org.bson.Document;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
 import org.junit.jupiter.api.Test;
 
 class BsonUtilsTest {
 
     @Test
-    void testSerializeDeserialize() throws SQLException {
-        Document originalDoc =
-                new Document("name", "Test")
-                        .append("value", 123)
-                        .append("nested", new Document("key", "value"));
+    void testSerializeDeserialize() throws MongoSerializationException {
+        BsonDocument originalDoc =
+                new BsonDocument("name", new BsonString("Test"))
+                        .append("value", new BsonInt32(123))
+                        .append("nested", new BsonDocument("key", new BsonString("value")));
 
         byte[] serialized = BsonUtils.serialize(originalDoc);
         assertNotNull(serialized, "Serialized byte array should not be null");
         assertTrue(serialized.length > 0, "Serialized byte array should have content");
 
-        Document deserializedDoc = BsonUtils.deserialize(serialized);
+        BsonDocument deserializedDoc = BsonUtils.deserialize(serialized);
         assertNotNull(deserializedDoc, "Deserialized document should not be null");
         assertEquals(
                 originalDoc,
@@ -46,7 +47,7 @@ class BsonUtilsTest {
     @Test
     void testSerializeNullDocument() {
         assertThrows(
-                SQLException.class,
+                MongoSerializationException.class,
                 () -> BsonUtils.serialize(null),
                 "Serializing a null document should throw SQLException");
     }

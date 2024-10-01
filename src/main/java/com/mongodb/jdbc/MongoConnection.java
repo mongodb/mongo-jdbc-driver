@@ -28,6 +28,9 @@ import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.DisableAutoLogging;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.logging.MongoSimpleFormatter;
+import com.mongodb.jdbc.mongosql.GetMongosqlTranslateVersionResult;
+import com.mongodb.jdbc.mongosql.MongoSQLException;
+import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +93,7 @@ public class MongoConnection implements Connection {
     private boolean extJsonMode;
     private UuidRepresentation uuidRepresentation;
     private String appName;
-    private MongoRunCmd runCmd;
+    private MongoSQLTranslate mongosqlTranslate;
 
     protected enum MongoClusterType {
         AtlasDataFederation,
@@ -138,7 +141,7 @@ public class MongoConnection implements Connection {
         this.uuidRepresentation =
                 connectionProperties.getConnectionString().getUuidRepresentation();
         this.appName = buildAppName(connectionProperties);
-        this.runCmd = new MongoRunCmd(this);
+        this.mongosqlTranslate = new MongoSQLTranslate(this.logger);
 
         this.isClosed = false;
     }
@@ -181,8 +184,8 @@ public class MongoConnection implements Connection {
         return settingsBuilder.build();
     }
 
-    protected MongoRunCmd getRunCmd() {
-        return runCmd;
+    protected MongoSQLTranslate getMongosqlTranslate() {
+        return mongosqlTranslate;
     }
 
     protected MongoClusterType getClusterType() {
@@ -573,7 +576,7 @@ public class MongoConnection implements Connection {
 
     class ConnValidation implements Callable<Void> {
         @Override
-        public Void call() throws SQLException {
+        public Void call() throws SQLException, MongoSQLException, MongoSerializationException {
             MongoClusterType actualClusterType = determineClusterType();
 
             switch (actualClusterType) {
@@ -589,8 +592,10 @@ public class MongoConnection implements Connection {
                         throw new SQLException(
                                 "Enterprise edition detected, but mongosqltranslate library not found");
                     }
-                    String mongosqlTranslateVersion = runCmd.getMongosqlTranslateVersion();
-                    if (!runCmd.checkDriverVersion()) {
+                    GetMongosqlTranslateVersionResult mongosqlTranslateVersion =
+                            mongosqlTranslate.getMongosqlTranslateVersion();
+                    appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion.version;
+                    if (!mongosqlTranslate.checkDriverVersion().compatible) {
                         throw new SQLException(
                                 "Incompatible driver version. The JDBC driver version, "
                                         + MongoDriver.getVersion()

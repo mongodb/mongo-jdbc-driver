@@ -26,12 +26,10 @@ import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -138,32 +136,5 @@ public class MongoJsonSchemaTest {
         MongoJsonSchema simplifiedSchema = MongoJsonSchema.toSimplifiedMongoJsonSchema(in_schema);
 
         assertEquals(simplifiedSchema, out_schema);
-    }
-
-    @Test
-    void testFromDocumentSuccess() throws SQLException {
-        Document sampleSchemaDoc =
-                new Document("bsonType", "object")
-                        .append(
-                                "properties",
-                                new Document("name", new Document("bsonType", "string"))
-                                        .append("age", new Document("bsonType", "int")));
-        MongoJsonSchema generatedSchema = MongoJsonSchema.fromDocument(sampleSchemaDoc);
-
-        MongoJsonSchema manualSchema = new MongoJsonSchema();
-        manualSchema.bsonType = "object";
-        manualSchema.properties = new LinkedHashMap<>();
-        MongoJsonSchema nameSchema = new MongoJsonSchema();
-        nameSchema.bsonType = "string";
-        manualSchema.properties.put("name", nameSchema);
-        MongoJsonSchema ageSchema = new MongoJsonSchema();
-        ageSchema.bsonType = "int";
-        manualSchema.properties.put("age", ageSchema);
-
-        assertNotNull(generatedSchema, "MongoJsonSchema should not be null");
-        assertEquals(
-                manualSchema,
-                generatedSchema,
-                "The generated schema should match the manually created schema.");
     }
 }

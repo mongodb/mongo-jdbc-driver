@@ -16,10 +16,10 @@
 
 package com.mongodb.jdbc;
 
-import java.sql.SQLException;
+import java.nio.ByteBuffer;
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
-import org.bson.Document;
+import org.bson.BsonDocument;
 import org.bson.codecs.*;
 import org.bson.io.BasicOutputBuffer;
 
@@ -29,42 +29,40 @@ public class BsonUtils {
     private static final DocumentCodec DOCUMENT_CODEC = new DocumentCodec();
 
     /**
-     * Serializes a Document into a BSON byte array.
+     * Serializes a BsonDocument into a BSON byte array.
      *
-     * @param doc The Document to serialize.
-     * @return The BSON byte array.
-     * @throws SQLException If serialization fails.
+     * @param doc The BsonDocument to serialize.
+     * @return BSON byte array.
+     * @throws MongoSerializationException If serialization fails.
      */
-    public static byte[] serialize(Document doc) throws SQLException {
+    public static byte[] serialize(BsonDocument doc) throws MongoSerializationException {
         if (doc == null) {
-            throw new SQLException("Cannot serialize a null Document.");
+            throw new MongoSerializationException("Cannot serialize a null BsonDocument.");
         }
         try (BasicOutputBuffer buffer = new BasicOutputBuffer();
                 BsonBinaryWriter writer = new BsonBinaryWriter(buffer)) {
-            DOCUMENT_CODEC.encode(
-                    writer,
-                    doc,
-                    EncoderContext.builder().isEncodingCollectibleDocument(true).build());
+            BsonDocumentCodec codec = new BsonDocumentCodec();
+            codec.encode(writer, doc, EncoderContext.builder().build());
             writer.flush();
             return buffer.toByteArray();
         } catch (RuntimeException e) {
-            throw new SQLException("Failed to serialize BSON.", e);
+            throw new MongoSerializationException("Failed to serialize BSON.", e);
         }
     }
 
     /**
-     * Deserializes a BSON byte array into a Document.
+     * Deserializes a BSON byte array into a BsonDocument.
      *
      * @param bytes The BSON byte array.
-     * @return The deserialized Document.
-     * @throws SQLException If deserialization fails.
+     * @return The deserialized BsonDocument.
+     * @throws MongoSerializationException If deserialization fails.
      */
-    public static Document deserialize(byte[] bytes) throws SQLException {
-        try (BsonBinaryReader reader = new BsonBinaryReader(java.nio.ByteBuffer.wrap(bytes))) {
-            Document doc = DOCUMENT_CODEC.decode(reader, DecoderContext.builder().build());
-            return doc;
+    public static BsonDocument deserialize(byte[] bytes) throws MongoSerializationException {
+        try (BsonBinaryReader reader = new BsonBinaryReader(ByteBuffer.wrap(bytes))) {
+            BsonDocumentCodec codec = new BsonDocumentCodec();
+            return codec.decode(reader, DecoderContext.builder().build());
         } catch (RuntimeException e) {
-            throw new SQLException("Failed to deserialize BSON.", e);
+            throw new MongoSerializationException("Failed to deserialize BSON.", e);
         }
     }
 }

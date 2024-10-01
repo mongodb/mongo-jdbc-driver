@@ -31,13 +31,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.BsonDocument;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
-import org.bson.Document;
 import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 public class MongoJsonSchema {
@@ -563,25 +560,5 @@ public class MongoJsonSchema {
         }
 
         return info;
-    }
-
-    public static MongoJsonSchema fromDocument(Document schemaDoc) throws SQLException {
-        if (schemaDoc == null) {
-            throw new SQLException("Schema document is null.");
-        }
-        try {
-            // Convert Document to BsonDocument
-            BsonDocument bsonSchemaDoc = schemaDoc.toBsonDocument();
-
-            Codec<JsonSchema> jsonSchemaCodec =
-                    MongoDriver.getCodecRegistry().get(JsonSchema.class);
-            JsonSchema baseSchema =
-                    jsonSchemaCodec.decode(
-                            bsonSchemaDoc.asBsonReader(), DecoderContext.builder().build());
-
-            return toSimplifiedMongoJsonSchema(baseSchema);
-        } catch (Exception e) {
-            throw new SQLException("Failed to parse result_set_schema: " + e.getMessage(), e);
-        }
     }
 }
