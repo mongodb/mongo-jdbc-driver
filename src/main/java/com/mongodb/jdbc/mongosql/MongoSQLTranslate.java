@@ -20,18 +20,29 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoSerializationException;
 import com.mongodb.jdbc.logging.MongoLogger;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
-import org.bson.BsonBoolean;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentReader;
-import org.bson.BsonString;
+import java.util.stream.Collectors;
+
+import org.bson.*;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 
 public class MongoSQLTranslate {
 
@@ -137,7 +148,7 @@ public class MongoSQLTranslate {
      *
      * @param sql The SQL query to translate.
      * @param dbName The database name.
-     * @param catalogDocument Schema catalog
+     * @param schemaCatalog schema catalog
      * @return TranslateResult
      * @throws MongoSQLException If the command execution fails.
      */
@@ -202,5 +213,108 @@ public class MongoSQLTranslate {
         }
 
         return namespacesResult;
+    }
+
+    // Builds a catalog document containing the schema information for the specified collections.
+    public BsonDocument buildCatalogDocument(
+            MongoDatabase mongoDatabase,
+            String dbName, List<GetNamespacesResult.Namespace> collections)
+            throws MongoSQLException {
+
+        // Create an aggregation pipeline to fetch the schema information for the specified collections.
+        // The pipeline uses $in to query all the specified collections and projects them into the desired format:
+        // "dbName": { "collection1" : "Schema1", "collection2" : "Schema2", ... }
+        List<String> collectionNames =
+                collections.stream().map(ns -> ns.collection).collect(Collectors.toList());
+
+        // Filter documents where _id is in the list of collection names
+        Bson matchStage = Aggregates.match(Filters.in("_id", collectionNames));
+
+        // Include only the 'schema' and '_id' fields
+        Bson projectStage =
+                Aggregates.project(
+                        Projections.fields(
+                                Projections.include("schema"), Projections.include("_id")));
+
+        // Accumulate collection names and their schemas into an array
+        Bson groupStage =
+                Aggregates.group(
+                        null,
+                        Accumulators.push(
+                                "collections",
+                                new BsonDocument("collectionName", new BsonString("$_id"))
+                                        .append("schema", new BsonString("$schema"))));
+
+        // Convert the 'collections' array into a document mapping each collection name to its schema
+        // under the database name
+        Bson finalProjectStage =
+                Aggregates.project(
+                        Projections.fields(
+                                Projections.excludeId(),
+                                Projections.computed(
+                                        dbName,
+                                        new BsonDocument(
+                                                "$arrayToObject",
+                                                new BsonArray(
+                                                        Arrays.asList(
+                                                                new BsonDocument(
+                                                                        "$map",
+                                                                        new BsonDocument(
+                                                                                "input",
+                                                                                new BsonString(
+                                                                                        "$collections"))
+                                                                                .append(
+                                                                                        "as",
+                                                                                        new BsonString(
+                                                                                                "coll"))
+                                                                                .append(
+                                                                                        "in",
+                                                                                        new BsonDocument(
+                                                                                                "k",
+                                                                                                new BsonString(
+                                                                                                        "$$coll.collectionName"))
+                                                                                                .append(
+                                                                                                        "v",
+                                                                                                        new BsonString(
+                                                                                                                "$$coll.schema"))))))))));
+        List<Bson> pipeline =
+                Arrays.asList(matchStage, projectStage, groupStage, finalProjectStage);
+
+        MongoCollection<BsonDocument> collection =
+                mongoDatabase.getCollection("__sql_schemas", BsonDocument.class);
+        AggregateIterable<BsonDocument> result = collection.aggregate(pipeline);
+
+        BsonDocument catalog = null;
+        boolean foundResult = false;
+
+        for (BsonDocument doc : result) {
+            if (foundResult) {
+                throw new MongoSQLException(
+                        "Multiple results returned while getting schema; expected only one.");
+            }
+            catalog = doc;
+            foundResult = true;
+        }
+        if (!foundResult) {
+            throw new MongoSQLException(
+                    "No schema information returned for the requested collections.");
+        }
+
+        // Check that all expected collections are present in the result
+        BsonDocument resultCollections = catalog.getDocument(dbName);
+        List<String> returnedCollections = new ArrayList<>(resultCollections.keySet());
+        List<String> missingCollections =
+                collections
+                        .stream()
+                        .map(ns -> ns.collection)
+                        .filter(c -> !returnedCollections.contains(c))
+                        .collect(Collectors.toList());
+
+        if (!missingCollections.isEmpty()) {
+            throw new MongoSQLException(
+                    "Could not retrieve schema for collections: " + missingCollections);
+        }
+
+        return catalog;
     }
 }

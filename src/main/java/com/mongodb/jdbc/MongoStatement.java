@@ -31,6 +31,7 @@ import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.GetNamespacesResult;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
+import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
 import java.util.*;
@@ -231,18 +232,19 @@ public class MongoStatement implements Statement {
 
     private ResultSet executeDirectClusterQuery(String sql)
             throws SQLException, MongoSQLException, MongoSerializationException {
+        MongoSQLTranslate mongoSQLTranslate = conn.getMongosqlTranslate();
         String dbName = currentDB.getName();
 
         GetNamespacesResult namespaceResult =
-                conn.getMongosqlTranslate().getNamespaces(currentDB.getName(), sql);
+                mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
         List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
         if (collections == null || collections.isEmpty()) {
             throw new SQLException("No collections found for the current database: " + dbName);
         }
 
-        BsonDocument catalogDoc = buildCatalogDocument(dbName, collections);
+        BsonDocument catalogDoc = mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
         TranslateResult translateResponse =
-                conn.getMongosqlTranslate().translate(sql, dbName, catalogDoc);
+                mongoSQLTranslate.translate(sql, dbName, catalogDoc);
 
         MongoIterable<BsonDocument> iterable =
                 currentDB
@@ -285,108 +287,6 @@ public class MongoStatement implements Statement {
         } catch (MongoSQLException | MongoSerializationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    // Builds a catalog document containing the schema information for the specified collections.
-    private BsonDocument buildCatalogDocument(
-            String dbName, List<GetNamespacesResult.Namespace> collections)
-            throws MongoSQLException {
-
-        // Create an aggregation pipeline to fetch the schema information for the specified collections.
-        // The pipeline uses $in to query all the specified collections and projects them into the desired format:
-        // "dbName": { "collection1" : "Schema1", "collection2" : "Schema2", ... }
-        List<String> collectionNames =
-                collections.stream().map(ns -> ns.collection).collect(Collectors.toList());
-
-        // Filter documents where _id is in the list of collection names
-        Bson matchStage = Aggregates.match(Filters.in("_id", collectionNames));
-
-        // Include only the 'schema' and '_id' fields
-        Bson projectStage =
-                Aggregates.project(
-                        Projections.fields(
-                                Projections.include("schema"), Projections.include("_id")));
-
-        // Accumulate collection names and their schemas into an array
-        Bson groupStage =
-                Aggregates.group(
-                        null,
-                        Accumulators.push(
-                                "collections",
-                                new BsonDocument("collectionName", new BsonString("$_id"))
-                                        .append("schema", new BsonString("$schema"))));
-
-        // Convert the 'collections' array into a document mapping each collection name to its schema
-        // under the database name
-        Bson finalProjectStage =
-                Aggregates.project(
-                        Projections.fields(
-                                Projections.excludeId(),
-                                Projections.computed(
-                                        dbName,
-                                        new BsonDocument(
-                                                "$arrayToObject",
-                                                new BsonArray(
-                                                        Arrays.asList(
-                                                                new BsonDocument(
-                                                                        "$map",
-                                                                        new BsonDocument(
-                                                                                        "input",
-                                                                                        new BsonString(
-                                                                                                "$collections"))
-                                                                                .append(
-                                                                                        "as",
-                                                                                        new BsonString(
-                                                                                                "coll"))
-                                                                                .append(
-                                                                                        "in",
-                                                                                        new BsonDocument(
-                                                                                                        "k",
-                                                                                                        new BsonString(
-                                                                                                                "$$coll.collectionName"))
-                                                                                                .append(
-                                                                                                        "v",
-                                                                                                        new BsonString(
-                                                                                                                "$$coll.schema"))))))))));
-        List<Bson> pipeline =
-                Arrays.asList(matchStage, projectStage, groupStage, finalProjectStage);
-
-        MongoCollection<BsonDocument> collection =
-                currentDB.getCollection("__sql_schemas", BsonDocument.class);
-        AggregateIterable<BsonDocument> result = collection.aggregate(pipeline);
-
-        BsonDocument catalog = null;
-        boolean foundResult = false;
-
-        for (BsonDocument doc : result) {
-            if (foundResult) {
-                throw new MongoSQLException(
-                        "Multiple results returned while getting schema; expected only one.");
-            }
-            catalog = doc;
-            foundResult = true;
-        }
-        if (!foundResult) {
-            throw new MongoSQLException(
-                    "No schema information returned for the requested collections.");
-        }
-
-        // Check that all expected collections are present in the result
-        BsonDocument resultCollections = catalog.getDocument(dbName);
-        List<String> returnedCollections = new ArrayList<>(resultCollections.keySet());
-        List<String> missingCollections =
-                collections
-                        .stream()
-                        .map(ns -> ns.collection)
-                        .filter(c -> !returnedCollections.contains(c))
-                        .collect(Collectors.toList());
-
-        if (!missingCollections.isEmpty()) {
-            throw new MongoSQLException(
-                    "Could not retrieve schema for collections: " + missingCollections);
-        }
-
-        return catalog;
     }
 
     @Override
