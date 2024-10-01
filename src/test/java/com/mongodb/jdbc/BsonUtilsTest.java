@@ -49,6 +49,6 @@ class BsonUtilsTest {
         assertThrows(
                 MongoSerializationException.class,
                 () -> BsonUtils.serialize(null),
-                "Serializing a null document should throw SQLException");
+                "Serializing a null document should throw MongoSerializationException");
     }
 }
