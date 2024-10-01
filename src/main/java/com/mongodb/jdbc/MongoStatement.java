@@ -18,15 +18,9 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoExecutionTimeoutException;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Accumulators;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.GetNamespacesResult;
@@ -36,9 +30,7 @@ import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.bson.*;
-import org.bson.conversions.Bson;
 
 @AutoLoggable
 public class MongoStatement implements Statement {
@@ -242,9 +234,9 @@ public class MongoStatement implements Statement {
             throw new SQLException("No collections found for the current database: " + dbName);
         }
 
-        BsonDocument catalogDoc = mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
-        TranslateResult translateResponse =
-                mongoSQLTranslate.translate(sql, dbName, catalogDoc);
+        BsonDocument catalogDoc =
+                mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
+        TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
 
         MongoIterable<BsonDocument> iterable =
                 currentDB

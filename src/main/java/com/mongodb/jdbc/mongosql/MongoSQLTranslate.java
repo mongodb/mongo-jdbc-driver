@@ -31,13 +31,11 @@ import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoSerializationException;
 import com.mongodb.jdbc.logging.MongoLogger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-
 import org.bson.*;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -218,7 +216,8 @@ public class MongoSQLTranslate {
     // Builds a catalog document containing the schema information for the specified collections.
     public BsonDocument buildCatalogDocument(
             MongoDatabase mongoDatabase,
-            String dbName, List<GetNamespacesResult.Namespace> collections)
+            String dbName,
+            List<GetNamespacesResult.Namespace> collections)
             throws MongoSQLException {
 
         // Create an aggregation pipeline to fetch the schema information for the specified collections.
@@ -260,9 +259,9 @@ public class MongoSQLTranslate {
                                                                 new BsonDocument(
                                                                         "$map",
                                                                         new BsonDocument(
-                                                                                "input",
-                                                                                new BsonString(
-                                                                                        "$collections"))
+                                                                                        "input",
+                                                                                        new BsonString(
+                                                                                                "$collections"))
                                                                                 .append(
                                                                                         "as",
                                                                                         new BsonString(
@@ -270,9 +269,9 @@ public class MongoSQLTranslate {
                                                                                 .append(
                                                                                         "in",
                                                                                         new BsonDocument(
-                                                                                                "k",
-                                                                                                new BsonString(
-                                                                                                        "$$coll.collectionName"))
+                                                                                                        "k",
+                                                                                                        new BsonString(
+                                                                                                                "$$coll.collectionName"))
                                                                                                 .append(
                                                                                                         "v",
                                                                                                         new BsonString(
