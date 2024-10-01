@@ -48,7 +48,7 @@ public class MongoSQLTranslate {
     private final CodecRegistry pojoCodecRegistry;
 
     /** Native method to send commands via JNI. */
-    public native byte[] runCommand(byte[] command, int length) throws MongoSQLException;
+    public native byte[] runCommand(byte[] command, int length);
 
     public MongoSQLTranslate(MongoLogger logger) {
         this.logger = logger;
