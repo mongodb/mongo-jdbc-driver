@@ -26,6 +26,7 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoSerializationException;
+import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
+@AutoLoggable
 public class MongoSQLTranslate {
 
     private final MongoLogger logger;
