@@ -17,25 +17,17 @@
 package com.mongodb.jdbc.mongosql;
 
 import com.mongodb.jdbc.JsonSchema;
+import com.mongodb.jdbc.MongoJsonSchema;
 import java.util.List;
 import org.bson.BsonDocument;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class TranslateResult extends BaseResult {
-    @BsonProperty("target_db")
     public final String targetDb;
-
-    @BsonProperty("target_collection")
     public final String targetCollection;
-
-    @BsonProperty("pipeline")
     public final List<BsonDocument> pipeline;
-
-    @BsonProperty("result_set_schema")
-    public final JsonSchema resultSetSchema;
-
-    @BsonProperty("select_order")
+    public final MongoJsonSchema resultSetSchema;
     public final List<List<String>> selectOrder;
 
     @BsonCreator
@@ -51,7 +43,10 @@ public class TranslateResult extends BaseResult {
         this.targetDb = targetDb;
         this.targetCollection = targetCollection;
         this.pipeline = pipeline;
-        this.resultSetSchema = resultSetSchema;
+        this.resultSetSchema =
+                (resultSetSchema != null)
+                        ? MongoJsonSchema.toSimplifiedMongoJsonSchema(resultSetSchema)
+                        : null;
         this.selectOrder = selectOrder;
     }
 }

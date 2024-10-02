@@ -237,11 +237,6 @@ public class MongoStatement implements Statement {
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
-        if (translateResponse.resultSetSchema == null) {
-            throw new MongoSQLException("Missing result set schema from translate response");
-        }
-        MongoJsonSchema mongoJsonSchema =
-                MongoJsonSchema.toSimplifiedMongoJsonSchema(translateResponse.resultSetSchema);
         MongoIterable<BsonDocument> iterable =
                 currentDB
                         .getCollection(translateResponse.targetCollection)
@@ -256,7 +251,7 @@ public class MongoStatement implements Statement {
                 new MongoResultSet(
                         this,
                         iterable.cursor(),
-                        mongoJsonSchema,
+                        translateResponse.resultSetSchema,
                         translateResponse.selectOrder,
                         conn.getExtJsonMode(),
                         conn.getUuidRepresentation());
