@@ -592,9 +592,8 @@ public class MongoConnection implements Connection {
                         throw new SQLException(
                                 "Enterprise edition detected, but mongosqltranslate library not found");
                     }
-                    GetMongosqlTranslateVersionResult mongosqlTranslateVersion =
-                            mongosqlTranslate.getMongosqlTranslateVersion();
-                    appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion.version;
+                    String mongosqlTranslateVersion =
+                            mongosqlTranslate.getMongosqlTranslateVersion().version;
                     if (!mongosqlTranslate.checkDriverVersion().compatible) {
                         throw new SQLException(
                                 "Incompatible driver version. The JDBC driver version, "
@@ -602,6 +601,7 @@ public class MongoConnection implements Connection {
                                         + ", is not compatible with mongosqltranslate library version, "
                                         + mongosqlTranslateVersion);
                     }
+                    appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion;
                     break;
                 case UnknownTarget:
                     // Target could not be determined.
