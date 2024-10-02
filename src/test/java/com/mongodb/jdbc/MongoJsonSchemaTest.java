@@ -17,8 +17,8 @@
 package com.mongodb.jdbc;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
