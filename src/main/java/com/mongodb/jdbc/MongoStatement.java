@@ -18,17 +18,19 @@ package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoExecutionTimeoutException;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.mongosql.GetNamespacesResult;
+import com.mongodb.jdbc.mongosql.MongoSQLException;
+import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
+import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
+import org.bson.*;
 
 @AutoLoggable
 public class MongoStatement implements Statement {
@@ -187,42 +189,94 @@ public class MongoStatement implements Statement {
         return resultSet != null;
     }
 
+    private ResultSet executeAtlasDataFederationQuery(String sql) throws SQLException {
+        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
+
+        BsonDocument sqlStage = constructQueryDocument(sql);
+        MongoIterable<BsonDocument> iterable =
+                currentDB
+                        .aggregate(Collections.singletonList(sqlStage), BsonDocument.class)
+                        .maxTime(maxQuerySec, TimeUnit.SECONDS);
+
+        if (fetchSize != 0) {
+            iterable = iterable.batchSize(fetchSize);
+        }
+
+        MongoCursor<BsonDocument> cursor = iterable.cursor();
+        MongoJsonSchemaResult schemaResult =
+                currentDB
+                        .withCodecRegistry(MongoDriver.registry)
+                        .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
+        MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
+        List<List<String>> selectOrder = schemaResult.selectOrder;
+
+        resultSet =
+                new MongoResultSet(
+                        this,
+                        cursor,
+                        schema,
+                        selectOrder,
+                        conn.getExtJsonMode(),
+                        conn.getUuidRepresentation());
+
+        return resultSet;
+    }
+
+    private ResultSet executeDirectClusterQuery(String sql)
+            throws MongoSQLException, MongoSerializationException, SQLException {
+        MongoSQLTranslate mongoSQLTranslate = conn.getMongosqlTranslate();
+        String dbName = currentDB.getName();
+
+        GetNamespacesResult namespaceResult =
+                mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
+        List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
+        if (collections == null || collections.isEmpty()) {
+            throw new MongoSQLException("No collections found for the current database: " + dbName);
+        }
+
+        BsonDocument catalogDoc =
+                mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
+        TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
+        MongoIterable<BsonDocument> iterable =
+                currentDB
+                        .getCollection(translateResponse.targetCollection)
+                        .aggregate(translateResponse.pipeline, BsonDocument.class)
+                        .maxTime(maxQuerySec, TimeUnit.SECONDS);
+
+        if (fetchSize != 0) {
+            iterable = iterable.batchSize(fetchSize);
+        }
+
+        resultSet =
+                new MongoResultSet(
+                        this,
+                        iterable.cursor(),
+                        translateResponse.resultSetSchema,
+                        translateResponse.selectOrder,
+                        conn.getExtJsonMode(),
+                        conn.getUuidRepresentation());
+
+        return resultSet;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public ResultSet executeQuery(String sql) throws SQLException {
         checkClosed();
         closeExistingResultSet();
 
-        BsonDocument stage = constructQueryDocument(sql);
-        BsonDocument getSchemaCmd = constructSQLGetResultSchemaDocument(sql);
         try {
-            MongoIterable<BsonDocument> iterable =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .aggregate(Collections.singletonList(stage), BsonDocument.class)
-                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
-            if (fetchSize != 0) {
-                iterable = iterable.batchSize(fetchSize);
+            if (conn.getClusterType() == MongoConnection.MongoClusterType.AtlasDataFederation) {
+                return executeAtlasDataFederationQuery(sql);
+            } else if (conn.getClusterType() == MongoConnection.MongoClusterType.Enterprise) {
+                return executeDirectClusterQuery(sql);
+            } else {
+                throw new SQLException("Unsupported cluster type: " + conn.clusterType);
             }
-
-            MongoJsonSchemaResult schemaResult =
-                    currentDB
-                            .withCodecRegistry(MongoDriver.registry)
-                            .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
-
-            MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
-            List<List<String>> selectOrder = schemaResult.selectOrder;
-            resultSet =
-                    new MongoResultSet(
-                            this,
-                            iterable.cursor(),
-                            schema,
-                            selectOrder,
-                            conn.getExtJsonMode(),
-                            conn.getUuidRepresentation());
-            return resultSet;
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
+        } catch (MongoSQLException | MongoSerializationException e) {
+            throw new RuntimeException(e);
         }
     }
 

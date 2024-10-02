@@ -65,6 +65,7 @@ class MongoStatementTest extends MongoMock {
     @BeforeEach
     void setupTest() throws NoSuchFieldException, SQLException {
         resetMockObjs();
+        mongoConnection.clusterType = MongoConnection.MongoClusterType.AtlasDataFederation;
         mongoStatement = new MongoStatement(mongoConnection, database);
     }
 
