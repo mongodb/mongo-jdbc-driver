@@ -28,7 +28,6 @@ import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.DisableAutoLogging;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.logging.MongoSimpleFormatter;
-import com.mongodb.jdbc.mongosql.GetMongosqlTranslateVersionResult;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
