@@ -17,47 +17,41 @@
 package com.mongodb.jdbc.mongosql;
 
 import com.mongodb.jdbc.JsonSchema;
-import com.mongodb.jdbc.MongoJsonSchema;
 import java.util.List;
 import org.bson.BsonDocument;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class TranslateResult {
-    public String targetDb;
-    public String targetCollection;
-    public List<BsonDocument> pipeline;
-    public MongoJsonSchema resultSetSchema;
-    public List<List<String>> selectOrder;
-    public String error;
-    public Boolean errorIsInternal;
+public class TranslateResult extends BaseResult {
+    @BsonProperty("target_db")
+    public final String targetDb;
+
+    @BsonProperty("target_collection")
+    public final String targetCollection;
+
+    @BsonProperty("pipeline")
+    public final List<BsonDocument> pipeline;
+
+    @BsonProperty("result_set_schema")
+    public final JsonSchema resultSetSchema;
+
+    @BsonProperty("select_order")
+    public final List<List<String>> selectOrder;
 
     @BsonCreator
     public TranslateResult(
-            @BsonProperty("target_db") final String targetDb,
-            @BsonProperty("target_collection") final String targetCollection,
-            @BsonProperty("pipeline") final List<BsonDocument> pipeline,
-            @BsonProperty("result_set_schema") final JsonSchema resultSetSchema,
-            @BsonProperty("select_order") final List<List<String>> selectOrder,
-            @BsonProperty("error") final String error,
-            @BsonProperty("error_is_internal") final Boolean errorIsInternal) {
-
+            @BsonProperty("target_db") String targetDb,
+            @BsonProperty("target_collection") String targetCollection,
+            @BsonProperty("pipeline") List<BsonDocument> pipeline,
+            @BsonProperty("result_set_schema") JsonSchema resultSetSchema,
+            @BsonProperty("select_order") List<List<String>> selectOrder,
+            @BsonProperty("error") String error,
+            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
+        super(error, errorIsInternal);
         this.targetDb = targetDb;
         this.targetCollection = targetCollection;
         this.pipeline = pipeline;
-
-        this.resultSetSchema =
-                (resultSetSchema != null)
-                        ? MongoJsonSchema.toSimplifiedMongoJsonSchema(resultSetSchema)
-                        : null;
-
+        this.resultSetSchema = resultSetSchema;
         this.selectOrder = selectOrder;
-
-        this.error = error;
-        this.errorIsInternal = errorIsInternal;
-    }
-
-    public boolean hasError() {
-        return error != null;
     }
 }

@@ -19,24 +19,16 @@ package com.mongodb.jdbc.mongosql;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class GetMongosqlTranslateVersionResult {
-
-    public String version;
-    public String error;
-    public Boolean errorIsInternal;
+public class GetMongosqlTranslateVersionResult extends BaseResult {
+    @BsonProperty("version")
+    public final String version;
 
     @BsonCreator
     public GetMongosqlTranslateVersionResult(
-            @BsonProperty("version") final String version,
-            @BsonProperty("error") final String error,
-            @BsonProperty("error_is_internal") final Boolean errorIsInternal) {
-
+            @BsonProperty("version") String version,
+            @BsonProperty("error") String error,
+            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
+        super(error, errorIsInternal);
         this.version = version;
-        this.error = error != null ? error : "";
-        this.errorIsInternal = errorIsInternal != null ? errorIsInternal : false;
-    }
-
-    public boolean hasError() {
-        return !error.isEmpty();
     }
 }

@@ -16,19 +16,32 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class CheckDriverVersionResult extends BaseResult {
-    @BsonProperty("compatible")
-    public final Boolean compatible;
+/** Base class for result types, includes error handling. */
+public abstract class BaseResult {
+    @BsonProperty("error")
+    protected final String error;
 
-    @BsonCreator
-    public CheckDriverVersionResult(
-            @BsonProperty("compatible") Boolean compatible,
+    @BsonProperty("error_is_internal")
+    protected final Boolean errorIsInternal;
+
+    public BaseResult(
             @BsonProperty("error") String error,
             @BsonProperty("error_is_internal") Boolean errorIsInternal) {
-        super(error, errorIsInternal);
-        this.compatible = (compatible != null) ? compatible : false;
+        this.error = (error != null) ? error : "";
+        this.errorIsInternal = (errorIsInternal != null) ? errorIsInternal : false;
+    }
+
+    public boolean hasError() {
+        return !error.isEmpty();
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public Boolean getErrorIsInternal() {
+        return errorIsInternal;
     }
 }

@@ -223,7 +223,7 @@ public class MongoStatement implements Statement {
     }
 
     private ResultSet executeDirectClusterQuery(String sql)
-            throws SQLException, MongoSQLException, MongoSerializationException {
+            throws MongoSQLException, MongoSerializationException, SQLException {
         MongoSQLTranslate mongoSQLTranslate = conn.getMongosqlTranslate();
         String dbName = currentDB.getName();
 
@@ -231,13 +231,17 @@ public class MongoStatement implements Statement {
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
         List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
         if (collections == null || collections.isEmpty()) {
-            throw new SQLException("No collections found for the current database: " + dbName);
+            throw new MongoSQLException("No collections found for the current database: " + dbName);
         }
 
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
-
+        if (translateResponse.resultSetSchema == null) {
+            throw new MongoSQLException("Missing result set schema from translate response");
+        }
+        MongoJsonSchema mongoJsonSchema =
+                MongoJsonSchema.toSimplifiedMongoJsonSchema(translateResponse.resultSetSchema);
         MongoIterable<BsonDocument> iterable =
                 currentDB
                         .getCollection(translateResponse.targetCollection)
@@ -252,7 +256,7 @@ public class MongoStatement implements Statement {
                 new MongoResultSet(
                         this,
                         iterable.cursor(),
-                        translateResponse.resultSetSchema,
+                        mongoJsonSchema,
                         translateResponse.selectOrder,
                         conn.getExtJsonMode(),
                         conn.getUuidRepresentation());

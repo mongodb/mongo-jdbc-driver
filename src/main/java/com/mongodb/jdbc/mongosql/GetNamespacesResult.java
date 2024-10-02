@@ -20,28 +20,17 @@ import java.util.List;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class GetNamespacesResult {
+public class GetNamespacesResult extends BaseResult {
     @BsonProperty("namespaces")
     public final List<Namespace> namespaces;
-
-    @BsonProperty("error")
-    public final String error;
-
-    @BsonProperty("error_is_internal")
-    public final Boolean errorIsInternal;
 
     @BsonCreator
     public GetNamespacesResult(
             @BsonProperty("namespaces") List<Namespace> namespaces,
             @BsonProperty("error") String error,
             @BsonProperty("error_is_internal") Boolean errorIsInternal) {
+        super(error, errorIsInternal);
         this.namespaces = namespaces;
-        this.error = error != null ? error : "";
-        this.errorIsInternal = errorIsInternal != null ? errorIsInternal : false;
-    }
-
-    public boolean hasError() {
-        return !error.isEmpty();
     }
 
     public static class Namespace {

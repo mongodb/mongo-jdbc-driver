@@ -16,10 +16,6 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -39,7 +35,6 @@ import java.util.stream.Collectors;
 import org.bson.*;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
 public class MongoSQLTranslate {
@@ -52,10 +47,7 @@ public class MongoSQLTranslate {
 
     public MongoSQLTranslate(MongoLogger logger) {
         this.logger = logger;
-        this.pojoCodecRegistry =
-                fromRegistries(
-                        MongoClientSettings.getDefaultCodecRegistry(),
-                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        this.pojoCodecRegistry = MongoDriver.getCodecRegistry();
     }
 
     /**
@@ -64,10 +56,11 @@ public class MongoSQLTranslate {
      * @param command The command to be executed.
      * @param responseClass The class of the response POJO.
      * @return The response POJO.
-     * @throws MongoSerializationException
-     * @throws MongoSQLException
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
+     * @throws MongoSQLException If an error occurs during command execution.
      */
-    public <T> T executeRunCommand(BsonDocument command, Class<T> responseClass)
+    public <T extends BaseResult> T runCommand(BsonDocument command, Class<T> responseClass)
             throws MongoSerializationException, MongoSQLException {
 
         byte[] commandBytes = BsonUtils.serialize(command);
@@ -75,9 +68,20 @@ public class MongoSQLTranslate {
         BsonDocument responseDoc = BsonUtils.deserialize(responseBytes);
 
         BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
-        return pojoCodecRegistry
-                .get(responseClass)
-                .decode(reader, DecoderContext.builder().build());
+        T result =
+                pojoCodecRegistry
+                        .get(responseClass)
+                        .decode(reader, DecoderContext.builder().build());
+
+        if (result.hasError()) {
+            String errorMessage =
+                    String.format(
+                            "Error executing command: %s. Error is internal: %s",
+                            result.getError(), result.getErrorIsInternal());
+            throw new MongoSQLException(errorMessage);
+        }
+
+        return result;
     }
 
     /**
@@ -85,6 +89,8 @@ public class MongoSQLTranslate {
      *
      * @return GetMongosqlTranslateVersionResult containing the version string.
      * @throws MongoSQLException If an error occurs during command execution.
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
      */
     public GetMongosqlTranslateVersionResult getMongosqlTranslateVersion()
             throws MongoSQLException, MongoSerializationException {
@@ -93,17 +99,7 @@ public class MongoSQLTranslate {
                         .append("options", new BsonDocument());
 
         GetMongosqlTranslateVersionResult versionResult =
-                executeRunCommand(command, GetMongosqlTranslateVersionResult.class);
-
-        if (versionResult.hasError()) {
-            String errorMessage =
-                    "Error executing getMongosqlTranslateVersion command: "
-                            + versionResult.error
-                            + ". Error is internal: "
-                            + versionResult.errorIsInternal;
-            logger.log(Level.SEVERE, errorMessage);
-            throw new MongoSQLException(errorMessage);
-        }
+                runCommand(command, GetMongosqlTranslateVersionResult.class);
 
         logger.log(Level.INFO, "mongosqlTranslateVersion: " + versionResult.version);
         return versionResult;
@@ -114,6 +110,8 @@ public class MongoSQLTranslate {
      *
      * @return CheckDriverVersionResult containing the compatibility status.
      * @throws MongoSQLException If an error occurs during command execution.
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
      */
     public CheckDriverVersionResult checkDriverVersion()
             throws MongoSQLException, MongoSerializationException {
@@ -125,17 +123,8 @@ public class MongoSQLTranslate {
                         .append("options", options);
 
         CheckDriverVersionResult checkDriverVersionResult =
-                executeRunCommand(command, CheckDriverVersionResult.class);
+                runCommand(command, CheckDriverVersionResult.class);
 
-        if (checkDriverVersionResult.hasError()) {
-            String errorMessage =
-                    "Error executing checkDriverVersion command: "
-                            + checkDriverVersionResult.error
-                            + ". Error is internal: "
-                            + checkDriverVersionResult.errorIsInternal;
-            logger.log(Level.SEVERE, errorMessage);
-            throw new MongoSQLException(errorMessage);
-        }
         logger.log(
                 Level.INFO, "Driver Compatibility Status: " + checkDriverVersionResult.compatible);
         return checkDriverVersionResult;
@@ -149,6 +138,8 @@ public class MongoSQLTranslate {
      * @param schemaCatalog schema catalog
      * @return TranslateResult
      * @throws MongoSQLException If the command execution fails.
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
      */
     public TranslateResult translate(String sql, String dbName, BsonDocument schemaCatalog)
             throws MongoSQLException, MongoSerializationException {
@@ -164,21 +155,7 @@ public class MongoSQLTranslate {
         BsonDocument translateCommand =
                 new BsonDocument("command", new BsonString("translate")).append("options", options);
 
-        TranslateResult translateResult =
-                executeRunCommand(translateCommand, TranslateResult.class);
-
-        if (translateResult.hasError()) {
-            String errorMessage =
-                    "Error executing translate command: "
-                            + translateResult.error
-                            + ". Error is internal: "
-                            + translateResult.errorIsInternal;
-
-            logger.log(Level.SEVERE, errorMessage);
-            throw new MongoSQLException(errorMessage);
-        }
-
-        return translateResult;
+        return runCommand(translateCommand, TranslateResult.class);
     }
 
     /**
@@ -188,6 +165,8 @@ public class MongoSQLTranslate {
      * @param sql The SQL query.
      * @return GetNamespacesResult containing the namespaces.
      * @throws MongoSQLException If an error occurs during command execution.
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
      */
     public GetNamespacesResult getNamespaces(String dbName, String sql)
             throws MongoSQLException, MongoSerializationException {
@@ -197,20 +176,7 @@ public class MongoSQLTranslate {
                 new BsonDocument("command", new BsonString("getNamespaces"))
                         .append("options", options);
 
-        GetNamespacesResult namespacesResult =
-                executeRunCommand(command, GetNamespacesResult.class);
-
-        if (namespacesResult.hasError()) {
-            String errorMessage =
-                    "Error executing getNamespaces command: "
-                            + namespacesResult.error
-                            + ". Error is internal: "
-                            + namespacesResult.errorIsInternal;
-            logger.log(Level.SEVERE, errorMessage);
-            throw new MongoSQLException(errorMessage);
-        }
-
-        return namespacesResult;
+        return runCommand(command, GetNamespacesResult.class);
     }
 
     // Builds a catalog document containing the schema information for the specified collections.
