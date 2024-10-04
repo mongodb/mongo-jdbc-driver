@@ -17,11 +17,13 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
+import static com.mongodb.jdbc.mongosql.MongoSQLTranslate.SQL_SCHEMAS_COLLECTION;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.mongosql.MongoSQLException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -66,7 +68,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final String INDEX_KEY_KEY = "key";
     private static final String INDEX_NAME_KEY = "name";
 
-    private static final List<String> UNIQUE_KEY_PATH = Arrays.asList("options", "unique");
+    private static final List<String> UNIQUE_KEY_PATH = Collections.singletonList("unique");
 
     private static final String PROCEDURE_CAT = "PROCEDURE_CAT";
     private static final String PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
@@ -1546,21 +1548,26 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 .collect(Collectors.toList())
                 .stream()
 
-                // filter only for collections matching the pattern
+                // filter only for collections matching the pattern, and exclude the `__sql_schemas` collection
                 .filter(
                         tableName ->
-                                tableNamePatternRE == null
-                                        || tableNamePatternRE.matcher(tableName).matches())
+                                (tableNamePatternRE == null
+                                                || tableNamePatternRE.matcher(tableName).matches())
+                                        && !tableName.equals(SQL_SCHEMAS_COLLECTION))
 
                 // map the collection names into triples of (dbName, tableName, tableSchema)
                 .map(
-                        tableName ->
-                                new Pair<>(
+                        tableName -> {
+                            try {
+                                return new Pair<>(
                                         new Pair<>(dbName, tableName),
-                                        db.runCommand(
-                                                new BsonDocument(
-                                                        "sqlGetSchema", new BsonString(tableName)),
-                                                MongoJsonSchemaResult.class)))
+                                        getSchemaByClusterType(db, tableName));
+                            } catch (MongoSQLException | MongoSerializationException e) {
+                                throw new RuntimeException(
+                                        "Error retrieving schema for: " + dbName + "." + tableName,
+                                        e);
+                            }
+                        })
 
                 // filter only for collections that have schemas
                 .filter(p -> isValidSchema(p.right()))
@@ -1601,6 +1608,20 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                                                                     entry.getValue(),
                                                                     idx.getAndIncrement())));
                         });
+    }
+
+    private MongoJsonSchemaResult getSchemaByClusterType(MongoDatabase db, String tableName)
+            throws MongoSQLException, MongoSerializationException {
+        if (conn.getClusterType() == MongoConnection.MongoClusterType.AtlasDataFederation) {
+            return db.runCommand(
+                    new BsonDocument("sqlGetSchema", new BsonString(tableName)),
+                    MongoJsonSchemaResult.class);
+        } else if (conn.getClusterType() == MongoConnection.MongoClusterType.Enterprise) {
+            return conn.getMongosqlTranslate().getSchema(db, tableName);
+        } else {
+            throw new UnsupportedOperationException(
+                    "Unsupported cluster type: " + conn.getClusterType());
+        }
     }
 
     @Override
@@ -1864,12 +1885,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         // We've found the first unique index. At this point, we get the schema for this
         // collection and create a result set based on this index's keys.
-        MongoJsonSchemaResult r =
-                this.conn
-                        .getDatabase(namespace.left())
-                        .runCommand(
-                                new BsonDocument("sqlGetSchema", new BsonString(namespace.right())),
-                                MongoJsonSchemaResult.class);
+        MongoJsonSchemaResult r;
+        try {
+            r = getSchemaByClusterType(conn.getDatabase(namespace.left()), namespace.right());
+        } catch (MongoSQLException | MongoSerializationException e) {
+            throw new RuntimeException(
+                    "Error retrieving schema for collection: " + namespace.right(), e);
+        }
 
         Document keys = indexInfo.get(INDEX_KEY_KEY, Document.class);
         try {
