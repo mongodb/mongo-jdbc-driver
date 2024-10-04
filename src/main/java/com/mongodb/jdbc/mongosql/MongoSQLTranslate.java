@@ -309,7 +309,7 @@ public class MongoSQLTranslate {
                                 Projections.fields(
                                         Projections.exclude("_id"),
                                         Projections.computed("schema.jsonSchema", "$schema"),
-                                        Projections.computed("schema.version", new BsonInt64(1)))),
+                                        Projections.computed("schema.version", new BsonInt32(1)))),
                         Aggregates.addFields(new Field<>("ok", new BsonInt32(1))));
 
         MongoCollection<BsonDocument> schemasCollection =

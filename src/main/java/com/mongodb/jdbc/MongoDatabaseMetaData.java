@@ -1536,7 +1536,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // Helper for getting column data for all columns from all tables from a specific
     // database. Used by getColumns and getColumnPrivileges. The caller specifies how
     // to serialize the column info into BSON documents for the result set.
-    Stream<BsonDocument> getColumnsFromDB(
+    private Stream<BsonDocument> getColumnsFromDB(
             String dbName,
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
