@@ -21,10 +21,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.MongoDriver;
+import com.mongodb.jdbc.MongoJsonSchemaResult;
 import com.mongodb.jdbc.MongoSerializationException;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
@@ -40,7 +42,7 @@ import org.bson.conversions.Bson;
 
 @AutoLoggable
 public class MongoSQLTranslate {
-
+    public static final String SQL_SCHEMAS_COLLECTION = "__sql_schemas";
     private final MongoLogger logger;
     private final CodecRegistry pojoCodecRegistry;
 
@@ -248,7 +250,7 @@ public class MongoSQLTranslate {
                 Arrays.asList(matchStage, projectStage, groupStage, finalProjectStage);
 
         MongoCollection<BsonDocument> collection =
-                mongoDatabase.getCollection("__sql_schemas", BsonDocument.class);
+                mongoDatabase.getCollection(SQL_SCHEMAS_COLLECTION, BsonDocument.class);
         AggregateIterable<BsonDocument> result = collection.aggregate(pipeline);
 
         BsonDocument catalog = null;
@@ -283,5 +285,49 @@ public class MongoSQLTranslate {
         }
 
         return catalog;
+    }
+
+    /**
+     * Retrieves the schema of a specific collection from the MongoDB database.
+     *
+     * @param mongoDatabase MongoDB database instance.
+     * @param collectionName Name of the collection to retrieve the schema.
+     * @return MongoJsonSchemaResult schema result of the collection.
+     * @throws MongoSQLException If no schema is found for the given collection or an error occurs
+     *     during command execution.
+     * @throws MongoSerializationException If an error occurs during serialization or
+     *     deserialization.
+     */
+    public MongoJsonSchemaResult getSchema(MongoDatabase mongoDatabase, String collectionName)
+            throws MongoSerializationException, MongoSQLException {
+
+        // The pipeline formats the output to match the structure required by MongoJsonSchemaResult
+        List<Bson> pipeline =
+                Arrays.asList(
+                        Aggregates.match(Filters.eq("_id", collectionName)),
+                        Aggregates.project(
+                                Projections.fields(
+                                        Projections.exclude("_id"),
+                                        Projections.computed("schema.jsonSchema", "$schema"),
+                                        Projections.computed("schema.version", new BsonInt64(1)))),
+                        Aggregates.addFields(new Field<>("ok", new BsonInt32(1))));
+
+        MongoCollection<BsonDocument> schemasCollection =
+                mongoDatabase.getCollection(SQL_SCHEMAS_COLLECTION, BsonDocument.class);
+        AggregateIterable<BsonDocument> result = schemasCollection.aggregate(pipeline);
+
+        BsonDocument resultDoc = result.first();
+
+        if (resultDoc == null) {
+            throw new MongoSQLException("No schema found for collection: " + collectionName);
+        }
+
+        BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
+        MongoJsonSchemaResult mongoJsonSchemaResult =
+                pojoCodecRegistry
+                        .get(MongoJsonSchemaResult.class)
+                        .decode(reader, DecoderContext.builder().build());
+
+        return mongoJsonSchemaResult;
     }
 }
