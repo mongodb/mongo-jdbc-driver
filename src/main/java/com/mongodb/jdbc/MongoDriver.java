@@ -47,6 +47,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -127,7 +128,7 @@ public class MongoDriver implements Driver {
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
-    static CodecRegistry registry =
+    public static final CodecRegistry REGISTRY =
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
@@ -185,14 +186,11 @@ public class MongoDriver implements Driver {
     private static boolean loadMongoSqlTranslateLibrary(String libraryPath) {
         try {
             System.load(libraryPath);
+            System.out.println("Sucessfully loaded " + libraryPath);
             return true;
         } catch (Throwable t) {
             return false;
         }
-    }
-
-    public static CodecRegistry getCodecRegistry() {
-        return registry;
     }
 
     // Resolves the potential paths where the MongoSQL Translate library are expected be located.
@@ -420,8 +418,7 @@ public class MongoDriver implements Driver {
     }
 
     @Override
-    public DriverPropertyInfo[] getPropertyInfo(String url, java.util.Properties info)
-            throws SQLException {
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
         Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
         return p.right();
     }
@@ -444,7 +441,7 @@ public class MongoDriver implements Driver {
     // ------------------------- JDBC 4.1 -----------------------------------
 
     @Override
-    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -682,8 +679,7 @@ public class MongoDriver implements Driver {
      * @return true if the given key is a JDBC specific property, false otherwise.
      */
     private static boolean isMongoJDBCProperty(String key) {
-        return Stream.of(MongoJDBCProperty.values())
-                .anyMatch(v -> v.getPropertyName().equalsIgnoreCase(key));
+        return Stream.of(values()).anyMatch(v -> v.getPropertyName().equalsIgnoreCase(key));
     }
 
     /**

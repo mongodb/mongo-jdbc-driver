@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import static com.mongodb.jdbc.BsonUtils.JSON_WRITER_SETTINGS;
+
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -37,21 +39,23 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.bson.*;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
 @AutoLoggable
 public class MongoSQLTranslate {
+
     public static final String SQL_SCHEMAS_COLLECTION = "__sql_schemas";
     private final MongoLogger logger;
-    private final CodecRegistry pojoCodecRegistry;
 
-    /** Native method to send commands via JNI. */
-    public native byte[] runCommand(byte[] command, int length);
+    /**
+     * Native method to send commands via JNI. pub extern "C" fn
+     * Java_com_mongodb_jdbc_mongosql_MongoSQLTranslate_runCommand( env: JNIEnv, _class: JClass,
+     * command: JByteArray, ) -> jbyteArray
+     */
+    public native byte[] runCommand(byte[] command);
 
     public MongoSQLTranslate(MongoLogger logger) {
         this.logger = logger;
-        this.pojoCodecRegistry = MongoDriver.getCodecRegistry();
     }
 
     /**
@@ -68,12 +72,12 @@ public class MongoSQLTranslate {
             throws MongoSerializationException, MongoSQLException {
 
         byte[] commandBytes = BsonUtils.serialize(command);
-        byte[] responseBytes = runCommand(commandBytes, commandBytes.length);
+        byte[] responseBytes = runCommand(commandBytes);
         BsonDocument responseDoc = BsonUtils.deserialize(responseBytes);
 
         BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
         T result =
-                pojoCodecRegistry
+                MongoDriver.REGISTRY
                         .get(responseClass)
                         .decode(reader, DecoderContext.builder().build());
 
@@ -189,6 +193,16 @@ public class MongoSQLTranslate {
             String dbName,
             List<GetNamespacesResult.Namespace> collections)
             throws MongoSQLException {
+
+        // There is no collection tied to the query
+        // For example "SELECT 1"
+        if (collections == null || collections.isEmpty()) {
+            MongoJsonSchema emptyObjectSchema = MongoJsonSchema.createEmptyObjectSchema();
+            BsonDocument doc =
+                    new BsonDocument(
+                            dbName, new BsonDocument("", emptyObjectSchema.toBsonDocument()));
+            return doc;
+        }
 
         // Create an aggregation pipeline to fetch the schema information for the specified collections.
         // The pipeline uses $in to query all the specified collections and projects them into the desired format:
@@ -324,7 +338,7 @@ public class MongoSQLTranslate {
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
         MongoJsonSchemaResult mongoJsonSchemaResult =
-                pojoCodecRegistry
+                MongoDriver.REGISTRY
                         .get(MongoJsonSchemaResult.class)
                         .decode(reader, DecoderContext.builder().build());
 

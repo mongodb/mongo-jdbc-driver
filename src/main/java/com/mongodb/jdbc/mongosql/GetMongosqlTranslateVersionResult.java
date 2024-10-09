@@ -16,10 +16,17 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import com.mongodb.jdbc.BsonUtils;
+import com.mongodb.jdbc.MongoDriver;
+import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class GetMongosqlTranslateVersionResult extends BaseResult {
+
+    private static final Codec<GetMongosqlTranslateVersionResult> CODEC =
+            MongoDriver.REGISTRY.get(GetMongosqlTranslateVersionResult.class);
+
     @BsonProperty("version")
     public final String version;
 
@@ -30,5 +37,10 @@ public class GetMongosqlTranslateVersionResult extends BaseResult {
             @BsonProperty("error_is_internal") Boolean errorIsInternal) {
         super(error, errorIsInternal);
         this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return BsonUtils.toString(CODEC, this);
     }
 }

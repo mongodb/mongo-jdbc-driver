@@ -16,14 +16,21 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.JsonSchema;
+import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoJsonSchema;
 import java.util.List;
 import org.bson.BsonDocument;
+import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class TranslateResult extends BaseResult {
+
+    private static final Codec<TranslateResult> CODEC =
+            MongoDriver.REGISTRY.get(TranslateResult.class);
+
     public final String targetDb;
     public final String targetCollection;
     public final List<BsonDocument> pipeline;
@@ -48,5 +55,10 @@ public class TranslateResult extends BaseResult {
                         ? MongoJsonSchema.toSimplifiedMongoJsonSchema(resultSetSchema)
                         : null;
         this.selectOrder = selectOrder;
+    }
+
+    @Override
+    public String toString() {
+        return BsonUtils.toString(CODEC, this);
     }
 }

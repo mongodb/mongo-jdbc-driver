@@ -16,17 +16,23 @@
 
 package com.mongodb.jdbc;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
+import org.bson.BsonDocumentWriter;
 import org.bson.codecs.*;
 import org.bson.io.BasicOutputBuffer;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriter;
+import org.bson.json.JsonWriterSettings;
 
 /** Utility class for BSON serialization and deserialization. */
 public class BsonUtils {
-
-    private static final DocumentCodec DOCUMENT_CODEC = new DocumentCodec();
+    public static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(true).build();
 
     /**
      * Serializes a BsonDocument into a BSON byte array.
@@ -64,5 +70,26 @@ public class BsonUtils {
         } catch (RuntimeException e) {
             throw new MongoSerializationException("Failed to deserialize BSON.", e);
         }
+    }
+
+    public static <T> String toString(Codec<T> codec, T val) {
+        try (StringWriter writer = new StringWriter();
+                JsonWriter jsonWriter = new JsonWriter(writer, JSON_WRITER_SETTINGS)) {
+            codec.encode(jsonWriter, val, EncoderContext.builder().build());
+            writer.flush();
+
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> BsonDocument toBsonDocument(Codec<T> codec, T val) {
+        BsonDocument doc = new BsonDocument();
+        try (BsonDocumentWriter writer = new BsonDocumentWriter(doc); ) {
+            codec.encode(writer, val, EncoderContext.builder().build());
+            writer.flush();
+        }
+        return doc;
     }
 }

@@ -437,7 +437,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // the argued filter.
     private Stream<MongoListTablesResult> getTableDataFromDB(
             String dbName, Function<MongoListTablesResult, Boolean> filter) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         return getCollectionsFromRunCommand(db).stream().filter(filter::apply);
     }
 
@@ -1541,7 +1541,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
             Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         return getCollectionsFromRunCommand(db)
                 .stream()
                 .map(collection -> collection.name)
@@ -1807,7 +1807,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String dbName,
             String tableName,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         ListIndexesIterable<Document> i = db.getCollection(tableName).listIndexes();
         List<BsonDocument> docs = new ArrayList<>();
 
