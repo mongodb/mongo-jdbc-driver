@@ -236,6 +236,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final com.mongodb.jdbc.MongoFunctions MongoFunctions =
             com.mongodb.jdbc.MongoFunctions.getInstance();
 
+    private static final Pattern DISALLOWED_COLLECTION_NAMES =
+            Pattern.compile("(system\\.(namespace|indexes|profiles|js|views))|__sql_schemas");
+
+    private static final Pattern DISALLOWED_DB_NAMES = Pattern.compile("admin|config|local|system");
+
     private final MongoConnection conn;
     private String serverVersion;
     private MongoLogger logger;
@@ -407,8 +412,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     // MHOUSE-7119: ADF quickstarts return empty strings and the admin database, so we filter them out
-    static boolean filterEmptiesAndAdmin(String dbName) {
-        return !dbName.isEmpty() && !dbName.equals("admin");
+    static boolean filterEmptiesAndInternalDBs(String dbName) {
+        return !dbName.isEmpty()
+                && !DISALLOWED_DB_NAMES.matcher(dbName).matches();
     }
 
     // Helper for getting a stream of all database names.
@@ -418,7 +424,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 .listDatabaseNames()
                 .into(new ArrayList<>())
                 .stream()
-                .filter(dbName -> filterEmptiesAndAdmin(dbName));
+                .filter(dbName -> filterEmptiesAndInternalDBs(dbName));
     }
 
     // Helper for getting a list of collection names from the db
@@ -487,10 +493,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             List<String> types,
             BiFunction<String, MongoListTablesResult, BsonDocument> bsonSerializer) {
 
+        // Filter out __sql_schemas, system.namespaces, system.indexes,system.profile,system.js,system.views
         return this.getTableDataFromDB(
                         dbName,
                         res ->
-                                (tableNamePatternRE == null
+                                // Don't list system collections
+                                (!DISALLOWED_COLLECTION_NAMES.matcher(res.name).matches())
+                                        && (tableNamePatternRE == null
                                                 || tableNamePatternRE.matcher(res.name).matches())
                                         && (types == null
                                                 || types.contains(res.type.toLowerCase())))
