@@ -108,12 +108,7 @@ tasks:
           ext: "dylib"
           release_version: "snapshot"
       # windows
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "windows"
-          ext: "dll"
-          release_version: "snapshot"
+      - func: "fetch mongosqltranslate windows"
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -382,6 +377,16 @@ functions:
         aws_secret: ${release_aws_secret}
         local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
         remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${release_version}-${platform}-${arch}.${ext}
+        bucket: translators-connectors-releases
+
+  "fetch mongosqltranslate windows":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/x86_64/windows/mongosqltranslate.dll
+        remote_file: mongosqltranslate/mongosqltranslate-vsnapshot-win.dll
         bucket: translators-connectors-releases
 
   "build jdbc driver":
