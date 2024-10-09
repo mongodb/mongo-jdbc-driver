@@ -76,19 +76,20 @@ tasks:
     commands:
       # fetch mongosqltranslate libraries for each platform before building
       # macos arm
+#      - func: "fetch libmongosqltranslate"
+#        vars:
+#          arch: "arm"
+#          platform: "macos"
+#          ext: "dylib"
+#          release_version: "snapshot"
+#      # linux x86
+#      - func: "fetch libmongosqltranslate"
+#        vars:
+#          arch: "x86_64"
+#          platform: "linux"
+#          ext: "so"
+#          release_version: "snapshot"
       - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "macos"
-          ext: "dylib"
-          release_version: "snapshot"
-      # linux x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "linux"
-          ext: "so"
-          release_version: "snapshot"
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -355,8 +356,20 @@ functions:
         working_dir: mongo-jdbc-driver
         aws_key: ${release_aws_key}
         aws_secret: ${release_aws_secret}
-        local_file: mongo-jdbc-driver/src/main/resources/{$arch}/{$platform}/libmongosqltranslate.{$ext}
-        remote_file: mongosqltranslate/libmongosqltranslate-v${release_version}-{$platform}-{$arch}.{$ext}
+#        local_file: mongo-jdbc-driver/src/main/resources/{$arch}/{$platform}/libmongosqltranslate.{$ext}
+#        remote_file: mongosqltranslate/libmongosqltranslate-v${release_version}-{$platform}-{$arch}.{$ext}
+        local_file: mongo-jdbc-driver/src/main/resources/arm/macos/libmongosqltranslate.dylib
+        remote_file: mongosqltranslate/libmongosqltranslate-vsnapshot-macos-arm.dylib
+        bucket: translators-connectors-releases
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+#        local_file: mongo-jdbc-driver/src/main/resources/{$arch}/{$platform}/libmongosqltranslate.{$ext}
+#        remote_file: mongosqltranslate/libmongosqltranslate-v${release_version}-{$platform}-{$arch}.{$ext}
+        local_file: mongo-jdbc-driver/src/main/resources/x86_64/linux/libmongosqltranslate.so
+        remote_file: mongosqltranslate/libmongosqltranslate-vsnapshot-linux-x86_64.so
         bucket: translators-connectors-releases
 
   "build jdbc driver":
