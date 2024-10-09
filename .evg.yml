@@ -724,7 +724,7 @@ functions:
         aws_secret: ${aws_secret}
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        bucket: translate
+        bucket: mciuploads
 
   "fetch source":
     - command: shell.exec
