@@ -97,12 +97,66 @@ public class DCIntegrationTest {
                 });
     }
 
+    /**
+     * Connect to an Enterprise cluster to use for the tests.
+     *
+     * @return the connection to the enterprise cluster to use for the tests.
+     * @throws SQLException If the connection failed.
+     */
+    private Connection enterpriseConnect() throws SQLException {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        return DriverManager.getConnection(info.left(), info.right());
+    }
+
     /** Tests that the driver connects to the enterprise edition of the server. */
     @Test
     public void testConnectionToEnterpriseServerSucceeds() throws SQLException {
-        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
-        MongoConnection conn =
-                (MongoConnection) DriverManager.getConnection(info.left(), info.right());
-        conn.close();
+        try (Connection conn = enterpriseConnect(); ) {
+            conn.getMetaData().getDriverVersion();
+        }
     }
+
+    @Test
+    public void testInvalidQueryShouldFail() throws SQLException {
+        try (Connection conn = enterpriseConnect();
+                Statement stmt = conn.createStatement(); ) {
+            // Invalid SQL query should fail
+            assertThrows(
+                    java.sql.SQLException.class,
+                    () -> {
+                        try {
+                            stmt.executeQuery("This is not valid SQL");
+                        } catch (SQLException e) {
+                            // Let's make sure that we fail for the reason we expect it to.
+                            assert (e.getMessage().contains("Error 2001"));
+                            throw e;
+                        }
+                    });
+        }
+    }
+
+    @Test
+    public void testValidSimpleQueryShouldSucceed() throws SQLException {
+        try (Connection conn = enterpriseConnect();
+             Statement stmt = conn.createStatement(); ) {
+            ResultSet rs = stmt.executeQuery("SELECT * from accounts");
+            assert (rs.next());
+            // Let's just check that we can access the data and don't blow up.
+            rs.getString(1);
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testCollectionLessQueryShouldSucceed() throws SQLException {
+        try (Connection conn = enterpriseConnect();
+             Statement stmt = conn.createStatement(); ) {
+            ResultSet rs = stmt.executeQuery("SELECT 1");
+            assert (rs.next());
+            // Let's just check that we can access the data and don't blow up.
+            rs.getString(1);
+
+            rs.close();
+        }
+
 }
