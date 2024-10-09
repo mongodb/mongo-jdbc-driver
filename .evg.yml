@@ -397,12 +397,6 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          ls -la src/main/resources
-          ls -la src/main/resources/arm/linux
-          ls -la src/main/resources/arm/macos
-          ls -la src/main/resources/x86_64/linux
-          ls -la src/main/resources/x86_64/macos
-          ls -la src/main/resources/x86_64/windows
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
