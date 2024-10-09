@@ -74,6 +74,21 @@ buildvariants:
 tasks:
   - name: "build"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          ext: "dylib"
+          release_version: "snapshot"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          ext: "so"
+          release_version: "snapshot"
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -334,6 +349,16 @@ functions:
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
+  "fetch libmongosqltranslate":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/{$arch}/{$platform}/libmongosqltranslate.{$ext}
+        remote_file: mongosqltranslate/libmongosqltranslate-v${release_version}-{$platform}-{$arch}.{$ext}
+        bucket: translators-connectors-releases
+
   "build jdbc driver":
     command: shell.exec
     type: test
@@ -342,6 +367,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          ls -la src/main/resources
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
@@ -669,7 +695,7 @@ functions:
         aws_secret: ${aws_secret}
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        bucket: mciuploads
+        bucket: translate
 
   "fetch source":
     - command: shell.exec
@@ -950,7 +976,6 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-
 
   "generate compliance report":
     - command: shell.exec
