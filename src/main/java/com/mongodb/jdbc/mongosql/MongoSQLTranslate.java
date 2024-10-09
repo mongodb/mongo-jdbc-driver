@@ -81,8 +81,10 @@ public class MongoSQLTranslate {
         if (result.hasError()) {
             String errorMessage =
                     String.format(
-                            "Error executing command: %s. Error is internal: %s",
-                            result.getError(), result.getErrorIsInternal());
+                            result.getErrorIsInternal()
+                                    ? "Internal error: %s"
+                                    : "Error executing command: %s",
+                            result.getError());
             throw new MongoSQLException(errorMessage);
         }
 
