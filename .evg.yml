@@ -110,6 +110,7 @@ tasks:
       # windows
       - func: "fetch mongosqltranslate windows"
       - func: "build jdbc driver"
+      - func: "check jar"
 
   - name: "test-unit"
     commands:
@@ -397,7 +398,27 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          echo "what?"
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
+          ls build
+          ls build/libs
+          echo "hello about to jar -tf"
+          jar -tf build/libs/mongodb-jdbc-2.2.0-SNAPSHOT.jar
+          echo "goodbye just jar -tf'd"
+
+  "check jar":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+          ${PREPARE_SHELL}
+          ls build
+          ls build/libs
+          echo "hello about to jar -tf"
+          jar -tf build/libs/mongodb-jdbc-2.2.0-SNAPSHOT.jar
+          echo "goodbye just jar -tf'd"
 
   "check spotless":
     command: shell.exec
