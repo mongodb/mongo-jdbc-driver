@@ -232,7 +232,6 @@ public class MongoStatement implements Statement {
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
         List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
         if (collections == null || collections.isEmpty()) {
-            throw new MongoSQLException("No collections found for the current database: " + dbName);
             //throw new MongoSQLException("No collections found for the current database: " + dbName);
         }
 

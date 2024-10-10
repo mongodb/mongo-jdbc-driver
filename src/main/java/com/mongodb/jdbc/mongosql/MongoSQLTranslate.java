@@ -16,7 +16,7 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import static com.mongodb.jdbc.BsonUtils.JSON_WRITER_SETTINGS;
+import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_SETTINGS;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -29,6 +29,7 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.jdbc.*;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.utils.BsonUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

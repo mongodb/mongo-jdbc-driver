@@ -23,12 +23,11 @@ import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import com.mongodb.jdbc.utils.NativeUtils;
+import java.io.*;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -135,6 +134,27 @@ public class MongoDriver implements Driver {
                     MongoClientSettings.getDefaultCodecRegistry(),
                     PojoCodecProvider.builder().automatic(true).build());
 
+    static String getAbbreviatedGitVersion() {
+        try {
+            // Unit and integration tests can't rely on the manifest from the jar
+            // Get the git tag and use it as the version
+            String command = "git describe --abbrev=0";
+            Process p = Runtime.getRuntime().exec(command);
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            StringBuilder version_sb = new StringBuilder();
+            String line;
+            while ((line = input.readLine()) != null) {
+                version_sb.append(line);
+                System.out.println("Version: " + version_sb);
+            }
+            return version_sb.append("-SNAPSHOT").substring(1).trim();
+
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    new SQLException("Internal error retrieving driver version"));
+        }
+    }
+
     static {
         MongoDriver unit = new MongoDriver();
         try {
@@ -142,21 +162,22 @@ public class MongoDriver implements Driver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        VERSION = unit.getClass().getPackage().getImplementationVersion();
-        if (VERSION != null) {
-            String[] verSp = VERSION.split("[.]");
-            if (verSp.length < 2) {
-                throw new RuntimeException(
-                        new SQLException(
-                                "version was not specified correctly, must contain at least major and minor parts"));
-            }
-            MAJOR_VERSION = Integer.parseInt(verSp[0]);
-            MINOR_VERSION = Integer.parseInt(verSp[1]);
+        String version = unit.getClass().getPackage().getImplementationVersion();
+        if (version == null) {
+            VERSION = getAbbreviatedGitVersion();
         } else {
-            // final requires this.
-            MAJOR_VERSION = 0;
-            MINOR_VERSION = 0;
+            VERSION = version;
         }
+
+        String[] verSp = VERSION.split("[.]");
+        if (verSp.length < 2) {
+            throw new RuntimeException(
+                    new SQLException(
+                            "version was not specified correctly, must contain at least major and minor parts"));
+        }
+        MAJOR_VERSION = Integer.parseInt(verSp[0]);
+        MINOR_VERSION = Integer.parseInt(verSp[1]);
+
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
         Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
@@ -212,10 +233,20 @@ public class MongoDriver implements Driver {
     }
 
     private static String getLibraryPath() throws Exception {
-        URL url = MongoDriver.class.getProtectionDomain().getCodeSource().getLocation();
-        Path driverPath = Paths.get(url.toURI());
-        Path driverDir = driverPath.getParent();
-        return driverDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
+
+        String libName = System.mapLibraryName(MONGOSQL_TRANSLATE_NAME);
+        URL url =
+                MongoDriver.class
+                        .getProtectionDomain()
+                        .getClassLoader()
+                        .getResource(
+                                NativeUtils.normalizeArch()
+                                        + "/"
+                                        + NativeUtils.normalizeOS()
+                                        + "/"
+                                        + libName);
+
+        return Paths.get(url.toURI()).toString();
     }
 
     @Override

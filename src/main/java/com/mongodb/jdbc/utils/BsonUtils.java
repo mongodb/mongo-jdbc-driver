@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc;
+package com.mongodb.jdbc.utils;
 
+import com.mongodb.jdbc.MongoSerializationException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;

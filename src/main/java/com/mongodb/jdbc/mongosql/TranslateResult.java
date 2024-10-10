@@ -16,10 +16,10 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.JsonSchema;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoJsonSchema;
+import com.mongodb.jdbc.utils.BsonUtils;
 import java.util.List;
 import org.bson.BsonDocument;
 import org.bson.codecs.Codec;
