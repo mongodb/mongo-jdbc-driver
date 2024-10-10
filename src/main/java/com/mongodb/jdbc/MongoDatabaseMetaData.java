@@ -413,8 +413,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     // MHOUSE-7119: ADF quickstarts return empty strings and the admin database, so we filter them out
     static boolean filterEmptiesAndInternalDBs(String dbName) {
-        return !dbName.isEmpty()
-                && !DISALLOWED_DB_NAMES.matcher(dbName).matches();
+        return !dbName.isEmpty() && !DISALLOWED_DB_NAMES.matcher(dbName).matches();
     }
 
     // Helper for getting a stream of all database names.
