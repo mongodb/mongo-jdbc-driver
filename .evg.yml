@@ -99,6 +99,8 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "test-smoke"
@@ -667,8 +669,8 @@ functions:
         working_dir: mongo-jdbc-driver
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         bucket: mciuploads
 
   "fetch source":
@@ -840,8 +842,8 @@ functions:
         silent: true
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         content_type: application/java-archive
         bucket: mciuploads
         permissions: public-read
