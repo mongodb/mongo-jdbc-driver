@@ -99,7 +99,6 @@ public class DCIntegrationTest {
     @Test
     public void testConnectionToCommunityServerFails() {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
-
         assertThrows(
                 java.sql.SQLException.class,
                 () -> {
@@ -179,7 +178,7 @@ public class DCIntegrationTest {
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getCatalogs();
             while (rs.next()) {
-                // Verify that none of the system database are returned
+                // Verify that none of the system databases are returned
                 assert (!MongoDatabaseMetaData.DISALLOWED_DB_NAMES
                         .matcher(rs.getString(1))
                         .matches());
@@ -206,7 +205,9 @@ public class DCIntegrationTest {
     public void testColumnsMetadataForCollectionWithSchema() throws SQLException {
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getColumns(null, null, "accounts", "%");
-            PrintUtils.printResultSet(rs);
+            assert (rs.next());
+            // Let's just check that we can access the data and don't blow up.
+            rs.getString(1);
             rs.close();
         }
     }
@@ -215,7 +216,8 @@ public class DCIntegrationTest {
     public void testColumnsMetadataForCollectionWithNoSchema() throws SQLException {
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getColumns(null, null, "acc_limit_over_1000", "%");
-            PrintUtils.printResultSet(rs);
+            // Let's just check that the result set is empty and we don't blow up.
+            assert (!rs.next());
             rs.close();
         }
     }
