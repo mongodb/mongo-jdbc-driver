@@ -382,7 +382,7 @@ functions:
         aws_key: ${release_aws_key}
         aws_secret: ${release_aws_secret}
         local_file: mongo-jdbc-driver/src/main/resources/x86_64/windows/mongosqltranslate.dll
-        remote_file: mongosqltranslate/mongosqltranslate-v${${LIBMONGOSQLTRANSLATE_VER}}-win.dll
+        remote_file: mongosqltranslate/mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-win.dll
         bucket: translators-connectors-releases
 
   "build jdbc driver":
