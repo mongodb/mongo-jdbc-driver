@@ -124,6 +124,7 @@ public class MongoDriver implements Driver {
     }
 
     private static boolean mongoSqlTranslateLibraryLoaded = false;
+    private static String mongoSqlTranslateLibraryPath = null;
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
@@ -194,6 +195,7 @@ public class MongoDriver implements Driver {
             String[] libraryPaths = resolveLibraryPaths();
             for (String path : libraryPaths) {
                 if (loadMongoSqlTranslateLibrary(path)) {
+                    mongoSqlTranslateLibraryPath = path;
                     mongoSqlTranslateLibraryLoaded = true;
                     return;
                 }
@@ -478,6 +480,10 @@ public class MongoDriver implements Driver {
 
     public static boolean isMongoSqlTranslateLibraryLoaded() {
         return mongoSqlTranslateLibraryLoaded;
+    }
+
+    public static String getMongoSqlTranslateLibraryPath() {
+        return mongoSqlTranslateLibraryPath;
     }
 
     // removePrefix removes a prefix from a String.
