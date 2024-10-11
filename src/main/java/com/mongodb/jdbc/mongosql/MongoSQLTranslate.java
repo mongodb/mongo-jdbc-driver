@@ -16,8 +16,6 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_SETTINGS;
-
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -187,7 +185,15 @@ public class MongoSQLTranslate {
         return runCommand(command, GetNamespacesResult.class);
     }
 
-    // Builds a catalog document containing the schema information for the specified collections.
+    /**
+     * Builds a catalog document containing the schema information for the specified collections.
+     *
+     * @param collections The list of collections to retrieve the schemas for.
+     * @param dbName The name of the database where the collections must be.
+     * @param mongoDatabase The current database for this connection.
+     * @return the schema catalog for all the specified collections. The catalog document format is
+     *     : { "dbName": { "collection1" : "Schema1", "collection2" : "Schema2", ... }}
+     */
     public BsonDocument buildCatalogDocument(
             MongoDatabase mongoDatabase,
             String dbName,
@@ -198,10 +204,9 @@ public class MongoSQLTranslate {
         // For example "SELECT 1"
         if (collections == null || collections.isEmpty()) {
             MongoJsonSchema emptyObjectSchema = MongoJsonSchema.createEmptyObjectSchema();
-            BsonDocument doc =
-                    new BsonDocument(
-                            dbName, new BsonDocument("", emptyObjectSchema.toBsonDocument()));
-            return doc;
+            // Create a catalog with an empty collection name and an empty schema
+            // {"test": {"": {}}}
+            return new BsonDocument(dbName, new BsonDocument("", new BsonDocument()));
         }
 
         // Create an aggregation pipeline to fetch the schema information for the specified collections.
@@ -279,8 +284,14 @@ public class MongoSQLTranslate {
             foundResult = true;
         }
         if (!foundResult) {
-            throw new MongoSQLException(
-                    "No schema information returned for the requested collections.");
+            logger.log(
+                    Level.SEVERE,
+                    "No schema information found for any of the requested collections. Will use empty schemas. Hint: Generate schemas for your collections.");
+            BsonDocument schemas = new BsonDocument();
+            for (String collectionName : collectionNames) {
+                schemas.append(collectionName, new BsonDocument());
+            }
+            catalog = new BsonDocument(dbName, schemas);
         }
 
         // Check that all expected collections are present in the result
@@ -297,7 +308,6 @@ public class MongoSQLTranslate {
             throw new MongoSQLException(
                     "Could not retrieve schema for collections: " + missingCollections);
         }
-
         return catalog;
     }
 
@@ -333,7 +343,10 @@ public class MongoSQLTranslate {
         BsonDocument resultDoc = result.first();
 
         if (resultDoc == null) {
-            throw new MongoSQLException("No schema found for collection: " + collectionName);
+            logger.log(
+                    Level.SEVERE,
+                    "No schema information returned for the requested collections. Using an empty schema.");
+            resultDoc = new BsonDocument();
         }
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
