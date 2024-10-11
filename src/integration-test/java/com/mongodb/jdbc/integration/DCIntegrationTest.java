@@ -19,9 +19,9 @@ package com.mongodb.jdbc.integration;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.jdbc.MongoConnection;
+import com.mongodb.jdbc.MongoDatabaseMetaData;
 import com.mongodb.jdbc.Pair;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -29,9 +29,13 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DCIntegrationTest {
 
-    /** Tests that the driver can work with SRV-style URIs. */
-    @Test
-    public void testConnectWithSRVURI() throws SQLException {
+    /**
+     * Connect to a remote cluster to use for the tests.
+     *
+     * @return the connection to the enterprise cluster to use for the tests.
+     * @throws SQLException If the connection failed.
+     */
+    private Connection remoteTestInstanceConnect() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
         String mongoURI =
@@ -53,8 +57,16 @@ public class DCIntegrationTest {
         p.setProperty("authSource", authSource);
         p.setProperty("database", "test");
 
-        MongoConnection conn = (MongoConnection) DriverManager.getConnection(fullURI, p);
-        conn.close();
+        return DriverManager.getConnection(fullURI, p);
+    }
+
+    /** Tests that the driver can work with SRV-style URIs. */
+    @Test
+    public void testConnectWithSRVURI() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            // Let's use the connection to make sure everything is working fine.
+            conn.getMetaData().getDriverVersion();
+        }
     }
 
     /**
@@ -97,28 +109,19 @@ public class DCIntegrationTest {
                 });
     }
 
-    /**
-     * Connect to an Enterprise cluster to use for the tests.
-     *
-     * @return the connection to the enterprise cluster to use for the tests.
-     * @throws SQLException If the connection failed.
-     */
-    private Connection enterpriseConnect() throws SQLException {
-        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
-        return DriverManager.getConnection(info.left(), info.right());
-    }
-
     /** Tests that the driver connects to the enterprise edition of the server. */
     @Test
     public void testConnectionToEnterpriseServerSucceeds() throws SQLException {
-        try (Connection conn = enterpriseConnect(); ) {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        try (Connection conn = DriverManager.getConnection(info.left(), info.right()); ) {
+            // Let's use the connection to make sure everything is working fine.
             conn.getMetaData().getDriverVersion();
         }
     }
 
     @Test
     public void testInvalidQueryShouldFail() throws SQLException {
-        try (Connection conn = enterpriseConnect();
+        try (Connection conn = remoteTestInstanceConnect();
                 Statement stmt = conn.createStatement(); ) {
             // Invalid SQL query should fail
             assertThrows(
@@ -137,8 +140,8 @@ public class DCIntegrationTest {
 
     @Test
     public void testValidSimpleQueryShouldSucceed() throws SQLException {
-        try (Connection conn = enterpriseConnect();
-             Statement stmt = conn.createStatement(); ) {
+        try (Connection conn = remoteTestInstanceConnect();
+                Statement stmt = conn.createStatement(); ) {
             ResultSet rs = stmt.executeQuery("SELECT * from accounts");
             assert (rs.next());
             // Let's just check that we can access the data and don't blow up.
@@ -149,14 +152,71 @@ public class DCIntegrationTest {
 
     @Test
     public void testCollectionLessQueryShouldSucceed() throws SQLException {
-        try (Connection conn = enterpriseConnect();
-             Statement stmt = conn.createStatement(); ) {
+        try (Connection conn = remoteTestInstanceConnect();
+                Statement stmt = conn.createStatement(); ) {
             ResultSet rs = stmt.executeQuery("SELECT 1");
             assert (rs.next());
             // Let's just check that we can access the data and don't blow up.
             rs.getString(1);
-
             rs.close();
         }
+    }
 
+    @Test
+    public void testValidSimpleQueryNoSchemaForCollectionShouldSucceed() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect();
+                Statement stmt = conn.createStatement(); ) {
+            ResultSet rs = stmt.executeQuery("SELECT account_id from acc_limit_over_1000 limit 5");
+            assert (rs.next());
+            // Let's just check that we can access the data and don't blow up.
+            rs.getString(1);
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testListDatabasse() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getCatalogs();
+            while (rs.next()) {
+                // Verify that none of the system database are returned
+                assert (!MongoDatabaseMetaData.DISALLOWED_DB_NAMES
+                        .matcher(rs.getString(1))
+                        .matches());
+            }
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testListTables() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getTables(null, null, "%", null);
+            while (rs.next()) {
+                // Verify that none of the system collections are returned
+                assert (!MongoDatabaseMetaData.DISALLOWED_COLLECTION_NAMES
+                        .matcher(rs.getString(3))
+                        .matches());
+            }
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testColumnsMetadataForCollectionWithSchema() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getColumns(null, null, "accounts", "%");
+            PrintUtils.printResultSet(rs);
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testColumnsMetadataForCollectionWithNoSchema() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getColumns(null, null, "acc_limit_over_1000", "%");
+            PrintUtils.printResultSet(rs);
+            rs.close();
+        }
+    }
 }
