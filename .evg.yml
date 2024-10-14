@@ -96,7 +96,7 @@ tasks:
           platform: "macos"
           lib_prefix: "lib"
           ext: "dylib"
-      # macos arm
+      # macos x86
       - func: "fetch libmongosqltranslate"
         vars:
           arch: "x86_64"
