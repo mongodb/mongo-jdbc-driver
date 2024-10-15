@@ -133,9 +133,10 @@ tasks:
   - name: sbom
     commands:
       - func: "generate sbom"
-      - func: "upload sbom"
-      - func: "push SBOM Lite to Silk"
-      - func: "pull augmented SBOM from Silk"
+      # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
+      # - func: "upload sbom"
+      # - func: "push SBOM Lite to Silk"
+      # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
