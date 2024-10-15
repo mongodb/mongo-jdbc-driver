@@ -1,6 +1,18 @@
 stepback: true
 command_type: system
 
+variables:
+  - &assume_role_cmd
+    command: ec2.assume_role
+    params:
+      role_arn: ${assume_role_arn}
+      duration_seconds: 3600
+  - &aws_std_config
+    aws_key: ${AWS_ACCESS_KEY_ID}
+    aws_secret: ${AWS_SECRET_ACCESS_KEY}
+    aws_session_token: ${AWS_SESSION_TOKEN}
+    bucket: evg-bucket-mongo-jdbc-driver
+
 pre:
   - func: "fetch source"
   - func: "export variables"
@@ -164,10 +176,11 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "publish augmented SBOM"
-      - func: "publish static code analysis"
+      # TODO: undo these comments before merging back into main
+      # - func: "publish augmented SBOM"
+      # - func: "publish static code analysis"
       - func: "generate compliance report"
-      - func: "publish compliance report"
+      # - func: "publish compliance report"
 
 functions:
   "push SBOM Lite to Silk":
@@ -195,10 +208,7 @@ functions:
           echo "-------------------------------"
 
   "pull augmented SBOM from Silk":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -223,9 +233,7 @@ functions:
           ls -lrt $SSDLC_DIR
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
@@ -233,15 +241,10 @@ functions:
         permissions: public-read
 
   "publish augmented SBOM":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
@@ -303,15 +306,10 @@ functions:
           echo "------------------------------------"
 
   "upload sbom":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
           - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
@@ -667,16 +665,11 @@ functions:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc files":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
         working_dir: mongo-jdbc-driver
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         bucket: mongo-jdbc-driver-eap
@@ -693,16 +686,11 @@ functions:
         directory: mongo-jdbc-driver
 
   "upload unit test classes":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
@@ -713,16 +701,11 @@ functions:
         visibility: none
 
   "upload integration test classes":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
@@ -733,16 +716,11 @@ functions:
         visibility: none
 
   "upload unit test packages":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
@@ -753,16 +731,11 @@ functions:
         visibility: none
 
   "upload integration test packages":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
@@ -773,16 +746,11 @@ functions:
         visibility: none
 
   "upload unit test index":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
@@ -791,16 +759,11 @@ functions:
         display_name: "Unit Test Results"
 
   "upload integration test index":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
@@ -809,16 +772,11 @@ functions:
         display_name: "Integration Test Results"
 
   "upload unit test css ":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
@@ -829,16 +787,11 @@ functions:
         visibility: none
 
   "upload integration test css ":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
@@ -849,16 +802,11 @@ functions:
         visibility: none
 
   "upload unit test js":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
@@ -869,16 +817,11 @@ functions:
         visibility: none
 
   "upload integration test js":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
@@ -895,10 +838,7 @@ functions:
         file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
 
   "upload jar file":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -906,13 +846,13 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
-          mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          if [ -d "build/libs" ]; then
+            mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          fi
     - command: s3.put
       params:
         silent: true
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
           - mongo-jdbc-driver/build/libs/*.jar
         remote_file: ${S3_ARTIFACTS_DIR}/
@@ -952,10 +892,7 @@ functions:
         content_type: application/json
 
   "static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -989,9 +926,7 @@ functions:
           exit $SCAN_RESULT
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_files_include_filter:
           - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/ssdlc/
@@ -1000,15 +935,10 @@ functions:
         permissions: public-read
 
   "publish static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
         remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
         content_type: application/json
@@ -1069,15 +999,10 @@ functions:
           echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
           echo "---------------------------"
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
@@ -1085,15 +1010,10 @@ functions:
         permissions: public-read
 
   "publish compliance report":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *aws_std_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
