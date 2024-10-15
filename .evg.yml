@@ -719,7 +719,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Unit Test Packages"
         visibility: none
