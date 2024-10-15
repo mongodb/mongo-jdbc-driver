@@ -11,7 +11,7 @@ variables:
     aws_key: ${AWS_ACCESS_KEY_ID}
     aws_secret: ${AWS_SECRET_ACCESS_KEY}
     aws_session_token: ${AWS_SESSION_TOKEN}
-    bucket: evg-bucket-mongo-jdbc-driver
+    bucket: mongo-jdbc-driver-eap
 
 pre:
   - func: "fetch source"
@@ -146,7 +146,7 @@ tasks:
     commands:
       - func: "generate sbom"
       # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
-      # - func: "upload sbom"
+      - func: "upload sbom"
       # - func: "push SBOM Lite to Silk"
       # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
@@ -237,7 +237,6 @@ functions:
         local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
 
   "publish augmented SBOM":
@@ -248,7 +247,6 @@ functions:
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: mongo-jdbc-driver-eap
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -314,7 +312,6 @@ functions:
           - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
 
   "scan sbom":
@@ -672,7 +669,6 @@ functions:
         <<: *aws_std_config
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-        bucket: mongo-jdbc-driver-eap
 
   "fetch source":
     - command: shell.exec
@@ -695,7 +691,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Unit Test Classes"
         visibility: none
@@ -710,7 +705,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Integration Test Classes"
         visibility: none
@@ -740,7 +734,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Integration Test Packages"
         visibility: none
@@ -754,7 +747,6 @@ functions:
         local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Unit Test Results"
 
@@ -767,7 +759,6 @@ functions:
         local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Integration Test Results"
 
@@ -781,7 +772,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Unit Test CSS"
         visibility: none
@@ -796,7 +786,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
         content_type: text/css
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Integration Test CSS"
         visibility: none
@@ -811,7 +800,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Unit Test JS"
         visibility: none
@@ -826,7 +814,6 @@ functions:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
         content_type: application/javascript
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
         display_name: "Integration Test JS"
         visibility: none
@@ -857,7 +844,6 @@ functions:
           - mongo-jdbc-driver/build/libs/*.jar
         remote_file: ${S3_ARTIFACTS_DIR}/
         content_type: application/java-archive
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
 
   "publish maven":
@@ -931,7 +917,6 @@ functions:
           - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
 
   "publish static code analysis":
@@ -942,7 +927,6 @@ functions:
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
         remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
         content_type: application/json
-        bucket: mongo-jdbc-driver-eap
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -1006,7 +990,6 @@ functions:
         local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: mongo-jdbc-driver-eap
         permissions: public-read
 
   "publish compliance report":
@@ -1017,7 +1000,6 @@ functions:
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: mongo-jdbc-driver-eap
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
