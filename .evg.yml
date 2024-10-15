@@ -7,11 +7,11 @@ variables:
     params:
       role_arn: ${assume_role_arn}
       duration_seconds: 3600
-  - &aws_std_config
+  - &evg_bucket_config
     aws_key: ${AWS_ACCESS_KEY_ID}
     aws_secret: ${AWS_SECRET_ACCESS_KEY}
     aws_session_token: ${AWS_SESSION_TOKEN}
-    bucket: mongo-jdbc-driver-eap
+    bucket: evg-bucket-mongo-jdbc-driver
 
 pre:
   - func: "fetch source"
@@ -152,6 +152,8 @@ tasks:
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
@@ -233,7 +235,7 @@ functions:
           ls -lrt $SSDLC_DIR
     - command: s3.put
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
@@ -243,7 +245,7 @@ functions:
     - *assume_role_cmd
     - command: s3.get
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
@@ -307,7 +309,7 @@ functions:
     - *assume_role_cmd
     - command: s3.put
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
           - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
@@ -666,7 +668,7 @@ functions:
     - command: s3.get
       params:
         working_dir: mongo-jdbc-driver
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
 
@@ -686,7 +688,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
@@ -700,7 +702,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
@@ -714,7 +716,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
@@ -728,7 +730,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
@@ -742,7 +744,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
@@ -754,7 +756,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
@@ -766,7 +768,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
@@ -780,7 +782,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
@@ -794,7 +796,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
@@ -808,7 +810,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
@@ -838,7 +840,7 @@ functions:
     - command: s3.put
       params:
         silent: true
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
           - mongo-jdbc-driver/build/libs/*.jar
         remote_file: ${S3_ARTIFACTS_DIR}/
@@ -911,7 +913,7 @@ functions:
           exit $SCAN_RESULT
     - command: s3.put
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_files_include_filter:
           - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/ssdlc/
@@ -922,7 +924,7 @@ functions:
     - *assume_role_cmd
     - command: s3.get
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
         remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
         content_type: application/json
@@ -985,7 +987,7 @@ functions:
     - *assume_role_cmd
     - command: s3.put
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
@@ -995,7 +997,7 @@ functions:
     - *assume_role_cmd
     - command: s3.get
       params:
-        <<: *aws_std_config
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
