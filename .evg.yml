@@ -108,7 +108,7 @@ tasks:
           platform: "macos"
           lib_prefix: "lib"
           ext: "dylib"
-      # macos arm
+      # macos x86
       - func: "fetch libmongosqltranslate"
         vars:
           arch: "x86_64"
@@ -635,8 +635,8 @@ functions:
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed -e 's/\-libv.*//' | sed s/v// )
-            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | sed -e 's/v.*\-libv//')
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 1 | sed s/v// )
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 2 | sed s/libv//)
           else
             export MDBJDBC_VER=snapshot
             export LIBMONGOSQLTRANSLATE_VER=snapshot
