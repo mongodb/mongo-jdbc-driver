@@ -1,6 +1,18 @@
 stepback: true
 command_type: system
 
+variables:
+  - &assume_role_cmd
+    command: ec2.assume_role
+    params:
+      role_arn: ${assume_role_arn}
+      duration_seconds: 3600
+  - &evg_bucket_config
+    aws_key: ${AWS_ACCESS_KEY_ID}
+    aws_secret: ${AWS_SECRET_ACCESS_KEY}
+    aws_session_token: ${AWS_SESSION_TOKEN}
+    bucket: evg-bucket-mongo-jdbc-driver
+
 pre:
   - func: "fetch source"
   - func: "export variables"
@@ -99,6 +111,8 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "test-smoke"
@@ -114,6 +128,8 @@ tasks:
       - func: "check spotless"
 
   - name: download-center-update
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
@@ -129,12 +145,15 @@ tasks:
   - name: sbom
     commands:
       - func: "generate sbom"
+      # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
       - func: "upload sbom"
-      - func: "push SBOM Lite to Silk"
-      - func: "pull augmented SBOM from Silk"
+      # - func: "push SBOM Lite to Silk"
+      # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
@@ -159,10 +178,11 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "publish augmented SBOM"
-      - func: "publish static code analysis"
+      # TODO: undo these comments before merging back into main
+      # - func: "publish augmented SBOM"
+      # - func: "publish static code analysis"
       - func: "generate compliance report"
-      - func: "publish compliance report"
+      # - func: "publish compliance report"
 
 functions:
   "push SBOM Lite to Silk":
@@ -190,10 +210,7 @@ functions:
           echo "-------------------------------"
 
   "pull augmented SBOM from Silk":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -218,29 +235,20 @@ functions:
           ls -lrt $SSDLC_DIR
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish augmented SBOM":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -298,20 +306,14 @@ functions:
           echo "------------------------------------"
 
   "upload sbom":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_files_include_filter:
           - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "scan sbom":
@@ -662,14 +664,13 @@ functions:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc files":
+    - *assume_role_cmd
     - command: s3.get
       params:
         working_dir: mongo-jdbc-driver
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        bucket: mciuploads
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
 
   "fetch source":
     - command: shell.exec
@@ -683,147 +684,137 @@ functions:
         directory: mongo-jdbc-driver
 
   "upload unit test classes":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Classes"
         visibility: none
 
   "upload integration test classes":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Classes"
         visibility: none
 
   "upload unit test packages":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Packages"
         visibility: none
 
   "upload integration test packages":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Packages"
         visibility: none
 
   "upload unit test index":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Results"
 
   "upload integration test index":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Results"
 
   "upload unit test css ":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test CSS"
         visibility: none
 
   "upload integration test css ":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
         content_type: text/css
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test CSS"
         visibility: none
 
   "upload unit test js":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test JS"
         visibility: none
 
   "upload integration test js":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
             - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
         content_type: application/javascript
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test JS"
         visibility: none
@@ -835,17 +826,26 @@ functions:
         file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
 
   "upload jar file":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          if [ -d "build/libs" ]; then
+            mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          fi
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/build/libs/*.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/
         content_type: application/java-archive
-        bucket: mciuploads
         permissions: public-read
-        display_name: "JDBC Driver (.jar)"
 
   "publish maven":
     - command: shell.exec
@@ -879,10 +879,7 @@ functions:
         content_type: application/json
 
   "static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -916,30 +913,21 @@ functions:
           exit $SCAN_RESULT
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_files_include_filter:
           - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
         remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -996,35 +984,23 @@ functions:
           echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
           echo "---------------------------"
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish compliance report":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
