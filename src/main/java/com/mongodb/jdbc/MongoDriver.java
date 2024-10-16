@@ -218,8 +218,6 @@ public class MongoDriver implements Driver {
 
     // Resolves the potential paths where the MongoSQL Translate library are expected be located.
     private static String[] resolveLibraryPaths() throws Exception {
-        String libraryPath = getLibraryPath();
-
         // The `MONGOSQL_TRANSLATE_PATH` environment variable allows specifying an alternative library path.
         // This provides a backdoor mechanism to override the default library path of being colocated with the
         // driver library and load the MongoSQL Translate library from a different location.
@@ -227,10 +225,17 @@ public class MongoDriver implements Driver {
         String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
 
         List<String> paths = new ArrayList<>();
-        paths.add(libraryPath);
+
+        // Add the library path defined via  the `MONGOSQL_TRANSLATE_PATH` environment variable if it existed
         if (envPath != null && !envPath.isEmpty()) {
             paths.add(envPath);
         }
+
+        // Add the default library path
+        paths.add(getLibraryPath());
+
+        // Pick the first entry. If the `MONGOSQL_TRANSLATE_PATH` environment variable was present, then it's the one
+        // which will be picked, if not, then the default library will be loaded.
         return paths.toArray(new String[0]);
     }
 
