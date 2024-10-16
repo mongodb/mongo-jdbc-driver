@@ -86,6 +86,37 @@ buildvariants:
 tasks:
   - name: "build"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch mongosqltranslate windows"
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -336,6 +367,26 @@ functions:
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
+  "fetch libmongosqltranslate":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
+        remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-${platform}-${arch}.${ext}
+        bucket: translators-connectors-releases
+
+  "fetch mongosqltranslate windows":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/x86_64/windows/mongosqltranslate.dll
+        remote_file: mongosqltranslate/mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-win.dll
+        bucket: translators-connectors-releases
+
   "build jdbc driver":
     command: shell.exec
     type: test
@@ -583,9 +634,12 @@ functions:
           # Tag triggered runs are releases and the version is set in the tag.
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+            # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 1 | sed s/v// )
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 2 | sed s/libv//)
           else
             export MDBJDBC_VER=snapshot
+            export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
 
           case ${_platform} in
@@ -621,6 +675,7 @@ functions:
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
@@ -647,6 +702,7 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
+            export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
           
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
@@ -938,7 +994,6 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-
 
   "generate compliance report":
     - command: shell.exec
