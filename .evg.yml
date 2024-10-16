@@ -167,6 +167,8 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "test-smoke"
@@ -182,6 +184,8 @@ tasks:
       - func: "check spotless"
 
   - name: download-center-update
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
@@ -197,11 +201,16 @@ tasks:
   - name: sbom
     commands:
       - func: "generate sbom"
+      # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
       - func: "upload sbom"
       - func: "augment sbom"
+      # - func: "push SBOM Lite to Silk"
+      # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
@@ -226,10 +235,11 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "publish augmented SBOM"
-      - func: "publish static code analysis"
+      # TODO: undo these comments before merging back into main
+      # - func: "publish augmented SBOM"
+      # - func: "publish static code analysis"
       - func: "generate compliance report"
-      - func: "publish compliance report"
+      # - func: "publish compliance report"
 
 functions:
   "augment sbom":
@@ -263,6 +273,27 @@ functions:
           ls -lrt $SSDLC_DIR
 
           echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
+
+          echo "-- Uploading initial SBOM Lite to Silk --"
+          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
+          --env-file silkbomb.env \
+          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+          upload --silk-asset-group ${SILK_ASSET_GROUP} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME
+          echo "-------------------------------"
+
+  "pull augmented SBOM from Silk":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          cat << EOF > silkbomb.env
+          SILK_CLIENT_ID=${SILK_CLIENT_ID}
+          SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET}
+          EOF
 
           echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
 
@@ -713,11 +744,18 @@ functions:
         script: |
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
+          export EAP_BUILD="false"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
+            echo "Tag triggered build: ${triggered_by_git_tag}"
+            
+            if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
+              echo "Detected EAP tag format."
+              export EAP_BUILD="true"
+            fi
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
             export MDBJDBC_VER=snapshot
@@ -764,6 +802,7 @@ functions:
           echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
           echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
           echo "SSDLC Directory = $SSDLC_DIR"
+          echo "EAP_BUILD = $EAP_BUILD"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -780,6 +819,7 @@ functions:
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          EAP_BUILD: "$EAP_BUILD"
           EOT
     - command: expansions.update
       params:
@@ -787,7 +827,6 @@ functions:
     - command: shell.exec
       params:
         shell: bash
-        add_expansions_to_env: true
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
@@ -855,6 +894,15 @@ functions:
         local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
         remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}-all.jar
 
+  "fetch jdbc files":
+    - *assume_role_cmd
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+
   "fetch source":
     - command: shell.exec
       params:
@@ -908,6 +956,45 @@ functions:
         display_name: "Smoke Test Classes"
         visibility: none
 
+  "upload smoke test css ":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/css/*.css
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/css/
+        content_type: text/css
+        permissions: public-read
+        display_name: "Smoke Test CSS"
+
+  "upload smoke test packages":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/packages/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/packages/
+        content_type: text/html
+        permissions: public-read
+        display_name: "Smoke Test Packages"
+        visibility: none
+
+  "upload unit test index":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
+        remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
+        content_type: text/html
+        permissions: public-read
+        display_name: "Unit Test Results"
+
   "upload unit test packages":
     - *assume_role_cmd
     - command: s3.put
@@ -935,32 +1022,6 @@ functions:
         permissions: public-read
         display_name: "Integration Test Packages"
         visibility: none
-
-  "upload smoke test packages":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver/smoketest/build/reports/tests/test/packages/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/packages/
-        content_type: text/html
-        permissions: public-read
-        display_name: "Smoke Test Packages"
-        visibility: none
-
-  "upload unit test index":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
-        content_type: text/html
-        permissions: public-read
-        display_name: "Unit Test Results"
 
   "upload integration test index":
     - *assume_role_cmd
@@ -1013,19 +1074,6 @@ functions:
         permissions: public-read
         display_name: "Integration Test CSS"
         visibility: none
-
-  "upload smoke test css ":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver/smoketest/build/reports/tests/test/css/*.css
-        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/css/
-        content_type: text/css
-        permissions: public-read
-        display_name: "Smoke Test CSS"
 
   "upload unit test js":
     - *assume_role_cmd
@@ -1081,20 +1129,25 @@ functions:
       type: test
       params:
         shell: bash
+        add_expansions_to_env: true
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
           if [ -d "build/libs" ]; then
-            # A sanity check to see if expected files are indeed here
-            ls -lrt build/libs
-            # Rename files according to our naming scheme
-            for f in ./build/libs/mongodb-jdbc-*.jar; do
-              if [[ "$f" == *"-all"* ]]; then
-                mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
-              else
-                mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-              fi
-            done
+            if [[ "${EAP_BUILD}" == "true" ]]; then
+              # A sanity check to see if expected files are indeed here
+              ls -lrt build/libs
+              # Rename files according to our naming scheme
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+                fi
+              done
+            else
+              mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+            fi
           fi
     - command: s3.put
       params:
