@@ -94,6 +94,37 @@ buildvariants:
 tasks:
   - name: "build"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch mongosqltranslate windows"
       - func: "build jdbc driver"
       - func: "upload jar file"
 
@@ -411,6 +442,26 @@ functions:
         ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
+
+  "fetch libmongosqltranslate":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
+        remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-${platform}-${arch}.${ext}
+        bucket: translators-connectors-releases
+
+  "fetch mongosqltranslate windows":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/x86_64/windows/mongosqltranslate.dll
+        remote_file: mongosqltranslate/mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-win.dll
+        bucket: translators-connectors-releases
 
   "build jdbc driver":
     command: shell.exec
@@ -831,6 +882,42 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
 
+          # set the state needed irrespective of _platform
+          ARTIFACTS_DIR=artifacts
+          S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
+          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
+          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
+
+          # Get the version from trigger.
+          # Tag triggered runs are releases and the version is set in the tag.
+          # Other runs are snapshot builds (periodic builds or patches)
+          if [[ "${triggered_by_git_tag}" != "" ]]; then
+            # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 1 | sed s/v// )
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 2 | sed s/libv//)
+          else
+            export MDBJDBC_VER=snapshot
+            export LIBMONGOSQLTRANSLATE_VER=snapshot
+          fi
+
+          case ${_platform} in
+          ubuntu2204-64-jdk-8)
+               JAVA_HOME=/opt/java/jdk8
+          ;;
+          ubuntu2204-64-jdk-11)
+               JAVA_HOME=/opt/java/jdk11
+          ;;
+          amazon2-arm64-jdk-11)
+               JAVA_HOME=/usr/lib/jvm/java-11
+          ;;
+          *)
+               echo "ERROR: invalid value for \${_platform}: '$_platform'"
+               echo "Allowed values: 'amazon2-arm64-jdk-11', 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+               exit 1
+          ;;
+          esac
+
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
 
@@ -844,6 +931,7 @@ functions:
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
@@ -870,7 +958,8 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
-
+            export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
+          
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
             export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
