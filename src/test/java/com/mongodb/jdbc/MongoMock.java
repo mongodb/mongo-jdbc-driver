@@ -560,7 +560,7 @@ public abstract class MongoMock {
                         + "    \"required\": [\"all\"]"
                         + "}";
 
-        return MongoDriver.registry
+        return MongoDriver.REGISTRY
                 .get(MongoJsonSchema.class)
                 .decode(new JsonReader(schema), DecoderContext.builder().build());
     }

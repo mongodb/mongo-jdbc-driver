@@ -11,7 +11,7 @@ variables:
     aws_key: ${AWS_ACCESS_KEY_ID}
     aws_secret: ${AWS_SECRET_ACCESS_KEY}
     aws_session_token: ${AWS_SESSION_TOKEN}
-    bucket: evg-bucket-mongo-jdbc-driver
+    bucket: mongo-jdbc-driver-eap
 
 pre:
   - func: "fetch source"
@@ -55,12 +55,12 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-large
     tasks:
+      - name: "fetch-mongosqltranslate"
       - name: "build"
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
-      # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
-      # - name: "test-dc-integration"
+      - name: "test-dc-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -68,6 +68,7 @@ buildvariants:
       _platform: amazon2-arm64-jdk-11
     run_on: amazon2-arm64-graviton3
     tasks:
+      - name: "fetch-mongosqltranslate"
       - name: "build"
       - name: "test-unit"
       - name: "test-adf-integration"
@@ -84,7 +85,7 @@ buildvariants:
       - name: "download-center-update"
 
 tasks:
-  - name: "build"
+  - name: "fetch-mongosqltranslate"
     commands:
       # fetch mongosqltranslate libraries for each platform before building
       # linux arm
@@ -117,6 +118,11 @@ tasks:
           ext: "dylib"
       # windows
       - func: "fetch mongosqltranslate windows"
+
+  - name: "build"
+    depends_on:
+      - name: "fetch-mongosqltranslate"
+    commands:
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -133,10 +139,14 @@ tasks:
       - func: "run adf integration test"
 
   - name: "test-dc-integration"
+    depends_on:
+      - name: "fetch-mongosqltranslate"
     commands:
       - func: "run dc integration test"
 
   - name: "test-smoke"
+    depends_on:
+      - name: "fetch-mongosqltranslate"
     commands:
       - func: "generate github token"
       - func: "run smoke test"
@@ -529,11 +539,7 @@ functions:
           exit 1
         ;;
         esac
-        
-        # Move library file to where MongoDriver class is located
-        mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
-        
+         
         # Download and run local community and enterprise mongods.
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
         
@@ -593,7 +599,7 @@ functions:
       work_dir: mongo-jdbc-driver
       key_id: ${papertrail_id}
       secret_key: ${papertrail_key}
-      product: mongo-jdbc-driver
+      product: mongo-jdbc-driver-eap
       version: ${MDBJDBC_VER}
       filenames:
         - "build/libs/*.jar"
@@ -693,7 +699,7 @@ functions:
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export SRV_TEST_HOST=${srv_test_host}
             export SRV_TEST_USER=${srv_test_user}
-            export SRV_TEST_PWD=${srv_test_pwd}
+            export SRV_TEST_PWD=${srv_test_pwd2}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
             export LOCAL_MDB_PORT_COM=${local_mdb_port_com}
             export LOCAL_MDB_PORT_ENT=${local_mdb_port_ent}

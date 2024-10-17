@@ -19,7 +19,7 @@ package com.mongodb.jdbc.mongosql;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 /** Base class for result types, includes error handling. */
-public abstract class BaseResult {
+public class BaseResult {
     @BsonProperty("error")
     protected final String error;
 

@@ -16,11 +16,18 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import com.mongodb.jdbc.MongoDriver;
+import com.mongodb.jdbc.utils.BsonUtils;
 import java.util.List;
+import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class GetNamespacesResult extends BaseResult {
+
+    private static final Codec<GetNamespacesResult> CODEC =
+            MongoDriver.REGISTRY.get(GetNamespacesResult.class);
+
     @BsonProperty("namespaces")
     public final List<Namespace> namespaces;
 
@@ -47,5 +54,10 @@ public class GetNamespacesResult extends BaseResult {
             this.database = database;
             this.collection = collection;
         }
+    }
+
+    @Override
+    public String toString() {
+        return BsonUtils.toString(CODEC, this);
     }
 }

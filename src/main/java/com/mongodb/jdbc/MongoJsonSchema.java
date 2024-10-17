@@ -39,7 +39,7 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 public class MongoJsonSchema {
     private static final Codec<JsonSchema> JSON_SCHEMA_CODEC =
-            MongoDriver.registry.get(JsonSchema.class);
+            MongoDriver.REGISTRY.get(JsonSchema.class);
 
     public static class ScalarProperties {
         protected String name;
