@@ -18,16 +18,16 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MongoSQLTranslateLibTest {
 
-    /**
-     * Helper function to call the runCommand endpoint of the translation library.
-     */
+    /** Helper function to call the runCommand endpoint of the translation library. */
 
     /** Helper function to call the runCommand endpoint of the translation library. */
     private static void testRunCommand() {
@@ -75,7 +75,6 @@ public class MongoSQLTranslateLibTest {
 
         // The library was loaded successfully. Now, let's make sure that we can call the runCommand endpoint.
         testRunCommand();
-
     }
 
     @Test

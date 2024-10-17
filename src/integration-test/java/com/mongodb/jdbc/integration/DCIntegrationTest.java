@@ -99,13 +99,15 @@ public class DCIntegrationTest {
     @Test
     public void testConnectionToCommunityServerFails() {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
-        assertThrows(
-                java.sql.SQLException.class,
-                () -> {
-                    MongoConnection conn =
-                            (MongoConnection)
-                                    DriverManager.getConnection(info.left(), info.right());
-                });
+        try (MongoConnection conn =
+                (MongoConnection) DriverManager.getConnection(info.left(), info.right()); ) {
+            assertThrows(java.sql.SQLException.class, () -> {});
+
+        } catch (SQLException e) {
+            assertTrue(
+                    e.getCause().getMessage().contains("Community edition detected"),
+                    e.getCause().getMessage() + " doesn't contain \"Community edition detected\"");
+        }
     }
 
     /** Tests that the driver connects to the enterprise edition of the server. */

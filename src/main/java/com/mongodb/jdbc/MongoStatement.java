@@ -30,7 +30,6 @@ import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.bson.*;
 
 @AutoLoggable
