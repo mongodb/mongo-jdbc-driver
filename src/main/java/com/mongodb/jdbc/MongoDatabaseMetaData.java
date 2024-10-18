@@ -17,7 +17,6 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
-import static com.mongodb.jdbc.mongosql.MongoSQLTranslate.SQL_SCHEMAS_COLLECTION;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
@@ -1559,9 +1558,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 // filter only for collections matching the pattern, and exclude the `__sql_schemas` collection
                 .filter(
                         tableName ->
-                                (tableNamePatternRE == null
-                                                || tableNamePatternRE.matcher(tableName).matches())
-                                        && !tableName.equals(SQL_SCHEMAS_COLLECTION))
+                                // Don't list system collections
+                                (!DISALLOWED_COLLECTION_NAMES.matcher(tableName).matches())
+                                        && (tableNamePatternRE == null
+                                                || tableNamePatternRE.matcher(tableName).matches()))
 
                 // map the collection names into triples of (dbName, tableName, tableSchema)
                 .map(
