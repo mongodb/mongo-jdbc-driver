@@ -95,6 +95,31 @@ public class DCIntegrationTest {
         return new Pair<>(uri, p);
     }
 
+    /**
+     * Execute the given SQL query and checks the table and column names from the metadata, also verifies that the cursor return is working Ok.
+     * @param query The SQL query to execute.
+     * @param expectedTableNames    The expected table names in the metadata.
+     * @param expectedColumnLabels The expected column names in the metadata.
+     * @throws SQLException if an error occurs.
+     */
+    private void executeQueryAndValidateResults(String query, String[] expectedTableNames, String[] expectedColumnLabels) throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect();
+             Statement stmt = conn.createStatement(); ) {
+            ResultSet rs = stmt.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            assert (rsmd.getColumnCount() == expectedColumnLabels.length);
+            int i = 1;
+            for (String expectColumnLabel : expectedColumnLabels) {
+                assertEquals(rsmd.getColumnName(i),(expectColumnLabel), rsmd.getColumnName(1) + " != " + expectColumnLabel);
+                i++;
+            }
+            assert (rs.next());
+            // Let's also check that we can access the data and don't blow up.
+            rs.getString(1);
+            rs.close();
+        }
+    }
+
     /** Tests that the driver rejects the community edition of the server. */
     @Test
     public void testConnectionToCommunityServerFails() {
@@ -141,42 +166,27 @@ public class DCIntegrationTest {
 
     @Test
     public void testValidSimpleQueryShouldSucceed() throws SQLException {
-        try (Connection conn = remoteTestInstanceConnect();
-                Statement stmt = conn.createStatement(); ) {
-            ResultSet rs = stmt.executeQuery("SELECT * from accounts");
-            assert (rs.next());
-            // Let's just check that we can access the data and don't blow up.
-            rs.getString(1);
-            rs.close();
-        }
+        String[] expectedTableNames = {"acc", "acc", "acc","acc","t", "t", "t", "t", "t","t"  };
+        String[] expectedColumnLabels = {"_id", "account_id", "limit","products","_id", "account_id", "bucket_end_date", "bucket_start_date", "transaction_count","transactions"  };
+        executeQueryAndValidateResults("SELECT * from accounts acc JOIN transactions t on acc.account_id = t.account_id limit 5", expectedTableNames, expectedColumnLabels);
     }
 
     @Test
     public void testCollectionLessQueryShouldSucceed() throws SQLException {
-        try (Connection conn = remoteTestInstanceConnect();
-                Statement stmt = conn.createStatement(); ) {
-            ResultSet rs = stmt.executeQuery("SELECT 1");
-            assert (rs.next());
-            // Let's just check that we can access the data and don't blow up.
-            rs.getString(1);
-            rs.close();
-        }
+        String[] expectedTableNames = {""};
+        String[] expectedColumnLabels = {"_1" };
+        executeQueryAndValidateResults("SELECT 1", expectedTableNames, expectedColumnLabels);
     }
 
     @Test
     public void testValidSimpleQueryNoSchemaForCollectionShouldSucceed() throws SQLException {
-        try (Connection conn = remoteTestInstanceConnect();
-                Statement stmt = conn.createStatement(); ) {
-            ResultSet rs = stmt.executeQuery("SELECT account_id from acc_limit_over_1000 limit 5");
-            assert (rs.next());
-            // Let's just check that we can access the data and don't blow up.
-            rs.getString(1);
-            rs.close();
-        }
+        String[] expectedTableNames = {""};
+        String[] expectedColumnLabels = {"account_id" };
+        executeQueryAndValidateResults("SELECT account_id from acc_limit_over_1000 limit 5", expectedTableNames, expectedColumnLabels);
     }
 
     @Test
-    public void testListDatabasse() throws SQLException {
+    public void testListDatabase() throws SQLException {
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getCatalogs();
             while (rs.next()) {
@@ -205,11 +215,13 @@ public class DCIntegrationTest {
 
     @Test
     public void testColumnsMetadataForCollectionWithSchema() throws SQLException {
+        String[] expectedColumnLabels = {"_id", "account_id", "limit","products"};
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getColumns(null, null, "accounts", "%");
-            assert (rs.next());
-            // Let's just check that we can access the data and don't blow up.
-            rs.getString(1);
+            for (String expectColumnLabel : expectedColumnLabels) {
+                assert (rs.next());
+                assertEquals(rs.getString(4),(expectColumnLabel), rs.getString(4) + " != " + expectColumnLabel);
+            }
             rs.close();
         }
     }
@@ -218,7 +230,7 @@ public class DCIntegrationTest {
     public void testColumnsMetadataForCollectionWithNoSchema() throws SQLException {
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getColumns(null, null, "acc_limit_over_1000", "%");
-            // Let's just check that the result set is empty and we don't blow up.
+            // Check that the result set is empty and we don't blow up when calling next.
             assert (!rs.next());
             rs.close();
         }
