@@ -55,7 +55,6 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-large
     tasks:
-      - name: "fetch-mongosqltranslate"
       - name: "build"
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
@@ -68,7 +67,6 @@ buildvariants:
       _platform: amazon2-arm64-jdk-11
     run_on: amazon2-arm64-graviton3
     tasks:
-      - name: "fetch-mongosqltranslate"
       - name: "build"
       - name: "test-unit"
       - name: "test-adf-integration"
@@ -85,7 +83,7 @@ buildvariants:
       - name: "download-center-update"
 
 tasks:
-  - name: "fetch-mongosqltranslate"
+  - name: "build"
     commands:
       # fetch mongosqltranslate libraries for each platform before building
       # linux arm
@@ -118,11 +116,6 @@ tasks:
           ext: "dylib"
       # windows
       - func: "fetch mongosqltranslate windows"
-
-  - name: "build"
-    depends_on:
-      - name: "fetch-mongosqltranslate"
-    commands:
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -139,15 +132,73 @@ tasks:
       - func: "run adf integration test"
 
   - name: "test-dc-integration"
-    depends_on:
-      - name: "fetch-mongosqltranslate"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch mongosqltranslate windows"
       - func: "run dc integration test"
 
   - name: "test-smoke"
-    depends_on:
-      - name: "fetch-mongosqltranslate"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch mongosqltranslate windows"
       - func: "generate github token"
       - func: "run smoke test"
 
@@ -404,8 +455,8 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
+        ${PREPARE_SHELL}
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -414,8 +465,8 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew spotlessCheck
+        ${PREPARE_SHELL}
+        ./gradlew spotlessCheck
 
   "run unit test":
     command: shell.exec
@@ -424,8 +475,8 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
+        ${PREPARE_SHELL}
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
 
   "run mongosqltranslate library load test":
     command: shell.exec
@@ -464,59 +515,59 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./resources/run_adf.sh start &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
-              -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
-          GRADLE_PID=$!
-
-          echo "Gradle process started with PID $GRADLE_PID"
-
-          # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-          # This monitoring approach will detect build completion or failure even when the Gradle 
-          # process doesn't terminate properly and allows the task to complete.
-          SECONDS=0
-          TIMEOUT=1800  # 30 minute timeout
-
-          while true; do
-              if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
-                  echo "Build successful!"
-                  EXITCODE=0
-                  break
-              fi
-
-              if grep -q "BUILD FAILED" gradle_output.log; then
-                  echo "Build failed!"
-                  EXITCODE=1
-                  break
-              fi
-              
-              if (( SECONDS > TIMEOUT )); then
-                  echo "$TIMEOUT second timeout reached. Exiting with failure."
-                  EXITCODE=1
-                  break
-              fi
-              
-              # Check if Gradle process is still running
-              if ! kill -0 $GRADLE_PID 2>/dev/null; then
-                  echo "Gradle process has finished."
-                  wait $GRADLE_PID
-                  EXITCODE=$?
-                  break
-              fi
-              
-              sleep 5
-          done
-
-          cat gradle_output.log
-          
-          kill $GRADLE_PID 2>/dev/null || true
-
-          ./resources/run_adf.sh stop
-          
-          echo "Integration test exit code: $EXITCODE"
-          exit $EXITCODE
+        ${PREPARE_SHELL}
+        ./resources/run_adf.sh start &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
+            -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
+        
+        echo "Gradle process started with PID $GRADLE_PID"
+        
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
+        
+        while true; do
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
+        
+            if grep -q "BUILD FAILED" gradle_output.log; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
+        
+            if (( SECONDS > TIMEOUT )); then
+                echo "$TIMEOUT second timeout reached. Exiting with failure."
+                EXITCODE=1
+                break
+            fi
+        
+            # Check if Gradle process is still running
+            if ! kill -0 $GRADLE_PID 2>/dev/null; then
+                echo "Gradle process has finished."
+                wait $GRADLE_PID
+                EXITCODE=$?
+                break
+            fi
+        
+            sleep 5
+        done
+        
+        cat gradle_output.log
+        
+        kill $GRADLE_PID 2>/dev/null || true
+        
+        ./resources/run_adf.sh stop
+        
+        echo "Integration test exit code: $EXITCODE"
+        exit $EXITCODE
 
   "run dc integration test":
     command: shell.exec
@@ -539,7 +590,7 @@ functions:
           exit 1
         ;;
         esac
-         
+        
         # Download and run local community and enterprise mongods.
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
         
@@ -585,11 +636,11 @@ functions:
         done
 
         cat gradle_output.log
-      
+        
         kill $GRADLE_PID 2>/dev/null || true
-      
+        
         pkill mongod
-      
+        
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
@@ -628,7 +679,6 @@ functions:
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
-
           # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
@@ -752,7 +802,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
+          - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
         permissions: public-read
@@ -766,7 +816,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
         permissions: public-read
@@ -780,7 +830,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
+          - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
         permissions: public-read
@@ -794,7 +844,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
         content_type: text/html
         permissions: public-read
@@ -832,7 +882,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/css/*.css
+          - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
         permissions: public-read
@@ -846,7 +896,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
         content_type: text/css
         permissions: public-read
@@ -860,7 +910,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/js/*.js
+          - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
         permissions: public-read
@@ -874,7 +924,7 @@ functions:
         silent: true
         <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
         content_type: application/javascript
         permissions: public-read
