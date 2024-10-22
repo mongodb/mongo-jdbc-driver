@@ -96,21 +96,28 @@ public class DCIntegrationTest {
     }
 
     /**
-     * Execute the given SQL query and checks the table and column names from the metadata, also verifies that the cursor return is working Ok.
+     * Execute the given SQL query and checks the table and column names from the metadata, also
+     * verifies that the cursor return is working Ok.
+     *
      * @param query The SQL query to execute.
-     * @param expectedTableNames    The expected table names in the metadata.
+     * @param expectedTableNames The expected table names in the metadata.
      * @param expectedColumnLabels The expected column names in the metadata.
      * @throws SQLException if an error occurs.
      */
-    private void executeQueryAndValidateResults(String query, String[] expectedTableNames, String[] expectedColumnLabels) throws SQLException {
+    private void executeQueryAndValidateResults(
+            String query, String[] expectedTableNames, String[] expectedColumnLabels)
+            throws SQLException {
         try (Connection conn = remoteTestInstanceConnect();
-             Statement stmt = conn.createStatement(); ) {
+                Statement stmt = conn.createStatement(); ) {
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
             assert (rsmd.getColumnCount() == expectedColumnLabels.length);
             int i = 1;
             for (String expectColumnLabel : expectedColumnLabels) {
-                assertEquals(rsmd.getColumnName(i),(expectColumnLabel), rsmd.getColumnName(1) + " != " + expectColumnLabel);
+                assertEquals(
+                        rsmd.getColumnName(i),
+                        (expectColumnLabel),
+                        rsmd.getColumnName(1) + " != " + expectColumnLabel);
                 i++;
             }
             assert (rs.next());
@@ -166,23 +173,40 @@ public class DCIntegrationTest {
 
     @Test
     public void testValidSimpleQueryShouldSucceed() throws SQLException {
-        String[] expectedTableNames = {"acc", "acc", "acc","acc","t", "t", "t", "t", "t","t"  };
-        String[] expectedColumnLabels = {"_id", "account_id", "limit","products","_id", "account_id", "bucket_end_date", "bucket_start_date", "transaction_count","transactions"  };
-        executeQueryAndValidateResults("SELECT * from accounts acc JOIN transactions t on acc.account_id = t.account_id limit 5", expectedTableNames, expectedColumnLabels);
+        String[] expectedTableNames = {"acc", "acc", "acc", "acc", "t", "t", "t", "t", "t", "t"};
+        String[] expectedColumnLabels = {
+            "_id",
+            "account_id",
+            "limit",
+            "products",
+            "_id",
+            "account_id",
+            "bucket_end_date",
+            "bucket_start_date",
+            "transaction_count",
+            "transactions"
+        };
+        executeQueryAndValidateResults(
+                "SELECT * from accounts acc JOIN transactions t on acc.account_id = t.account_id limit 5",
+                expectedTableNames,
+                expectedColumnLabels);
     }
 
     @Test
     public void testCollectionLessQueryShouldSucceed() throws SQLException {
         String[] expectedTableNames = {""};
-        String[] expectedColumnLabels = {"_1" };
+        String[] expectedColumnLabels = {"_1"};
         executeQueryAndValidateResults("SELECT 1", expectedTableNames, expectedColumnLabels);
     }
 
     @Test
     public void testValidSimpleQueryNoSchemaForCollectionShouldSucceed() throws SQLException {
         String[] expectedTableNames = {""};
-        String[] expectedColumnLabels = {"account_id" };
-        executeQueryAndValidateResults("SELECT account_id from acc_limit_over_1000 limit 5", expectedTableNames, expectedColumnLabels);
+        String[] expectedColumnLabels = {"account_id"};
+        executeQueryAndValidateResults(
+                "SELECT account_id from acc_limit_over_1000 limit 5",
+                expectedTableNames,
+                expectedColumnLabels);
     }
 
     @Test
@@ -215,12 +239,15 @@ public class DCIntegrationTest {
 
     @Test
     public void testColumnsMetadataForCollectionWithSchema() throws SQLException {
-        String[] expectedColumnLabels = {"_id", "account_id", "limit","products"};
+        String[] expectedColumnLabels = {"_id", "account_id", "limit", "products"};
         try (Connection conn = remoteTestInstanceConnect(); ) {
             ResultSet rs = conn.getMetaData().getColumns(null, null, "accounts", "%");
             for (String expectColumnLabel : expectedColumnLabels) {
                 assert (rs.next());
-                assertEquals(rs.getString(4),(expectColumnLabel), rs.getString(4) + " != " + expectColumnLabel);
+                assertEquals(
+                        rs.getString(4),
+                        (expectColumnLabel),
+                        rs.getString(4) + " != " + expectColumnLabel);
             }
             rs.close();
         }
