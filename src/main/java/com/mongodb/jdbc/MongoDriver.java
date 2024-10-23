@@ -23,10 +23,9 @@ import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import com.mongodb.jdbc.utils.NativeUtils;
+import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -124,9 +123,10 @@ public class MongoDriver implements Driver {
     }
 
     private static boolean mongoSqlTranslateLibraryLoaded = false;
+    private static Exception mongoSqlTranslateLibraryLoadingError = null;
     private static String mongoSqlTranslateLibraryPath = null;
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
-    public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
+    protected static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
     public static final CodecRegistry REGISTRY =
             fromProviders(
@@ -136,23 +136,28 @@ public class MongoDriver implements Driver {
                     PojoCodecProvider.builder().automatic(true).build());
 
     static String getAbbreviatedGitVersion() {
+        Process p = null;
         try {
             // Unit and integration tests can't rely on the manifest from the jar
             // Get the git tag and use it as the version
             String command = "git describe --abbrev=0";
-            Process p = Runtime.getRuntime().exec(command);
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            StringBuilder version_sb = new StringBuilder();
-            String line;
-            while ((line = input.readLine()) != null) {
-                version_sb.append(line);
-                System.out.println("Version: " + version_sb);
+            p = Runtime.getRuntime().exec(command);
+            try (BufferedReader input =
+                    new BufferedReader(new InputStreamReader(p.getInputStream())); ) {
+                StringBuilder version_sb = new StringBuilder();
+                String line;
+                while ((line = input.readLine()) != null) {
+                    version_sb.append(line);
+                }
+                return version_sb.append("-SNAPSHOT").substring(1).trim();
             }
-            return version_sb.append("-SNAPSHOT").substring(1).trim();
-
         } catch (IOException e) {
             throw new RuntimeException(
                     new SQLException("Internal error retrieving driver version"));
+        } finally {
+            if (p != null) {
+                p.destroy();
+            }
         }
     }
 
@@ -183,77 +188,40 @@ public class MongoDriver implements Driver {
         NAME = (name != null) ? name : "mongodb-jdbc";
         Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
 
-        initializeMongoSqlTranslateLibrary();
+        try {
+            loadMongoSqlTranslateLibrary();
+        }
+        // Store the error so that we can log it later.
+        catch (Exception e) {
+            mongoSqlTranslateLibraryLoadingError = e;
+        } catch (Error e) {
+            // Note, linkage issues are reported as linkage error and not as Exception. We need to track both.
+            mongoSqlTranslateLibraryLoadingError = new Exception(e);
+        }
     }
 
     /**
      * Attempts to initialize the MongoSQL Translate library from various paths and sets
      * mongoSqlTranslateLibraryLoaded to indicate success or failure.
      */
-    private static void initializeMongoSqlTranslateLibrary() {
-        try {
-            String[] libraryPaths = resolveLibraryPaths();
-            for (String path : libraryPaths) {
-                if (loadMongoSqlTranslateLibrary(path)) {
-                    mongoSqlTranslateLibraryPath = path;
-                    mongoSqlTranslateLibraryLoaded = true;
-                    return;
-                }
-                mongoSqlTranslateLibraryLoaded = false;
-            }
-        } catch (Throwable t) {
-            mongoSqlTranslateLibraryLoaded = false;
-        }
-    }
-
-    private static boolean loadMongoSqlTranslateLibrary(String libraryPath) {
-        try {
-            System.load(libraryPath);
-            System.out.println("Sucessfully loaded " + libraryPath);
-            return true;
-        } catch (Throwable t) {
-            return false;
-        }
-    }
-
-    // Resolves the potential paths where the MongoSQL Translate library are expected be located.
-    private static String[] resolveLibraryPaths() throws Exception {
+    private static void loadMongoSqlTranslateLibrary() throws IOException {
         // The `MONGOSQL_TRANSLATE_PATH` environment variable allows specifying an alternative library path.
         // This provides a backdoor mechanism to override the default library path of being colocated with the
         // driver library and load the MongoSQL Translate library from a different location.
         // Intended primarily for development and testing purposes.
         String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
-
-        List<String> paths = new ArrayList<>();
-
-        // Add the library path defined via  the `MONGOSQL_TRANSLATE_PATH` environment variable if it existed
         if (envPath != null && !envPath.isEmpty()) {
-            paths.add(envPath);
+            String absolutePath = Paths.get(envPath).toAbsolutePath().normalize().toString();
+            try {
+                System.load(absolutePath);
+                mongoSqlTranslateLibraryPath = absolutePath;
+            } catch (Error e) {
+                // Store the error and then try loading the library from inside the jar next.
+                mongoSqlTranslateLibraryLoadingError = new Exception(e);
+            }
         }
-
-        // Add the default library path
-        paths.add(getLibraryPath());
-
-        // Pick the first entry. If the `MONGOSQL_TRANSLATE_PATH` environment variable was present, then it's the one
-        // which will be picked, if not, then the default library will be loaded.
-        return paths.toArray(new String[0]);
-    }
-
-    private static String getLibraryPath() throws Exception {
-
-        String libName = System.mapLibraryName(MONGOSQL_TRANSLATE_NAME);
-        URL url =
-                MongoDriver.class
-                        .getProtectionDomain()
-                        .getClassLoader()
-                        .getResource(
-                                NativeUtils.normalizeArch()
-                                        + "/"
-                                        + NativeUtils.normalizeOS()
-                                        + "/"
-                                        + libName);
-
-        return Paths.get(url.toURI()).toString();
+        mongoSqlTranslateLibraryPath = NativeLoader.loadLibraryFromJar(MONGOSQL_TRANSLATE_NAME);
+        mongoSqlTranslateLibraryLoaded = true;
     }
 
     @Override
@@ -489,6 +457,10 @@ public class MongoDriver implements Driver {
 
     public static String getMongoSqlTranslateLibraryPath() {
         return mongoSqlTranslateLibraryPath;
+    }
+
+    public static Exception getMongoSqlTranslateLibraryLoadError() {
+        return mongoSqlTranslateLibraryLoadingError;
     }
 
     // removePrefix removes a prefix from a String.

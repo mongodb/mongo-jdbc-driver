@@ -230,9 +230,6 @@ public class MongoStatement implements Statement {
         GetNamespacesResult namespaceResult =
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
         List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
-        if (collections == null || collections.isEmpty()) {
-            //throw new MongoSQLException("No collections found for the current database: " + dbName);
-        }
 
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);

@@ -50,6 +50,7 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -589,7 +590,17 @@ public class MongoConnection implements Connection {
                     // Ensure the library is loaded if Enterprise edition detected.
                     if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
                         throw new SQLException(
-                                "Enterprise edition detected, but mongosqltranslate library not found");
+                                "Enterprise edition detected, but mongosqltranslate library not found",
+                                MongoDriver.getMongoSqlTranslateLibraryLoadError());
+                    } else if (MongoDriver.getMongoSqlTranslateLibraryLoadError() != null) {
+                        logger.log(
+                                Level.INFO,
+                                "Error while loading the library using the environment variable. Library bundled with the driver used instead.\n"
+                                        + Arrays.stream(
+                                                        MongoDriver
+                                                                .getMongoSqlTranslateLibraryLoadError()
+                                                                .getStackTrace())
+                                                .map(StackTraceElement::toString));
                     }
                     String mongosqlTranslateVersion =
                             mongosqlTranslate.getMongosqlTranslateVersion().version;
@@ -610,8 +621,10 @@ public class MongoConnection implements Connection {
 
             // Set the cluster type.
             clusterType = actualClusterType;
-            Statement statement = createStatement();
-            boolean resultExists = statement.execute("SELECT 1");
+            boolean resultExists;
+            try (Statement statement = createStatement()) {
+                resultExists = statement.execute("SELECT 1");
+            }
             if (!resultExists) {
                 // no resultSet returned
                 throw new SQLException("Connection error");
