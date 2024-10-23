@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -21,7 +24,8 @@ public class SmokeTest {
     static final String URL = "jdbc:mongodb://localhost";
     static final String DB = "integration_test";
 
-    private Connection conn;
+    // Connection and simple query to use for sanity check.
+    private Map<Connection, String> connections = new HashMap<>();
 
     public static Connection getBasicConnection(String url, String db)
             throws SQLException {
@@ -36,30 +40,57 @@ public class SmokeTest {
 
     @BeforeEach
     public void setupConnection() throws SQLException {
-        conn = getBasicConnection(URL, DB);
+        connections.put(getBasicConnection(URL, DB), "SELECT * from class");
+        connections.put(getDirectRemoteInstanceConnection(), "Select * from accounts limit 5");
+    }
+
+    private Connection getDirectRemoteInstanceConnection() throws SQLException {
+        String mongoHost = System.getenv("SRV_TEST_HOST");
+        String mongoURI =
+                "mongodb+srv://"
+                        + mongoHost
+                        + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
+        String fullURI = "jdbc:" + mongoURI;
+
+        String user = System.getenv("SRV_TEST_USER");
+        String pwd = System.getenv("SRV_TEST_PWD");
+        String authSource = System.getenv("SRV_TEST_AUTH_DB");
+
+        Properties p = new java.util.Properties();
+        p.setProperty("user", user);
+        p.setProperty("password", pwd);
+        p.setProperty("authSource", authSource);
+        p.setProperty("database", "test");
+
+        return DriverManager.getConnection(fullURI, p);
     }
 
     @AfterEach
     protected void cleanupTest() throws SQLException {
-        conn.close();
+        for (Connection conn : connections.keySet()) {
+            conn.close();
+        }
     }
 
     @Test
     public void databaseMetadataTest() throws SQLException {
-        DatabaseMetaData dbMetadata = conn.getMetaData();
-        System.out.println(dbMetadata.getDriverName());
-        System.out.println(dbMetadata.getDriverVersion());
+        for (Connection conn : connections.keySet()) {
+            DatabaseMetaData dbMetadata = conn.getMetaData();
+            System.out.println(dbMetadata.getDriverName());
+            System.out.println(dbMetadata.getDriverVersion());
 
-        ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
-        rowsReturnedCheck(rs);
+            ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
+            rowsReturnedCheck(rs);
+        }
     }
 
     @Test
     public  void queryTest() throws SQLException {
-        try (Statement stmt = conn.createStatement()) {
-            String query = "SELECT * from class";
-            ResultSet rs = stmt.executeQuery(query);
-            rowsReturnedCheck(rs);
+        for (Map.Entry<Connection, String> entry : connections.entrySet()) {
+            try (Statement stmt = entry.getKey().createStatement()) {
+                ResultSet rs = stmt.executeQuery(entry.getValue());
+                rowsReturnedCheck(rs);
+            }
         }
     }
 

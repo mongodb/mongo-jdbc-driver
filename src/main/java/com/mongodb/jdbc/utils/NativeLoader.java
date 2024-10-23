@@ -40,11 +40,6 @@ import org.apache.commons.lang3.SystemUtils;
  * @see "https://github.com/adamheinrich/native-utils"
  */
 public class NativeLoader {
-    /**
-     * The minimum length a prefix for a file has to have according to {@link
-     * File#createTempFile(String, String)}}.
-     */
-    private static final int MIN_PREFIX_LENGTH = 3;
 
     private static final String NATIVE_FOLDER_PATH_PREFIX = "mongosql_native";
 
@@ -135,6 +130,7 @@ public class NativeLoader {
                 temporaryLibDir.deleteOnExit();
             }
 
+            // Copy the library in the temporary directory.
             File libFile;
             libFile = new File(temporaryLibDir, libName);
 

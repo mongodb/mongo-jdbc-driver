@@ -492,12 +492,12 @@ functions:
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
         
-        # Move library file to where MongoDriver class is located
-        mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
-        
-        # Test loading library from same directory as where the JDBC driver is located
+        # Test loading library from the JDBC driver
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
+        
+        # Test loading library from an invalid path specified in ENV variable
+        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
+            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithInvalidEnvironmentVariableFallback
 
   "generate github token":
     command: github.generate_token

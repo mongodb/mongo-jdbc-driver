@@ -91,7 +91,7 @@ public class MongoSQLTranslateLibTest {
         initMethod.setAccessible(true);
         initMethod.invoke(null);
 
-        assertNotNull(MongoDriver.getMongoSqlTranslateLibraryLoadError());
+        assertNull(MongoDriver.getMongoSqlTranslateLibraryLoadError());
 
         assertTrue(
                 MongoDriver.isMongoSqlTranslateLibraryLoaded(),
