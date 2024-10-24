@@ -215,6 +215,8 @@ public class MongoDriver implements Driver {
             try {
                 System.load(absolutePath);
                 mongoSqlTranslateLibraryPath = absolutePath;
+                mongoSqlTranslateLibraryLoaded = true;
+                return;
             } catch (Error e) {
                 // Store the error and then try loading the library from inside the jar next.
                 mongoSqlTranslateLibraryLoadingError = new Exception(e);
