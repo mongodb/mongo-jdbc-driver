@@ -112,7 +112,7 @@ public class MongoSQLTranslateLibTest {
         String envPath = System.getenv(MongoDriver.MONGOSQL_TRANSLATE_PATH);
         assertNotNull(envPath, "MONGOSQL_TRANSLATE_PATH should be set");
 
-        // Test initializeMongoSqlTranslateLibrary, with Environment variable set it should find the library
+        // Test loadMongoSqlTranslateLibrary, with invalid Environment variable set should fallback to driver directory
         Method initMethod = MongoDriver.class.getDeclaredMethod("loadMongoSqlTranslateLibrary");
         initMethod.setAccessible(true);
         initMethod.invoke(null);
