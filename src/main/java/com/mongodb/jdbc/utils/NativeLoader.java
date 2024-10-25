@@ -50,9 +50,11 @@ public class NativeLoader {
     // A library can only be loaded once.
     private static Set<String> loadedLibs = new HashSet<String>();
 
+    // This pattern was constructed using OpenJDK platform keys logic.
+    // See https://github.com/openjdk/jtreg/blob/master/make/Platform.gmk#L103
     private static final Pattern X86_64_ARCH_PATTERN =
-            Pattern.compile("^(x8664|amd64|ia32e|em64t|x64)$");
-    private static final String ARM_ARCH = "aarch64";
+            Pattern.compile("^(x86_64|amd64|ia32e|em64t|x64|x86-64|8664|intel64)$");
+    private static final Pattern ARM_ARCH_PATTERN = Pattern.compile("^(aarch64|arm64)$");
 
     private static final String ARM = "arm";
     private static final String X86_64 = "x86_64";
@@ -81,7 +83,7 @@ public class NativeLoader {
         String arch = SystemUtils.OS_ARCH.toLowerCase();
         if (X86_64_ARCH_PATTERN.matcher(arch).matches()) {
             return X86_64;
-        } else if (ARM_ARCH.equals(arch)) {
+        } else if (ARM_ARCH_PATTERN.matcher(arch).matches()) {
             return ARM;
         }
 
