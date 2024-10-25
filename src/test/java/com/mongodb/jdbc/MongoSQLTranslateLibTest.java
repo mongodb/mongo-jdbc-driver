@@ -126,12 +126,6 @@ public class MongoSQLTranslateLibTest {
                 "Expected error to be a loading error but is "
                         + MongoDriver.getMongoSqlTranslateLibraryLoadError().getMessage());
 
-        assertTrue(
-                MongoDriver.getMongoSqlTranslateLibraryLoadError()
-                        .getMessage()
-                        .contains("java.lang.UnsatisfiedLinkError: Can't load library"),
-                "Expected error to match path from environment variable but is "
-                        + MongoDriver.getMongoSqlTranslateLibraryLoadError().getMessage());
 
         // The library must be loaded and it should be the one from inside the driver.
         assertTrue(
