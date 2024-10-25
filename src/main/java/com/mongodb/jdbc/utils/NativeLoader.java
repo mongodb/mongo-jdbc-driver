@@ -118,7 +118,6 @@ public class NativeLoader {
         String resourcePath =
                 normalizeArch().toLowerCase() + "/" + normalizeOS().toLowerCase() + "/" + libName;
 
-        System.out.println("Resource path: " + resourcePath);
         URL resource =
                 MongoDriver.class.getProtectionDomain().getClassLoader().getResource(resourcePath);
 
