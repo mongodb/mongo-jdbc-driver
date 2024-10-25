@@ -126,7 +126,6 @@ public class MongoSQLTranslateLibTest {
                 "Expected error to be a loading error but is "
                         + MongoDriver.getMongoSqlTranslateLibraryLoadError().getMessage());
 
-
         // The library must be loaded and it should be the one from inside the driver.
         assertTrue(
                 MongoDriver.isMongoSqlTranslateLibraryLoaded(),
