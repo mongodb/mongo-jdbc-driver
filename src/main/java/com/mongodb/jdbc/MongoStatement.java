@@ -205,7 +205,7 @@ public class MongoStatement implements Statement {
         MongoCursor<BsonDocument> cursor = iterable.cursor();
         MongoJsonSchemaResult schemaResult =
                 currentDB
-                        .withCodecRegistry(MongoDriver.registry)
+                        .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
         MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
         List<List<String>> selectOrder = schemaResult.selectOrder;
@@ -230,18 +230,25 @@ public class MongoStatement implements Statement {
         GetNamespacesResult namespaceResult =
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
         List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
-        if (collections == null || collections.isEmpty()) {
-            throw new MongoSQLException("No collections found for the current database: " + dbName);
-        }
 
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
-        MongoIterable<BsonDocument> iterable =
-                currentDB
-                        .getCollection(translateResponse.targetCollection)
-                        .aggregate(translateResponse.pipeline, BsonDocument.class)
-                        .maxTime(maxQuerySec, TimeUnit.SECONDS);
+        MongoIterable<BsonDocument> iterable = null;
+        if (translateResponse.targetCollection != null
+                && !translateResponse.targetCollection.isEmpty()) {
+            iterable =
+                    currentDB
+                            .getCollection(translateResponse.targetCollection)
+                            .aggregate(translateResponse.pipeline, BsonDocument.class)
+                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
+        } else {
+            // If there are no target collection execute the pipeline against the DB directly
+            iterable =
+                    currentDB
+                            .aggregate(translateResponse.pipeline, BsonDocument.class)
+                            .maxTime(maxQuerySec, TimeUnit.SECONDS);
+        }
 
         if (fetchSize != 0) {
             iterable = iterable.batchSize(fetchSize);
@@ -276,7 +283,7 @@ public class MongoStatement implements Statement {
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
         } catch (MongoSQLException | MongoSerializationException e) {
-            throw new RuntimeException(e);
+            throw new SQLException(e);
         }
     }
 

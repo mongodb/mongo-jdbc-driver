@@ -20,9 +20,9 @@ import static com.mongodb.jdbc.MongoDriver.AUTHENTICATION_ERROR_SQLSTATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.jdbc.MongoConnection;
+import com.mongodb.jdbc.MongoDatabaseMetaData;
 import com.mongodb.jdbc.Pair;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -30,9 +30,13 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DCIntegrationTest {
 
-    /** Tests that the driver can work with SRV-style URIs. */
-    @Test
-    public void testConnectWithSRVURI() throws SQLException {
+    /**
+     * Connect to a remote cluster to use for the tests.
+     *
+     * @return the connection to the enterprise cluster to use for the tests.
+     * @throws SQLException If the connection failed.
+     */
+    private Connection remoteTestInstanceConnect() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
         String mongoURI =
@@ -54,8 +58,16 @@ public class DCIntegrationTest {
         p.setProperty("authSource", authSource);
         p.setProperty("database", "test");
 
-        MongoConnection conn = (MongoConnection) DriverManager.getConnection(fullURI, p);
-        conn.close();
+        return DriverManager.getConnection(fullURI, p);
+    }
+
+    /** Tests that the driver can work with SRV-style URIs. */
+    @Test
+    public void testConnectWithSRVURI() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            // Let's use the connection to make sure everything is working fine.
+            conn.getMetaData().getDriverVersion();
+        }
     }
 
     /**
@@ -84,27 +96,172 @@ public class DCIntegrationTest {
         return new Pair<>(uri, p);
     }
 
+    /**
+     * Execute the given SQL query and checks the table and column names from the metadata, also
+     * verifies that the cursor return is working Ok.
+     *
+     * @param query The SQL query to execute.
+     * @param expectedTableNames The expected table names in the metadata.
+     * @param expectedColumnLabels The expected column names in the metadata.
+     * @throws SQLException if an error occurs.
+     */
+    private void executeQueryAndValidateResults(
+            String query, String[] expectedTableNames, String[] expectedColumnLabels)
+            throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect();
+                Statement stmt = conn.createStatement(); ) {
+            ResultSet rs = stmt.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            assert (rsmd.getColumnCount() == expectedColumnLabels.length);
+            int i = 1;
+            for (String expectColumnLabel : expectedColumnLabels) {
+                assertEquals(
+                        rsmd.getColumnName(i),
+                        (expectColumnLabel),
+                        rsmd.getColumnName(1) + " != " + expectColumnLabel);
+                i++;
+            }
+            assert (rs.next());
+            // Let's also check that we can access the data and don't blow up.
+            rs.getString(1);
+            rs.close();
+        }
+    }
+
     /** Tests that the driver rejects the community edition of the server. */
     @Test
     public void testConnectionToCommunityServerFails() {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
+        try (MongoConnection conn =
+                (MongoConnection) DriverManager.getConnection(info.left(), info.right()); ) {
+            assertThrows(java.sql.SQLException.class, () -> {});
 
-        assertThrows(
-                java.sql.SQLException.class,
-                () -> {
-                    MongoConnection conn =
-                            (MongoConnection)
-                                    DriverManager.getConnection(info.left(), info.right());
-                });
+        } catch (SQLException e) {
+            assertTrue(
+                    e.getCause().getMessage().contains("Community edition detected"),
+                    e.getCause().getMessage() + " doesn't contain \"Community edition detected\"");
+        }
     }
 
     /** Tests that the driver connects to the enterprise edition of the server. */
     @Test
     public void testConnectionToEnterpriseServerSucceeds() throws SQLException {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
-        MongoConnection conn =
-                (MongoConnection) DriverManager.getConnection(info.left(), info.right());
-        conn.close();
+        try (Connection conn = DriverManager.getConnection(info.left(), info.right()); ) {
+            // Let's use the connection to make sure everything is working fine.
+            conn.getMetaData().getDriverVersion();
+        }
+    }
+
+    @Test
+    public void testInvalidQueryShouldFail() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect();
+                Statement stmt = conn.createStatement(); ) {
+            // Invalid SQL query should fail
+            assertThrows(
+                    java.sql.SQLException.class,
+                    () -> {
+                        try {
+                            stmt.executeQuery("This is not valid SQL");
+                        } catch (SQLException e) {
+                            // Let's make sure that we fail for the reason we expect it to.
+                            assert (e.getMessage().contains("Error 2001"));
+                            throw e;
+                        }
+                    });
+        }
+    }
+
+    @Test
+    public void testValidSimpleQueryShouldSucceed() throws SQLException {
+        String[] expectedTableNames = {"acc", "acc", "acc", "acc", "t", "t", "t", "t", "t", "t"};
+        String[] expectedColumnLabels = {
+            "_id",
+            "account_id",
+            "limit",
+            "products",
+            "_id",
+            "account_id",
+            "bucket_end_date",
+            "bucket_start_date",
+            "transaction_count",
+            "transactions"
+        };
+        executeQueryAndValidateResults(
+                "SELECT * from accounts acc JOIN transactions t on acc.account_id = t.account_id limit 5",
+                expectedTableNames,
+                expectedColumnLabels);
+    }
+
+    @Test
+    public void testCollectionLessQueryShouldSucceed() throws SQLException {
+        String[] expectedTableNames = {""};
+        String[] expectedColumnLabels = {"_1"};
+        executeQueryAndValidateResults("SELECT 1", expectedTableNames, expectedColumnLabels);
+    }
+
+    @Test
+    public void testValidSimpleQueryNoSchemaForCollectionShouldSucceed() throws SQLException {
+        String[] expectedTableNames = {""};
+        String[] expectedColumnLabels = {"account_id"};
+        executeQueryAndValidateResults(
+                "SELECT account_id from acc_limit_over_1000 limit 5",
+                expectedTableNames,
+                expectedColumnLabels);
+    }
+
+    @Test
+    public void testListDatabase() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getCatalogs();
+            while (rs.next()) {
+                // Verify that none of the system databases are returned
+                assert (!MongoDatabaseMetaData.DISALLOWED_DB_NAMES
+                        .matcher(rs.getString(1))
+                        .matches());
+            }
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testListTables() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getTables(null, null, "%", null);
+            while (rs.next()) {
+                // Verify that none of the system collections are returned
+                assert (!MongoDatabaseMetaData.DISALLOWED_COLLECTION_NAMES
+                        .matcher(rs.getString(3))
+                        .matches());
+            }
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testColumnsMetadataForCollectionWithSchema() throws SQLException {
+        String[] expectedColumnLabels = {"_id", "account_id", "limit", "products"};
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getColumns(null, null, "accounts", "%");
+            for (String expectColumnLabel : expectedColumnLabels) {
+                assert (rs.next());
+                assertEquals(
+                        rs.getString(4),
+                        (expectColumnLabel),
+                        rs.getString(4) + " != " + expectColumnLabel);
+            }
+            rs.close();
+        }
+    }
+
+    @Test
+    public void testColumnsMetadataForCollectionWithNoSchema() throws SQLException {
+        try (Connection conn = remoteTestInstanceConnect(); ) {
+            ResultSet rs = conn.getMetaData().getColumns(null, null, "acc_limit_over_1000", "%");
+            // Check that the result set is empty and we don't blow up when calling next.
+            assert (!rs.next());
+            rs.close();
+        }
     }
 
     @Test
