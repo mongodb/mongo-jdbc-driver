@@ -14,3 +14,5 @@ local_adf
 
 # Ignore generated tests
 resources/generated_test
+
+.idea/
