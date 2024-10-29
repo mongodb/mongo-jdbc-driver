@@ -123,7 +123,12 @@ tasks:
           lib_prefix: "lib"
           ext: "dylib"
       # windows
-      - func: "fetch mongosqltranslate windows"
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "build jdbc driver"
       - func: "upload jar file"
 
@@ -172,7 +177,12 @@ tasks:
           lib_prefix: "lib"
           ext: "dylib"
       # windows
-      - func: "fetch mongosqltranslate windows"
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
@@ -216,7 +226,12 @@ tasks:
           lib_prefix: "lib"
           ext: "dylib"
       # windows
-      - func: "fetch mongosqltranslate windows"
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "generate github token"
       - func: "run smoke test"
 
@@ -474,16 +489,6 @@ functions:
         aws_secret: ${release_aws_secret}
         local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
         remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-${platform}-${arch}.${ext}
-        bucket: translators-connectors-releases
-
-  "fetch mongosqltranslate windows":
-    - command: s3.get
-      params:
-        working_dir: mongo-jdbc-driver
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: mongo-jdbc-driver/src/main/resources/x86_64/windows/mongosqltranslate.dll
-        remote_file: mongosqltranslate/mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-win.dll
         bucket: translators-connectors-releases
 
   "build jdbc driver":
