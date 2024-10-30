@@ -61,7 +61,7 @@ public class NativeLoader {
 
     private static final String MACOS = "macos";
     private static final String LINUX = "linux";
-    private static final String WINDOWS = "windows";
+    private static final String WINDOWS = "win";
 
     /** Private constructor - this class will never be instanced. */
     private NativeLoader() {}
