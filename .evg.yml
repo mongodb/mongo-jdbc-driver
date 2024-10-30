@@ -250,7 +250,7 @@ tasks:
         params:
           working_dir: mongo-jdbc-driver
           <<: *evg_bucket_config
-          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
           remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
       - command: s3.put
         params:
