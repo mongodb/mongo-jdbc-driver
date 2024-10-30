@@ -261,7 +261,7 @@ tasks:
           remote_file: eap/mongo-jdbc-driver-eap/
           bucket: translators-connectors-releases
           permissions: public-read
-          content_type: application/json
+          content_type: application/java-archive
 
   - name: spotless
     commands:
