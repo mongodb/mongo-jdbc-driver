@@ -87,6 +87,7 @@ buildvariants:
       - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
 
@@ -247,6 +248,39 @@ tasks:
     commands:
       - func: "publish maven"
       - func: "trace artifacts"
+
+  # Publishes the release artifacts to S3
+  - name: publish-s3
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    depends_on:
+      - name: "build"
+        variant: "release"
+      - name: "test-smoke"
+        variant: "release"
+    commands:
+      - *assume_role_cmd
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_files_include_filter:
+            - mongodb-jdbc-eap-*.jar
+          remote_file: eap/mongo-jdbc-driver-eap/
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/java-archive
 
   - name: spotless
     commands:
@@ -1251,9 +1285,18 @@ functions:
         script: |
           ${PREPARE_SHELL}
           if [ -d "build/libs" ]; then
+            # A sanity check to see if expected files are indeed here
+            ls -lrt build/libs
+          
             if [[ "${EAP_BUILD}" == "true" ]]; then
-              # A sanity check to see if expected files are indeed here
-              ls -lrt build/libs
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+                fi
+              done
+            else
               # Rename files according to our naming scheme
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
@@ -1262,8 +1305,6 @@ functions:
                   mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
                 fi
               done
-            else
-              mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
             fi
           fi
     - command: s3.put
