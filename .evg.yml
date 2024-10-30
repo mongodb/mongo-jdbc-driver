@@ -79,6 +79,7 @@ buildvariants:
     tasks:
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
 
@@ -229,6 +230,37 @@ tasks:
     commands:
       - func: "publish maven"
       - func: "trace artifacts"
+
+  # Publishes the release artifacts to S3
+  - name: publish-s3
+    git_tag_only: true
+    depends_on:
+      - name: "test-smoke"
+        variant: "release"
+    commands:
+      - *assume_role_cmd
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_files_include_filter:
+            - mongodb-jdbc-eap-*.jar
+          remote_file: eap/mongo-jdbc-driver-eap/
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/json
 
   - name: spotless
     commands:
@@ -461,7 +493,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
