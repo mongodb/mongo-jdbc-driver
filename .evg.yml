@@ -232,8 +232,10 @@ tasks:
 
   # Publishes the release artifacts to S3
   - name: publish-s3
-    git_tag_only: true
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
     depends_on:
+      - name: "build"
+        variant: "release"
       - name: "test-smoke"
         variant: "release"
     commands:
