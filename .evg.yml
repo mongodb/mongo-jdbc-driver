@@ -55,7 +55,6 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-large
     tasks:
-      - name: "build"
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
@@ -67,7 +66,6 @@ buildvariants:
       _platform: amazon2-arm64-jdk-11
     run_on: amazon2-arm64-graviton3
     tasks:
-      - name: "build"
       - name: "test-unit"
       - name: "test-adf-integration"
 
@@ -77,6 +75,7 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-small
     tasks:
+      - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
       - name: "publish-s3"
@@ -984,7 +983,16 @@ functions:
         script: |
           ${PREPARE_SHELL}
           if [ -d "build/libs" ]; then
-            mv "build/libs/$(ls -AU build/libs | head -1)" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+            # A sanity check to see if expected files are indeed here
+            ls -lrt build/libs
+            # Rename files according to our naming scheme
+            for f in ./build/libs/mongodb-jdbc-*.jar; do 
+              if [[ "$f" == *"-all"* ]]; then
+                mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+              else
+                mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+              fi
+            done
           fi
     - command: s3.put
       params:
