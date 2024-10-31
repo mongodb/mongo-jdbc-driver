@@ -729,29 +729,33 @@ functions:
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 1 | sed s/v// )
-            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | cut -d '-' -f 2 | sed s/libv//)
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag}  | awk -F'-libv' '{print $2}')
           else
             export MDBJDBC_VER=snapshot
             export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
 
-          case ${_platform} in
-          ubuntu2204-64-jdk-8)
-               JAVA_HOME=/opt/java/jdk8
-          ;;
-          ubuntu2204-64-jdk-11)
-               JAVA_HOME=/opt/java/jdk11
-          ;;
-          amazon2-arm64-jdk-11)
-               JAVA_HOME=/usr/lib/jvm/java-11
-          ;;
-          *)
-               echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'amazon2-arm64-jdk-11', 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
-               exit 1
-          ;;
-          esac
+          echo "JDBC version = $MDBJDBC_VER"
+          echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
+          
+          if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
+              export JAVA_HOME=/opt/java/jdk8
+          elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
+              export JAVA_HOME=/opt/java/jdk11
+          elif [[ "${_platform}" == "amazon2-arm64-jdk-11" ]]; then
+              export JAVA_HOME=/usr/lib/jvm/java-11
+          else
+              # According to DEVPROD, the Java toolchain should always be under `/opt/java/`
+              if [ -d "/opt/java/jdk11" ]; then
+                export JAVA_HOME=/opt/java/jdk11
+              else
+                echo >&2 "Can't find Java. `/opt/java/jdk11` does not exist"
+                exit 1
+              fi
+          fi
+          
+          echo "Java home = $JAVA_HOME"
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
