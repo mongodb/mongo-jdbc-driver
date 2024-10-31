@@ -24,8 +24,10 @@ the MongoDB Atlas SQL JDBC driver.
 
 #### Supported Operating Systems
 
-The MongoDB JDBC driver is compatible with Windows x86_64 architecture, MacOS x86_64 and MacOS aarch64 architectures, and linux x86_64,
-and linux arm64 architectures.
+The MongoDB JDBC driver is compatible with:
+- Windows x86_64
+- macOS x86_64 and macOS aarch64 architectures
+- linux x86_64 and linux arm64 architectures
 
 #### Dependencies
 
@@ -434,8 +436,6 @@ FROM Transactions
 GROUP BY ProductSold;
 ```
 
-
-
 ### Scalar Functions
 
 #### String Functions
@@ -619,8 +619,7 @@ FROM SomeTable;
 
 - SIMILAR TO
 - RANDOM
-- Timezone Conversion
-Not Supported: MongoDB stores dates in UTC.
+- Timezone Conversion (MongoDB stores dates in UTC)
 - GROUP_CONCAT
 
 ### Additional Notes
@@ -657,7 +656,6 @@ help, see your tool vendor's documentation.
 
 ### Common Issues
 
-
 - Enterprise edition detected, but mongosqltranslate library not found.
 
 The translation library was unable to be located. The translation library is included in the JAR and copied to a
@@ -672,14 +670,9 @@ into an JDBC error will be in the logs. Look for ERROR and WARN entries.
 
 Delete the JAR file.
 
-
 ## Appendix
 
 ### Error Codes Reference
 
 There are many error codes available to help trouble shoot queries and operations.
 You can reference them [in the official MongoDB documentation](https://www.mongodb.com/docs/atlas/data-federation/query/sql/errors/).
-
-### Change Log
-
-
