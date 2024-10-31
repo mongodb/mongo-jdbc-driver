@@ -730,7 +730,7 @@ functions:
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
-            export LIBMONGOSQLTRANSLATE_VER=$(echo "$input" | awk -F'-libv' '{print $2}')
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag}  | awk -F'-libv' '{print $2}')
           else
             export MDBJDBC_VER=snapshot
             export LIBMONGOSQLTRANSLATE_VER=snapshot
