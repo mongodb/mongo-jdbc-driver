@@ -279,8 +279,15 @@ public class MongoConnection implements Connection {
         BsonDocument command = new BsonDocument();
         command.put("buildInfo", new BsonInt32(1));
         try {
-            Document result = mongoClient.getDatabase("admin").runCommand(command);
-            return (String) result.get("version");
+            Document result = mongoClient.getDatabase(currentDB).runCommand(command);
+            Document maybeDataLake = (Document) result.get("dataLake");
+            String serverVersion;
+            if (maybeDataLake != null) {
+                serverVersion = (String) maybeDataLake.get("version");
+            } else {
+                serverVersion = (String) result.get("version");
+            }
+            return serverVersion;
         } catch (Exception e) {
             throw new SQLException(e);
         }

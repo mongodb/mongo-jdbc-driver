@@ -17,6 +17,7 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
+import static java.lang.Integer.parseInt;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
@@ -187,6 +188,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final int APPROXIMATE_DOC_SIZE = 16777000;
     private static final String FUNC_DEFAULT_CATALOG = "def";
     private static final String YES = "YES";
+
+    private int serverMajorVersion;
+    private int serverMinorVersion;
 
     private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
             Arrays.asList(
@@ -581,6 +585,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             return serverVersion;
         }
         serverVersion = conn.getServerVersion();
+        String[] versionParts = serverVersion.split("\\.");
+        serverMajorVersion = parseInt(versionParts[0]);
+        serverMinorVersion = parseInt(versionParts[1]);
         return serverVersion;
     }
 
@@ -1255,12 +1262,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return MongoDriver.MAJOR_VERSION;
+        return serverMajorVersion;
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return MongoDriver.MINOR_VERSION;
+        return serverMinorVersion;
     }
 
     @Override
