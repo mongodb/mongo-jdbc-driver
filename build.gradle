@@ -8,7 +8,7 @@ plugins {
 }
 
 if (project.hasProperty('isTagTriggered')) {
-    version = getAbbreviatedGitVersion()()
+    version = getAbbreviatedGitVersion()
 } else {
     version = getGitVersion()
 }
