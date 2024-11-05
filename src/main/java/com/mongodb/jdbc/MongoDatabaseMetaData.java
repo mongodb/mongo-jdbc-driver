@@ -24,13 +24,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowIdLifetime;
-import java.sql.SQLException;
-import java.sql.Types;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -586,6 +581,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
         }
         serverVersion = conn.getServerVersion();
         String[] versionParts = serverVersion.split("\\.");
+        if (versionParts.length != 3) {
+            throw new SQLException("Unable to determine Database version");
+        }
         serverMajorVersion = parseInt(versionParts[0]);
         serverMinorVersion = parseInt(versionParts[1]);
         return serverVersion;
