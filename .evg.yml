@@ -538,7 +538,7 @@ functions:
         fi
         ./gradlew clean generateLicenseReport --rerun-tasks && \
         echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
