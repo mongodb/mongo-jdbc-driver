@@ -24,7 +24,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
