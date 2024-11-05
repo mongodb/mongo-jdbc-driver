@@ -494,7 +494,10 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        if [[ "${triggered_by_git_tag}" != "" ]]; then
+          EXTRA_PROP="-PisTagTriggered"
+        fi
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec

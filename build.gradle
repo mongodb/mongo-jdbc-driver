@@ -7,10 +7,16 @@ plugins {
     id "org.cyclonedx.bom" version "1.8.2"
 }
 
-version =  getGitVersion()
+if (project.hasProperty('isTagTriggered')) {
+    version = getAbbreviatedGitVersion()
+} else {
+    version = getGitVersion()
+}
 
 ext {
+    println("Driver version = " + version)
     releaseVersion = getReleaseVersion()
+    println("Artifacts version" + releaseVersion)
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
     aspectjVersion = '1.9.7'
@@ -222,30 +228,10 @@ dependencies {
 }
 
 def getReleaseVersion() {
-	def snapshot = isDirtyVersion() || !isTaggedVersion()
-	if (snapshot) {
+    if (!project.hasProperty('isTagTriggered')) {
 		return getAbbreviatedGitVersion() + "-SNAPSHOT"
 	} else {
-		return getGitVersion()
-	}
-}
-
-def isDirtyVersion() {
-	getGitVersion().endsWith("dirty")
-}
-
-def isTaggedVersion() {
-	def out = new ByteArrayOutputStream()
-	def result = exec {
-		commandLine 'git', 'describe', '--exact'
-		ignoreExitValue true
-		standardOutput out
-		errorOutput out
-	}
-	if (result.getExitValue() == 0) {
-		return true
-	} else {
-		return false
+		return getAbbreviatedGitVersion()
 	}
 }
 
