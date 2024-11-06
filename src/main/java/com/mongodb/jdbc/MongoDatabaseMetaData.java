@@ -17,7 +17,6 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
-import static java.lang.Integer.parseInt;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
@@ -575,17 +574,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        if (serverVersion != null) {
-            return serverVersion;
-        }
-        serverVersion = conn.getServerVersion();
-        String[] versionParts = serverVersion.split("\\.");
-        if (versionParts.length != 3) {
-            throw new SQLException("Unable to determine Database version");
-        }
-        serverMajorVersion = parseInt(versionParts[0]);
-        serverMinorVersion = parseInt(versionParts[1]);
-        return serverVersion;
+        return conn.getServerVersion();
     }
 
     @Override
@@ -1259,12 +1248,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return serverMajorVersion;
+        return conn.getServerMajorVersion();
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return serverMinorVersion;
+        return conn.getServerMinorVersion();
     }
 
     @Override

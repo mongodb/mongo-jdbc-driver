@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc;
 
+import static java.lang.Integer.parseInt;
+
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -70,7 +72,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.Document;
 import org.bson.UuidRepresentation;
 
 @AutoLoggable
@@ -94,6 +95,22 @@ public class MongoConnection implements Connection {
     private UuidRepresentation uuidRepresentation;
     private String appName;
     private MongoSQLTranslate mongosqlTranslate;
+
+    private int serverMajorVersion;
+    private int serverMinorVersion;
+    private String serverVersion;
+
+    public int getServerMajorVersion() {
+        return serverMajorVersion;
+    }
+
+    public int getServerMinorVersion() {
+        return serverMinorVersion;
+    }
+
+    public String getServerVersion() {
+        return this.serverVersion;
+    }
 
     protected enum MongoClusterType {
         AtlasDataFederation,
@@ -219,7 +236,7 @@ public class MongoConnection implements Connection {
         // the type of the cluster.
         BuildInfo buildInfoRes =
                 mongoClient
-                        .getDatabase("admin")
+                        .getDatabase(currentDB)
                         .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(buildInfoCmd, BuildInfo.class);
 
@@ -227,6 +244,11 @@ public class MongoConnection implements Connection {
         if (buildInfoRes.ok != 1) {
             return MongoClusterType.UnknownTarget;
         }
+
+        this.serverVersion = buildInfoRes.version;
+        String[] versionParts = buildInfoRes.version.split("\\.");
+        this.serverMajorVersion = parseInt(versionParts[0], 10);
+        this.serverMinorVersion = parseInt(versionParts[1], 10);
 
         // If the "dataLake" field is present, it must be an ADF cluster.
         if (buildInfoRes.dataLake != null) {
@@ -271,26 +293,6 @@ public class MongoConnection implements Connection {
 
     String getUser() {
         return user;
-    }
-
-    String getServerVersion() throws SQLException {
-        checkConnection();
-
-        BsonDocument command = new BsonDocument();
-        command.put("buildInfo", new BsonInt32(1));
-        try {
-            Document result = mongoClient.getDatabase(currentDB).runCommand(command);
-            Document maybeDataLake = (Document) result.get("dataLake");
-            String serverVersion;
-            if (maybeDataLake != null) {
-                serverVersion = (String) maybeDataLake.get("version");
-            } else {
-                serverVersion = (String) result.get("version");
-            }
-            return serverVersion;
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
     }
 
     protected MongoDatabase getDatabase(String DBName) {
