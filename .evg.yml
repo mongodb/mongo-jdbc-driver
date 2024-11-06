@@ -78,6 +78,7 @@ buildvariants:
       - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "make-docs"
       - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
@@ -230,6 +231,13 @@ tasks:
       - func: "publish maven"
       - func: "trace artifacts"
 
+  # make and upload docs
+  - name: make-docs
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    commands:
+      - func: "build jdbc docs"
+      - func: "upload jdbc docs"
+
   # Publishes the release artifacts to S3
   - name: publish-s3
     allowed_requesters: ["ad_hoc", "github_tag", "patch"]
@@ -262,6 +270,21 @@ tasks:
           bucket: translators-connectors-releases
           permissions: public-read
           content_type: application/java-archive
+      - command: s3.get
+        params:
+          work_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/pdf
 
   - name: spotless
     commands:
@@ -278,7 +301,7 @@ tasks:
       - func: "update download center feed"
 
   - name: semgrep
-    exec_timeout_secs: 3600 # 1h 
+    exec_timeout_secs: 3600 # 1h
     commands:
       - func: "static code analysis"
 
@@ -325,6 +348,24 @@ tasks:
       # - func: "publish compliance report"
 
 functions:
+  "build jdbc docs":
+    - command: subprocess.exec
+      params:
+        binary: bash
+        working_dir: mongo-jdbc-driver
+        args:
+          - "./evergreen/make_docs.sh"
+
+  "upload jdbc docs":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
+        remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+        permissions: public-read
+        content_type: application/pdf
+
   "push SBOM Lite to Silk":
     - command: shell.exec
       type: test
@@ -409,9 +450,9 @@ functions:
         script: |
           ${PREPARE_SHELL}
           set -o errexit
-          
+
           mkdir -p $SBOM_TOOL_DIR
-          
+
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
@@ -424,9 +465,9 @@ functions:
         script: |
           ${PREPARE_SHELL}
           set -o errexit
-          
+
           JQ_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
-          
+
           echo "-- Downloading JQ $JQ_URL --"
           curl -L -o $SBOM_TOOL_DIR/jq "$JQ_URL" \
             --silent \
@@ -435,12 +476,12 @@ functions:
             --retry 5 \
             --retry-delay 0
           chmod +x ./$SBOM_TOOL_DIR/jq
-          
+
           echo "------------------------------------"
           echo "Adding team name to SBOM"
           echo "------------------------------------"
           jq '.components[].properties += [{"name": "internal:team_responsible", "value": "Atlas SQL"}]' $SBOM_WITHOUT_TEAM_NAME > $SBOM_LITE
-          
+
           echo "------------------------------------"
           echo "Done generating SBOM"
           echo "------------------------------------"
@@ -465,12 +506,12 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -o errexit
-        
+
         # Install Grype
         echo "-- Downloading Grype --"
         curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_TOOL_DIR
         echo "------------------------------------"
-        
+
         echo "-- Scanning dependency for vulnerabilities --"
         ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
@@ -528,14 +569,14 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -e
-        
+
         # Test loading library from path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
-        
+
         # Test loading library from the JDBC driver
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
-        
+
         # Test loading library from an invalid path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithInvalidEnvironmentVariableFallback
@@ -562,34 +603,34 @@ functions:
         ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
             -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
-        
+
         echo "Gradle process started with PID $GRADLE_PID"
-        
+
         # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # This monitoring approach will detect build completion or failure even when the Gradle
         # process doesn't terminate properly and allows the task to complete.
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
-        
+
         while true; do
             if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
                 echo "Build successful!"
                 EXITCODE=0
                 break
             fi
-        
+
             if grep -q "BUILD FAILED" gradle_output.log; then
                 echo "Build failed!"
                 EXITCODE=1
                 break
             fi
-        
+
             if (( SECONDS > TIMEOUT )); then
                 echo "$TIMEOUT second timeout reached. Exiting with failure."
                 EXITCODE=1
                 break
             fi
-        
+
             # Check if Gradle process is still running
             if ! kill -0 $GRADLE_PID 2>/dev/null; then
                 echo "Gradle process has finished."
@@ -597,16 +638,16 @@ functions:
                 EXITCODE=$?
                 break
             fi
-        
+
             sleep 5
         done
-        
+
         cat gradle_output.log
-        
+
         kill $GRADLE_PID 2>/dev/null || true
-        
+
         ./resources/run_adf.sh stop
-        
+
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
@@ -631,19 +672,19 @@ functions:
           exit 1
         ;;
         esac
-        
+
         # Download and run local community and enterprise mongods.
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
-        
+
         # Run the tests.
         ./gradlew integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
         echo "Gradle process started with PID $GRADLE_PID"
-        
+
         # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # This monitoring approach will detect build completion or failure even when the Gradle
         # process doesn't terminate properly and allows the task to complete.
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
@@ -658,7 +699,7 @@ functions:
               EXITCODE=1
               break
           fi
-        
+
           if (( SECONDS > TIMEOUT )); then
               echo "$TIMEOUT second timeout reached. Exiting with failure."
               EXITCODE=1
@@ -677,11 +718,11 @@ functions:
         done
 
         cat gradle_output.log
-        
+
         kill $GRADLE_PID 2>/dev/null || true
-        
+
         pkill mongod
-        
+
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
@@ -741,7 +782,7 @@ functions:
 
           echo "JDBC version = $MDBJDBC_VER"
           echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
-          
+
           if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
               export JAVA_HOME=/opt/java/jdk8
           elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
@@ -757,7 +798,7 @@ functions:
                 exit 1
               fi
           fi
-          
+
           echo "Java home = $JAVA_HOME"
 
           # export any environment variables that will be needed by subprocesses
@@ -804,7 +845,7 @@ functions:
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
             export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
-          
+
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
             export SBOM_TOOL_DIR="sbom_generations"
@@ -813,7 +854,7 @@ functions:
             export SSDLC_DIR="$SSDLC_DIR"
             export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
+            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
           EOT
 
     - command: expansions.update
@@ -995,7 +1036,7 @@ functions:
             # A sanity check to see if expected files are indeed here
             ls -lrt build/libs
             # Rename files according to our naming scheme
-            for f in ./build/libs/mongodb-jdbc-*.jar; do 
+            for f in ./build/libs/mongodb-jdbc-*.jar; do
               if [[ "$f" == *"-all"* ]]; then
                 mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
               else
@@ -1053,7 +1094,7 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           echo "Running static code analysis with Semgrep..."
-          
+
           venv='venv'
           # Setup or use the existing virtualenv for semgrep
           if [[ -f "$venv/bin/activate" ]]; then
@@ -1119,32 +1160,32 @@ functions:
           SARIF_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif"
           echo "Sbom url = $SBOM_URL"
           echo "Sarif Url = $SARIF_URL"
-          
+
           echo "----- Generating ${COMPLIANCE_REPORT_NAME} -----"
-          
+
           # Copy template
           cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the version
           echo "Update the version"
           echo "sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the SBOM link
           echo "Update the SBOM link"
           echo "sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g"${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the SARIF link
           echo "Update the SARIF link"
           echo "sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the author information
           echo "Update the author name"
           echo "sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}
-          
+
           echo "update the author email"
           echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
