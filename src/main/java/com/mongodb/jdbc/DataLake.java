@@ -16,20 +16,9 @@
 
 package com.mongodb.jdbc;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
-
 public class DataLake {
     public String version;
     public String mongoSQLVersion;
-
-    @BsonCreator
-    public DataLake(
-            @BsonProperty("version") String version,
-            @BsonProperty("mongoSQLVersion") String mongoSQLVersion) {
-        this.version = version;
-        this.mongoSQLVersion = mongoSQLVersion;
-    }
 
     // Override toString for logging
     @Override

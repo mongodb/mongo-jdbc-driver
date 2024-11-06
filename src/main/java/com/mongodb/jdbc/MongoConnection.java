@@ -16,8 +16,6 @@
 
 package com.mongodb.jdbc;
 
-import static java.lang.Integer.parseInt;
-
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -218,23 +216,19 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
-        logger.log(Level.FINER, buildInfoRes.toString());
+        logger.log(Level.FINE, buildInfoRes.toString());
 
-        this.serverVersion =
-                buildInfoRes.version
-                        + buildInfoRes.getDataLakeVersion()
-                        + buildInfoRes.getDataLakeMongoSQLVersion();
+        this.serverVersion = buildInfoRes.getFullVersion();
 
         try {
-            String[] versionParts = buildInfoRes.version.split("\\.");
-            this.serverMajorVersion = parseInt(versionParts[0], 10);
-            this.serverMinorVersion = parseInt(versionParts[1], 10);
-        } catch (NumberFormatException e) {
-            logger.log(Level.WARNING, e.toString());
+            this.serverMajorVersion = buildInfoRes.getMajorVersion();
+            this.serverMinorVersion = buildInfoRes.getMinorVersion();
+        } catch (IndexOutOfBoundsException e) {
+            logger.log(Level.SEVERE, e.toString());
         }
 
         // If the "dataLake" field is present, it must be an ADF cluster.
-        if (buildInfoRes.getDataLakePresence().isPresent()) {
+        if (buildInfoRes.dataLake != null) {
             // append datalake and mongosql version to server version
             return MongoClusterType.AtlasDataFederation;
         } else if (buildInfoRes.modules != null) {
