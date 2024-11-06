@@ -218,8 +218,10 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
+        logger.log(Level.FINER, buildInfoRes.toString());
+
         this.serverVersion =
-                this.serverVersion
+                buildInfoRes.version
                         + buildInfoRes.getDataLakeVersion()
                         + buildInfoRes.getDataLakeMongoSQLVersion();
 
@@ -569,6 +571,12 @@ public class MongoConnection implements Connection {
         @Override
         public Void call() throws SQLException, MongoSQLException, MongoSerializationException {
             MongoClusterType actualClusterType = determineClusterType();
+            String serverInfo =
+                    "Connecting to cluster type "
+                            + actualClusterType.toString()
+                            + " with server version "
+                            + serverVersion;
+            logger.log(Level.INFO, serverInfo);
 
             switch (actualClusterType) {
                 case AtlasDataFederation:
