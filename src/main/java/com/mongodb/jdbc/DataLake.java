@@ -18,44 +18,25 @@ package com.mongodb.jdbc;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import java.util.Set;
-import java.util.Optional;
 
-public class BuildInfo {
+public class DataLake {
     public String version;
-    public Set<String> modules;
-    public int ok;
-    public DataLake dataLake;
+    public String mongoSQLVersion;
 
     @BsonCreator
-    public BuildInfo(@BsonProperty("version") String version, @BsonProperty("modules") Set<String> modules, @BsonProperty("ok") int ok, @BsonProperty("dataLake") DataLake dataLake) {
+    public DataLake(@BsonProperty("version") String version, @BsonProperty("mongoSQLVersion") String mongoSQLVersion) {
         this.version = version;
-        this.modules = modules;
-        this.ok = ok;
-        this.dataLake = dataLake;
+        this.mongoSQLVersion = mongoSQLVersion;
     }
-
-    public Optional<DataLake> getDataLakePresence() {
-        return Optional.ofNullable(dataLake);
-    }
-
-    public String getDataLakeVersion() {
-        return getDataLakePresence().map(dl -> "." +  dl.version).orElse("");
-    }
-
-    public String getDataLakeMongoSQLVersion() {
-        return getDataLakePresence().map(dl -> "." +  dl.mongoSQLVersion).orElse("");
-    }
-
 
     // Override toString for logging
     @Override
     public String toString() {
-        return "BuildInfo{" +
+        return "DataLake{" +
                 "version='" + version + '\'' +
-                ", modules=" + modules +
-                ", ok=" + ok +
-                ", dataLake=" + dataLake +
+                ", mongoSQLVersion=" + mongoSQLVersion +
                 '}';
     }
 }
+
+

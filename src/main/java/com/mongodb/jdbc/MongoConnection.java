@@ -16,8 +16,6 @@
 
 package com.mongodb.jdbc;
 
-import static java.lang.Integer.parseInt;
-
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -33,46 +31,22 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.UuidRepresentation;
+
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.UuidRepresentation;
+import java.util.logging.*;
+
+import static java.lang.Integer.parseInt;
 
 @AutoLoggable
 public class MongoConnection implements Connection {
@@ -245,13 +219,19 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
-        this.serverVersion = buildInfoRes.version;
-        String[] versionParts = buildInfoRes.version.split("\\.");
-        this.serverMajorVersion = parseInt(versionParts[0], 10);
-        this.serverMinorVersion = parseInt(versionParts[1], 10);
+        this.serverVersion = this.serverVersion + buildInfoRes.getDataLakeVersion() + buildInfoRes.getDataLakeMongoSQLVersion();
+
+        try {
+            String[] versionParts = buildInfoRes.version.split("\\.");
+            this.serverMajorVersion = parseInt(versionParts[0], 10);
+            this.serverMinorVersion = parseInt(versionParts[1], 10);
+        } catch (NumberFormatException e) {
+            logger.log(Level.WARNING, e.toString());
+        }
 
         // If the "dataLake" field is present, it must be an ADF cluster.
-        if (buildInfoRes.dataLake != null) {
+        if (buildInfoRes.getDataLakePresence().isPresent()) {
+            // append datalake and mongosql version to server version
             return MongoClusterType.AtlasDataFederation;
         } else if (buildInfoRes.modules != null) {
             // Otherwise, if "modules" is present and contains "enterprise",
