@@ -87,6 +87,7 @@ buildvariants:
       - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "make-docs"
       - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
@@ -249,6 +250,13 @@ tasks:
       - func: "publish maven"
       - func: "trace artifacts"
 
+  # make and upload docs
+  - name: make-docs
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    commands:
+      - func: "build jdbc docs"
+      - func: "upload jdbc docs"
+
   # Publishes the release artifacts to S3
   - name: publish-s3
     allowed_requesters: ["ad_hoc", "github_tag", "patch"]
@@ -281,6 +289,21 @@ tasks:
           bucket: translators-connectors-releases
           permissions: public-read
           content_type: application/java-archive
+      - command: s3.get
+        params:
+          work_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/pdf
 
   - name: spotless
     commands:
@@ -356,7 +379,7 @@ functions:
         silent: true
         shell: bash
         working_dir: mongo-jdbc-driver
-        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
         script: |
           # use AWS CLI to get the Kondukto API token from AWS Secrets Manager
           kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
@@ -365,6 +388,59 @@ functions:
           fi
           # set the KONDUKTO_TOKEN environment variable
           echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          
+          ls -lrt $SSDLC_DIR
+          
+          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
+          
+          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
+          
+          echo "-- Augmenting SBOM Lite --"
+          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
+          --env-file ${workdir}/kondukto_credentials.env \
+          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
+          echo "-------------------------------"
+          
+          ls -lrt $SSDLC_DIR
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
+        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        content_type: application/json
+        permissions: public-read
+
+  "build jdbc docs":
+    - command: subprocess.exec
+      params:
+        binary: bash
+        working_dir: mongo-jdbc-driver
+        args:
+          - "./evergreen/make_docs.sh"
+
+  "upload jdbc docs":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
+        remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+        permissions: public-read
+        content_type: application/pdf
+
+  "push SBOM Lite to Silk":
     - command: shell.exec
       type: test
       params:
@@ -580,7 +656,7 @@ functions:
 
         # Test loading library from same directory as where the JDBC driver is located
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
-        
+
         # Test loading library from an invalid path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithInvalidEnvironmentVariableFallback
@@ -607,34 +683,34 @@ functions:
         ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
             -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
-        
+
         echo "Gradle process started with PID $GRADLE_PID"
-        
+
         # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # This monitoring approach will detect build completion or failure even when the Gradle
         # process doesn't terminate properly and allows the task to complete.
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
-        
+
         while true; do
             if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
                 echo "Build successful!"
                 EXITCODE=0
                 break
             fi
-        
+
             if grep -q "BUILD FAILED" gradle_output.log; then
                 echo "Build failed!"
                 EXITCODE=1
                 break
             fi
-        
+
             if (( SECONDS > TIMEOUT )); then
                 echo "$TIMEOUT second timeout reached. Exiting with failure."
                 EXITCODE=1
                 break
             fi
-        
+
             # Check if Gradle process is still running
             if ! kill -0 $GRADLE_PID 2>/dev/null; then
                 echo "Gradle process has finished."
@@ -642,16 +718,16 @@ functions:
                 EXITCODE=$?
                 break
             fi
-        
+
             sleep 5
         done
-        
+
         cat gradle_output.log
-        
+
         kill $GRADLE_PID 2>/dev/null || true
-        
+
         ./resources/run_adf.sh stop
-        
+
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
@@ -966,7 +1042,7 @@ functions:
 
           echo "JDBC version = $MDBJDBC_VER"
           echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
-          
+
           if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
               export JAVA_HOME=/opt/java/jdk8
           elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
@@ -982,7 +1058,7 @@ functions:
                 exit 1
               fi
           fi
-          
+
           echo "Java home = $JAVA_HOME"
 
           # export any environment variables that will be needed by subprocesses
@@ -1026,7 +1102,7 @@ functions:
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
             export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
-          
+
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
             export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
