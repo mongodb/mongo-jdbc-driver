@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc;
 
+import static java.lang.Integer.parseInt;
+
 import com.google.common.base.Preconditions;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -31,10 +33,6 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.UuidRepresentation;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -45,8 +43,9 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
-
-import static java.lang.Integer.parseInt;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.UuidRepresentation;
 
 @AutoLoggable
 public class MongoConnection implements Connection {
@@ -219,7 +218,10 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
-        this.serverVersion = this.serverVersion + buildInfoRes.getDataLakeVersion() + buildInfoRes.getDataLakeMongoSQLVersion();
+        this.serverVersion =
+                this.serverVersion
+                        + buildInfoRes.getDataLakeVersion()
+                        + buildInfoRes.getDataLakeMongoSQLVersion();
 
         try {
             String[] versionParts = buildInfoRes.version.split("\\.");

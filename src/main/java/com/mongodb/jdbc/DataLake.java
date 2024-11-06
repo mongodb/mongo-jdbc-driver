@@ -24,7 +24,9 @@ public class DataLake {
     public String mongoSQLVersion;
 
     @BsonCreator
-    public DataLake(@BsonProperty("version") String version, @BsonProperty("mongoSQLVersion") String mongoSQLVersion) {
+    public DataLake(
+            @BsonProperty("version") String version,
+            @BsonProperty("mongoSQLVersion") String mongoSQLVersion) {
         this.version = version;
         this.mongoSQLVersion = mongoSQLVersion;
     }
@@ -32,11 +34,12 @@ public class DataLake {
     // Override toString for logging
     @Override
     public String toString() {
-        return "DataLake{" +
-                "version='" + version + '\'' +
-                ", mongoSQLVersion=" + mongoSQLVersion +
-                '}';
+        return "DataLake{"
+                + "version='"
+                + version
+                + '\''
+                + ", mongoSQLVersion="
+                + mongoSQLVersion
+                + '}';
     }
 }
-
-
