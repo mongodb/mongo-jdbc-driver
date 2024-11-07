@@ -31,6 +31,10 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.UuidRepresentation;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -41,9 +45,6 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.UuidRepresentation;
 
 @AutoLoggable
 public class MongoConnection implements Connection {
@@ -223,7 +224,8 @@ public class MongoConnection implements Connection {
         try {
             this.serverMajorVersion = buildInfoRes.getMajorVersion();
             this.serverMinorVersion = buildInfoRes.getMinorVersion();
-        } catch (IndexOutOfBoundsException e) {
+            // Only log issues happening while trying to compute the server version as this is not a blocker.
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
         }
 
