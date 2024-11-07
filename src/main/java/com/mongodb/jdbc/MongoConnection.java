@@ -31,10 +31,6 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.UuidRepresentation;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -45,6 +41,9 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.UuidRepresentation;
 
 @AutoLoggable
 public class MongoConnection implements Connection {
