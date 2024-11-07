@@ -38,44 +38,16 @@ import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.utils.X509Authentication;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.Document;
 import org.bson.UuidRepresentation;
 
 @AutoLoggable
@@ -105,9 +77,12 @@ public class MongoConnection implements Connection {
     private int serverMinorVersion;
     private String serverVersion;
 
+<<<<<<< HEAD
     public static final String MONGODB_JDBC_X509_CLIENT_CERT_PATH =
             "MONGODB_JDBC_X509_CLIENT_CERT_PATH";
 
+=======
+>>>>>>> 6a76451 (SQL-2423: correctly report db version (#300))
     public int getServerMajorVersion() {
         return serverMajorVersion;
     }
@@ -116,6 +91,13 @@ public class MongoConnection implements Connection {
         return serverMinorVersion;
     }
 
+<<<<<<< HEAD
+=======
+    public String getServerVersion() {
+        return this.serverVersion;
+    }
+
+>>>>>>> 6a76451 (SQL-2423: correctly report db version (#300))
     protected enum MongoClusterType {
         AtlasDataFederation,
         Community,
@@ -269,7 +251,7 @@ public class MongoConnection implements Connection {
         // the type of the cluster.
         BuildInfo buildInfoRes =
                 mongoClient
-                        .getDatabase("admin")
+                        .getDatabase(currentDB)
                         .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(buildInfoCmd, BuildInfo.class);
 
@@ -278,8 +260,21 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
+        logger.log(Level.FINE, buildInfoRes.toString());
+
+        this.serverVersion = buildInfoRes.getFullVersion();
+
+        try {
+            this.serverMajorVersion = buildInfoRes.getMajorVersion();
+            this.serverMinorVersion = buildInfoRes.getMinorVersion();
+            // Only log issues happening while trying to compute the server version as this is not a blocker.
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+        }
+
         // If the "dataLake" field is present, it must be an ADF cluster.
         if (buildInfoRes.dataLake != null) {
+            // append datalake and mongosql version to server version
             return MongoClusterType.AtlasDataFederation;
         } else if (buildInfoRes.modules != null) {
             // Otherwise, if "modules" is present and contains "enterprise",
@@ -321,19 +316,6 @@ public class MongoConnection implements Connection {
 
     String getUser() {
         return user;
-    }
-
-    String getServerVersion() throws SQLException {
-        checkConnection();
-
-        BsonDocument command = new BsonDocument();
-        command.put("buildInfo", new BsonInt32(1));
-        try {
-            Document result = mongoClient.getDatabase("admin").runCommand(command);
-            return (String) result.get("version");
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
     }
 
     protected MongoDatabase getDatabase(String DBName) {
@@ -628,6 +610,12 @@ public class MongoConnection implements Connection {
         @Override
         public Void call() throws SQLException, MongoSQLException, MongoSerializationException {
             MongoClusterType actualClusterType = determineClusterType();
+            String serverInfo =
+                    "Connecting to cluster type "
+                            + actualClusterType.toString()
+                            + " with server version "
+                            + serverVersion;
+            logger.log(Level.INFO, serverInfo);
 
             switch (actualClusterType) {
                 case AtlasDataFederation:

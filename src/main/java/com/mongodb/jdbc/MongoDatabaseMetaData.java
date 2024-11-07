@@ -23,13 +23,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowIdLifetime;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -187,6 +181,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final int APPROXIMATE_DOC_SIZE = 16777000;
     private static final String FUNC_DEFAULT_CATALOG = "def";
     private static final String YES = "YES";
+
+    private int serverMajorVersion;
+    private int serverMinorVersion;
 
     private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
             Arrays.asList(
@@ -577,11 +574,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        if (serverVersion != null) {
-            return serverVersion;
-        }
-        serverVersion = conn.getServerVersion();
-        return serverVersion;
+        return conn.getServerVersion();
     }
 
     @Override
@@ -1255,12 +1248,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return MongoDriver.MAJOR_VERSION;
+        return conn.getServerMajorVersion();
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return MongoDriver.MINOR_VERSION;
+        return conn.getServerMinorVersion();
     }
 
     @Override
