@@ -16,13 +16,68 @@
 
 package com.mongodb.jdbc;
 
+import java.util.List;
 import java.util.Set;
-import org.bson.BsonValue;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-// Simple POJO for deserializing buildInfo results.
 public class BuildInfo {
-    public String version;
+    private String fullVersion;
+    private List<Integer> versionArray;
     public Set<String> modules;
-    public BsonValue dataLake;
     public int ok;
+
+    public DataLake dataLake;
+
+    @BsonCreator
+    public BuildInfo(
+            @BsonProperty("version") String version,
+            @BsonProperty("versionArray") List<Integer> versionArray,
+            @BsonProperty("modules") Set<String> modules,
+            @BsonProperty("ok") int ok,
+            @BsonProperty("dataLake") DataLake dataLake)
+            throws IndexOutOfBoundsException {
+        this.fullVersion = version;
+        this.versionArray = versionArray;
+        if (dataLake != null) {
+            this.fullVersion += "." + dataLake.version + "." + dataLake.mongoSQLVersion;
+        }
+        this.dataLake = dataLake;
+        this.ok = ok;
+        this.modules = modules;
+    }
+
+    public String getFullVersion() {
+        return this.fullVersion;
+    }
+
+    public int getMajorVersion() throws IndexOutOfBoundsException {
+        return this.versionArray.get(0);
+    }
+
+    public int getMinorVersion() throws IndexOutOfBoundsException {
+        return this.versionArray.get(1);
+    }
+
+    // Override toString for logging
+    @Override
+    public String toString() {
+        return "BuildInfo{"
+                + "fullVersion='"
+                + fullVersion
+                + '\''
+                + ", versionArray="
+                + versionArray
+                + ", majorVersion="
+                + this.getMajorVersion()
+                + ", minorVersion="
+                + this.getMinorVersion()
+                + ", modules="
+                + modules
+                + ", ok="
+                + ok
+                + ", dataLake="
+                + dataLake
+                + '}';
+    }
 }
