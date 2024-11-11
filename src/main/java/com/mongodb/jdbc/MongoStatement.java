@@ -49,7 +49,7 @@ public class MongoStatement implements Statement {
     private String currentDBName;
     private MongoLogger logger;
     private int statementId;
-    private String cursorName;
+    String cursorName;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);

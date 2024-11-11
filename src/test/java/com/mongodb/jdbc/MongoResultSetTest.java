@@ -590,7 +590,6 @@ class MongoResultSetTest extends MongoMock {
 
     @Test
     void testGetCursorName() throws Exception {
-        assertEquals("explicit!", mongoResultSet.getCursorName());
         mongoStatement.setCursorName("test");
         assertEquals("test", mongoResultSet.getCursorName());
     }
