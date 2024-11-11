@@ -72,4 +72,9 @@ public class BsonExplicitCursor implements MongoCursor<BsonDocument> {
         }
         return null;
     }
+
+    @Override
+    public String getCursorId() {
+        return "explicit!";
+    }
 }

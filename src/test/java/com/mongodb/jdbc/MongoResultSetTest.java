@@ -589,6 +589,13 @@ class MongoResultSetTest extends MongoMock {
     }
 
     @Test
+    void testGetCursorName() throws Exception {
+        assertEquals("explicit!", mongoResultSet.getCursorName());
+        mongoStatement.setCursorName("test");
+        assertEquals("test", mongoResultSet.getCursorName());
+    }
+
+    @Test
     void testGetArithmeticValues() throws Exception {
         // Test Double values are as expected
         assertEquals(0.0, mongoResultSet.getDouble(INT_NULLABLE_COL_LABEL));
@@ -907,11 +914,6 @@ class MongoResultSetTest extends MongoMock {
                 SQLException.class,
                 () -> {
                     closedMongoResultSet.clearWarnings();
-                });
-        assertThrows(
-                SQLException.class,
-                () -> {
-                    closedMongoResultSet.getCursorName();
                 });
         assertThrows(
                 SQLException.class,
