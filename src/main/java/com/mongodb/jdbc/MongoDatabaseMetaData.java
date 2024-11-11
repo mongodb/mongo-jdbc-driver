@@ -2664,8 +2664,17 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 .stream()
                 .map(
                         key -> {
-                            BsonValue ascOrDesc =
-                                    new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+
+                            // If the index is not an integer (e.g., a geospatial index), `keys.getInteger(key)`
+                            // will throw a ClassCastException. In this case, we set `ascOrDesc` to null since these
+                            // sort sequences are not supported by JDBC.
+                            BsonValue ascOrDesc;
+                            try {
+                                ascOrDesc =
+                                        new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+                            } catch (ClassCastException e){
+                                ascOrDesc = null;
+                            }
 
                             return createSortableBottomBson(
                                     // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
