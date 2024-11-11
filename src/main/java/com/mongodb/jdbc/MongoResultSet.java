@@ -631,7 +631,7 @@ public class MongoResultSet implements ResultSet {
             return this.statement.cursorName;
         }
         if (this.cursor != null) {
-            return String.valueOf(this.cursor.getServerCursor.getId());
+            return String.valueOf(this.cursor.getServerCursor().getId());
         }
         return "";
     }
