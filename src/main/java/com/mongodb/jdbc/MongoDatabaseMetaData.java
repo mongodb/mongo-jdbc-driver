@@ -2670,10 +2670,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                             // sort sequences are not supported by JDBC.
                             BsonValue ascOrDesc;
                             try {
-                                ascOrDesc =
-                                        new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
-                            } catch (ClassCastException e){
-                                ascOrDesc = null;
+                                ascOrDesc = new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
+                            } catch (ClassCastException e) {
+                                ascOrDesc = new BsonString("");
                             }
 
                             return createSortableBottomBson(
