@@ -758,15 +758,11 @@ functions:
     - command: shell.exec
       params:
         shell: bash
-        silent: true
+        silent: false
         working_dir: mongo-jdbc-driver
         script: |
-          # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
@@ -779,10 +775,8 @@ functions:
             export MDBJDBC_VER=snapshot
             export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
-
-          echo "JDBC version = $MDBJDBC_VER"
-          echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
-
+          
+          # Set JAVA_HOME based on platform
           if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
               export JAVA_HOME=/opt/java/jdk8
           elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
@@ -798,8 +792,36 @@ functions:
                 exit 1
               fi
           fi
-
+          
+          echo "=== Generated Values ==="
+          echo "JDBC version = $MDBJDBC_VER"
+          echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
           echo "Java home = $JAVA_HOME"
+          echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
+          
+          # Write calculated values to expansions file
+          mkdir -p $ARTIFACTS_DIR
+          cat <<EOT > $ARTIFACTS_DIR/initial_expansions.yml
+          MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
+          JAVA_HOME: "$JAVA_HOME"
+          ARTIFACTS_DIR: "$ARTIFACTS_DIR"
+          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          EOT
+    - command: expansions.update
+      params:
+        file: mongo-jdbc-driver/artifacts/initial_expansions.yml
+    - command: shell.exec
+      params:
+        shell: bash
+        add_expansions_to_env: true
+        silent: true
+        working_dir: mongo-jdbc-driver
+        script: |
+          # set the state needed irrespective of _platform
+          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
+          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
@@ -812,8 +834,7 @@ functions:
           export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
           mkdir -p $SSDLC_DIR
 
-          # create expansions from values calculated above
-          mkdir -p $ARTIFACTS_DIR
+          # create expansions from values calculated above and in previous command
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
@@ -856,7 +877,6 @@ functions:
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
           EOT
-
     - command: expansions.update
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
