@@ -43,8 +43,8 @@ Ensure you have the `master` branch checked out, and that you have pulled the la
 
 #### Create the tag and push
 
-To determine which version of [`libmongosqltranslate`](https://github.com/10gen/mongosql-rs) to build with the release, the version
-tag must be annotated with `libv`.
+To specify which version of [`libmongosqltranslate`](https://github.com/10gen/mongosql-rs) should be built with the release, the version
+of `libmongosqltranslate` must be annotated in the git tag with `libv`.
 
 Create an annotated tag and push it:
 
