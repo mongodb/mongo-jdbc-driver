@@ -28,9 +28,12 @@ import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.bson.*;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
 
 @AutoLoggable
 public class MongoStatement implements Statement {
@@ -229,10 +232,18 @@ public class MongoStatement implements Statement {
 
         GetNamespacesResult namespaceResult =
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
-        List<GetNamespacesResult.Namespace> collections = namespaceResult.namespaces;
+        List<GetNamespacesResult.Namespace> namespaces = namespaceResult.namespaces;
+
+        // Check to see if namespaces returned a database. It would only do this
+        // if the query contains a qualified namespace. In this event, we must
+        // switch currentDB to the query's database for proper operation.
+        if (!namespaces.isEmpty() && !namespaces.get(0).database.isEmpty()) {
+            dbName = namespaces.get(0).database;
+            currentDB = conn.getDatabase(dbName);
+        }
 
         BsonDocument catalogDoc =
-                mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, collections);
+                mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, namespaces);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
         MongoIterable<BsonDocument> iterable = null;
         if (translateResponse.targetCollection != null
