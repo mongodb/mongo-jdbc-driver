@@ -223,7 +223,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final List<SortableBsonDocument.SortSpec> GET_INDEX_INFO_SORT_SPECS =
             Arrays.asList(
                     new SortableBsonDocument.SortSpec(
-                            NON_UNIQUE, SortableBsonDocument.ValueType.String),
+                            NON_UNIQUE, SortableBsonDocument.ValueType.Boolean),
                     new SortableBsonDocument.SortSpec(
                             INDEX_NAME, SortableBsonDocument.ValueType.String),
                     new SortableBsonDocument.SortSpec(
