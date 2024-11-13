@@ -2662,18 +2662,22 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         return keys.keySet()
                 .stream()
+                .filter(
+                        key -> {
+                            // If the index is not an integer (e.g., a geospatial index), `keys.getInteger(key)`
+                            // will throw a ClassCastException. In this case, we skip the index because the
+                            // sort sequence is not supported by JDBC.
+                            try {
+                                keys.getInteger(key);
+                            } catch (ClassCastException e) {
+                                return false;
+                            }
+                            return true;
+                        })
                 .map(
                         key -> {
-
-                            // If the index is not an integer (e.g., a geospatial index), `keys.getInteger(key)`
-                            // will throw a ClassCastException. In this case, we set `ascOrDesc` to null since these
-                            // sort sequences are not supported by JDBC.
-                            BsonValue ascOrDesc;
-                            try {
-                                ascOrDesc = new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
-                            } catch (ClassCastException e) {
-                                ascOrDesc = new BsonString("");
-                            }
+                            BsonValue ascOrDesc =
+                                    new BsonString(keys.getInteger(key) > 0 ? "A" : "D");
 
                             return createSortableBottomBson(
                                     // Per JDBC spec, sort by  NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
