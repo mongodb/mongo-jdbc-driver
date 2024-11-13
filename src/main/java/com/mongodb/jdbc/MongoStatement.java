@@ -52,6 +52,7 @@ public class MongoStatement implements Statement {
     private String currentDBName;
     private MongoLogger logger;
     private int statementId;
+    String cursorName;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
@@ -182,6 +183,7 @@ public class MongoStatement implements Statement {
     @Override
     public void setCursorName(String name) throws SQLException {
         checkClosed();
+        this.cursorName = name;
     }
 
     // ----------------------- Multiple Results --------------------------
