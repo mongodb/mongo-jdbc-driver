@@ -2,7 +2,7 @@ stepback: true
 command_type: system
 
 ignore:
-  - *.md
+  - "*.md"
 
 variables:
   - &assume_role_cmd
