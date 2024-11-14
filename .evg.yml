@@ -793,11 +793,31 @@ functions:
               fi
           fi
           
+          # set the state needed irrespective of _platform
+          SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
+          SBOM_TOOL_DIR="sbom_generations"
+          SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
+          SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
+          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
+          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
+          SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
+          mkdir -p "$SSDLC_DIR"
+          
           echo "=== Generated Values ==="
           echo "JDBC version = $MDBJDBC_VER"
           echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
           echo "Java home = $JAVA_HOME"
           echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
+          echo "=== SSDLC Values ==="
+          echo "SBOM_WITHOUT_TEAM_NAME = $SBOM_WITHOUT_TEAM_NAME"
+          echo "SBOM_TOOL_DIR = $SBOM_TOOL_DIR"
+          echo "SBOM Lite Name = $SBOM_LITE_NAME"
+          echo "SBOM_LITE = $SBOM_LITE"
+          echo "Augmented SBOM Name = $AUGMENTED_SBOM_NAME"
+          echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
+          echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
+          echo "SSDLC Directory = $SSDLC_DIR"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -807,6 +827,14 @@ functions:
           JAVA_HOME: "$JAVA_HOME"
           ARTIFACTS_DIR: "$ARTIFACTS_DIR"
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          SBOM_WITHOUT_TEAM_NAME: "$SBOM_WITHOUT_TEAM_NAME"
+          SBOM_TOOL_DIR: "$SBOM_TOOL_DIR"
+          SBOM_LITE_NAME: "$SBOM_LITE_NAME"
+          SBOM_LITE: "$SBOM_LITE"
+          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
+          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
+          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
+          SSDLC_DIR: "$SSDLC_DIR"
           EOT
     - command: expansions.update
       params:
@@ -818,21 +846,15 @@ functions:
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
-          # set the state needed irrespective of _platform
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
 
-          export SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
+          export SBOM_LITE_NAME="$SBOM_LITE_NAME"
           export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-          export COMPLIANCE_REPORT_NAME=$COMPLIANCE_REPORT_NAME
-          export STATIC_CODE_ANALYSIS_NAME=$STATIC_CODE_ANALYSIS_NAME
-
-          export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
-          mkdir -p $SSDLC_DIR
+          export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
+          export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
+          export SSDLC_DIR="$SSDLC_DIR"
 
           # create expansions from values calculated above and in previous command
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
@@ -868,12 +890,12 @@ functions:
             export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
 
             # ssdlc relevant variables
-            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-            export SBOM_TOOL_DIR="sbom_generations"
+            export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
+            export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
             export SBOM_LITE_NAME="$SBOM_LITE_NAME"
             export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
             export SSDLC_DIR="$SSDLC_DIR"
-            export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
+            export SBOM_LITE="$SBOM_LITE"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
           EOT
