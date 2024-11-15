@@ -223,7 +223,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final List<SortableBsonDocument.SortSpec> GET_INDEX_INFO_SORT_SPECS =
             Arrays.asList(
                     new SortableBsonDocument.SortSpec(
-                            NON_UNIQUE, SortableBsonDocument.ValueType.String),
+                            NON_UNIQUE, SortableBsonDocument.ValueType.Boolean),
                     new SortableBsonDocument.SortSpec(
                             INDEX_NAME, SortableBsonDocument.ValueType.String),
                     new SortableBsonDocument.SortSpec(
@@ -2662,6 +2662,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         return keys.keySet()
                 .stream()
+                .filter(
+                        key -> {
+                            // If the index is not an integer (e.g., a geospatial index), `keys.getInteger(key)`
+                            // will throw a ClassCastException. In this case, we skip the index because the
+                            // sort sequence is not supported by JDBC.
+                            try {
+                                keys.getInteger(key);
+                            } catch (ClassCastException e) {
+                                return false;
+                            }
+                            return true;
+                        })
                 .map(
                         key -> {
                             BsonValue ascOrDesc =
