@@ -19,8 +19,6 @@ Version number policy could be referred from here: https://docs.oracle.com/middl
 
 Among all the version standards Maven supports, we will use MajorVersion, IncrementalVersion and Qualifier inside this project.
 
-The current version number is specified inside `gradle.properties` file.
-
 ## Release Process
 
 ### Snapshot Versions
@@ -71,7 +69,7 @@ of `libmongosqltranslate` must be annotated in the git tag with `libv`. This ver
 Create an annotated tag and push it (using the correct versions):
 
 ```sh
-# git tag -a -m X.Y.Z-alpha-1-libvX.Y.Z-alpha vX.Y.Z-alpha-1-libvX.Y.Z-alpha
+# git tag -a -m X.Y.Z[-<JDBCprerelease>-libvXX.YY.ZZ[-<prerelease>]]
 git tag -am 3.0.0-alpha-2-libv1.0.0-alpha-3
 git push --tags
 ```
