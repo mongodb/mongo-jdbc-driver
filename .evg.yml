@@ -1,6 +1,9 @@
 stepback: true
 command_type: system
 
+ignore:
+  - "*.md"
+
 variables:
   - &assume_role_cmd
     command: ec2.assume_role
