@@ -1,6 +1,21 @@
 stepback: true
 command_type: system
 
+ignore:
+  - "*.md"
+
+variables:
+  - &assume_role_cmd
+    command: ec2.assume_role
+    params:
+      role_arn: ${assume_role_arn}
+      duration_seconds: 3600
+  - &evg_bucket_config
+    aws_key: ${AWS_ACCESS_KEY_ID}
+    aws_secret: ${AWS_SECRET_ACCESS_KEY}
+    aws_session_token: ${AWS_SESSION_TOKEN}
+    bucket: mongo-jdbc-driver-eap
+
 pre:
   - func: "fetch source"
   - func: "export variables"
@@ -43,12 +58,10 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-large
     tasks:
-      - name: "build"
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
-      # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
-      # - name: "test-dc-integration"
+      - name: "test-dc-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -56,7 +69,6 @@ buildvariants:
       _platform: amazon2-arm64-jdk-11
     run_on: amazon2-arm64-graviton3
     tasks:
-      - name: "build"
       - name: "test-unit"
       - name: "test-adf-integration"
 
@@ -66,14 +78,53 @@ buildvariants:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-small
     tasks:
+      - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "make-docs"
+      - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
 
 tasks:
   - name: "build"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "build jdbc driver"
 
   - name: "test-unit"
@@ -91,14 +142,88 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "run dc integration test"
 
   - name: "test-smoke"
     commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "generate github token"
       - func: "run smoke test"
 
   - name: "publish-maven"
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "test-smoke"
@@ -109,11 +234,68 @@ tasks:
       - func: "publish maven"
       - func: "trace artifacts"
 
+  # make and upload docs
+  - name: make-docs
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    commands:
+      - func: "build jdbc docs"
+      - func: "upload jdbc docs"
+
+  # Publishes the release artifacts to S3
+  - name: publish-s3
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    depends_on:
+      - name: "build"
+        variant: "release"
+      - name: "test-smoke"
+        variant: "release"
+    commands:
+      - *assume_role_cmd
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_files_include_filter:
+            - mongodb-jdbc-eap-*.jar
+          remote_file: eap/mongo-jdbc-driver-eap/
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/java-archive
+      - command: s3.get
+        params:
+          work_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/pdf
+
   - name: spotless
     commands:
       - func: "check spotless"
 
   - name: download-center-update
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
@@ -122,19 +304,22 @@ tasks:
       - func: "update download center feed"
 
   - name: semgrep
-    exec_timeout_secs: 3600 # 1h 
+    exec_timeout_secs: 3600 # 1h
     commands:
       - func: "static code analysis"
 
   - name: sbom
     commands:
       - func: "generate sbom"
+      # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
       - func: "upload sbom"
-      - func: "push SBOM Lite to Silk"
-      - func: "pull augmented SBOM from Silk"
+      # - func: "push SBOM Lite to Silk"
+      # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
+    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
+    disable: true
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
@@ -159,12 +344,31 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "publish augmented SBOM"
-      - func: "publish static code analysis"
+      # TODO: undo these comments before merging back into main
+      # - func: "publish augmented SBOM"
+      # - func: "publish static code analysis"
       - func: "generate compliance report"
-      - func: "publish compliance report"
+      # - func: "publish compliance report"
 
 functions:
+  "build jdbc docs":
+    - command: subprocess.exec
+      params:
+        binary: bash
+        working_dir: mongo-jdbc-driver
+        args:
+          - "./evergreen/make_docs.sh"
+
+  "upload jdbc docs":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
+        remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+        permissions: public-read
+        content_type: application/pdf
+
   "push SBOM Lite to Silk":
     - command: shell.exec
       type: test
@@ -190,10 +394,7 @@ functions:
           echo "-------------------------------"
 
   "pull augmented SBOM from Silk":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -218,29 +419,20 @@ functions:
           ls -lrt $SSDLC_DIR
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish augmented SBOM":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
         remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -261,9 +453,9 @@ functions:
         script: |
           ${PREPARE_SHELL}
           set -o errexit
-          
+
           mkdir -p $SBOM_TOOL_DIR
-          
+
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
@@ -276,9 +468,9 @@ functions:
         script: |
           ${PREPARE_SHELL}
           set -o errexit
-          
+
           JQ_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
-          
+
           echo "-- Downloading JQ $JQ_URL --"
           curl -L -o $SBOM_TOOL_DIR/jq "$JQ_URL" \
             --silent \
@@ -287,31 +479,25 @@ functions:
             --retry 5 \
             --retry-delay 0
           chmod +x ./$SBOM_TOOL_DIR/jq
-          
+
           echo "------------------------------------"
           echo "Adding team name to SBOM"
           echo "------------------------------------"
           jq '.components[].properties += [{"name": "internal:team_responsible", "value": "Atlas SQL"}]' $SBOM_WITHOUT_TEAM_NAME > $SBOM_LITE
-          
+
           echo "------------------------------------"
           echo "Done generating SBOM"
           echo "------------------------------------"
 
   "upload sbom":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_files_include_filter:
           - ${SBOM_LITE_NAME}
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "scan sbom":
@@ -323,16 +509,26 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -o errexit
-        
+
         # Install Grype
         echo "-- Downloading Grype --"
         curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_TOOL_DIR
         echo "------------------------------------"
-        
+
         echo "-- Scanning dependency for vulnerabilities --"
         ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
+
+  "fetch libmongosqltranslate":
+    - command: s3.get
+      params:
+        working_dir: mongo-jdbc-driver
+        aws_key: ${release_aws_key}
+        aws_secret: ${release_aws_secret}
+        local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
+        remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-${platform}-${arch}.${ext}
+        bucket: translators-connectors-releases
 
   "build jdbc driver":
     command: shell.exec
@@ -341,8 +537,11 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
+        ${PREPARE_SHELL}
+        if [[ "${triggered_by_git_tag}" != "" ]]; then
+          EXTRA_PROP="-PisTagTriggered"
+        fi
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -351,8 +550,8 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew spotlessCheck
+        ${PREPARE_SHELL}
+        ./gradlew spotlessCheck
 
   "run unit test":
     command: shell.exec
@@ -361,8 +560,8 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
+        ${PREPARE_SHELL}
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
 
   "run mongosqltranslate library load test":
     command: shell.exec
@@ -373,17 +572,17 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -e
-        
+
         # Test loading library from path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
-        
-        # Move library file to where MongoDriver class is located
-        mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
-        
-        # Test loading library from same directory as where the JDBC driver is located
+
+        # Test loading library from the JDBC driver
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
+
+        # Test loading library from an invalid path specified in ENV variable
+        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
+            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithInvalidEnvironmentVariableFallback
 
   "generate github token":
     command: github.generate_token
@@ -401,59 +600,59 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./resources/run_adf.sh start &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
-              -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
-          GRADLE_PID=$!
+        ${PREPARE_SHELL}
+        ./resources/run_adf.sh start &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
+            -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
 
-          echo "Gradle process started with PID $GRADLE_PID"
+        echo "Gradle process started with PID $GRADLE_PID"
 
-          # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-          # This monitoring approach will detect build completion or failure even when the Gradle 
-          # process doesn't terminate properly and allows the task to complete.
-          SECONDS=0
-          TIMEOUT=1800  # 30 minute timeout
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
 
-          while true; do
-              if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
-                  echo "Build successful!"
-                  EXITCODE=0
-                  break
-              fi
+        while true; do
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
 
-              if grep -q "BUILD FAILED" gradle_output.log; then
-                  echo "Build failed!"
-                  EXITCODE=1
-                  break
-              fi
-              
-              if (( SECONDS > TIMEOUT )); then
-                  echo "$TIMEOUT second timeout reached. Exiting with failure."
-                  EXITCODE=1
-                  break
-              fi
-              
-              # Check if Gradle process is still running
-              if ! kill -0 $GRADLE_PID 2>/dev/null; then
-                  echo "Gradle process has finished."
-                  wait $GRADLE_PID
-                  EXITCODE=$?
-                  break
-              fi
-              
-              sleep 5
-          done
+            if grep -q "BUILD FAILED" gradle_output.log; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
 
-          cat gradle_output.log
-          
-          kill $GRADLE_PID 2>/dev/null || true
+            if (( SECONDS > TIMEOUT )); then
+                echo "$TIMEOUT second timeout reached. Exiting with failure."
+                EXITCODE=1
+                break
+            fi
 
-          ./resources/run_adf.sh stop
-          
-          echo "Integration test exit code: $EXITCODE"
-          exit $EXITCODE
+            # Check if Gradle process is still running
+            if ! kill -0 $GRADLE_PID 2>/dev/null; then
+                echo "Gradle process has finished."
+                wait $GRADLE_PID
+                EXITCODE=$?
+                break
+            fi
+
+            sleep 5
+        done
+
+        cat gradle_output.log
+
+        kill $GRADLE_PID 2>/dev/null || true
+
+        ./resources/run_adf.sh stop
+
+        echo "Integration test exit code: $EXITCODE"
+        exit $EXITCODE
 
   "run dc integration test":
     command: shell.exec
@@ -476,23 +675,19 @@ functions:
           exit 1
         ;;
         esac
-        
-        # Move library file to where MongoDriver class is located
-        mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
-        
+
         # Download and run local community and enterprise mongods.
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
-        
+
         # Run the tests.
         ./gradlew integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
         echo "Gradle process started with PID $GRADLE_PID"
-        
+
         # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-        # This monitoring approach will detect build completion or failure even when the Gradle 
+        # This monitoring approach will detect build completion or failure even when the Gradle
         # process doesn't terminate properly and allows the task to complete.
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
@@ -507,7 +702,7 @@ functions:
               EXITCODE=1
               break
           fi
-        
+
           if (( SECONDS > TIMEOUT )); then
               echo "$TIMEOUT second timeout reached. Exiting with failure."
               EXITCODE=1
@@ -526,11 +721,11 @@ functions:
         done
 
         cat gradle_output.log
-      
+
         kill $GRADLE_PID 2>/dev/null || true
-      
+
         pkill mongod
-      
+
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
@@ -540,7 +735,7 @@ functions:
       work_dir: mongo-jdbc-driver
       key_id: ${papertrail_id}
       secret_key: ${papertrail_key}
-      product: mongo-jdbc-driver
+      product: mongo-jdbc-driver-eap
       version: ${MDBJDBC_VER}
       filenames:
         - "build/libs/*.jar"
@@ -566,59 +761,109 @@ functions:
     - command: shell.exec
       params:
         shell: bash
-        silent: true
+        silent: false
         working_dir: mongo-jdbc-driver
         script: |
-
-          # set the state needed irrespective of _platform
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+            # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
+            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
+            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag}  | awk -F'-libv' '{print $2}')
           else
             export MDBJDBC_VER=snapshot
+            export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
-
-          case ${_platform} in
-          ubuntu2204-64-jdk-8)
-               JAVA_HOME=/opt/java/jdk8
-          ;;
-          ubuntu2204-64-jdk-11)
-               JAVA_HOME=/opt/java/jdk11
-          ;;
-          amazon2-arm64-jdk-11)
-               JAVA_HOME=/usr/lib/jvm/java-11
-          ;;
-          *)
-               echo "ERROR: invalid value for \${_platform}: '$_platform'"
-               echo "Allowed values: 'amazon2-arm64-jdk-11', 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
-               exit 1
-          ;;
-          esac
+          
+          # Set JAVA_HOME based on platform
+          if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
+              export JAVA_HOME=/opt/java/jdk8
+          elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
+              export JAVA_HOME=/opt/java/jdk11
+          elif [[ "${_platform}" == "amazon2-arm64-jdk-11" ]]; then
+              export JAVA_HOME=/usr/lib/jvm/java-11
+          else
+              # According to DEVPROD, the Java toolchain should always be under `/opt/java/`
+              if [ -d "/opt/java/jdk11" ]; then
+                export JAVA_HOME=/opt/java/jdk11
+              else
+                echo >&2 "Can't find Java. `/opt/java/jdk11` does not exist"
+                exit 1
+              fi
+          fi
+          
+          # set the state needed irrespective of _platform
+          SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
+          SBOM_TOOL_DIR="sbom_generations"
+          SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
+          SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
+          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
+          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
+          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
+          SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
+          mkdir -p "$SSDLC_DIR"
+          
+          echo "=== Generated Values ==="
+          echo "JDBC version = $MDBJDBC_VER"
+          echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
+          echo "Java home = $JAVA_HOME"
+          echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
+          echo "=== SSDLC Values ==="
+          echo "SBOM_WITHOUT_TEAM_NAME = $SBOM_WITHOUT_TEAM_NAME"
+          echo "SBOM_TOOL_DIR = $SBOM_TOOL_DIR"
+          echo "SBOM Lite Name = $SBOM_LITE_NAME"
+          echo "SBOM_LITE = $SBOM_LITE"
+          echo "Augmented SBOM Name = $AUGMENTED_SBOM_NAME"
+          echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
+          echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
+          echo "SSDLC Directory = $SSDLC_DIR"
+          
+          # Write calculated values to expansions file
+          mkdir -p $ARTIFACTS_DIR
+          cat <<EOT > $ARTIFACTS_DIR/initial_expansions.yml
+          MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
+          JAVA_HOME: "$JAVA_HOME"
+          ARTIFACTS_DIR: "$ARTIFACTS_DIR"
+          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          SBOM_WITHOUT_TEAM_NAME: "$SBOM_WITHOUT_TEAM_NAME"
+          SBOM_TOOL_DIR: "$SBOM_TOOL_DIR"
+          SBOM_LITE_NAME: "$SBOM_LITE_NAME"
+          SBOM_LITE: "$SBOM_LITE"
+          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
+          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
+          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
+          SSDLC_DIR: "$SSDLC_DIR"
+          EOT
+    - command: expansions.update
+      params:
+        file: mongo-jdbc-driver/artifacts/initial_expansions.yml
+    - command: shell.exec
+      params:
+        shell: bash
+        add_expansions_to_env: true
+        silent: true
+        working_dir: mongo-jdbc-driver
+        script: |
 
           # export any environment variables that will be needed by subprocesses
           export PROJECT_DIRECTORY="$(pwd)"
 
-          export SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
+          export SBOM_LITE_NAME="$SBOM_LITE_NAME"
           export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-          export COMPLIANCE_REPORT_NAME=$COMPLIANCE_REPORT_NAME
-          export STATIC_CODE_ANALYSIS_NAME=$STATIC_CODE_ANALYSIS_NAME
+          export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
+          export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
+          export SSDLC_DIR="$SSDLC_DIR"
 
-          export SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
-          mkdir -p $SSDLC_DIR
-
-          # create expansions from values calculated above
-          mkdir -p $ARTIFACTS_DIR
+          # create expansions from values calculated above and in previous command
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
@@ -636,7 +881,7 @@ functions:
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export SRV_TEST_HOST=${srv_test_host}
             export SRV_TEST_USER=${srv_test_user}
-            export SRV_TEST_PWD=${srv_test_pwd}
+            export SRV_TEST_PWD=${srv_test_pwd2}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
             export LOCAL_MDB_PORT_COM=${local_mdb_port_com}
             export LOCAL_MDB_PORT_ENT=${local_mdb_port_ent}
@@ -645,31 +890,30 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
-          
+            export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
+
             # ssdlc relevant variables
-            export SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-            export SBOM_TOOL_DIR="sbom_generations"
+            export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
+            export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
             export SBOM_LITE_NAME="$SBOM_LITE_NAME"
             export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
             export SSDLC_DIR="$SSDLC_DIR"
-            export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
+            export SBOM_LITE="$SBOM_LITE"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
+            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
           EOT
-
     - command: expansions.update
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc files":
+    - *assume_role_cmd
     - command: s3.get
       params:
         working_dir: mongo-jdbc-driver
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
-        bucket: mciuploads
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
 
   "fetch source":
     - command: shell.exec
@@ -683,147 +927,137 @@ functions:
         directory: mongo-jdbc-driver
 
   "upload unit test classes":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
+          - mongo-jdbc-driver/build/reports/tests/test/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/classes/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Classes"
         visibility: none
 
   "upload integration test classes":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/classes/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/classes/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Classes"
         visibility: none
 
   "upload unit test packages":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
+          - mongo-jdbc-driver/build/reports/tests/test/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/packages/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Packages"
         visibility: none
 
   "upload integration test packages":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/packages/*.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/packages/
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Packages"
         visibility: none
 
   "upload unit test index":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test Results"
 
   "upload integration test index":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
         content_type: text/html
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test Results"
 
   "upload unit test css ":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/css/*.css
+          - mongo-jdbc-driver/build/reports/tests/test/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/test/css/
         content_type: text/css
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test CSS"
         visibility: none
 
   "upload integration test css ":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/css/*.css
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/css/
         content_type: text/css
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test CSS"
         visibility: none
 
   "upload unit test js":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/test/js/*.js
+          - mongo-jdbc-driver/build/reports/tests/test/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/test/js/
         content_type: application/javascript
-        bucket: mciuploads
         permissions: public-read
         display_name: "Unit Test JS"
         visibility: none
 
   "upload integration test js":
+    - *assume_role_cmd
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
+        <<: *evg_bucket_config
         local_files_include_filter:
-            - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
+          - mongo-jdbc-driver/build/reports/tests/integrationTest/js/*.js
         remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/js/
         content_type: application/javascript
-        bucket: mciuploads
         permissions: public-read
         display_name: "Integration Test JS"
         visibility: none
@@ -835,17 +1069,35 @@ functions:
         file: mongo-jdbc-driver/build/test-results/*/TEST-*.xml
 
   "upload jar file":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          if [ -d "build/libs" ]; then
+            # A sanity check to see if expected files are indeed here
+            ls -lrt build/libs
+            # Rename files according to our naming scheme
+            for f in ./build/libs/mongodb-jdbc-*.jar; do
+              if [[ "$f" == *"-all"* ]]; then
+                mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+              else
+                mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+              fi
+            done
+          fi
     - command: s3.put
       params:
         silent: true
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}.jar
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/build/libs/*.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/
         content_type: application/java-archive
-        bucket: mciuploads
         permissions: public-read
-        display_name: "JDBC Driver (.jar)"
 
   "publish maven":
     - command: shell.exec
@@ -879,10 +1131,7 @@ functions:
         content_type: application/json
 
   "static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: shell.exec
       type: test
       params:
@@ -890,7 +1139,7 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           echo "Running static code analysis with Semgrep..."
-          
+
           venv='venv'
           # Setup or use the existing virtualenv for semgrep
           if [[ -f "$venv/bin/activate" ]]; then
@@ -916,30 +1165,21 @@ functions:
           exit $SCAN_RESULT
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_files_include_filter:
           - mongo-jdbc-driver.sast.*
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish static code analysis":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
         remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
         content_type: application/json
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}
@@ -950,7 +1190,6 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-
 
   "generate compliance report":
     - command: shell.exec
@@ -966,65 +1205,53 @@ functions:
           SARIF_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif"
           echo "Sbom url = $SBOM_URL"
           echo "Sarif Url = $SARIF_URL"
-          
+
           echo "----- Generating ${COMPLIANCE_REPORT_NAME} -----"
-          
+
           # Copy template
           cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the version
           echo "Update the version"
           echo "sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the SBOM link
           echo "Update the SBOM link"
           echo "sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g"${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the SARIF link
           echo "Update the SARIF link"
           echo "sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}
-          
+
           # Update the author information
           echo "Update the author name"
           echo "sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}
-          
+
           echo "update the author email"
           echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
           sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
           echo "---------------------------"
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.put
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: evg-bucket-mongo-jdbc-driver
         permissions: public-read
 
   "publish compliance report":
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
+    - *assume_role_cmd
     - command: s3.get
       params:
-        aws_key: ${AWS_ACCESS_KEY_ID}
-        aws_secret: ${AWS_SECRET_ACCESS_KEY}
-        aws_session_token: ${AWS_SESSION_TOKEN}
+        <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
         remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
         content_type: text/markdown
-        bucket: evg-bucket-mongo-jdbc-driver
     - command: s3.put
       params:
         aws_key: ${release_aws_key}

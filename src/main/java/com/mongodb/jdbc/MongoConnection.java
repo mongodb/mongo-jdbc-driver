@@ -33,43 +33,16 @@ import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
+import java.sql.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.Document;
 import org.bson.UuidRepresentation;
 
 @AutoLoggable
@@ -93,6 +66,22 @@ public class MongoConnection implements Connection {
     private UuidRepresentation uuidRepresentation;
     private String appName;
     private MongoSQLTranslate mongosqlTranslate;
+
+    private int serverMajorVersion;
+    private int serverMinorVersion;
+    private String serverVersion;
+
+    public int getServerMajorVersion() {
+        return serverMajorVersion;
+    }
+
+    public int getServerMinorVersion() {
+        return serverMinorVersion;
+    }
+
+    public String getServerVersion() {
+        return this.serverVersion;
+    }
 
     protected enum MongoClusterType {
         AtlasDataFederation,
@@ -218,8 +207,8 @@ public class MongoConnection implements Connection {
         // the type of the cluster.
         BuildInfo buildInfoRes =
                 mongoClient
-                        .getDatabase("admin")
-                        .withCodecRegistry(MongoDriver.registry)
+                        .getDatabase(currentDB)
+                        .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(buildInfoCmd, BuildInfo.class);
 
         // if "ok" is not 1, then the target type could not be determined.
@@ -227,8 +216,21 @@ public class MongoConnection implements Connection {
             return MongoClusterType.UnknownTarget;
         }
 
+        logger.log(Level.FINE, buildInfoRes.toString());
+
+        this.serverVersion = buildInfoRes.getFullVersion();
+
+        try {
+            this.serverMajorVersion = buildInfoRes.getMajorVersion();
+            this.serverMinorVersion = buildInfoRes.getMinorVersion();
+            // Only log issues happening while trying to compute the server version as this is not a blocker.
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+        }
+
         // If the "dataLake" field is present, it must be an ADF cluster.
         if (buildInfoRes.dataLake != null) {
+            // append datalake and mongosql version to server version
             return MongoClusterType.AtlasDataFederation;
         } else if (buildInfoRes.modules != null) {
             // Otherwise, if "modules" is present and contains "enterprise",
@@ -270,19 +272,6 @@ public class MongoConnection implements Connection {
 
     String getUser() {
         return user;
-    }
-
-    String getServerVersion() throws SQLException {
-        checkConnection();
-
-        BsonDocument command = new BsonDocument();
-        command.put("buildInfo", new BsonInt32(1));
-        try {
-            Document result = mongoClient.getDatabase("admin").runCommand(command);
-            return (String) result.get("version");
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
     }
 
     protected MongoDatabase getDatabase(String DBName) {
@@ -577,6 +566,12 @@ public class MongoConnection implements Connection {
         @Override
         public Void call() throws SQLException, MongoSQLException, MongoSerializationException {
             MongoClusterType actualClusterType = determineClusterType();
+            String serverInfo =
+                    "Connecting to cluster type "
+                            + actualClusterType.toString()
+                            + " with server version "
+                            + serverVersion;
+            logger.log(Level.INFO, serverInfo);
 
             switch (actualClusterType) {
                 case AtlasDataFederation:
@@ -589,7 +584,17 @@ public class MongoConnection implements Connection {
                     // Ensure the library is loaded if Enterprise edition detected.
                     if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
                         throw new SQLException(
-                                "Enterprise edition detected, but mongosqltranslate library not found");
+                                "Enterprise edition detected, but mongosqltranslate library not found",
+                                MongoDriver.getMongoSqlTranslateLibraryLoadError());
+                    } else if (MongoDriver.getMongoSqlTranslateLibraryLoadError() != null) {
+                        logger.log(
+                                Level.INFO,
+                                "Error while loading the library using the environment variable. Library bundled with the driver used instead.\n"
+                                        + Arrays.stream(
+                                                        MongoDriver
+                                                                .getMongoSqlTranslateLibraryLoadError()
+                                                                .getStackTrace())
+                                                .map(StackTraceElement::toString));
                     }
                     String mongosqlTranslateVersion =
                             mongosqlTranslate.getMongosqlTranslateVersion().version;
@@ -610,6 +615,14 @@ public class MongoConnection implements Connection {
 
             // Set the cluster type.
             clusterType = actualClusterType;
+            boolean resultExists;
+            try (Statement statement = createStatement()) {
+                resultExists = statement.execute("SELECT 1");
+            }
+            if (!resultExists) {
+                // no resultSet returned
+                throw new SQLException("Connection error");
+            }
             return null;
         }
     }

@@ -17,20 +17,13 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
-import static com.mongodb.jdbc.mongosql.MongoSQLTranslate.SQL_SCHEMAS_COLLECTION;
 
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowIdLifetime;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -189,6 +182,9 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final String FUNC_DEFAULT_CATALOG = "def";
     private static final String YES = "YES";
 
+    private int serverMajorVersion;
+    private int serverMinorVersion;
+
     private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
             Arrays.asList(
                     new SortableBsonDocument.SortSpec(
@@ -227,7 +223,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final List<SortableBsonDocument.SortSpec> GET_INDEX_INFO_SORT_SPECS =
             Arrays.asList(
                     new SortableBsonDocument.SortSpec(
-                            NON_UNIQUE, SortableBsonDocument.ValueType.String),
+                            NON_UNIQUE, SortableBsonDocument.ValueType.Boolean),
                     new SortableBsonDocument.SortSpec(
                             INDEX_NAME, SortableBsonDocument.ValueType.String),
                     new SortableBsonDocument.SortSpec(
@@ -235,6 +231,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     private static final com.mongodb.jdbc.MongoFunctions MongoFunctions =
             com.mongodb.jdbc.MongoFunctions.getInstance();
+
+    public static final Pattern DISALLOWED_COLLECTION_NAMES =
+            Pattern.compile("(system\\.(namespace|indexes|profiles|js|views))|__sql_schemas");
+
+    public static final Pattern DISALLOWED_DB_NAMES = Pattern.compile("admin|config|local|system");
 
     private final MongoConnection conn;
     private String serverVersion;
@@ -407,8 +408,8 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     }
 
     // MHOUSE-7119: ADF quickstarts return empty strings and the admin database, so we filter them out
-    static boolean filterEmptiesAndAdmin(String dbName) {
-        return !dbName.isEmpty() && !dbName.equals("admin");
+    static boolean filterEmptiesAndInternalDBs(String dbName) {
+        return !dbName.isEmpty() && !DISALLOWED_DB_NAMES.matcher(dbName).matches();
     }
 
     // Helper for getting a stream of all database names.
@@ -418,7 +419,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 .listDatabaseNames()
                 .into(new ArrayList<>())
                 .stream()
-                .filter(dbName -> filterEmptiesAndAdmin(dbName));
+                .filter(dbName -> filterEmptiesAndInternalDBs(dbName));
     }
 
     // Helper for getting a list of collection names from the db
@@ -437,7 +438,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     // the argued filter.
     private Stream<MongoListTablesResult> getTableDataFromDB(
             String dbName, Function<MongoListTablesResult, Boolean> filter) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         return getCollectionsFromRunCommand(db).stream().filter(filter::apply);
     }
 
@@ -487,10 +488,13 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             List<String> types,
             BiFunction<String, MongoListTablesResult, BsonDocument> bsonSerializer) {
 
+        // Filter out __sql_schemas, system.namespaces, system.indexes,system.profile,system.js,system.views
         return this.getTableDataFromDB(
                         dbName,
                         res ->
-                                (tableNamePatternRE == null
+                                // Don't list system collections
+                                (!DISALLOWED_COLLECTION_NAMES.matcher(res.name).matches())
+                                        && (tableNamePatternRE == null
                                                 || tableNamePatternRE.matcher(res.name).matches())
                                         && (types == null
                                                 || types.contains(res.type.toLowerCase())))
@@ -570,11 +574,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        if (serverVersion != null) {
-            return serverVersion;
-        }
-        serverVersion = conn.getServerVersion();
-        return serverVersion;
+        return conn.getServerVersion();
     }
 
     @Override
@@ -1248,12 +1248,12 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return MongoDriver.MAJOR_VERSION;
+        return conn.getServerMajorVersion();
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return MongoDriver.MINOR_VERSION;
+        return conn.getServerMinorVersion();
     }
 
     @Override
@@ -1541,7 +1541,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             Pattern tableNamePatternRE,
             Pattern columnNamePatternRE,
             Function<GetColumnsDocInfo, BsonDocument> bsonSerializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         return getCollectionsFromRunCommand(db)
                 .stream()
                 .map(collection -> collection.name)
@@ -1551,9 +1551,10 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
                 // filter only for collections matching the pattern, and exclude the `__sql_schemas` collection
                 .filter(
                         tableName ->
-                                (tableNamePatternRE == null
-                                                || tableNamePatternRE.matcher(tableName).matches())
-                                        && !tableName.equals(SQL_SCHEMAS_COLLECTION))
+                                // Don't list system collections
+                                (!DISALLOWED_COLLECTION_NAMES.matcher(tableName).matches())
+                                        && (tableNamePatternRE == null
+                                                || tableNamePatternRE.matcher(tableName).matches()))
 
                 // map the collection names into triples of (dbName, tableName, tableSchema)
                 .map(
@@ -1807,7 +1808,7 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             String dbName,
             String tableName,
             BiFunction<Pair<String, String>, Document, List<BsonDocument>> serializer) {
-        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.registry);
+        MongoDatabase db = this.conn.getDatabase(dbName).withCodecRegistry(MongoDriver.REGISTRY);
         ListIndexesIterable<Document> i = db.getCollection(tableName).listIndexes();
         List<BsonDocument> docs = new ArrayList<>();
 
@@ -2661,6 +2662,18 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
 
         return keys.keySet()
                 .stream()
+                .filter(
+                        key -> {
+                            // If the index is not an integer (e.g., a geospatial index), `keys.getInteger(key)`
+                            // will throw a ClassCastException. In this case, we skip the index because the
+                            // sort sequence is not supported by JDBC.
+                            try {
+                                keys.getInteger(key);
+                            } catch (ClassCastException e) {
+                                return false;
+                            }
+                            return true;
+                        })
                 .map(
                         key -> {
                             BsonValue ascOrDesc =
