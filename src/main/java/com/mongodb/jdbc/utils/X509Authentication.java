@@ -1,0 +1,117 @@
+package com.mongodb.jdbc.utils;
+
+import com.mongodb.jdbc.logging.MongoLogger;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
+import org.bouncycastle.pkcs.jcajce.JcePKCSPBEInputDecryptorProviderBuilder;
+import sun.java2d.loops.FillRect;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import java.io.FileReader;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.util.logging.Level;
+
+public class X509Authentication {
+    private static final String BOUNCY_CASTLE = "BC";
+    private final MongoLogger logger;
+
+    static {
+        if (Security.getProvider(BOUNCY_CASTLE) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+    }
+
+    public X509Authentication(MongoLogger logger) {
+        this.logger = logger;
+    }
+
+    public void configureX509Authentication(
+            com.mongodb.MongoClientSettings.Builder settingsBuilder,
+            String pemPath,
+            char[] passphrase) {
+
+        logger.log(Level.FINE, "Using client certificate for X509 authentication: " + pemPath);
+        if (passphrase != null && passphrase.length > 0) {
+            logger.log(Level.FINE, "Client certificate passphrase has been specified");
+        }
+        try {
+            SSLContext sslContext = createSSLContext(pemPath, passphrase);
+
+            settingsBuilder.applyToSslSettings(sslSettings -> {
+                sslSettings.enabled(true);
+                sslSettings.context(sslContext);
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("SSL setup failed", e);
+        }
+    }
+
+    private SSLContext createSSLContext(String pemPath, char[] passphrase) throws Exception {
+        PrivateKey privateKey = null;
+        Certificate cert = null;
+
+        try (PEMParser pemParser = new PEMParser(new FileReader(pemPath))) {
+            Object pemObj;
+            while ((pemObj = pemParser.readObject()) != null) {
+                try {
+                    if (passphrase != null && passphrase.length > 0 && pemObj instanceof PKCS8EncryptedPrivateKeyInfo) {
+                        privateKey = new JcaPEMKeyConverter().setProvider(BOUNCY_CASTLE).getPrivateKey(
+                                ((PKCS8EncryptedPrivateKeyInfo) pemObj).decryptPrivateKeyInfo(
+                                        new JcePKCSPBEInputDecryptorProviderBuilder()
+                                                .setProvider(BOUNCY_CASTLE)
+                                                .build(passphrase)
+                                )
+                        );
+                    } else if (pemObj instanceof PrivateKeyInfo) {
+                        privateKey = new JcaPEMKeyConverter().setProvider(BOUNCY_CASTLE)
+                                .getPrivateKey((PrivateKeyInfo) pemObj);
+                    }
+                } catch (Exception e) {
+                    throw new GeneralSecurityException("Failed to process private key from PEM file", e);
+                }
+
+                if (pemObj instanceof X509CertificateHolder) {
+                    cert = new JcaX509CertificateConverter()
+                            .setProvider(BOUNCY_CASTLE)
+                            .getCertificate((X509CertificateHolder) pemObj);
+                }
+            }
+        }
+
+        if (privateKey == null) {
+            throw new IllegalStateException("Failed to read private key from PEM file (encrypted or unencrypted)");
+        }
+        if (cert == null) {
+            throw new IllegalStateException("Failed to read certificate from PEM file");
+        }
+
+        return createSSLContextFromKeyAndCert(privateKey, cert);
+    }
+
+    private SSLContext createSSLContextFromKeyAndCert(PrivateKey privateKey, Certificate cert)
+            throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(null, null);
+        keyStore.setKeyEntry("mongodb-cert", privateKey,
+                null,
+                new Certificate[]{cert});
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+
+        // Passphrase not needed for in memory keystore
+        kmf.init(keyStore, null);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        // Initialize sslContext and use default trust managers
+        sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
+
+        return sslContext;
+    }
+}

@@ -27,6 +27,7 @@ public class MongoConnectionProperties {
     private File logDir;
     private String clientInfo;
     private boolean extJsonMode;
+    private String x509PemPath;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -34,13 +35,15 @@ public class MongoConnectionProperties {
             Level logLevel,
             File logDir,
             String clientInfo,
-            boolean extJsonMode) {
+            boolean extJsonMode,
+            String x509PemPath) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
         this.logDir = logDir;
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
+        this.x509PemPath = x509PemPath;
     }
 
     public ConnectionString getConnectionString() {
@@ -66,6 +69,11 @@ public class MongoConnectionProperties {
     public boolean getExtJsonMode() {
         return extJsonMode;
     }
+
+    public String getX509PemPath() {
+        return x509PemPath;
+    }
+
 
     /*
      * Generate a unique key for the connection properties. This key is used to identify the connection properties in the

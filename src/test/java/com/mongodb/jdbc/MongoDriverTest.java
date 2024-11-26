@@ -719,4 +719,18 @@ class MongoDriverTest {
 
         assertSame(conn1.getMongoClient(), conn2.getMongoClient());
     }
+
+    @Test
+    void testMongoDBX509AuthMechanismWithoutPassphrase() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
+        assertThrows(
+                IllegalStateException.class,
+                () -> d.getUnvalidatedConnection(x509URL, p),
+                "Expected to fail because x509Passphrase is missing."
+        );
+    }
 }

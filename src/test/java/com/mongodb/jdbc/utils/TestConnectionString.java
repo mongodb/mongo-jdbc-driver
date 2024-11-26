@@ -46,10 +46,10 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        Pair<ConnectionString, DriverPropertyInfo[]> result = getConnectionSettings(localhost, p);
+        ConnectionSettings result = getConnectionSettings(localhost, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(DB, result.left().getCredential().getSource());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(DB, result.connectionString.getCredential().getSource());
     }
 
     @Test
@@ -58,11 +58,11 @@ class TestConnectionString {
         p.setProperty(USER_CONN_KEY, USER);
         p.setProperty(PWD_CONN_KEY, PWD);
 
-        Pair<ConnectionString, DriverPropertyInfo[]> result =
+        ConnectionSettings result =
                 getConnectionSettings(localhostWithOnlyDB, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(AUTHDB, result.left().getCredential().getSource());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
     }
 
     @Test
@@ -72,12 +72,12 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        Pair<ConnectionString, DriverPropertyInfo[]> result =
+        ConnectionSettings result =
                 getConnectionSettings(localhostWithOnlyDB, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(DB, result.left().getCredential().getSource());
-        assertEquals(DB, result.left().getDatabase());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(DB, result.connectionString.getCredential().getSource());
+        assertEquals(DB, result.connectionString.getDatabase());
     }
 
     @Test
@@ -87,12 +87,12 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        Pair<ConnectionString, DriverPropertyInfo[]> result =
+        ConnectionSettings result =
                 getConnectionSettings(onlyAuthSource, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(AUTHDB, result.left().getCredential().getSource());
-        assertEquals(DB, result.left().getDatabase());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
+        assertEquals(DB, result.connectionString.getDatabase());
     }
 
     @Test
@@ -101,12 +101,12 @@ class TestConnectionString {
         p.setProperty(USER_CONN_KEY, USER);
         p.setProperty(PWD_CONN_KEY, PWD);
 
-        Pair<ConnectionString, DriverPropertyInfo[]> result =
+        ConnectionSettings result =
                 getConnectionSettings(dbAndAuthSource, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(AUTHDB, result.left().getCredential().getSource());
-        assertEquals(POUET, result.left().getDatabase());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
+        assertEquals(POUET, result.connectionString.getDatabase());
     }
 
     @Test
@@ -115,11 +115,12 @@ class TestConnectionString {
         p.setProperty(USER_CONN_KEY, USER);
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
-        Pair<ConnectionString, DriverPropertyInfo[]> result =
+
+        ConnectionSettings result =
                 getConnectionSettings(dbAndAuthSource, p);
 
-        assertEquals(USER, result.left().getCredential().getUserName());
-        assertEquals(AUTHDB, result.left().getCredential().getSource());
-        assertEquals(DB, result.left().getDatabase());
+        assertEquals(USER, result.connectionString.getCredential().getUserName());
+        assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
+        assertEquals(DB, result.connectionString.getDatabase());
     }
 }
