@@ -19,9 +19,6 @@ package com.mongodb.jdbc.utils;
 import static com.mongodb.jdbc.MongoDriver.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.jdbc.Pair;
-import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
@@ -58,8 +55,7 @@ class TestConnectionString {
         p.setProperty(USER_CONN_KEY, USER);
         p.setProperty(PWD_CONN_KEY, PWD);
 
-        ConnectionSettings result =
-                getConnectionSettings(localhostWithOnlyDB, p);
+        ConnectionSettings result = getConnectionSettings(localhostWithOnlyDB, p);
 
         assertEquals(USER, result.connectionString.getCredential().getUserName());
         assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
@@ -72,8 +68,7 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        ConnectionSettings result =
-                getConnectionSettings(localhostWithOnlyDB, p);
+        ConnectionSettings result = getConnectionSettings(localhostWithOnlyDB, p);
 
         assertEquals(USER, result.connectionString.getCredential().getUserName());
         assertEquals(DB, result.connectionString.getCredential().getSource());
@@ -87,8 +82,7 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        ConnectionSettings result =
-                getConnectionSettings(onlyAuthSource, p);
+        ConnectionSettings result = getConnectionSettings(onlyAuthSource, p);
 
         assertEquals(USER, result.connectionString.getCredential().getUserName());
         assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
@@ -101,8 +95,7 @@ class TestConnectionString {
         p.setProperty(USER_CONN_KEY, USER);
         p.setProperty(PWD_CONN_KEY, PWD);
 
-        ConnectionSettings result =
-                getConnectionSettings(dbAndAuthSource, p);
+        ConnectionSettings result = getConnectionSettings(dbAndAuthSource, p);
 
         assertEquals(USER, result.connectionString.getCredential().getUserName());
         assertEquals(AUTHDB, result.connectionString.getCredential().getSource());
@@ -116,8 +109,7 @@ class TestConnectionString {
         p.setProperty(PWD_CONN_KEY, PWD);
         p.setProperty(DATABASE, DB);
 
-        ConnectionSettings result =
-                getConnectionSettings(dbAndAuthSource, p);
+        ConnectionSettings result = getConnectionSettings(dbAndAuthSource, p);
 
         assertEquals(USER, result.connectionString.getCredential().getUserName());
         assertEquals(AUTHDB, result.connectionString.getCredential().getSource());

@@ -730,7 +730,6 @@ class MongoDriverTest {
         assertThrows(
                 IllegalStateException.class,
                 () -> d.getUnvalidatedConnection(x509URL, p),
-                "Expected to fail because x509Passphrase is missing."
-        );
+                "Expected to fail because x509Passphrase is missing.");
     }
 }

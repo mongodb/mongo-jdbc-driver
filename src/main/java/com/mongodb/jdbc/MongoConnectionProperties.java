@@ -74,7 +74,6 @@ public class MongoConnectionProperties {
         return x509PemPath;
     }
 
-
     /*
      * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
      * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.

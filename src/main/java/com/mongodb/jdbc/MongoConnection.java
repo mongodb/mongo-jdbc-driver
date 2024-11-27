@@ -17,7 +17,6 @@
 package com.mongodb.jdbc;
 
 import com.google.common.base.Preconditions;
-import com.mongodb.AuthenticationMechanism;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoCredential.OidcCallback;
@@ -32,6 +31,7 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import com.mongodb.jdbc.utils.X509Authentication;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -42,8 +42,6 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
-
-import com.mongodb.jdbc.utils.X509Authentication;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.UuidRepresentation;
@@ -97,7 +95,9 @@ public class MongoConnection implements Connection {
     }
 
     public MongoConnection(
-            MongoClient mongoClient, MongoConnectionProperties connectionProperties, char[] x509Passphrase) {
+            MongoClient mongoClient,
+            MongoConnectionProperties connectionProperties,
+            char[] x509Passphrase) {
         this.connectionId = connectionCounter.incrementAndGet();
         initConnectionLogger(
                 connectionId,
@@ -129,10 +129,10 @@ public class MongoConnection implements Connection {
         this(mongoClient, connectionProperties, null);
     }
 
-    public MongoConnection(
-            MongoConnectionProperties connectionProperties, char[] x509Passphrase) {
+    public MongoConnection(MongoConnectionProperties connectionProperties, char[] x509Passphrase) {
         this(null, connectionProperties, x509Passphrase);
     }
+
     public MongoConnection(MongoConnectionProperties connectionProperties) {
         this(null, connectionProperties);
     }
@@ -165,10 +165,12 @@ public class MongoConnection implements Connection {
         return appNameBuilder.toString();
     }
 
-    private MongoClientSettings createMongoClientSettings(MongoConnectionProperties connectionProperties) {
-        MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder()
-                .applicationName(this.appName)
-                .applyConnectionString(connectionProperties.getConnectionString());
+    private MongoClientSettings createMongoClientSettings(
+            MongoConnectionProperties connectionProperties) {
+        MongoClientSettings.Builder settingsBuilder =
+                MongoClientSettings.builder()
+                        .applicationName(this.appName)
+                        .applyConnectionString(connectionProperties.getConnectionString());
 
         MongoCredential credential = connectionProperties.getConnectionString().getCredential();
 
@@ -178,9 +180,11 @@ public class MongoConnection implements Connection {
             if (MongoDriver.MONGODB_OIDC.equalsIgnoreCase(mechanism)) {
                 // Handle OIDC authentication
                 OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
-                credential = MongoCredential.createOidcCredential(
-                                connectionProperties.getConnectionString().getUsername())
-                        .withMechanismProperty(MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                credential =
+                        MongoCredential.createOidcCredential(
+                                        connectionProperties.getConnectionString().getUsername())
+                                .withMechanismProperty(
+                                        MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
                 settingsBuilder.credential(credential);
             } else if (MongoDriver.MONGODB_X509.equalsIgnoreCase(mechanism)) {
                 String pemPath = connectionProperties.getX509PemPath();
@@ -188,11 +192,13 @@ public class MongoConnection implements Connection {
                     pemPath = System.getenv(X509_CLIENT_CERT_PATH);
                 }
                 if (pemPath == null || pemPath.isEmpty()) {
-                    throw new IllegalStateException("PEM file path is required for X.509 authentication but was not provided.");
+                    throw new IllegalStateException(
+                            "PEM file path is required for X.509 authentication but was not provided.");
                 }
 
                 X509Authentication x509Authentication = new X509Authentication(logger);
-                x509Authentication.configureX509Authentication(settingsBuilder, pemPath, this.x509Passphrase);
+                x509Authentication.configureX509Authentication(
+                        settingsBuilder, pemPath, this.x509Passphrase);
             }
         }
 

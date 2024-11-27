@@ -286,7 +286,8 @@ public class MongoDriver implements Driver {
         // Since the user is calling connect, we should throw a SQLException if we get a prompt back.
         if (cs.driverInfo.length != 0) {
             // Inspect the return value to format the SQLException and throw the connection error
-            throw new SQLException(reportMissingProperties(cs.driverInfo), CONNECTION_ERROR_SQLSTATE);
+            throw new SQLException(
+                    reportMissingProperties(cs.driverInfo), CONNECTION_ERROR_SQLSTATE);
         }
 
         return createConnection(cs.connectionString, info, cs.x509Passphrase);
@@ -329,8 +330,8 @@ public class MongoDriver implements Driver {
         return sb.toString();
     }
 
-    private MongoConnection createConnection(ConnectionString cs, Properties info, char[] x509Passphrase)
-            throws SQLException {
+    private MongoConnection createConnection(
+            ConnectionString cs, Properties info, char[] x509Passphrase) throws SQLException {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
 
@@ -387,7 +388,13 @@ public class MongoDriver implements Driver {
 
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
-                        cs, database, logLevel, logDir, clientInfo, extJsonMode, info.getProperty(X509_PEM_PATH.getPropertyName()));
+                        cs,
+                        database,
+                        logLevel,
+                        logDir,
+                        clientInfo,
+                        extJsonMode,
+                        info.getProperty(X509_PEM_PATH.getPropertyName()));
 
         Integer key = mongoConnectionProperties.generateKey();
 
@@ -412,7 +419,8 @@ public class MongoDriver implements Driver {
             if (client != null) {
                 return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
             }
-            MongoConnection newConnection = new MongoConnection(mongoConnectionProperties, x509Passphrase);
+            MongoConnection newConnection =
+                    new MongoConnection(mongoConnectionProperties, x509Passphrase);
             mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
             return newConnection;
         } finally {
@@ -442,8 +450,7 @@ public class MongoDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        ConnectionSettings
-         cs = getConnectionSettings(url, info);
+        ConnectionSettings cs = getConnectionSettings(url, info);
         return cs.driverInfo;
     }
 
@@ -505,8 +512,8 @@ public class MongoDriver implements Driver {
 
     // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    public static ConnectionSettings getConnectionSettings(
-            String url, Properties info) throws SQLException {
+    public static ConnectionSettings getConnectionSettings(String url, Properties info)
+            throws SQLException {
         if (info == null) {
             info = new Properties();
         }

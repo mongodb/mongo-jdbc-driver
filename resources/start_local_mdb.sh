@@ -4,7 +4,8 @@
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-RESOURCES_DIR="$SCRIPT_DIR/.."
+RESOURCES_DIR="$SCRIPT_DIR"
+
 # architecture: "arm64" or "x64"
 #
 # This script will download each version of mongodb, start a mongod
@@ -73,22 +74,16 @@ start_mdb_with_x509() {
 
   echo "Creating X.509 user..."
   ./mongosh --port $port \
-    --tls \
-    --tlsCertificateKeyFile "$RESOURCES_DIR/authentication_test/X509/client-unencrypted.pem" \
-    --tlsCAFile "$RESOURCES_DIR/authentication_test/X509/ca.crt" \
-    --authenticationDatabase '$external' \
-    --authenticationMechanism MONGODB-X509 \
     --eval 'db.getSiblingDB("$external").runCommand({
       createUser: "OU=eng,O=mongodb,L=NY,ST=NY,C=US",
       roles: [
         { role: "readWrite", db: "test" },
         { role: "userAdminAnyDatabase", db: "admin" }
-      ],
-      writeConcern: { w: "majority" , wtimeout: 5000 }
+      ]
     })'
 
   echo "Stopping MongoDB to restart with auth..."
-  pkill -f mongod
+  $mongod_dir/bin/mongod --dbpath $db_path --shutdown
   sleep 5
 
   echo "Starting MongoDB with X.509 authentication enabled..."
