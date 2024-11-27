@@ -16,12 +16,14 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.AuthenticationMechanism.*;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
@@ -46,6 +48,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -61,6 +65,30 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  * @since 1.0.0
  */
 public class MongoDriver implements Driver {
+
+    // The regular expression to validate and manipulate the mongoDB uri.
+    protected static final Pattern MONGODB_URI_PATTERN =
+            Pattern.compile(
+                    "(mongodb(?:\\+srv)?://)(?<uidpwd>(?:\\S+:)?\\S+@)?([^\\r\\n\\t\\f\\v ?]+(\\?(?<options>.*))?)");
+    // The regular expression to extract the authentication mechanism.
+    protected static final Pattern AUTH_MECH_TO_AUGMENT_PATTERN =
+            Pattern.compile(
+                    "authMechanism=(?<authMech>("
+                            + PLAIN.getMechanismName()
+                            + "|"
+                            + SCRAM_SHA_1.getMechanismName()
+                            + "|"
+                            + SCRAM_SHA_256.getMechanismName()
+                            + "|"
+                            + GSSAPI.getMechanismName()
+                            + "))");
+    //The list of mechanism for which a username and/or password must be present for the first uri parsing pass.
+    protected static final List<String> MECHANISMS_TO_AUGMENT =
+            Arrays.asList(
+                    PLAIN.getMechanismName(),
+                    SCRAM_SHA_1.getMechanismName(),
+                    SCRAM_SHA_256.getMechanismName(),
+                    GSSAPI.getMechanismName());
 
     /**
      * The list of connection options specific to the JDBC driver which can only be provided through
@@ -489,19 +517,14 @@ public class MongoDriver implements Driver {
 
     // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    public static Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
+    protected static Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
             String url, Properties info) throws SQLException {
         if (info == null) {
             info = new Properties();
         }
 
-        String actualURL = removePrefix(JDBC, url);
-        ConnectionString originalConnectionString;
-        try {
-            originalConnectionString = new ConnectionString(actualURL);
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
+        // Build a valid connection string which will pass the initial parsing. Some authentication mechanism require a username and/or password.
+        ConnectionString originalConnectionString = buildConnectionString(url, info);
 
         ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
         String user = result.user;
@@ -557,6 +580,66 @@ public class MongoDriver implements Driver {
                                 result.authMechanism,
                                 result.normalizedOptions));
         return new Pair<>(c, new DriverPropertyInfo[] {});
+    }
+
+    /**
+     * Parse the original uri provided by the user. If the parsing failed, we try to augment the URI
+     * with the username and password provided in the properties. The reason behind it is that new
+     * ConnectionString(xx) validates the uri as is parses it and for some authentication mechanisms
+     * these info are mandatory, but the user can provide them separately to the driver.
+     *
+     * @param url The original uri as provided by the user.
+     * @param info The extra properties.
+     * @return the uri unchanged or augmented with uid and pwd from info.
+     * @throws IllegalArgumentException
+     * @throws MongoConfigurationException
+     */
+    protected static ConnectionString buildConnectionString(String url, Properties info)
+            throws IllegalArgumentException, MongoConfigurationException {
+        String actualURL = removePrefix(JDBC, url);
+        ConnectionString originalConnectionString = null;
+        try {
+            originalConnectionString = new ConnectionString(actualURL);
+        } catch (IllegalArgumentException ea) {
+            // If there are no username and password set in the URI, we will try with one provided in the properties
+            // and retry the operation
+            Matcher uri_matcher = MONGODB_URI_PATTERN.matcher(actualURL);
+            if (uri_matcher.find()) {
+                String username =
+                        info.getProperty(USER) != null
+                                ? URLEncoder.encode(info.getProperty(USER))
+                                : null;
+                String password =
+                        info.getProperty(PASSWORD) != null
+                                ? URLEncoder.encode(info.getProperty(PASSWORD))
+                                : null;
+                String options = uri_matcher.group("options");
+                if (uri_matcher.group("uidpwd") == null && username != null && options != null) {
+                    // Mechanisms requiring a username and password : PLAIN, SCRAM_SHA_1, SCRAM_SHA_256
+                    Matcher authMec_matcher = AUTH_MECH_TO_AUGMENT_PATTERN.matcher(options);
+                    if (authMec_matcher.find()) {
+                        String authMech = authMec_matcher.group("authMech");
+                        if (MECHANISMS_TO_AUGMENT.contains(authMech.toUpperCase())) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(uri_matcher.group(1)); // protocol
+                            sb.append(username);
+                            if (password != null) {
+                                sb.append(":");
+                                sb.append(password);
+                            }
+                            sb.append("@");
+                            sb.append(uri_matcher.group(3)); // host and options
+
+                            originalConnectionString = new ConnectionString(sb.toString());
+                        }
+                    }
+                }
+            } else {
+                // Credential information were present in the URI, this issue is not related to missing username and/or password
+                throw ea;
+            }
+        }
+        return originalConnectionString;
     }
 
     private static interface NullCoalesce<T> {
@@ -695,7 +778,8 @@ public class MongoDriver implements Driver {
      * @return true if the given key is a JDBC specific property, false otherwise.
      */
     private static boolean isMongoJDBCProperty(String key) {
-        return Stream.of(values()).anyMatch(v -> v.getPropertyName().equalsIgnoreCase(key));
+        return Stream.of(MongoJDBCProperty.values())
+                .anyMatch(v -> v.getPropertyName().equalsIgnoreCase(key));
     }
 
     /**
