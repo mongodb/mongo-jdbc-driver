@@ -601,8 +601,6 @@ public class MongoDriver implements Driver {
         try {
             originalConnectionString = new ConnectionString(actualURL);
         } catch (IllegalArgumentException ea) {
-            // If there are no username and password set in the URI, we will try with one provided in the properties
-            // and retry the operation
             Matcher uri_matcher = MONGODB_URI_PATTERN.matcher(actualURL);
             if (uri_matcher.find()) {
                 String username =
@@ -615,7 +613,6 @@ public class MongoDriver implements Driver {
                                 : null;
                 String options = uri_matcher.group("options");
                 if (uri_matcher.group("uidpwd") == null && username != null && options != null) {
-                    // Mechanisms requiring a username and password : PLAIN, SCRAM_SHA_1, SCRAM_SHA_256
                     Matcher authMec_matcher = AUTH_MECH_TO_AUGMENT_PATTERN.matcher(options);
                     if (authMec_matcher.find()) {
                         String authMech = authMec_matcher.group("authMech");
