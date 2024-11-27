@@ -219,6 +219,7 @@ tasks:
           platform: "win"
           lib_prefix: ""
           ext: "dll"
+      - func: "run dc integration test"
       - func: "run X509 integration test"
 
   - name: "test-smoke"
