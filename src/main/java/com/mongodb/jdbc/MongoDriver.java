@@ -523,63 +523,72 @@ public class MongoDriver implements Driver {
             info = new Properties();
         }
 
-        // Build a valid connection string which will pass the initial parsing. Some authentication mechanism require a username and/or password.
-        ConnectionString originalConnectionString = buildConnectionString(url, info);
+        try {
+            // Build a valid connection string which will pass the initial parsing. Some authentication mechanism require a username and/or password.
+            ConnectionString originalConnectionString = buildConnectionString(url, info);
 
-        ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
-        String user = result.user;
-        char[] password = result.password;
+            ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
+            String user = result.user;
+            char[] password = result.password;
 
-        List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
+            List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
 
-        // A database to connect to is required. If they have not specified one, look in the connection string for a
-        // database. The specified database in the connect window will always override the uri database.
-        if ((!info.containsKey(DATABASE.getPropertyName())
-                        || info.getProperty(DATABASE.getPropertyName()).isEmpty())
-                && originalConnectionString.getDatabase() != null) {
-            info.setProperty(DATABASE.getPropertyName(), originalConnectionString.getDatabase());
+            // A database to connect to is required. If they have not specified one, look in the connection string for a
+            // database. The specified database in the connect window will always override the uri database.
+            if ((!info.containsKey(DATABASE.getPropertyName())
+                            || info.getProperty(DATABASE.getPropertyName()).isEmpty())
+                    && originalConnectionString.getDatabase() != null) {
+                info.setProperty(
+                        DATABASE.getPropertyName(), originalConnectionString.getDatabase());
+            }
+            if (!info.containsKey(DATABASE.getPropertyName())
+                    || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
+                mandatoryConnectionProperties.add(
+                        new DriverPropertyInfo(DATABASE.getPropertyName(), null));
+            }
+            String authDatabase = info.getProperty(DATABASE.getPropertyName());
+
+            if (user == null && password != null) {
+                // user is null, but password is not, we must prompt for the user.
+                // Note: The convention is actually to return DriverPropertyInfo objects
+                // with null values, this is not a bug.
+                mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
+            }
+            if (password == null
+                    && user != null
+                    && !MONGODB_OIDC.equalsIgnoreCase(result.authMechanism)) {
+                // password is null, but user is not, we must prompt for the password.
+                mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+            }
+
+            // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
+            if (mandatoryConnectionProperties.size() > 0) {
+                return new Pair<>(
+                        null,
+                        mandatoryConnectionProperties.toArray(
+                                new DriverPropertyInfo[mandatoryConnectionProperties.size()]));
+            }
+
+            // If we are here, we must have all the required connection information. So we have a valid URI state,
+            // go ahead and construct it and prompt for nothing.
+            ConnectionString c =
+                    new ConnectionString(
+                            buildNewURI(
+                                    originalConnectionString.isSrvProtocol(),
+                                    originalConnectionString.getHosts(),
+                                    user,
+                                    password,
+                                    authDatabase,
+                                    result.authMechanism,
+                                    result.normalizedOptions));
+            return new Pair<>(c, new DriverPropertyInfo[] {});
+        } catch (Exception e) {
+            if ((e instanceof SQLException)) {
+                throw e;
+            } else {
+                throw new SQLException(e);
+            }
         }
-        if (!info.containsKey(DATABASE.getPropertyName())
-                || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
-            mandatoryConnectionProperties.add(
-                    new DriverPropertyInfo(DATABASE.getPropertyName(), null));
-        }
-        String authDatabase = info.getProperty(DATABASE.getPropertyName());
-
-        if (user == null && password != null) {
-            // user is null, but password is not, we must prompt for the user.
-            // Note: The convention is actually to return DriverPropertyInfo objects
-            // with null values, this is not a bug.
-            mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
-        }
-        if (password == null
-                && user != null
-                && !MONGODB_OIDC.equalsIgnoreCase(result.authMechanism)) {
-            // password is null, but user is not, we must prompt for the password.
-            mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
-        }
-
-        // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
-        if (mandatoryConnectionProperties.size() > 0) {
-            return new Pair<>(
-                    null,
-                    mandatoryConnectionProperties.toArray(
-                            new DriverPropertyInfo[mandatoryConnectionProperties.size()]));
-        }
-
-        // If we are here, we must have all the required connection information. So we have a valid URI state,
-        // go ahead and construct it and prompt for nothing.
-        ConnectionString c =
-                new ConnectionString(
-                        buildNewURI(
-                                originalConnectionString.isSrvProtocol(),
-                                originalConnectionString.getHosts(),
-                                user,
-                                password,
-                                authDatabase,
-                                result.authMechanism,
-                                result.normalizedOptions));
-        return new Pair<>(c, new DriverPropertyInfo[] {});
     }
 
     /**
