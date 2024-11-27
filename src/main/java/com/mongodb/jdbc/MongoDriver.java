@@ -597,9 +597,8 @@ public class MongoDriver implements Driver {
     protected static ConnectionString buildConnectionString(String url, Properties info)
             throws IllegalArgumentException, MongoConfigurationException {
         String actualURL = removePrefix(JDBC, url);
-        ConnectionString originalConnectionString = null;
         try {
-            originalConnectionString = new ConnectionString(actualURL);
+            return new ConnectionString(actualURL);
         } catch (IllegalArgumentException ea) {
             Matcher uri_matcher = MONGODB_URI_PATTERN.matcher(actualURL);
             if (uri_matcher.find()) {
@@ -627,16 +626,17 @@ public class MongoDriver implements Driver {
                             sb.append("@");
                             sb.append(uri_matcher.group(3)); // host and options
 
-                            originalConnectionString = new ConnectionString(sb.toString());
+                            return new ConnectionString(sb.toString());
                         }
                     }
                 }
+                // The error is not related to a missing uid/pwd for the mechanisms which need them
+                throw ea;
             } else {
                 // Credential information were present in the URI, this issue is not related to missing username and/or password
                 throw ea;
             }
         }
-        return originalConnectionString;
     }
 
     private static interface NullCoalesce<T> {
