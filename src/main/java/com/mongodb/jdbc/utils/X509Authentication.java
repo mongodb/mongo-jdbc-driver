@@ -74,6 +74,10 @@ public class X509Authentication {
 
         try (PEMParser pemParser = new PEMParser(new FileReader(pemPath))) {
             Object pemObj;
+
+            // Iterate through PEM objects found in the PEM file and process them based on type:
+            //  - Encrypted/unencrypted private keys
+            //  - X.509 certificates
             while ((pemObj = pemParser.readObject()) != null) {
                 try {
                     if (passphrase != null

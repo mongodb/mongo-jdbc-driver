@@ -729,7 +729,6 @@ functions:
 
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
-  
 
   "run X509 integration test":
     command: shell.exec
@@ -753,11 +752,16 @@ functions:
         ;;
         esac
 
-        # Download and run local community and enterprise mongods.
+        # Download and run enterprise mongod with x509 authentication enabled
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch --x509
         
-        # Set env variable for X509_CLIENT_CERT_PATH
-        export X509_CLIENT_CERT_PATH=$PWD/resources/authentication_test/X509/client-unencrypted.pem
+        # Set env variables for certificate directory and X509_CLIENT_CERT_PATH
+        X509_CERT_DIR=$PWD/resources/authentication_test/X509
+        export X509_CLIENT_CERT_PATH=$X509_CERT_DIR/client-unencrypted.pem
+        
+        # Configure Java SSL to trust self-signed certificates from custom truststore
+        export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$X509_CERT_DIR/truststore.jks \
+            -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
         ./gradlew integrationTest \
@@ -772,15 +776,17 @@ functions:
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
         while true; do
-          if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
-              echo "Build successful!"
-              EXITCODE=0
-              break
-          fi
-          if grep -q "BUILD FAILED" gradle_output.log; then
-              echo "Build failed!"
-              EXITCODE=1
-              break
+          if [ -f gradle_output.log ]; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
+            if grep -q "BUILD FAILED" gradle_output.log; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
           fi
 
           if (( SECONDS > TIMEOUT )); then

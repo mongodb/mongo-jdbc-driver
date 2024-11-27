@@ -533,6 +533,8 @@ public class MongoDriver implements Driver {
         char[] x509Passphrase = null;
 
         if (MONGODB_X509.equalsIgnoreCase(result.authMechanism)) {
+            // X509 authentication does not require a password to authenticate.  It is used by the driver in case
+            // the PEM file has been encrypted with a passphrase.
             x509Passphrase = result.password;
         } else {
             user = result.user;

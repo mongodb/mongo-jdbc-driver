@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.integration;
 
+import static com.mongodb.jdbc.MongoConnection.X509_CLIENT_CERT_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;
@@ -28,7 +29,7 @@ import org.junit.jupiter.api.TestInstance;
 public class AuthX509IntegrationTest {
 
     private static final String LOCAL_PORT_ENV_VAR = "LOCAL_MDB_PORT_ENT";
-    private static final String PASSWORD_ENV_VAR = "LOCAL_MDB_PWD";
+    private static final String PASSWORD_ENV_VAR = "ADF_TEST_LOCAL_PWD";
     private static final String X509_CERT_PATH_PROPERTY = "x509PemPath";
 
     private Connection connectWithX509(String pemPath, String passphrase) throws SQLException {
@@ -53,8 +54,17 @@ public class AuthX509IntegrationTest {
         return DriverManager.getConnection(uri, properties);
     }
 
+    /**
+     * Tests that when x509PemPath property is set, it takes precedence over the
+     * X509_CLIENT_CERT_PATH environment variable. The X509_CLIENT_CERT_PATH points to a valid file,
+     * but the property points to an invalid path. Should fail with FileNotFound.
+     */
     @Test
     public void testPropertyPrecedenceFailsIfWrong() {
+        String certPathEnvVar = System.getenv(X509_CLIENT_CERT_PATH);
+        assertNotNull(
+                certPathEnvVar, "Environment variable " + X509_CLIENT_CERT_PATH + " must be set");
+
         String mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
 
@@ -82,6 +92,7 @@ public class AuthX509IntegrationTest {
                 "Expected FileNotFoundException, but got: " + cause.getClass().getName());
     }
 
+    /** Tests that PEM file without passphrase connects */
     @Test
     public void testPropertySetCorrectly() throws SQLException {
         Connection connection =
@@ -90,10 +101,10 @@ public class AuthX509IntegrationTest {
         connection.getMetaData().getDriverVersion();
     }
 
+    /** Tests that PEM file encrypted with passphrase connects */
     @Test
     public void testEncryptedCertWithPassphrase() throws SQLException {
         String passphrase = System.getenv(PASSWORD_ENV_VAR);
-        Properties properties = new Properties();
 
         Connection connection =
                 connectWithX509(
@@ -102,8 +113,16 @@ public class AuthX509IntegrationTest {
         connection.getMetaData().getDriverVersion();
     }
 
+    /**
+     * Tests that without the x509PemPath property set, the X509_CLIENT_CERT_PATH will be used and
+     * successfully connects
+     */
     @Test
     public void testNoPropertyReliesOnEnvVariable() throws SQLException {
+        String certPathEnvVar = System.getenv(X509_CLIENT_CERT_PATH);
+        assertNotNull(
+                certPathEnvVar, "Environment variable " + X509_CLIENT_CERT_PATH + " must be set");
+
         String mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
 
@@ -116,8 +135,7 @@ public class AuthX509IntegrationTest {
         properties.setProperty("database", "test");
 
         Connection connection = DriverManager.getConnection(uri, properties);
-        assertNotNull(
-                connection, "Connection relying on environment variables should succeed");
+        assertNotNull(connection, "Connection relying on environment variables should succeed");
         connection.getMetaData().getDriverVersion();
     }
 }

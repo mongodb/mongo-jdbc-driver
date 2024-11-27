@@ -73,7 +73,7 @@ public class MongoConnection implements Connection {
     private int serverMinorVersion;
     private String serverVersion;
 
-    private static final String X509_CLIENT_CERT_PATH = "X509_CLIENT_CERT_PATH";
+    public static final String X509_CLIENT_CERT_PATH = "X509_CLIENT_CERT_PATH";
 
     public int getServerMajorVersion() {
         return serverMajorVersion;
