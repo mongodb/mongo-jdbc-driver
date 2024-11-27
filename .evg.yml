@@ -62,6 +62,7 @@ buildvariants:
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
       - name: "test-dc-integration"
+      - name: "test-x509-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -179,6 +180,45 @@ tasks:
           lib_prefix: ""
           ext: "dll"
       - func: "run dc integration test"
+
+  - name: "test-x509-integration"
+    commands:
+      # fetch mongosqltranslate libraries for each platform before building
+      # linux arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # linux x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "linux"
+          lib_prefix: "lib"
+          ext: "so"
+      # macos arm
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "arm"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # macos x86
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "macos"
+          lib_prefix: "lib"
+          ext: "dylib"
+      # windows
+      - func: "fetch libmongosqltranslate"
+        vars:
+          arch: "x86_64"
+          platform: "win"
+          lib_prefix: ""
+          ext: "dll"
       - func: "run X509 integration test"
 
   - name: "test-smoke"
