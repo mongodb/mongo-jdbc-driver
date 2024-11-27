@@ -261,7 +261,7 @@ class TestConnectionString {
         // No user name or password, with auth mech
         for (String authMech : MECHANISMS_TO_AUGMENT) {
             testPatternsHelper(
-                    "mongodb://localhost?authSource=$external&authMechanism="+authMech,
+                    "mongodb://localhost?authSource=$external&authMechanism=" + authMech,
                     true,
                     false,
                     authMech);
@@ -279,7 +279,9 @@ class TestConnectionString {
 
         for (String authMech : MECHANISMS_TO_AUGMENT) {
             testPatternsHelper(
-                    "mongodb://localhost?authSource=$external&authMechanism="+ authMech  +"&connectTimeoutms=600000",
+                    "mongodb://localhost?authSource=$external&authMechanism="
+                            + authMech
+                            + "&connectTimeoutms=600000",
                     true,
                     false,
                     authMech);
@@ -291,7 +293,9 @@ class TestConnectionString {
                 null);
         for (String authMech : MECHANISMS_TO_AUGMENT) {
             testPatternsHelper(
-                    "mongodb+srv://localhost?authMechanism="+ authMech  +"&authSource=$external&connectTimeoutms=600000",
+                    "mongodb+srv://localhost?authMechanism="
+                            + authMech
+                            + "&authSource=$external&connectTimeoutms=600000",
                     true,
                     false,
                     authMech);
@@ -303,7 +307,8 @@ class TestConnectionString {
                 null);
 
         for (String authMech : MECHANISMS_TO_AUGMENT) {
-            testPatternsHelper("mongodb://localhost?authMechanism="+authMech, true, false, authMech);
+            testPatternsHelper(
+                    "mongodb://localhost?authMechanism=" + authMech, true, false, authMech);
         }
         testPatternsHelper("mongodb://localhost?authMechanism=MONGODB-OIDC", true, false, null);
     }
