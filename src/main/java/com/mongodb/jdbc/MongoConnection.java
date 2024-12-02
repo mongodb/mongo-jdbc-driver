@@ -77,12 +77,9 @@ public class MongoConnection implements Connection {
     private int serverMinorVersion;
     private String serverVersion;
 
-<<<<<<< HEAD
     public static final String MONGODB_JDBC_X509_CLIENT_CERT_PATH =
             "MONGODB_JDBC_X509_CLIENT_CERT_PATH";
 
-=======
->>>>>>> 6a76451 (SQL-2423: correctly report db version (#300))
     public int getServerMajorVersion() {
         return serverMajorVersion;
     }
@@ -91,13 +88,10 @@ public class MongoConnection implements Connection {
         return serverMinorVersion;
     }
 
-<<<<<<< HEAD
-=======
     public String getServerVersion() {
         return this.serverVersion;
     }
 
->>>>>>> 6a76451 (SQL-2423: correctly report db version (#300))
     protected enum MongoClusterType {
         AtlasDataFederation,
         Community,
