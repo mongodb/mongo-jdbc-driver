@@ -792,12 +792,14 @@ functions:
           exit 1
         ;;
         esac
+        
+        X509_CERT_DIR=$PWD/resources/authentication_test/X509
 
         # Download and run enterprise mongod with x509 authentication enabled
-        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch --x509
+        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch $X509_CERT_DIR --x509
         
         # Set env variables for certificate directory and X509_CLIENT_CERT_PATH
-        X509_CERT_DIR=$PWD/resources/authentication_test/X509
+        
         export X509_CLIENT_CERT_PATH=$X509_CERT_DIR/client-unencrypted.pem
         
         # Configure Java SSL to trust self-signed certificates from custom truststore
