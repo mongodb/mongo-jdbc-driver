@@ -19,20 +19,19 @@ package com.mongodb.jdbc.integration;
 import static com.mongodb.jdbc.MongoConnection.X509_CLIENT_CERT_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AuthX509IntegrationTest {
 
     private static final String LOCAL_PORT_ENV_VAR = "LOCAL_MDB_PORT_ENT";
     private static final String PASSWORD_ENV_VAR = "ADF_TEST_LOCAL_PWD";
     private static final String X509_CERT_PATH_PROPERTY = "x509PemPath";
 
-    private Connection connectWithX509(String pemPath, String passphrase) throws SQLException {
+    private static Connection connectWithX509(String pemPath, String passphrase) throws SQLException {
         String mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
 
@@ -64,6 +63,8 @@ public class AuthX509IntegrationTest {
         String certPathEnvVar = System.getenv(X509_CLIENT_CERT_PATH);
         assertNotNull(
                 certPathEnvVar, "Environment variable " + X509_CLIENT_CERT_PATH + " must be set");
+        File certFile = new File(certPathEnvVar);
+        assertTrue(certFile.exists(), "File at " + certPathEnvVar + " does not exist");
 
         String mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
@@ -81,9 +82,7 @@ public class AuthX509IntegrationTest {
         Exception exception =
                 assertThrows(
                         RuntimeException.class,
-                        () -> {
-                            DriverManager.getConnection(uri, properties);
-                        });
+                        () -> DriverManager.getConnection(uri, properties));
 
         Throwable cause = exception.getCause();
         assertNotNull(cause, "Expected a cause in the exception");
@@ -95,10 +94,11 @@ public class AuthX509IntegrationTest {
     /** Tests that PEM file without passphrase connects */
     @Test
     public void testPropertySetCorrectly() throws SQLException {
-        Connection connection =
-                connectWithX509("resources/authentication_test/X509/client-unencrypted.pem", null);
-        assertNotNull(connection, "Connection should succeed");
-        connection.getMetaData().getDriverVersion();
+        try (Connection connection =
+                     connectWithX509("resources/authentication_test/X509/client-unencrypted.pem", null)) {
+            assertNotNull(connection, "Connection should succeed");
+            connection.getMetaData().getDriverVersion();
+        }
     }
 
     /** Tests that PEM file encrypted with passphrase connects */
@@ -106,11 +106,32 @@ public class AuthX509IntegrationTest {
     public void testEncryptedCertWithPassphrase() throws SQLException {
         String passphrase = System.getenv(PASSWORD_ENV_VAR);
 
-        Connection connection =
-                connectWithX509(
-                        "resources/authentication_test/X509/client-encrypted.pem", passphrase);
-        assertNotNull(connection, "Connection with encrypted cert should succeed");
-        connection.getMetaData().getDriverVersion();
+        try (Connection connection =
+                     connectWithX509(
+                             "resources/authentication_test/X509/client-encrypted.pem", passphrase)) {
+            assertNotNull(connection, "Connection with encrypted cert should succeed");
+            connection.getMetaData().getDriverVersion();
+        }
+    }
+
+    /** Tests that an incorrect passphrase fails with exception */
+    @Test
+    public void testEncryptedCertWithIncorrectPassphraseFails() {
+        String passphrase = "incorrectPassphrase";
+
+        Exception exception =
+                assertThrows(
+                        RuntimeException.class,
+                        () ->
+                                connectWithX509(
+                                        "resources/authentication_test/X509/client-encrypted.pem",
+                                        passphrase));
+
+        Throwable cause = exception.getCause();
+        assertNotNull(cause, "Expected a cause in the exception");
+        assertTrue(
+                cause instanceof java.security.GeneralSecurityException,
+                "Expected GeneralSecurityException, but got: " + cause.getClass().getName());
     }
 
     /**
@@ -134,8 +155,9 @@ public class AuthX509IntegrationTest {
         Properties properties = new Properties();
         properties.setProperty("database", "test");
 
-        Connection connection = DriverManager.getConnection(uri, properties);
-        assertNotNull(connection, "Connection relying on environment variables should succeed");
-        connection.getMetaData().getDriverVersion();
+        try (Connection connection = DriverManager.getConnection(uri, properties)) {
+            assertNotNull(connection, "Connection relying on environment variables should succeed");
+            connection.getMetaData().getDriverVersion();
+        }
     }
 }
