@@ -16,7 +16,11 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.AuthenticationMechanism.MONGODB_OIDC;
+import static com.mongodb.AuthenticationMechanism.MONGODB_X509;
+
 import com.google.common.base.Preconditions;
+import com.mongodb.AuthenticationMechanism;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoCredential.OidcCallback;
@@ -73,7 +77,8 @@ public class MongoConnection implements Connection {
     private int serverMinorVersion;
     private String serverVersion;
 
-    public static final String X509_CLIENT_CERT_PATH = "X509_CLIENT_CERT_PATH";
+    public static final String MONGODB_JDBC_X509_CLIENT_CERT_PATH =
+            "MONGODB_JDBC_X509_CLIENT_CERT_PATH";
 
     public int getServerMajorVersion() {
         return serverMajorVersion;
@@ -175,9 +180,9 @@ public class MongoConnection implements Connection {
         MongoCredential credential = connectionProperties.getConnectionString().getCredential();
 
         if (credential != null) {
-            String mechanism = credential.getMechanism();
+            AuthenticationMechanism authMechanism = credential.getAuthenticationMechanism();
 
-            if (MongoDriver.MONGODB_OIDC.equalsIgnoreCase(mechanism)) {
+            if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
                 // Handle OIDC authentication
                 OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
                 credential =
@@ -186,10 +191,10 @@ public class MongoConnection implements Connection {
                                 .withMechanismProperty(
                                         MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
                 settingsBuilder.credential(credential);
-            } else if (MongoDriver.MONGODB_X509.equalsIgnoreCase(mechanism)) {
+            } else if (authMechanism != null && authMechanism.equals(MONGODB_X509)) {
                 String pemPath = connectionProperties.getX509PemPath();
                 if (pemPath == null || pemPath.isEmpty()) {
-                    pemPath = System.getenv(X509_CLIENT_CERT_PATH);
+                    pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
                 }
                 if (pemPath == null || pemPath.isEmpty()) {
                     throw new IllegalStateException(

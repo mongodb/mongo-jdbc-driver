@@ -16,7 +16,7 @@
 
 package com.mongodb.jdbc.integration;
 
-import static com.mongodb.jdbc.MongoConnection.X509_CLIENT_CERT_PATH;
+import static com.mongodb.jdbc.MongoConnection.MONGODB_JDBC_X509_CLIENT_CERT_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -62,9 +62,10 @@ public class AuthX509IntegrationTest {
      */
     @Test
     public void testPropertyPrecedenceFailsIfWrong() {
-        String certPathEnvVar = System.getenv(X509_CLIENT_CERT_PATH);
+        String certPathEnvVar = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
         assertNotNull(
-                certPathEnvVar, "Environment variable " + X509_CLIENT_CERT_PATH + " must be set");
+                certPathEnvVar,
+                "Environment variable " + MONGODB_JDBC_X509_CLIENT_CERT_PATH + " must be set");
         File certFile = new File(certPathEnvVar);
         assertTrue(certFile.exists(), "File at " + certPathEnvVar + " does not exist");
 
@@ -142,9 +143,10 @@ public class AuthX509IntegrationTest {
      */
     @Test
     public void testNoPropertyReliesOnEnvVariable() throws SQLException {
-        String certPathEnvVar = System.getenv(X509_CLIENT_CERT_PATH);
+        String certPathEnvVar = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
         assertNotNull(
-                certPathEnvVar, "Environment variable " + X509_CLIENT_CERT_PATH + " must be set");
+                certPathEnvVar,
+                "Environment variable " + MONGODB_JDBC_X509_CLIENT_CERT_PATH + " must be set");
 
         String mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");

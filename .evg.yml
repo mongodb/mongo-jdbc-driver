@@ -798,9 +798,9 @@ functions:
         # Download and run enterprise mongod with x509 authentication enabled
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch $X509_CERT_DIR --x509
         
-        # Set env variables for certificate directory and X509_CLIENT_CERT_PATH
+        # Set env variables for certificate directory and MONGODB_JDBC_X509_CLIENT_CERT_PATH
         
-        export X509_CLIENT_CERT_PATH=$X509_CERT_DIR/client-unencrypted.pem
+        export MONGODB_JDBC_X509_CLIENT_CERT_PATH=$X509_CERT_DIR/client-unencrypted.pem
         
         # Configure Java SSL to trust self-signed certificates from custom truststore
         export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$X509_CERT_DIR/truststore.jks \

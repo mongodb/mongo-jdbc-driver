@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.AuthenticationMechanism.MONGODB_OIDC;
+import static com.mongodb.AuthenticationMechanism.MONGODB_X509;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -111,8 +113,6 @@ public class MongoDriver implements Driver {
                     });
     static final String RELAXED = "RELAXED";
     static final String EXTENDED = "EXTENDED";
-    static final String MONGODB_OIDC = AuthenticationMechanism.MONGODB_OIDC.toString();
-    static final String MONGODB_X509 = AuthenticationMechanism.MONGODB_X509.toString();
 
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
@@ -501,10 +501,10 @@ public class MongoDriver implements Driver {
     private static class ParseResult {
         String user;
         char[] password;
-        String authMechanism;
+        AuthenticationMechanism authMechanism;
         Properties normalizedOptions;
 
-        ParseResult(String u, char[] p, String a, Properties options) {
+        ParseResult(String u, char[] p, AuthenticationMechanism a, Properties options) {
             user = u;
             password = p;
             authMechanism = a;
@@ -534,7 +534,7 @@ public class MongoDriver implements Driver {
         char[] password = null;
         char[] x509Passphrase = null;
 
-        if (MONGODB_X509.equalsIgnoreCase(result.authMechanism)) {
+        if (result.authMechanism != null && result.authMechanism.equals(MONGODB_X509)) {
             // X509 authentication does not require a password to authenticate.  It is used by the driver in case
             // the PEM file has been encrypted with a passphrase.
             x509Passphrase = result.password;
@@ -565,12 +565,13 @@ public class MongoDriver implements Driver {
             // with null values, this is not a bug.
             mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
         }
-        if (password == null
-                && user != null
-                && !MONGODB_X509.equalsIgnoreCase(result.authMechanism)
-                && !MONGODB_OIDC.equalsIgnoreCase(result.authMechanism)) {
-            // password is null, but user is not, we must prompt for the password.
-            mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+        if (password == null && user != null) {
+            if (result.authMechanism == null
+                    || (!result.authMechanism.equals(MONGODB_X509)
+                            && !result.authMechanism.equals(MONGODB_OIDC))) {
+                // password is null, but user is not, we must prompt for the password.
+                mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+            }
         }
 
         // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
@@ -592,7 +593,6 @@ public class MongoDriver implements Driver {
                                 user,
                                 password,
                                 authDatabase,
-                                result.authMechanism,
                                 result.normalizedOptions));
         return new MongoConnectionConfig(c, new DriverPropertyInfo[] {}, x509Passphrase);
     }
@@ -633,8 +633,10 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
-        String authMechanism =
-                clientURI.getCredential() != null ? clientURI.getCredential().getMechanism() : null;
+        AuthenticationMechanism authMechanism =
+                clientURI.getCredential() != null
+                        ? clientURI.getCredential().getAuthenticationMechanism()
+                        : null;
 
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
@@ -644,7 +646,7 @@ public class MongoDriver implements Driver {
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
 
         // handle disagreements on user.
-        if (MONGODB_OIDC.equalsIgnoreCase(authMechanism)) {
+        if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
             if (uriPWD != null || propertyPWD != null) {
                 throw new SQLException(
                         "Password should not be specified when using MONGODB-OIDC authentication");
@@ -753,7 +755,6 @@ public class MongoDriver implements Driver {
             String user,
             char[] password,
             String authDatabase,
-            String authMechanism,
             Properties options)
             throws SQLException {
         // The returned URI should be of the following format:
