@@ -258,12 +258,12 @@ public class MongoDriver implements Driver {
         return conn;
     }
 
-    public static class ConnectionSettings {
+    public static class MongoConnectionConfig {
         public final ConnectionString connectionString;
         public final DriverPropertyInfo[] driverInfo;
         public final char[] x509Passphrase;
 
-        ConnectionSettings(ConnectionString cs, DriverPropertyInfo[] di, char[] x509pass) {
+        MongoConnectionConfig(ConnectionString cs, DriverPropertyInfo[] di, char[] x509pass) {
             connectionString = cs;
             driverInfo = di;
             x509Passphrase = x509pass;
@@ -282,15 +282,17 @@ public class MongoDriver implements Driver {
         // Ensure that the ConnectionString and Properties are consistent.
         // Reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
-        ConnectionSettings cs = getConnectionSettings(url, info);
+        MongoConnectionConfig connectionConfig = getConnectionSettings(url, info);
         // Since the user is calling connect, we should throw a SQLException if we get a prompt back.
-        if (cs.driverInfo.length != 0) {
+        if (connectionConfig.driverInfo.length != 0) {
             // Inspect the return value to format the SQLException and throw the connection error
             throw new SQLException(
-                    reportMissingProperties(cs.driverInfo), CONNECTION_ERROR_SQLSTATE);
+                    reportMissingProperties(connectionConfig.driverInfo),
+                    CONNECTION_ERROR_SQLSTATE);
         }
 
-        return createConnection(cs.connectionString, info, cs.x509Passphrase);
+        return createConnection(
+                connectionConfig.connectionString, info, connectionConfig.x509Passphrase);
     }
 
     /**
@@ -450,8 +452,8 @@ public class MongoDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        ConnectionSettings cs = getConnectionSettings(url, info);
-        return cs.driverInfo;
+        MongoConnectionConfig connectionConfig = getConnectionSettings(url, info);
+        return connectionConfig.driverInfo;
     }
 
     @Override
@@ -512,7 +514,7 @@ public class MongoDriver implements Driver {
 
     // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    public static ConnectionSettings getConnectionSettings(String url, Properties info)
+    public static MongoConnectionConfig getConnectionSettings(String url, Properties info)
             throws SQLException {
         if (info == null) {
             info = new Properties();
@@ -573,7 +575,7 @@ public class MongoDriver implements Driver {
 
         // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
         if (!mandatoryConnectionProperties.isEmpty()) {
-            return new ConnectionSettings(
+            return new MongoConnectionConfig(
                     null,
                     mandatoryConnectionProperties.toArray(
                             new DriverPropertyInfo[mandatoryConnectionProperties.size()]),
@@ -592,7 +594,7 @@ public class MongoDriver implements Driver {
                                 authDatabase,
                                 result.authMechanism,
                                 result.normalizedOptions));
-        return new ConnectionSettings(c, new DriverPropertyInfo[] {}, x509Passphrase);
+        return new MongoConnectionConfig(c, new DriverPropertyInfo[] {}, x509Passphrase);
     }
 
     private static interface NullCoalesce<T> {
