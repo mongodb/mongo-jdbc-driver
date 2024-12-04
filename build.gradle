@@ -16,7 +16,7 @@ if (project.hasProperty('isTagTriggered')) {
 ext {
     println("Driver version = " + version)
     releaseVersion = getReleaseVersion()
-    println("Artifacts version" + releaseVersion)
+    println("Artifacts version = " + releaseVersion)
     javaDataLoader = "com.mongodb.jdbc.integration.testharness.DataLoader"
     javaTestGenerator = "com.mongodb.jdbc.integration.testharness.TestGenerator"
     aspectjVersion = '1.9.7'

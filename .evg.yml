@@ -21,18 +21,22 @@ pre:
   - func: "export variables"
 
 post:
-  - func: "upload jar file"
   - func: "upload unit test classes"
   - func: "upload integration test classes"
+  - func: "upload smoke test classes"
   - func: "upload unit test packages"
   - func: "upload integration test packages"
+  - func: "upload smoke test packages"
   - func: "upload unit test js"
   - func: "upload integration test js"
+  - func: "upload smoke test js"
   - func: "upload unit test css "
   - func: "upload integration test css "
+  - func: "upload smoke test css "
   - func: "upload unit test index"
   - func: "upload integration test index"
   - func: "upload xunit test results"
+  - func: "upload smoke test index"
 
 buildvariants:
 
@@ -127,6 +131,7 @@ tasks:
           lib_prefix: ""
           ext: "dll"
       - func: "build jdbc driver"
+      - func: "upload jar file"
 
   - name: "test-unit"
     commands:
@@ -223,43 +228,11 @@ tasks:
       - func: "run X509 integration test"
 
   - name: "test-smoke"
+    depends_on:
+        - name: "build"
+          variant: "release"
     commands:
-      # fetch mongosqltranslate libraries for each platform before building
-      # linux arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # linux x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # macos arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # macos x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # windows
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "win"
-          lib_prefix: ""
-          ext: "dll"
+      - func: "fetch jdbc shadow jar"
       - func: "generate github token"
       - func: "run smoke test"
 
@@ -870,21 +843,24 @@ functions:
         - "build/libs/*.jar"
 
   "run smoke test":
-    command: shell.exec
-    type: test
-    params:
-      env:
-        GITHUB_TOKEN: "${github_token}"
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        ./resources/run_adf.sh start &&
-        ./gradlew runDataLoader &&
-        ./gradlew clean shadowJar &&
-        ./gradlew :smoketest:test -Psmoketest
-        EXITCODE=$?
-        ./resources/run_adf.sh stop
-        exit $EXITCODE
+    - command: shell.exec
+      type: test
+      params:
+        env:
+          GITHUB_TOKEN: "${github_token}"
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          
+          #Smoke test are loading the "*-all.jar" from mongo-jdbc-driver/build/libs/
+          ls -lrt build/libs/
+          
+          ./resources/run_adf.sh start &&
+          ./gradlew runDataLoader &&
+          ./gradlew :smoketest:test -Psmoketest
+          EXITCODE=$?
+          ./resources/run_adf.sh stop         
+          exit $EXITCODE
 
   "export variables":
     - command: shell.exec
@@ -1035,14 +1011,13 @@ functions:
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
-  "fetch jdbc files":
+  "fetch jdbc shadow jar":
     - *assume_role_cmd
     - command: s3.get
       params:
-        working_dir: mongo-jdbc-driver
         <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
 
   "fetch source":
     - command: shell.exec
@@ -1083,6 +1058,20 @@ functions:
         display_name: "Integration Test Classes"
         visibility: none
 
+  "upload smoke test classes":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/classes/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/classes/
+        content_type: text/html
+        permissions: public-read
+        display_name: "Smoke Test Classes"
+        visibility: none
+
   "upload unit test packages":
     - *assume_role_cmd
     - command: s3.put
@@ -1111,6 +1100,20 @@ functions:
         display_name: "Integration Test Packages"
         visibility: none
 
+  "upload smoke test packages":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/packages/*.html
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/packages/
+        content_type: text/html
+        permissions: public-read
+        display_name: "Smoke Test Packages"
+        visibility: none
+
   "upload unit test index":
     - *assume_role_cmd
     - command: s3.put
@@ -1135,6 +1138,18 @@ functions:
         permissions: public-read
         display_name: "Integration Test Results"
 
+  "upload smoke test index":
+      - *assume_role_cmd
+      - command: s3.put
+        params:
+          silent: true
+          <<: *evg_bucket_config
+          local_file: mongo-jdbc-driver/smoketest/build/reports/tests/test/index.html
+          remote_file: ${S3_ARTIFACTS_DIR}/smoketest/index.html
+          content_type: text/html
+          permissions: public-read
+          display_name: "Smoke Test Results"
+  
   "upload unit test css ":
     - *assume_role_cmd
     - command: s3.put
@@ -1163,6 +1178,19 @@ functions:
         display_name: "Integration Test CSS"
         visibility: none
 
+  "upload smoke test css ":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/css/*.css
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/css/
+        content_type: text/css
+        permissions: public-read
+        display_name: "Smoke Test CSS"
+
   "upload unit test js":
     - *assume_role_cmd
     - command: s3.put
@@ -1189,6 +1217,20 @@ functions:
         content_type: application/javascript
         permissions: public-read
         display_name: "Integration Test JS"
+        visibility: none
+
+  "upload smoke test js":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_files_include_filter:
+          - mongo-jdbc-driver/smoketest/build/reports/tests/test/js/*.js
+        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/js/
+        content_type: application/javascript
+        permissions: public-read
+        display_name: "Smoke Test JS"
         visibility: none
 
   "upload xunit test results":
