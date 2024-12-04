@@ -59,7 +59,7 @@ start_mdb_with_x509() {
   local type=$1
   local port=$2
   local mongod_dir=$3
-  local $x509_cert_dir $4
+  local x509_cert_dir="$4"
   local db_path="${type}_db"
 
   echo "Starting MongoDB $type with initial configuration on port $port"

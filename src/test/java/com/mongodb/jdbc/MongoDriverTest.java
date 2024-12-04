@@ -732,4 +732,29 @@ class MongoDriverTest {
                 () -> d.getUnvalidatedConnection(x509URL, p),
                 "Expected to fail because x509Passphrase is missing.");
     }
+
+    @Test
+    void testMongoDBX509WithPemPathAndPassphrase() throws SQLException {
+        String passphrase = "passphrase";
+
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(MongoDriver.MongoJDBCProperty.X509_PEM_PATH.getPropertyName(), "valid-path.pem");
+        p.setProperty("password", passphrase);
+
+        String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
+
+        MongoDriver.MongoConnectionConfig config = d.getConnectionSettings(x509URL, p);
+
+        assertNotNull(config.connectionString, "Connection string should be created.");
+        assertNull(
+                config.connectionString.getUsername(),
+                "Username should be null.");
+        assertNull(
+                config.connectionString.getPassword(),
+                "Password should be null.");
+        assertArrayEquals(
+                passphrase.toCharArray(), config.x509Passphrase, "x509Passphrase should match the provided value.");
+    }
 }
