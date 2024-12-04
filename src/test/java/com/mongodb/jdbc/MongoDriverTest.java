@@ -740,7 +740,8 @@ class MongoDriverTest {
         MongoDriver d = new MongoDriver();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
-        p.setProperty(MongoDriver.MongoJDBCProperty.X509_PEM_PATH.getPropertyName(), "valid-path.pem");
+        p.setProperty(
+                MongoDriver.MongoJDBCProperty.X509_PEM_PATH.getPropertyName(), "valid-path.pem");
         p.setProperty("password", passphrase);
 
         String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
@@ -748,13 +749,11 @@ class MongoDriverTest {
         MongoDriver.MongoConnectionConfig config = d.getConnectionSettings(x509URL, p);
 
         assertNotNull(config.connectionString, "Connection string should be created.");
-        assertNull(
-                config.connectionString.getUsername(),
-                "Username should be null.");
-        assertNull(
-                config.connectionString.getPassword(),
-                "Password should be null.");
+        assertNull(config.connectionString.getUsername(), "Username should be null.");
+        assertNull(config.connectionString.getPassword(), "Password should be null.");
         assertArrayEquals(
-                passphrase.toCharArray(), config.x509Passphrase, "x509Passphrase should match the provided value.");
+                passphrase.toCharArray(),
+                config.x509Passphrase,
+                "x509Passphrase should match the provided value.");
     }
 }
