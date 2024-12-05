@@ -751,6 +751,7 @@ class MongoDriverTest {
         assertNotNull(config.connectionString, "Connection string should be created.");
         assertNull(config.connectionString.getUsername(), "Username should be null.");
         assertNull(config.connectionString.getPassword(), "Password should be null.");
+        assert(config.connectionString.getCredential().getAuthenticationMechanism(), AuthenticationMechanism.MONGODB_X509)
         assertArrayEquals(
                 passphrase.toCharArray(),
                 config.x509Passphrase,
