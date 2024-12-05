@@ -33,14 +33,8 @@ import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.jcajce.JcePKCSPBEInputDecryptorProviderBuilder;
 
 public class X509Authentication {
-    private static final String BOUNCY_CASTLE = "BC";
+    private static final BouncyCastleProvider BC_PROVIDER = new BouncyCastleProvider();
     private final MongoLogger logger;
-
-    static {
-        if (Security.getProvider(BOUNCY_CASTLE) == null) {
-            Security.addProvider(new BouncyCastleProvider());
-        }
-    }
 
     public X509Authentication(MongoLogger logger) {
         this.logger = logger;
@@ -85,17 +79,17 @@ public class X509Authentication {
                             && pemObj instanceof PKCS8EncryptedPrivateKeyInfo) {
                         privateKey =
                                 new JcaPEMKeyConverter()
-                                        .setProvider(BOUNCY_CASTLE)
+                                        .setProvider(BC_PROVIDER)
                                         .getPrivateKey(
                                                 ((PKCS8EncryptedPrivateKeyInfo) pemObj)
                                                         .decryptPrivateKeyInfo(
                                                                 new JcePKCSPBEInputDecryptorProviderBuilder()
-                                                                        .setProvider(BOUNCY_CASTLE)
+                                                                        .setProvider(BC_PROVIDER)
                                                                         .build(passphrase)));
                     } else if (pemObj instanceof PrivateKeyInfo) {
                         privateKey =
                                 new JcaPEMKeyConverter()
-                                        .setProvider(BOUNCY_CASTLE)
+                                        .setProvider(BC_PROVIDER)
                                         .getPrivateKey((PrivateKeyInfo) pemObj);
                     }
                 } catch (Exception e) {
@@ -106,7 +100,7 @@ public class X509Authentication {
                 if (pemObj instanceof X509CertificateHolder) {
                     cert =
                             new JcaX509CertificateConverter()
-                                    .setProvider(BOUNCY_CASTLE)
+                                    .setProvider(BC_PROVIDER)
                                     .getCertificate((X509CertificateHolder) pemObj);
                 }
             }

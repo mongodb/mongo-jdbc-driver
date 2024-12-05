@@ -19,6 +19,7 @@ package com.mongodb.jdbc;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.AuthenticationMechanism;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -751,7 +752,10 @@ class MongoDriverTest {
         assertNotNull(config.connectionString, "Connection string should be created.");
         assertNull(config.connectionString.getUsername(), "Username should be null.");
         assertNull(config.connectionString.getPassword(), "Password should be null.");
-        assert(config.connectionString.getCredential().getAuthenticationMechanism(), AuthenticationMechanism.MONGODB_X509)
+        assertEquals(
+                AuthenticationMechanism.MONGODB_X509,
+                config.connectionString.getCredential().getAuthenticationMechanism(),
+                "Authentication mechanism should be MONGODB_X509.");
         assertArrayEquals(
                 passphrase.toCharArray(),
                 config.x509Passphrase,
