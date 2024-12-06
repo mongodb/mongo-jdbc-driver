@@ -41,6 +41,7 @@ import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
@@ -189,24 +190,31 @@ public class OidcAuthFlow {
         logger.log(Level.INFO, "osName: " + osName);
         Runtime runtime = Runtime.getRuntime();
 
-        if (osName.startsWith("mac os")) {
-            runtime.exec(new String[] {"open", url});
-        } else if (osName.startsWith("windows")) {
+        if (osName.contains("windows")) {
             runtime.exec(new String[] {"rundll32", "url.dll,FileProtocolHandler", url});
+        } else if (osName.contains("mac os")) {
+            runtime.exec(new String[] {"open", url});
         } else {
             String[] browsers = {"xdg-open", "firefox", "google-chrome"};
-            boolean browserFound = false;
+            IOException lastError = null;
             for (String browser : browsers) {
-                Process process = runtime.exec(new String[] {"which", browser});
-                if (process.getInputStream().read() != -1) {
-                    runtime.exec(new String[] {browser, url});
-                    browserFound = true;
+                try {
+                    // Check if browser exists
+                    Process process = runtime.exec(new String[] {"which", browser});
+                    if (process.waitFor() == 0) {
+                        runtime.exec(new String[] {browser, url});
+                    }
+                } catch (IOException e) {
+                    lastError = e;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     break;
                 }
             }
-            if (!browserFound) {
-                throw new Exception("No web browser found to open the URL");
-            }
+
+            throw lastError != null
+                    ? lastError
+                    : new IOException("No web browser found to open the URL");
         }
     }
 
