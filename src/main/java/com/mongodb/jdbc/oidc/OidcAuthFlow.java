@@ -186,7 +186,7 @@ public class OidcAuthFlow {
      */
     private void openURL(String url) throws Exception {
         String osName = System.getProperty("os.name").toLowerCase();
-        logger.log(Level.INFO, "osName: "+osName);
+        logger.log(Level.INFO, "osName: " + osName);
         Runtime runtime = Runtime.getRuntime();
 
         if (osName.startsWith("mac os")) {
