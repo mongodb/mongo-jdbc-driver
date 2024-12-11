@@ -99,7 +99,8 @@ public class MongoDriver implements Driver {
         CLIENT_INFO("clientinfo"),
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
-        EXT_JSON_MODE("extjsonmode");
+        EXT_JSON_MODE("extjsonmode"),
+        X509_PEM_PATH("x509pempath");
 
         private final String propertyName;
 
@@ -138,7 +139,7 @@ public class MongoDriver implements Driver {
                     });
     static final String RELAXED = "RELAXED";
     static final String EXTENDED = "EXTENDED";
-    static final String MONGODB_OIDC = AuthenticationMechanism.MONGODB_OIDC.toString();
+
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
 
@@ -283,6 +284,18 @@ public class MongoDriver implements Driver {
         return conn;
     }
 
+    public static class MongoConnectionConfig {
+        public final ConnectionString connectionString;
+        public final DriverPropertyInfo[] driverInfo;
+        public final char[] x509Passphrase;
+
+        MongoConnectionConfig(ConnectionString cs, DriverPropertyInfo[] di, char[] x509pass) {
+            connectionString = cs;
+            driverInfo = di;
+            x509Passphrase = x509pass;
+        }
+    }
+
     protected MongoConnection getUnvalidatedConnection(String url, Properties info)
             throws SQLException {
         if (!acceptsURL(url)) {
@@ -295,14 +308,17 @@ public class MongoDriver implements Driver {
         // Ensure that the ConnectionString and Properties are consistent.
         // Reuse the code getPropertyInfo to make sure the URI is properly set wrt the passed
         // Properties info value.
-        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
+        MongoConnectionConfig connectionConfig = getConnectionSettings(url, info);
         // Since the user is calling connect, we should throw a SQLException if we get a prompt back.
-        if (p.right().length != 0) {
+        if (connectionConfig.driverInfo.length != 0) {
             // Inspect the return value to format the SQLException and throw the connection error
-            throw new SQLException(reportMissingProperties(p.right()), CONNECTION_ERROR_SQLSTATE);
+            throw new SQLException(
+                    reportMissingProperties(connectionConfig.driverInfo),
+                    CONNECTION_ERROR_SQLSTATE);
         }
 
-        return createConnection(p.left(), info);
+        return createConnection(
+                connectionConfig.connectionString, info, connectionConfig.x509Passphrase);
     }
 
     /**
@@ -342,8 +358,8 @@ public class MongoDriver implements Driver {
         return sb.toString();
     }
 
-    private MongoConnection createConnection(ConnectionString cs, Properties info)
-            throws SQLException {
+    private MongoConnection createConnection(
+            ConnectionString cs, Properties info, char[] x509Passphrase) throws SQLException {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
 
@@ -400,7 +416,13 @@ public class MongoDriver implements Driver {
 
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
-                        cs, database, logLevel, logDir, clientInfo, extJsonMode);
+                        cs,
+                        database,
+                        logLevel,
+                        logDir,
+                        clientInfo,
+                        extJsonMode,
+                        info.getProperty(X509_PEM_PATH.getPropertyName()));
 
         Integer key = mongoConnectionProperties.generateKey();
 
@@ -410,7 +432,7 @@ public class MongoDriver implements Driver {
             MongoClient client = (clientRef != null) ? clientRef.get() : null;
 
             if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties);
+                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
             }
         } finally {
             mongoClientCacheLock.readLock().unlock();
@@ -423,9 +445,10 @@ public class MongoDriver implements Driver {
             MongoClient client = (clientRef != null) ? clientRef.get() : null;
             // Check for client again to handle race conditions
             if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties);
+                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
             }
-            MongoConnection newConnection = new MongoConnection(mongoConnectionProperties);
+            MongoConnection newConnection =
+                    new MongoConnection(mongoConnectionProperties, x509Passphrase);
             mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
             return newConnection;
         } finally {
@@ -455,8 +478,8 @@ public class MongoDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        Pair<ConnectionString, DriverPropertyInfo[]> p = getConnectionSettings(url, info);
-        return p.right();
+        MongoConnectionConfig connectionConfig = getConnectionSettings(url, info);
+        return connectionConfig.driverInfo;
     }
 
     @Override
@@ -504,10 +527,10 @@ public class MongoDriver implements Driver {
     private static class ParseResult {
         String user;
         char[] password;
-        String authMechanism;
+        AuthenticationMechanism authMechanism;
         Properties normalizedOptions;
 
-        ParseResult(String u, char[] p, String a, Properties options) {
+        ParseResult(String u, char[] p, AuthenticationMechanism a, Properties options) {
             user = u;
             password = p;
             authMechanism = a;
@@ -515,10 +538,10 @@ public class MongoDriver implements Driver {
         }
     }
 
-    // getConnectionString constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
+    // getConnectionSettings constructs a valid MongoDB connection string which will be used as an input to the mongoClient.
     // If there are required fields missing, those fields will be returned in DriverPropertyInfo[] with a null connectionString
-    protected static Pair<ConnectionString, DriverPropertyInfo[]> getConnectionSettings(
-            String url, Properties info) throws SQLException {
+    public static MongoConnectionConfig getConnectionSettings(String url, Properties info)
+            throws SQLException {
         if (info == null) {
             info = new Properties();
         }
@@ -528,8 +551,18 @@ public class MongoDriver implements Driver {
             ConnectionString originalConnectionString = buildConnectionString(url, info);
 
             ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
-            String user = result.user;
-            char[] password = result.password;
+            String user = null;
+            char[] password = null;
+            char[] x509Passphrase = null;
+
+            if (result.authMechanism != null && result.authMechanism.equals(MONGODB_X509)) {
+                // X509 authentication does not require a password to authenticate.  It is used by the driver in case
+                // the PEM file has been encrypted with a passphrase.
+                x509Passphrase = result.password;
+            } else {
+                user = result.user;
+                password = result.password;
+            }
 
             List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
 
@@ -554,19 +587,22 @@ public class MongoDriver implements Driver {
                 // with null values, this is not a bug.
                 mandatoryConnectionProperties.add(new DriverPropertyInfo(USER, null));
             }
-            if (password == null
-                    && user != null
-                    && !MONGODB_OIDC.equalsIgnoreCase(result.authMechanism)) {
-                // password is null, but user is not, we must prompt for the password.
-                mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+            if (password == null && user != null) {
+                if (result.authMechanism == null
+                        || (!result.authMechanism.equals(MONGODB_X509)
+                                && !result.authMechanism.equals(MONGODB_OIDC))) {
+                    // password is null, but user is not, we must prompt for the password.
+                    mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
+                }
             }
 
             // If mandatoryConnectionProperties is not empty, we stop here because we are missing connection information
             if (mandatoryConnectionProperties.size() > 0) {
-                return new Pair<>(
+                return new MongoConnectionConfig(
                         null,
                         mandatoryConnectionProperties.toArray(
-                                new DriverPropertyInfo[mandatoryConnectionProperties.size()]));
+                                new DriverPropertyInfo[mandatoryConnectionProperties.size()]),
+                        null);
             }
 
             // If we are here, we must have all the required connection information. So we have a valid URI state,
@@ -579,9 +615,8 @@ public class MongoDriver implements Driver {
                                     user,
                                     password,
                                     authDatabase,
-                                    result.authMechanism,
                                     result.normalizedOptions));
-            return new Pair<>(c, new DriverPropertyInfo[] {});
+            return new MongoConnectionConfig(c, new DriverPropertyInfo[] {}, x509Passphrase);
         } catch (Exception e) {
             if ((e instanceof SQLException)) {
                 throw e;
@@ -684,8 +719,10 @@ public class MongoDriver implements Driver {
                     return left;
                 };
 
-        String authMechanism =
-                clientURI.getCredential() != null ? clientURI.getCredential().getMechanism() : null;
+        AuthenticationMechanism authMechanism =
+                clientURI.getCredential() != null
+                        ? clientURI.getCredential().getAuthenticationMechanism()
+                        : null;
 
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
@@ -695,7 +732,7 @@ public class MongoDriver implements Driver {
         char[] propertyPWD = propertyPWDStr != null ? propertyPWDStr.toCharArray() : null;
 
         // handle disagreements on user.
-        if (MONGODB_OIDC.equalsIgnoreCase(authMechanism)) {
+        if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
             if (uriPWD != null || propertyPWD != null) {
                 throw new SQLException(
                         "Password should not be specified when using MONGODB-OIDC authentication");
@@ -805,7 +842,6 @@ public class MongoDriver implements Driver {
             String user,
             char[] password,
             String authDatabase,
-            String authMechanism,
             Properties options)
             throws SQLException {
         // The returned URI should be of the following format:

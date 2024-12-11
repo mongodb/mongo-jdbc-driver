@@ -19,6 +19,7 @@ package com.mongodb.jdbc;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.AuthenticationMechanism;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -718,5 +719,46 @@ class MongoDriverTest {
         MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
 
         assertSame(conn1.getMongoClient(), conn2.getMongoClient());
+    }
+
+    @Test
+    void testMongoDBX509AuthMechanismWithoutPassphrase() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
+        assertThrows(
+                IllegalStateException.class,
+                () -> d.getUnvalidatedConnection(x509URL, p),
+                "Expected to fail because x509Passphrase is missing.");
+    }
+
+    @Test
+    void testMongoDBX509WithPemPathAndPassphrase() throws SQLException {
+        String passphrase = "passphrase";
+
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(
+                MongoDriver.MongoJDBCProperty.X509_PEM_PATH.getPropertyName(), "valid-path.pem");
+        p.setProperty("password", passphrase);
+
+        String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
+
+        MongoDriver.MongoConnectionConfig config = d.getConnectionSettings(x509URL, p);
+
+        assertNotNull(config.connectionString, "Connection string should be created.");
+        assertNull(config.connectionString.getUsername(), "Username should be null.");
+        assertNull(config.connectionString.getPassword(), "Password should be null.");
+        assertEquals(
+                AuthenticationMechanism.MONGODB_X509,
+                config.connectionString.getCredential().getAuthenticationMechanism(),
+                "Authentication mechanism should be MONGODB_X509.");
+        assertArrayEquals(
+                passphrase.toCharArray(),
+                config.x509Passphrase,
+                "x509Passphrase should match the provided value.");
     }
 }
