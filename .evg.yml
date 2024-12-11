@@ -67,6 +67,8 @@ buildvariants:
       - name: "test-adf-integration"
       # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
       # - name: "test-dc-integration"
+      # SQL-2544: Merge jdbc EAP branch into master
+      # - name: "test-x509-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -111,6 +113,49 @@ tasks:
   - name: "test-dc-integration"
     commands:
       - func: "run dc integration test"
+
+  - name: "test-x509-integration"
+    commands:
+      # SQL-2544: Merge jdbc EAP branch into master
+
+      #      # fetch mongosqltranslate libraries for each platform before building
+      #      # linux arm
+      #      - func: "fetch libmongosqltranslate"
+      #        vars:
+      #          arch: "arm"
+      #          platform: "linux"
+      #          lib_prefix: "lib"
+      #          ext: "so"
+      #      # linux x86
+      #      - func: "fetch libmongosqltranslate"
+      #        vars:
+      #          arch: "x86_64"
+      #          platform: "linux"
+      #          lib_prefix: "lib"
+      #          ext: "so"
+      #      # macos arm
+      #      - func: "fetch libmongosqltranslate"
+      #        vars:
+      #          arch: "arm"
+      #          platform: "macos"
+      #          lib_prefix: "lib"
+      #          ext: "dylib"
+      #      # macos x86
+      #      - func: "fetch libmongosqltranslate"
+      #        vars:
+      #          arch: "x86_64"
+      #          platform: "macos"
+      #          lib_prefix: "lib"
+      #          ext: "dylib"
+      #      # windows
+      #      - func: "fetch libmongosqltranslate"
+      #        vars:
+      #          arch: "x86_64"
+      #          platform: "win"
+      #          lib_prefix: ""
+      #          ext: "dll"
+      - func: "run dc integration test"
+      - func: "run X509 integration test"
 
   - name: "test-smoke"
     depends_on:
@@ -539,6 +584,93 @@ functions:
         pkill mongod
 
         echo "Integration test exit code: $EXITCODE"
+        exit $EXITCODE
+
+  "run X509 integration test":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+
+        case ${_platform} in
+        ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
+          mdb_version_com="mongodb-linux-x86_64-ubuntu2204-7.0.14"
+          mdb_version_ent="mongodb-linux-x86_64-enterprise-ubuntu2204-7.0.14"
+          arch="x64"
+        ;;
+        *)
+          echo "ERROR: invalid value for \${_platform}: '$_platform'"
+          echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+          exit 1
+        ;;
+        esac
+        
+        X509_CERT_DIR=$PWD/resources/authentication_test/X509
+
+        # Download and run enterprise mongod with x509 authentication enabled
+        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch $X509_CERT_DIR --x509
+        
+        # Set env variables for certificate directory and MONGODB_JDBC_X509_CLIENT_CERT_PATH
+        
+        export MONGODB_JDBC_X509_CLIENT_CERT_PATH=$X509_CERT_DIR/client-unencrypted.pem
+        
+        # Configure Java SSL to trust self-signed certificates from custom truststore
+        export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$X509_CERT_DIR/truststore.jks \
+            -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
+
+        # Run the tests.
+        ./gradlew integrationTest \
+            -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
+
+        echo "Gradle process started with PID $GRADLE_PID"
+
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
+        while true; do
+          if [ -f gradle_output.log ]; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
+            if grep -q "BUILD FAILED" gradle_output.log; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
+          fi
+
+          if (( SECONDS > TIMEOUT )); then
+              echo "$TIMEOUT second timeout reached. Exiting with failure."
+              EXITCODE=1
+              break
+          fi
+
+          # Check if Gradle process is still running
+          if ! kill -0 $GRADLE_PID 2>/dev/null; then
+              echo "Gradle process has finished."
+              wait $GRADLE_PID
+              EXITCODE=$?
+              break
+          fi
+
+          sleep 5
+        done
+
+        cat gradle_output.log
+
+        kill $GRADLE_PID 2>/dev/null || true
+
+        pkill mongod
+
+        echo "X509 integration test exit code: $EXITCODE"
         exit $EXITCODE
 
   "trace artifacts":
