@@ -262,4 +262,25 @@ public class DCIntegrationTest {
             rs.close();
         }
     }
+
+    @Test
+    public void testInvalidCredentialsOnEnterpriseServer() throws SQLException {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        info.right().setProperty("password", "invalid-password");
+
+        SQLException thrown =
+                assertThrows(
+                        SQLException.class,
+                        () -> DriverManager.getConnection(info.left(), info.right()),
+                        "A SQLException should be thrown due to invalid credentials.");
+
+        String message = thrown.getMessage().toLowerCase();
+        assertTrue(
+                message.contains("authentication failed"),
+                "The error message should indicate that authentication failed.");
+        assertEquals(
+                "28000",
+                thrown.getSQLState(),
+                "SQLSTATE should indicate an authentication failure (28000).");
+    }
 }

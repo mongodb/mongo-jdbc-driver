@@ -278,6 +278,18 @@ public class MongoDriver implements Driver {
                         "Couldn't connect due to a timeout. Please check your hostname and port. If necessary, set a "
                                 + "longer connection timeout in the MongoDB URI.");
             } catch (Exception e) {
+                // Unwrap the cause to detect authentication failures
+                Throwable cause = e;
+                while (cause != null) {
+                    if (cause instanceof com.mongodb.MongoSecurityException) {
+                        throw new SQLException(
+                                "Authentication failed. Verify that the credentials are correct.",
+                                "28000",
+                                e);
+                    }
+                    cause = cause.getCause();
+                }
+
                 throw new SQLException("Connection failed.", e);
             }
         }
