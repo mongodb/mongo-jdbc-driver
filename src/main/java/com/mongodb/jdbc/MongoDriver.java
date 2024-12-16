@@ -285,7 +285,7 @@ public class MongoDriver implements Driver {
                     if (cause instanceof com.mongodb.MongoSecurityException) {
                         throw new SQLException(
                                 "Authentication failed. Verify that the credentials are correct.",
-                                "28000",
+                                AUTHENTICATION_ERROR_SQLSTATE,
                                 e);
                     }
                     cause = cause.getCause();
