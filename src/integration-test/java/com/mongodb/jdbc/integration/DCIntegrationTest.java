@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.integration;
 
+import static com.mongodb.jdbc.MongoDriver.AUTHENTICATION_ERROR_SQLSTATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.jdbc.MongoConnection;
@@ -279,8 +280,10 @@ public class DCIntegrationTest {
                 message.contains("authentication failed"),
                 "The error message should indicate that authentication failed.");
         assertEquals(
-                "28000",
+                AUTHENTICATION_ERROR_SQLSTATE,
                 thrown.getSQLState(),
-                "SQLSTATE should indicate an authentication failure (28000).");
+                "SQLSTATE should indicate an authentication failure ("
+                        + AUTHENTICATION_ERROR_SQLSTATE
+                        + ")");
     }
 }
