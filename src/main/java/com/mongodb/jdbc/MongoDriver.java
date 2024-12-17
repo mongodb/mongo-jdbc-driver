@@ -142,7 +142,7 @@ public class MongoDriver implements Driver {
 
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
-    protected static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
+    public static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
 
     private static ConcurrentHashMap<Integer, WeakReference<MongoClient>> mongoClientCache =
             new ConcurrentHashMap<>();
