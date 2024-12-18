@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.integration;
 
+import static com.mongodb.jdbc.MongoDriver.AUTHENTICATION_ERROR_SQLSTATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.jdbc.MongoConnection;
@@ -104,5 +105,28 @@ public class DCIntegrationTest {
         MongoConnection conn =
                 (MongoConnection) DriverManager.getConnection(info.left(), info.right());
         conn.close();
+    }
+
+    @Test
+    public void testInvalidCredentialsOnEnterpriseServer() throws SQLException {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        info.right().setProperty("password", "invalid-password");
+
+        SQLException thrown =
+                assertThrows(
+                        SQLException.class,
+                        () -> DriverManager.getConnection(info.left(), info.right()),
+                        "A SQLException should be thrown due to invalid credentials.");
+
+        String message = thrown.getMessage().toLowerCase();
+        assertTrue(
+                message.contains("authentication failed"),
+                "The error message should indicate that authentication failed.");
+        assertEquals(
+                AUTHENTICATION_ERROR_SQLSTATE,
+                thrown.getSQLState(),
+                "SQLSTATE should indicate an authentication failure ("
+                        + AUTHENTICATION_ERROR_SQLSTATE
+                        + ")");
     }
 }
