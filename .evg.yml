@@ -342,6 +342,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
+          python3 ./print_it.py
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
@@ -625,6 +626,7 @@ functions:
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          RING_FILE_GPG_BASE64: "$RING_FILE_GPG_BASE64"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -655,7 +657,11 @@ functions:
             export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
+            export RING_FILE_GPG_BASE64="$RING_FILE_GPG_BASE64"
           EOT
+          
+          echo env
+
 
     - command: expansions.update
       params:
