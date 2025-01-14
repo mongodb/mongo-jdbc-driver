@@ -5,6 +5,7 @@ plugins {
     id "de.marcphilipp.nexus-publish" version "0.3.0"
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "org.cyclonedx.bom" version "1.8.2"
+    id 'com.github.jk1.dependency-license-report' version '1.17'
 }
 
 if (project.hasProperty('isTagTriggered')) {
@@ -27,6 +28,13 @@ spotless {
         googleJavaFormat('1.1').aosp()
         licenseHeaderFile('resources/license_header.txt')
     }
+}
+
+import com.github.jk1.license.render.TextReportRenderer
+
+licenseReport {
+    outputDir = project.layout.buildDirectory.dir("../src/main/resources").get().asFile.path
+    renderers = [new TextReportRenderer('THIRD-PARTY-LICENSE.txt')]
 }
 
 cyclonedxBom {
