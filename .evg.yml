@@ -658,8 +658,6 @@ functions:
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
             export RING_FILE_GPG_BASE64="$RING_FILE_GPG_BASE64"
           EOT
-          
-          echo env
 
 
     - command: expansions.update
