@@ -342,7 +342,6 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
           ${PREPARE_SHELL}
-          python3 ./print_it.py
           ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean -x test -x integrationTest spotlessApply build --rerun-tasks
 
   "check spotless":
@@ -858,7 +857,7 @@ functions:
       type: test
       params:
         shell: bash
-        silent: false 
+        silent: true 
         working_dir: mongo-jdbc-driver
         script: |
           PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_TOKEN_NAME=${NEXUS_TOKEN_NAME} NEXUS_TOKEN=${NEXUS_TOKEN} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh
