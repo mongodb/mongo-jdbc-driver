@@ -625,6 +625,7 @@ functions:
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          RING_FILE_GPG_BASE64: "$RING_FILE_GPG_BASE64"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -655,7 +656,9 @@ functions:
             export SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"          
+            export RING_FILE_GPG_BASE64="$RING_FILE_GPG_BASE64"
           EOT
+
 
     - command: expansions.update
       params:
@@ -852,7 +855,7 @@ functions:
       type: test
       params:
         shell: bash
-        silent: false 
+        silent: true 
         working_dir: mongo-jdbc-driver
         script: |
           PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_TOKEN_NAME=${NEXUS_TOKEN_NAME} NEXUS_TOKEN=${NEXUS_TOKEN} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64=${RING_FILE_GPG_BASE64} ./gradle/publish.sh
