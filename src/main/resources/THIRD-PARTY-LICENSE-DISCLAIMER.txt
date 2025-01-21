@@ -6,4 +6,4 @@ please bring it to our attention through our JIRA system at:
 
     https://jira.mongodb.org
 
-The attached notices are provided for information only.
+The attached notices are provided for information only, see: THIRD-PARTY-NOTICES.txt
