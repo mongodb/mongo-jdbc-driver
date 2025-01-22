@@ -99,7 +99,6 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
-    git_tag_only: true
     depends_on:
       - name: "test-smoke"
         variant: "release"
