@@ -9,7 +9,7 @@ set +o xtrace # Disable command traces before executing them.
 ############################################
 #            Main Program                  #
 ############################################
-echo ${RING_FILE_GPG_BASE64} | base64 --decode > ${PROJECT_DIRECTORY}/secring.gpg
+echo "${RING_FILE_GPG_BASE64}" | base64 --decode > ${PROJECT_DIRECTORY}/secring.gpg
 
 trap "rm ${PROJECT_DIRECTORY}/secring.gpg; exit" EXIT HUP
 
