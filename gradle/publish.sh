@@ -3,15 +3,15 @@
 # DO NOT ECHO COMMANDS AS THEY CONTAIN SECRETS!
 
 set -o errexit  # Exit the script with error if any of the commands fail
-# set +o verbose # Command echoing off.
-# set +o xtrace # Disable command traces before executing them.
+set +o verbose # Command echoing off.
+set +o xtrace # Disable command traces before executing them.
 
 ############################################
 #            Main Program                  #
 ############################################
-echo ${RING_FILE_GPG_BASE64} | base64 --decode > ${PROJECT_DIRECTORY}/secring.gpg
+echo "${RING_FILE_GPG_BASE64}" | base64 --decode > ${PROJECT_DIRECTORY}/secring.gpg
 
-# trap "rm ${PROJECT_DIRECTORY}/secring.gpg; exit" EXIT HUP
+trap "rm ${PROJECT_DIRECTORY}/secring.gpg; exit" EXIT HUP
 
 export ORG_GRADLE_PROJECT_nexus_token_name=${NEXUS_TOKEN_NAME}
 export ORG_GRADLE_PROJECT_nexus_token=${NEXUS_TOKEN}
@@ -23,7 +23,5 @@ export ORG_GRADLE_PROJECT_nexus_profile_id=${NEXUS_PROFILE_ID}
 
 echo "Publishing snapshot or release"
 
-cat ${PROJECT_DIRECTORY}/secring.gpg
-
-# ./gradlew -version
-# ./gradlew publishMaven --info
+./gradlew -version
+./gradlew publishMaven --info
