@@ -545,9 +545,9 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          echo "-------------------------"
+          echo "!-------------------------"
           find . | grep resources
-          echo "-------------------------"
+          echo "!-------------------------"
     - command: shell.exec
       type: test
       params:
