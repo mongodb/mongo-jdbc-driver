@@ -531,18 +531,17 @@ functions:
         bucket: translators-connectors-releases
 
   "build jdbc driver":
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          if [[ "${triggered_by_git_tag}" != "" ]]; then
-            EXTRA_PROP="-PisTagTriggered"
-          fi
-          #./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP generateLicenseReport shadowjar --rerun-tasks
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [[ "${triggered_by_git_tag}" != "" ]]; then
+          EXTRA_PROP="-PisTagTriggered"
+        fi
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply generateLicenseReport build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec

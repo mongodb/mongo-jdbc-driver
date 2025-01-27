@@ -21,6 +21,12 @@ Among all the version standards Maven supports, we will use MajorVersion, Increm
 
 ## Release Process
 
+### Run ./gradlew generateLicense
+
+Always run ./gradlew generateLicense before a release and check in the newly generated
+THIRD-PARTY-LICENSES.txt file in src/main/resources. Some issue with the JAVA_HOME on evergreen
+causes ./gradlew to not pick up the file if it does not exist before the build task.
+
 ### Snapshot Versions
 
 Every successful untagged build in evergreen will release the artifacts to the Sonatype SNAPSHOT repo in https://oss.sonatype.org/#view-repositories;snapshots~browsestorage
