@@ -545,15 +545,6 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          echo "!-------------------------"
-          find . | grep resources
-          echo "!-------------------------"
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
           ${PREPARE_SHELL}
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             EXTRA_PROP="-PisTagTriggered"
