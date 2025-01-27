@@ -537,8 +537,8 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} generateLicenseReport
-          #./gradlew generateLicenseReport
+          #./gradlew -Dorg.gradle.java.home=${JAVA_HOME} generateLicenseReport
+          ./gradlew generateLicenseReport
     - command: shell.exec
       type: test
       params:
