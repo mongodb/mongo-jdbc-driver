@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    runtimeOnly files('../build/libs/'+rootProject.name+'-'+getReleaseVersion()+'-all.jar')
+    runtimeOnly fileTree('../build/libs/') { include '*-all.jar' }
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 

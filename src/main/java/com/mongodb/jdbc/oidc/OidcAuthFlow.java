@@ -41,7 +41,7 @@ import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.awt.Desktop;
+import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
@@ -129,10 +129,10 @@ public class OidcAuthFlow {
                             .build();
 
             // Open the browser to the authorization request URI.
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(request.toURI());
-            } else {
-                log(Level.SEVERE, "Desktop operations not supported");
+            try {
+                openURL(request.toURI().toString());
+            } catch (Exception e) {
+                log(Level.SEVERE, "Failed to open the browser: " + e.getMessage());
                 return null;
             }
 
@@ -174,6 +174,47 @@ public class OidcAuthFlow {
                 log(Level.WARNING, "Thread interrupted " + e.getMessage());
             }
             server.stop();
+        }
+    }
+
+    /**
+     * Opens the specified URI in the default web browser, supporting macOS, Windows, and
+     * Linux/Unix. This method uses platform-specific commands to invoke the browser.
+     *
+     * @param url the URL to be opened as a string
+     * @throws Exception if no supported browser is found or an error occurs while attempting to
+     *     open the URL
+     */
+    private void openURL(String url) throws Exception {
+        String osName = System.getProperty("os.name").toLowerCase();
+        logger.log(Level.INFO, "osName: " + osName);
+        Runtime runtime = Runtime.getRuntime();
+
+        if (osName.contains("windows")) {
+            runtime.exec(new String[] {"rundll32", "url.dll,FileProtocolHandler", url});
+        } else if (osName.contains("mac os")) {
+            runtime.exec(new String[] {"open", url});
+        } else {
+            String[] browsers = {"xdg-open", "firefox", "google-chrome"};
+            IOException lastError = null;
+            for (String browser : browsers) {
+                try {
+                    // Check if browser exists
+                    Process process = runtime.exec(new String[] {"which", browser});
+                    if (process.waitFor() == 0) {
+                        runtime.exec(new String[] {browser, url});
+                    }
+                } catch (IOException e) {
+                    lastError = e;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+
+            throw lastError != null
+                    ? lastError
+                    : new IOException("No web browser found to open the URL");
         }
     }
 
