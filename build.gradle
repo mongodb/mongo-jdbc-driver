@@ -5,7 +5,10 @@ plugins {
     id "de.marcphilipp.nexus-publish" version "0.3.0"
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "org.cyclonedx.bom" version "1.8.2"
+    id 'com.github.jk1.dependency-license-report' version '1.17'
 }
+
+import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isTagTriggered')) {
     version = getAbbreviatedGitVersion()
@@ -27,6 +30,10 @@ spotless {
         googleJavaFormat('1.1').aosp()
         licenseHeaderFile('resources/license_header.txt')
     }
+}
+
+licenseReport {
+    renderers = [new TextReportRenderer('THIRD-PARTY-LICENSE.txt')]
 }
 
 cyclonedxBom {
@@ -101,8 +108,6 @@ allprojects {
         testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
         testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
     }
-
-    //ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.VERBOSE
 
     compileJava {
         doLast {
@@ -213,12 +218,43 @@ task runCallbackWithBadRefreshToken(type: JavaExec) {
     main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcCallbackWithBadRefreshToken'
 }
 
+
+
+tasks.register('copyThirdPartyLicenseNotice', Copy) {
+    from layout.buildDirectory.file("reports/dependency-license/THIRD-PARTY-LICENSE.txt")
+    into layout.projectDirectory.dir("src/main/resources/META-INF/licenses")
+}
+
 jar {
+    // Add the THIRD-PARTY-LICENSE to our jar
+    // Note that in order for this to work, the file must be present
+    // To generate it, run generateLicenseReport. However, ':generateLicenseReport' has a dependecy on `:jar`
+    // which makes it impossible to generate and bundle the THIRD-PARTY-LICENSE in one pass.
+    from('build/reports/dependency-license/THIRD-PARTY-LICENSE.txt') {
+        into 'META-INF/licenses'
+    }
+
     manifest {
         attributes('Implementation-Title': project.name,
                 'Implementation-Version': project.version)
     }
 }
+
+shadowJar  {
+    // Add the THIRD-PARTY-LICENSE to our jar
+    // Note that in order for this to work, the file must be present
+    // To generate it, run generateLicenseReport. However, ':generateLicenseReport' has a dependecy on `:jar`
+    // which makes it impossible to generate and bundle the THIRD-PARTY-LICENSE in one pass.
+    from('build/reports/dependency-license/THIRD-PARTY-LICENSE.txt') {
+        into 'META-INF/licenses'
+    }
+}
+
+tasks.named('copyThirdPartyLicenseNotice') {
+    dependsOn generateLicenseReport
+}
+
+
 
 dependencies {
     integrationTestImplementation "org.yaml:snakeyaml:$snakeYamlVersion"
