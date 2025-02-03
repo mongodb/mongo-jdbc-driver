@@ -218,13 +218,6 @@ task runCallbackWithBadRefreshToken(type: JavaExec) {
     main = 'com.mongodb.jdbc.oidc.manualtests.TestOidcCallbackWithBadRefreshToken'
 }
 
-
-
-tasks.register('copyThirdPartyLicenseNotice', Copy) {
-    from layout.buildDirectory.file("reports/dependency-license/THIRD-PARTY-LICENSE.txt")
-    into layout.projectDirectory.dir("src/main/resources/META-INF/licenses")
-}
-
 jar {
     // Add the THIRD-PARTY-LICENSE to our jar
     // Note that in order for this to work, the file must be present
@@ -249,12 +242,6 @@ shadowJar  {
         into 'META-INF/licenses'
     }
 }
-
-tasks.named('copyThirdPartyLicenseNotice') {
-    dependsOn generateLicenseReport
-}
-
-
 
 dependencies {
     integrationTestImplementation "org.yaml:snakeyaml:$snakeYamlVersion"
