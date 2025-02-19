@@ -190,7 +190,7 @@ functions:
         shell: bash
         working_dir: mongo-jdbc-driver
         script: |
-          ${prepare_shell}
+          ${PREPARE_SHELL}
 
           ls -lrt $SSDLC_DIR
 
