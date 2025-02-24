@@ -579,7 +579,7 @@ functions:
     - command: shell.exec
       params:
         shell: bash
-        silent: true
+        silent: false
         working_dir: mongo-jdbc-driver
         script: |
           ARTIFACTS_DIR=artifacts
