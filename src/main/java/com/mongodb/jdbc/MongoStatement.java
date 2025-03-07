@@ -286,8 +286,9 @@ public class MongoStatement implements Statement {
             throw new RuntimeException(e);
         }
         long endTime = System.nanoTime();
-        double execTime = (endTime - startTime) / 1000000000d;
-        logger.log(Level.INFO, "Query executed in " + execTime + " seconds");
+        logger.log(
+                Level.INFO,
+                "Query executed in " + ((endTime - startTime) / 1000000000d) + " seconds");
         logger.log(
                 Level.INFO,
                 "\n---------- Resultset schema -------\n"

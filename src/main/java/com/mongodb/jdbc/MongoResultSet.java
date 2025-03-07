@@ -191,8 +191,11 @@ public class MongoResultSet implements ResultSet {
                 long startTime = System.nanoTime();
                 current = cursor.next();
                 long endTime = System.nanoTime();
-                double execTime = (endTime - startTime) / 1000000d;
-                logger.log(Level.FINE, "Moved to next row in " + execTime + " milliseconds");
+                logger.log(
+                        Level.FINE,
+                        "Moved to next row in "
+                                + ((endTime - startTime) / 1000000d)
+                                + " milliseconds");
                 ++rowNum;
             }
             return result;
