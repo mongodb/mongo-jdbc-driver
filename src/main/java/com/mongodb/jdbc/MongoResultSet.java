@@ -45,10 +45,8 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.logging.Level;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
@@ -183,14 +181,24 @@ public class MongoResultSet implements ResultSet {
     @Override
     public boolean next() throws SQLException {
         checkClosed();
-
-        boolean result;
-        result = cursor.hasNext();
-        if (result) {
-            current = cursor.next();
-            ++rowNum;
+        try {
+            boolean result;
+            logger.log(Level.FINER, "More rows available ? ");
+            result = cursor.hasNext();
+            logger.log(Level.FINER, String.valueOf(result));
+            if (result) {
+                logger.log(Level.FINE, "Getting row " + (rowNum + 1));
+                long startTime = System.nanoTime();
+                current = cursor.next();
+                long endTime = System.nanoTime();
+                double execTime = (endTime - startTime) / 1000000d;
+                logger.log(Level.FINER, "Moved to next row in " + execTime + " milliseconds");
+                ++rowNum;
+            }
+            return result;
+        } catch (Exception e) {
+            throw new SQLException(e);
         }
-        return result;
     }
 
     @Override
