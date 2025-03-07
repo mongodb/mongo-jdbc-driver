@@ -85,6 +85,8 @@ public class MongoResultSet implements ResultSet {
     protected boolean extJsonMode;
     protected UuidRepresentation uuidRepresentation;
 
+    private MongoJsonSchema jsonSchema;
+
     /**
      * Constructor for a MongoResultset tied to a connection and statement.
      *
@@ -143,6 +145,7 @@ public class MongoResultSet implements ResultSet {
             Integer statementId)
             throws SQLException {
         Preconditions.checkNotNull(cursor);
+        this.jsonSchema = schema;
         // dateFormat is not thread safe, so we do not want to make it a static field.
         dateFormat.setTimeZone(UTC);
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
@@ -153,6 +156,12 @@ public class MongoResultSet implements ResultSet {
         this.rsMetaData =
                 new MongoResultSetMetaData(
                         schema, selectOrder, sortFieldsAlphabetically, parentLogger, statementId);
+    }
+
+    public String getJsonSchema() throws SQLException {
+        checkClosed();
+
+        return this.jsonSchema.toString();
     }
 
     // This is only used for testing, and that is why it has package level access, and the

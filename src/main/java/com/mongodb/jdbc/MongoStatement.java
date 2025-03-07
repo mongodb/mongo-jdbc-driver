@@ -30,6 +30,7 @@ import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.bson.*;
 
 @AutoLoggable
@@ -264,12 +265,18 @@ public class MongoStatement implements Statement {
     public ResultSet executeQuery(String sql) throws SQLException {
         checkClosed();
         closeExistingResultSet();
-
+        long startTime = System.nanoTime();
+        logger.log(
+                Level.INFO,
+                "\n---------- Query ----------\n"
+                        + sql
+                        + "\n----------------------------------------\n");
+        ResultSet result = null;
         try {
             if (conn.getClusterType() == MongoConnection.MongoClusterType.AtlasDataFederation) {
-                return executeAtlasDataFederationQuery(sql);
+                result = executeAtlasDataFederationQuery(sql);
             } else if (conn.getClusterType() == MongoConnection.MongoClusterType.Enterprise) {
-                return executeDirectClusterQuery(sql);
+                result = executeDirectClusterQuery(sql);
             } else {
                 throw new SQLException("Unsupported cluster type: " + conn.clusterType);
             }
@@ -278,6 +285,15 @@ public class MongoStatement implements Statement {
         } catch (MongoSQLException | MongoSerializationException e) {
             throw new RuntimeException(e);
         }
+        long endTime = System.nanoTime();
+        double execTime = (endTime - startTime) / 1000000000d;
+        logger.log(Level.INFO, "Query executed in " + execTime + " seconds");
+        logger.log(
+                Level.INFO,
+                "\n---------- Resultset schema -------\n"
+                        + ((MongoResultSet) result).getJsonSchema().toString()
+                        + "\n----------------------------------------\n");
+        return result;
     }
 
     @Override
