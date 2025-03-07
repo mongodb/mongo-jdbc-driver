@@ -183,16 +183,16 @@ public class MongoResultSet implements ResultSet {
         checkClosed();
         try {
             boolean result;
-            logger.log(Level.FINER, "More rows available ? ");
+            logger.log(Level.FINE, "More rows available ? ");
             result = cursor.hasNext();
-            logger.log(Level.FINER, String.valueOf(result));
+            logger.log(Level.FINE, String.valueOf(result));
             if (result) {
                 logger.log(Level.FINE, "Getting row " + (rowNum + 1));
                 long startTime = System.nanoTime();
                 current = cursor.next();
                 long endTime = System.nanoTime();
                 double execTime = (endTime - startTime) / 1000000d;
-                logger.log(Level.FINER, "Moved to next row in " + execTime + " milliseconds");
+                logger.log(Level.FINE, "Moved to next row in " + execTime + " milliseconds");
                 ++rowNum;
             }
             return result;
