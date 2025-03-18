@@ -17,7 +17,9 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
+import java.io.StringWriter;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -29,17 +31,32 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
+import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.ValueCodecProvider;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriter;
+import org.bson.json.JsonWriterSettings;
 
 public class MongoJsonSchema {
     private static final Codec<JsonSchema> JSON_SCHEMA_CODEC =
             MongoDriver.registry.get(JsonSchema.class);
+
+    private static final CodecRegistry REGISTRY =
+            fromProviders(
+                    new BsonValueCodecProvider(),
+                    new ValueCodecProvider(),
+                    PojoCodecProvider.builder().automatic(true).build());;
+    private static final Codec<MongoJsonSchema> CODEC = REGISTRY.get(MongoJsonSchema.class);
+    private static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(true).build();
 
     public static class ScalarProperties {
         protected String name;
@@ -421,7 +438,15 @@ public class MongoJsonSchema {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+
+        StringWriter writer = new StringWriter();
+        CODEC.encode(
+                new JsonWriter(writer, JSON_WRITER_SETTINGS),
+                this,
+                EncoderContext.builder().build());
+        writer.flush();
+
+        return writer.toString();
     }
 
     // Any is represented by the empty json schema {}, so all fields
