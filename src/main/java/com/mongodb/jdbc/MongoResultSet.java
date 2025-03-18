@@ -49,6 +49,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
@@ -82,21 +83,26 @@ public class MongoResultSet implements ResultSet {
     protected boolean wasNull = false;
     protected MongoResultSetMetaData rsMetaData;
     protected MongoLogger logger;
+    // Boolean marker true if the JSON representation is Extended JSON. False otherwise.
     protected boolean extJsonMode;
     protected UuidRepresentation uuidRepresentation;
+
+    private MongoJsonSchema jsonSchema;
 
     /**
      * Constructor for a MongoResultset tied to a connection and statement.
      *
      * @param statement The statement this resultset is related to.
      * @param cursor The resultset cursor.
-     * @param schema The resultset schema.
+     * @param resultSetchema The resultset schema.
+     * @param selectOrder The select list order.
+     * @param extJsonMode The JSON mode.
      * @throws SQLException
      */
     public MongoResultSet(
             MongoStatement statement,
             MongoCursor<BsonDocument> cursor,
-            MongoJsonSchema schema,
+            MongoJsonSchema resultSetchema,
             List<List<String>> selectOrder,
             boolean extJsonMode,
             UuidRepresentation uuidRepresentation)
@@ -108,11 +114,12 @@ public class MongoResultSet implements ResultSet {
                         this.getClass().getCanonicalName(),
                         statement.getParentLogger(),
                         statement.getStatementId());
+        logger.setQueryDiagnostics(statement.getQueryDiagnostics());
         this.extJsonMode = extJsonMode;
         this.uuidRepresentation = uuidRepresentation;
         setUpResultset(
                 cursor,
-                schema,
+                resultSetchema,
                 selectOrder,
                 true,
                 statement.getParentLogger(),
@@ -143,6 +150,7 @@ public class MongoResultSet implements ResultSet {
             Integer statementId)
             throws SQLException {
         Preconditions.checkNotNull(cursor);
+        this.jsonSchema = schema;
         // dateFormat is not thread safe, so we do not want to make it a static field.
         dateFormat.setTimeZone(UTC);
         // Only sort the columns alphabetically for SQL statement result sets and not for database metadata result sets.
@@ -153,6 +161,12 @@ public class MongoResultSet implements ResultSet {
         this.rsMetaData =
                 new MongoResultSetMetaData(
                         schema, selectOrder, sortFieldsAlphabetically, parentLogger, statementId);
+    }
+
+    public String getJsonSchema() throws SQLException {
+        checkClosed();
+
+        return this.jsonSchema.toString();
     }
 
     // This is only used for testing, and that is why it has package level access, and the
@@ -174,14 +188,26 @@ public class MongoResultSet implements ResultSet {
     @Override
     public boolean next() throws SQLException {
         checkClosed();
-
-        boolean result;
-        result = cursor.hasNext();
-        if (result) {
-            current = cursor.next();
-            ++rowNum;
+        try {
+            boolean result;
+            result = cursor.hasNext();
+            logger.log(Level.FINER, "cursor.hasNext()? " + String.valueOf(result));
+            if (result) {
+                logger.log(Level.FINEST, "Getting row " + (rowNum + 1));
+                long startTime = System.nanoTime();
+                current = cursor.next();
+                long endTime = System.nanoTime();
+                logger.log(
+                        Level.FINER,
+                        "Moved to next row in "
+                                + ((endTime - startTime) / 1000000d)
+                                + " milliseconds");
+                ++rowNum;
+            }
+            return result;
+        } catch (Exception e) {
+            throw new SQLException(e);
         }
-        return result;
     }
 
     @Override

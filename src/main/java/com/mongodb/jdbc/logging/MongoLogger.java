@@ -16,9 +16,14 @@
 
 package com.mongodb.jdbc.logging;
 
+import com.mongodb.jdbc.MongoJsonSchema;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
 
 public class MongoLogger {
     private static final String ENTRY_PREFIX = ">> ";
@@ -26,6 +31,7 @@ public class MongoLogger {
     private Logger logger;
     private Integer connectionId;
     private Integer statementId;
+    private QueryDiagnostics queryDiagnostics = new QueryDiagnostics();
 
     /**
      * Gets a logger, tied to a connection. Used for logging after a connection has been created.
@@ -110,6 +116,15 @@ public class MongoLogger {
 
     protected void logError(String sourceName, String msg, Throwable thrown) {
         if ((null != logger) && logger.isLoggable(Level.SEVERE)) {
+            if (thrown instanceof SQLException) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(msg);
+                sb.append("\n");
+                sb.append("SQL diagnostics: ");
+                sb.append(getQueryDiagnostics());
+                msg = sb.toString();
+            }
+
             logger.logp(
                     Level.SEVERE,
                     addConnectionStatementIdsToSourceName(sourceName),
@@ -216,5 +231,29 @@ public class MongoLogger {
         }
 
         return sourceName;
+    }
+
+    public QueryDiagnostics getQueryDiagnostics() {
+        return queryDiagnostics;
+    }
+
+    public void setQueryDiagnostics(QueryDiagnostics queryDiagnostics) {
+        this.queryDiagnostics = queryDiagnostics;
+    }
+
+    public void setResultSetSchema(MongoJsonSchema resultSetSchema) {
+        this.getQueryDiagnostics().setResultSetSchema(resultSetSchema);
+    }
+
+    public void setNamespacesSchema(BsonDocument namespacesSchema) {
+        this.getQueryDiagnostics().setNamespacesSchema(namespacesSchema);
+    }
+
+    public void setSqlQuery(String sql) {
+        this.getQueryDiagnostics().setSqlQuery(sql);
+    }
+
+    public void setPipeline(List<BsonDocument> pipeline) {
+        this.getQueryDiagnostics().setPipeline(new BsonArray(pipeline));
     }
 }
