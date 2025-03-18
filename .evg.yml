@@ -67,8 +67,8 @@ buildvariants:
       - name: "test-adf-integration"
       # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
       # - name: "test-dc-integration"
-      - name: "test-dc-integration"
-      - name: "test-x509-integration"
+      # SQL-2544: Merge jdbc EAP branch into master
+      # - name: "test-x509-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
