@@ -16,31 +16,29 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_NO_INDENT_SETTINGS;
+
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.utils.BsonUtils;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class GetMongosqlTranslateVersionResult extends BaseResult {
+public class GetMongosqlTranslateVersionResult {
 
     private static final Codec<GetMongosqlTranslateVersionResult> CODEC =
-            MongoDriver.REGISTRY.get(GetMongosqlTranslateVersionResult.class);
+            MongoDriver.getCodecRegistry().get(GetMongosqlTranslateVersionResult.class);
 
     @BsonProperty("version")
     public final String version;
 
     @BsonCreator
-    public GetMongosqlTranslateVersionResult(
-            @BsonProperty("version") String version,
-            @BsonProperty("error") String error,
-            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
-        super(error, errorIsInternal);
+    public GetMongosqlTranslateVersionResult(@BsonProperty("version") String version) {
         this.version = version;
     }
 
     @Override
     public String toString() {
-        return BsonUtils.toString(CODEC, this);
+        return BsonUtils.toString(CODEC, this, JSON_WRITER_NO_INDENT_SETTINGS);
     }
 }

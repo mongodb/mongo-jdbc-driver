@@ -79,7 +79,8 @@ class MongoResultSetTest extends MongoMock {
         try {
             schema = generateMongoJsonSchema();
             resultSetMetaData =
-                    new MongoResultSetMetaData(schema, null, true, mongoConnection.getLogger(), 0);
+                    new MongoResultSetMetaData(
+                            schema, null, true, mongoConnection.getLogger(), 0, null);
             mongoStatement = new MongoStatement(mongoConnection, "test");
         } catch (SQLException e) {
             throw new RuntimeException(e);

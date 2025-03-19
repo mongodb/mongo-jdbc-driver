@@ -158,7 +158,7 @@ public class MongoDriver implements Driver {
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     protected static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
-    public static final CodecRegistry REGISTRY =
+    protected static final CodecRegistry REGISTRY =
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
@@ -189,6 +189,10 @@ public class MongoDriver implements Driver {
                 p.destroy();
             }
         }
+    }
+
+    public static CodecRegistry getCodecRegistry() {
+        return REGISTRY;
     }
 
     static {

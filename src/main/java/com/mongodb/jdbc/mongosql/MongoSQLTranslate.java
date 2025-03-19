@@ -42,7 +42,8 @@ public class MongoSQLTranslate {
 
     public static final String SQL_SCHEMAS_COLLECTION = "__sql_schemas";
     private final MongoLogger logger;
-
+    public static final String ERROR_KEY = "error";
+    public static final String IS_INTERNAL_ERROR_KEY = "error_is_internal";
     /**
      * Native method to send commands via JNI. pub extern "C" fn
      * Java_com_mongodb_jdbc_mongosql_MongoSQLTranslate_runCommand( env: JNIEnv, _class: JClass,
@@ -64,30 +65,27 @@ public class MongoSQLTranslate {
      *     deserialization.
      * @throws MongoSQLException If an error occurs during command execution.
      */
-    public <T extends BaseResult> T runCommand(BsonDocument command, Class<T> responseClass)
+    public <T> T runCommand(BsonDocument command, Class<T> responseClass)
             throws MongoSerializationException, MongoSQLException {
 
         byte[] commandBytes = BsonUtils.serialize(command);
         byte[] responseBytes = runCommand(commandBytes);
         BsonDocument responseDoc = BsonUtils.deserialize(responseBytes);
 
-        BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
-        T result =
-                MongoDriver.REGISTRY
-                        .get(responseClass)
-                        .decode(reader, DecoderContext.builder().build());
-
-        if (result.hasError()) {
+        BsonValue error = responseDoc.get(ERROR_KEY);
+        if (error != null) {
             String errorMessage =
                     String.format(
-                            result.getErrorIsInternal()
+                            responseDoc.getBoolean(IS_INTERNAL_ERROR_KEY).getValue()
                                     ? "Internal error: %s"
                                     : "Error executing command: %s",
-                            result.getError());
+                            error.asString().getValue());
             throw new MongoSQLException(errorMessage);
         }
-
-        return result;
+        BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
+        return MongoDriver.getCodecRegistry()
+                .get(responseClass)
+                .decode(reader, DecoderContext.builder().build());
     }
 
     /**
@@ -351,7 +349,7 @@ public class MongoSQLTranslate {
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
         MongoJsonSchemaResult mongoJsonSchemaResult =
-                MongoDriver.REGISTRY
+                MongoDriver.getCodecRegistry()
                         .get(MongoJsonSchemaResult.class)
                         .decode(reader, DecoderContext.builder().build());
 
