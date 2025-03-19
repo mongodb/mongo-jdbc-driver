@@ -254,7 +254,7 @@ public class MongoStatement implements Statement {
         // Translate the SQL query
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, namespaces);
-        logger.log(Level.FINE, "Namespaces schema: " + catalogDoc);
+        logger.log(Level.FINE, "Query catalog: " + catalogDoc);
         logger.setNamespacesSchema(catalogDoc);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
         logger.setPipeline(translateResponse.pipeline);

@@ -246,7 +246,7 @@ public class MongoLogger {
     }
 
     public void setNamespacesSchema(BsonDocument namespacesSchema) {
-        this.getQueryDiagnostics().setNamespacesSchema(namespacesSchema);
+        this.getQueryDiagnostics().setQueryCatalog(namespacesSchema);
     }
 
     public void setSqlQuery(String sql) {

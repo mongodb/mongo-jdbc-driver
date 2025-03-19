@@ -31,7 +31,7 @@ public class QueryDiagnostics {
             MongoDriver.getCodecRegistry().get(QueryDiagnostics.class);
 
     @BsonProperty private String sqlQuery;
-    @BsonProperty private BsonDocument namespacesSchema;
+    @BsonProperty private BsonDocument queryCatalog;
     @BsonProperty private MongoJsonSchema resultSetSchema;
     @BsonProperty private BsonArray pipeline;
 
@@ -39,8 +39,8 @@ public class QueryDiagnostics {
         this.sqlQuery = sqlQuery;
     }
 
-    public void setNamespacesSchema(BsonDocument namespacesSchema) {
-        this.namespacesSchema = namespacesSchema;
+    public void setQueryCatalog(BsonDocument queryCatalog) {
+        this.queryCatalog = queryCatalog;
     }
 
     public void setResultSetSchema(MongoJsonSchema resultSetSchema) {
@@ -55,8 +55,8 @@ public class QueryDiagnostics {
         return sqlQuery;
     }
 
-    public BsonDocument getNamespacesSchema() {
-        return namespacesSchema;
+    public BsonDocument getQueryCatalog() {
+        return queryCatalog;
     }
 
     public MongoJsonSchema getResultSetSchema() {
