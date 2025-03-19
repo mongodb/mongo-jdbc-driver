@@ -160,13 +160,12 @@ public class MongoResultSet implements ResultSet {
 
         this.rsMetaData =
                 new MongoResultSetMetaData(
-                        schema, selectOrder, sortFieldsAlphabetically, parentLogger, statementId);
-    }
-
-    public String getJsonSchema() throws SQLException {
-        checkClosed();
-
-        return this.jsonSchema.toString();
+                        schema,
+                        selectOrder,
+                        sortFieldsAlphabetically,
+                        parentLogger,
+                        statementId,
+                        logger.getQueryDiagnostics());
     }
 
     // This is only used for testing, and that is why it has package level access, and the

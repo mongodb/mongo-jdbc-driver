@@ -99,8 +99,6 @@ allprojects {
         implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: lang3Version
         implementation group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
-
-
         ajc "org.aspectj:aspectjtools:$aspectjVersion"
         implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: bouncyCastleVersion
         implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: bouncyCastleVersion
