@@ -14,3 +14,9 @@ local_adf
 
 # Ignore generated tests
 resources/generated_test
+
+# Ignore mongosqltranslate libraries
+src/main/resources/**/libmongosqltranslate.*
+src/main/resources/**/mongosqltranslate.*
+.library_cache/
+
