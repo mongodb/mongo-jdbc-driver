@@ -95,42 +95,6 @@ buildvariants:
 tasks:
   - name: "build"
     commands:
-      # fetch mongosqltranslate libraries for each platform before building
-      # linux arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # linux x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # macos arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # macos x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # windows
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "win"
-          lib_prefix: ""
-          ext: "dll"
       - func: "build jdbc driver"
       - func: "upload jar file"
 
@@ -149,42 +113,6 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
-      # fetch mongosqltranslate libraries for each platform before building
-      # linux arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # linux x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "linux"
-          lib_prefix: "lib"
-          ext: "so"
-      # macos arm
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "arm"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # macos x86
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "macos"
-          lib_prefix: "lib"
-          ext: "dylib"
-      # windows
-      - func: "fetch libmongosqltranslate"
-        vars:
-          arch: "x86_64"
-          platform: "win"
-          lib_prefix: ""
-          ext: "dll"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
@@ -555,21 +483,12 @@ functions:
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
-  "fetch libmongosqltranslate":
-    - command: s3.get
-      params:
-        working_dir: mongo-jdbc-driver
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: mongo-jdbc-driver/src/main/resources/${arch}/${platform}/${lib_prefix}mongosqltranslate.${ext}
-        remote_file: mongosqltranslate/${lib_prefix}mongosqltranslate-v${LIBMONGOSQLTRANSLATE_VER}-${platform}-${arch}.${ext}
-        bucket: translators-connectors-releases
-
   "build jdbc driver":
     command: shell.exec
     type: test
     params:
       shell: bash
+      add_expansions_to_env: true
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}

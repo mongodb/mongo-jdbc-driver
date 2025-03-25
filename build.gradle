@@ -279,6 +279,110 @@ def getAbbreviatedGitVersion() {
     out.toString().substring(1).trim()
 }
 
+// Determines the version of libmongosqltranslate to use based on the following priority:
+// Command line property 'libVersion' ie -PlibmongosqltranslateVersion=1.2.3 for manual testing
+// If build is triggered by a tag, check that LIBMONGOSQLTRANSLATE_VER environment variable is set and use that value
+// Otherwise default to "snapshot" version
+def getLibMongosqlTranslateVersion() {
+    if (project.hasProperty('libmongosqltranslateVersion')) {
+        logger.lifecycle("Using manually specified libVersion: ${project.property('libmongosqltranslateVersion')}")
+        return project.property('libmongosqltranslateVersion')
+    }
+    if (project.hasProperty('isTagTriggered')) {
+        if (System.getenv('LIBMONGOSQLTRANSLATE_VER')) {
+            logger.lifecycle("Using version from environment: ${System.getenv('LIBMONGOSQLTRANSLATE_VER')}")
+            return System.getenv('LIBMONGOSQLTRANSLATE_VER')
+        } else {
+            throw new GradleException("Build is tag-triggered but LIBMONGOSQLTRANSLATE_VER " +
+                    "environment variable is not set. This is required for tag-triggered builds.")
+        }
+    }
+    logger.lifecycle("Using snapshot version")
+    return "snapshot"
+}
+
+def libraryCache = new File("${project.rootDir}/.library_cache")
+
+task downloadLibMongosqlTranslate {
+    def libraryPlatforms = [
+            [platform: 'linux', arch: 'arm', libPrefix: 'lib', ext: 'so'],
+            [platform: 'linux', arch: 'x86_64', libPrefix: 'lib', ext: 'so'],
+            [platform: 'macos', arch: 'arm', libPrefix: 'lib', ext: 'dylib'],
+            [platform: 'macos', arch: 'x86_64', libPrefix: 'lib', ext: 'dylib'],
+            [platform: 'win', arch: 'x86_64', libPrefix: '', ext: 'dll']
+    ]
+    description = 'Downloads mongosqltranslate libraries for all platforms'
+    group = 'Build Setup'
+
+    // Read the force-update flag from the command line `-PupdateLibs=true`
+    def updateLibs = project.hasProperty('updateLibs') ? project.property('updateLibs').toBoolean() : false
+    doLast {
+        def libVersion = getLibMongosqlTranslateVersion()
+        logger.lifecycle("Using libmongosqltranslate version: ${libVersion}")
+
+        libraryCache.mkdirs()
+
+        libraryPlatforms.each { platform ->
+            def libraryFileName = "${platform.libPrefix}mongosqltranslate.${platform.ext}"
+            def s3FileName =
+                    "${platform.libPrefix}mongosqltranslate-v${libVersion}-${platform.platform}-${platform.arch}.${platform.ext}"
+            def s3Url = "https://translators-connectors-releases.s3.amazonaws.com/mongosqltranslate/${s3FileName}"
+
+            def cacheFile = new File(libraryCache, s3FileName)
+            def resourceDir = new File("${project.rootDir}/src/main/resources/${platform.arch}/${platform.platform}")
+            resourceDir.mkdirs()
+
+            def destinationFile = new File(resourceDir, libraryFileName)
+
+            // Skip the download if the force-update flag is not set and the library already exists in library cache
+            if (!updateLibs && cacheFile.exists() && cacheFile.length() > 0) {
+                logger.lifecycle("Using cached version of ${s3FileName} for ${platform.platform}-${platform.arch}")
+                destinationFile.bytes = cacheFile.bytes
+                return
+            }
+
+            try {
+                logger.lifecycle("Downloading ${s3Url}...")
+
+                def connection = new URL(s3Url).openConnection()
+                connection.connectTimeout = 30000
+                connection.readTimeout = 30000
+
+                cacheFile.withOutputStream { outputStream ->
+                    connection.getInputStream().withCloseable { inputStream ->
+                        outputStream << inputStream
+                    }
+                }
+
+                // Verify we downloaded actual content
+                if (cacheFile.length() == 0) {
+                    throw new IOException("Downloaded file is empty")
+                }
+
+                destinationFile.bytes = cacheFile.bytes
+                logger.lifecycle("Successfully downloaded ${s3FileName} for ${platform.platform}-${platform.arch}")
+
+            } catch (Exception e) {
+                logger.warn("Could not download ${s3FileName}: ${e.message}")
+
+                if (cacheFile.exists() && cacheFile.length() > 0) {
+                    logger.lifecycle("Using cached version from ${cacheFile.path}")
+                    destinationFile.bytes = cacheFile.bytes
+                } else {
+                    logger.error("ERROR: Could not download ${s3FileName} and no valid cached version available.")
+                    logger.error("S3 URL attempted: ${s3Url}")
+                    throw new GradleException("Failed to download " + s3FileName +
+                            " and no valid cached version exists. Build cannot continue.")
+                }
+            }
+        }
+    }
+}
+
+tasks.named('compileJava').configure {
+    dependsOn tasks.named('downloadLibMongosqlTranslate')
+}
+
 tasks.register('runMongoSQLTranslateLibTest', Test) {
     description = 'Runs MongoSQLTranslateLibTest'
     group = 'verification'
