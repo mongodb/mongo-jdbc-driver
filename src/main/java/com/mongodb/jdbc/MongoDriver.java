@@ -131,7 +131,7 @@ public class MongoDriver implements Driver {
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
-    static CodecRegistry registry =
+    protected static final CodecRegistry REGISTRY =
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
@@ -196,7 +196,7 @@ public class MongoDriver implements Driver {
     }
 
     public static CodecRegistry getCodecRegistry() {
-        return registry;
+        return REGISTRY;
     }
 
     // Resolves the potential paths where the MongoSQL Translate library are expected be located.

@@ -18,6 +18,7 @@ package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.BsonTypeInfo.*;
 
+import com.mongodb.jdbc.utils.BsonUtils;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -29,8 +30,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.BsonValue;
@@ -38,8 +37,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 public class MongoJsonSchema {
-    private static final Codec<JsonSchema> JSON_SCHEMA_CODEC =
-            MongoDriver.registry.get(JsonSchema.class);
+
+    private static final Codec<MongoJsonSchema> CODEC =
+            MongoDriver.getCodecRegistry().get(MongoJsonSchema.class);
 
     public static class ScalarProperties {
         protected String name;
@@ -421,7 +421,7 @@ public class MongoJsonSchema {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        return BsonUtils.toString(CODEC, this);
     }
 
     // Any is represented by the empty json schema {}, so all fields

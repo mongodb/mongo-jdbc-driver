@@ -18,6 +18,7 @@ package com.mongodb.jdbc;
 
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.QueryDiagnostics;
 import java.math.BigDecimal;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -79,13 +80,19 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
             List<List<String>> selectOrder,
             boolean sortFieldsAlphabetically,
             MongoLogger parentLogger,
-            Integer statementId)
+            Integer statementId,
+            QueryDiagnostics queryDiagnostics)
             throws SQLException {
         this.logger =
                 (statementId == null)
                         ? new MongoLogger(this.getClass().getCanonicalName(), parentLogger)
                         : new MongoLogger(
                                 this.getClass().getCanonicalName(), parentLogger, statementId);
+        if (queryDiagnostics != null) {
+            logger.setQueryDiagnostics(queryDiagnostics);
+        } else {
+            logger.setResultSetSchema(schema);
+        }
 
         assertDatasourceSchema(schema);
 
