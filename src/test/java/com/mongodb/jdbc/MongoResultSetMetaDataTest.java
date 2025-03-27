@@ -40,7 +40,12 @@ class MongoResultSetMetaDataTest extends MongoMock {
         try {
             resultSetMetaData =
                     new MongoResultSetMetaData(
-                            generateMongoJsonSchema(), null, true, mongoConnection.getLogger(), 0);
+                            generateMongoJsonSchema(),
+                            null,
+                            true,
+                            mongoConnection.getLogger(),
+                            0,
+                            null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -122,12 +127,14 @@ class MongoResultSetMetaDataTest extends MongoMock {
 
         MongoJsonSchema schema = generateMongoJsonSchema();
         MongoResultSetMetaData unsortedMedata =
-                new MongoResultSetMetaData(schema, null, false, mongoConnection.getLogger(), 0);
+                new MongoResultSetMetaData(
+                        schema, null, false, mongoConnection.getLogger(), 0, null);
         MongoResultSetMetaData sortedMedata =
-                new MongoResultSetMetaData(schema, null, true, mongoConnection.getLogger(), 0);
+                new MongoResultSetMetaData(
+                        schema, null, true, mongoConnection.getLogger(), 0, null);
         MongoResultSetMetaData selectOrderedMetadata =
                 new MongoResultSetMetaData(
-                        schema, selectOrder, false, mongoConnection.getLogger(), 0);
+                        schema, selectOrder, false, mongoConnection.getLogger(), 0, null);
 
         assertEquals(
                 expected_original_columns.length,

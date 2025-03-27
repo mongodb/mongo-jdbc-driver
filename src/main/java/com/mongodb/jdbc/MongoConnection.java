@@ -269,7 +269,7 @@ public class MongoConnection implements Connection {
         BuildInfo buildInfoRes =
                 mongoClient
                         .getDatabase("admin")
-                        .withCodecRegistry(MongoDriver.registry)
+                        .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(buildInfoCmd, BuildInfo.class);
 
         // if "ok" is not 1, then the target type could not be determined.

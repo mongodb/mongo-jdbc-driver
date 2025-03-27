@@ -24,12 +24,12 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.jdbc.BsonUtils;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoJsonSchemaResult;
 import com.mongodb.jdbc.MongoSerializationException;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.utils.BsonUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,21 +37,21 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.bson.*;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
 @AutoLoggable
 public class MongoSQLTranslate {
     public static final String SQL_SCHEMAS_COLLECTION = "__sql_schemas";
     private final MongoLogger logger;
-    private final CodecRegistry pojoCodecRegistry;
 
     /** Native method to send commands via JNI. */
     public native byte[] runCommand(byte[] command, int length);
 
+    public static final String ERROR_KEY = "error";
+    public static final String IS_INTERNAL_ERROR_KEY = "error_is_internal";
+
     public MongoSQLTranslate(MongoLogger logger) {
         this.logger = logger;
-        this.pojoCodecRegistry = MongoDriver.getCodecRegistry();
     }
 
     /**
@@ -64,7 +64,7 @@ public class MongoSQLTranslate {
      *     deserialization.
      * @throws MongoSQLException If an error occurs during command execution.
      */
-    public <T extends BaseResult> T runCommand(BsonDocument command, Class<T> responseClass)
+    public <T> T runCommand(BsonDocument command, Class<T> responseClass)
             throws MongoSerializationException, MongoSQLException {
 
         byte[] commandBytes = BsonUtils.serialize(command);
@@ -72,20 +72,20 @@ public class MongoSQLTranslate {
         BsonDocument responseDoc = BsonUtils.deserialize(responseBytes);
 
         BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
-        T result =
-                pojoCodecRegistry
-                        .get(responseClass)
-                        .decode(reader, DecoderContext.builder().build());
-
-        if (result.hasError()) {
+        BsonValue error = responseDoc.get(ERROR_KEY);
+        if (error != null) {
             String errorMessage =
                     String.format(
-                            "Error executing command: %s. Error is internal: %s",
-                            result.getError(), result.getErrorIsInternal());
+                            responseDoc.getBoolean(IS_INTERNAL_ERROR_KEY).getValue()
+                                    ? "Internal error: %s"
+                                    : "Error executing command: %s",
+                            error.asString().getValue());
             throw new MongoSQLException(errorMessage);
         }
 
-        return result;
+        return MongoDriver.getCodecRegistry()
+                .get(responseClass)
+                .decode(reader, DecoderContext.builder().build());
     }
 
     /**
@@ -323,11 +323,8 @@ public class MongoSQLTranslate {
         }
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
-        MongoJsonSchemaResult mongoJsonSchemaResult =
-                pojoCodecRegistry
-                        .get(MongoJsonSchemaResult.class)
-                        .decode(reader, DecoderContext.builder().build());
-
-        return mongoJsonSchemaResult;
+        return MongoDriver.getCodecRegistry()
+                .get(MongoJsonSchemaResult.class)
+                .decode(reader, DecoderContext.builder().build());
     }
 }

@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc;
+package com.mongodb.jdbc.utils;
 
+import com.mongodb.jdbc.MongoSerializationException;
+import com.mongodb.jdbc.NoCheckStateJsonWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
-import org.bson.BsonBinaryReader;
-import org.bson.BsonBinaryWriter;
-import org.bson.BsonDocument;
+import org.bson.*;
 import org.bson.codecs.*;
 import org.bson.io.BasicOutputBuffer;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriter;
+import org.bson.json.JsonWriterSettings;
 
 /** Utility class for BSON serialization and deserialization. */
 public class BsonUtils {
+    public static final JsonWriterSettings JSON_WRITER_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(true).build();
 
-    private static final DocumentCodec DOCUMENT_CODEC = new DocumentCodec();
+    public static final JsonWriterSettings JSON_WRITER_NO_INDENT_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(false).build();
 
     /**
      * Serializes a BsonDocument into a BSON byte array.
@@ -64,5 +72,30 @@ public class BsonUtils {
         } catch (RuntimeException e) {
             throw new MongoSerializationException("Failed to deserialize BSON.", e);
         }
+    }
+
+    public static <T> String toString(Codec<T> codec, T val, JsonWriterSettings settings) {
+        try (StringWriter writer = new StringWriter();
+                JsonWriter jsonWriter = new NoCheckStateJsonWriter(writer, settings)) {
+            codec.encode(jsonWriter, val, EncoderContext.builder().build());
+            writer.flush();
+
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> String toString(Codec<T> codec, T val) {
+        return toString(codec, val, JSON_WRITER_SETTINGS);
+    }
+
+    public static <T> BsonDocument toBsonDocument(Codec<T> codec, T val) {
+        BsonDocument doc = new BsonDocument();
+        try (BsonDocumentWriter writer = new BsonDocumentWriter(doc); ) {
+            codec.encode(writer, val, EncoderContext.builder().build());
+            writer.flush();
+        }
+        return doc;
     }
 }

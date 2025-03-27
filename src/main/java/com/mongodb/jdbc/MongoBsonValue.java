@@ -42,6 +42,8 @@ import org.bson.json.JsonWriterSettings;
 public class MongoBsonValue {
     private JsonWriterSettings JSON_WRITER_SETTINGS;
     static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
+    static final BsonValueCodec CODEC = new BsonValueCodec();
+
     private final UuidRepresentation uuidRepresentation;
     private final boolean extJsonMode;
 
@@ -164,9 +166,8 @@ public class MongoBsonValue {
     }
 
     private String toExtendedJson(BsonValue v) {
-        BsonValueCodec c = new BsonValueCodec();
         StringWriter w = new StringWriter();
-        c.encode(new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS), v, ENCODER_CONTEXT);
+        CODEC.encode(new NoCheckStateJsonWriter(w, JSON_WRITER_SETTINGS), v, ENCODER_CONTEXT);
         w.flush();
         return w.toString();
     }
