@@ -29,7 +29,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 public class TranslateResult extends BaseResult {
 
     private static final Codec<TranslateResult> CODEC =
-            MongoDriver.REGISTRY.get(TranslateResult.class);
+            MongoDriver.getCodecRegistry().get(TranslateResult.class);
 
     public final String targetDb;
     public final String targetCollection;

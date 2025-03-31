@@ -23,6 +23,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.logging.QueryDiagnostics;
 import com.mongodb.jdbc.mongosql.GetNamespacesResult;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
@@ -75,6 +76,10 @@ public class MongoStatement implements Statement {
 
     protected int getStatementId() {
         return statementId;
+    }
+
+    protected QueryDiagnostics getQueryDiagnostics() {
+        return logger.getQueryDiagnostics();
     }
 
     protected BsonDocument constructQueryDocument(String sql) {

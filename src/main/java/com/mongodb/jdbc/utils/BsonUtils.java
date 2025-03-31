@@ -17,6 +17,7 @@
 package com.mongodb.jdbc.utils;
 
 import com.mongodb.jdbc.MongoSerializationException;
+import com.mongodb.jdbc.NoCheckStateJsonWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -34,6 +35,9 @@ import org.bson.json.JsonWriterSettings;
 public class BsonUtils {
     public static final JsonWriterSettings JSON_WRITER_SETTINGS =
             JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(true).build();
+
+    public static final JsonWriterSettings JSON_WRITER_NO_INDENT_SETTINGS =
+            JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).indent(false).build();
 
     /**
      * Serializes a BsonDocument into a BSON byte array.
@@ -73,9 +77,9 @@ public class BsonUtils {
         }
     }
 
-    public static <T> String toString(Codec<T> codec, T val) {
+    public static <T> String toString(Codec<T> codec, T val, JsonWriterSettings settings) {
         try (StringWriter writer = new StringWriter();
-                JsonWriter jsonWriter = new JsonWriter(writer, JSON_WRITER_SETTINGS)) {
+                JsonWriter jsonWriter = new NoCheckStateJsonWriter(writer, settings)) {
             codec.encode(jsonWriter, val, EncoderContext.builder().build());
             writer.flush();
 
@@ -83,6 +87,10 @@ public class BsonUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static <T> String toString(Codec<T> codec, T val) {
+        return toString(codec, val, JSON_WRITER_SETTINGS);
     }
 
     public static <T> BsonDocument toBsonDocument(Codec<T> codec, T val) {

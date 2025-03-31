@@ -25,7 +25,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 public class CheckDriverVersionResult extends BaseResult {
 
     private static final Codec<CheckDriverVersionResult> CODEC =
-            MongoDriver.REGISTRY.get(CheckDriverVersionResult.class);
+            MongoDriver.getCodecRegistry().get(CheckDriverVersionResult.class);
 
     @BsonProperty("compatible")
     public final Boolean compatible;

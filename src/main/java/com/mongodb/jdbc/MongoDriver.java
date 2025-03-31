@@ -154,10 +154,12 @@ public class MongoDriver implements Driver {
     }
 
     private static boolean mongoSqlTranslateLibraryLoaded = false;
+    private static Exception mongoSqlTranslateLibraryLoadingError = null;
+    private static String mongoSqlTranslateLibraryPath = null;
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
-    static CodecRegistry registry =
+    protected static final CodecRegistry REGISTRY =
             fromProviders(
                     new BsonValueCodecProvider(),
                     new ValueCodecProvider(),
@@ -222,7 +224,7 @@ public class MongoDriver implements Driver {
     }
 
     public static CodecRegistry getCodecRegistry() {
-        return registry;
+        return REGISTRY;
     }
 
     // Resolves the potential paths where the MongoSQL Translate library are expected be located.
@@ -248,6 +250,16 @@ public class MongoDriver implements Driver {
         Path driverPath = Paths.get(url.toURI());
         Path driverDir = driverPath.getParent();
         return driverDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
+    }
+
+    public static boolean isEapBuild(String version) {
+        // Return false if the version string is null or empty
+        if (version == null || version.isEmpty()) {
+            return false;
+        }
+
+        // Our EAP builds contain `libv` in the tag
+        return version.contains("libv");
     }
 
     @Override
@@ -515,6 +527,14 @@ public class MongoDriver implements Driver {
         return mongoSqlTranslateLibraryLoaded;
     }
 
+    public static String getMongoSqlTranslateLibraryPath() {
+        return mongoSqlTranslateLibraryPath;
+    }
+
+    public static Exception getMongoSqlTranslateLibraryLoadError() {
+        return mongoSqlTranslateLibraryLoadingError;
+    }
+
     // removePrefix removes a prefix from a String.
     private static String removePrefix(String prefix, String s) {
         if (s != null && prefix != null && s.startsWith(prefix)) {
@@ -628,7 +648,6 @@ public class MongoDriver implements Driver {
                 throw new SQLException(e);
             }
         }
-
     }
 
     /**

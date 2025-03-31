@@ -26,7 +26,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 public class GetNamespacesResult extends BaseResult {
 
     private static final Codec<GetNamespacesResult> CODEC =
-            MongoDriver.REGISTRY.get(GetNamespacesResult.class);
+            MongoDriver.getCodecRegistry().get(GetNamespacesResult.class);
 
     @BsonProperty("namespaces")
     public final List<Namespace> namespaces;

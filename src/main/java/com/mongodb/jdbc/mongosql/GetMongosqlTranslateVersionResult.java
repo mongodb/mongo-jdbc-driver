@@ -25,7 +25,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 public class GetMongosqlTranslateVersionResult extends BaseResult {
 
     private static final Codec<GetMongosqlTranslateVersionResult> CODEC =
-            MongoDriver.REGISTRY.get(GetMongosqlTranslateVersionResult.class);
+            MongoDriver.getCodecRegistry().get(GetMongosqlTranslateVersionResult.class);
 
     @BsonProperty("version")
     public final String version;

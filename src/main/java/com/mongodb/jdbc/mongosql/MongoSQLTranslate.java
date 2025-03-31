@@ -73,7 +73,7 @@ public class MongoSQLTranslate {
 
         BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
         T result =
-                MongoDriver.REGISTRY
+                MongoDriver.getCodecRegistry()
                         .get(responseClass)
                         .decode(reader, DecoderContext.builder().build());
 
@@ -350,11 +350,8 @@ public class MongoSQLTranslate {
         }
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);
-        MongoJsonSchemaResult mongoJsonSchemaResult =
-                MongoDriver.REGISTRY
-                        .get(MongoJsonSchemaResult.class)
-                        .decode(reader, DecoderContext.builder().build());
-
-        return mongoJsonSchemaResult;
+        return MongoDriver.getCodecRegistry()
+                .get(MongoJsonSchemaResult.class)
+                .decode(reader, DecoderContext.builder().build());
     }
 }
