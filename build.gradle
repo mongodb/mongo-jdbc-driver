@@ -12,6 +12,8 @@ import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isTagTriggered')) {
     version = getAbbreviatedGitVersion()
+} else if (project.hasProperty('isEapBuild')){
+    version = getLatestEapTag()
 } else {
     version = getGitVersion()
 }
@@ -169,8 +171,9 @@ task integrationTest(type: Test) {
     description = 'Runs integration tests.'
     group = 'verification'
 
+    dependsOn tasks.named('jar')
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    classpath = sourceSets.integrationTest.runtimeClasspath + files(tasks.jar.archiveFile.get()) - sourceSets.main.output
     shouldRunAfter test
 }
 
@@ -269,6 +272,16 @@ def getGitVersion() {
         standardOutput = out
     }
     out.toString().substring(1).trim()
+}
+
+def getLatestEapTag() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'tag', '--list', '*libv*', '--sort=-creatordate'
+        standardOutput = stdout
+    }
+    def tags = stdout.toString().trim().readLines()
+    return tags ? tags[0].toString().substring(1).trim() : null
 }
 
 def getAbbreviatedGitVersion() {

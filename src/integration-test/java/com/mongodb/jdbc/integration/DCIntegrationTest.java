@@ -112,6 +112,7 @@ public class DCIntegrationTest {
                 Statement stmt = conn.createStatement(); ) {
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
+
             assert (rsmd.getColumnCount() == expectedColumnLabels.length);
             int i = 1;
             for (String expectColumnLabel : expectedColumnLabels) {

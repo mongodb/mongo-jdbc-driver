@@ -11,6 +11,11 @@ variables:
       role_arn: ${assume_role_arn}
       duration_seconds: 3600
   - &evg_bucket_config
+      aws_key: ${AWS_ACCESS_KEY_ID}
+      aws_secret: ${AWS_SECRET_ACCESS_KEY}
+      aws_session_token: ${AWS_SESSION_TOKEN}
+      bucket: evg-bucket-mongo-jdbc-driver
+  - &evg_bucket_config_eap
     aws_key: ${AWS_ACCESS_KEY_ID}
     aws_secret: ${AWS_SECRET_ACCESS_KEY}
     aws_session_token: ${AWS_SESSION_TOKEN}
@@ -66,8 +71,7 @@ buildvariants:
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
       - name: "test-dc-integration"
-      # SQL-2544: Merge jdbc EAP branch into master
-      # - name: "test-x509-integration"
+      - name: "test-x509-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -622,6 +626,11 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
+        
+        if [ "${BUILD_TYPE}" == "eap" ]; then
+          echo "Skipping DC integration test because this is not an EAP build (BUILD_TYPE=${BUILD_TYPE})."
+          exit 0 
+        fi 
 
         case ${_platform} in
         ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
@@ -644,7 +653,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew integrationTest \
+        ./gradlew integrationTest -PisEapBuild=true \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -699,6 +708,11 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
+        
+        if [ "${BUILD_TYPE}" != "eap" ]; then
+          echo "Skipping X509 integration test because this is not an EAP build (BUILD_TYPE=${BUILD_TYPE})."
+          exit 0 
+        fi 
 
         case ${_platform} in
         ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
@@ -727,7 +741,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew integrationTest \
+        ./gradlew integrationTest -PisEapBuild=true \
             -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -818,7 +832,7 @@ functions:
         script: |
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
-          export EAP_BUILD="false"
+          export BUILD_TYPE="snapshot"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
@@ -828,7 +842,10 @@ functions:
             
             if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
               echo "Detected EAP tag format."
-              export EAP_BUILD="true"
+              export BUILD_TYPE="eap"
+            else
+              echo "Setting standard build."
+              export BUILD_TYPE="standard"
             fi
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
@@ -876,7 +893,7 @@ functions:
           echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
           echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
           echo "SSDLC Directory = $SSDLC_DIR"
-          echo "EAP_BUILD = $EAP_BUILD"
+          echo "BUILD_TYPE = $BUILD_TYPE"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -893,7 +910,7 @@ functions:
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
-          EAP_BUILD: "$EAP_BUILD"
+          BUILD_TYPE: "$BUILD_TYPE"
           EOT
     - command: expansions.update
       params:
@@ -1213,9 +1230,12 @@ functions:
       params:
         silent: true
         <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
+        preserve_path: true
+        local_files_include_filter:
+          - "mongo-jdbc-driver/build/reports/tests/integrationTest/*"
+        # local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/
         content_type: text/html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/
         permissions: public-read
         display_name: "Integration Test Results"
 
@@ -1334,7 +1354,7 @@ functions:
             # A sanity check to see if expected files are indeed here
             ls -lrt build/libs
           
-            if [[ "${EAP_BUILD}" == "true" ]]; then
+            if [[ "${BUILD_TYPE}" == "eap" ]]; then
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
