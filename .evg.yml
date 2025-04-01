@@ -1037,8 +1037,8 @@ functions:
             export ADF_TEST_HOST=${adf_test_host}
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export SRV_TEST_HOST=${srv_test_host}
-            export SRV_TEST_USER=${srv_test_user}
-            export SRV_TEST_PWD=${srv_test_pwd}
+            export SRV_TEST_USER=${srv_test_user_dc}
+            export SRV_TEST_PWD=${srv_test_pwd_dc}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
             export LOCAL_MDB_PORT_COM=${local_mdb_port_com}
             export LOCAL_MDB_PORT_ENT=${local_mdb_port_ent}
