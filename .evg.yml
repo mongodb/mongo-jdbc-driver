@@ -665,7 +665,7 @@ functions:
       script: |
         ${PREPARE_SHELL}
         
-        if [ "${BUILD_TYPE}" == "eap" ]; then
+        if [ "${BUILD_TYPE}" != "eap" ]; then
           echo "Skipping DC integration test because this is not an EAP build (BUILD_TYPE=${BUILD_TYPE})."
           exit 0 
         fi 
