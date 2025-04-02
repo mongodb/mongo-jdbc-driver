@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -27,7 +26,7 @@ public class SmokeTest {
     // Connection and simple query to use for sanity check.
     private Map<Connection, String> connections = new HashMap<>();
 
-    public static Connection getBasicConnection(String url, String db)
+    public static Connection getADFInstanceConnection(String url, String db)
             throws SQLException {
         Properties p = new java.util.Properties();
         p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
@@ -36,12 +35,6 @@ public class SmokeTest {
         p.setProperty("ssl", "false");
         p.setProperty("database", db);
         return DriverManager.getConnection(URL, p);
-    }
-
-    @BeforeEach
-    public void setupConnection() throws SQLException {
-        connections.put(getBasicConnection(URL, DB), "SELECT * from class");
-        connections.put(getDirectRemoteInstanceConnection(), "Select * from accounts limit 5");
     }
 
     private Connection getDirectRemoteInstanceConnection() throws SQLException {
@@ -63,6 +56,35 @@ public class SmokeTest {
         p.setProperty("database", "test");
 
         return DriverManager.getConnection(fullURI, p);
+    }
+
+    @BeforeEach
+    public void setupConnection() throws SQLException {
+        String buildType = System.getenv("BUILD_TYPE");
+        boolean isEapBuild = "eap".equalsIgnoreCase(buildType);
+        System.out.println("Read environment variable BUILD_TYPE: '" + buildType + "', Detected EAP build: " + isEapBuild);
+
+        connections.put(getADFInstanceConnection(URL, DB), "SELECT * from class");
+
+        if (isEapBuild) {
+            try {
+                Connection directConnection = getDirectRemoteInstanceConnection();
+                connections.put(directConnection, "Select * from accounts limit 5");
+            } catch (SQLException e) {
+                System.err.println("Failed to connect to direct remote instance: " + e.getMessage());
+                throw e;
+            }
+        } else {
+            try {
+                Connection directConnection = getDirectRemoteInstanceConnection();
+                directConnection.close();
+                throw new AssertionError("Expected direct remote connection to fail for non-EAP build");
+            } catch (SQLException e) {
+                if (!"Connection failed.".equals(e.getMessage())) {
+                    throw new AssertionError("Expected 'Connection failed.' but got: " + e.getMessage());
+                }
+            }
+        }
     }
 
     @AfterEach

@@ -815,6 +815,8 @@ functions:
           
           #Smoke test are loading the "*-all.jar" from mongo-jdbc-driver/build/libs/
           ls -lrt build/libs/
+          echo "Build Type:"
+          echo ${BUILD_TYPE}
           
           ./resources/run_adf.sh start &&
           ./gradlew runDataLoader &&
@@ -1027,6 +1029,7 @@ functions:
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          BUILD_TYPE: "$BUILD_TYPE"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -1058,26 +1061,38 @@ functions:
             export SBOM_LITE="$SBOM_LITE"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
+            export BUILD_TYPE="$BUILD_TYPE"
           EOT
     - command: expansions.update
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc shadow jar":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          ${PREPARE_SHELL}
+          
+          mkdir -p mongo-jdbc-driver/build/libs
+          
+          # Determine which JAR file to download based on BUILD_TYPE
+          if [ "${BUILD_TYPE}" == "eap" ]; then
+            echo "Fetching EAP JAR file"
+            echo "JAR_FILENAME: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
+          else
+            echo "Fetching standard JAR file"
+            echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
+          fi
+    - command: expansions.update
+      params:
+        file: jdbc_jar_expansion.yml
     - *assume_role_cmd
     - command: s3.get
       params:
         <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}-all.jar
-
-  "fetch jdbc files":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+        local_file: mongo-jdbc-driver/build/libs/${JAR_FILENAME}
+        remote_file: ${S3_ARTIFACTS_DIR}/${JAR_FILENAME}
 
   "fetch source":
     - command: shell.exec
