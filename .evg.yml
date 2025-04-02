@@ -15,11 +15,34 @@ variables:
       aws_secret: ${AWS_SECRET_ACCESS_KEY}
       aws_session_token: ${AWS_SESSION_TOKEN}
       bucket: evg-bucket-mongo-jdbc-driver
-  - &evg_bucket_config_eap
-    aws_key: ${AWS_ACCESS_KEY_ID}
-    aws_secret: ${AWS_SECRET_ACCESS_KEY}
-    aws_session_token: ${AWS_SESSION_TOKEN}
-    bucket: mongo-jdbc-driver-eap
+  - &check_and_allow_for_eap_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" != "eap" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is not 'eap'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+           echo "BUILD_TYPE is 'eap'. Allowing task execution to continue."
+        fi
+  - &check_and_allow_for_non_eap_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" == "eap" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is 'eap'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+          echo "BUILD_TYPE is not 'eap'. Allowing task execution to continue."
+        fi
 
 pre:
   - func: "fetch source"
@@ -59,7 +82,8 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
-      - name: ssdlc-artifacts-snapshot
+      - name: ssdlc-artifacts-snapshot-standard
+      - name: ssdlc-artifacts-snapshot-eap
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -134,8 +158,6 @@ tasks:
       - func: "run smoke test"
 
   - name: "publish-maven"
-    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
-    disable: true
     git_tag_only: true
     depends_on:
       - name: "test-smoke"
@@ -143,6 +165,7 @@ tasks:
       - name: sbom
         variant: code-quality-and-correctness
     commands:
+      - func: "check and allow for non-eap build"
       - func: "publish maven"
       - func: "trace artifacts"
 
@@ -162,6 +185,7 @@ tasks:
       - name: "test-smoke"
         variant: "release"
     commands:
+      - *check_and_allow_for_eap_build
       - *assume_role_cmd
       - command: s3.get
         params:
@@ -206,13 +230,12 @@ tasks:
       - func: "check spotless"
 
   - name: download-center-update
-    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
-    disable: true
     git_tag_only: true
     depends_on:
       - name: "publish-maven"
         variant: "release"
     commands:
+      - func: "check and allow for non-eap build"
       - func: "update download center feed"
 
   - name: semgrep
@@ -223,16 +246,11 @@ tasks:
   - name: sbom
     commands:
       - func: "generate sbom"
-      # TODO: uncomment this before merging branch back into master, to ensure we still upload to silk from the main branch
       - func: "upload sbom"
       - func: "augment sbom"
-      # - func: "push SBOM Lite to Silk"
-      # - func: "pull augmented SBOM from Silk"
       - func: "scan sbom"
 
   - name: ssdlc-artifacts-release
-    # TODO: remove this before merging eap branch back into main branch, to allow download center to update.
-    disable: true
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
@@ -242,12 +260,13 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
+      - func: "check and allow for non-eap build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
 
-  - name: ssdlc-artifacts-snapshot
+  - name: ssdlc-artifacts-snapshot-standard
     run_on: ubuntu2204-small
     allow_for_git_tag: false
     depends_on:
@@ -257,13 +276,32 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      # TODO: undo these comments before merging back into main
-      # - func: "publish augmented SBOM"
-      # - func: "publish static code analysis"
+      - func: "check and allow for non-eap build"
+      - func: "publish augmented SBOM"
+      - func: "publish static code analysis"
       - func: "generate compliance report"
-      # - func: "publish compliance report"
+      - func: "publish compliance report"
+
+  - name: ssdlc-artifacts-snapshot-eap
+    run_on: ubuntu2204-small
+    allow_for_git_tag: false
+    depends_on:
+      - name: sbom
+        variant: code-quality-and-correctness
+      - name: semgrep
+        variant: code-quality-and-correctness
+    exec_timeout_secs: 300 # 5m
+    commands:
+      - func: "check and allow for eap build"
+      - func: "generate compliance report"
 
 functions:
+  "check and allow for non-eap build":
+    - *check_and_allow_for_non_eap_build
+
+  "check and allow for eap build":
+    - *check_and_allow_for_eap_build
+
   "augment sbom":
     - command: ec2.assume_role
       display_name: Assume IAM role with permissions to pull Kondukto API token
@@ -1146,44 +1184,6 @@ functions:
         permissions: public-read
         display_name: "Smoke Test Classes"
         visibility: none
-
-  "upload smoke test css":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver/smoketest/build/reports/tests/test/css/*.css
-        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/css/
-        content_type: text/css
-        permissions: public-read
-        display_name: "Smoke Test CSS"
-
-  "upload smoke test packages":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver/smoketest/build/reports/tests/test/packages/*.html
-        remote_file: ${S3_ARTIFACTS_DIR}/smoketest/packages/
-        content_type: text/html
-        permissions: public-read
-        display_name: "Smoke Test Packages"
-
-  "upload unit test index":
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        silent: true
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/reports/tests/test/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/test/index.html
-        content_type: text/html
-        permissions: public-read
-        display_name: "Unit Test Results"
 
   "upload unit test packages":
     - *assume_role_cmd
