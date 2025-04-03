@@ -24,9 +24,7 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.jdbc.MongoDriver;
-import com.mongodb.jdbc.MongoJsonSchemaResult;
-import com.mongodb.jdbc.MongoSerializationException;
+import com.mongodb.jdbc.*;
 import com.mongodb.jdbc.logging.AutoLoggable;
 import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.utils.BsonUtils;
@@ -41,14 +39,16 @@ import org.bson.conversions.Bson;
 
 @AutoLoggable
 public class MongoSQLTranslate {
+
     public static final String SQL_SCHEMAS_COLLECTION = "__sql_schemas";
     private final MongoLogger logger;
 
-    /** Native method to send commands via JNI. */
-    public native byte[] runCommand(byte[] command, int length);
-
-    public static final String ERROR_KEY = "error";
-    public static final String IS_INTERNAL_ERROR_KEY = "error_is_internal";
+    /**
+     * Native method to send commands via JNI. pub extern "C" fn
+     * Java_com_mongodb_jdbc_mongosql_MongoSQLTranslate_runCommand( env: JNIEnv, _class: JClass,
+     * command: JByteArray, ) -> jbyteArray
+     */
+    public native byte[] runCommand(byte[] command);
 
     public MongoSQLTranslate(MongoLogger logger) {
         this.logger = logger;
@@ -64,28 +64,30 @@ public class MongoSQLTranslate {
      *     deserialization.
      * @throws MongoSQLException If an error occurs during command execution.
      */
-    public <T> T runCommand(BsonDocument command, Class<T> responseClass)
+    public <T extends BaseResult> T runCommand(BsonDocument command, Class<T> responseClass)
             throws MongoSerializationException, MongoSQLException {
 
         byte[] commandBytes = BsonUtils.serialize(command);
-        byte[] responseBytes = runCommand(commandBytes, commandBytes.length);
+        byte[] responseBytes = runCommand(commandBytes);
         BsonDocument responseDoc = BsonUtils.deserialize(responseBytes);
 
         BsonDocumentReader reader = new BsonDocumentReader(responseDoc);
-        BsonValue error = responseDoc.get(ERROR_KEY);
-        if (error != null) {
+        T result =
+                MongoDriver.getCodecRegistry()
+                        .get(responseClass)
+                        .decode(reader, DecoderContext.builder().build());
+
+        if (result.hasError()) {
             String errorMessage =
                     String.format(
-                            responseDoc.getBoolean(IS_INTERNAL_ERROR_KEY).getValue()
+                            result.getErrorIsInternal()
                                     ? "Internal error: %s"
                                     : "Error executing command: %s",
-                            error.asString().getValue());
+                            result.getError());
             throw new MongoSQLException(errorMessage);
         }
 
-        return MongoDriver.getCodecRegistry()
-                .get(responseClass)
-                .decode(reader, DecoderContext.builder().build());
+        return result;
     }
 
     /**
@@ -183,12 +185,29 @@ public class MongoSQLTranslate {
         return runCommand(command, GetNamespacesResult.class);
     }
 
-    // Builds a catalog document containing the schema information for the specified collections.
+    /**
+     * Builds a catalog document containing the schema information for the specified collections.
+     *
+     * @param collections The list of collections to retrieve the schemas for.
+     * @param dbName The name of the database where the collections must be.
+     * @param mongoDatabase The current database for this connection.
+     * @return the schema catalog for all the specified collections. The catalog document format is
+     *     : { "dbName": { "collection1" : "Schema1", "collection2" : "Schema2", ... }}
+     */
     public BsonDocument buildCatalogDocument(
             MongoDatabase mongoDatabase,
             String dbName,
             List<GetNamespacesResult.Namespace> collections)
             throws MongoSQLException {
+
+        // There is no collection tied to the query
+        // For example "SELECT 1"
+        if (collections == null || collections.isEmpty()) {
+            MongoJsonSchema emptyObjectSchema = MongoJsonSchema.createEmptyObjectSchema();
+            // Create a catalog with an empty collection name and an empty schema
+            // {"test": {"": {}}}
+            return new BsonDocument(dbName, new BsonDocument("", new BsonDocument()));
+        }
 
         // Create an aggregation pipeline to fetch the schema information for the specified collections.
         // The pipeline uses $in to query all the specified collections and projects them into the desired format:
@@ -265,8 +284,14 @@ public class MongoSQLTranslate {
             foundResult = true;
         }
         if (!foundResult) {
-            throw new MongoSQLException(
-                    "No schema information returned for the requested collections.");
+            logger.log(
+                    Level.SEVERE,
+                    "No schema information found for any of the requested collections. Will use empty schemas. Hint: Generate schemas for your collections.");
+            BsonDocument schemas = new BsonDocument();
+            for (String collectionName : collectionNames) {
+                schemas.append(collectionName, new BsonDocument());
+            }
+            catalog = new BsonDocument(dbName, schemas);
         }
 
         // Check that all expected collections are present in the result
@@ -283,7 +308,6 @@ public class MongoSQLTranslate {
             throw new MongoSQLException(
                     "Could not retrieve schema for collections: " + missingCollections);
         }
-
         return catalog;
     }
 
@@ -319,7 +343,10 @@ public class MongoSQLTranslate {
         BsonDocument resultDoc = result.first();
 
         if (resultDoc == null) {
-            throw new MongoSQLException("No schema found for collection: " + collectionName);
+            logger.log(
+                    Level.SEVERE,
+                    "No schema information returned for the requested collections. Using an empty schema.");
+            resultDoc = new BsonDocument();
         }
 
         BsonDocumentReader reader = new BsonDocumentReader(resultDoc);

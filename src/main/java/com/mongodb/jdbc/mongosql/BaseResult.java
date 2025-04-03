@@ -16,31 +16,32 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import com.mongodb.jdbc.MongoDriver;
-import com.mongodb.jdbc.utils.BsonUtils;
-import org.bson.codecs.Codec;
-import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class GetMongosqlTranslateVersionResult extends BaseResult {
+/** Base class for result types, includes error handling. */
+public class BaseResult {
+    @BsonProperty("error")
+    protected final String error;
 
-    private static final Codec<GetMongosqlTranslateVersionResult> CODEC =
-            MongoDriver.getCodecRegistry().get(GetMongosqlTranslateVersionResult.class);
+    @BsonProperty("error_is_internal")
+    protected final Boolean errorIsInternal;
 
-    @BsonProperty("version")
-    public final String version;
-
-    @BsonCreator
-    public GetMongosqlTranslateVersionResult(
-            @BsonProperty("version") String version,
+    public BaseResult(
             @BsonProperty("error") String error,
             @BsonProperty("error_is_internal") Boolean errorIsInternal) {
-        super(error, errorIsInternal);
-        this.version = version;
+        this.error = (error != null) ? error : "";
+        this.errorIsInternal = (errorIsInternal != null) ? errorIsInternal : false;
     }
 
-    @Override
-    public String toString() {
-        return BsonUtils.toString(CODEC, this);
+    public boolean hasError() {
+        return !error.isEmpty();
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public Boolean getErrorIsInternal() {
+        return errorIsInternal;
     }
 }

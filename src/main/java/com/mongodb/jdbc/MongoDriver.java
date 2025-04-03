@@ -16,21 +16,19 @@
 
 package com.mongodb.jdbc;
 
-import static com.mongodb.AuthenticationMechanism.MONGODB_OIDC;
-import static com.mongodb.AuthenticationMechanism.MONGODB_X509;
+import static com.mongodb.AuthenticationMechanism.*;
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import com.mongodb.jdbc.utils.NativeLoader;
+import java.io.*;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -49,6 +47,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.ValueCodecProvider;
@@ -64,6 +64,30 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  * @since 1.0.0
  */
 public class MongoDriver implements Driver {
+
+    // The regular expression to validate and manipulate the mongoDB uri.
+    protected static final Pattern MONGODB_URI_PATTERN =
+            Pattern.compile(
+                    "(mongodb(?:\\+srv)?://)(?<uidpwd>(?:\\S+:)?\\S+@)?([^\\r\\n\\t\\f\\v ?]+(\\?(?<options>.*))?)");
+    // The regular expression to extract the authentication mechanism.
+    protected static final Pattern AUTH_MECH_TO_AUGMENT_PATTERN =
+            Pattern.compile(
+                    "authMechanism=(?<authMech>("
+                            + PLAIN.getMechanismName()
+                            + "|"
+                            + SCRAM_SHA_1.getMechanismName()
+                            + "|"
+                            + SCRAM_SHA_256.getMechanismName()
+                            + "|"
+                            + GSSAPI.getMechanismName()
+                            + "))");
+    //The list of mechanism for which a username and/or password must be present for the first uri parsing pass.
+    protected static final List<String> MECHANISMS_TO_AUGMENT =
+            Arrays.asList(
+                    PLAIN.getMechanismName(),
+                    SCRAM_SHA_1.getMechanismName(),
+                    SCRAM_SHA_256.getMechanismName(),
+                    GSSAPI.getMechanismName());
 
     /**
      * The list of connection options specific to the JDBC driver which can only be provided through
@@ -128,6 +152,8 @@ public class MongoDriver implements Driver {
     }
 
     private static boolean mongoSqlTranslateLibraryLoaded = false;
+    private static Exception mongoSqlTranslateLibraryLoadingError = null;
+    private static String mongoSqlTranslateLibraryPath = null;
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
     public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
@@ -138,6 +164,32 @@ public class MongoDriver implements Driver {
                     MongoClientSettings.getDefaultCodecRegistry(),
                     PojoCodecProvider.builder().automatic(true).build());
 
+    static String getAbbreviatedGitVersion() {
+        Process p = null;
+        try {
+            // Unit and integration tests can't rely on the manifest from the jar
+            // Get the git tag and use it as the version
+            String command = "git describe --abbrev=0";
+            p = Runtime.getRuntime().exec(command);
+            try (BufferedReader input =
+                    new BufferedReader(new InputStreamReader(p.getInputStream())); ) {
+                StringBuilder version_sb = new StringBuilder();
+                String line;
+                while ((line = input.readLine()) != null) {
+                    version_sb.append(line);
+                }
+                return version_sb.append("-SNAPSHOT").substring(1).trim();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    new SQLException("Internal error retrieving driver version"));
+        } finally {
+            if (p != null) {
+                p.destroy();
+            }
+        }
+    }
+
     static {
         MongoDriver unit = new MongoDriver();
         try {
@@ -145,83 +197,77 @@ public class MongoDriver implements Driver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        VERSION = unit.getClass().getPackage().getImplementationVersion();
-        if (VERSION != null) {
-            String[] verSp = VERSION.split("[.]");
-            if (verSp.length < 2) {
-                throw new RuntimeException(
-                        new SQLException(
-                                "version was not specified correctly, must contain at least major and minor parts"));
-            }
-            MAJOR_VERSION = Integer.parseInt(verSp[0]);
-            MINOR_VERSION = Integer.parseInt(verSp[1]);
+
+        String version = unit.getClass().getPackage().getImplementationVersion();
+        if (version == null) {
+            VERSION = getAbbreviatedGitVersion();
         } else {
-            // final requires this.
-            MAJOR_VERSION = 0;
-            MINOR_VERSION = 0;
+            VERSION = version;
         }
+        String[] verSp = VERSION.split("[.]");
+        if (verSp.length < 2) {
+            throw new RuntimeException(
+                    new SQLException(
+                            "version was not specified correctly, must contain at least major and minor parts"));
+        }
+        MAJOR_VERSION = Integer.parseInt(verSp[0]);
+        MINOR_VERSION = Integer.parseInt(verSp[1]);
+
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
         Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
 
-        initializeMongoSqlTranslateLibrary();
+        try {
+            loadMongoSqlTranslateLibrary();
+        }
+        // Store the error so that we can log it later.
+        catch (Exception e) {
+            mongoSqlTranslateLibraryLoadingError = e;
+        } catch (Error e) {
+            // Note, linkage issues are reported as linkage error and not as Exception. We need to track both.
+            mongoSqlTranslateLibraryLoadingError = new Exception(e);
+        }
     }
 
     /**
      * Attempts to initialize the MongoSQL Translate library from various paths and sets
      * mongoSqlTranslateLibraryLoaded to indicate success or failure.
      */
-    private static void initializeMongoSqlTranslateLibrary() {
-        try {
-            String[] libraryPaths = resolveLibraryPaths();
-            for (String path : libraryPaths) {
-                if (loadMongoSqlTranslateLibrary(path)) {
-                    mongoSqlTranslateLibraryLoaded = true;
-                    return;
-                }
-                mongoSqlTranslateLibraryLoaded = false;
+    private static void loadMongoSqlTranslateLibrary() throws IOException {
+        // The `MONGOSQL_TRANSLATE_PATH` environment variable allows specifying an alternative library path.
+        // This provides a backdoor mechanism to override the default library path of being colocated with the
+        // driver library and load the MongoSQL Translate library from a different location.
+        // Intended primarily for development and testing purposes.
+        String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
+        if (envPath != null && !envPath.isEmpty()) {
+            String absolutePath = Paths.get(envPath).toAbsolutePath().normalize().toString();
+            try {
+                System.load(absolutePath);
+                mongoSqlTranslateLibraryPath = absolutePath;
+                mongoSqlTranslateLibraryLoaded = true;
+                return;
+            } catch (Error e) {
+                // Store the error and then try loading the library from inside the jar next.
+                mongoSqlTranslateLibraryLoadingError = new Exception(e);
             }
-        } catch (Throwable t) {
-            mongoSqlTranslateLibraryLoaded = false;
         }
-    }
-
-    private static boolean loadMongoSqlTranslateLibrary(String libraryPath) {
-        try {
-            System.load(libraryPath);
-            return true;
-        } catch (Throwable t) {
-            return false;
-        }
+        mongoSqlTranslateLibraryPath = NativeLoader.loadLibraryFromJar(MONGOSQL_TRANSLATE_NAME);
+        mongoSqlTranslateLibraryLoaded = true;
     }
 
     public static CodecRegistry getCodecRegistry() {
         return REGISTRY;
     }
 
-    // Resolves the potential paths where the MongoSQL Translate library are expected be located.
-    private static String[] resolveLibraryPaths() throws Exception {
-        String libraryPath = getLibraryPath();
-
-        // The `MONGOSQL_TRANSLATE_PATH` environment variable allows specifying an alternative library path.
-        // This provides a backdoor mechanism to override the default library path of being colocated with the
-        // driver library and load the MongoSQL Translate library from a different location.
-        // Intended primarily for development and testing purposes.
-        String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
-
-        List<String> paths = new ArrayList<>();
-        paths.add(libraryPath);
-        if (envPath != null && !envPath.isEmpty()) {
-            paths.add(envPath);
+    public static boolean isEapBuild() {
+        String version = getVersion();
+        // Return false if the version string is null or empty
+        if (version == null || version.isEmpty()) {
+            return false;
         }
-        return paths.toArray(new String[0]);
-    }
 
-    private static String getLibraryPath() throws Exception {
-        URL url = MongoDriver.class.getProtectionDomain().getCodeSource().getLocation();
-        Path driverPath = Paths.get(url.toURI());
-        Path driverDir = driverPath.getParent();
-        return driverDir.resolve(System.mapLibraryName(MONGOSQL_TRANSLATE_NAME)).toString();
+        // Our EAP builds contain `libv` in the tag
+        return version.contains("libv");
     }
 
     @Override
@@ -489,6 +535,14 @@ public class MongoDriver implements Driver {
         return mongoSqlTranslateLibraryLoaded;
     }
 
+    public static String getMongoSqlTranslateLibraryPath() {
+        return mongoSqlTranslateLibraryPath;
+    }
+
+    public static Exception getMongoSqlTranslateLibraryLoadError() {
+        return mongoSqlTranslateLibraryLoadingError;
+    }
+
     // removePrefix removes a prefix from a String.
     private static String removePrefix(String prefix, String s) {
         if (s != null && prefix != null && s.startsWith(prefix)) {
@@ -600,6 +654,63 @@ public class MongoDriver implements Driver {
                 throw e;
             } else {
                 throw new SQLException(e);
+            }
+        }
+    }
+
+    /**
+     * Parse the original uri provided by the user. If the parsing failed, we try to augment the URI
+     * with the username and password provided in the properties. The reason behind it is that new
+     * ConnectionString(xx) validates the uri as is parses it and for some authentication mechanisms
+     * these info are mandatory, but the user can provide them separately to the driver.
+     *
+     * @param url The original uri as provided by the user.
+     * @param info The extra properties.
+     * @return the uri unchanged or augmented with uid and pwd from info.
+     * @throws IllegalArgumentException
+     * @throws MongoConfigurationException
+     */
+    protected static ConnectionString buildConnectionString(String url, Properties info)
+            throws IllegalArgumentException, MongoConfigurationException {
+        String actualURL = removePrefix(JDBC, url);
+        try {
+            return new ConnectionString(actualURL);
+        } catch (IllegalArgumentException ea) {
+            Matcher uri_matcher = MONGODB_URI_PATTERN.matcher(actualURL);
+            if (uri_matcher.find()) {
+                String username =
+                        info.getProperty(USER) != null
+                                ? URLEncoder.encode(info.getProperty(USER))
+                                : null;
+                String password =
+                        info.getProperty(PASSWORD) != null
+                                ? URLEncoder.encode(info.getProperty(PASSWORD))
+                                : null;
+                String options = uri_matcher.group("options");
+                if (uri_matcher.group("uidpwd") == null && username != null && options != null) {
+                    Matcher authMec_matcher = AUTH_MECH_TO_AUGMENT_PATTERN.matcher(options);
+                    if (authMec_matcher.find()) {
+                        String authMech = authMec_matcher.group("authMech");
+                        if (MECHANISMS_TO_AUGMENT.contains(authMech.toUpperCase())) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(uri_matcher.group(1)); // protocol
+                            sb.append(username);
+                            if (password != null) {
+                                sb.append(":");
+                                sb.append(password);
+                            }
+                            sb.append("@");
+                            sb.append(uri_matcher.group(3)); // host and options
+
+                            return new ConnectionString(sb.toString());
+                        }
+                    }
+                }
+                // The error is not related to a missing uid/pwd for the mechanisms which need them
+                throw ea;
+            } else {
+                // Credential information were present in the URI, this issue is not related to missing username and/or password
+                throw ea;
             }
         }
     }

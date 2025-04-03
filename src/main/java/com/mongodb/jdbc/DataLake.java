@@ -16,19 +16,19 @@
 
 package com.mongodb.jdbc;
 
-import static org.junit.jupiter.api.Assertions.fail;
+public class DataLake {
+    public String version;
+    public String mongoSQLVersion;
 
-class MongosqlLibTest {
-    private native String runCommand(String command);
-
-    public void testRunCommand() {
-        try {
-            String result = runCommand("SELECT * FROM test");
-            assert result.contains("mongosql translation test result success");
-        } catch (UnsatisfiedLinkError e) {
-            System.err.println("Error: Unable to link with native library");
-            e.printStackTrace();
-            fail("UnsatisfiedLinkError: Native library could not be loaded");
-        }
+    // Override toString for logging
+    @Override
+    public String toString() {
+        return "DataLake{"
+                + "version='"
+                + version
+                + '\''
+                + ", mongoSQLVersion="
+                + mongoSQLVersion
+                + '}';
     }
 }

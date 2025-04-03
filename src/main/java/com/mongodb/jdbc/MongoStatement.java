@@ -29,10 +29,9 @@ import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.mongosql.TranslateResult;
 import java.sql.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import org.apache.commons.text.StringEscapeUtils;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
@@ -51,8 +50,10 @@ public class MongoStatement implements Statement {
     protected boolean closeOnCompletion = false;
     private int fetchSize = 0;
     private int maxQuerySec = 0;
+    private String currentDBName;
     private MongoLogger logger;
     private int statementId;
+    String cursorName;
 
     public MongoStatement(MongoConnection conn, String databaseName) throws SQLException {
         Preconditions.checkNotNull(conn);
@@ -60,6 +61,7 @@ public class MongoStatement implements Statement {
         this.statementId = conn.getNextStatementId();
         logger = new MongoLogger(this.getClass().getCanonicalName(), conn.getLogger(), statementId);
         this.conn = conn;
+        currentDBName = databaseName;
 
         try {
             currentDB = conn.getDatabase(databaseName);
@@ -186,6 +188,7 @@ public class MongoStatement implements Statement {
     @Override
     public void setCursorName(String name) throws SQLException {
         checkClosed();
+        this.cursorName = name;
     }
 
     // ----------------------- Multiple Results --------------------------
@@ -214,15 +217,14 @@ public class MongoStatement implements Statement {
                 currentDB
                         .withCodecRegistry(MongoDriver.REGISTRY)
                         .runCommand(getSchemaCmd, MongoJsonSchemaResult.class);
-        MongoJsonSchema resultsetSchema = schemaResult.schema.mongoJsonSchema;
+        MongoJsonSchema schema = schemaResult.schema.mongoJsonSchema;
         List<List<String>> selectOrder = schemaResult.selectOrder;
-        logger.setResultSetSchema(resultsetSchema);
-        logger.log(Level.FINE, "ResultSet schema: " + resultsetSchema);
+
         resultSet =
                 new MongoResultSet(
                         this,
                         cursor,
-                        resultsetSchema,
+                        schema,
                         selectOrder,
                         conn.getExtJsonMode(),
                         conn.getUuidRepresentation());
@@ -235,12 +237,10 @@ public class MongoStatement implements Statement {
         MongoSQLTranslate mongoSQLTranslate = conn.getMongosqlTranslate();
         String dbName = currentDB.getName();
 
-        // Retrieve the namespaces for the query
         GetNamespacesResult namespaceResult =
                 mongoSQLTranslate.getNamespaces(currentDB.getName(), sql);
-
-        logger.log(Level.FINE, "Namespaces: " + namespaceResult);
         List<GetNamespacesResult.Namespace> namespaces = namespaceResult.namespaces;
+
         // Check to see if namespaces returned a database. It would only do this
         // if the query contains a qualified namespace. In this event, we must
         // switch currentDB to the query's database for proper operation.
@@ -249,16 +249,9 @@ public class MongoStatement implements Statement {
             currentDB = conn.getDatabase(dbName);
         }
 
-        // Translate the SQL query
         BsonDocument catalogDoc =
                 mongoSQLTranslate.buildCatalogDocument(currentDB, dbName, namespaces);
-        logger.log(Level.FINE, "Query catalog: " + catalogDoc);
-        logger.setNamespacesSchema(catalogDoc);
         TranslateResult translateResponse = mongoSQLTranslate.translate(sql, dbName, catalogDoc);
-        logger.setPipeline(translateResponse.pipeline);
-        logger.setResultSetSchema(translateResponse.resultSetSchema);
-        logger.log(Level.FINE, "Translate response: " + translateResponse);
-
         MongoIterable<BsonDocument> iterable = null;
         if (translateResponse.targetCollection != null
                 && !translateResponse.targetCollection.isEmpty()) {
@@ -296,29 +289,20 @@ public class MongoStatement implements Statement {
     public ResultSet executeQuery(String sql) throws SQLException {
         checkClosed();
         closeExistingResultSet();
-        logger.setSqlQuery(sql);
-        long startTime = System.nanoTime();
-        logger.log(Level.INFO, StringEscapeUtils.escapeJava(sql));
-        ResultSet result = null;
+
         try {
             if (conn.getClusterType() == MongoConnection.MongoClusterType.AtlasDataFederation) {
-                result = executeAtlasDataFederationQuery(sql);
+                return executeAtlasDataFederationQuery(sql);
             } else if (conn.getClusterType() == MongoConnection.MongoClusterType.Enterprise) {
-                result = executeDirectClusterQuery(sql);
+                return executeDirectClusterQuery(sql);
             } else {
                 throw new SQLException("Unsupported cluster type: " + conn.clusterType);
             }
         } catch (MongoExecutionTimeoutException e) {
             throw new SQLTimeoutException(e);
         } catch (MongoSQLException | MongoSerializationException e) {
-            throw new RuntimeException(e);
+            throw new SQLException(e);
         }
-        long endTime = System.nanoTime();
-        logger.log(
-                Level.FINE,
-                "Query executed in " + ((endTime - startTime) / 1000000000d) + " seconds");
-
-        return result;
     }
 
     @Override

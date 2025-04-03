@@ -652,8 +652,13 @@ public class MongoResultSet implements ResultSet {
 
     @Override
     public String getCursorName() throws SQLException {
-        throw new SQLFeatureNotSupportedException(
-                Thread.currentThread().getStackTrace()[1].toString());
+        if (this.statement.cursorName != null) {
+            return this.statement.cursorName;
+        }
+        if (this.cursor != null) {
+            return String.valueOf(this.cursor.getServerCursor().getId());
+        }
+        return "";
     }
 
     @Override

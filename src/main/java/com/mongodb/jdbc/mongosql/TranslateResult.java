@@ -16,8 +16,6 @@
 
 package com.mongodb.jdbc.mongosql;
 
-import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_NO_INDENT_SETTINGS;
-
 import com.mongodb.jdbc.JsonSchema;
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.MongoJsonSchema;
@@ -28,7 +26,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class TranslateResult {
+public class TranslateResult extends BaseResult {
 
     private static final Codec<TranslateResult> CODEC =
             MongoDriver.getCodecRegistry().get(TranslateResult.class);
@@ -45,7 +43,10 @@ public class TranslateResult {
             @BsonProperty("target_collection") String targetCollection,
             @BsonProperty("pipeline") List<BsonDocument> pipeline,
             @BsonProperty("result_set_schema") JsonSchema resultSetSchema,
-            @BsonProperty("select_order") List<List<String>> selectOrder) {
+            @BsonProperty("select_order") List<List<String>> selectOrder,
+            @BsonProperty("error") String error,
+            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
+        super(error, errorIsInternal);
         this.targetDb = targetDb;
         this.targetCollection = targetCollection;
         this.pipeline = pipeline;
@@ -58,6 +59,6 @@ public class TranslateResult {
 
     @Override
     public String toString() {
-        return BsonUtils.toString(CODEC, this, JSON_WRITER_NO_INDENT_SETTINGS);
+        return BsonUtils.toString(CODEC, this);
     }
 }
