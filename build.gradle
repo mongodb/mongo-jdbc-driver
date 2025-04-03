@@ -10,7 +10,7 @@ plugins {
 
 import com.github.jk1.license.render.TextReportRenderer
 
-if (project.hasProperty('isTagTriggered')) {
+if (project.hasProperty('isRelease')) {
     version = getAbbreviatedGitVersion()
 } else {
     version = getGitVersion()
@@ -254,7 +254,7 @@ dependencies {
 }
 
 def getReleaseVersion() {
-    if (!project.hasProperty('isTagTriggered')) {
+    if (!project.hasProperty('isRelease')) {
 		return getAbbreviatedGitVersion() + "-SNAPSHOT"
 	} else {
 		return getAbbreviatedGitVersion()
