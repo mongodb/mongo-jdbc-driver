@@ -828,7 +828,7 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
-            if [[ "${triggered_by_git_tag}" == "" ]]; then
+            if [[ "${triggered_by_git_tag}" != "" ]]; then
               export IS_RELEASE_PROP="-PisRelease"
             fi
 
