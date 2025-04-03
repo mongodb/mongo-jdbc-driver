@@ -1084,17 +1084,19 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
-          if [ -d "build/libs" ]; then
-            # A sanity check to see if expected files are indeed here
-            ls -lrt build/libs
-            # Rename files according to our naming scheme
-            for f in ./build/libs/mongodb-jdbc-*.jar; do
-              if [[ "$f" == *"-all"* ]]; then
-                mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
-              else
-                mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
-              fi
-            done
+          if [[ "${triggered_by_git_tag}" == "" ]]; then
+            if [ -d "build/libs" ]; then
+              # A sanity check to see if expected files are indeed here
+              ls -lrt build/libs
+              # Rename files according to our naming scheme
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+                fi
+              done
+            fi
           fi
     - command: s3.put
       params:
