@@ -320,7 +320,7 @@ functions:
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
-          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SSDLC_DIR -PcyclonedxBomName=sbom_without_team_name
+          ./gradlew $IS_RELEASE_PROP clean cyclonedxBom -PcyclonedxBomDestination=$SSDLC_DIR -PcyclonedxBomName=sbom_without_team_name
     - command: shell.exec
       type: test
       params:
@@ -389,12 +389,9 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        if [[ "${triggered_by_git_tag}" != "" ]]; then
-          EXTRA_PROP="-PisTagTriggered"
-        fi
-        ./gradlew clean generateLicenseReport --rerun-tasks && \
+        ./gradlew $IS_RELEASE_PROP clean generateLicenseReport --rerun-tasks && \
         echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -404,7 +401,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew spotlessCheck
+        ./gradlew $IS_RELEASE_PROP spotlessCheck
 
   "run unit test":
     command: shell.exec
@@ -414,7 +411,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean test
 
   "run mongosqltranslate library load test":
     command: shell.exec
@@ -428,14 +425,14 @@ functions:
 
         # Test loading library from path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
-            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
+            ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
 
         # Move library file to where MongoDriver class is located
         mkdir -p build/classes/java/
         mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
 
         # Test loading library from same directory as where the JDBC driver is located
-        ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
+        ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
   "generate github token":
     command: github.generate_token
@@ -455,8 +452,8 @@ functions:
       script: |
           ${PREPARE_SHELL}
           ./resources/run_adf.sh start &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP runDataLoader &&
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean integrationTest \
               -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
           GRADLE_PID=$!
 
@@ -537,7 +534,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -622,7 +619,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -698,8 +695,8 @@ functions:
         ls -lrt build/libs/
         
         ./resources/run_adf.sh start &&
-        ./gradlew runDataLoader &&
-        ./gradlew :smoketest:test -Psmoketest
+        ./gradlew $IS_RELEASE_PROP runDataLoader &&
+        ./gradlew $IS_RELEASE_PROP :smoketest:test -Psmoketest
         EXITCODE=$?
         ./resources/run_adf.sh stop         
         exit $EXITCODE
@@ -831,6 +828,9 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
+            if [[ "${triggered_by_git_tag}" != "" ]]; then
+              export IS_RELEASE_PROP="-PisRelease"
+            fi
 
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
