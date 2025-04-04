@@ -90,6 +90,7 @@ buildvariants:
       - name: "publish-maven"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
+      - name: "javadoc"
 
 tasks:
   - name: "build"
@@ -180,6 +181,10 @@ tasks:
   - name: spotless
     commands:
       - func: "check spotless"
+
+  - name: javadoc
+    commands:
+      - func: "check javadoc"
 
   - name: download-center-update
     git_tag_only: true
@@ -402,6 +407,16 @@ functions:
       script: |
         ${PREPARE_SHELL}
         ./gradlew $IS_RELEASE_PROP spotlessCheck
+
+  "check javadoc":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        ./gradlew $IS_RELEASE_PROP javadoc        
 
   "run unit test":
     command: shell.exec
