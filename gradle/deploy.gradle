@@ -4,9 +4,11 @@ allprojects {
 
         if (releaseVersion.endsWith('-SNAPSHOT')) {
             description = 'Publishes snapshots to Sonatype'
+            println("Publishes snapshots to Sonatype")
             dependsOn ':publishToSonatype'
         } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
+            println("PubPublishes a release and uploads to Sonatype / Maven Central")
             if (project.name == rootProject.name) {
                 dependsOn ':closeAndReleaseRepository'
                 dependsOn ':publishToSonatype'

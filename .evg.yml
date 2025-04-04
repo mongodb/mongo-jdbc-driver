@@ -1113,7 +1113,6 @@ functions:
       type: test
       params:
         shell: bash
-        silent: true
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
