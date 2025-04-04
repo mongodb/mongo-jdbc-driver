@@ -100,7 +100,7 @@ public class MongoResultSetMetaData implements ResultSetMetaData {
         columnIndices = new ArrayList<NameSpace>();
         columnInfo = new ArrayList<MongoColumnInfo>();
 
-        if (selectOrder == null) {
+        if (selectOrder == null || selectOrder.isEmpty()) {
             String[] datasources = schema.properties.keySet().toArray(new String[0]);
             Arrays.sort(datasources);
 
