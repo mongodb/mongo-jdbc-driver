@@ -98,8 +98,8 @@ public class MongoLogger {
 
     /**
      * Log a method entry. This is a convenience method that can be used to log entry to a method. A
-     * LogRecord with message ">> callSignature", log level FINER, and the given sourceName is
-     * logged.
+     * LogRecord with message "{@literal >>} callSignature", log level FINER, and the given
+     * sourceName is logged.
      *
      * @param sourceName Name of class that issued the logging request
      * @param callSignature The call signature, method and arguments, to log.

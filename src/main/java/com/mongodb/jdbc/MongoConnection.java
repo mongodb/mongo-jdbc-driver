@@ -668,7 +668,6 @@ public class MongoConnection implements Connection {
      * Executes a dummy query to test the connection.
      *
      * @param timeout The query timeout.
-     * @throws Exception If an error occurs.
      */
     protected void testConnection(int timeout)
             throws SQLException, InterruptedException, ExecutionException, TimeoutException {
