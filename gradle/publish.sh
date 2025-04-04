@@ -21,7 +21,9 @@ export ORG_GRADLE_PROJECT_signing_secretKeyRingFile=${PROJECT_DIRECTORY}/secring
 export ORG_GRADLE_PROJECT_nexus_url=${NEXUS_URL}
 export ORG_GRADLE_PROJECT_nexus_profile_id=${NEXUS_PROFILE_ID}
 
+set -o verbose # Command echoing on.
+set -o xtrace # Enable command traces before executing them.
 echo "Publishing snapshot or release"
 
-./gradlew -version
-./gradlew publishMaven --info
+./gradlew ${IS_RELEASE_PROP} -version
+./gradlew ${IS_RELEASE_PROP} publishMaven --info
