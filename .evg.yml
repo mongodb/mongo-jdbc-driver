@@ -29,7 +29,7 @@ variables:
         else
            echo "BUILD_TYPE is 'eap'. Allowing task execution to continue."
         fi
-  - &check_and_allow_for_non_eap_build
+  - &check_and_allow_for_standard_and_snapshot_build
     command: shell.exec
     type: test
     params:
@@ -41,7 +41,21 @@ variables:
           echo "BUILD_TYPE (${BUILD_TYPE}) is 'eap'. Stopping task execution."
           curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
         else
-          echo "BUILD_TYPE is not 'eap'. Allowing task execution to continue."
+          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
+        fi
+  - &check_and_allow_for_eap_and_snapshot_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" == "standard" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is 'standard'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
         fi
 
 pre:
@@ -141,10 +155,12 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
+      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
     commands:
+      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
       - func: "run X509 integration test"
 
@@ -165,7 +181,7 @@ tasks:
       - name: sbom
         variant: code-quality-and-correctness
     commands:
-      - func: "check and allow for non-eap build"
+      - func: "check and allow for standard and snapshot build"
       - func: "publish maven"
       - func: "trace artifacts"
 
@@ -176,7 +192,7 @@ tasks:
       - func: "build jdbc docs"
       - func: "upload jdbc docs"
 
-  # Publishes the release artifacts to S3
+  # Publishes the EAP release artifacts to S3
   - name: publish-s3
     allowed_requesters: ["ad_hoc", "github_tag", "patch"]
     depends_on:
@@ -235,7 +251,7 @@ tasks:
       - name: "publish-maven"
         variant: "release"
     commands:
-      - func: "check and allow for non-eap build"
+      - func: "check and allow for standard and snapshot build"
       - func: "update download center feed"
 
   - name: semgrep
@@ -260,7 +276,7 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for non-eap build"
+      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
@@ -276,7 +292,7 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for non-eap build"
+      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
@@ -296,8 +312,11 @@ tasks:
       - func: "generate compliance report"
 
 functions:
-  "check and allow for non-eap build":
-    - *check_and_allow_for_non_eap_build
+  "check and allow for standard and snapshot build":
+    - *check_and_allow_for_standard_and_snapshot_build
+
+  "check and allow for eap and snapshot build":
+    - *check_and_allow_for_eap_and_snapshot_build
 
   "check and allow for eap build":
     - *check_and_allow_for_eap_build
@@ -536,6 +555,12 @@ functions:
         ${PREPARE_SHELL}
         if [[ "${triggered_by_git_tag}" != "" ]]; then
           EXTRA_PROP="-PisTagTriggered"
+        else
+          if [[ "${BUILD_TYPE}" == "eap" ]]; then
+            # Sets EAP build flag when not triggered by a git tag. Useful for testing the eap build 
+            # without needing to rely on Tag-triggered build
+            EXTRA_PROP="-PisEapBuild=true"
+          fi
         fi
         ./gradlew clean generateLicenseReport --rerun-tasks && \
         echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
@@ -664,11 +689,6 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        
-        if [ "${BUILD_TYPE}" != "eap" ]; then
-          echo "Skipping DC integration test because this is not an EAP build (BUILD_TYPE=${BUILD_TYPE})."
-          exit 0 
-        fi 
 
         case ${_platform} in
         ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
@@ -746,11 +766,6 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        
-        if [ "${BUILD_TYPE}" != "eap" ]; then
-          echo "Skipping X509 integration test because this is not an EAP build (BUILD_TYPE=${BUILD_TYPE})."
-          exit 0 
-        fi 
 
         case ${_platform} in
         ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
@@ -872,7 +887,6 @@ functions:
         script: |
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
-          export BUILD_TYPE="snapshot"
 
           # Get the version from trigger.
           # Tag triggered runs are releases and the version is set in the tag.
@@ -890,6 +904,7 @@ functions:
             export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
             export MDBJDBC_VER=snapshot
+            export BUILD_TYPE=snapshot
           fi
           
           # Set JAVA_HOME based on platform

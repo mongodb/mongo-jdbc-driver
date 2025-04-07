@@ -96,6 +96,7 @@ public class SmokeTest {
 
     @Test
     public void databaseMetadataTest() throws SQLException {
+        System.out.println("Running databaseMetadataTest");
         for (Connection conn : connections.keySet()) {
             DatabaseMetaData dbMetadata = conn.getMetaData();
             System.out.println(dbMetadata.getDriverName());
@@ -108,6 +109,7 @@ public class SmokeTest {
 
     @Test
     public  void queryTest() throws SQLException {
+        System.out.println("Running queryTest");
         for (Map.Entry<Connection, String> entry : connections.entrySet()) {
             try (Statement stmt = entry.getKey().createStatement()) {
                 ResultSet rs = stmt.executeQuery(entry.getValue());
@@ -121,6 +123,7 @@ public class SmokeTest {
         while (rs.next()) {
             actualCount++;
         }
+        System.out.println("Rows returned count: " + actualCount);
         assertTrue(actualCount >= 1, "No rows returned in result set");
     }
 }
