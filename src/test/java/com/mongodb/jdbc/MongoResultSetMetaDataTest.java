@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bson.BsonValue;
@@ -370,5 +371,22 @@ class MongoResultSetMetaDataTest extends MongoMock {
         // Duplicated column names fail
         assertThrows(Exception.class, () -> resultSetMetaData.getDatasource(FOO_DUP_COL_LABEL));
         assertThrows(Exception.class, () -> resultSetMetaData.getDatasource(BOT_DUP_COL_LABEL));
+    }
+
+    @Test
+    void testEmptySelectOrder() throws SQLException {
+        MongoJsonSchema schema = generateMongoJsonSchema();
+
+        MongoResultSetMetaData nullSelectOrderMetadata =
+                new MongoResultSetMetaData(
+                        schema, null, true, mongoConnection.getLogger(), 0, null);
+
+        List<List<String>> emptySelectOrder = new ArrayList<>();
+        MongoResultSetMetaData emptySelectOrderMetadata =
+                new MongoResultSetMetaData(
+                        schema, emptySelectOrder, true, mongoConnection.getLogger(), 0, null);
+
+        assertEquals(12, nullSelectOrderMetadata.getColumnCount());
+        assertEquals(12, emptySelectOrderMetadata.getColumnCount());
     }
 }
