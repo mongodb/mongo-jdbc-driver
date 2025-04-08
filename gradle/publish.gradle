@@ -45,12 +45,18 @@ publishing {
 
                     // Add custom dependencies
                     def newDependenciesNode = asNode().appendNode('dependencies')
-                    configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-                        def dependencyNode = newDependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', artifact.moduleVersion.id.group)
-                        dependencyNode.appendNode('artifactId', artifact.name)
-                        dependencyNode.appendNode('version', artifact.moduleVersion.id.version)
-                        dependencyNode.appendNode('scope', 'runtime')
+                    println("${configurations.runtimeClasspath.name} depedencies")
+                    // Get the resolved configuration
+                    // Collect direct dependencies
+                    configurations.runtimeClasspath.resolvedConfiguration.firstLevelModuleDependencies.each { resolvedDependency ->
+                        resolvedDependency.moduleArtifacts.each { artifact ->
+                            println " - ${artifact.moduleVersion.id.group}:${artifact.moduleVersion.id.name}:${artifact.moduleVersion.id.version}"
+                            def dependencyNode = newDependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', artifact.moduleVersion.id.group)
+                            dependencyNode.appendNode('artifactId', artifact.name)
+                            dependencyNode.appendNode('version', artifact.moduleVersion.id.version)
+                            dependencyNode.appendNode('scope', "runtime")
+                        }
                     }
                 }
             }
@@ -91,6 +97,43 @@ afterEvaluate {
         }
     }
 }
+
+task listFirstLevelDependencies {
+    doLast {
+        println("First-level dependencies:")
+
+        // For each configuration you are interested in, list the first-level dependencies
+        configurations.all { configuration ->
+            if (configuration.canBeResolved) {
+                println("Configuration: ${configuration.name}")
+                configuration.allDependencies.each { dependency ->
+                    // Print only the first-level dependencies (declared in build.gradle)
+                    println " - ${dependency.group}:${dependency.name}:${dependency.version}"
+                }
+            }
+        }
+    }
+}
+
+task listResolvedFirstLevelDependencies {
+    doLast {
+        println("Resolved first-level dependencies:")
+        def configuration = configurations.runtimeClasspath
+        if (configuration.canBeResolved) {
+            println("Configuration: ${configuration.name}")
+            // Get the resolved configuration
+            def resolvedConfiguration = configuration.resolvedConfiguration
+            // Collect direct dependencies
+            resolvedConfiguration.firstLevelModuleDependencies.each { resolvedDependency ->
+                resolvedDependency.moduleArtifacts.each { artifact ->
+                    println " - ${artifact.moduleVersion.id.group}:${artifact.moduleVersion.id.name}:${artifact.moduleVersion.id.version}"
+                }
+            }
+        }
+    }
+}
+
+
 
 /*
 For security we allow the signing-related project properties to be passed in as environment variables, which
