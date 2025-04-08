@@ -91,6 +91,7 @@ buildvariants:
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
       - name: "javadoc"
+      - name: "thirdparty-license-notices"
 
 tasks:
   - name: "build"
@@ -185,6 +186,10 @@ tasks:
   - name: javadoc
     commands:
       - func: "check javadoc"
+
+  - name: thirdparty-license-notices
+    commands:
+        - func: "check thirdparty notices"
 
   - name: download-center-update
     git_tag_only: true
@@ -394,9 +399,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew $IS_RELEASE_PROP clean generateLicenseReport --rerun-tasks && \
-        echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -416,7 +419,26 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew $IS_RELEASE_PROP javadoc        
+        ./gradlew $IS_RELEASE_PROP javadoc
+
+  "check thirdparty notices":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generateLicenseReport
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/reports/licenses/THIRD-PARTY-LICENSE.txt
+        remote_file: ${S3_ARTIFACTS_DIR}/reports/licenses/THIRD-PARTY-LICENSE.txt
+        content_type: text/plain; charset=utf-8
+        permissions: public-read
 
   "run unit test":
     command: shell.exec
