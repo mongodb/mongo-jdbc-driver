@@ -92,6 +92,7 @@ buildvariants:
       - name: "download-center-update"
       - name: "javadoc"
       - name: "thirdparty-license-notices"
+      - name: "pom-publication"
 
 tasks:
   - name: "build"
@@ -190,6 +191,10 @@ tasks:
   - name: thirdparty-license-notices
     commands:
         - func: "check thirdparty notices"
+
+  - name: pom-publication
+    commands:
+        - func: "check pom generation"
 
   - name: download-center-update
     git_tag_only: true
@@ -438,6 +443,25 @@ functions:
         local_file: mongo-jdbc-driver/build/reports/licenses/THIRD-PARTY-LICENSE.txt
         remote_file: ${S3_ARTIFACTS_DIR}/reports/licenses/THIRD-PARTY-LICENSE.txt
         content_type: text/plain; charset=utf-8
+        permissions: public-read
+
+  "check pom generation":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generatePomFileForMavenJavaPublication
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/publications/mavenJava/pom-default.xml
+        remote_file: ${S3_ARTIFACTS_DIR}/publications/pom-default.xml
+        content_type: application/xml; charset=utf-8
         permissions: public-read
 
   "run unit test":

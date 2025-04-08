@@ -37,6 +37,22 @@ publishing {
                     connection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
                     developerConnection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
                 }
+
+                withXml {
+                    // Clear the existing dependencies
+                    def pomNode = asNode()
+                    pomNode.remove(pomNode.dependencies)
+
+                    // Add custom dependencies
+                    def newDependenciesNode = asNode().appendNode('dependencies')
+                    configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+                        def dependencyNode = newDependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', artifact.moduleVersion.id.group)
+                        dependencyNode.appendNode('artifactId', artifact.name)
+                        dependencyNode.appendNode('version', artifact.moduleVersion.id.version)
+                        dependencyNode.appendNode('scope', 'runtime')
+                    }
+                }
             }
         }
     }
