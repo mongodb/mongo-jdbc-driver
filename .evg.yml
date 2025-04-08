@@ -1124,6 +1124,13 @@ functions:
         permissions: public-read
 
   "publish maven":
+    - *assume_role_cmd
+    - command: s3.get
+      params:
+        <<: *evg_bucket_config
+        local_file: artifacts/ssdlc/mongodb-jdbc.sbom.json
+        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        content_type: application/json
     - command: shell.exec
       type: test
       params:

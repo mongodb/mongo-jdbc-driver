@@ -16,6 +16,8 @@ if (project.hasProperty('isRelease')) {
     version = getGitVersion()
 }
 
+def thirdpartyNoticeDir = "$buildDir/" + thirdpartyNoticeDir
+
 ext {
     println("Driver version = " + version)
     releaseVersion = getReleaseVersion()
@@ -33,7 +35,22 @@ spotless {
 }
 
 licenseReport {
-    renderers = [new TextReportRenderer('THIRD-PARTY-LICENSE.txt')]
+    outputDir = (thirdpartyNoticeDir as File).toPath().toString()
+    renderers = [new TextReportRenderer(thirdpartyNoticeName) ]
+}
+
+generateLicenseReport {
+
+    def tempFile = new File("$buildDir", "temp-third-party-notice.txt")
+    def header = new File("$projectDir/resources", "third_party_header.txt")
+
+    doLast {
+        // Replace original file with temp file content
+        def inputFile = new File((thirdpartyNoticeDir as File).toPath().toString(), thirdpartyNoticeName)
+        tempFile.setText(header.getText() + inputFile.getText())
+        inputFile.text = tempFile.text
+        tempFile.delete() // Clean up the temporary file
+    }
 }
 
 cyclonedxBom {
@@ -220,27 +237,9 @@ task runCallbackWithBadRefreshToken(type: JavaExec) {
 }
 
 jar {
-    // Add the THIRD-PARTY-LICENSE to our jar
-    // Note that in order for this to work, the file must be present
-    // To generate it, run generateLicenseReport. However, ':generateLicenseReport' has a dependecy on `:jar`
-    // which makes it impossible to generate and bundle the THIRD-PARTY-LICENSE in one pass.
-    from('build/reports/dependency-license/THIRD-PARTY-LICENSE.txt') {
-        into 'META-INF/licenses'
-    }
-
     manifest {
         attributes('Implementation-Title': project.name,
                 'Implementation-Version': project.version)
-    }
-}
-
-shadowJar  {
-    // Add the THIRD-PARTY-LICENSE to our jar
-    // Note that in order for this to work, the file must be present
-    // To generate it, run generateLicenseReport. However, ':generateLicenseReport' has a dependecy on `:jar`
-    // which makes it impossible to generate and bundle the THIRD-PARTY-LICENSE in one pass.
-    from('build/reports/dependency-license/THIRD-PARTY-LICENSE.txt') {
-        into 'META-INF/licenses'
     }
 }
 

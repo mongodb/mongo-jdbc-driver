@@ -1,8 +1,6 @@
 apply plugin: 'signing'
 apply plugin: 'io.codearte.nexus-staging'
 
-//def augmentedSbom = artifacts.add('sbom', file("$rootDir/artifacts/ssdlc/mongo-jdbc-driver.augmented.sbom.json"))
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -12,7 +10,13 @@ publishing {
             }
             artifact shadowJar
             artifact javadocJar
-            //artifact augmentedSbom
+            artifact("$buildDir/"+thirdpartyNoticeDir+"/"+thirdpartyNoticeName) {
+                classifier = 'license'
+            }
+            artifact("$rootDir/artifacts/ssdlc/mongodb-jdbc.sbom.json") {
+                classifier = 'sbom'
+            }
+
             pom {
                 name = 'JDBC Driver'
                 description = 'JDBC Driver for MongoDB Atlas SQL interface'
