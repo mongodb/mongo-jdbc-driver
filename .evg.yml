@@ -91,6 +91,8 @@ buildvariants:
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
       - name: "javadoc"
+      - name: "thirdparty-license-notices"
+      - name: "pom-publication"
 
 tasks:
   - name: "build"
@@ -185,6 +187,14 @@ tasks:
   - name: javadoc
     commands:
       - func: "check javadoc"
+
+  - name: thirdparty-license-notices
+    commands:
+        - func: "check thirdparty notices"
+
+  - name: pom-publication
+    commands:
+        - func: "check pom generation"
 
   - name: download-center-update
     git_tag_only: true
@@ -394,9 +404,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew $IS_RELEASE_PROP clean generateLicenseReport --rerun-tasks && \
-        echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -416,7 +424,45 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew $IS_RELEASE_PROP javadoc        
+        ./gradlew $IS_RELEASE_PROP javadoc
+
+  "check thirdparty notices":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generateLicenseReport
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/reports/licenses/THIRD-PARTY-LICENSE.txt
+        remote_file: ${S3_ARTIFACTS_DIR}/reports/licenses/THIRD-PARTY-LICENSE.txt
+        content_type: text/plain; charset=utf-8
+        permissions: public-read
+
+  "check pom generation":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generatePomFileForMavenJavaPublication
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/publications/mavenJava/pom-default.xml
+        remote_file: ${S3_ARTIFACTS_DIR}/publications/pom-default.xml
+        content_type: application/xml; charset=utf-8
+        permissions: public-read
 
   "run unit test":
     command: shell.exec
@@ -1124,6 +1170,13 @@ functions:
         permissions: public-read
 
   "publish maven":
+    - *assume_role_cmd
+    - command: s3.get
+      params:
+        <<: *evg_bucket_config
+        local_file: artifacts/ssdlc/mongodb-jdbc.sbom.json
+        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        content_type: application/json
     - command: shell.exec
       type: test
       params:

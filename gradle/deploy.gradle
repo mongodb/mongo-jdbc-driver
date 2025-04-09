@@ -1,6 +1,7 @@
 allprojects {
     task publishMaven {
         group = 'publishing'
+        dependsOn ':generateLicenseReport'
 
         if (releaseVersion.endsWith('-SNAPSHOT')) {
             description = 'Publishes snapshots to Sonatype'
