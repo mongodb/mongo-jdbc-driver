@@ -31,11 +31,11 @@ The MongoDB JDBC driver is compatible with:
 
 #### Dependencies
 
-None
+- OpenSSL 3.0 or greater is required for secure connections.
 
 ## Installation
 
-1. [Download the JAR](TODO).
+1. [Download the JAR](https://central.sonatype.com/artifact/org.mongodb/mongodb-jdbc).
 2. Install and Configure the JDBC Driver.
 Copy the JAR file to the appropriate directory. For example, to install the JDBC driver for Tableau on MacOS,
 copy the file to `~/Library/Tableau/Drivers`.

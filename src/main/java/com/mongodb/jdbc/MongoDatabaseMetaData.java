@@ -182,9 +182,6 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
     private static final String FUNC_DEFAULT_CATALOG = "def";
     private static final String YES = "YES";
 
-    private int serverMajorVersion;
-    private int serverMinorVersion;
-
     private static final List<SortableBsonDocument.SortSpec> GET_TABLES_SORT_SPECS =
             Arrays.asList(
                     new SortableBsonDocument.SortSpec(

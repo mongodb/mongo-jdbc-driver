@@ -18,21 +18,24 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.jdbc.mongosql.GetMongosqlTranslateVersionResult;
+import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MongoSQLTranslateLibTest {
 
     /** Helper function to call the runCommand endpoint of the translation library. */
-    private static void testRunCommand() {
+    private static void testRunCommand() throws MongoSQLException, MongoSerializationException {
         MongoSQLTranslate mongosqlTranslate = new MongoSQLTranslate(null);
-        byte[] bytes =
-                mongosqlTranslate.runCommand("SendingSomething".getBytes(StandardCharsets.UTF_8));
-        assert bytes.length > 0;
+
+        GetMongosqlTranslateVersionResult result = mongosqlTranslate.getMongosqlTranslateVersion();
+
+        assertNotNull(result);
+        assertNotNull(result.version);
     }
 
     @BeforeEach
@@ -100,7 +103,7 @@ public class MongoSQLTranslateLibTest {
         assertTrue(
                 MongoDriver.getMongoSqlTranslateLibraryPath()
                         .contains("resources/MongoSqlLibraryTest"),
-                "Expected library path to contain 'resources/main' but didn't. Actual path is "
+                "Expected library path to contain 'resources/MongoSqlLibraryTest' but didn't. Actual path is "
                         + MongoDriver.getMongoSqlTranslateLibraryPath());
 
         // The library was loaded successfully. Now, let's make sure that we can call the runCommand endpoint.

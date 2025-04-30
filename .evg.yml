@@ -595,14 +595,21 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -e
+        
+        ./gradlew downloadLibMongosqlTranslate
+        export MONGOSQL_LIB_PATH="$PWD/src/main/resources/x86_64/linux/libmongosqltranslate.so"
 
         # Test loading library from path specified in ENV variable
-        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
+        TEST_DIR="$PWD/src/test/resources/MongoSqlLibraryTest"
+        TEST_LIB_PATH="$TEST_DIR/libmongosqltranslate.so"
+        mkdir -p "$TEST_DIR"
+        cp $MONGOSQL_LIB_PATH $TEST_LIB_PATH
+        MONGOSQL_TRANSLATE_PATH="TEST_LIB_PATH" \
             ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
 
         # Move library file to where MongoDriver class is located
         mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
+        cp -f $MONGOSQL_LIB_PATH build/classes/java/
 
         # Test loading library from same directory as where the JDBC driver is located
         ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
@@ -893,100 +900,21 @@ functions:
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
             echo "Tag triggered build: ${triggered_by_git_tag}"
-            
+  
             if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
               echo "Detected EAP tag format."
               export BUILD_TYPE="eap"
+              # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>'
+              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
+              export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $2}')
             else
               echo "Setting standard build."
               export BUILD_TYPE="standard"
+              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+              export LIBMONGOSQLTRANSLATE_VER="none"
             fi
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
           else
-            export MDBJDBC_VER=snapshot
             export BUILD_TYPE=snapshot
-          fi
-          
-          # Set JAVA_HOME based on platform
-          if [[ "${_platform}" == "ubuntu2204-64-jdk-8" ]]; then
-              export JAVA_HOME=/opt/java/jdk8
-          elif [[ "${_platform}" == "ubuntu2204-64-jdk-11" ]]; then
-              export JAVA_HOME=/opt/java/jdk11
-          elif [[ "${_platform}" == "amazon2-arm64-jdk-11" ]]; then
-              export JAVA_HOME=/usr/lib/jvm/java-11
-          else
-              # According to DEVPROD, the Java toolchain should always be under `/opt/java/`
-              if [ -d "/opt/java/jdk11" ]; then
-                export JAVA_HOME=/opt/java/jdk11
-              else
-                echo >&2 "Can't find Java. `/opt/java/jdk11` does not exist"
-                exit 1
-              fi
-          fi
-          
-          # set the state needed irrespective of _platform
-          SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-          SBOM_TOOL_DIR="sbom_generations"
-          SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
-          SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
-          SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
-          mkdir -p "$SSDLC_DIR"
-          
-          echo "=== Generated Values ==="
-          echo "JDBC version = $MDBJDBC_VER"
-          echo "Java home = $JAVA_HOME"
-          echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
-          echo "=== SSDLC Values ==="
-          echo "SBOM_WITHOUT_TEAM_NAME = $SBOM_WITHOUT_TEAM_NAME"
-          echo "SBOM_TOOL_DIR = $SBOM_TOOL_DIR"
-          echo "SBOM Lite Name = $SBOM_LITE_NAME"
-          echo "SBOM_LITE = $SBOM_LITE"
-          echo "Augmented SBOM Name = $AUGMENTED_SBOM_NAME"
-          echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
-          echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
-          echo "SSDLC Directory = $SSDLC_DIR"
-          echo "BUILD_TYPE = $BUILD_TYPE"
-          
-          # Write calculated values to expansions file
-          mkdir -p $ARTIFACTS_DIR
-          cat <<EOT > $ARTIFACTS_DIR/initial_expansions.yml
-          MDBJDBC_VER: "$MDBJDBC_VER"
-          JAVA_HOME: "$JAVA_HOME"
-          ARTIFACTS_DIR: "$ARTIFACTS_DIR"
-          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
-          SBOM_WITHOUT_TEAM_NAME: "$SBOM_WITHOUT_TEAM_NAME"
-          SBOM_TOOL_DIR: "$SBOM_TOOL_DIR"
-          SBOM_LITE_NAME: "$SBOM_LITE_NAME"
-          SBOM_LITE: "$SBOM_LITE"
-          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
-          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
-          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
-          SSDLC_DIR: "$SSDLC_DIR"
-          BUILD_TYPE: "$BUILD_TYPE"
-          EOT
-    - command: expansions.update
-      params:
-        file: mongo-jdbc-driver/artifacts/initial_expansions.yml
-    - command: shell.exec
-      params:
-        shell: bash
-        silent: true
-        working_dir: mongo-jdbc-driver
-        script: |
-          ARTIFACTS_DIR=artifacts
-          S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
-
-          # Get the version from trigger.
-          # Tag triggered runs are releases and the version is set in the tag.
-          # Other runs are snapshot builds (periodic builds or patches)
-          if [[ "${triggered_by_git_tag}" != "" ]]; then
-            # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
-            export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag}  | awk -F'-libv' '{print $2}')
-          else
             export MDBJDBC_VER=snapshot
             export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
@@ -1022,6 +950,7 @@ functions:
           echo "=== Generated Values ==="
           echo "JDBC version = $MDBJDBC_VER"
           echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
+          echo "Build type = $BUILD_TYPE"
           echo "Java home = $JAVA_HOME"
           echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
           echo "=== SSDLC Values ==="
@@ -1050,6 +979,7 @@ functions:
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          BUILD_TYPE: "$BUILD_TYPE"
           EOT
     - command: expansions.update
       params:

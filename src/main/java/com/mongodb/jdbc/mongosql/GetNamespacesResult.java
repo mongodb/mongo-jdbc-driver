@@ -16,6 +16,8 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_NO_INDENT_SETTINGS;
+
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.utils.BsonUtils;
 import java.util.List;
@@ -23,7 +25,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class GetNamespacesResult extends BaseResult {
+public class GetNamespacesResult {
 
     private static final Codec<GetNamespacesResult> CODEC =
             MongoDriver.getCodecRegistry().get(GetNamespacesResult.class);
@@ -32,15 +34,14 @@ public class GetNamespacesResult extends BaseResult {
     public final List<Namespace> namespaces;
 
     @BsonCreator
-    public GetNamespacesResult(
-            @BsonProperty("namespaces") List<Namespace> namespaces,
-            @BsonProperty("error") String error,
-            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
-        super(error, errorIsInternal);
+    public GetNamespacesResult(@BsonProperty("namespaces") List<Namespace> namespaces) {
         this.namespaces = namespaces;
     }
 
     public static class Namespace {
+        private static final Codec<Namespace> CODEC =
+                MongoDriver.getCodecRegistry().get(Namespace.class);
+
         @BsonProperty("database")
         public final String database;
 
@@ -54,10 +55,15 @@ public class GetNamespacesResult extends BaseResult {
             this.database = database;
             this.collection = collection;
         }
+
+        @Override
+        public String toString() {
+            return BsonUtils.toString(CODEC, this, JSON_WRITER_NO_INDENT_SETTINGS);
+        }
     }
 
     @Override
     public String toString() {
-        return BsonUtils.toString(CODEC, this);
+        return BsonUtils.toString(CODEC, this, JSON_WRITER_NO_INDENT_SETTINGS);
     }
 }

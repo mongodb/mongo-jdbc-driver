@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDatabaseMetaData;
 import com.mongodb.jdbc.Pair;
+import com.mongodb.jdbc.mongosql.MongoSQLException;
 import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
@@ -159,17 +160,15 @@ public class DCIntegrationTest {
         try (Connection conn = remoteTestInstanceConnect();
                 Statement stmt = conn.createStatement(); ) {
             // Invalid SQL query should fail
-            assertThrows(
-                    java.sql.SQLException.class,
-                    () -> {
-                        try {
-                            stmt.executeQuery("This is not valid SQL");
-                        } catch (SQLException e) {
-                            // Let's make sure that we fail for the reason we expect it to.
-                            assert (e.getMessage().contains("Error 2001"));
-                            throw e;
-                        }
-                    });
+            Exception exception =
+                    assertThrows(
+                            RuntimeException.class,
+                            () -> {
+                                stmt.executeQuery("This is not valid SQL");
+                            });
+            // Let's make sure that we fail for the reason we expect it to.
+            assertTrue(exception.getCause() instanceof MongoSQLException);
+            assertTrue(exception.getMessage().contains("Error 2001"));
         }
     }
 

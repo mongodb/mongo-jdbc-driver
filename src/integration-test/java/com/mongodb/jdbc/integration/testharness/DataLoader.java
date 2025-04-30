@@ -90,6 +90,7 @@ public class DataLoader {
         this.mdbUri = new ConnectionString(LOCAL_MDB_URL);
         System.out.println(this.mdbUri);
         this.adfUri = new ConnectionString(LOCAL_ADF_URL);
+        System.out.println("Local ADF url" + this.adfUri);
 
         readDataFiles(dataDirectory);
     }

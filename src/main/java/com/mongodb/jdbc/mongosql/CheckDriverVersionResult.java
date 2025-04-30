@@ -16,13 +16,15 @@
 
 package com.mongodb.jdbc.mongosql;
 
+import static com.mongodb.jdbc.utils.BsonUtils.JSON_WRITER_NO_INDENT_SETTINGS;
+
 import com.mongodb.jdbc.MongoDriver;
 import com.mongodb.jdbc.utils.BsonUtils;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-public class CheckDriverVersionResult extends BaseResult {
+public class CheckDriverVersionResult {
 
     private static final Codec<CheckDriverVersionResult> CODEC =
             MongoDriver.getCodecRegistry().get(CheckDriverVersionResult.class);
@@ -31,16 +33,12 @@ public class CheckDriverVersionResult extends BaseResult {
     public final Boolean compatible;
 
     @BsonCreator
-    public CheckDriverVersionResult(
-            @BsonProperty("compatible") Boolean compatible,
-            @BsonProperty("error") String error,
-            @BsonProperty("error_is_internal") Boolean errorIsInternal) {
-        super(error, errorIsInternal);
+    public CheckDriverVersionResult(@BsonProperty("compatible") Boolean compatible) {
         this.compatible = (compatible != null) ? compatible : false;
     }
 
     @Override
     public String toString() {
-        return BsonUtils.toString(CODEC, this);
+        return BsonUtils.toString(CODEC, this, JSON_WRITER_NO_INDENT_SETTINGS);
     }
 }
