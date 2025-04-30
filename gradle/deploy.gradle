@@ -1,12 +1,15 @@
 allprojects {
     task publishMaven {
         group = 'publishing'
+        dependsOn ':generateLicenseReport'
 
         if (releaseVersion.endsWith('-SNAPSHOT')) {
             description = 'Publishes snapshots to Sonatype'
+            println("Will publish snapshots to Sonatype")
             dependsOn ':publishToSonatype'
         } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
+            println("Will publish a release and uploads to Sonatype / Maven Central")
             if (project.name == rootProject.name) {
                 dependsOn ':closeAndReleaseRepository'
                 dependsOn ':publishToSonatype'

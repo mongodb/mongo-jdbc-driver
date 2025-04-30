@@ -1,8 +1,6 @@
 apply plugin: 'signing'
 apply plugin: 'io.codearte.nexus-staging'
 
-def augmentedSbom = artifacts.add('sbom', file("$rootDir/artifacts/ssdlc/mongo-jdbc-driver.augmented.sbom.json"))
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -12,7 +10,13 @@ publishing {
             }
             artifact shadowJar
             artifact javadocJar
-            artifact augmentedSbom
+            artifact("$buildDir/"+thirdpartyNoticeDir+"/"+thirdpartyNoticeName) {
+                classifier = 'license'
+            }
+            artifact("$rootDir/artifacts/ssdlc/mongodb-jdbc.sbom.json") {
+                classifier = 'sbom'
+            }
+
             pom {
                 name = 'JDBC Driver'
                 description = 'JDBC Driver for MongoDB Atlas SQL interface'
@@ -32,6 +36,28 @@ publishing {
                     url = 'https://github.com/mongodb/mongo-jdbc-driver'
                     connection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
                     developerConnection = 'scm:git@github.com:mongodb/mongo-jdbc-driver.git'
+                }
+
+                withXml {
+                    // Clear the existing dependencies
+                    def pomNode = asNode()
+                    pomNode.remove(pomNode.dependencies)
+
+                    // Add custom dependencies
+                    def newDependenciesNode = asNode().appendNode('dependencies')
+                    println("${configurations.runtimeClasspath.name} depedencies")
+                    // Get the resolved configuration
+                    // Collect direct dependencies
+                    configurations.runtimeClasspath.resolvedConfiguration.firstLevelModuleDependencies.each { resolvedDependency ->
+                        resolvedDependency.moduleArtifacts.each { artifact ->
+                            println " - ${artifact.moduleVersion.id.group}:${artifact.moduleVersion.id.name}:${artifact.moduleVersion.id.version}"
+                            def dependencyNode = newDependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', artifact.moduleVersion.id.group)
+                            dependencyNode.appendNode('artifactId', artifact.name)
+                            dependencyNode.appendNode('version', artifact.moduleVersion.id.version)
+                            dependencyNode.appendNode('scope', "runtime")
+                        }
+                    }
                 }
             }
         }
@@ -71,6 +97,43 @@ afterEvaluate {
         }
     }
 }
+
+task listFirstLevelDependencies {
+    doLast {
+        println("First-level dependencies:")
+
+        // For each configuration you are interested in, list the first-level dependencies
+        configurations.all { configuration ->
+            if (configuration.canBeResolved) {
+                println("Configuration: ${configuration.name}")
+                configuration.allDependencies.each { dependency ->
+                    // Print only the first-level dependencies (declared in build.gradle)
+                    println " - ${dependency.group}:${dependency.name}:${dependency.version}"
+                }
+            }
+        }
+    }
+}
+
+task listResolvedFirstLevelDependencies {
+    doLast {
+        println("Resolved first-level dependencies:")
+        def configuration = configurations.runtimeClasspath
+        if (configuration.canBeResolved) {
+            println("Configuration: ${configuration.name}")
+            // Get the resolved configuration
+            def resolvedConfiguration = configuration.resolvedConfiguration
+            // Collect direct dependencies
+            resolvedConfiguration.firstLevelModuleDependencies.each { resolvedDependency ->
+                resolvedDependency.moduleArtifacts.each { artifact ->
+                    println " - ${artifact.moduleVersion.id.group}:${artifact.moduleVersion.id.name}:${artifact.moduleVersion.id.version}"
+                }
+            }
+        }
+    }
+}
+
+
 
 /*
 For security we allow the signing-related project properties to be passed in as environment variables, which

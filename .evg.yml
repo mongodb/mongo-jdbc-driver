@@ -133,6 +133,9 @@ buildvariants:
       - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
+      - name: "javadoc"
+      - name: "thirdparty-license-notices"
+      - name: "pom-publication"
 
 tasks:
   - name: "build"
@@ -244,6 +247,18 @@ tasks:
   - name: spotless
     commands:
       - func: "check spotless"
+
+  - name: javadoc
+    commands:
+      - func: "check javadoc"
+
+  - name: thirdparty-license-notices
+    commands:
+        - func: "check thirdparty notices"
+
+  - name: pom-publication
+    commands:
+        - func: "check pom generation"
 
   - name: download-center-update
     git_tag_only: true
@@ -483,7 +498,7 @@ functions:
           echo "------------------------------------"
           echo "Generating SBOM"
           echo "------------------------------------"
-          ./gradlew clean cyclonedxBom -PcyclonedxBomDestination=$SSDLC_DIR -PcyclonedxBomName=sbom_without_team_name
+          ./gradlew $IS_RELEASE_PROP clean cyclonedxBom -PcyclonedxBomDestination=$SSDLC_DIR -PcyclonedxBomName=sbom_without_team_name
     - command: shell.exec
       type: test
       params:
@@ -553,18 +568,12 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        if [[ "${triggered_by_git_tag}" != "" ]]; then
-          EXTRA_PROP="-PisTagTriggered"
-        else
-          if [[ "${BUILD_TYPE}" == "eap" ]]; then
-            # Sets EAP build flag when not triggered by a git tag. Useful for testing the eap build 
-            # without needing to rely on Tag-triggered build
-            EXTRA_PROP="-PisEapBuild=true"
-          fi
+
+        if [[ "${BUILD_TYPE}" == "eap" ]]; then
+          # Sets EAP build flag. Useful for testing the eap build without needing to rely on Tag-triggered build
+          IS_EAP_PROP="-PisEapBuild=true"
         fi
-        ./gradlew clean generateLicenseReport --rerun-tasks && \
-        echo -e "$(cat resources/third_party_header.txt)\n$(cat build/reports/dependency-license/THIRD-PARTY-LICENSE.txt)" > build/reports/dependency-license/THIRD-PARTY-LICENSE.txt && \
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $EXTRA_PROP clean -x test -x integrationTest spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP $IS_EAP_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -574,7 +583,55 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew spotlessCheck
+        ./gradlew $IS_RELEASE_PROP spotlessCheck
+
+  "check javadoc":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        ./gradlew $IS_RELEASE_PROP javadoc
+
+  "check thirdparty notices":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generateLicenseReport
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/reports/licenses/THIRD-PARTY-LICENSE.txt
+        remote_file: ${S3_ARTIFACTS_DIR}/reports/licenses/THIRD-PARTY-LICENSE.txt
+        content_type: text/plain; charset=utf-8
+        permissions: public-read
+
+  "check pom generation":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          ./gradlew $IS_RELEASE_PROP clean generatePomFileForMavenJavaPublication
+    - command: s3.put
+      params:
+        silent: true
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/build/publications/mavenJava/pom-default.xml
+        remote_file: ${S3_ARTIFACTS_DIR}/publications/pom-default.xml
+        content_type: application/xml; charset=utf-8
+        permissions: public-read
 
   "run unit test":
     command: shell.exec
@@ -584,7 +641,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean test
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean test
 
   "run mongosqltranslate library load test":
     command: shell.exec
@@ -605,14 +662,14 @@ functions:
         mkdir -p "$TEST_DIR"
         cp $MONGOSQL_LIB_PATH $TEST_LIB_PATH
         MONGOSQL_TRANSLATE_PATH="TEST_LIB_PATH" \
-            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
+            ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
 
         # Move library file to where MongoDriver class is located
         mkdir -p build/classes/java/
         cp -f $MONGOSQL_LIB_PATH build/classes/java/
 
         # Test loading library from same directory as where the JDBC driver is located
-        ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
+        ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
 
         # Test loading library from an invalid path specified in ENV variable
         MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
@@ -636,8 +693,8 @@ functions:
       script: |
         ${PREPARE_SHELL}
         ./resources/run_adf.sh start &&
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} runDataLoader &&
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} clean integrationTest \
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP runDataLoader &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean integrationTest \
             -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -718,7 +775,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew integrationTest -PisEapBuild=true \
+        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -801,7 +858,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew integrationTest -PisEapBuild=true \
+        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
             -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -864,26 +921,26 @@ functions:
         - "build/libs/*.jar"
 
   "run smoke test":
-    - command: shell.exec
-      type: test
-      params:
-        env:
-          GITHUB_TOKEN: "${github_token}"
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          
-          #Smoke test are loading the "*-all.jar" from mongo-jdbc-driver/build/libs/
-          ls -lrt build/libs/
-          echo "Build Type:"
-          echo ${BUILD_TYPE}
-          
-          ./resources/run_adf.sh start &&
-          ./gradlew runDataLoader &&
-          ./gradlew :smoketest:test -Psmoketest
-          EXITCODE=$?
-          ./resources/run_adf.sh stop         
-          exit $EXITCODE
+    command: shell.exec
+    type: test
+    params:
+      env:
+        GITHUB_TOKEN: "${github_token}"
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        
+        #Smoke test are loading the "*-all.jar" from mongo-jdbc-driver/build/libs/
+        ls -lrt build/libs/
+        echo "Build Type:"
+        echo ${BUILD_TYPE}
+        
+        ./resources/run_adf.sh start &&
+        ./gradlew $IS_RELEASE_PROP runDataLoader &&
+        ./gradlew $IS_RELEASE_PROP :smoketest:test -Psmoketest
+        EXITCODE=$?
+        ./resources/run_adf.sh stop         
+        exit $EXITCODE
 
   "export variables":
     - command: shell.exec
@@ -1034,6 +1091,9 @@ functions:
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
             export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
+            if [[ "${triggered_by_git_tag}" != "" ]]; then
+              export IS_RELEASE_PROP="-PisRelease"
+            fi
 
             # ssdlc relevant variables
             export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
@@ -1313,8 +1373,9 @@ functions:
           if [ -d "build/libs" ]; then
             # A sanity check to see if expected files are indeed here
             ls -lrt build/libs
-          
+
             if [[ "${BUILD_TYPE}" == "eap" ]]; then
+              # For EAP builds (tagged or untagged), add "eap" to the name
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
@@ -1322,8 +1383,8 @@ functions:
                   mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
                 fi
               done
-            else
-              # Rename files according to our naming scheme
+            elif [[ "${triggered_by_git_tag}" == "" ]]; then
+              # For non-EAP, non-tagged builds, rename to standard format
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
@@ -1333,6 +1394,7 @@ functions:
               done
             fi
           fi
+
     - command: s3.put
       params:
         silent: true
@@ -1344,14 +1406,21 @@ functions:
         permissions: public-read
 
   "publish maven":
+    - *assume_role_cmd
+    - command: s3.get
+      params:
+        <<: *evg_bucket_config
+        local_file: artifacts/ssdlc/mongodb-jdbc.sbom.json
+        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        content_type: application/json
     - command: shell.exec
       type: test
       params:
         shell: bash
-        silent: true
         working_dir: mongo-jdbc-driver
         script: |
-          PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_TOKEN_NAME=${NEXUS_TOKEN_NAME} NEXUS_TOKEN=${NEXUS_TOKEN} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64="${RING_FILE_GPG_BASE64}" ./gradle/publish.sh
+          ${PREPARE_SHELL}
+          PROJECT_DIRECTORY="$(pwd)" NEXUS_PROFILE_ID=${NEXUS_PROFILE_ID} NEXUS_TOKEN_NAME=${NEXUS_TOKEN_NAME} NEXUS_TOKEN=${NEXUS_TOKEN} NEXUS_URL=${NEXUS_URL} SIGNING_PASSWORD=${SIGNING_PASSWORD} SIGNING_KEY_ID=${SIGNING_KEY_ID} RING_FILE_GPG_BASE64="${RING_FILE_GPG_BASE64}" IS_RELEASE_PROP=$IS_RELEASE_PROP ./gradle/publish.sh
 
   "update download center feed":
     - command: shell.exec
