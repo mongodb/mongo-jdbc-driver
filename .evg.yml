@@ -653,15 +653,34 @@ functions:
         ${PREPARE_SHELL}
         set -e
         
-        ./gradlew downloadLibMongosqlTranslate
         export MONGOSQL_LIB_PATH="$PWD/src/main/resources/x86_64/linux/libmongosqltranslate.so"
-
+      
+        # Download the libmongosqltranslate libraries
+        ./gradlew downloadLibMongosqlTranslate &
+        GRADLE_PID=$!
+    
+        TIMEOUT=120
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if [ -f "$MONGOSQL_LIB_PATH" ]; then
+            kill $GRADLE_PID 2>/dev/null || true
+            break
+          fi
+          sleep 5
+          ELAPSED=$((ELAPSED+5))
+        done
+        if [ ! -f "$MONGOSQL_LIB_PATH" ]; then
+          kill $GRADLE_PID 2>/dev/null || true
+          echo "ERROR: Failed to download libmongosqltranslate.so"
+          exit 1
+        fi
+        
         # Test loading library from path specified in ENV variable
         TEST_DIR="$PWD/src/test/resources/MongoSqlLibraryTest"
         TEST_LIB_PATH="$TEST_DIR/libmongosqltranslate.so"
         mkdir -p "$TEST_DIR"
         cp $MONGOSQL_LIB_PATH $TEST_LIB_PATH
-        MONGOSQL_TRANSLATE_PATH="TEST_LIB_PATH" \
+        MONGOSQL_TRANSLATE_PATH="$TEST_LIB_PATH" \
             ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
 
         # Move library file to where MongoDriver class is located

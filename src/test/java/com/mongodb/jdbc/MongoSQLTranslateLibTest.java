@@ -18,11 +18,14 @@ package com.mongodb.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.mongosql.GetMongosqlTranslateVersionResult;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +33,8 @@ public class MongoSQLTranslateLibTest {
 
     /** Helper function to call the runCommand endpoint of the translation library. */
     private static void testRunCommand() throws MongoSQLException, MongoSerializationException {
-        MongoSQLTranslate mongosqlTranslate = new MongoSQLTranslate(null);
+        MongoLogger mongoLogger = new MongoLogger(Logger.getLogger("Logger"), 1);
+        MongoSQLTranslate mongosqlTranslate = new MongoSQLTranslate(mongoLogger);
 
         GetMongosqlTranslateVersionResult result = mongosqlTranslate.getMongosqlTranslateVersion();
 
