@@ -117,17 +117,167 @@ The query SELECT * from FLATTEN(users) will return the following columns, with t
 
 ### Work with Arrays
 
-Arrays can be unwound with the UNWIND operator. You specify which array to unwind with the
-`WITH PATH` identifier. The following query:
+Arrays can be unwound using the UNWIND operator, which expands array elements into individual rows in the result set.
+
+#### UNWIND Syntax
+
+```sql
+UNWIND(<datasource> WITH PATH | PATHS => <paths>,
+                         INDEX => <name>,
+                         OUTER => <bool>)
+```
+
+Where:
+- `datasource` is any valid data source
+- `PATH` or `PATHS` specifies the field path(s) to unwind. If specified in parentheses, multiple paths may be expressed.
+- `INDEX` is the name to assign to the index column
+- `OUTER` indicates whether documents with null, missing, or empty array values are preserved
+
+#### Single Path Unwinding
+
+For a simple array, you can unwind a single path:
 
 ```sql
 SELECT * FROM UNWIND(users WITH PATH => users.favorites) WHERE username = 'AzureDiamond'
 ```
 
-Will result in two rows in the result set, each with an entry from the `favorites` array.
+This will result in multiple rows in the result set, each with an entry from the `favorites` array:
 
 - "Jon Snow", "AzureDiamond", "irc", ...
 - "Jon Snow", "AzureDiamond", "hunter2", ...
+
+#### Multiple Path Unwinding
+
+The UNWIND operator allows unwinding multiple arrays in a single operation using compound array identifiers:
+
+```sql
+SELECT a.b.c AS c, b.d AS d
+FROM UNWIND(collection WITH PATHS => (a[].b[], b[]))
+```
+
+This unwinding operation is equivalent to:
+
+```sql
+SELECT a.b.c AS c, b.d AS d
+FROM UNWIND(UNWIND(UNWIND(collection WITH PATH => a) WITH PATH => a.b) WITH PATH => b)
+```
+
+#### Compound Array Identifiers
+
+Square brackets (`[]`) after a field name indicate where an unwind operation should occur. For nested arrays, you can specify brackets at each level:
+
+```sql
+-- Unwind the array 'a', then unwind the nested array 'b' within each element of 'a'
+SELECT a.b.c AS c FROM UNWIND(collection WITH PATHS => (a[].b[]))
+```
+
+For anonymous inner arrays, you can use multiple consecutive brackets:
+
+```sql
+-- Unwind the array 'g', then unwind each anonymous inner array
+SELECT * FROM UNWIND(collection WITH PATHS => (g[][]))
+```
+
+#### Index Option
+
+You can track the position of elements in the original array using the INDEX option:
+
+```sql
+-- Global index for all unwound arrays
+SELECT a.b.c AS c, a_ix, b_ix
+FROM UNWIND(collection WITH PATHS => (a[].b[], b[]), INDEX => ix)
+
+-- Specific index for each unwound array
+SELECT a.b.c AS c, a_ix, b_ix
+FROM UNWIND(collection WITH PATHS => (a[INDEX => a_ix].b[], b[INDEX => b_ix]))
+```
+
+#### OUTER Option
+
+The OUTER option preserves documents that have null, missing, or empty array values:
+
+```sql
+-- Apply OUTER option to all unwound arrays
+SELECT * FROM UNWIND(collection WITH PATHS => (a[].b[]), OUTER => TRUE)
+
+-- Apply OUTER option to a specific unwound array
+SELECT * FROM UNWIND(collection WITH PATHS => (a[OUTER => TRUE].b[]))
+```
+
+#### Examples
+
+Given a document in collection "foo":
+
+```json
+{
+  "a": [
+    { "b": [ { "c": 1 } ] }
+  ],
+  "b": [
+    { "d": 42 }
+  ],
+  "w": {
+    "x": [ 3 ],
+    "y": [ { "z": [ 4 ] } ]
+  }
+}
+```
+
+To extract nested values from multiple arrays:
+
+```sql
+-- Unwind multiple arrays in a single operation
+SELECT w.x as x, w.y.z as z
+FROM UNWIND(foo WITH PATHS => (w.x[], w.y[].z[]))
+```
+
+Result:
+
+```sh
+x | z
+--+--
+3 | 4
+
+```
+
+To unwind arrays with index tracking:
+
+```sql
+SELECT a.b.c AS c, a_ix, b_ix, b.d AS d
+FROM UNWIND(foo WITH PATHS => (a[INDEX => a_ix].b[], b[INDEX => b_ix]))
+```
+
+Result:
+
+```sh
+c | a_ix | b_ix | d
+--+------+------+----
+1 |    0 |    0 | 42
+```
+
+#### Important Notes
+
+1. Compound array identifiers must be enclosed in parentheses:
+
+   ```sql
+   -- Error: compound array identifier not enclosed in parentheses
+   SELECT * FROM UNWIND(foo WITH PATH => a[].b[])
+
+   -- Correct
+   SELECT * FROM UNWIND(foo WITH PATHS => (a[].b[]))
+   ```
+
+2. You must unwind parent arrays before accessing nested arrays:
+
+   ```sql
+   -- Error: a.b[] is invalid because a hasn't been unwound first
+   SELECT * FROM UNWIND(foo WITH PATH => (a.b[]))
+
+   -- Correct
+   SELECT * FROM UNWIND(foo WITH PATHS => (a[].b[]))
+   ```
+
+3. The PATH and PATHS keywords are interchangeable.
 
 ### Convert Data Types
 
@@ -619,7 +769,8 @@ FROM SomeTable;
 
 - SIMILAR TO
 - RANDOM
-- Timezone Conversion (MongoDB stores dates in UTC)
+- Timezone Conversion
+  Not Supported: MongoDB stores dates in UTC.
 - GROUP_CONCAT
 
 ### Additional Notes
