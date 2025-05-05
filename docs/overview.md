@@ -57,9 +57,9 @@ SELECT `select` from SQL
 
 The driver will use the database specified in the following order:
 1. Query
-2. ODBC Connection String/DSN
+2. JDBC Connection String/DSN
 
-For example, if your ODBC connection string or DSN contains the DATABASE value **Store1**,
+For example, if your JDBC connection string or DSN contains the DATABASE value **Store1**,
 the query `SELECT * FROM Sales` will query the Sales collection in the Store1 database.
 
 You may also specify the database in the query. The following query will target the Sales collection
