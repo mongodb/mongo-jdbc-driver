@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -21,9 +23,10 @@ public class SmokeTest {
     static final String URL = "jdbc:mongodb://localhost";
     static final String DB = "integration_test";
 
-    private Connection conn;
+    // Connection and simple query to use for sanity check.
+    private Map<Connection, String> connections = new HashMap<>();
 
-    public static Connection getBasicConnection(String url, String db)
+    public static Connection getADFInstanceConnection(String url, String db)
             throws SQLException {
         Properties p = new java.util.Properties();
         p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
@@ -34,32 +37,84 @@ public class SmokeTest {
         return DriverManager.getConnection(URL, p);
     }
 
+    private Connection getDirectRemoteInstanceConnection() throws SQLException {
+        String mongoHost = System.getenv("SRV_TEST_HOST");
+        String mongoURI =
+                "mongodb+srv://"
+                        + mongoHost
+                        + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
+        String fullURI = "jdbc:" + mongoURI;
+
+        String user = System.getenv("SRV_TEST_USER");
+        String pwd = System.getenv("SRV_TEST_PWD");
+        String authSource = System.getenv("SRV_TEST_AUTH_DB");
+
+        Properties p = new java.util.Properties();
+        p.setProperty("user", user);
+        p.setProperty("password", pwd);
+        p.setProperty("authSource", authSource);
+        p.setProperty("database", "test");
+
+        return DriverManager.getConnection(fullURI, p);
+    }
+
     @BeforeEach
     public void setupConnection() throws SQLException {
-        conn = getBasicConnection(URL, DB);
+        String buildType = System.getenv("BUILD_TYPE");
+        boolean isEapBuild = "eap".equalsIgnoreCase(buildType);
+        System.out.println("Read environment variable BUILD_TYPE: '" + buildType + "', Detected EAP build: " + isEapBuild);
+
+        connections.put(getADFInstanceConnection(URL, DB), "SELECT * from class");
+
+        if (isEapBuild) {
+            try {
+                Connection directConnection = getDirectRemoteInstanceConnection();
+                connections.put(directConnection, "Select * from accounts limit 5");
+            } catch (SQLException e) {
+                System.err.println("Failed to connect to direct remote instance: " + e.getMessage());
+                throw e;
+            }
+        } else {
+            try {
+                Connection directConnection = getDirectRemoteInstanceConnection();
+                directConnection.close();
+                throw new AssertionError("Expected direct remote connection to fail for non-EAP build");
+            } catch (SQLException e) {
+                if (!"Connection failed.".equals(e.getMessage())) {
+                    throw new AssertionError("Expected 'Connection failed.' but got: " + e.getMessage());
+                }
+            }
+        }
     }
 
     @AfterEach
     protected void cleanupTest() throws SQLException {
-        conn.close();
+        for (Connection conn : connections.keySet()) {
+            conn.close();
+        }
     }
 
     @Test
     public void databaseMetadataTest() throws SQLException {
-        DatabaseMetaData dbMetadata = conn.getMetaData();
-        System.out.println(dbMetadata.getDriverName());
-        System.out.println(dbMetadata.getDriverVersion());
+        System.out.println("Running databaseMetadataTest");
+        for (Connection conn : connections.keySet()) {
+            DatabaseMetaData dbMetadata = conn.getMetaData();
+            System.out.println(dbMetadata.getDriverName());
+            System.out.println(dbMetadata.getDriverVersion());
 
-        ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
-        rowsReturnedCheck(rs);
+            ResultSet rs = dbMetadata.getColumns(null, "%", "%", "%");
+            rowsReturnedCheck(rs);
+        }
     }
 
     @Test
     public  void queryTest() throws SQLException {
-        try (Statement stmt = conn.createStatement()) {
-            String query = "SELECT * from class";
-            ResultSet rs = stmt.executeQuery(query);
-            rowsReturnedCheck(rs);
+        System.out.println("Running queryTest");
+        for (Map.Entry<Connection, String> entry : connections.entrySet()) {
+            try (Statement stmt = entry.getKey().createStatement()) {
+                ResultSet rs = stmt.executeQuery(entry.getValue());
+                rowsReturnedCheck(rs);
+            }
         }
     }
 
@@ -68,6 +123,7 @@ public class SmokeTest {
         while (rs.next()) {
             actualCount++;
         }
+        System.out.println("Rows returned count: " + actualCount);
         assertTrue(actualCount >= 1, "No rows returned in result set");
     }
 }

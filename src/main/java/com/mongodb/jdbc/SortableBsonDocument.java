@@ -34,6 +34,7 @@ public class SortableBsonDocument extends BsonDocument implements Comparable<Sor
     enum ValueType {
         String,
         Int,
+        Boolean,
     }
 
     List<SortSpec> sortSpecs;
@@ -62,6 +63,12 @@ public class SortableBsonDocument extends BsonDocument implements Comparable<Sor
                             this.nestedDocValue
                                     .getInt32(sortSpec.key)
                                     .compareTo(o.nestedDocValue.getInt32(sortSpec.key));
+                    break;
+                case Boolean:
+                    r =
+                            this.nestedDocValue
+                                    .getBoolean(sortSpec.key)
+                                    .compareTo(o.nestedDocValue.getBoolean(sortSpec.key));
                     break;
             }
 

@@ -16,7 +16,7 @@
 
 package com.mongodb.jdbc;
 
-import static com.mongodb.jdbc.MongoDatabaseMetaData.filterEmptiesAndAdmin;
+import static com.mongodb.jdbc.MongoDatabaseMetaData.filterEmptiesAndInternalDBs;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.ConnectionString;
@@ -451,7 +451,7 @@ public class MongoDatabaseMetaDataTest {
         assertEquals(
                 expected,
                 input.stream()
-                        .filter(dbName -> filterEmptiesAndAdmin(dbName))
+                        .filter(dbName -> filterEmptiesAndInternalDBs(dbName))
                         .collect(Collectors.toList()));
     }
 }

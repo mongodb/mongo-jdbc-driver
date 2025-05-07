@@ -114,6 +114,27 @@ You can find the generated jar in build/libs/
 ```
 ./gradlew spotlessApply
 ```
+### Downloading mongosqltranslate Library
+The driver requires the `mongosqltranslate` library for direct cluster SQL translation.  For initial gradle builds the
+library files will be automatically downloaded to the cache directory `${project.rootDir}/.library_cache/`.
+If a specific version of the library already exists in the cache, it will be used. 
+#### Specifying library version:
+By default, the `snapshot` version will be downloaded.  To use a specific version, use the libmongosqltranslateVersion 
+property:
+```bash
+./gradlew clean build -PlibmongosqltranslateVersion=1.0.0-beta-1
+```
+#### Force Re-download:
+Unless the updateLibs property is set to true, cached versions will be used to avoid repeated downloads.  
+```bash
+# Override cached versions
+./gradlew clean build -PupdateLibs=true
+```
+#### Run download task only
+```bash
+./gradlew downloadLibMongosqlTranslate
+```
+
 ## Integration Testing
 Integration testing requires a local MongoDB and Atlas Data Federation instance to be running
 #### Environment Variables

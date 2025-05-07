@@ -11,10 +11,52 @@ variables:
       role_arn: ${assume_role_arn}
       duration_seconds: 3600
   - &evg_bucket_config
-    aws_key: ${AWS_ACCESS_KEY_ID}
-    aws_secret: ${AWS_SECRET_ACCESS_KEY}
-    aws_session_token: ${AWS_SESSION_TOKEN}
-    bucket: evg-bucket-mongo-jdbc-driver
+      aws_key: ${AWS_ACCESS_KEY_ID}
+      aws_secret: ${AWS_SECRET_ACCESS_KEY}
+      aws_session_token: ${AWS_SESSION_TOKEN}
+      bucket: evg-bucket-mongo-jdbc-driver
+  - &check_and_allow_for_eap_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" != "eap" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is not 'eap'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+           echo "BUILD_TYPE is 'eap'. Allowing task execution to continue."
+        fi
+  - &check_and_allow_for_standard_and_snapshot_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" == "eap" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is 'eap'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
+        fi
+  - &check_and_allow_for_eap_and_snapshot_build
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+        if [ "${BUILD_TYPE}" == "standard" ]; then
+          echo "BUILD_TYPE (${BUILD_TYPE}) is 'standard'. Stopping task execution."
+          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
+        else
+          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
+        fi
 
 pre:
   - func: "fetch source"
@@ -54,7 +96,8 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
-      - name: ssdlc-artifacts-snapshot
+      - name: ssdlc-artifacts-snapshot-standard
+      - name: ssdlc-artifacts-snapshot-eap
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -65,10 +108,8 @@ buildvariants:
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
       - name: "test-adf-integration"
-      # SQL-2289: integration tests. Use the actual mongosqltranslate library for testing instead of mock.
-      # - name: "test-dc-integration"
-      # SQL-2544: Merge jdbc EAP branch into master
-      # - name: "test-x509-integration"
+      - name: "test-dc-integration"
+      - name: "test-x509-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -88,6 +129,8 @@ buildvariants:
       - name: "build"
       - name: "test-smoke"
       - name: "publish-maven"
+      - name: "make-docs"
+      - name: "publish-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
       - name: "javadoc"
@@ -115,48 +158,12 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
+      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
     commands:
-      # SQL-2544: Merge jdbc EAP branch into master
-
-      #      # fetch mongosqltranslate libraries for each platform before building
-      #      # linux arm
-      #      - func: "fetch libmongosqltranslate"
-      #        vars:
-      #          arch: "arm"
-      #          platform: "linux"
-      #          lib_prefix: "lib"
-      #          ext: "so"
-      #      # linux x86
-      #      - func: "fetch libmongosqltranslate"
-      #        vars:
-      #          arch: "x86_64"
-      #          platform: "linux"
-      #          lib_prefix: "lib"
-      #          ext: "so"
-      #      # macos arm
-      #      - func: "fetch libmongosqltranslate"
-      #        vars:
-      #          arch: "arm"
-      #          platform: "macos"
-      #          lib_prefix: "lib"
-      #          ext: "dylib"
-      #      # macos x86
-      #      - func: "fetch libmongosqltranslate"
-      #        vars:
-      #          arch: "x86_64"
-      #          platform: "macos"
-      #          lib_prefix: "lib"
-      #          ext: "dylib"
-      #      # windows
-      #      - func: "fetch libmongosqltranslate"
-      #        vars:
-      #          arch: "x86_64"
-      #          platform: "win"
-      #          lib_prefix: ""
-      #          ext: "dll"
+      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
       - func: "run X509 integration test"
 
@@ -177,8 +184,65 @@ tasks:
       - name: sbom
         variant: code-quality-and-correctness
     commands:
+      - func: "check and allow for standard and snapshot build"
       - func: "publish maven"
       - func: "trace artifacts"
+
+  # make and upload docs
+  - name: make-docs
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    commands:
+      - func: "build jdbc docs"
+      - func: "upload jdbc docs"
+
+  # Publishes the EAP release artifacts to S3
+  - name: publish-s3
+    allowed_requesters: ["ad_hoc", "github_tag", "patch"]
+    depends_on:
+      - name: "build"
+        variant: "release"
+      - name: "test-smoke"
+        variant: "release"
+    commands:
+      - *check_and_allow_for_eap_build
+      - *assume_role_cmd
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+      - command: s3.get
+        params:
+          working_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_files_include_filter:
+            - mongodb-jdbc-eap-*.jar
+          remote_file: eap/mongo-jdbc-driver-eap/
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/java-archive
+      - command: s3.get
+        params:
+          work_dir: mongo-jdbc-driver
+          <<: *evg_bucket_config
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+      - command: s3.put
+        params:
+          aws_key: ${release_aws_key}
+          aws_secret: ${release_aws_secret}
+          local_file: docs/MongoDB_JDBC_Guide.pdf
+          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          bucket: translators-connectors-releases
+          permissions: public-read
+          content_type: application/pdf
 
   - name: spotless
     commands:
@@ -202,6 +266,7 @@ tasks:
       - name: "publish-maven"
         variant: "release"
     commands:
+      - func: "check and allow for standard and snapshot build"
       - func: "update download center feed"
 
   - name: semgrep
@@ -226,12 +291,13 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
+      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
 
-  - name: ssdlc-artifacts-snapshot
+  - name: ssdlc-artifacts-snapshot-standard
     run_on: ubuntu2204-small
     allow_for_git_tag: false
     depends_on:
@@ -241,12 +307,35 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
+      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
 
+  - name: ssdlc-artifacts-snapshot-eap
+    run_on: ubuntu2204-small
+    allow_for_git_tag: false
+    depends_on:
+      - name: sbom
+        variant: code-quality-and-correctness
+      - name: semgrep
+        variant: code-quality-and-correctness
+    exec_timeout_secs: 300 # 5m
+    commands:
+      - func: "check and allow for eap build"
+      - func: "generate compliance report"
+
 functions:
+  "check and allow for standard and snapshot build":
+    - *check_and_allow_for_standard_and_snapshot_build
+
+  "check and allow for eap and snapshot build":
+    - *check_and_allow_for_eap_and_snapshot_build
+
+  "check and allow for eap build":
+    - *check_and_allow_for_eap_build
+
   "augment sbom":
     - command: ec2.assume_role
       display_name: Assume IAM role with permissions to pull Kondukto API token
@@ -258,7 +347,7 @@ functions:
         silent: true
         shell: bash
         working_dir: mongo-jdbc-driver
-        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
         script: |
           # use AWS CLI to get the Kondukto API token from AWS Secrets Manager
           kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
@@ -274,10 +363,84 @@ functions:
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
+          
+          ls -lrt $SSDLC_DIR
+          
+          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
+          
+          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
+          
+          echo "-- Augmenting SBOM Lite --"
+          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
+          --env-file ${workdir}/kondukto_credentials.env \
+          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
+          echo "-------------------------------"
+          
+          ls -lrt $SSDLC_DIR
+    - command: ec2.assume_role
+      params:
+        role_arn: ${assume_role_arn}
+        duration_seconds: 3600
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
+        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        content_type: application/json
+        permissions: public-read
+
+  "build jdbc docs":
+    - command: subprocess.exec
+      params:
+        binary: bash
+        working_dir: mongo-jdbc-driver
+        args:
+          - "./evergreen/make_docs.sh"
+
+  "upload jdbc docs":
+    - *assume_role_cmd
+    - command: s3.put
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
+        remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
+        permissions: public-read
+        content_type: application/pdf
+
+  "push SBOM Lite to Silk":
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
 
           ls -lrt $SSDLC_DIR
 
           echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
+
+          echo "-- Uploading initial SBOM Lite to Silk --"
+          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
+          --env-file silkbomb.env \
+          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+          upload --silk-asset-group ${SILK_ASSET_GROUP} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME
+          echo "-------------------------------"
+
+  "pull augmented SBOM from Silk":
+    - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          cat << EOF > silkbomb.env
+          SILK_CLIENT_ID=${SILK_CLIENT_ID}
+          SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET}
+          EOF
 
           echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
 
@@ -401,10 +564,16 @@ functions:
     type: test
     params:
       shell: bash
+      add_expansions_to_env: true
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
+
+        if [[ "${BUILD_TYPE}" == "eap" ]]; then
+          # Sets EAP build flag. Useful for testing the eap build without needing to rely on Tag-triggered build
+          IS_EAP_PROP="-PisEapBuild=true"
+        fi
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP $IS_EAP_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -483,17 +652,47 @@ functions:
       script: |
         ${PREPARE_SHELL}
         set -e
-
+        
+        export MONGOSQL_LIB_PATH="$PWD/src/main/resources/x86_64/linux/libmongosqltranslate.so"
+      
+        # Download the libmongosqltranslate libraries
+        ./gradlew downloadLibMongosqlTranslate &
+        GRADLE_PID=$!
+    
+        TIMEOUT=120
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if [ -f "$MONGOSQL_LIB_PATH" ]; then
+            kill $GRADLE_PID 2>/dev/null || true
+            break
+          fi
+          sleep 5
+          ELAPSED=$((ELAPSED+5))
+        done
+        if [ ! -f "$MONGOSQL_LIB_PATH" ]; then
+          kill $GRADLE_PID 2>/dev/null || true
+          echo "ERROR: Failed to download libmongosqltranslate.so"
+          exit 1
+        fi
+        
         # Test loading library from path specified in ENV variable
-        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so" \
+        TEST_DIR="$PWD/src/test/resources/MongoSqlLibraryTest"
+        TEST_LIB_PATH="$TEST_DIR/libmongosqltranslate.so"
+        mkdir -p "$TEST_DIR"
+        cp $MONGOSQL_LIB_PATH $TEST_LIB_PATH
+        MONGOSQL_TRANSLATE_PATH="$TEST_LIB_PATH" \
             ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithEnvironmentVariable
 
         # Move library file to where MongoDriver class is located
         mkdir -p build/classes/java/
-        mv -f src/test/resources/MongoSqlLibraryTest/libmongosqltranslate.so build/classes/java/
+        cp -f $MONGOSQL_LIB_PATH build/classes/java/
 
         # Test loading library from same directory as where the JDBC driver is located
         ./gradlew $IS_RELEASE_PROP runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingFromDriverPath
+
+        # Test loading library from an invalid path specified in ENV variable
+        MONGOSQL_TRANSLATE_PATH="$PWD/src/test/resources/MongoSqlLibraryTest/thisIsNotCorrect" \
+            ./gradlew runMongoSQLTranslateLibTest -PtestMethod=testLibraryLoadingWithInvalidEnvironmentVariableFallback
 
   "generate github token":
     command: github.generate_token
@@ -511,59 +710,59 @@ functions:
       shell: bash
       working_dir: mongo-jdbc-driver
       script: |
-          ${PREPARE_SHELL}
-          ./resources/run_adf.sh start &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP runDataLoader &&
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean integrationTest \
-              -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
-          GRADLE_PID=$!
+        ${PREPARE_SHELL}
+        ./resources/run_adf.sh start &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP runDataLoader &&
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean integrationTest \
+            -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
 
-          echo "Gradle process started with PID $GRADLE_PID"
+        echo "Gradle process started with PID $GRADLE_PID"
 
-          # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
-          # This monitoring approach will detect build completion or failure even when the Gradle
-          # process doesn't terminate properly and allows the task to complete.
-          SECONDS=0
-          TIMEOUT=1800  # 30 minute timeout
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
 
-          while true; do
-              if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
-                  echo "Build successful!"
-                  EXITCODE=0
-                  break
-              fi
+        while true; do
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
 
-              if grep -q "BUILD FAILED" gradle_output.log; then
-                  echo "Build failed!"
-                  EXITCODE=1
-                  break
-              fi
+            if grep -q "BUILD FAILED" gradle_output.log; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
 
-              if (( SECONDS > TIMEOUT )); then
-                  echo "$TIMEOUT second timeout reached. Exiting with failure."
-                  EXITCODE=1
-                  break
-              fi
+            if (( SECONDS > TIMEOUT )); then
+                echo "$TIMEOUT second timeout reached. Exiting with failure."
+                EXITCODE=1
+                break
+            fi
 
-              # Check if Gradle process is still running
-              if ! kill -0 $GRADLE_PID 2>/dev/null; then
-                  echo "Gradle process has finished."
-                  wait $GRADLE_PID
-                  EXITCODE=$?
-                  break
-              fi
+            # Check if Gradle process is still running
+            if ! kill -0 $GRADLE_PID 2>/dev/null; then
+                echo "Gradle process has finished."
+                wait $GRADLE_PID
+                EXITCODE=$?
+                break
+            fi
 
-              sleep 5
-          done
+            sleep 5
+        done
 
-          cat gradle_output.log
+        cat gradle_output.log
 
-          kill $GRADLE_PID 2>/dev/null || true
+        kill $GRADLE_PID 2>/dev/null || true
 
-          ./resources/run_adf.sh stop
+        ./resources/run_adf.sh stop
 
-          echo "Integration test exit code: $EXITCODE"
-          exit $EXITCODE
+        echo "Integration test exit code: $EXITCODE"
+        exit $EXITCODE
 
   "run dc integration test":
     command: shell.exec
@@ -595,7 +794,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP integrationTest \
+        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -636,9 +835,7 @@ functions:
         done
 
         cat gradle_output.log
-
         kill $GRADLE_PID 2>/dev/null || true
-
         pkill mongod
 
         echo "Integration test exit code: $EXITCODE"
@@ -680,7 +877,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP integrationTest \
+        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
             -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -737,7 +934,7 @@ functions:
       work_dir: mongo-jdbc-driver
       key_id: ${papertrail_id}
       secret_key: ${papertrail_key}
-      product: mongo-jdbc-driver
+      product: mongo-jdbc-driver-eap
       version: ${MDBJDBC_VER}
       filenames:
         - "build/libs/*.jar"
@@ -754,6 +951,8 @@ functions:
         
         #Smoke test are loading the "*-all.jar" from mongo-jdbc-driver/build/libs/
         ls -lrt build/libs/
+        echo "Build Type:"
+        echo ${BUILD_TYPE}
         
         ./resources/run_adf.sh start &&
         ./gradlew $IS_RELEASE_PROP runDataLoader &&
@@ -776,9 +975,24 @@ functions:
           # Tag triggered runs are releases and the version is set in the tag.
           # Other runs are snapshot builds (periodic builds or patches)
           if [[ "${triggered_by_git_tag}" != "" ]]; then
-            export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+            echo "Tag triggered build: ${triggered_by_git_tag}"
+  
+            if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
+              echo "Detected EAP tag format."
+              export BUILD_TYPE="eap"
+              # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>'
+              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
+              export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $2}')
+            else
+              echo "Setting standard build."
+              export BUILD_TYPE="standard"
+              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
+              export LIBMONGOSQLTRANSLATE_VER="none"
+            fi
           else
+            export BUILD_TYPE=snapshot
             export MDBJDBC_VER=snapshot
+            export LIBMONGOSQLTRANSLATE_VER=snapshot
           fi
           
           # Set JAVA_HOME based on platform
@@ -811,6 +1025,8 @@ functions:
           
           echo "=== Generated Values ==="
           echo "JDBC version = $MDBJDBC_VER"
+          echo "Mongosqltranslate version = $LIBMONGOSQLTRANSLATE_VER"
+          echo "Build type = $BUILD_TYPE"
           echo "Java home = $JAVA_HOME"
           echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
           echo "=== SSDLC Values ==="
@@ -827,6 +1043,7 @@ functions:
           mkdir -p $ARTIFACTS_DIR
           cat <<EOT > $ARTIFACTS_DIR/initial_expansions.yml
           MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
           JAVA_HOME: "$JAVA_HOME"
           ARTIFACTS_DIR: "$ARTIFACTS_DIR"
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
@@ -838,6 +1055,7 @@ functions:
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          BUILD_TYPE: "$BUILD_TYPE"
           EOT
     - command: expansions.update
       params:
@@ -863,12 +1081,14 @@ functions:
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
           MDBJDBC_VER: "$MDBJDBC_VER"
+          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
           JAVA_HOME: "$JAVA_HOME"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
+          BUILD_TYPE: "$BUILD_TYPE"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -879,8 +1099,8 @@ functions:
             export ADF_TEST_HOST=${adf_test_host}
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export SRV_TEST_HOST=${srv_test_host}
-            export SRV_TEST_USER=${srv_test_user}
-            export SRV_TEST_PWD=${srv_test_pwd}
+            export SRV_TEST_USER=${srv_test_user_dc}
+            export SRV_TEST_PWD=${srv_test_pwd_dc}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
             export LOCAL_MDB_PORT_COM=${local_mdb_port_com}
             export LOCAL_MDB_PORT_ENT=${local_mdb_port_ent}
@@ -889,6 +1109,7 @@ functions:
             export JAVA_HOME=${JAVA_HOME}
             export PROJECT_DIRECTORY=${PROJECT_DIRECTORY}
             export MDBJDBC_VER=${MDBJDBC_VER}
+            export LIBMONGOSQLTRANSLATE_VER=${LIBMONGOSQLTRANSLATE_VER}
             if [[ "${triggered_by_git_tag}" != "" ]]; then
               export IS_RELEASE_PROP="-PisRelease"
             fi
@@ -902,19 +1123,38 @@ functions:
             export SBOM_LITE="$SBOM_LITE"
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
+            export BUILD_TYPE="$BUILD_TYPE"
           EOT
-
     - command: expansions.update
       params:
         file: mongo-jdbc-driver/artifacts/expansions.yml
 
   "fetch jdbc shadow jar":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          ${PREPARE_SHELL}
+          
+          mkdir -p mongo-jdbc-driver/build/libs
+          
+          # Determine which JAR file to download based on BUILD_TYPE
+          if [ "${BUILD_TYPE}" == "eap" ]; then
+            echo "Fetching EAP JAR file"
+            echo "JAR_FILENAME: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
+          else
+            echo "Fetching standard JAR file"
+            echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
+          fi
+    - command: expansions.update
+      params:
+        file: jdbc_jar_expansion.yml
     - *assume_role_cmd
     - command: s3.get
       params:
         <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
-        remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-${MDBJDBC_VER}-all.jar
+        local_file: mongo-jdbc-driver/build/libs/${JAR_FILENAME}
+        remote_file: ${S3_ARTIFACTS_DIR}/${JAR_FILENAME}
 
   "fetch source":
     - command: shell.exec
@@ -1029,9 +1269,12 @@ functions:
       params:
         silent: true
         <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/index.html
-        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/index.html
+        preserve_path: true
+        local_files_include_filter:
+          - "mongo-jdbc-driver/build/reports/tests/integrationTest/*"
+        # local_file: mongo-jdbc-driver/build/reports/tests/integrationTest/
         content_type: text/html
+        remote_file: ${S3_ARTIFACTS_DIR}/integrationTest/
         permissions: public-read
         display_name: "Integration Test Results"
 
@@ -1142,14 +1385,24 @@ functions:
       type: test
       params:
         shell: bash
+        add_expansions_to_env: true
         working_dir: mongo-jdbc-driver
         script: |
           ${PREPARE_SHELL}
-          if [[ "${triggered_by_git_tag}" == "" ]]; then
-            if [ -d "build/libs" ]; then
-              # A sanity check to see if expected files are indeed here
-              ls -lrt build/libs
-              # Rename files according to our naming scheme
+          if [ -d "build/libs" ]; then
+            # A sanity check to see if expected files are indeed here
+            ls -lrt build/libs
+            if [[ "${BUILD_TYPE}" == "eap" ]]; then
+              # For EAP builds (tagged or untagged), add "eap" to the name
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+                fi
+              done
+            elif [[ "${triggered_by_git_tag}" == "" ]]; then
+              # For non-EAP, non-tagged builds, rename to standard format
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
