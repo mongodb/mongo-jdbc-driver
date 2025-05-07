@@ -11,11 +11,17 @@ plugins {
 import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isRelease')) {
-    version = getAbbreviatedGitVersion()
-} else if (project.hasProperty('isEapBuild')){
-    version = getLatestEapTag()
+    if (project.hasProperty('isEapBuild')) {
+        version = getLatestEapTag()
+    } else {
+        version = getAbbreviatedGitVersion()
+    }
 } else {
-    version = getGitVersion()
+    if (project.hasProperty('isEapBuild')) {
+        version = getGitVersion() + "-libv-SNAPSHOT"
+    }  else {
+        version = getGitVersion()
+    }
 }
 
 def thirdpartyNoticeDir = "$buildDir/" + thirdpartyNoticeDir
@@ -257,11 +263,18 @@ dependencies {
 }
 
 def getReleaseVersion() {
-    if (!project.hasProperty('isRelease')) {
-		return getAbbreviatedGitVersion() + "-SNAPSHOT"
-	} else {
-		return getAbbreviatedGitVersion()
-	}
+    String baseVersion = getAbbreviatedGitVersion()
+
+    boolean isSnapshot = !project.hasProperty('isRelease')
+    boolean isEap = project.hasProperty('isEapBuild')
+    String suffix = ""
+    if (isEap) {
+        suffix += "-eap"
+    }
+    if (isSnapshot) {
+        suffix += "-SNAPSHOT"
+    }
+    return baseVersion + suffix
 }
 
 def getGitVersion() {
