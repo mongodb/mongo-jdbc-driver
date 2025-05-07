@@ -1381,6 +1381,37 @@ functions:
 
   "upload jar file":
     - *assume_role_cmd
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        add_expansions_to_env: true
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          if [ -d "build/libs" ]; then
+            # A sanity check to see if expected files are indeed here
+            ls -lrt build/libs
+            if [[ "${BUILD_TYPE}" == "eap" ]]; then
+              # For EAP builds (tagged or untagged), add "eap" to the name
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
+                fi
+              done
+            elif [[ "${triggered_by_git_tag}" == "" ]]; then
+              # For non-EAP, non-tagged builds, rename to standard format
+              for f in ./build/libs/mongodb-jdbc-*.jar; do
+                if [[ "$f" == *"-all"* ]]; then
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
+                else
+                  mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}.jar
+                fi
+              done
+            fi
+          fi
     - command: s3.put
       params:
         silent: true
