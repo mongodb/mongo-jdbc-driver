@@ -249,7 +249,7 @@ public class ConfigurationTracer {
      * @param value The configuration value
      * @param source The source of the configuration
      */
-    private void traceConfig(String name, String value, ConfigSource source) {
+    public void traceConfig(String name, String value, ConfigSource source) {
         if (!enabled) return;
         
         ConfigValue existingValue = tracedConfigs.get(name);
@@ -309,7 +309,7 @@ public class ConfigurationTracer {
      * @param name The property name to check
      * @return true if the property contains sensitive information, false otherwise
      */
-    private static boolean isSensitive(String name) {
+    public static boolean isSensitive(String name) {
         if (name == null) return false;
         
         String lowerName = name.toLowerCase();
