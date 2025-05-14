@@ -278,7 +278,7 @@ public class MongoDriver implements Driver {
             Enumeration keys = info.propertyNames();
             while (keys.hasMoreElements()) {
                 String key = keys.nextElement().toString();
-                lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
+                lowerCaseprops.put(key.toLowerCase(), info.get(key));
             }
         }
         MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
