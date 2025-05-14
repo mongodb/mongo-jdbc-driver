@@ -25,6 +25,9 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
+import com.mongodb.jdbc.logging.MongoLogger;
+import com.mongodb.jdbc.utils.ConfigurationTracer;
+import com.mongodb.jdbc.utils.JaasConfigurationTracer;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
 import java.lang.ref.WeakReference;
@@ -99,7 +102,8 @@ public class MongoDriver implements Driver {
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
-        X509_PEM_PATH("x509pempath");
+        X509_PEM_PATH("x509pempath"),
+        CONFIG_TRACE_ENABLED("configtrace");
 
         private final String propertyName;
 
@@ -241,6 +245,16 @@ public class MongoDriver implements Driver {
         String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
         if (envPath != null && !envPath.isEmpty()) {
             String absolutePath = Paths.get(envPath).toAbsolutePath().normalize().toString();
+            
+            if (Boolean.parseBoolean(System.getProperty("mongodb.jdbc.config.trace.enabled", "false"))) {
+                try {
+                    MongoLogger tempLogger = new MongoLogger(java.util.logging.Logger.getLogger("MongoDriver"), 0);
+                    ConfigurationTracer configTracer = new ConfigurationTracer(tempLogger, null);
+                    configTracer.traceEnvironmentVariable(MONGOSQL_TRANSLATE_PATH, envPath);
+                } catch (Exception e) {
+                }
+            }
+            
             try {
                 System.load(absolutePath);
                 mongoSqlTranslateLibraryPath = absolutePath;
@@ -441,6 +455,9 @@ public class MongoDriver implements Driver {
             }
         }
 
+        boolean configTraceEnabled = Boolean.parseBoolean(
+                info.getProperty(CONFIG_TRACE_ENABLED.getPropertyName(), "false"));
+                
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
                         cs,
@@ -449,7 +466,8 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
-                        info.getProperty(X509_PEM_PATH.getPropertyName()));
+                        info.getProperty(X509_PEM_PATH.getPropertyName()),
+                        configTraceEnabled);
 
         Integer key = mongoConnectionProperties.generateKey();
 
@@ -731,6 +749,25 @@ public class MongoDriver implements Driver {
         if (info == null) {
             info = new Properties();
         }
+        
+        MongoLogger tempLogger = null;
+        ConfigurationTracer configTracer = null;
+        
+        try {
+            boolean traceEnabled = Boolean.parseBoolean(System.getProperty(
+                    "mongodb.jdbc.config.trace.enabled", "false")) ||
+                    Boolean.parseBoolean(info.getProperty("configtrace", "false"));
+                    
+            if (traceEnabled) {
+                tempLogger = new MongoLogger(java.util.logging.Logger.getLogger("MongoDriver"), 0);
+                configTracer = new ConfigurationTracer(tempLogger, info);
+                
+                configTracer.traceConnectionProperties(info);
+                
+                configTracer.traceUrlParameters(clientURI);
+            }
+        } catch (Exception e) {
+        }
         // The coalesce function takes the first non-null argument, returning null only
         // if both arguments are null. The java type system requires us to write this twice,
         // once for each type we care about, unless we prefer to use Objects and cast, but I avoid
@@ -755,6 +792,10 @@ public class MongoDriver implements Driver {
                 clientURI.getCredential() != null
                         ? clientURI.getCredential().getAuthenticationMechanism()
                         : null;
+                        
+        if (configTracer != null && authMechanism != null) {
+            configTracer.traceDefaultValue("authMechanism", authMechanism.getMechanismName());
+        }
 
         // grab the user and password from the URI.
         String uriUser = clientURI.getUsername();
@@ -785,6 +826,13 @@ public class MongoDriver implements Driver {
                 // Make sure the `info` reflects the URL for USER because MongoDatabaseMetaData needs to
                 // know this.
                 info.setProperty(USER, user);
+                
+                if (configTracer != null) {
+                    configTracer.traceConfig("user", user, 
+                            uriUser != null ? 
+                            ConfigurationTracer.ConfigSource.URL_PARAMETER : 
+                            ConfigurationTracer.ConfigSource.CONNECTION_PROPERTY);
+                }
             }
             // handle disagreements on password.
             if (uriPWD != null && propertyPWD != null && !Arrays.equals(uriPWD, propertyPWD)) {
@@ -792,6 +840,13 @@ public class MongoDriver implements Driver {
             }
             // set the password
             password = c.coalesce(uriPWD, propertyPWD);
+            
+            if (configTracer != null && password != null) {
+                configTracer.traceConfig("password", "********", 
+                        uriPWD != null ? 
+                        ConfigurationTracer.ConfigSource.URL_PARAMETER : 
+                        ConfigurationTracer.ConfigSource.CONNECTION_PROPERTY);
+            }
         }
 
         String optionString = null;
@@ -834,6 +889,27 @@ public class MongoDriver implements Driver {
             }
         }
 
+        if (configTracer != null) {
+            String[] systemPropsToTrace = {
+                "javax.net.ssl.trustStore",
+                "javax.net.ssl.trustStorePassword",
+                "javax.net.ssl.keyStore",
+                "javax.net.ssl.keyStorePassword",
+                "java.security.auth.login.config",
+                "java.security.krb5.conf",
+                "sun.security.krb5.debug"
+            };
+            
+            for (String propName : systemPropsToTrace) {
+                String propValue = System.getProperty(propName);
+                if (propValue != null) {
+                    configTracer.traceSystemProperty(propName, propValue);
+                }
+            }
+            
+            configTracer.dumpTracedConfigs();
+        }
+        
         return new ParseResult(user, password, authMechanism, options);
     }
 

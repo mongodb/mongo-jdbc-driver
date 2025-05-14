@@ -28,6 +28,7 @@ public class MongoConnectionProperties {
     private String clientInfo;
     private boolean extJsonMode;
     private String x509PemPath;
+    private boolean configTraceEnabled;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -36,7 +37,8 @@ public class MongoConnectionProperties {
             File logDir,
             String clientInfo,
             boolean extJsonMode,
-            String x509PemPath) {
+            String x509PemPath,
+            boolean configTraceEnabled) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
@@ -44,6 +46,7 @@ public class MongoConnectionProperties {
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
         this.x509PemPath = x509PemPath;
+        this.configTraceEnabled = configTraceEnabled;
     }
 
     public ConnectionString getConnectionString() {
@@ -72,6 +75,10 @@ public class MongoConnectionProperties {
 
     public String getX509PemPath() {
         return x509PemPath;
+    }
+    
+    public boolean isConfigTraceEnabled() {
+        return configTraceEnabled;
     }
 
     /*

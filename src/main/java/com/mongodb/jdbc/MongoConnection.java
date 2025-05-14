@@ -35,6 +35,8 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import com.mongodb.jdbc.utils.ConfigurationTracer;
+import com.mongodb.jdbc.utils.JaasConfigurationTracer;
 import com.mongodb.jdbc.utils.X509Authentication;
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +74,8 @@ public class MongoConnection implements Connection {
     private UuidRepresentation uuidRepresentation;
     private String appName;
     private MongoSQLTranslate mongosqlTranslate;
+    private ConfigurationTracer configTracer;
+    private JaasConfigurationTracer jaasTracer;
 
     private int serverMajorVersion;
     private int serverMinorVersion;
@@ -151,6 +155,20 @@ public class MongoConnection implements Connection {
                 connectionProperties.getConnectionString().getUuidRepresentation();
         this.appName = buildAppName(connectionProperties);
         this.mongosqlTranslate = new MongoSQLTranslate(this.logger);
+        
+        if (connectionProperties.isConfigTraceEnabled() || 
+                Boolean.parseBoolean(System.getProperty(ConfigurationTracer.CONFIG_TRACE_ENABLED_PROP, "false"))) {
+            Properties props = new Properties();
+            if (connectionProperties.isConfigTraceEnabled()) {
+                props.setProperty(ConfigurationTracer.CONFIG_TRACE_ENABLED_CONN_PROP, "true");
+            }
+            this.configTracer = new ConfigurationTracer(this.logger, props);
+            
+            this.configTracer.traceUrlParameters(connectionProperties.getConnectionString());
+            
+            this.jaasTracer = new JaasConfigurationTracer(this.logger, this.configTracer);
+            this.jaasTracer.traceJaasConfiguration("MongoClient");
+        }
 
         this.isClosed = false;
     }
@@ -193,9 +211,21 @@ public class MongoConnection implements Connection {
                 settingsBuilder.credential(credential);
             } else if (authMechanism != null && authMechanism.equals(MONGODB_X509)) {
                 String pemPath = connectionProperties.getX509PemPath();
+                
+                if (pemPath != null && !pemPath.isEmpty() && configTracer != null) {
+                    Properties x509Props = new Properties();
+                    x509Props.setProperty("x509pempath", pemPath);
+                    configTracer.traceConnectionProperties(x509Props);
+                }
+                
                 if (pemPath == null || pemPath.isEmpty()) {
                     pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
+                    
+                    if (pemPath != null && !pemPath.isEmpty() && configTracer != null) {
+                        configTracer.traceEnvironmentVariable(MONGODB_JDBC_X509_CLIENT_CERT_PATH, pemPath);
+                    }
                 }
+                
                 if (pemPath == null || pemPath.isEmpty()) {
                     throw new IllegalStateException(
                             "PEM file path is required for X.509 authentication but was not provided.");
