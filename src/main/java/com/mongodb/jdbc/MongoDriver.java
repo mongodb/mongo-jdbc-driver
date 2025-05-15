@@ -238,13 +238,23 @@ public class MongoDriver implements Driver {
         // This provides a backdoor mechanism to override the default library path of being colocated with the
         // driver library and load the MongoSQL Translate library from a different location.
         // Intended primarily for development and testing purposes.
-        String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
+        MongoLogger logger = getDriverLogger();
+        String envPath = utils.ConfigurationProvenanceTracker.getEnvProperty(
+                MONGOSQL_TRANSLATE_PATH, 
+                "MongoSQL Translate library loading", 
+                logger);
         if (envPath != null && !envPath.isEmpty()) {
             String absolutePath = Paths.get(envPath).toAbsolutePath().normalize().toString();
             try {
                 System.load(absolutePath);
                 mongoSqlTranslateLibraryPath = absolutePath;
                 mongoSqlTranslateLibraryLoaded = true;
+                utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                        "mongoSqlTranslateLibraryPath", 
+                        absolutePath, 
+                        "Environment variable", 
+                        "MongoSQL Translate library loading", 
+                        logger);
                 return;
             } catch (Error e) {
                 // Store the error and then try loading the library from inside the jar next.
@@ -253,6 +263,22 @@ public class MongoDriver implements Driver {
         }
         mongoSqlTranslateLibraryPath = NativeLoader.loadLibraryFromJar(MONGOSQL_TRANSLATE_NAME);
         mongoSqlTranslateLibraryLoaded = true;
+        utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                "mongoSqlTranslateLibraryPath", 
+                mongoSqlTranslateLibraryPath, 
+                "JAR resource", 
+                "MongoSQL Translate library loading", 
+                logger);
+    }
+
+    /**
+     * Gets a logger for the driver to use for provenance tracking.
+     * @return A MongoLogger instance
+     */
+    private static MongoLogger getDriverLogger() {
+        Logger logger = Logger.getLogger(MongoDriver.class.getName());
+        logger.setLevel(Level.INFO);
+        return new MongoLogger(logger, 0, 0);
     }
 
     public static CodecRegistry getCodecRegistry() {
@@ -387,14 +413,34 @@ public class MongoDriver implements Driver {
 
     private MongoConnection createConnection(
             ConnectionString cs, Properties info, char[] x509Passphrase) throws SQLException {
+        MongoLogger logger = getDriverLogger();
+        
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
+        
+        if (database != null) {
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    "database", 
+                    database, 
+                    (cs.getDatabase() != null && database.equals(cs.getDatabase())) 
+                        ? "MongoDB Connection String" 
+                        : "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
+        }
 
         // Default log level is OFF
         String logLevelVal = info.getProperty(LOG_LEVEL.getPropertyName(), Level.OFF.getName());
         Level logLevel;
         try {
             logLevel = Level.parse(logLevelVal.toUpperCase());
+            
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    LOG_LEVEL.getPropertyName(), 
+                    logLevelVal, 
+                    "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
         } catch (IllegalArgumentException e) {
             throw new SQLException(
                     "Invalid "
@@ -420,6 +466,16 @@ public class MongoDriver implements Driver {
                             + logDirVal
                             + ". It must be a directory.");
         }
+        
+        if (logDirVal != null) {
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    LOG_DIR.getPropertyName(), 
+                    logDirVal, 
+                    "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
+        }
+        
         String clientInfo = info.getProperty(CLIENT_INFO.getPropertyName());
         if (clientInfo != null && clientInfo.split("\\+").length != 2) {
             throw new SQLException(
@@ -428,6 +484,15 @@ public class MongoDriver implements Driver {
                             + " property value : "
                             + clientInfo
                             + ". Expected format <name>+<version>.");
+        }
+        
+        if (clientInfo != null) {
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    CLIENT_INFO.getPropertyName(), 
+                    clientInfo, 
+                    "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
         }
 
         String extJsonModeVal = info.getProperty(EXT_JSON_MODE.getPropertyName());
@@ -439,6 +504,23 @@ public class MongoDriver implements Driver {
             } else if (extJsonModeVal != RELAXED) {
                 throw new SQLException("Invalid JSON mode: " + extJsonModeVal);
             }
+            
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    EXT_JSON_MODE.getPropertyName(), 
+                    extJsonModeVal, 
+                    "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
+        }
+        
+        String x509PemPath = info.getProperty(X509_PEM_PATH.getPropertyName());
+        if (x509PemPath != null) {
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    X509_PEM_PATH.getPropertyName(), 
+                    x509PemPath, 
+                    "JDBC Connection Property", 
+                    "Connection creation", 
+                    logger);
         }
 
         MongoConnectionProperties mongoConnectionProperties =
@@ -449,7 +531,7 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
-                        info.getProperty(X509_PEM_PATH.getPropertyName()));
+                        x509PemPath);
 
         Integer key = mongoConnectionProperties.generateKey();
 
@@ -573,6 +655,8 @@ public class MongoDriver implements Driver {
             info = new Properties();
         }
 
+        MongoLogger logger = getDriverLogger();
+
         try {
             String actualURL = removePrefix(JDBC, url);
             ConnectionString originalConnectionString;
@@ -587,13 +671,49 @@ public class MongoDriver implements Driver {
             char[] password = null;
             char[] x509Passphrase = null;
 
+            if (result.authMechanism != null) {
+                utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                        "authMechanism", 
+                        result.authMechanism.getMechanismName(), 
+                        "MongoDB Connection String", 
+                        "Connection settings normalization", 
+                        logger);
+            }
+
             if (result.authMechanism != null && result.authMechanism.equals(MONGODB_X509)) {
                 // X509 authentication does not require a password to authenticate.  It is used by the driver in case
                 // the PEM file has been encrypted with a passphrase.
                 x509Passphrase = result.password;
+                
+                utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                        "x509Passphrase", 
+                        x509Passphrase != null ? "********" : "Not set / Null", 
+                        "Connection Property", 
+                        "X509 authentication setup", 
+                        logger);
             } else {
                 user = result.user;
                 password = result.password;
+                
+                if (user != null) {
+                    utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                            "user", 
+                            user, 
+                            originalConnectionString.getUsername() != null ? 
+                                    "MongoDB Connection String" : "JDBC Connection Property", 
+                            "Connection settings normalization", 
+                            logger);
+                }
+                
+                if (password != null) {
+                    utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                            "password", 
+                            "********", 
+                            originalConnectionString.getPassword() != null ? 
+                                    "MongoDB Connection String" : "JDBC Connection Property", 
+                            "Connection settings normalization", 
+                            logger);
+                }
             }
 
             List<DriverPropertyInfo> mandatoryConnectionProperties = new ArrayList<>();
@@ -605,6 +725,13 @@ public class MongoDriver implements Driver {
                     && originalConnectionString.getDatabase() != null) {
                 info.setProperty(
                         DATABASE.getPropertyName(), originalConnectionString.getDatabase());
+                
+                utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                        DATABASE.getPropertyName(), 
+                        originalConnectionString.getDatabase(), 
+                        "MongoDB Connection String", 
+                        "Connection settings normalization", 
+                        logger);
             }
             if (!info.containsKey(DATABASE.getPropertyName())
                     || info.getProperty(DATABASE.getPropertyName()).isEmpty()) {
@@ -648,6 +775,15 @@ public class MongoDriver implements Driver {
                                     password,
                                     authDatabase,
                                     result.normalizedOptions));
+            
+            // Track final connection string
+            utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                    "finalConnectionString", 
+                    c.getConnectionString().replaceAll(":[^:@]+@", ":********@"), // Mask password in connection string
+                    "Constructed from user inputs", 
+                    "Final connection string creation", 
+                    logger);
+                    
             return new MongoConnectionConfig(c, new DriverPropertyInfo[] {}, x509Passphrase);
         } catch (Exception e) {
             if ((e instanceof SQLException)) {

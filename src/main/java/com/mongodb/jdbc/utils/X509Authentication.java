@@ -52,10 +52,30 @@ public class X509Authentication {
         try {
             SSLContext sslContext = createSSLContext(pemPath, passphrase);
 
+            ConfigurationProvenanceTracker.logPropertyProvenance(
+                    "tlsCertificateKeyFile", 
+                    pemPath, 
+                    "X509 Authentication PEM file", 
+                    "SSL context creation", 
+                    logger);
+
             settingsBuilder.applyToSslSettings(
                     sslSettings -> {
                         sslSettings.enabled(true);
                         sslSettings.context(sslContext);
+                        
+                        ConfigurationProvenanceTracker.logPropertyProvenance(
+                                "ssl.enabled", 
+                                "true", 
+                                "MongoClientSettings (programmatic)", 
+                                "SSL settings configuration", 
+                                logger);
+                        ConfigurationProvenanceTracker.logPropertyProvenance(
+                                "ssl.context", 
+                                "Custom SSLContext from PEM file", 
+                                "MongoClientSettings (programmatic)", 
+                                "SSL settings configuration", 
+                                logger);
                     });
         } catch (Exception e) {
             throw new RuntimeException("SSL setup failed", e);

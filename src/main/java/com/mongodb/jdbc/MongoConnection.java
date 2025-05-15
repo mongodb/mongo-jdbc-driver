@@ -177,10 +177,33 @@ public class MongoConnection implements Connection {
                         .applicationName(this.appName)
                         .applyConnectionString(connectionProperties.getConnectionString());
 
+        utils.ConfigurationProvenanceTracker.logAllSecuritySystemProperties(
+                "MongoConnection initialization", this.logger);
+
+        ConnectionString connString = connectionProperties.getConnectionString();
+        if (connString.getAuthSource() != null) {
+            utils.ConfigurationProvenanceTracker.logConnectionStringParameter(
+                    "authSource", connString.getAuthSource(), connString, "MongoConnection creation", this.logger);
+        }
+        
+        if (connString.getSslEnabled() != null) {
+            utils.ConfigurationProvenanceTracker.logConnectionStringParameter(
+                    "tls", connString.getSslEnabled().toString(), connString, "MongoConnection creation", this.logger);
+        }
+
         MongoCredential credential = connectionProperties.getConnectionString().getCredential();
 
         if (credential != null) {
             AuthenticationMechanism authMechanism = credential.getAuthenticationMechanism();
+            
+            if (authMechanism != null) {
+                utils.ConfigurationProvenanceTracker.logConnectionStringParameter(
+                        "authMechanism", 
+                        authMechanism.getMechanismName(), 
+                        connString, 
+                        "MongoConnection creation", 
+                        this.logger);
+            }
 
             if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
                 // Handle OIDC authentication
@@ -191,11 +214,27 @@ public class MongoConnection implements Connection {
                                 .withMechanismProperty(
                                         MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
                 settingsBuilder.credential(credential);
+                
+                utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                        "MongoCredential.OIDC_HUMAN_CALLBACK_KEY", 
+                        "JdbcOidcCallback", 
+                        "MongoCredential (programmatic)", 
+                        "OIDC authentication setup", 
+                        this.logger);
             } else if (authMechanism != null && authMechanism.equals(MONGODB_X509)) {
                 String pemPath = connectionProperties.getX509PemPath();
                 if (pemPath == null || pemPath.isEmpty()) {
-                    pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
+                    pemPath = utils.ConfigurationProvenanceTracker.getEnvProperty(
+                            MONGODB_JDBC_X509_CLIENT_CERT_PATH, "X509 authentication setup", this.logger);
+                } else {
+                    utils.ConfigurationProvenanceTracker.logPropertyProvenance(
+                            "X509PemPath", 
+                            pemPath, 
+                            "Connection Properties", 
+                            "X509 authentication setup", 
+                            this.logger);
                 }
+                
                 if (pemPath == null || pemPath.isEmpty()) {
                     throw new IllegalStateException(
                             "PEM file path is required for X.509 authentication but was not provided.");
