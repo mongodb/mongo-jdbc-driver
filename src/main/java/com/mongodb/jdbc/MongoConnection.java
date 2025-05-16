@@ -197,13 +197,24 @@ public class MongoConnection implements Connection {
                     pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
                 }
                 if (pemPath == null || pemPath.isEmpty()) {
+                    logger.log(Level.SEVERE, "X509 authentication failed: PEM file path not provided");
                     throw new IllegalStateException(
-                            "PEM file path is required for X.509 authentication but was not provided.");
+                            "PEM file path is required for X.509 authentication but was not provided. " +
+                            "Set the x509pempath property or MONGODB_JDBC_X509_CLIENT_CERT_PATH environment variable.");
                 }
 
-                X509Authentication x509Authentication = new X509Authentication(logger);
-                x509Authentication.configureX509Authentication(
-                        settingsBuilder, pemPath, this.x509Passphrase);
+                // Log that we're attempting X509 authentication
+                logger.log(Level.INFO, "Attempting X509 authentication with certificate: " + pemPath);
+                
+                try {
+                    X509Authentication x509Authentication = new X509Authentication(logger);
+                    x509Authentication.configureX509Authentication(
+                            settingsBuilder, pemPath, this.x509Passphrase);
+                } catch (RuntimeException e) {
+                    // Log the X509 authentication error
+                    logger.log(Level.SEVERE, "X509 authentication configuration failed", e);
+                    throw e; // Re-throw to maintain original behavior
+                }
             }
         }
 
@@ -701,6 +712,22 @@ public class MongoConnection implements Connection {
             } else {
                 future.get();
             }
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SQLException) {
+                throw (SQLException) cause;
+            } else if (cause instanceof RuntimeException && cause.getCause() != null) {
+                Throwable rootCause = cause.getCause();
+                if (rootCause.getMessage() != null && 
+                    (rootCause.getMessage().contains("X509") || 
+                     rootCause.getMessage().contains("certificate") ||
+                     rootCause.getMessage().contains("SSL"))) {
+                    throw new SQLException("X509 authentication failed: " + rootCause.getMessage(), rootCause);
+                }
+                throw new SQLException("Connection failed: " + cause.getMessage(), cause);
+            } else {
+                throw e;
+            }
         } finally {
             future.cancel(true);
             executor.shutdown();
@@ -711,8 +738,21 @@ public class MongoConnection implements Connection {
     public boolean isValid(int timeout) throws SQLException {
         try {
             testConnection(timeout);
-        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+        } catch (InterruptedException | TimeoutException ex) {
             // Only propagate the SQLException
+            return false;
+        } catch (ExecutionException ex) {
+            Throwable cause = ex.getCause();
+            if (cause instanceof RuntimeException && cause.getCause() != null) {
+                Throwable rootCause = cause.getCause();
+                if (rootCause.getMessage() != null && 
+                    (rootCause.getMessage().contains("X509") || 
+                     rootCause.getMessage().contains("certificate") ||
+                     rootCause.getMessage().contains("SSL"))) {
+                    // Log the X509 authentication error
+                    logger.log(Level.SEVERE, "X509 authentication failed: " + rootCause.getMessage(), rootCause);
+                }
+            }
             return false;
         }
         return true;

@@ -57,8 +57,17 @@ public class X509Authentication {
                         sslSettings.enabled(true);
                         sslSettings.context(sslContext);
                     });
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("X509 authentication failed: " + e.getMessage(), e);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException("X509 certificate security error: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("SSL setup failed", e);
+            String errorMessage = "X509 authentication setup failed";
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+                errorMessage += ": " + e.getMessage();
+            }
+            logger.log(Level.SEVERE, errorMessage, e);
+            throw new RuntimeException(errorMessage, e);
         }
     }
 
@@ -77,15 +86,20 @@ public class X509Authentication {
                     if (passphrase != null
                             && passphrase.length > 0
                             && pemObj instanceof PKCS8EncryptedPrivateKeyInfo) {
-                        privateKey =
-                                new JcaPEMKeyConverter()
-                                        .setProvider(BC_PROVIDER)
-                                        .getPrivateKey(
-                                                ((PKCS8EncryptedPrivateKeyInfo) pemObj)
-                                                        .decryptPrivateKeyInfo(
-                                                                new JcePKCSPBEInputDecryptorProviderBuilder()
-                                                                        .setProvider(BC_PROVIDER)
-                                                                        .build(passphrase)));
+                        try {
+                            privateKey =
+                                    new JcaPEMKeyConverter()
+                                            .setProvider(BC_PROVIDER)
+                                            .getPrivateKey(
+                                                    ((PKCS8EncryptedPrivateKeyInfo) pemObj)
+                                                            .decryptPrivateKeyInfo(
+                                                                    new JcePKCSPBEInputDecryptorProviderBuilder()
+                                                                            .setProvider(BC_PROVIDER)
+                                                                            .build(passphrase)));
+                        } catch (Exception e) {
+                            throw new GeneralSecurityException(
+                                    "Failed to decrypt private key - incorrect passphrase or corrupted key", e);
+                        }
                     } else if (pemObj instanceof PrivateKeyInfo) {
                         privateKey =
                                 new JcaPEMKeyConverter()
@@ -94,24 +108,36 @@ public class X509Authentication {
                     }
                 } catch (Exception e) {
                     throw new GeneralSecurityException(
-                            "Failed to process private key from PEM file", e);
+                            "Failed to process private key from PEM file: " + e.getMessage(), e);
                 }
 
                 if (pemObj instanceof X509CertificateHolder) {
-                    cert =
-                            new JcaX509CertificateConverter()
-                                    .setProvider(BC_PROVIDER)
-                                    .getCertificate((X509CertificateHolder) pemObj);
+                    try {
+                        cert =
+                                new JcaX509CertificateConverter()
+                                        .setProvider(BC_PROVIDER)
+                                        .getCertificate((X509CertificateHolder) pemObj);
+                    } catch (Exception e) {
+                        throw new GeneralSecurityException(
+                                "Failed to process X.509 certificate: " + e.getMessage(), e);
+                    }
                 }
             }
+        } catch (java.io.FileNotFoundException e) {
+            throw new IllegalStateException(
+                    "X.509 certificate file not found: " + pemPath, e);
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException(
+                    "Error reading X.509 certificate file: " + e.getMessage(), e);
         }
 
         if (privateKey == null) {
             throw new IllegalStateException(
-                    "Failed to read private key from PEM file (encrypted or unencrypted)");
+                    "Failed to read private key from PEM file. Ensure the file contains a valid private key.");
         }
         if (cert == null) {
-            throw new IllegalStateException("Failed to read certificate from PEM file");
+            throw new IllegalStateException(
+                    "Failed to read certificate from PEM file. Ensure the file contains a valid X.509 certificate.");
         }
 
         return createSSLContextFromKeyAndCert(privateKey, cert);
