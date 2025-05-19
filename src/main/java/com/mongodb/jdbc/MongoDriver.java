@@ -272,13 +272,16 @@ public class MongoDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
+        if (!acceptsURL(url)) {
+            return null;
+        }
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
             Enumeration keys = info.propertyNames();
             while (keys.hasMoreElements()) {
                 String key = keys.nextElement().toString();
-                lowerCaseprops.put(key.toLowerCase(), info.get(key));
+                lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
             }
         }
         MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
