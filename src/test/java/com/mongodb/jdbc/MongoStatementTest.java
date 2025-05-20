@@ -282,7 +282,7 @@ class MongoStatementTest extends MongoMock {
 
     @Test
     void testSetGetFetchSize() throws SQLException {
-        assertThrows(SQLException.class, () ->mongoStatement.setFetchSize(-1));
+        assertThrows(SQLException.class, () -> mongoStatement.setFetchSize(-1));
 
         int fetchSize = 10;
         mongoStatement.setFetchSize(fetchSize);
