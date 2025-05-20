@@ -359,6 +359,9 @@ public class MongoStatement implements Statement {
     @Override
     public void setFetchSize(int rows) throws SQLException {
         checkClosed();
+        if (rows < 0) {
+            throw new SQLException("Invalid fetch size: " + rows + ". Fetch size must be >= 0.");
+        }
         fetchSize = rows;
     }
 
