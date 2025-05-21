@@ -280,9 +280,12 @@ public class MongoDriver implements Driver {
         if (info != null) {
             Enumeration keys = info.propertyNames();
             while (keys.hasMoreElements()) {
-                String key = keys.nextElement().toString();
+                Object potentialKey = keys.nextElement();
+                String key = potentialKey.toString();
                 if (key == null) {
-                    continue;
+                    throw new SQLException(
+                            "property keys must be Strings, found type: "
+                                    + potentialKey.getClass().getName());
                 }
                 lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
             }
