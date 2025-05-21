@@ -281,6 +281,9 @@ public class MongoDriver implements Driver {
             Enumeration keys = info.propertyNames();
             while (keys.hasMoreElements()) {
                 String key = keys.nextElement().toString();
+                if (key == null) {
+                    continue;
+                }
                 lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
             }
         }
