@@ -282,8 +282,7 @@ public class MongoDriver implements Driver {
             while (keys.hasMoreElements()) {
                 Object potentialKey = keys.nextElement();
                 if (potentialKey == null) {
-                    throw new SQLException(
-                            "property keys must be non-null Strings, found null");
+                    throw new SQLException("property keys must be non-null Strings, found null");
                 }
                 String key = potentialKey.toString();
                 if (key == null) {
@@ -293,8 +292,7 @@ public class MongoDriver implements Driver {
                 }
                 Object potentialValue = info.getProperty(key);
                 if (potentialValue == null) {
-                    throw new SQLException(
-                            "property values must be non-null Strings, found null");
+                    throw new SQLException("property values must be non-null Strings, found null");
                 }
                 String value = potentialValue.toString();
                 if (value == null) {

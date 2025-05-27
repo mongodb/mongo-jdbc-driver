@@ -24,7 +24,6 @@ import com.mongodb.ConnectionString;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Matcher;
-import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 
 class TestConnectionString {
