@@ -99,7 +99,8 @@ public class MongoDriver implements Driver {
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
-        X509_PEM_PATH("x509pempath");
+        X509_PEM_PATH("x509pempath"),
+        MONGO_CLIENT_CACHE_ENABLED("mongoclientcacheenabled");
 
         private final String propertyName;
 
@@ -441,6 +442,9 @@ public class MongoDriver implements Driver {
             }
         }
 
+        String mongoClientCacheEnabledVal = info.getProperty(MONGO_CLIENT_CACHE_ENABLED.getPropertyName(), "true");
+        boolean mongoClientCacheEnabled = mongoClientCacheEnabledVal.equalsIgnoreCase("true");
+
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
                         cs,
@@ -449,7 +453,12 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
-                        info.getProperty(X509_PEM_PATH.getPropertyName()));
+                        info.getProperty(X509_PEM_PATH.getPropertyName()),
+                        mongoClientCacheEnabled);
+
+        if (!mongoClientCacheEnabled) {
+            return new MongoConnection(mongoConnectionProperties, x509Passphrase);
+        }
 
         Integer key = mongoConnectionProperties.generateKey();
 
