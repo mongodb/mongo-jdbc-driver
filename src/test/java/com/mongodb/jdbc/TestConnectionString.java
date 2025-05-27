@@ -306,4 +306,40 @@ class TestConnectionString {
         }
         testPatternsHelper("mongodb://localhost?authMechanism=MONGODB-OIDC", true, false, null);
     }
+
+    @Test
+    void testNullPropValue() throws Exception {
+        // Create a new Properties object.
+        Properties p = new Properties();
+        // Put a key-value pair into the Properties object, with the value being an object.
+        p.put(USER_CONN_KEY, new Pair<Double, Boolean>(new Double(6), true));
+        p.setProperty(PWD_CONN_KEY, PWD);
+        p.setProperty(DATABASE, DB);
+
+        assertThrows(SQLException.class, () -> new MongoDriver().connect("jdbc:" + localhost, p));
+
+        try {
+            new MongoDriver().connect("jdbc:" + localhost, p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void testNullPropKey() throws Exception {
+        // Create a new Properties object.
+        Properties p = new Properties();
+        // Put a key-value pair into the Properties object, with the value being an object.
+        p.put(new Pair<Double, Boolean>(new Double(6), true), USER);
+        p.setProperty(PWD_CONN_KEY, PWD);
+        p.setProperty(DATABASE, DB);
+
+        assertThrows(SQLException.class, () -> new MongoDriver().connect("jdbc:" + localhost, p));
+
+        try {
+            new MongoDriver().connect("jdbc:" + localhost, p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
