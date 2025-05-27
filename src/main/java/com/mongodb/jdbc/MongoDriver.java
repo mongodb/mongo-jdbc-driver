@@ -270,9 +270,22 @@ public class MongoDriver implements Driver {
         return version.contains("libv");
     }
 
+    private String propertyTypeCheck(Object v, String type) throws SQLException {
+        if (v == null) {
+            throw new SQLException("property " + type + " must be non-null Strings, found null");
+        }
+        if (!String.class.isInstance(v)) {
+            throw new SQLException(
+                    "property "
+                            + type
+                            + " must be non-null Strings, found type: "
+                            + v.getClass().getName());
+        }
+        return (String) v;
+    }
+
     private Properties canonicalizeProperties(Properties info) throws SQLException {
-        System.out.println(
-                "MongoDriver.canonicalizeProperties: " + info);
+        System.out.println("MongoDriver.canonicalizeProperties: " + info);
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
@@ -281,25 +294,11 @@ public class MongoDriver implements Driver {
                 Object potentialKey = keys.nextElement();
                 System.out.println(
                         "MongoDriver.canonicalizeProperties, potential key: " + potentialKey);
-                if (potentialKey == null) {
-                    throw new SQLException("property keys must be non-null Strings, found null");
-                }
-                String key = potentialKey.toString();
-                if (key == null) {
-                    throw new SQLException(
-                            "property keys must be Strings, found type: "
-                                    + potentialKey.getClass().getName());
-                }
+                String key = propertyTypeCheck(potentialKey, "keys");
                 Object potentialValue = info.getProperty(key);
-                if (potentialValue == null) {
-                    throw new SQLException("property values must be non-null Strings, found null");
-                }
-                String value = potentialValue.toString();
-                if (value == null) {
-                    throw new SQLException(
-                            "property values must be Strings, found type: "
-                                    + potentialValue.getClass().getName());
-                }
+                System.out.println(
+                        "MongoDriver.canonicalizeProperties, potential value: " + potentialValue);
+                String value = propertyTypeCheck(potentialValue, "values");
                 lowerCaseprops.setProperty(key.toLowerCase(), value.trim());
             }
         }

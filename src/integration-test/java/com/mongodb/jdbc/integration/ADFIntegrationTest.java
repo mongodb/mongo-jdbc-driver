@@ -94,14 +94,15 @@ public class ADFIntegrationTest {
             throws SQLException {
         System.out.println("Connecting to database: " + db);
         String fullUrl = URL;
-        Properties p = new java.util.Properties(extraProps);
+        Properties p = extraProps == null ? new Properties() : extraProps;
+        System.out.println("extraProps: " + extraProps);
+        System.out.println("before sets: " + p);
         p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
         System.out.println("Main connection properties: " + p);
-        System.out.println("extraProps: " + extraProps);
 
         if (uriOptions != null && !uriOptions.isEmpty()) {
             fullUrl += (URL.contains("?") ? "&" : "/?") + uriOptions;
