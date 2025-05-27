@@ -270,11 +270,7 @@ public class MongoDriver implements Driver {
         return version.contains("libv");
     }
 
-    @Override
-    public Connection connect(String url, Properties info) throws SQLException {
-        if (!acceptsURL(url)) {
-            return null;
-        }
+    private Properties canonicalizeProperties(Properties info) throws SQLException {
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
@@ -303,6 +299,15 @@ public class MongoDriver implements Driver {
                 lowerCaseprops.put(key.toLowerCase(), value.trim());
             }
         }
+        return lowerCaseprops;
+    }
+
+    @Override
+    public Connection connect(String url, Properties info) throws SQLException {
+        if (!acceptsURL(url)) {
+            return null;
+        }
+        Properties lowerCaseprops = canonicalizeProperties(info);
         MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
