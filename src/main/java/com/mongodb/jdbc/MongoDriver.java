@@ -285,25 +285,18 @@ public class MongoDriver implements Driver {
     }
 
     private Properties canonicalizeProperties(Properties info) throws SQLException {
-        System.out.println("MongoDriver.canonicalizeProperties: " + info);
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
             Enumeration<?> keys = info.keys();
             while (keys.hasMoreElements()) {
                 Object potentialKey = keys.nextElement();
-                System.out.println(
-                        "MongoDriver.canonicalizeProperties, potential key: " + potentialKey);
                 String key = propertyTypeCheck(potentialKey, "keys");
                 Object potentialValue = info.getProperty(key);
-                System.out.println(
-                        "MongoDriver.canonicalizeProperties, potential value: " + potentialValue);
                 String value = propertyTypeCheck(potentialValue, "values");
                 lowerCaseprops.setProperty(key.toLowerCase(), value.trim());
             }
         }
-        System.out.println(
-                "MongoDriver.canonicalizeProperties, after canonicalized: " + lowerCaseprops);
         return lowerCaseprops;
     }
 
