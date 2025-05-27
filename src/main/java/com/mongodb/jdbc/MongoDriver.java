@@ -296,7 +296,7 @@ public class MongoDriver implements Driver {
                             "property values must be Strings, found type: "
                                     + potentialValue.getClass().getName());
                 }
-                lowerCaseprops.put(key.toLowerCase(), value.trim());
+                lowerCaseprops.setProperty(key.toLowerCase(), value.trim());
             }
         }
         return lowerCaseprops;
