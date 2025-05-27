@@ -92,25 +92,19 @@ public class ADFIntegrationTest {
 
     public MongoConnection getBasicConnection(String db, Properties extraProps, String uriOptions)
             throws SQLException {
-        System.out.println("Connecting to database: " + db);
         String fullUrl = URL;
-        Properties p = extraProps == null ? new Properties() : extraProps;
-        System.out.println("extraProps: " + extraProps);
-        System.out.println("before sets: " + p);
+        Properties p = new java.util.Properties(extraProps);
         p.setProperty("user", System.getenv("ADF_TEST_LOCAL_USER"));
         p.setProperty("password", System.getenv("ADF_TEST_LOCAL_PWD"));
         p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
-        System.out.println("Main connection properties: " + p);
 
         if (uriOptions != null && !uriOptions.isEmpty()) {
             fullUrl += (URL.contains("?") ? "&" : "/?") + uriOptions;
         }
 
-        MongoConnection ret = (MongoConnection) DriverManager.getConnection(fullUrl, p);
-        System.out.println("Connection established to: " + ret);
-        return ret;
+        return (MongoConnection) DriverManager.getConnection(fullUrl, p);
     }
 
     @BeforeAll
@@ -215,17 +209,12 @@ public class ADFIntegrationTest {
      */
     private MongoConnection connect(Level logLevel) throws SQLException {
         Properties loggingProps = new Properties();
-        System.out.println("Connecting with log level: " + logLevel);
         if (null != logLevel) {
             loggingProps.setProperty(LOG_LEVEL.getPropertyName(), logLevel.getName());
         }
-        System.out.println(
-                "Log level set to: " + loggingProps.getProperty(LOG_LEVEL.getPropertyName()));
 
         // Log files will be created in the current directory
         loggingProps.setProperty(LOG_DIR.getPropertyName(), CURRENT_DIR);
-        System.out.println(
-                "Log directory set to: " + loggingProps.getProperty(LOG_DIR.getPropertyName()));
         return getBasicConnection(loggingProps);
     }
 

@@ -288,7 +288,13 @@ public class MongoDriver implements Driver {
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
-            Enumeration<?> keys = info.keys();
+            Enumeration<?> keys = null;
+            try {
+                keys = info.propertyNames();
+            } catch (ClassCastException e) {
+                throw new SQLException(
+                        "Properties Object must contain String keys and values only. ");
+            }
             while (keys.hasMoreElements()) {
                 Object potentialKey = keys.nextElement();
                 String key = propertyTypeCheck(potentialKey, "keys");
