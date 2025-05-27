@@ -217,7 +217,8 @@ public class ADFIntegrationTest {
         if (null != logLevel) {
             loggingProps.setProperty(LOG_LEVEL.getPropertyName(), logLevel.getName());
         }
-        System.out.println("Log level set to: " + loggingProps.getProperty(LOG_LEVEL.getPropertyName()));
+        System.out.println(
+                "Log level set to: " + loggingProps.getProperty(LOG_LEVEL.getPropertyName()));
 
         // Log files will be created in the current directory
         loggingProps.setProperty(LOG_DIR.getPropertyName(), CURRENT_DIR);
