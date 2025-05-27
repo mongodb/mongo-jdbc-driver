@@ -100,7 +100,8 @@ public class ADFIntegrationTest {
         p.setProperty("authSource", System.getenv("ADF_TEST_LOCAL_AUTH_DB"));
         p.setProperty("database", db);
         p.setProperty("ssl", "false");
-        System.out.println("Connection properties: " + p);
+        System.out.println("Main connection properties: " + p);
+        System.out.println("extraProps: " + extraProps);
 
         if (uriOptions != null && !uriOptions.isEmpty()) {
             fullUrl += (URL.contains("?") ? "&" : "/?") + uriOptions;

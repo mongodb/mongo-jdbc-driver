@@ -299,6 +299,7 @@ public class MongoDriver implements Driver {
                 lowerCaseprops.setProperty(key.toLowerCase(), value.trim());
             }
         }
+        System.out.println("Canonicalized properties: " + lowerCaseprops);
         return lowerCaseprops;
     }
 
