@@ -41,6 +41,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoDriverTest {
+
+    static final String localhost = "mongodb://localhost";
+    static final String USER = "AzureDiamond";
+    static final String PWD = "hunter2";
+    static final String DB = "foo";
     static final String basicURL = "jdbc:mongodb://localhost";
     static final String userNoPWDURL = "jdbc:mongodb://foo@localhost/admin";
     static final String userURL = "jdbc:mongodb://foo:bar@localhost";
@@ -66,6 +71,7 @@ class MongoDriverTest {
 
     private static final String USER_CONN_KEY = "user";
     private static final String PWD_CONN_KEY = "password";
+    private static final String DB_CONN_KEY = "database";
 
     private static final Properties mandatoryProperties = setProperties();
 
@@ -760,5 +766,43 @@ class MongoDriverTest {
                 passphrase.toCharArray(),
                 config.x509Passphrase,
                 "x509Passphrase should match the provided value.");
+    }
+
+    @Test
+    void testNullPropValue() throws Exception {
+        // Create a new Properties object.
+        Properties p = new Properties();
+        MongoDriver d = new MongoDriver();
+        // Put a key-value pair into the Properties object, with the value being an object.
+        p.put(USER_CONN_KEY, new Pair<Double, Boolean>(6.0, true));
+        p.setProperty(PWD_CONN_KEY, PWD);
+        p.setProperty(DB_CONN_KEY, DB);
+
+        assertThrows(SQLException.class, () -> d.connect("jdbc:" + localhost, p));
+
+        try {
+            d.connect("jdbc:" + localhost, p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void testNullPropKey() throws Exception {
+        // Create a new Properties object.
+        Properties p = new Properties();
+        MongoDriver d = new MongoDriver();
+        // Put a key-value pair into the Properties object, with the value being an object.
+        p.put(new Pair<Double, Boolean>(6.0, true), USER);
+        p.setProperty(PWD_CONN_KEY, PWD);
+        p.setProperty(DB_CONN_KEY, DB);
+
+        assertThrows(SQLException.class, () -> d.connect("jdbc:" + localhost, p));
+
+        try {
+            d.connect("jdbc:" + localhost, p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

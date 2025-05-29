@@ -270,17 +270,38 @@ public class MongoDriver implements Driver {
         return version.contains("libv");
     }
 
-    @Override
-    public Connection connect(String url, Properties info) throws SQLException {
+    private Properties canonicalizeProperties(Properties info) throws SQLException {
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
-            Enumeration keys = info.propertyNames();
-            while (keys.hasMoreElements()) {
-                String key = keys.nextElement().toString();
-                lowerCaseprops.put(key.toLowerCase(), info.getProperty(key));
+            try {
+                Enumeration<?> keys = info.propertyNames();
+                while (keys.hasMoreElements()) {
+                    String key = (String) keys.nextElement();
+                    String value = info.getProperty(key);
+                    // The value here can only be null if the value is not a String because
+                    // the keys are all obtained by enumerating all the propertyNames.
+                    if (value == null) {
+                        throw new SQLException(
+                                "Properties Object must contain String values only.");
+                    }
+                    key = key.toLowerCase(); // Normalize key to lower case
+                    value = value.trim(); // Trim whitespace from the value
+                    lowerCaseprops.setProperty(key, value);
+                }
+            } catch (ClassCastException e) {
+                throw new SQLException("Properties Object must contain String keys only.");
             }
         }
+        return lowerCaseprops;
+    }
+
+    @Override
+    public Connection connect(String url, Properties info) throws SQLException {
+        if (!acceptsURL(url)) {
+            return null;
+        }
+        Properties lowerCaseprops = canonicalizeProperties(info);
         MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
