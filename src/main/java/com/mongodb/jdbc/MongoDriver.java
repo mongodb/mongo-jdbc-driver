@@ -290,8 +290,7 @@ public class MongoDriver implements Driver {
                     lowerCaseprops.setProperty(key, value);
                 }
             } catch (ClassCastException e) {
-                throw new SQLException(
-                        "Properties Object must contain String keys only.");
+                throw new SQLException("Properties Object must contain String keys only.");
             }
         }
         return lowerCaseprops;
