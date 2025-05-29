@@ -270,37 +270,28 @@ public class MongoDriver implements Driver {
         return version.contains("libv");
     }
 
-    private String propertyTypeCheck(Object v, String type) throws SQLException {
-        if (v == null) {
-            throw new SQLException("property " + type + " must be non-null Strings, found null");
-        }
-        if (!String.class.isInstance(v)) {
-            throw new SQLException(
-                    "property "
-                            + type
-                            + " must be non-null Strings, found type: "
-                            + v.getClass().getName());
-        }
-        return (String) v;
-    }
-
     private Properties canonicalizeProperties(Properties info) throws SQLException {
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive
         if (info != null) {
-            Enumeration<?> keys = null;
             try {
-                keys = info.propertyNames();
+                Enumeration<?> keys = info.propertyNames();
+                while (keys.hasMoreElements()) {
+                    String key = (String) keys.nextElement();
+                    String value = info.getProperty(key);
+                    // The value here can only be null if the value is not a String because
+                    // the keys are all obtained by enumerating all the propertyNames.
+                    if (value == null) {
+                        throw new SQLException(
+                                "Properties Object must contain String values only.");
+                    }
+                    key = key.toLowerCase(); // Normalize key to lower case
+                    value = value.trim(); // Trim whitespace from the value
+                    lowerCaseprops.setProperty(key, value);
+                }
             } catch (ClassCastException e) {
                 throw new SQLException(
-                        "Properties Object must contain String keys and values only. ");
-            }
-            while (keys.hasMoreElements()) {
-                Object potentialKey = keys.nextElement();
-                String key = propertyTypeCheck(potentialKey, "keys");
-                Object potentialValue = info.getProperty(key);
-                String value = propertyTypeCheck(potentialValue, "values");
-                lowerCaseprops.setProperty(key.toLowerCase(), value.trim());
+                        "Properties Object must contain String keys only.");
             }
         }
         return lowerCaseprops;
