@@ -69,6 +69,7 @@ public class MongoConnection implements Connection {
     private static Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
     private String logDirPath;
     private boolean extJsonMode;
+    private boolean mongoClientCacheEnabled;
     private UuidRepresentation uuidRepresentation;
     private String appName;
     private MongoSQLTranslate mongosqlTranslate;
@@ -147,6 +148,7 @@ public class MongoConnection implements Connection {
         this.user = connectionProperties.getConnectionString().getUsername();
         this.currentDB = connectionProperties.getDatabase();
         this.extJsonMode = connectionProperties.getExtJsonMode();
+        this.mongoClientCacheEnabled = connectionProperties.getMongoClientCacheEnabled();
         this.uuidRepresentation =
                 connectionProperties.getConnectionString().getUuidRepresentation();
         this.appName = buildAppName(connectionProperties);
@@ -376,6 +378,11 @@ public class MongoConnection implements Connection {
     public void close() {
         if (isClosed()) {
             return;
+        }
+
+        if (!mongoClientCacheEnabled) {
+            // The MongoClient is owned by this connection.
+            mongoClient.close();
         }
 
         // Decrement fileHandlerCount and delete entry
