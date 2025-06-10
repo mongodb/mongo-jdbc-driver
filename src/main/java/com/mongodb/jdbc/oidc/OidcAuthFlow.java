@@ -65,17 +65,18 @@ public class OidcAuthFlow {
     }
 
     /**
-     * Builds the OIDC scopes for the authorization request by combining default scopes
-     * with client-requested scopes that are supported by the Identity Provider.  Adds
-     * openid and offline_access scopes by default, and includes the clientID/.default if
-     * in the requested scopes.
+     * Builds the OIDC scopes for the authorization request by combining default scopes with
+     * client-requested scopes that are supported by the Identity Provider. Adds openid and
+     * offline_access scopes by default, and includes the clientID/.default if in the requested
+     * scopes.
      *
      * @param clientID the OAuth2 client identifier
      * @param idpServerInfo server information containing requested scopes and other IdP details
      * @param providerMetadata OIDC provider metadata containing supported scopes
      * @return a Scope object containing all valid scopes to be requested
      */
-    public Scope buildScopes(String clientID, IdpInfo idpServerInfo, OIDCProviderMetadata providerMetadata) {
+    public Scope buildScopes(
+            String clientID, IdpInfo idpServerInfo, OIDCProviderMetadata providerMetadata) {
         Set<String> scopes = new HashSet<>();
         Scope supportedScopes = providerMetadata.getScopes();
 
