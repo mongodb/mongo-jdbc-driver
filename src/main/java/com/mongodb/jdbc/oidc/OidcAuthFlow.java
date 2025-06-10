@@ -86,7 +86,7 @@ public class OidcAuthFlow {
         // Add custom scopes from request that are supported by the IdP
         List<String> requestedScopes = idpServerInfo.getRequestScopes();
         if (requestedScopes != null) {
-            // Always add clientID/.default if it's in requestedScopes
+            // Always add clientID/.default if it's in requestedScopes, this was needed for Azure OIDC.
             String clientIDDefault = clientID + "/.default";
             if (requestedScopes.contains(clientIDDefault)) {
                 scopes.add(clientIDDefault);
