@@ -92,10 +92,13 @@ public class OidcAuthFlow {
             if (requestedScopes.contains(clientIDDefault)) {
                 scopes.add(clientIDDefault);
             }
-            for (String scope : requestedScopes) {
-                if (supportedScopes != null) {
+            if (supportedScopes != null) {
+                for (String scope : requestedScopes) {
                     if (supportedScopes.contains(scope)) {
                         scopes.add(scope);
+                    } else {
+                        logger.warning(
+                                "Requested scope '" + scope + "' is not supported by the IdP");
                     }
                 }
             }
