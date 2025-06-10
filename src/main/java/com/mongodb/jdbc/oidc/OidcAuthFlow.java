@@ -44,7 +44,9 @@ import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.RefreshFailedException;
@@ -54,11 +56,55 @@ public class OidcAuthFlow {
     private static final Logger logger = Logger.getLogger(OidcAuthFlow.class.getName());
     private MongoLogger mongoLogger;
     private static final String OFFLINE_ACCESS = "offline_access";
+    private static final String OPENID = "openid";
 
     public OidcAuthFlow() {}
 
     public OidcAuthFlow(MongoLogger parentLogger) {
         this.mongoLogger = new MongoLogger(OidcAuthFlow.class.getName(), parentLogger);
+    }
+
+    /**
+     * Builds the OIDC scopes for the authorization request by combining default scopes
+     * with client-requested scopes that are supported by the Identity Provider.  Adds
+     * openid and offline_access scopes by default, and includes the clientID/.default if
+     * in the requested scopes.
+     *
+     * @param clientID the OAuth2 client identifier
+     * @param idpServerInfo server information containing requested scopes and other IdP details
+     * @param providerMetadata OIDC provider metadata containing supported scopes
+     * @return a Scope object containing all valid scopes to be requested
+     */
+    public Scope buildScopes(String clientID, IdpInfo idpServerInfo, OIDCProviderMetadata providerMetadata) {
+        Set<String> scopes = new HashSet<>();
+        Scope supportedScopes = providerMetadata.getScopes();
+
+        // Add openid and offline_access scopes by default
+        scopes.add(OPENID);
+        scopes.add(OFFLINE_ACCESS);
+
+        // Add custom scopes from request that are supported by the IdP
+        List<String> requestedScopes = idpServerInfo.getRequestScopes();
+        if (requestedScopes != null) {
+            // Always add clientID/.default if it's in requestedScopes
+            String clientIDDefault = clientID + "/.default";
+            if (requestedScopes.contains(clientIDDefault)) {
+                scopes.add(clientIDDefault);
+            }
+            for (String scope : requestedScopes) {
+                if (supportedScopes != null) {
+                    if (supportedScopes.contains(scope)) {
+                        scopes.add(scope);
+                    }
+                }
+            }
+        }
+
+        Scope finalScopes = new Scope();
+        for (String scope : scopes) {
+            finalScopes.add(new Scope.Value(scope));
+        }
+        return finalScopes;
     }
 
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext)
@@ -80,30 +126,7 @@ public class OidcAuthFlow {
                     OIDCProviderMetadata.resolve(new Issuer(issuerURI));
             URI authorizationEndpoint = providerMetadata.getAuthorizationEndpointURI();
             URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
-
-            Scope supportedScopes = providerMetadata.getScopes();
-            List<String> scopesList = idpServerInfo.getRequestScopes();
-            Scope requestedScopes = new Scope();
-            if (scopesList != null) {
-                for (String scope : scopesList) {
-                    if (supportedScopes != null && supportedScopes.contains(scope)) {
-                        requestedScopes.add(new Scope.Value(scope));
-                    } else {
-                        logger.warning(
-                                "Requested scope '" + scope + "' is not supported by the IdP");
-                    }
-                }
-            }
-            // mongodb is not configured to ask for offline_access by default. We prefer always getting a
-            // refresh token when the server allows it.
-            if (!scopesList.contains(OFFLINE_ACCESS)) {
-                if (supportedScopes != null && supportedScopes.contains(OFFLINE_ACCESS)) {
-                    requestedScopes.add(new Scope.Value(OFFLINE_ACCESS));
-                } else {
-                    logger.info(
-                            "Offline access (refresh token) is not supported by the OIDC provider");
-                }
-            }
+            Scope requestedScopes = buildScopes(clientID, idpServerInfo, providerMetadata);
 
             // Start the local RFC8252 HTTP server to receive the redirect.
             server.start();
