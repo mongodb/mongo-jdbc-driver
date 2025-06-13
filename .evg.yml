@@ -80,8 +80,19 @@ post:
   - func: "upload xunit test results"
   - func: "upload smoke test index"
 
-buildvariants:
 
+modules:
+  - name: sql-engines-common-test-infra
+    owner: mongodb
+    repo: sql-engines-common-test-infra
+    branch: main
+    auto_update: true
+
+include:
+  - filename: evergreen/configs/mongodb_util.yml
+    module: sql-engines-common-test-infra
+
+buildvariants:
   - name: static-analysis
     display_name: "Static Analysis"
     run_on: [ ubuntu2204-small ]
@@ -104,6 +115,8 @@ buildvariants:
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-large
+    modules:
+      - sql-engines-common-test-infra
     tasks:
       - name: "test-unit"
       - name: "test-mongo-sql-translate"
@@ -116,6 +129,8 @@ buildvariants:
     expansions:
       _platform: amazon2-arm64-jdk-11
     run_on: amazon2-arm64-graviton3
+    modules:
+      - sql-engines-common-test-infra
     tasks:
       - name: "test-unit"
       - name: "test-adf-integration"
@@ -125,6 +140,8 @@ buildvariants:
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: ubuntu2204-small
+    modules:
+      - sql-engines-common-test-infra
     tasks:
       - name: "build"
       - name: "test-smoke"
@@ -153,7 +170,10 @@ tasks:
 
   - name: "test-adf-integration"
     commands:
-      - func: "generate github token"
+      - func: "prepare resources"
+      - func: "update orchestrator mongod port"
+      - func: "bootstrap mongo-orchestration"
+      - func: "generate sql-engines github token"
       - func: "run adf integration test"
 
   - name: "test-dc-integration"
@@ -173,7 +193,10 @@ tasks:
           variant: "release"
     commands:
       - func: "fetch jdbc shadow jar"
-      - func: "generate github token"
+      - func: "prepare resources"
+      - func: "update orchestrator mongod port"
+      - func: "bootstrap mongo-orchestration"
+      - func: "generate sql-engines github token"
       - func: "run smoke test"
 
   - name: "publish-maven"
@@ -711,7 +734,11 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        ./resources/run_adf.sh start &&
+        
+        export COMPUTE_MODE_MONGOD_PORT=47017
+        $COMMON_TEST_INFRA_DIR/evergreen/scripts/start_compute_node.sh &&
+        
+        $COMMON_TEST_INFRA_DIR/test-environment/run_adf.sh start &&
         ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP runDataLoader &&
         ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP clean integrationTest \
             -x test --tests ADFIntegrationTest > gradle_output.log 2>&1 &
@@ -726,13 +753,13 @@ functions:
         TIMEOUT=1800  # 30 minute timeout
 
         while true; do
-            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log 2>/dev/null; then
                 echo "Build successful!"
                 EXITCODE=0
                 break
             fi
 
-            if grep -q "BUILD FAILED" gradle_output.log; then
+            if grep -q "BUILD FAILED" gradle_output.log 2>/dev/null; then
                 echo "Build failed!"
                 EXITCODE=1
                 break
@@ -759,7 +786,7 @@ functions:
 
         kill $GRADLE_PID 2>/dev/null || true
 
-        ./resources/run_adf.sh stop
+        $COMMON_TEST_INFRA_DIR/test-environment/run_adf.sh stop
 
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
@@ -806,12 +833,12 @@ functions:
         SECONDS=0
         TIMEOUT=1800  # 30 minute timeout
         while true; do
-          if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+          if grep -q "BUILD SUCCESSFUL" gradle_output.log 2>/dev/null; then
               echo "Build successful!"
               EXITCODE=0
               break
           fi
-          if grep -q "BUILD FAILED" gradle_output.log; then
+          if grep -q "BUILD FAILED" gradle_output.log 2> /dev/null; then
               echo "Build failed!"
               EXITCODE=1
               break
@@ -890,12 +917,12 @@ functions:
         TIMEOUT=1800  # 30 minute timeout
         while true; do
           if [ -f gradle_output.log ]; then
-            if grep -q "BUILD SUCCESSFUL" gradle_output.log; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log 2>/dev/null; then
                 echo "Build successful!"
                 EXITCODE=0
                 break
             fi
-            if grep -q "BUILD FAILED" gradle_output.log; then
+            if grep -q "BUILD FAILED" gradle_output.log 2>/dev/null; then
                 echo "Build failed!"
                 EXITCODE=1
                 break
@@ -954,11 +981,14 @@ functions:
         echo "Build Type:"
         echo ${BUILD_TYPE}
         
-        ./resources/run_adf.sh start &&
+        export COMPUTE_MODE_MONGOD_PORT=47017
+        $COMMON_TEST_INFRA_DIR/evergreen/scripts/start_compute_node.sh &&
+        
+        $COMMON_TEST_INFRA_DIR/test-environment/run_adf.sh start &&
         ./gradlew $IS_RELEASE_PROP runDataLoader &&
         ./gradlew $IS_RELEASE_PROP :smoketest:test -Psmoketest
         EXITCODE=$?
-        ./resources/run_adf.sh stop         
+        $COMMON_TEST_INFRA_DIR/test-environment/run_adf.sh stop         
         exit $EXITCODE
 
   "export variables":
@@ -968,6 +998,8 @@ functions:
         silent: false
         working_dir: mongo-jdbc-driver
         script: |
+          export PROJECT_DIRECTORY="$(pwd)"
+
           ARTIFACTS_DIR=artifacts
           S3_ARTIFACTS_DIR='mongo-jdbc-driver/artifacts/${version_id}/${build_variant}'
 
@@ -1012,6 +1044,12 @@ functions:
               fi
           fi
           
+          # common test infra variables
+          COMMON_TEST_INFRA_DIR="$PROJECT_DIRECTORY/sql-engines-common-test-infra"
+          DRIVERS_TOOLS="$PROJECT_DIRECTORY/evergreen/drivers-tools"
+          MONGO_ORCHESTRATION_HOME="$DRIVERS_TOOLS/.evergreen/orchestration"
+          MONGODB_BINARIES="$DRIVERS_TOOLS/mongodb/bin"
+          
           # set the state needed irrespective of _platform
           SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
           SBOM_TOOL_DIR="sbom_generations"
@@ -1038,6 +1076,11 @@ functions:
           echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
           echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
           echo "SSDLC Directory = $SSDLC_DIR"
+          echo "=== Common Test Infra Values ==="
+          echo "Common Test Infra Directory = $COMMON_TEST_INFRA_DIR"
+          echo "Drivers Tools Directory = $DRIVERS_TOOLS"
+          echo "Mongo Orchestration Home = $MONGO_ORCHESTRATION_HOME"
+          echo "MongoDB Binaries = $MONGODB_BINARIES"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -1056,6 +1099,12 @@ functions:
           STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
           BUILD_TYPE: "$BUILD_TYPE"
+          PROJECT_DIRECTORY: "$PROJECT_DIRECTORY"
+          COMMON_TEST_INFRA_DIR: "$COMMON_TEST_INFRA_DIR"
+          DRIVERS_TOOLS: "$DRIVERS_TOOLS"
+          MONGO_ORCHESTRATION_HOME: "$MONGO_ORCHESTRATION_HOME"
+          MONGODB_BINARIES: "$MONGODB_BINARIES"
+          script_dir: "$COMMON_TEST_INFRA_DIR/evergreen/scripts"
           EOT
     - command: expansions.update
       params:
@@ -1069,8 +1118,6 @@ functions:
         script: |
 
           # export any environment variables that will be needed by subprocesses
-          export PROJECT_DIRECTORY="$(pwd)"
-
           export SBOM_LITE_NAME="$SBOM_LITE_NAME"
           export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
           export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
@@ -1124,6 +1171,11 @@ functions:
             export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
             export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
             export BUILD_TYPE="$BUILD_TYPE"
+          
+            export COMMON_TEST_INFRA_DIR="$COMMON_TEST_INFRA_DIR"
+            export DRIVERS_TOOLS="$DRIVERS_TOOLS"
+            export MONGO_ORCHESTRATION_HOME="$MONGO_ORCHESTRATION_HOME"
+            export MONGODB_BINARIES="$MONGODB_BINARIES"
           EOT
     - command: expansions.update
       params:
@@ -1166,6 +1218,8 @@ functions:
     - command: git.get_project
       params:
         directory: mongo-jdbc-driver
+      revisions:
+        sql-engines-common-test-infra: ${sql-engines-common-test-infra_rev}
 
   "upload unit test classes":
     - *assume_role_cmd
