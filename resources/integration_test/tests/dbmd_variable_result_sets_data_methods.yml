@@ -6,7 +6,9 @@ tests:
     expected_result:
       - [db2]
       - [integration_test]
-    row_count: 2
+      - [integration_test_2]
+      - [tdvt]
+    row_count: 4
     ordered: true
     expected_sql_type: [LONGVARCHAR]
     expected_bson_type: [ string ]
