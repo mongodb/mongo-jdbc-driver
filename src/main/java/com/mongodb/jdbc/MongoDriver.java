@@ -99,7 +99,8 @@ public class MongoDriver implements Driver {
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
-        X509_PEM_PATH("x509pempath");
+        X509_PEM_PATH("x509pempath"),
+        DISABLE_CACHE("disablecache");
 
         private final String propertyName;
 
@@ -471,6 +472,15 @@ public class MongoDriver implements Driver {
                         clientInfo,
                         extJsonMode,
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
+
+        String disableCacheVal =
+                info.getProperty(DISABLE_CACHE.getPropertyName(), "false").toLowerCase();
+        if (disableCacheVal == "true"
+                || disableCacheVal.equals("yes")
+                || disableCacheVal.equals("1")) {
+            // If the user has set the disable cache property, we will not use the cache.
+            return new MongoConnection(mongoConnectionProperties, x509Passphrase);
+        }
 
         Integer key = mongoConnectionProperties.generateKey();
 
