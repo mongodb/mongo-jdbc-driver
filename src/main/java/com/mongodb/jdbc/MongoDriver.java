@@ -191,6 +191,15 @@ public class MongoDriver implements Driver {
         }
     }
 
+    static int getClientCacheSizeForTest() {
+        mongoClientCacheLock.readLock().lock();
+        try {
+            return mongoClientCache.size();
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
+        }
+    }
+
     static {
         MongoDriver unit = new MongoDriver();
         try {
