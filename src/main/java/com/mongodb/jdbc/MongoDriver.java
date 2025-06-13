@@ -100,7 +100,7 @@ public class MongoDriver implements Driver {
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
         X509_PEM_PATH("x509pempath"),
-        DISABLE_CACHE("disablecache");
+        DISABLE_CLIENT_CACHE("disableclientcache");
 
         private final String propertyName;
 
@@ -474,7 +474,7 @@ public class MongoDriver implements Driver {
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
 
         String disableCacheVal =
-                info.getProperty(DISABLE_CACHE.getPropertyName(), "false").toLowerCase();
+                info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
         if (disableCacheVal == "true"
                 || disableCacheVal.equals("yes")
                 || disableCacheVal.equals("1")) {
