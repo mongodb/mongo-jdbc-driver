@@ -493,7 +493,6 @@ public class MongoDriver implements Driver {
 
         String disableCacheVal =
                 info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
-        System.out.println(disableCacheVal);
         if (disableCacheVal.equals("true")
                 || disableCacheVal.equals("yes")
                 || disableCacheVal.equals("1")) {
