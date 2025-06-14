@@ -99,7 +99,8 @@ public class MongoDriver implements Driver {
         LOG_LEVEL("loglevel"),
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
-        X509_PEM_PATH("x509pempath");
+        X509_PEM_PATH("x509pempath"),
+        DISABLE_CLIENT_CACHE("disableclientcache");
 
         private final String propertyName;
 
@@ -187,6 +188,24 @@ public class MongoDriver implements Driver {
             if (p != null) {
                 p.destroy();
             }
+        }
+    }
+
+    static int getClientCacheSizeForTest() {
+        mongoClientCacheLock.readLock().lock();
+        try {
+            return mongoClientCache.size();
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
+        }
+    }
+
+    static void clearClientCacheForTest() {
+        mongoClientCacheLock.readLock().lock();
+        try {
+            mongoClientCache.clear();
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
         }
     }
 
@@ -471,6 +490,15 @@ public class MongoDriver implements Driver {
                         clientInfo,
                         extJsonMode,
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
+
+        String disableCacheVal =
+                info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
+        if (disableCacheVal.equals("true")
+                || disableCacheVal.equals("yes")
+                || disableCacheVal.equals("1")) {
+            // If the user has set the disable cache property, we will not use the cache.
+            return new MongoConnection(mongoConnectionProperties, x509Passphrase);
+        }
 
         Integer key = mongoConnectionProperties.generateKey();
 
