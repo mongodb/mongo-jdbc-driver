@@ -768,68 +768,55 @@ class MongoDriverTest {
                 "x509Passphrase should match the provided value.");
     }
 
+    void testDisableClientCacheAux(String value) throws SQLException {
+        MongoDriver d = new MongoDriver();
+        d.clearClientCacheForTest();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
+
+        // Create two connections with the same properties
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
+
+        assertEquals(
+                0,
+                d.getClientCacheSizeForTest(),
+                "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
+        // Verify that the connections do not share the same MongoClient instance
+        assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
+    }
+
+    void testNoDisableClientCacheAux(String value) throws SQLException {
+        MongoDriver d = new MongoDriver();
+        d.clearClientCacheForTest();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
+
+        // Create two connections with the same properties
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
+
+        // Verify that the connections do not share the same MongoClient instance
+        assertEquals(
+                d.getClientCacheSizeForTest(),
+                1,
+                "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
+        assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
+    }
+
     @Test
     void testDisableClientCache() throws SQLException {
-        {
-            MongoDriver d = new MongoDriver();
-            Properties p = new Properties();
-            p.setProperty(DATABASE.getPropertyName(), "test");
-            p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), "tRUe");
-            
-            // Create two connections with the same properties
-            MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-            MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-            
-            // Verify that the connections do not share the same MongoClient instance
-            assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
-            assertEquals(d.getClientCacheSize(), 0,
-                    "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        }
-        {
-            MongoDriver d = new MongoDriver();
-            Properties p = new Properties();
-            p.setProperty(DATABASE.getPropertyName(), "test");
-            p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), "1");
-            
-            // Create two connections with the same properties
-            MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-            MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-            
-            // Verify that the connections do not share the same MongoClient instance
-            assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
-            assertEquals(d.getClientCacheSize(), 0,
-                    "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        }
-        {
-            MongoDriver d = new MongoDriver();
-            Properties p = new Properties();
-            p.setProperty(DATABASE.getPropertyName(), "test");
-            p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), "YeS");
-            
-            // Create two connections with the same properties
-            MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-            MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-            
-            // Verify that the connections do not share the same MongoClient instance
-            assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
-            assertEquals(d.getClientCacheSize(), 0,
-                    "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        }
-        {
-            MongoDriver d = new MongoDriver();
-            Properties p = new Properties();
-            p.setProperty(DATABASE.getPropertyName(), "test");
-            p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), "false");
-            
-            // Create two connections with the same properties
-            MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-            MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-            
-            // Verify that the connections do not share the same MongoClient instance
-            assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
-            assertEquals(d.getClientCacheSize(), 1,
-                    "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        }
+        testDisableClientCacheAux("true");
+        testDisableClientCacheAux("TRUE");
+        testDisableClientCacheAux("TrUe");
+        testDisableClientCacheAux("1");
+        testDisableClientCacheAux("YeS");
+
+        testNoDisableClientCacheAux("false");
+        testNoDisableClientCacheAux("FALSE");
+        testNoDisableClientCacheAux("0");
     }
 
     @Test

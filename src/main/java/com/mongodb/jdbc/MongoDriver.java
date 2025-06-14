@@ -200,6 +200,15 @@ public class MongoDriver implements Driver {
         }
     }
 
+    static void clearClientCacheForTest() {
+        mongoClientCacheLock.readLock().lock();
+        try {
+            mongoClientCache.clear();
+        } finally {
+            mongoClientCacheLock.readLock().unlock();
+        }
+    }
+
     static {
         MongoDriver unit = new MongoDriver();
         try {
@@ -484,7 +493,8 @@ public class MongoDriver implements Driver {
 
         String disableCacheVal =
                 info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
-        if (disableCacheVal == "true"
+        System.out.println(disableCacheVal);
+        if (disableCacheVal.equals("true")
                 || disableCacheVal.equals("yes")
                 || disableCacheVal.equals("1")) {
             // If the user has set the disable cache property, we will not use the cache.
