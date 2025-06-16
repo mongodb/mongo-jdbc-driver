@@ -768,9 +768,46 @@ class MongoDriverTest {
                 "x509Passphrase should match the provided value.");
     }
 
-    void testDisableClientCacheAux(String value) throws SQLException {
+    private int getClientCacheSize() throws NoSuchFieldException, IllegalAccessException {
+        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
+        cacheField.setAccessible(true);
+        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
+                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
+
+        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
+        lockField.setAccessible(true);
+        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
+
+        lock.readLock().lock();
+        try {
+            return cache.size();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    private void clearClientCache() throws NoSuchFieldException, IllegalAccessException {
+        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
+        cacheField.setAccessible(true);
+        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
+                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
+
+        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
+        lockField.setAccessible(true);
+        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
+
+        lock.writeLock().lock();
+        try {
+            cache.clear();
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    void testDisableClientCacheAux(String value)
+            throws SQLException, NoSuchFieldException, IllegalAccessException {
         MongoDriver d = new MongoDriver();
-        d.clearClientCacheForTest();
+        clearClientCache();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
@@ -781,15 +818,16 @@ class MongoDriverTest {
 
         assertEquals(
                 0,
-                d.getClientCacheSizeForTest(),
+                getClientCacheSize(),
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         // Verify that the connections do not share the same MongoClient instance
         assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
     }
 
-    void testNoDisableClientCacheAux(String value) throws SQLException {
+    void testNoDisableClientCacheAux(String value)
+            throws SQLException, NoSuchFieldException, IllegalAccessException {
         MongoDriver d = new MongoDriver();
-        d.clearClientCacheForTest();
+        clearClientCache();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
@@ -800,14 +838,15 @@ class MongoDriverTest {
 
         // Verify that the connections do not share the same MongoClient instance
         assertEquals(
-                d.getClientCacheSizeForTest(),
+                getClientCacheSize(),
                 1,
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
     }
 
     @Test
-    void testDisableClientCache() throws SQLException {
+    void testDisableClientCache()
+            throws SQLException, NoSuchFieldException, IllegalAccessException {
         testDisableClientCacheAux("true");
         testDisableClientCacheAux("TRUE");
         testDisableClientCacheAux("TrUe");
@@ -818,7 +857,7 @@ class MongoDriverTest {
         testNoDisableClientCacheAux("FALSE");
         testNoDisableClientCacheAux("0");
     }
-
+    
     @Test
     void testNullPropValue() throws Exception {
         // Create a new Properties object.
