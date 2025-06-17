@@ -734,7 +734,6 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-        
         export COMPUTE_MODE_MONGOD_PORT=47017
         $COMMON_TEST_INFRA_DIR/evergreen/scripts/start_compute_node.sh &&
         
