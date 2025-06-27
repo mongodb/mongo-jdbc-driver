@@ -19,7 +19,7 @@ export ORG_GRADLE_PROJECT_signing_key_id=${SIGNING_KEY_ID}
 export ORG_GRADLE_PROJECT_signing_password=${SIGNING_PASSWORD}
 export ORG_GRADLE_PROJECT_signing_secretKeyRingFile=${PROJECT_DIRECTORY}/secring.gpg
 export ORG_GRADLE_PROJECT_nexus_url=${NEXUS_URL}
-export ORG_GRADLE_PROJECT_nexus_profile_id=${NEXUS_PROFILE_ID}
+export ORG_GRADLE_PROJECT_nexus_snapshot_url=${NEXUS_SNAPSHOT_URL}
 
 set -o verbose # Command echoing on.
 set -o xtrace # Enable command traces before executing them.
