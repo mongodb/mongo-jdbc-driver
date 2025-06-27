@@ -60,11 +60,14 @@ public class SmokeTest {
 
     @BeforeEach
     public void setupConnection() throws SQLException {
-        String buildType = System.getenv("BUILD_TYPE");
-        boolean isEapBuild = "eap".equalsIgnoreCase(buildType);
-        System.out.println("Read environment variable BUILD_TYPE: '" + buildType + "', Detected EAP build: " + isEapBuild);
+        Connection adfConnection = getADFInstanceConnection(URL, DB);
+        connections.put(adfConnection, "SELECT * from class");
 
-        connections.put(getADFInstanceConnection(URL, DB), "SELECT * from class");
+        DatabaseMetaData metadata = adfConnection.getMetaData();
+        String driverVersion = metadata.getDriverVersion();
+        boolean isEapBuild = driverVersion != null && (driverVersion.contains("-libv"));
+        System.out.println("Running smoke test with driver version: " + driverVersion +
+                " , EAP Build: " + isEapBuild);
 
         if (isEapBuild) {
             try {

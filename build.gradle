@@ -1,8 +1,7 @@
 plugins {
     id 'java-library'
     id "com.diffplug.gradle.spotless" version "3.24.3"
-    id 'io.codearte.nexus-staging' version '0.21.2'
-    id "de.marcphilipp.nexus-publish" version "0.3.0"
+    id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "org.cyclonedx.bom" version "1.8.2"
     id 'com.github.jk1.dependency-license-report' version '1.17'

@@ -1,5 +1,8 @@
 apply plugin: 'signing'
-apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'maven-publish'
+
+def nexusReleaseUrl = project.findProperty("nexus_url")
+def nexusSnapshotUrl = project.findProperty("nexus_snapshot_url")
 
 publishing {
     publications {
@@ -64,22 +67,14 @@ publishing {
     }
 }
 
-nexusStaging {
-    def nexusUrl = project.hasProperty('nexus_url') ? project.getProperty('nexus_url') : nexusDomain
-    serverUrl "$nexusUrl/service/local/"
-    username project.hasProperty('nexus_token_name') ? project.getProperty('nexus_token_name') : ""
-    password project.hasProperty('nexus_token') ? project.getProperty('nexus_token') : ""
-    packageGroup project.getGroup()
-    stagingProfileId project.hasProperty('nexus_profile_id') ? project.getProperty('nexus_profile_id') : ''
-    numberOfRetries 40
-}
-
 nexusPublishing {
     repositories {
         sonatype {
-            def domain = project.hasProperty('nexus_url') ? project.getProperty('nexus_url') : nexusDomain
-            nexusUrl = uri(nexusStaging.serverUrl)
-            snapshotRepositoryUrl = uri("$domain/content/repositories/snapshots/")
+            nexusUrl = nexusReleaseUrl ? uri(nexusReleaseUrl) : uri("https://ossrh-staging-api.central.sonatype.com/service/local/")
+            snapshotRepositoryUrl = nexusSnapshotUrl ? uri(nexusSnapshotUrl) : uri("https://central.sonatype.com/repository/maven-snapshots/")
+
+            username = project.hasProperty('nexus_token_name') ? project.getProperty('nexus_token_name') : ""
+            password = project.hasProperty('nexus_token') ? project.getProperty('nexus_token') : ""
         }
     }
 }
