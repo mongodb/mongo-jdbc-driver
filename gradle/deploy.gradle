@@ -1,22 +1,17 @@
-allprojects {
+afterEvaluate {
     task publishMaven {
         group = 'publishing'
         dependsOn ':generateLicenseReport'
-
         if (releaseVersion.endsWith('-SNAPSHOT')) {
             description = 'Publishes snapshots to Sonatype'
             println("Will publish snapshots to Sonatype")
-            dependsOn ':publishToSonatype'
+            dependsOn project.tasks.named('publishToSonatype')
         } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
             println("Will publish a release and uploads to Sonatype / Maven Central")
             if (project.name == rootProject.name) {
-                dependsOn ':closeAndReleaseRepository'
-                dependsOn ':publishToSonatype'
-                // Make sure we publish to staging first
-                project.tasks.getByName('publishToSonatype').finalizedBy(
-                        project.tasks.getByName('closeAndReleaseRepository'),
-                )
+                dependsOn project.tasks.named('publishToSonatype')
+                project.tasks.named('publishToSonatype').finalizedBy(project.tasks.named('closeAndReleaseRepository'))
             }
         }
     }
