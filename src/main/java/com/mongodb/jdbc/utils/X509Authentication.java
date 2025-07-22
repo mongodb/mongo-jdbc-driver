@@ -80,7 +80,9 @@ public class X509Authentication {
             //  - Encrypted/unencrypted private keys
             //  - X.509 certificates
             while ((pemObj = pemParser.readObject()) != null) {
-
+                logger.log(
+                        Level.FINE,
+                        "Processing PEM object of type: " + pemObj.getClass().getName());
                 // Initialize the JcaPEMKeyConverter with the Bouncy Castle provider name.
                 // This converter is used to transform Bouncy Castle's internal ASN.1 objects
                 // into Java Security API (JCA) objects like PrivateKey, PublicKey, etc.
@@ -104,7 +106,7 @@ public class X509Authentication {
                             "Successfully loaded unencrypted Private Key (PKCS#1). Algorithm: "
                                     + privateKey.getAlgorithm());
                 } else if (pemObj instanceof PKCS8EncryptedPrivateKeyInfo) {
-                    logger.log(Level.FINE, "Private key is encrypted (PKCS#8)");
+                    logger.log(Level.FINE, "Found encrypted Private key (PKCS#8)");
                     // Handles encrypted PKCS#8 private keys (-----BEGIN ENCRYPTED PRIVATE KEY-----)
                     PKCS8EncryptedPrivateKeyInfo encryptedPrivateKeyInfo =
                             (PKCS8EncryptedPrivateKeyInfo) pemObj;
@@ -118,11 +120,12 @@ public class X509Authentication {
                                         decryptorBuilder
                                                 .setProvider(BC_PROVIDER)
                                                 .build(passphrase));
+                        logger.log(Level.FINE, "Successfully decrypted Private Key (PKCS#8)");
                         // Convert the decrypted info to a Java PrivateKey object
                         privateKey = converter.getPrivateKey(decryptedInfo);
                         logger.log(
                                 Level.FINE,
-                                "Successfully decrypted and loaded Private Key (PKCS#8). Algorithm: "
+                                "Successfully loaded Private Key (PKCS#8). Algorithm: "
                                         + privateKey.getAlgorithm());
                     } catch (Exception e) {
                         // Specific error for incorrect password or decryption failure
@@ -142,11 +145,12 @@ public class X509Authentication {
                         // Decrypt the key pair
                         PEMKeyPair decryptedKeyPair =
                                 encryptedKeyPair.decryptKeyPair(decryptorBuilder.build(passphrase));
+                        logger.log(Level.FINE, "Successfully decrypted Private Key (PKCS#1)");
                         // Convert the decrypted key pair to a Java KeyPair and get the private key
                         privateKey = converter.getKeyPair(decryptedKeyPair).getPrivate();
                         logger.log(
                                 Level.FINE,
-                                "Successfully decrypted and loaded Private Key (PKCS#1). Algorithm: "
+                                "Successfully loaded Private Key (PKCS#1). Algorithm: "
                                         + privateKey.getAlgorithm());
                     } catch (PEMException e) {
                         // Specific error for incorrect password or decryption failure
@@ -164,6 +168,7 @@ public class X509Authentication {
                                 e);
                     }
                 } else if (pemObj instanceof X509CertificateHolder) {
+                    logger.log(Level.FINE, "Found X.509 Certificate.");
                     // Handles X.509 certificates (-----BEGIN CERTIFICATE-----)
                     X509CertificateHolder certHolder = (X509CertificateHolder) pemObj;
                     logger.log(Level.FINE, "Successfully loaded X.509 Certificate.");
@@ -181,14 +186,16 @@ public class X509Authentication {
                     PublicKey publicKey = converter.getPublicKey(publicKeyInfo);
                     logger.log(
                             Level.FINER,
-                            "Successfully loaded Public Key. Algorithm: "
-                                    + publicKey.getAlgorithm());
+                            "Found Public Key. Algorithm: "
+                                    + publicKey.getAlgorithm()
+                                    + ". This key is not used for authentication and will be ignored.");
                 } else {
                     // For any other unrecognized PEM object types
-                    throw new MongoException(
+                    logger.log(
+                            Level.FINER,
                             "Unsupported PEM object type found: "
                                     + pemObj.getClass().getName()
-                                    + ". Cannot process this type.");
+                                    + ". Cannot process this PEM object type, ignoring it.");
                 }
             }
         } catch (IOException e) {
@@ -206,12 +213,20 @@ public class X509Authentication {
             throw e;
         }
 
+        // The private key and X509 certificate must be fund for
+        StringBuilder missingComponents = new StringBuilder();
         if (privateKey == null) {
-            throw new MongoException(
-                    "Failed to read private key from PEM file (encrypted or unencrypted)");
+            missingComponents.append(
+                    "Private key not found in the PEM file (encrypted or unencrypted)");
         }
         if (cert == null) {
-            throw new MongoException("Failed to read X509 certificate from PEM file");
+            if (missingComponents.length() > 0) {
+                missingComponents.append("\n");
+            }
+            missingComponents.append("X.509 certificate not found in the PEM file");
+        }
+        if (missingComponents.length() > 0) {
+            throw new MongoException(missingComponents.toString());
         }
 
         return createSSLContextFromKeyAndCert(privateKey, cert);
@@ -219,7 +234,8 @@ public class X509Authentication {
 
     private SSLContext createSSLContextFromKeyAndCert(PrivateKey privateKey, Certificate cert)
             throws Exception {
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12", BC_PROVIDER);
+
         keyStore.load(null, null);
         keyStore.setKeyEntry("mongodb-cert", privateKey, null, new Certificate[] {cert});
 
