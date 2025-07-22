@@ -92,4 +92,28 @@ public class X509AuthenticationTest {
         x509Authentication.configureX509Authentication(
                 SETTINGS_BUILDER, pemFile.getPath(), passphrase);
     }
+
+    @Test
+    public void testX509AuthenticationWithNoX509Certificate() {
+        X509Authentication x509Authentication = new X509Authentication(MONGO_LOGGER);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File pemFile =
+                new File(
+                        classLoader
+                                .getResource(TEST_PEM_DIR + "/no_x509_certificate.pem")
+                                .getFile());
+        assertFalse(pemFile.isDirectory(), pemFile.getPath() + " is not a file.");
+        try {
+            x509Authentication.configureX509Authentication(
+                    SETTINGS_BUILDER, pemFile.getPath(), null);
+        } catch (Exception e) {
+            assertTrue(
+                    e.getCause()
+                            .getMessage()
+                            .contains("X.509 certificate not found in the PEM file"),
+                    e.getCause().getMessage()
+                            + " doesn't contain \"X.509 certificate not found in the PEM file\"");
+        }
+    }
 }
