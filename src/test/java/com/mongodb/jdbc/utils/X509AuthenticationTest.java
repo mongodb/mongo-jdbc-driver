@@ -116,4 +116,26 @@ public class X509AuthenticationTest {
                             + " doesn't contain \"X.509 certificate not found in the PEM file\"");
         }
     }
+
+    @Test
+    public void testX509AuthenticationWithNoPrivateKey() {
+        X509Authentication x509Authentication = new X509Authentication(MONGO_LOGGER);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File pemFile =
+                new File(classLoader.getResource(TEST_PEM_DIR + "/no_private_key.pem").getFile());
+        assertFalse(pemFile.isDirectory(), pemFile.getPath() + " is not a file.");
+        try {
+            x509Authentication.configureX509Authentication(
+                    SETTINGS_BUILDER, pemFile.getPath(), null);
+        } catch (Exception e) {
+            assertTrue(
+                    e.getCause()
+                            .getMessage()
+                            .contains(
+                                    "Private key not found in the PEM file (encrypted or unencrypted)"),
+                    e.getCause().getMessage()
+                            + " doesn't contain \"Private key not found in the PEM file (encrypted or unencrypted)\"");
+        }
+    }
 }
