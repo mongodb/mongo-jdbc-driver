@@ -321,34 +321,36 @@ public class MongoDriver implements Driver {
             return null;
         }
         Properties lowerCaseprops = canonicalizeProperties(info);
-        MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
+
         // the jdbc spec requires that null be returned if a Driver cannot handle the specified URL
         // (cases where multiple jdbc drivers are present and the program is checking which driver
         // to use), so it is possible for conn to be null at this point.
-        if (conn != null) {
-            try {
+        try {
+            MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
+            if (conn != null) {
                 conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
-            } catch (TimeoutException te) {
-                throw new SQLTimeoutException(
-                        "Couldn't connect due to a timeout. Please check your hostname and port. If necessary, set a "
-                                + "longer connection timeout in the MongoDB URI.");
-            } catch (Exception e) {
-                // Unwrap the cause to detect authentication failures
-                Throwable cause = e;
-                while (cause != null) {
-                    if (cause instanceof com.mongodb.MongoSecurityException) {
-                        throw new SQLException(
-                                "Authentication failed. Verify that the credentials are correct.",
-                                AUTHENTICATION_ERROR_SQLSTATE,
-                                e);
-                    }
-                    cause = cause.getCause();
-                }
-
-                throw new SQLException("Connection failed.", e);
+                return conn;
+            } else {
+                throw new SQLException("Connection setup failed but no errors where reported.");
             }
+        } catch (TimeoutException te) {
+            throw new SQLTimeoutException(
+                    "Couldn't connect due to a timeout. Please check your hostname and port. If necessary, set a "
+                            + "longer connection timeout in the MongoDB URI.");
+        } catch (Exception e) {
+            // Unwrap the cause to detect authentication failures
+            Throwable cause = e;
+            while (cause != null) {
+                if (cause instanceof com.mongodb.MongoSecurityException) {
+                    throw new SQLException(
+                            "Authentication failed. Verify that the credentials are correct.",
+                            AUTHENTICATION_ERROR_SQLSTATE,
+                            e);
+                }
+                cause = cause.getCause();
+            }
+            throw new SQLException("Connection failed.", e);
         }
-        return conn;
     }
 
     public static class MongoConnectionConfig {
@@ -383,9 +385,12 @@ public class MongoDriver implements Driver {
                     reportMissingProperties(connectionConfig.driverInfo),
                     CONNECTION_ERROR_SQLSTATE);
         }
-
-        return createConnection(
-                connectionConfig.connectionString, info, connectionConfig.x509Passphrase);
+        try {
+            return createConnection(
+                    connectionConfig.connectionString, info, connectionConfig.x509Passphrase);
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
     }
 
     /**
@@ -426,7 +431,7 @@ public class MongoDriver implements Driver {
     }
 
     private MongoConnection createConnection(
-            ConnectionString cs, Properties info, char[] x509Passphrase) throws SQLException {
+            ConnectionString cs, Properties info, char[] x509Passphrase) throws Exception {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
 

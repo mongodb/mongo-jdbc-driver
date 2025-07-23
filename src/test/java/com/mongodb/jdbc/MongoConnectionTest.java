@@ -70,7 +70,7 @@ class MongoConnectionTest extends MongoMock {
     }
 
     @Test
-    void testBuildAppNameWithoutClientInfo() {
+    void testBuildAppNameWithoutClientInfo() throws Exception {
         when(mockConnectionProperties.getClientInfo()).thenReturn(null);
 
         mongoConnection = new MongoConnection(null, mockConnectionProperties);
@@ -80,7 +80,7 @@ class MongoConnectionTest extends MongoMock {
     }
 
     @Test
-    void testAppNameWithValidClientInfo() {
+    void testAppNameWithValidClientInfo() throws Exception {
         String clientInfo = "test-client+1.0.0";
         when(mockConnectionProperties.getClientInfo()).thenReturn(clientInfo);
 
@@ -92,7 +92,7 @@ class MongoConnectionTest extends MongoMock {
     }
 
     @Test
-    void testAppNameWithInvalidClientInfo() {
+    void testAppNameWithInvalidClientInfo() throws Exception {
         // Client information has to be in the format 'name+version'
         when(mockConnectionProperties.getClientInfo()).thenReturn("invalid-client-info");
 

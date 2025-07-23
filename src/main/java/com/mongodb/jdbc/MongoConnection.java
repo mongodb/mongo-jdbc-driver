@@ -102,7 +102,8 @@ public class MongoConnection implements Connection {
     public MongoConnection(
             MongoClient mongoClient,
             MongoConnectionProperties connectionProperties,
-            char[] x509Passphrase) {
+            char[] x509Passphrase)
+            throws Exception {
         this.connectionId = connectionCounter.incrementAndGet();
         initConnectionLogger(
                 connectionId,
@@ -129,16 +130,17 @@ public class MongoConnection implements Connection {
         }
     }
 
-    public MongoConnection(
-            MongoClient mongoClient, MongoConnectionProperties connectionProperties) {
+    public MongoConnection(MongoClient mongoClient, MongoConnectionProperties connectionProperties)
+            throws Exception {
         this(mongoClient, connectionProperties, null);
     }
 
-    public MongoConnection(MongoConnectionProperties connectionProperties, char[] x509Passphrase) {
+    public MongoConnection(MongoConnectionProperties connectionProperties, char[] x509Passphrase)
+            throws Exception {
         this(null, connectionProperties, x509Passphrase);
     }
 
-    public MongoConnection(MongoConnectionProperties connectionProperties) {
+    public MongoConnection(MongoConnectionProperties connectionProperties) throws Exception {
         this(null, connectionProperties);
     }
 
@@ -171,7 +173,7 @@ public class MongoConnection implements Connection {
     }
 
     private MongoClientSettings createMongoClientSettings(
-            MongoConnectionProperties connectionProperties) {
+            MongoConnectionProperties connectionProperties) throws Exception {
         MongoClientSettings.Builder settingsBuilder =
                 MongoClientSettings.builder()
                         .applicationName(this.appName)

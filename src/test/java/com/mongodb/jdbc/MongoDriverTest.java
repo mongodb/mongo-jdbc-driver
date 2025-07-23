@@ -93,7 +93,7 @@ class MongoDriverTest {
     }
 
     @Test
-    void testBasicURL() throws SQLException {
+    void testBasicURL() throws Exception {
         MongoDriver d = new MongoDriver();
         // Missing mandatory 'DATABASE.getPropertyName()' property
         missingConnectionSettings(d, basicURL, null);
@@ -112,7 +112,7 @@ class MongoDriverTest {
     }
 
     @Test
-    void testURIDBURL() throws SQLException {
+    void testURIDBURL() throws Exception {
         MongoDriver d = new MongoDriver();
         Properties p = new Properties();
         p.setProperty(USER_CONN_KEY, "AzureDiamond");
@@ -121,7 +121,7 @@ class MongoDriverTest {
     }
 
     private void missingConnectionSettings(
-            MongoDriver d, String connectionUrl, Properties properties) {
+            MongoDriver d, String connectionUrl, Properties properties) throws SQLException {
         // Should not return null or throw, even with null properties.
         try {
             d.getUnvalidatedConnection(connectionUrl, properties);
@@ -740,7 +740,7 @@ class MongoDriverTest {
 
         String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
         assertThrows(
-                IllegalStateException.class,
+                SQLException.class,
                 () -> d.getUnvalidatedConnection(x509URL, p),
                 "Expected to fail because x509Passphrase is missing.");
     }

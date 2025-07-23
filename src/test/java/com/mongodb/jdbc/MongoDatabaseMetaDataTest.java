@@ -42,6 +42,9 @@ public class MongoDatabaseMetaDataTest {
                             new MongoConnectionProperties(
                                     uri, database, null, null, null, false, null)));
 
+    // Report exception from MongoConnection
+    public MongoDatabaseMetaDataTest() throws Exception {}
+
     protected int countRows(ResultSet rs) throws SQLException {
         for (int i = 0; ; ++i) {
             if (!rs.next()) {
