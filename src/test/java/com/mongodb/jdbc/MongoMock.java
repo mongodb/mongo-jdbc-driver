@@ -186,10 +186,19 @@ public abstract class MongoMock {
     @Mock protected static AggregateIterable<BsonDocument> aggregateIterable;
     @Mock protected static MongoCursor<BsonDocument> mongoCursor;
 
-    @InjectMocks
-    protected static MongoConnection mongoConnection =
-            new MongoConnection(
-                    new MongoConnectionProperties(uri, database, null, null, null, false, null));
+    @InjectMocks protected static MongoConnection mongoConnection = null;
+
+    static {
+        try {
+            mongoConnection =
+                    new MongoConnection(
+                            new MongoConnectionProperties(
+                                    uri, database, null, null, null, false, null));
+        } catch (Exception e) {
+            // The connection initialization should not fail, but if it does, we log the error to have more info.
+            e.printStackTrace();
+        }
+    }
 
     private static Field getDeclaredFieldFromClassOrSuperClass(Class c, String fieldName)
             throws NoSuchFieldException {
