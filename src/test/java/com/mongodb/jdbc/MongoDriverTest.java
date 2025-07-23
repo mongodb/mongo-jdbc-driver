@@ -740,7 +740,7 @@ class MongoDriverTest {
 
         String x509URL = "jdbc:mongodb://localhost/test?authMechanism=MONGODB-X509";
         assertThrows(
-                IllegalStateException.class,
+                SQLException.class,
                 () -> d.getUnvalidatedConnection(x509URL, p),
                 "Expected to fail because x509Passphrase is missing.");
     }

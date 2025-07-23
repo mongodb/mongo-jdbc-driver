@@ -84,7 +84,7 @@ public class AuthX509IntegrationTest {
 
         Exception exception =
                 assertThrows(
-                        RuntimeException.class, () -> DriverManager.getConnection(uri, properties));
+                        SQLException.class, () -> DriverManager.getConnection(uri, properties));
 
         Throwable cause = exception.getCause();
         assertNotNull(cause, "Expected a cause in the exception");
@@ -124,7 +124,7 @@ public class AuthX509IntegrationTest {
 
         Exception exception =
                 assertThrows(
-                        RuntimeException.class,
+                        SQLException.class,
                         () ->
                                 connectWithX509(
                                         "resources/authentication_test/X509/client-encrypted.pem",

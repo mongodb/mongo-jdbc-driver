@@ -105,7 +105,7 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testX509AuthenticationWithPKCS1EncryptedInvalidPassword() {
+    public void testX509AuthenticationWithPKCS1EncryptedInvalidPassphrase() {
         configureX509AuthFailure(
                 "pkcs1_encrypted.pem",
                 "invalid".toCharArray(),
@@ -113,7 +113,7 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testX509AuthenticationWithPKCS8EncryptedInvalidPassword() {
+    public void testX509AuthenticationWithPKCS8EncryptedInvalidPassphrase() {
         configureX509AuthFailure(
                 "pkcs8_encrypted.pem",
                 "invalid".toCharArray(),
