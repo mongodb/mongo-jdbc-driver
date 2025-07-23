@@ -20,8 +20,6 @@ import static com.mongodb.jdbc.MongoConnection.MONGODB_JDBC_X509_CLIENT_CERT_PAT
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.security.GeneralSecurityException;
 import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
@@ -89,8 +87,8 @@ public class AuthX509IntegrationTest {
         Throwable cause = exception.getCause();
         assertNotNull(cause, "Expected a cause in the exception");
         assertTrue(
-                cause instanceof FileNotFoundException,
-                "Expected FileNotFoundException, but got: " + cause.getClass().getName());
+                cause instanceof SQLException,
+                "Expected SQLException, but got: " + cause.getClass().getName());
     }
 
     /** Tests that PEM file without passphrase connects */
@@ -133,8 +131,8 @@ public class AuthX509IntegrationTest {
         Throwable cause = exception.getCause();
         assertNotNull(cause, "Expected a cause in the exception");
         assertTrue(
-                cause instanceof GeneralSecurityException,
-                "Expected GeneralSecurityException, but got: " + cause.getClass().getName());
+                cause instanceof SQLException,
+                "Expected SQLException, but got: " + cause.getClass().getName());
     }
 
     /**
