@@ -16,7 +16,8 @@ afterEvaluate {
                 dependsOn project.tasks.named('publishToSonatype')
                 project.tasks.named('publishToSonatype').configure {
                     finalizedBy(project.tasks.named('closeAndReleaseRepository'))
-                }            }
+                }
+            }
         }
     }
 }
