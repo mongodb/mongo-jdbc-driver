@@ -215,7 +215,9 @@ public class MongoSQLTranslate {
                 collections.stream().map(ns -> ns.collection).collect(Collectors.toList());
 
         // Filter documents where _id is in the list of collection names
-        Bson matchStage = Aggregates.match(Filters.in("_id", collectionNames));
+        Bson matchStage =
+                Aggregates.match(
+                        Filters.and(Filters.in("_id", collectionNames), Filters.exists("schema")));
 
         // Include only the 'schema' and '_id' fields
         Bson projectStage =
