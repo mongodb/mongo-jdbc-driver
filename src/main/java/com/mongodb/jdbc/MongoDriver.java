@@ -692,9 +692,11 @@ public class MongoDriver implements Driver {
             }
             if (password == null && user != null) {
                 if (result.authMechanism == null
-                        && !result.authMechanism.equals(MONGODB_OIDC)
-                        && !result.authMechanism.equals(GSSAPI)) {
-                    // password is null, but user is not, we must prompt for the password.
+                        || (!result.authMechanism.equals(MONGODB_X509)
+                                && !result.authMechanism.equals(MONGODB_OIDC)
+                                && !result.authMechanism.equals(GSSAPI))) {
+                    // Password is null, but user is provided.  If the authentication mechanism
+                    // does not support password-less login, then the password must be prompted for.
                     mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
                 }
             }
