@@ -28,6 +28,8 @@ public class MongoConnectionProperties {
     private String clientInfo;
     private boolean extJsonMode;
     private String x509PemPath;
+    private String jaasConfigPath;
+    private String gssNativeMode;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -36,14 +38,18 @@ public class MongoConnectionProperties {
             File logDir,
             String clientInfo,
             boolean extJsonMode,
-            String x509PemPath) {
+            String x509PemPath,
+            String jaasConfigPath,
+            String gssNativeMode) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
         this.logDir = logDir;
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
-        this.x509PemPath = x509PemPath;
+        this.x509PemPath = (x509PemPath != null) ? x509PemPath.trim() : null;
+        this.jaasConfigPath = (jaasConfigPath != null) ? jaasConfigPath.trim() : null;
+        this.gssNativeMode = gssNativeMode != null ? gssNativeMode : null;
     }
 
     public ConnectionString getConnectionString() {
@@ -72,6 +78,14 @@ public class MongoConnectionProperties {
 
     public String getX509PemPath() {
         return x509PemPath;
+    }
+
+    public String getJaasConfigPath() {
+        return jaasConfigPath;
+    }
+
+    public String getGssNativeMode() {
+        return gssNativeMode;
     }
 
     /*

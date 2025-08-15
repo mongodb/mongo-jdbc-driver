@@ -100,7 +100,9 @@ public class MongoDriver implements Driver {
         LOG_DIR("logdir"),
         EXT_JSON_MODE("extjsonmode"),
         X509_PEM_PATH("x509pempath"),
-        DISABLE_CLIENT_CACHE("disableclientcache");
+        DISABLE_CLIENT_CACHE("disableclientcache"),
+        JAAS_CONFIG_PATH("jaasconfigpath"),
+        GSS_NATIVE_MODE("gssnativemode");
 
         private final String propertyName;
 
@@ -486,6 +488,19 @@ public class MongoDriver implements Driver {
             }
         }
 
+        String gssNativeModeVal = info.getProperty(GSS_NATIVE_MODE.getPropertyName());
+        if (gssNativeModeVal != null) {
+            gssNativeModeVal = gssNativeModeVal.trim().toLowerCase();
+            if (!"true".equals(gssNativeModeVal) && !"false".equals(gssNativeModeVal)) {
+                throw new SQLException(
+                        "Invalid "
+                                + GSS_NATIVE_MODE.getPropertyName()
+                                + " property value: "
+                                + gssNativeModeVal
+                                + ". Valid values are: 'true', 'false'.");
+            }
+        }
+
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
                         cs,
@@ -494,7 +509,9 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
-                        info.getProperty(X509_PEM_PATH.getPropertyName()));
+                        info.getProperty(X509_PEM_PATH.getPropertyName()),
+                        info.getProperty(JAAS_CONFIG_PATH.getPropertyName()),
+                        gssNativeModeVal);
 
         String disableCacheVal =
                 info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
@@ -675,8 +692,8 @@ public class MongoDriver implements Driver {
             }
             if (password == null && user != null) {
                 if (result.authMechanism == null
-                        || (!result.authMechanism.equals(MONGODB_X509)
-                                && !result.authMechanism.equals(MONGODB_OIDC))) {
+                        && !result.authMechanism.equals(MONGODB_OIDC)
+                        && !result.authMechanism.equals(GSSAPI)) {
                     // password is null, but user is not, we must prompt for the password.
                     mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
                 }
