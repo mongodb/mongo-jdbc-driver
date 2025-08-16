@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.AuthenticationMechanism.GSSAPI;
 import static com.mongodb.AuthenticationMechanism.MONGODB_OIDC;
 import static com.mongodb.AuthenticationMechanism.MONGODB_X509;
 
@@ -184,28 +185,60 @@ public class MongoConnection implements Connection {
         if (credential != null) {
             AuthenticationMechanism authMechanism = credential.getAuthenticationMechanism();
 
-            if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
-                // Handle OIDC authentication
-                OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
-                credential =
-                        MongoCredential.createOidcCredential(
-                                        connectionProperties.getConnectionString().getUsername())
-                                .withMechanismProperty(
-                                        MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
-                settingsBuilder.credential(credential);
-            } else if (authMechanism != null && authMechanism.equals(MONGODB_X509)) {
-                String pemPath = connectionProperties.getX509PemPath();
-                if (pemPath == null || pemPath.isEmpty()) {
-                    pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
-                }
-                if (pemPath == null || pemPath.isEmpty()) {
-                    throw new IllegalStateException(
-                            "PEM file path is required for X.509 authentication but was not provided.");
-                }
+            if (authMechanism != null) {
+                if (authMechanism.equals(MONGODB_OIDC)) {
+                    // Handle OIDC authentication
+                    OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
+                    credential =
+                            MongoCredential.createOidcCredential(
+                                            connectionProperties
+                                                    .getConnectionString()
+                                                    .getUsername())
+                                    .withMechanismProperty(
+                                            MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                    settingsBuilder.credential(credential);
+                } else if (authMechanism.equals(GSSAPI)) {
 
-                X509Authentication x509Authentication = new X509Authentication(logger);
-                x509Authentication.configureX509Authentication(
-                        settingsBuilder, pemPath, this.x509Passphrase);
+                    String jaasPath = connectionProperties.getJaasConfigPath();
+                    if (jaasPath != null && !jaasPath.isEmpty()) {
+                        System.setProperty("java.security.auth.login.config", jaasPath);
+                        logger.log(Level.INFO, "Using custom JAAS config: " + jaasPath);
+                    } else {
+                        String existingConfig =
+                                System.getProperty("java.security.auth.login.config");
+                        if (existingConfig != null) {
+                            logger.log(
+                                    Level.INFO,
+                                    "Using JAAS config from system property: " + existingConfig);
+                        } else {
+                            logger.log(
+                                    Level.INFO,
+                                    "No JAAS config specified. Relying on classpath or JVM defaults.");
+                        }
+                    }
+
+                    String gssNative = connectionProperties.getGssNativeMode();
+                    if (gssNative != null && !gssNative.isEmpty()) {
+                        System.setProperty("sun.security.jgss.native", gssNative);
+                        logger.log(
+                                Level.INFO, "Set sun.security.jgss.native = " + gssNative.trim());
+                    }
+
+                    settingsBuilder.credential(credential);
+                } else if (authMechanism.equals(MONGODB_X509)) {
+                    String pemPath = connectionProperties.getX509PemPath();
+                    if (pemPath == null || pemPath.isEmpty()) {
+                        pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
+                    }
+                    if (pemPath == null || pemPath.isEmpty()) {
+                        throw new IllegalStateException(
+                                "PEM file path is required for X.509 authentication but was not provided.");
+                    }
+
+                    X509Authentication x509Authentication = new X509Authentication(logger);
+                    x509Authentication.configureX509Authentication(
+                            settingsBuilder, pemPath, this.x509Passphrase);
+                }
             }
         }
 
