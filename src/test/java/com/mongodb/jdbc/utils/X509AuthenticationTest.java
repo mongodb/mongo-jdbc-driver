@@ -210,4 +210,58 @@ public class X509AuthenticationTest {
                 null,
                 "Private key not found (encrypted or unencrypted) and X.509 certificate not found in the PEM file");
     }
+
+    @Test
+    public void testNoNewlinesInInput_ReconstructsProperly() {
+        // Input has NO newlines — everything is on one line
+        String input = "-----BEGIN CERTIFICATE-----MIIC...ABC-----END CERTIFICATE-----";
+
+        // Expected: newlines inserted before BEGIN, after END, and at end
+        String expected = "-----BEGIN CERTIFICATE-----\nMIIC...ABC\n-----END CERTIFICATE-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemString_FlatPrivateKeyBlock_NoNewlines() {
+        // Full private key block — but completely flat (no newlines)
+        String input =
+                "-----BEGIN ENCRYPTED PRIVATE KEY----- MIIEvPz -----END ENCRYPTED PRIVATE KEY-----";
+
+        String expected =
+                "-----BEGIN ENCRYPTED PRIVATE KEY-----\n MIIEvPz \n-----END ENCRYPTED PRIVATE KEY-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemString_FlatEncryptedPrivateKeyBlock_NoNewlines() {
+        // Full private key block — but completely flat (no newlines)
+        String input = "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----";
+
+        String expected = "-----BEGIN PRIVATE KEY-----\nMIIEvPz\n-----END PRIVATE KEY-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemString_FlatPrivateKeyAndCertificate_Minimal() {
+        String input =
+                "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----"
+                        + "-----BEGIN CERTIFICATE-----MIICQz-----END CERTIFICATE-----";
+
+        String expected =
+                "-----BEGIN PRIVATE KEY-----\nMIIEvPz\n-----END PRIVATE KEY-----\n"
+                        + "-----BEGIN CERTIFICATE-----\nMIICQz\n-----END CERTIFICATE-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
 }

@@ -18,13 +18,14 @@ package com.mongodb.jdbc.utils;
 
 import com.mongodb.MongoException;
 import com.mongodb.jdbc.logging.MongoLogger;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.util.logging.Level;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -37,6 +38,7 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.jcajce.JcePKCSPBEInputDecryptorProviderBuilder;
+import org.bson.BsonDocument;
 
 public class X509Authentication {
     private static final BouncyCastleProvider BC_PROVIDER = new BouncyCastleProvider();
@@ -52,10 +54,10 @@ public class X509Authentication {
      *
      * @param settingsBuilder The MongoDB client settings builder to apply the SSL configuration.
      *     Must not be null.
-     * @param pemPath The path to the PEM file containing the private key and certificate. Must not
-     *     be null.
+     * @param pemPath The path to the PEM file containing the private key and certificate. Can be
+     *     null.
      * @param passphrase The passphrase for the private key, if it is encrypted; null if
-     *     unencrypted.
+     *     unencrypted. Can also hold the full PEM contents.
      * @throws Exception If there is an error during configuration or PEM parsing.
      * @throws NullPointerException if settingsBuilder or pemPath are null.
      */
@@ -65,12 +67,53 @@ public class X509Authentication {
             char[] passphrase)
             throws Exception {
 
-        logger.log(Level.FINE, "Using client certificate for X509 authentication: " + pemPath);
-        if (passphrase != null && passphrase.length > 0) {
-            logger.log(Level.FINE, "Client certificate passphrase has been specified");
+        PEMParser pemParser = null;
+        char[] privateKeyPassphrase = null;
+
+        // If pemPath is specified, that takes precedence and the passphrase will be used if it is not null
+        // Otherwise, the passphrase will be used as PEM contents.  It can be in the form of raw PEM contents or
+        // as a JSON representation with keys `pem` and `passphrase`
+        if (pemPath != null && !pemPath.trim().isEmpty()) {
+            File file = new File(pemPath);
+            if (!file.exists()) {
+                throw new MongoException("PEM file not found: " + pemPath);
+            }
+            logger.log(Level.FINE, "Using PEM file: " + pemPath);
+            try {
+                pemParser = new PEMParser(new FileReader(file));
+            } catch (IOException e) {
+                throw new MongoException("Failed to read PEM file: " + e.getMessage(), e);
+            }
+            privateKeyPassphrase = passphrase;
+        } else {
+            if (passphrase == null || passphrase.length == 0) {
+                throw new MongoException("No PEM path provided and passphrase is empty");
+            }
+            String passphraseAsPemContent = new String(passphrase);
+            PemAuthenticationInput pemAuthenticationInput =
+                    parsePemAuthenticationInput(passphraseAsPemContent);
+            if (pemAuthenticationInput != null) {
+                // JSON input with PEM and optional passphrase
+                logger.log(Level.FINE, "Using X.509 credentials from JSON in passphrase field");
+
+                String formatted = formatPemString(pemAuthenticationInput.pem);
+                pemParser = new PEMParser(new StringReader(formatted));
+                privateKeyPassphrase =
+                        pemAuthenticationInput.passphrase != null
+                                ? pemAuthenticationInput.passphrase.toCharArray()
+                                : null;
+            } else {
+                // Raw PEM content (unencrypted)
+                logger.log(Level.FINE, "Using raw PEM content from passphrase field (unencrypted)");
+
+                pemParser =
+                        new PEMParser(new StringReader(formatPemString(passphraseAsPemContent)));
+                privateKeyPassphrase = null;
+            }
         }
+
         try {
-            SSLContext sslContext = createSSLContext(pemPath, passphrase);
+            SSLContext sslContext = createSSLContext(pemParser, privateKeyPassphrase);
 
             settingsBuilder.applyToSslSettings(
                     sslSettings -> {
@@ -78,16 +121,49 @@ public class X509Authentication {
                         sslSettings.context(sslContext);
                     });
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "\"SSL setup failed: " + e.getMessage());
+            logger.log(Level.SEVERE, "SSL setup failed: " + e.getMessage());
             throw e;
+        } finally {
+            if (pemParser != null) {
+                try {
+                    pemParser.close();
+                } catch (IOException e) {
+                    logger.log(Level.WARNING, "Error closing PEM parser: " + e.getMessage());
+                }
+            }
         }
     }
 
-    private SSLContext createSSLContext(String pemPath, char[] passphrase) throws Exception {
+    String formatPemString(String pem) {
+        if (pem == null) return null;
+
+        // Replace escaped newlines (common when passed as JSON strings)
+        pem = pem.replace("\\\\n", "\n").replace("\\n", "\n").replace("\\r", "\n");
+
+        // Ensure BEGIN and END tags are on separate lines
+        pem = pem.replace("-----BEGIN", "\n-----BEGIN");
+        pem = pem.replace("-----END", "\n-----END");
+
+        // Clean up extra spaces after headers
+        pem = pem.replace(" PRIVATE KEY-----", " PRIVATE KEY-----\n");
+        pem = pem.replace(" CERTIFICATE-----", " CERTIFICATE-----\n");
+
+        // Remove extra blank lines and trim leading/trailing whitespace
+        pem = pem.replaceAll("\n+", "\n").trim();
+
+        // Add a final newline (PEMParser expects it)
+        if (!pem.endsWith("\n")) {
+            pem += "\n";
+        }
+
+        return pem;
+    }
+
+    private SSLContext createSSLContext(PEMParser pemParser, char[] passphrase) throws Exception {
         PrivateKey privateKey = null;
         Certificate cert = null;
 
-        try (PEMParser pemParser = new PEMParser(new FileReader(pemPath))) {
+        try {
             Object pemObj = null;
 
             // Iterate through PEM objects found in the PEM file and process them based on type.
@@ -294,5 +370,37 @@ public class X509Authentication {
         sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
 
         return sslContext;
+    }
+
+    private PemAuthenticationInput parsePemAuthenticationInput(String input) {
+        try {
+            BsonDocument doc = BsonDocument.parse(input);
+            if (doc == null || !doc.containsKey("pem")) {
+                return null;
+            }
+            String pem = doc.getString("pem").getValue();
+            String passphrase = null;
+            if (doc.containsKey("passphrase")) {
+                passphrase = doc.getString("passphrase").getValue();
+            }
+            return new PemAuthenticationInput(pem, passphrase);
+        } catch (Exception e) {
+            // Not valid JSON, malformed, or IO error
+            return null;
+        }
+    }
+
+    // Parsed input for X.509 authentication when provided as JSON in the password field.
+    private static class PemAuthenticationInput {
+        final String pem;
+        final String passphrase;
+
+        PemAuthenticationInput(String pem, String passphrase) {
+            if (pem == null || pem.trim().isEmpty()) {
+                throw new IllegalArgumentException("PEM content is required");
+            }
+            this.pem = pem.trim();
+            this.passphrase = passphrase;
+        }
     }
 }

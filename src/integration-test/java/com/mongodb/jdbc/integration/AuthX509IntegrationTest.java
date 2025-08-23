@@ -20,6 +20,9 @@ import static com.mongodb.jdbc.MongoConnection.MONGODB_JDBC_X509_CLIENT_CERT_PAT
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
@@ -160,6 +163,42 @@ public class AuthX509IntegrationTest {
         try (Connection connection = DriverManager.getConnection(uri, properties)) {
             assertNotNull(connection, "Connection relying on environment variables should succeed");
             connection.getMetaData().getDriverVersion();
+        }
+    }
+
+    /**
+     * Tests that a raw unencrypted PEM certificate provided in the 'password' field can be used to
+     * successfully authenticate via X509.
+     */
+    @Test
+    public void testUnencryptedPemInPasswordField() throws SQLException, IOException {
+        // Load the one-line raw unencrypted PEM string
+        String filePath = "resources/authentication_test/X509/client-unencrypted-string.txt";
+
+        String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
+        try (Connection connection = connectWithX509(null, pemContent)) {
+            assertNotNull(
+                    connection, "Connection with inline unencrypted PEM string should succeed");
+            connection.getMetaData().getDriverVersion();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to connect with inline unencrypted PEM", e);
+        }
+    }
+
+    /**
+     * Tests that an encrypted PEM certificate provided in the 'password' field, where the PEM is
+     * stored in JSON format, can be used to successfully authenticate via X509.
+     */
+    @Test
+    public void testEncryptedPemJsonInPasswordField() throws Exception {
+        // Load the one-line encrypted PEM string stored in JSON format
+        String filePath = "resources/authentication_test/X509/client-encrypted-string.json";
+        String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
+        try (Connection connection = connectWithX509(null, pemContent)) {
+            assertNotNull(connection, "Connection with inline encrypted PEM string should succeed");
+            connection.getMetaData().getDriverVersion();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to connect with inline encrypted PEM string", e);
         }
     }
 }
