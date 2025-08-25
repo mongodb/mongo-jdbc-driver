@@ -75,10 +75,7 @@ public class X509Authentication {
         // as a JSON representation with keys `pem` and `passphrase`
         if (pemPath != null && !pemPath.trim().isEmpty()) {
             File file = new File(pemPath);
-            if (!file.exists()) {
-                throw new MongoException("PEM file not found: " + pemPath);
-            }
-            logger.log(Level.FINE, "Using PEM file: " + pemPath);
+            logger.log(Level.FINE, "Using client certificate for X509 authentication: " + pemPath);
             try {
                 pemParser = new PEMParser(new FileReader(file));
             } catch (IOException e) {
