@@ -62,7 +62,7 @@ public class AuthX509IntegrationTest {
      * but the property points to an invalid path. Should fail with FileNotFound.
      */
     @Test
-    public void testPropertyPrecedenceFailsIfWrong() {
+    public void testPEMPathPropertyPrecedenceFailsIfWrong() {
         String certPathEnvVar = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
         assertNotNull(
                 certPathEnvVar,
@@ -96,7 +96,7 @@ public class AuthX509IntegrationTest {
 
     /** Tests that PEM file without passphrase connects */
     @Test
-    public void testPropertySetCorrectly() throws SQLException {
+    public void testPEMPathPropertySetCorrectly() throws SQLException {
         try (Connection connection =
                 connectWithX509(
                         "resources/authentication_test/X509/client-unencrypted.pem", null)) {
@@ -107,7 +107,7 @@ public class AuthX509IntegrationTest {
 
     /** Tests that PEM file encrypted with passphrase connects */
     @Test
-    public void testEncryptedCertWithPassphrase() throws SQLException {
+    public void testPEMPathEncryptedCertWithPassphrase() throws SQLException {
         String passphrase = System.getenv(PASSWORD_ENV_VAR);
 
         try (Connection connection =
@@ -120,7 +120,7 @@ public class AuthX509IntegrationTest {
 
     /** Tests that an incorrect passphrase fails with exception */
     @Test
-    public void testEncryptedCertWithIncorrectPassphraseFails() {
+    public void testPEMPathEncryptedCertWithIncorrectPassphraseFails() {
         String passphrase = "incorrectPassphrase";
 
         Exception exception =
@@ -143,7 +143,7 @@ public class AuthX509IntegrationTest {
      * successfully connects
      */
     @Test
-    public void testNoPropertyReliesOnEnvVariable() throws SQLException {
+    public void testPEMPathNoPropertyReliesOnEnvVariable() throws SQLException {
         String certPathEnvVar = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
         assertNotNull(
                 certPathEnvVar,
@@ -171,17 +171,17 @@ public class AuthX509IntegrationTest {
      * successfully authenticate via X509.
      */
     @Test
-    public void testUnencryptedPemInPasswordField() throws SQLException, IOException {
+    public void testPEMContentsUnencryptedPkcs8InPasswordField() throws SQLException, IOException {
         // Load the one-line raw unencrypted PEM string
-        String filePath = "resources/authentication_test/X509/client-unencrypted-string.txt";
+        String filePath = "resources/authentication_test/X509/client-unencrypted-pkcs8-string.txt";
 
         String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
         try (Connection connection = connectWithX509(null, pemContent)) {
             assertNotNull(
-                    connection, "Connection with inline unencrypted PEM string should succeed");
+                    connection, "Connection with inline unencrypted PKCS#8 PEM should succeed");
             connection.getMetaData().getDriverVersion();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to connect with inline unencrypted PEM", e);
+            throw new RuntimeException("Failed to connect with inline unencrypted PKCS#8 PEM", e);
         }
     }
 
@@ -190,15 +190,56 @@ public class AuthX509IntegrationTest {
      * stored in JSON format, can be used to successfully authenticate via X509.
      */
     @Test
-    public void testEncryptedPemJsonInPasswordField() throws Exception {
+    public void testPEMContentsEncryptedPkcs8JsonInPasswordField() throws Exception {
         // Load the one-line encrypted PEM string stored in JSON format
-        String filePath = "resources/authentication_test/X509/client-encrypted-string.json";
+        String filePath = "resources/authentication_test/X509/client-encrypted-pkcs8-string.json";
         String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
         try (Connection connection = connectWithX509(null, pemContent)) {
-            assertNotNull(connection, "Connection with inline encrypted PEM string should succeed");
+            assertNotNull(connection, "Connection with inline encrypted PKCS#8 PEM should succeed");
             connection.getMetaData().getDriverVersion();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to connect with inline encrypted PEM string", e);
+            throw new RuntimeException("Failed to connect with inline encrypted PKCS#8 PEM", e);
+        }
+    }
+
+    /**
+     * Tests that a raw unencrypted PKCS#1 PEM certificate provided in the 'password' field can be
+     * used to successfully authenticate via X509.
+     */
+    @Test
+    public void testPEMContentsUnencryptedPkcs1InPasswordField() throws SQLException, IOException {
+        // Load the one-line raw unencrypted PEM string
+        String filePath = "resources/authentication_test/X509/client-unencrypted-pkcs1-string.txt";
+
+        String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
+        try (Connection connection = connectWithX509(null, pemContent)) {
+            assertNotNull(
+                    connection,
+                    "Connection with inline unencrypted PKCS#1 PEM string should succeed");
+            connection.getMetaData().getDriverVersion();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to connect with inline unencrypted PKCS#1 PEM", e);
+        }
+    }
+
+    /**
+     * Tests that a raw encrypted PKCS#1 PEM certificate provided in the 'password' field can be
+     * used to successfully authenticate via X509.
+     */
+    @Test
+    public void testPEMContentsEncryptedPkcs1JsonInPasswordField()
+            throws SQLException, IOException {
+        // Load the one-line raw encrypted PEM string
+        String filePath = "resources/authentication_test/X509/client-encrypted-pkcs1-string.json";
+
+        String pemContent = new String(Files.readAllBytes(Paths.get(filePath)));
+        try (Connection connection = connectWithX509(null, pemContent)) {
+            assertNotNull(
+                    connection,
+                    "Connection with inline encrypted PKCS#1 PEM string should succeed");
+            connection.getMetaData().getDriverVersion();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to connect with inline encrypted PKCS#1 PEM", e);
         }
     }
 }

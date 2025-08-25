@@ -185,8 +185,8 @@ tasks:
     commands:
       - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
-      - func: "run X509 integration test"
-      - func: "run X509 PEM in pwd field integration test"
+      - func: "run X509 PEM Path integration test"
+      - func: "run X509 PEM Contents integration test"
 
   - name: "test-smoke"
     depends_on:
@@ -868,7 +868,7 @@ functions:
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
-  "run X509 integration test":
+  "run X509 PEM Path integration test":
     command: shell.exec
     type: test
     params:
@@ -905,11 +905,7 @@ functions:
 
         # Run the tests.
         ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
-            --tests 'AuthX509IntegrationTest.testPropertyPrecedenceFailsIfWrong' \
-            --tests 'AuthX509IntegrationTest.testPropertySetCorrectly' \
-            --tests 'AuthX509IntegrationTest.testEncryptedCertWithPassphrase' \
-            --tests 'AuthX509IntegrationTest.testEncryptedCertWithIncorrectPassphraseFails' \
-            --tests 'AuthX509IntegrationTest.testNoPropertyReliesOnEnvVariable' \
+            --tests 'AuthX509IntegrationTest.testPEMPath*' \
             -x test > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -960,7 +956,7 @@ functions:
         echo "X509 integration test exit code: $EXITCODE"
         exit $EXITCODE
 
-  "run X509 PEM in pwd field integration test":
+  "run X509 PEM Contents integration test":
     command: shell.exec
     type: test
     params:
@@ -993,8 +989,7 @@ functions:
 
         # Run the tests.
         ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
-            --tests 'AuthX509IntegrationTest.testUnencryptedPemInPasswordField' \
-            --tests 'AuthX509IntegrationTest.testEncryptedPemJsonInPasswordField' \
+            --tests 'AuthX509IntegrationTest.testPEMContents*' \
             -x test  > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 

@@ -93,8 +93,7 @@ public class X509Authentication {
                 // JSON input with PEM and optional passphrase
                 logger.log(Level.FINE, "Using X.509 credentials from JSON in passphrase field");
 
-                String formatted = formatPemString(pemAuthenticationInput.pem);
-                pemParser = new PEMParser(new StringReader(formatted));
+                pemParser = new PEMParser(new StringReader(formatPemString(pemAuthenticationInput.pem)));
                 privateKeyPassphrase =
                         pemAuthenticationInput.passphrase != null
                                 ? pemAuthenticationInput.passphrase.toCharArray()
@@ -131,22 +130,32 @@ public class X509Authentication {
         }
     }
 
+    /**
+     * Formats a PEM string to handles escaped newlines and ensures correct header placement. Adds
+     * required newlines for compatibility with Bouncy Castle PEMParser.
+     *
+     * @param pem The PEM string to format; may be null.
+     * @return A cleaned, normalized PEM string with proper line breaks and headers, or null if the
+     *     input was null.
+     */
     String formatPemString(String pem) {
         if (pem == null) return null;
 
         // Replace escaped newlines (common when passed as JSON strings)
         pem = pem.replace("\\\\n", "\n").replace("\\n", "\n").replace("\\r", "\n");
 
-        // Ensure BEGIN and END tags are on separate lines
+        // Ensure header tags are on separate lines
         pem = pem.replace("-----BEGIN", "\n-----BEGIN");
         pem = pem.replace("-----END", "\n-----END");
-
-        // Clean up extra spaces after headers
         pem = pem.replace(" PRIVATE KEY-----", " PRIVATE KEY-----\n");
         pem = pem.replace(" CERTIFICATE-----", " CERTIFICATE-----\n");
 
-        // Remove extra blank lines and trim leading/trailing whitespace
-        pem = pem.replaceAll("\n+", "\n").trim();
+        // These fields are encryption headers used when a PKCS#1 private key is encrypted
+        pem = pem.replace("Proc-Type:", "\nProc-Type:");
+        pem = pem.replaceAll("DEK-Info:\\s+[A-Z0-9\\-]+,[A-F0-9]+\\s*", "\n$0\n");
+
+        // Remove extra newlines and trim leading/trailing whitespace
+        pem = pem.replaceAll("[ \\t]*\n[ \\t]*", "\n").replaceAll("\n+", "\n").trim();
 
         // Add a final newline (PEMParser expects it)
         if (!pem.endsWith("\n")) {
@@ -167,7 +176,8 @@ public class X509Authentication {
             // Stops after finding both an :
             //  - Encrypted/unencrypted private key
             //  - X.509 certificate
-            while (((pemObj = pemParser.readObject()) != null)
+            while (pemParser != null
+                    && ((pemObj = pemParser.readObject()) != null)
                     && (cert == null || privateKey == null)) {
                 logger.log(
                         Level.FINE,

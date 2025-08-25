@@ -212,7 +212,7 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testNoNewlinesInInput_ReconstructsProperly() {
+    public void testFormatPemCertificateHeaderAddsNewlines() {
         // Input has NO newlines — everything is on one line
         String input = "-----BEGIN CERTIFICATE-----MIIC...ABC-----END CERTIFICATE-----";
 
@@ -225,13 +225,13 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testFormatPemString_FlatPrivateKeyBlock_NoNewlines() {
+    public void testFormatPemEncryptedPrivateKeyHeaderAddsNewlines() {
         // Full private key block — but completely flat (no newlines)
         String input =
                 "-----BEGIN ENCRYPTED PRIVATE KEY----- MIIEvPz -----END ENCRYPTED PRIVATE KEY-----";
 
         String expected =
-                "-----BEGIN ENCRYPTED PRIVATE KEY-----\n MIIEvPz \n-----END ENCRYPTED PRIVATE KEY-----\n";
+                "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIEvPz\n-----END ENCRYPTED PRIVATE KEY-----\n";
 
         String result = x509Authentication.formatPemString(input);
 
@@ -239,7 +239,7 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testFormatPemString_FlatEncryptedPrivateKeyBlock_NoNewlines() {
+    public void testFormatPemPrivateKeyHeaderAddsNewlines() {
         // Full private key block — but completely flat (no newlines)
         String input = "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----";
 
@@ -251,7 +251,7 @@ public class X509AuthenticationTest {
     }
 
     @Test
-    public void testFormatPemString_FlatPrivateKeyAndCertificate_Minimal() {
+    public void testFormatPemPrivateKeyAndCertificateHeadersAddsNewlines() {
         String input =
                 "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----"
                         + "-----BEGIN CERTIFICATE-----MIICQz-----END CERTIFICATE-----";
@@ -259,6 +259,22 @@ public class X509AuthenticationTest {
         String expected =
                 "-----BEGIN PRIVATE KEY-----\nMIIEvPz\n-----END PRIVATE KEY-----\n"
                         + "-----BEGIN CERTIFICATE-----\nMIICQz\n-----END CERTIFICATE-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemEncryptedPkcs1AddsNewlines() {
+        String input =
+                "-----BEGIN RSA PRIVATE KEY----- Proc-Type: 4,ENCRYPTED DEK-Info: AES-256-CBC,ABCD1234 MIIEvPz -----END RSA PRIVATE KEY-----";
+        String expected =
+                "-----BEGIN RSA PRIVATE KEY-----\n"
+                        + "Proc-Type: 4,ENCRYPTED\n"
+                        + "DEK-Info: AES-256-CBC,ABCD1234\n"
+                        + "MIIEvPz\n"
+                        + "-----END RSA PRIVATE KEY-----\n";
 
         String result = x509Authentication.formatPemString(input);
 
