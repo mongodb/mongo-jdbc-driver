@@ -93,7 +93,9 @@ public class X509Authentication {
                 // JSON input with PEM and optional passphrase
                 logger.log(Level.FINE, "Using X.509 credentials from JSON in passphrase field");
 
-                pemParser = new PEMParser(new StringReader(formatPemString(pemAuthenticationInput.pem)));
+                pemParser =
+                        new PEMParser(
+                                new StringReader(formatPemString(pemAuthenticationInput.pem)));
                 privateKeyPassphrase =
                         pemAuthenticationInput.passphrase != null
                                 ? pemAuthenticationInput.passphrase.toCharArray()
