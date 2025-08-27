@@ -216,7 +216,7 @@ public class X509AuthenticationTest {
         // Input has NO newlines — everything is on one line
         String input = "-----BEGIN CERTIFICATE-----MIIC...ABC-----END CERTIFICATE-----";
 
-        // Expected: newlines inserted before BEGIN, after END, and at end
+        // Expected: newlines inserted after BEGIN, before END, and at end
         String expected = "-----BEGIN CERTIFICATE-----\nMIIC...ABC\n-----END CERTIFICATE-----\n";
 
         String result = x509Authentication.formatPemString(input);
