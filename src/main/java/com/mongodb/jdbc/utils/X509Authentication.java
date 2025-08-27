@@ -384,7 +384,12 @@ public class X509Authentication {
     private PemAuthenticationInput parsePemAuthenticationInput(String input) {
         try {
             BsonDocument doc = BsonDocument.parse(input);
-            if (doc == null || !doc.containsKey("pem")) {
+            if (doc == null) {
+                logger.log(Level.FINE, "Failed to parse JSON: input was null or empty");
+                return null;
+            }
+            if (!doc.containsKey("pem")) {
+                logger.log(Level.FINE, "Missing required 'pem' field in JSON input");
                 return null;
             }
             String pem = doc.getString("pem").getValue();
@@ -395,6 +400,10 @@ public class X509Authentication {
             return new PemAuthenticationInput(pem, passphrase);
         } catch (Exception e) {
             // Not valid JSON, malformed, or IO error
+            logger.log(
+                    Level.FINE,
+                    "Failed to parse JSON input for X.509 authentication: "
+                            + e.getClass().getSimpleName());
             return null;
         }
     }
