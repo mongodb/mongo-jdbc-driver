@@ -133,7 +133,7 @@ public class X509Authentication {
     }
 
     /**
-     * Formats a PEM string to handles escaped newlines and ensures correct header placement. Adds
+     * Formats a PEM string to handle escaped newlines and ensures correct header placement. Adds
      * required newlines for compatibility with Bouncy Castle PEMParser.
      *
      * @param pem The PEM string to format; may be null.
