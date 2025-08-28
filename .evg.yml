@@ -905,7 +905,7 @@ functions:
 
         # Run the tests.
         ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
-            --tests 'AuthX509IntegrationTest.testPEMPath*' \
+            --tests 'AuthX509PEMPathIntegrationTest' \
             -x test > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -989,7 +989,7 @@ functions:
 
         # Run the tests.
         ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
-            --tests 'AuthX509IntegrationTest.testPEMContents*' \
+            --tests 'AuthX509PEMContentsIntegrationTest' \
             -x test  > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
