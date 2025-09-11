@@ -619,39 +619,31 @@ public class MongoConnection implements Connection {
                             "Community edition detected. The JDBC driver is intended for use with MongoDB Enterprise edition or Atlas Data Federation.");
                 case Enterprise:
                     String version = MongoDriver.getVersion();
-                    if (MongoDriver.isEapBuild()) {
-                        // Ensure the library is loaded if Enterprise edition detected.
-                        if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
-                            throw new SQLException(
-                                    "Enterprise edition detected, but mongosqltranslate library not found",
-                                    MongoDriver.getMongoSqlTranslateLibraryLoadError());
-                        } else if (MongoDriver.getMongoSqlTranslateLibraryLoadError() != null) {
-                            logger.log(
-                                    Level.INFO,
-                                    "Error while loading the library using the environment variable. Library bundled with the driver used instead.\n"
-                                            + Arrays.stream(
-                                                            MongoDriver
-                                                                    .getMongoSqlTranslateLibraryLoadError()
-                                                                    .getStackTrace())
-                                                    .map(StackTraceElement::toString));
-                        }
-                        String mongosqlTranslateVersion =
-                                mongosqlTranslate.getMongosqlTranslateVersion().version;
-                        if (!mongosqlTranslate.checkDriverVersion().compatible) {
-                            throw new SQLException(
-                                    "Incompatible driver version. The JDBC driver version, "
-                                            + version
-                                            + ", is not compatible with mongosqltranslate library version, "
-                                            + mongosqlTranslateVersion);
-                        }
-                        appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion;
-                    } else {
+                    // Ensure the library is loaded if Enterprise edition detected.
+                    if (!MongoDriver.isMongoSqlTranslateLibraryLoaded()) {
                         throw new SQLException(
-                                "Direct Cluster connection is only supported in EAP driver builds. "
-                                        + "Your driver version ('"
-                                        + version
-                                        + "') is not an EAP build.");
+                                "Enterprise edition detected, but mongosqltranslate library not found",
+                                MongoDriver.getMongoSqlTranslateLibraryLoadError());
+                    } else if (MongoDriver.getMongoSqlTranslateLibraryLoadError() != null) {
+                        logger.log(
+                                Level.INFO,
+                                "Error while loading the library using the environment variable. Library bundled with the driver used instead.\n"
+                                        + Arrays.stream(
+                                                        MongoDriver
+                                                                .getMongoSqlTranslateLibraryLoadError()
+                                                                .getStackTrace())
+                                                .map(StackTraceElement::toString));
                     }
+                    String mongosqlTranslateVersion =
+                            mongosqlTranslate.getMongosqlTranslateVersion().version;
+                    if (!mongosqlTranslate.checkDriverVersion().compatible) {
+                        throw new SQLException(
+                                "Incompatible driver version. The JDBC driver version, "
+                                        + version
+                                        + ", is not compatible with mongosqltranslate library version, "
+                                        + mongosqlTranslateVersion);
+                    }
+                    appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion;
                     break;
                 case UnknownTarget:
                     // Target could not be determined.
