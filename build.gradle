@@ -10,17 +10,9 @@ plugins {
 import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isRelease')) {
-    if (project.hasProperty('isEapBuild')) {
-        version = getLatestEapTag()
-    } else {
-        version = getAbbreviatedGitVersion()
-    }
+    version = getAbbreviatedGitVersion()
 } else {
-    if (project.hasProperty('isEapBuild')) {
-        version = getGitVersion() + "-libv-SNAPSHOT"
-    }  else {
-        version = getGitVersion()
-    }
+    version = getGitVersion()
 }
 
 def thirdpartyNoticeDir = "$buildDir/" + thirdpartyNoticeDir
@@ -265,11 +257,7 @@ def getReleaseVersion() {
     String baseVersion = getAbbreviatedGitVersion()
 
     boolean isSnapshot = !project.hasProperty('isRelease')
-    boolean isEap = project.hasProperty('isEapBuild')
     String suffix = ""
-    if (isEap) {
-        suffix += "-eap"
-    }
     if (isSnapshot) {
         suffix += "-SNAPSHOT"
     }
@@ -285,23 +273,26 @@ def getGitVersion() {
     out.toString().substring(1).trim()
 }
 
-def getLatestEapTag() {
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'tag', '--list', '*libv*', '--sort=-creatordate'
-        standardOutput = stdout
-    }
-    def tags = stdout.toString().trim().readLines()
-    return tags ? tags[0].toString().substring(1).trim() : null
-}
-
 def getAbbreviatedGitVersion() {
     def out = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'describe', '--abbrev=0'
         standardOutput = out
     }
-    out.toString().substring(1).trim()
+
+    // Remove the leading 'v'
+    out = out.toString().substring(1).trim()
+    println "Untrimmed git version : $out"
+
+    // Remove the libv portion
+    String[] parts = out.split("-libv")
+    if (parts.length > 1) {
+        out = parts[0]
+    }
+
+    println "Trimmed git version : $out"
+
+    return out
 }
 
 // Determines the version of libmongosqltranslate to use based on the following priority:

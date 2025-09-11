@@ -15,48 +15,6 @@ variables:
       aws_secret: ${AWS_SECRET_ACCESS_KEY}
       aws_session_token: ${AWS_SESSION_TOKEN}
       bucket: evg-bucket-mongo-jdbc-driver
-  - &check_and_allow_for_eap_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" != "eap" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is not 'eap'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-           echo "BUILD_TYPE is 'eap'. Allowing task execution to continue."
-        fi
-  - &check_and_allow_for_standard_and_snapshot_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" == "eap" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is 'eap'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
-        fi
-  - &check_and_allow_for_eap_and_snapshot_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" == "standard" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is 'standard'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
-        fi
 
 pre:
   - func: "fetch source"
@@ -147,7 +105,7 @@ buildvariants:
       - name: "test-smoke"
       - name: "publish-maven"
       - name: "make-docs"
-      - name: "publish-s3"
+      - name: "publish-doc-guide-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
       - name: "javadoc"
@@ -178,12 +136,10 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
-      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
     commands:
-      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
       - func: "run X509 PEM Path integration test"
       - func: "run X509 PEM Contents integration test"
@@ -208,7 +164,6 @@ tasks:
       - name: sbom
         variant: code-quality-and-correctness
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish maven"
       - func: "trace artifacts"
 
@@ -219,8 +174,8 @@ tasks:
       - func: "build jdbc docs"
       - func: "upload jdbc docs"
 
-  # Publishes the EAP release artifacts to S3
-  - name: publish-s3
+  # Publishes the JDBC guide S3
+  - name: publish-doc-guide-s3
     allowed_requesters: ["ad_hoc", "github_tag", "patch"]
     depends_on:
       - name: "build"
@@ -228,30 +183,7 @@ tasks:
       - name: "test-smoke"
         variant: "release"
     commands:
-      - *check_and_allow_for_eap_build
       - *assume_role_cmd
-      - command: s3.get
-        params:
-          working_dir: mongo-jdbc-driver
-          <<: *evg_bucket_config
-          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-      - command: s3.get
-        params:
-          working_dir: mongo-jdbc-driver
-          <<: *evg_bucket_config
-          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-      - command: s3.put
-        params:
-          aws_key: ${release_aws_key}
-          aws_secret: ${release_aws_secret}
-          local_files_include_filter:
-            - mongodb-jdbc-eap-*.jar
-          remote_file: eap/mongo-jdbc-driver-eap/
-          bucket: translators-connectors-releases
-          permissions: public-read
-          content_type: application/java-archive
       - command: s3.get
         params:
           work_dir: mongo-jdbc-driver
@@ -263,7 +195,7 @@ tasks:
           aws_key: ${release_aws_key}
           aws_secret: ${release_aws_secret}
           local_file: docs/MongoDB_JDBC_Guide.pdf
-          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          remote_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
           bucket: translators-connectors-releases
           permissions: public-read
           content_type: application/pdf
@@ -290,7 +222,6 @@ tasks:
       - name: "publish-maven"
         variant: "release"
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "update download center feed"
 
   - name: semgrep
@@ -315,13 +246,12 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
 
-  - name: ssdlc-artifacts-snapshot-standard
+  - name: ssdlc-artifacts-snapshot
     run_on: ubuntu2204-small
     allow_for_git_tag: false
     depends_on:
@@ -331,35 +261,12 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
-
-  - name: ssdlc-artifacts-snapshot-eap
-    run_on: ubuntu2204-small
-    allow_for_git_tag: false
-    depends_on:
-      - name: sbom
-        variant: code-quality-and-correctness
-      - name: semgrep
-        variant: code-quality-and-correctness
-    exec_timeout_secs: 300 # 5m
-    commands:
-      - func: "check and allow for eap build"
-      - func: "generate compliance report"
 
 functions:
-  "check and allow for standard and snapshot build":
-    - *check_and_allow_for_standard_and_snapshot_build
-
-  "check and allow for eap and snapshot build":
-    - *check_and_allow_for_eap_and_snapshot_build
-
-  "check and allow for eap build":
-    - *check_and_allow_for_eap_build
-
   "augment sbom":
     - command: ec2.assume_role
       display_name: Assume IAM role with permissions to pull Kondukto API token
