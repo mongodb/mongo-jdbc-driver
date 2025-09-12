@@ -304,7 +304,7 @@ def getLibMongosqlTranslateVersion() {
         logger.lifecycle("Using manually specified libVersion: ${project.property('libmongosqltranslateVersion')}")
         return project.property('libmongosqltranslateVersion')
     }
-    if (project.hasProperty('isTagTriggered')) {
+    if (project.hasProperty('isRelease')) {
         if (System.getenv('LIBMONGOSQLTRANSLATE_VER')) {
             logger.lifecycle("Using version from environment: ${System.getenv('LIBMONGOSQLTRANSLATE_VER')}")
             return System.getenv('LIBMONGOSQLTRANSLATE_VER')
