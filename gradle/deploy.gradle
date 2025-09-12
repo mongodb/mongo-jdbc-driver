@@ -6,9 +6,6 @@ afterEvaluate {
             description = 'Publishes snapshots to Sonatype'
             println("Will publish snapshots to Sonatype")
             dependsOn project.tasks.named('publishToSonatype')
-        } else if (project.hasProperty('isEapBuild')) {
-            description = 'This is an EAP build, skipping publishing'
-            println("This is an EAP build, skipping publishing")
         } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
             println("Will publish a release and uploads to Sonatype / Maven Central")
