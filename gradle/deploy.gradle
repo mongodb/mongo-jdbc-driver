@@ -15,7 +15,7 @@ afterEvaluate {
             if (project.name == rootProject.name) {
                 dependsOn project.tasks.named('publishToSonatype')
                 project.tasks.named('publishToSonatype').configure {
-                    finalizedBy(project.tasks.named('closeAndReleaseRepository'))
+                    finalizedBy(project.tasks.named('closeAndReleaseSonatypeStagingRepository'))
                 }
             }
         }
