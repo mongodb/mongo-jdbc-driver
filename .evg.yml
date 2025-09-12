@@ -139,6 +139,7 @@ tasks:
 
   - name: "test-x509-integration"
     commands:
+      - func: "run dc integration test"
       - func: "run X509 PEM Path integration test"
       - func: "run X509 PEM Contents integration test"
 
