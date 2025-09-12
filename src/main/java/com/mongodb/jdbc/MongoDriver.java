@@ -278,17 +278,6 @@ public class MongoDriver implements Driver {
         return REGISTRY;
     }
 
-    public static boolean isEapBuild() {
-        String version = getVersion();
-        // Return false if the version string is null or empty
-        if (version == null || version.isEmpty()) {
-            return false;
-        }
-
-        // Our EAP builds contain `libv` in the tag
-        return version.contains("libv");
-    }
-
     private Properties canonicalizeProperties(Properties info) throws SQLException {
         Properties lowerCaseprops = new Properties();
         // Normalize all properties key to lower case to make all connection settings case-insensitive

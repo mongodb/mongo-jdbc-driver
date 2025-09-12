@@ -65,28 +65,14 @@ public class SmokeTest {
 
         DatabaseMetaData metadata = adfConnection.getMetaData();
         String driverVersion = metadata.getDriverVersion();
-        boolean isEapBuild = driverVersion != null && (driverVersion.contains("-libv"));
-        System.out.println("Running smoke test with driver version: " + driverVersion +
-                " , EAP Build: " + isEapBuild);
+        System.out.println("Running smoke test with driver version: " + driverVersion);
 
-        if (isEapBuild) {
-            try {
-                Connection directConnection = getDirectRemoteInstanceConnection();
-                connections.put(directConnection, "Select * from accounts limit 5");
-            } catch (SQLException e) {
-                System.err.println("Failed to connect to direct remote instance: " + e.getMessage());
-                throw e;
-            }
-        } else {
-            try {
-                Connection directConnection = getDirectRemoteInstanceConnection();
-                directConnection.close();
-                throw new AssertionError("Expected direct remote connection to fail for non-EAP build");
-            } catch (SQLException e) {
-                if (!"Connection failed.".equals(e.getMessage())) {
-                    throw new AssertionError("Expected 'Connection failed.' but got: " + e.getMessage());
-                }
-            }
+        try {
+            Connection directConnection = getDirectRemoteInstanceConnection();
+            connections.put(directConnection, "Select * from accounts limit 5");
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to direct remote instance: " + e.getMessage());
+            throw e;
         }
     }
 
