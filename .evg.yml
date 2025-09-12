@@ -65,8 +65,7 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
-      - name: ssdlc-artifacts-snapshot-standard
-      - name: ssdlc-artifacts-snapshot-eap
+      - name: ssdlc-artifacts-snapshot
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -140,7 +139,6 @@ tasks:
 
   - name: "test-x509-integration"
     commands:
-      - func: "run dc integration test"
       - func: "run X509 PEM Path integration test"
       - func: "run X509 PEM Contents integration test"
 
@@ -499,12 +497,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-
-        if [[ "${BUILD_TYPE}" == "eap" ]]; then
-          # Sets EAP build flag. Useful for testing the eap build without needing to rely on Tag-triggered build
-          IS_EAP_PROP="-PisEapBuild=true"
-        fi
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP $IS_EAP_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -728,7 +721,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -811,7 +804,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             --tests 'AuthX509PEMPathIntegrationTest' \
             -x test > gradle_output.log 2>&1 &
         GRADLE_PID=$!
@@ -895,7 +888,7 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             --tests 'AuthX509PEMContentsIntegrationTest' \
             -x test  > gradle_output.log 2>&1 &
         GRADLE_PID=$!
@@ -953,7 +946,7 @@ functions:
       work_dir: mongo-jdbc-driver
       key_id: ${papertrail_id}
       secret_key: ${papertrail_key}
-      product: mongo-jdbc-driver-eap
+      product: mongo-jdbc-driver
       version: ${MDBJDBC_VER}
       filenames:
         - "build/libs/*.jar"
@@ -1002,16 +995,13 @@ functions:
             echo "Tag triggered build: ${triggered_by_git_tag}"
   
             if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
-              echo "Detected EAP tag format."
-              export BUILD_TYPE="eap"
               # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>'
               export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
               export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $2}')
             else
-              echo "Setting standard build."
-              export BUILD_TYPE="standard"
-              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
-              export LIBMONGOSQLTRANSLATE_VER="none"
+              echo >&2 "Tag format invalid."
+              echo >&2 "Tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>"
+              exit 1
             fi
           else
             export BUILD_TYPE=snapshot
@@ -1183,13 +1173,8 @@ functions:
           mkdir -p mongo-jdbc-driver/build/libs
           
           # Determine which JAR file to download based on BUILD_TYPE
-          if [ "${BUILD_TYPE}" == "eap" ]; then
-            echo "Fetching EAP JAR file"
-            echo "JAR_FILENAME: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
-          else
-            echo "Fetching standard JAR file"
-            echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
-          fi
+          echo "Fetching standard JAR file"
+          echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
     - command: expansions.update
       params:
         file: jdbc_jar_expansion.yml
@@ -1438,17 +1423,8 @@ functions:
           if [ -d "build/libs" ]; then
             # A sanity check to see if expected files are indeed here
             ls -lrt build/libs
-            if [[ "${BUILD_TYPE}" == "eap" ]]; then
-              # For EAP builds (tagged or untagged), add "eap" to the name
-              for f in ./build/libs/mongodb-jdbc-*.jar; do
-                if [[ "$f" == *"-all"* ]]; then
-                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-                else
-                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-                fi
-              done
-            elif [[ "${triggered_by_git_tag}" == "" ]]; then
-              # For non-EAP, non-tagged builds, rename to standard format
+            if [[ "${triggered_by_git_tag}" == "" ]]; then
+              # For non-tagged builds rename to standard format
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar
