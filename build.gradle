@@ -1,13 +1,9 @@
 plugins {
     id 'java-library'
-    id "com.diffplug.gradle.spotless" version "3.24.3"
-    id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
-    id "org.cyclonedx.bom" version "1.8.2"
-    id 'com.github.jk1.dependency-license-report' version '1.17'
+    id "com.diffplug.spotless" version "6.25.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isRelease')) {
     version = getAbbreviatedGitVersion()
@@ -34,47 +30,6 @@ spotless {
     }
 }
 
-licenseReport {
-    outputDir = (thirdpartyNoticeDir as File).toPath().toString()
-    renderers = [new TextReportRenderer(thirdpartyNoticeName) ]
-}
-
-generateLicenseReport {
-
-    def tempFile = new File("$buildDir", "temp-third-party-notice.txt")
-    def header = new File("$projectDir/resources", "third_party_header.txt")
-
-    doLast {
-        // Replace original file with temp file content
-        def inputFile = new File((thirdpartyNoticeDir as File).toPath().toString(), thirdpartyNoticeName)
-        tempFile.setText(header.getText() + inputFile.getText())
-        inputFile.text = tempFile.text
-        tempFile.delete() // Clean up the temporary file
-    }
-}
-
-cyclonedxBom {
-    // includeConfigs is the list of configuration names to include when generating the BOM (leave empty to include every configuration), regex is supported
-    includeConfigs = ["runtimeClasspath"]
-    // skipConfigs is a list of configuration names to exclude when generating the BOM, regex is supported
-    skipConfigs = ["testCompileClasspath", "testRuntimeClass", "testRuntimeOnly"]
-    // skipProjects is a list of project names to exclude when generating the BOM
-    skipProjects = ["integration-test", "demo", "smoketest"]
-    // Specified the type of project being built. Defaults to 'library'
-    projectType = "library"
-    // Specified the version of the CycloneDX specification to use. Defaults to '1.5'
-    schemaVersion = "1.5"
-    // Boms destination directory. Defaults to 'build/reports'
-    destination = file(cyclonedxBomDestination)
-    // The file name for the generated BOMs (before the file format suffix). Defaults to 'bom'
-    outputName = cyclonedxBomName
-    // The file format generated, can be xml, json or all for generating both. Defaults to 'all'
-    outputFormat = "json"
-    // Exclude BOM Serial Number. Defaults to 'true'
-    includeBomSerialNumber = false
-    // Exclude License Text. Defaults to 'true'
-    includeLicenseText = false
-}
 
 sourceSets {
     integrationTest {
@@ -123,8 +78,8 @@ allprojects {
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-        testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-        testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
     }
 
     compileJava {
@@ -151,17 +106,17 @@ allprojects {
 
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
-        classifier "sources"
+        archiveClassifier = "sources"
     }
 
     task testJar(type: Jar) {
         from sourceSets.test.allJava
-        classifier "test"
+        archiveClassifier = "test"
     }
 
     task javadocJar(type: Jar) {
         from javadoc
-        classifier 'javadoc'
+        archiveClassifier = 'javadoc'
     }
 
     artifacts {
@@ -179,6 +134,21 @@ configurations {
     jar.archiveVersion = releaseVersion
     shadowJar.archiveVersion = releaseVersion
 }
+
+shadowJar {
+    relocate 'org.bouncycastle', 'shaded.org.bouncycastle'
+    
+    // Exclude dependencies that might contain Java 21 compiled classes
+    exclude 'META-INF/versions/**'
+    exclude '**/module-info.class'
+    
+    // Try to exclude specific dependencies that might be problematic
+    dependencies {
+        exclude(dependency('org.ow2.asm:.*'))
+        exclude(dependency('net.minidev:.*'))
+    }
+}
+
 
 task integrationTest(type: Test) {
     useJUnitPlatform()
@@ -423,5 +393,5 @@ tasks.test {
     }
 }
 
-apply from: 'gradle/publish.gradle'
-apply from: 'gradle/deploy.gradle'
+// apply from: 'gradle/publish.gradle'
+// apply from: 'gradle/deploy.gradle'
