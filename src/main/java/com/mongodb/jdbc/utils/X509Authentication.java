@@ -19,11 +19,13 @@ package com.mongodb.jdbc.utils;
 import com.mongodb.MongoException;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.security.*;
 import java.security.cert.Certificate;
+import java.security.UnrecoverableKeyException;
 import java.util.logging.Level;
 import javax.net.ssl.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -129,6 +131,53 @@ public class X509Authentication {
                     logger.log(Level.WARNING, "Error closing PEM parser: " + e.getMessage());
                 }
             }
+        }
+    }
+
+    /**
+     * Configures X.509 authentication for MongoDB using a JKS keystore containing the private key and
+     * certificate.
+     *
+     * @param settingsBuilder The MongoDB client settings builder to apply the SSL configuration.
+     *     Must not be null.
+     * @param keystorePath The path to the JKS keystore file containing the private key and certificate.
+     *     Must not be null.
+     * @param keystorePassword The password for the keystore. Can be null if keystore is not password protected.
+     * @param certificateAlias The alias of the certificate to use from the keystore. Must not be null.
+     * @throws Exception If there is an error during configuration, keystore loading, or certificate extraction.
+     * @throws NullPointerException if settingsBuilder, keystorePath, or certificateAlias are null.
+     */
+    public void configureX509AuthenticationFromKeystore(
+            com.mongodb.MongoClientSettings.Builder settingsBuilder,
+            String keystorePath,
+            char[] keystorePassword,
+            String certificateAlias)
+            throws Exception {
+
+        if (settingsBuilder == null) {
+            throw new NullPointerException("settingsBuilder cannot be null");
+        }
+        if (keystorePath == null || keystorePath.trim().isEmpty()) {
+            throw new NullPointerException("keystorePath cannot be null or empty");
+        }
+        if (certificateAlias == null || certificateAlias.trim().isEmpty()) {
+            throw new NullPointerException("certificateAlias cannot be null or empty");
+        }
+
+        logger.log(Level.FINE, "Using JKS keystore for X509 authentication: " + keystorePath);
+        logger.log(Level.FINE, "Certificate alias: " + certificateAlias);
+
+        try {
+            SSLContext sslContext = createSSLContextFromKeystore(keystorePath, keystorePassword, certificateAlias);
+
+            settingsBuilder.applyToSslSettings(
+                    sslSettings -> {
+                        sslSettings.enabled(true);
+                        sslSettings.context(sslContext);
+                    });
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "SSL setup failed: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -379,6 +428,42 @@ public class X509Authentication {
         sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
 
         return sslContext;
+    }
+
+    private SSLContext createSSLContextFromKeystore(String keystorePath, char[] keystorePassword, String certificateAlias) throws Exception {
+        KeyStore keystore = KeyStore.getInstance("JKS");
+        
+        try (FileInputStream keystoreStream = new FileInputStream(keystorePath)) {
+            keystore.load(keystoreStream, keystorePassword);
+            logger.log(Level.FINE, "Successfully loaded JKS keystore from: " + keystorePath);
+        } catch (IOException e) {
+            throw new MongoException("Failed to read keystore file: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new MongoException("Failed to load keystore: " + e.getMessage(), e);
+        }
+
+        Certificate cert = keystore.getCertificate(certificateAlias);
+        if (cert == null) {
+            throw new MongoException("Certificate with alias '" + certificateAlias + "' not found in keystore");
+        }
+        logger.log(Level.FINE, "Found certificate with alias: " + certificateAlias);
+
+        PrivateKey privateKey;
+        try {
+            Key key = keystore.getKey(certificateAlias, keystorePassword);
+            if (key == null) {
+                throw new MongoException("Private key with alias '" + certificateAlias + "' not found in keystore");
+            }
+            if (!(key instanceof PrivateKey)) {
+                throw new MongoException("Key with alias '" + certificateAlias + "' is not a private key");
+            }
+            privateKey = (PrivateKey) key;
+            logger.log(Level.FINE, "Successfully extracted private key with alias: " + certificateAlias);
+        } catch (UnrecoverableKeyException e) {
+            throw new MongoException("Failed to extract private key with alias '" + certificateAlias + "': " + e.getMessage(), e);
+        }
+
+        return createSSLContextFromKeyAndCert(privateKey, cert);
     }
 
     private PemAuthenticationInput parsePemAuthenticationInput(String input) {
