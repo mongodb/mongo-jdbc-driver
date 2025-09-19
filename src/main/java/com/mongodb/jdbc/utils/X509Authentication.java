@@ -430,9 +430,10 @@ public class X509Authentication {
         return sslContext;
     }
 
-    private SSLContext createSSLContextFromKeystore(String keystorePath, char[] keystorePassword, String certificateAlias) throws Exception {
+    private SSLContext createSSLContextFromKeystore(
+            String keystorePath, char[] keystorePassword, String certificateAlias)
+            throws Exception {
         KeyStore keystore = KeyStore.getInstance("JKS");
-        
         try (FileInputStream keystoreStream = new FileInputStream(keystorePath)) {
             keystore.load(keystoreStream, keystorePassword);
             logger.log(Level.FINE, "Successfully loaded JKS keystore from: " + keystorePath);
