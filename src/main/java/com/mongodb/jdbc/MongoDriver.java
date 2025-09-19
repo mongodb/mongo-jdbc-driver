@@ -491,7 +491,7 @@ public class MongoDriver implements Driver {
         String gssNativeModeVal = info.getProperty(GSS_NATIVE_MODE.getPropertyName());
         if (gssNativeModeVal != null) {
             gssNativeModeVal = gssNativeModeVal.trim().toLowerCase();
-            if (!"true".equals(gssNativeModeVal) && !"false".equals(gssNativeModeVal)) {
+            if (!"true".equalsIgnoreCase(gssNativeModeVal) && !"false".equalsIgnoreCase(gssNativeModeVal)) {
                 throw new SQLException(
                         "Invalid "
                                 + GSS_NATIVE_MODE.getPropertyName()
