@@ -198,7 +198,6 @@ public class MongoConnection implements Connection {
                                             MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
                     settingsBuilder.credential(credential);
                 } else if (authMechanism.equals(GSSAPI)) {
-
                     String jaasPath = connectionProperties.getJaasConfigPath();
                     if (jaasPath != null && !jaasPath.isEmpty()) {
                         System.setProperty("java.security.auth.login.config", jaasPath);
