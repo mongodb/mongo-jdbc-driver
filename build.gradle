@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id "com.diffplug.gradle.spotless" version "3.24.3"
+    id "com.diffplug.spotless" version "6.13.0"
     id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.cyclonedx.bom" version "1.8.2"

@@ -12,6 +12,10 @@ dependencies {
     compile rootProject
 }
 
+tasks.named('shadowJar') {
+    dependsOn ':shadowJar'
+}
+
 test {
     exclude 'com/mongodb/jdbc/utils/**'
 }
