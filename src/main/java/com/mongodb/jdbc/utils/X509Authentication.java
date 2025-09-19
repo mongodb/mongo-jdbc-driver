@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.security.UnrecoverableKeyException;
 import java.util.logging.Level;
 import javax.net.ssl.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
