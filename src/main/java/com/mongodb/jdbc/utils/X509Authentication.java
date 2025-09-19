@@ -168,7 +168,8 @@ public class X509Authentication {
         logger.log(Level.FINE, "Certificate alias: " + certificateAlias);
 
         try {
-            SSLContext sslContext = createSSLContextFromKeystore(keystorePath, keystorePassword, certificateAlias);
+            SSLContext sslContext =
+                    createSSLContextFromKeystore(keystorePath, keystorePassword, certificateAlias);
 
             settingsBuilder.applyToSslSettings(
                     sslSettings -> {
@@ -445,7 +446,8 @@ public class X509Authentication {
 
         Certificate cert = keystore.getCertificate(certificateAlias);
         if (cert == null) {
-            throw new MongoException("Certificate with alias '" + certificateAlias + "' not found in keystore");
+            throw new MongoException(
+                    "Certificate with alias '" + certificateAlias + "' not found in keystore");
         }
         logger.log(Level.FINE, "Found certificate with alias: " + certificateAlias);
 
@@ -453,15 +455,22 @@ public class X509Authentication {
         try {
             Key key = keystore.getKey(certificateAlias, keystorePassword);
             if (key == null) {
-                throw new MongoException("Private key with alias '" + certificateAlias + "' not found in keystore");
+                throw new MongoException(
+                        "Private key with alias '" + certificateAlias + "' not found in keystore");
             }
             if (!(key instanceof PrivateKey)) {
                 throw new MongoException("Key with alias '" + certificateAlias + "' is not a private key");
             }
             privateKey = (PrivateKey) key;
-            logger.log(Level.FINE, "Successfully extracted private key with alias: " + certificateAlias);
+            logger.log(
+                    Level.FINE, "Successfully extracted private key with alias: " + certificateAlias);
         } catch (UnrecoverableKeyException e) {
-            throw new MongoException("Failed to extract private key with alias '" + certificateAlias + "': " + e.getMessage(), e);
+            throw new MongoException(
+                    "Failed to extract private key with alias '"
+                            + certificateAlias
+                            + "': "
+                            + e.getMessage(),
+                    e);
         }
 
         return createSSLContextFromKeyAndCert(privateKey, cert);
