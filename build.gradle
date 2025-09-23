@@ -1,8 +1,8 @@
 plugins {
     id 'java-library'
-    id "com.diffplug.gradle.spotless" version "3.24.3"
+    id "com.diffplug.spotless" version "6.13.0"
     id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.cyclonedx.bom" version "1.8.2"
     id 'com.github.jk1.dependency-license-report' version '1.17'
 }
@@ -12,7 +12,7 @@ import com.github.jk1.license.render.TextReportRenderer
 if (project.hasProperty('isRelease')) {
     version = getAbbreviatedGitVersion()
 } else {
-    version = getGitVersion()
+    version = getGitVersion() + "-SNAPSHOT"
 }
 
 def thirdpartyNoticeDir = "$buildDir/" + thirdpartyNoticeDir
@@ -123,8 +123,8 @@ allprojects {
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-        testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-        testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
     }
 
     compileJava {
@@ -178,6 +178,33 @@ configurations {
     // Use the release version instead of gitVersion for the produced jar
     jar.archiveVersion = releaseVersion
     shadowJar.archiveVersion = releaseVersion
+}
+
+shadowJar {
+    relocate 'com.google', 'shadow.com.google'
+    relocate 'com.nimbusds', 'shadow.com.nimbusds'
+    relocate 'net.jcip', 'shadow.net.jcip'
+    relocate 'net.minidev', 'shadow.net.minidev'
+    relocate 'ognl', 'shadow.ognl'
+    relocate('org', 'shadow.org') {
+        exclude 'org.ow2.asm:.*'
+        exclude 'net.minidev:.*'
+        exclude 'org.javassist:.*'
+    }
+
+    // Exclude Java 21 compiled classes and multi-release JAR versions
+    exclude 'META-INF/versions/**'
+    exclude '**/module-info.class'
+
+    // Exclude specific dependencies that contain Java 21 bytecode
+    dependencies {
+        exclude(dependency('org.ow2.asm:.*'))
+        exclude(dependency('net.minidev:.*'))
+        exclude(dependency('org.javassist:.*'))
+    }
+
+    // Configure ASM to skip problematic class files
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer)
 }
 
 task integrationTest(type: Test) {

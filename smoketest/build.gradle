@@ -7,6 +7,11 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
 }
 
+// Ensure smoketest shadowJar depends on the main shadowJar task
+tasks.named('shadowJar') {
+    dependsOn ':shadowJar'
+}
+
 test {
     useJUnitPlatform()
 }
