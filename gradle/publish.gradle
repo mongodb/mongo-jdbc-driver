@@ -11,7 +11,6 @@ publishing {
             artifact sourceJar {
                 classifier 'sources'
             }
-            artifact shadowJar
             artifact javadocJar
 
             pom {
