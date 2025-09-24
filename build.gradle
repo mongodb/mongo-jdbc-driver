@@ -181,6 +181,7 @@ configurations {
 }
 
 shadowJar {
+    archiveClassifier = 'all'
     relocate 'com.google', 'shadow.com.google'
     relocate 'com.nimbusds', 'shadow.com.nimbusds'
     relocate 'net.jcip', 'shadow.net.jcip'
