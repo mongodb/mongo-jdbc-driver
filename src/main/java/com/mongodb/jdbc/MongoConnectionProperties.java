@@ -28,6 +28,7 @@ public class MongoConnectionProperties {
     private String clientInfo;
     private boolean extJsonMode;
     private String x509PemPath;
+    private String tlsCaFile;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -36,6 +37,7 @@ public class MongoConnectionProperties {
             File logDir,
             String clientInfo,
             boolean extJsonMode,
+            String tlsCaFile,
             String x509PemPath) {
         this.connectionString = connectionString;
         this.database = database;
@@ -43,6 +45,7 @@ public class MongoConnectionProperties {
         this.logDir = logDir;
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
+        this.tlsCaFile = tlsCaFile;
         this.x509PemPath = x509PemPath;
     }
 
@@ -68,6 +71,10 @@ public class MongoConnectionProperties {
 
     public boolean getExtJsonMode() {
         return extJsonMode;
+    }
+
+    public String getTlsCaFile() {
+        return tlsCaFile;
     }
 
     public String getX509PemPath() {

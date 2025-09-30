@@ -94,13 +94,14 @@ public class MongoDriver implements Driver {
      * a Properties Object.
      */
     public enum MongoJDBCProperty {
-        DATABASE("database"),
         CLIENT_INFO("clientinfo"),
-        LOG_LEVEL("loglevel"),
-        LOG_DIR("logdir"),
+        DATABASE("database"),
+        DISABLE_CLIENT_CACHE("disableclientcache"),
         EXT_JSON_MODE("extjsonmode"),
-        X509_PEM_PATH("x509pempath"),
-        DISABLE_CLIENT_CACHE("disableclientcache");
+        LOG_DIR("logdir"),
+        LOG_LEVEL("loglevel"),
+        TLS_CA_FILE("tlscafile"),
+        X509_PEM_PATH("x509pempath");
 
         private final String propertyName;
 
@@ -345,11 +346,14 @@ public class MongoDriver implements Driver {
     public static class MongoConnectionConfig {
         public final ConnectionString connectionString;
         public final DriverPropertyInfo[] driverInfo;
+        public final String tlsCaFile;
         public final char[] x509Passphrase;
 
-        MongoConnectionConfig(ConnectionString cs, DriverPropertyInfo[] di, char[] x509pass) {
+        MongoConnectionConfig(
+                ConnectionString cs, DriverPropertyInfo[] di, String tcf, char[] x509pass) {
             connectionString = cs;
             driverInfo = di;
+            tlsCaFile = tcf;
             x509Passphrase = x509pass;
         }
     }
@@ -376,7 +380,10 @@ public class MongoDriver implements Driver {
         }
         try {
             return createConnection(
-                    connectionConfig.connectionString, info, connectionConfig.x509Passphrase);
+                    connectionConfig.connectionString,
+                    info,
+                    connectionConfig.tlsCaFile,
+                    connectionConfig.x509Passphrase);
         } catch (Exception e) {
             throw new SQLException(e);
         }
@@ -420,7 +427,8 @@ public class MongoDriver implements Driver {
     }
 
     private MongoConnection createConnection(
-            ConnectionString cs, Properties info, char[] x509Passphrase) throws Exception {
+            ConnectionString cs, Properties info, String tlsCaFile, char[] x509Passphrase)
+            throws Exception {
         // Database from the properties must be present
         String database = info.getProperty(DATABASE.getPropertyName());
 
@@ -483,6 +491,7 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
+                        tlsCaFile,
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
 
         String disableCacheVal =
@@ -677,6 +686,7 @@ public class MongoDriver implements Driver {
                         null,
                         mandatoryConnectionProperties.toArray(
                                 new DriverPropertyInfo[mandatoryConnectionProperties.size()]),
+                        null,
                         null);
             }
 
@@ -691,7 +701,12 @@ public class MongoDriver implements Driver {
                                     password,
                                     authDatabase,
                                     result.normalizedOptions));
-            return new MongoConnectionConfig(c, new DriverPropertyInfo[] {}, x509Passphrase);
+
+            return new MongoConnectionConfig(
+                    c,
+                    new DriverPropertyInfo[] {},
+                    result.normalizedOptions.getProperty(TLS_CA_FILE.getPropertyName()),
+                    x509Passphrase);
         } catch (Exception e) {
             if ((e instanceof SQLException)) {
                 throw e;

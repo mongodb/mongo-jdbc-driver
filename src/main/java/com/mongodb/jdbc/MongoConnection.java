@@ -57,6 +57,7 @@ public class MongoConnection implements Connection {
     protected String currentDB;
     protected String url;
     protected String user;
+    protected String tlsCaFile;
     protected char[] x509Passphrase;
     protected boolean isClosed;
     protected MongoClusterType clusterType;
@@ -115,6 +116,7 @@ public class MongoConnection implements Connection {
         initializeConnection(connectionProperties);
 
         this.x509Passphrase = x509Passphrase;
+        this.tlsCaFile = connectionProperties.getTlsCaFile();
         this.mongoClientSettings = createMongoClientSettings(connectionProperties);
 
         if (mongoClient == null) {
@@ -201,7 +203,7 @@ public class MongoConnection implements Connection {
                 }
 
                 x509Authentication.configureX509Authentication(
-                        settingsBuilder, pemPath, this.x509Passphrase);
+                        settingsBuilder, pemPath, this.tlsCaFile, this.x509Passphrase);
             }
         }
 

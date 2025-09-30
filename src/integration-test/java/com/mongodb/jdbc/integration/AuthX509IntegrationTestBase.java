@@ -41,10 +41,20 @@ public abstract class AuthX509IntegrationTestBase {
     }
 
     protected Connection connectWithX509(String pemPath, String passphrase) throws SQLException {
+        return connectWithX509(pemPath, passphrase, null, null);
+    }
+
+    protected Connection connectWithX509(
+            String pemPath, String passphrase, String tlsCaFile, String uriOption)
+            throws SQLException {
         String uri =
                 "jdbc:mongodb://localhost:"
                         + mongoPort
                         + "/?authSource=$external&authMechanism=MONGODB-X509&tls=true";
+
+        if (uriOption != null) {
+            uri = uri + "&" + uriOption;
+        }
 
         Properties properties = new Properties();
         properties.setProperty("database", "test");
@@ -54,6 +64,9 @@ public abstract class AuthX509IntegrationTestBase {
         }
         if (passphrase != null) {
             properties.setProperty("password", passphrase);
+        }
+        if (tlsCaFile != null) {
+            properties.setProperty("tlscafile", tlsCaFile);
         }
 
         return DriverManager.getConnection(uri, properties);
