@@ -140,10 +140,9 @@ tasks:
   - name: "test-x509-integration"
     commands:
       - func: "run dc integration test"
+      - func: "run X509 tlsCaFile integration test"
       - func: "run X509 PEM Path integration test"
       - func: "run X509 PEM Contents integration test"
-      - func: "run X509 tlsCaFile integration test"
-
 
   - name: "test-smoke"
     depends_on:
@@ -974,7 +973,7 @@ functions:
         unset JAVA_TOOL_OPTIONS
         ./gradlew --stop
         ./gradlew $IS_RELEASE_PROP integrationTest \
-            --tests 'AuthX509tlsCaFileIntegrationTest' \
+            --tests 'AuthX509TlsCaFileIntegrationTest' \
             -x test  > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 

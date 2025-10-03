@@ -24,7 +24,26 @@ import java.sql.SQLTimeoutException;
 import org.junit.jupiter.api.Test;
 
 // Integration tests for X.509 authentication with TLS CA file configuration.
-public class AuthX509tlsCaFileIntegrationTest extends AuthX509IntegrationTestBase {
+public class AuthX509TlsCaFileIntegrationTest extends AuthX509IntegrationTestBase {
+    /**
+     * Tests that a connection fails when the TLS CA file is not provided. This verifies that the
+     * client cannot connect without proper CA configuration.
+     */
+    @Test
+    public void testTlsCaFilePropertyUnsetFails() throws SQLException {
+        assertThrows(
+                SQLTimeoutException.class,
+                () -> {
+                    try (Connection connection =
+                            connectWithX509(
+                                    "resources/authentication_test/X509/client-unencrypted.pem",
+                                    null,
+                                    null,
+                                    null)) {
+                        connection.getMetaData().getDriverVersion();
+                    }
+                });
+    }
 
     /**
      * Tests that a connection succeeds when the TLS CA file is explicitly set as a property. This
@@ -91,25 +110,5 @@ public class AuthX509tlsCaFileIntegrationTest extends AuthX509IntegrationTestBas
             assertNotNull(connection, "Connection should succeed with valid CA file");
             connection.getMetaData().getDriverVersion();
         }
-    }
-
-    /**
-     * Tests that a connection fails when the TLS CA file is not provided. This verifies that the
-     * client cannot connect without proper CA configuration.
-     */
-    @Test
-    public void testTlsCaFilePropertyUnsetFails() throws SQLException {
-        assertThrows(
-                SQLTimeoutException.class,
-                () -> {
-                    try (Connection connection =
-                            connectWithX509(
-                                    "resources/authentication_test/X509/client-unencrypted.pem",
-                                    null,
-                                    null,
-                                    null)) {
-                        connection.getMetaData().getDriverVersion();
-                    }
-                });
     }
 }

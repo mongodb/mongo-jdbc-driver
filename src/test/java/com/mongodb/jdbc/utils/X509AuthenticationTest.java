@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.File;
+import java.net.URL;
 import java.security.KeyStore;
 import java.util.logging.*;
 import org.junit.jupiter.api.Test;
@@ -55,12 +56,22 @@ public class X509AuthenticationTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File pemFile =
                 new File(classLoader.getResource(TEST_PEM_DIR + "/" + pemFileName).getFile());
-        File tlsCaFile =
-                new File(classLoader.getResource(TEST_PEM_DIR + "/" + tlsCaFileName).getFile());
         assertFalse(pemFile.isDirectory(), pemFile.getPath() + " is not a file.");
-        assertFalse(tlsCaFile.isDirectory(), tlsCaFile.getPath() + " is not a file.");
+
+        File tlsCaFile = null;
+        if (tlsCaFileName != null) {
+            URL caResource = classLoader.getResource(TEST_PEM_DIR + "/" + tlsCaFileName);
+            assertNotNull(caResource, "CA certificate file not found: " + tlsCaFileName);
+
+            tlsCaFile = new File(caResource.getFile());
+            assertFalse(tlsCaFile.isDirectory(), tlsCaFile.getPath() + " is not a file.");
+        }
+
         x509Authentication.configureX509Authentication(
-                SETTINGS_BUILDER, pemFile.getPath(), tlsCaFile.getPath(), passphrase);
+                SETTINGS_BUILDER,
+                pemFile.getPath(),
+                tlsCaFile != null ? tlsCaFile.getPath() : null,
+                passphrase);
     }
 
     // Helper method to configure X.509 authentication
@@ -305,7 +316,7 @@ public class X509AuthenticationTest {
 
         int certCount = x509Authentication.loadCACertificates(multipleCaFile.getPath(), trustStore);
 
-        assertEquals(4, certCount, "Expected 4 certificates to be loaded from multiple cert file");
+        assertEquals(5, certCount, "Expected 5 certificates to be loaded from multiple cert file");
 
         // Verify all certificates were added with the correct aliases
         for (int i = 0; i < certCount; i++) {

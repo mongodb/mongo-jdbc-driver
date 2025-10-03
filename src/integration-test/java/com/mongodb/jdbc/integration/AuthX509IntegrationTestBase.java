@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import javax.net.ssl.*;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AuthX509IntegrationTestBase {
@@ -36,7 +37,6 @@ public abstract class AuthX509IntegrationTestBase {
     public void setUp() {
         mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
-
         passwordEnv = System.getenv(PASSWORD_ENV_VAR);
     }
 
