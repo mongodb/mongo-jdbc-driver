@@ -91,6 +91,9 @@ public class MongoConnectionProperties {
         if (clientInfo != null) {
             keyBuilder.append(":clientInfo=").append(clientInfo);
         }
+        if (tlsCaFile != null) {
+            keyBuilder.append(":tlsCaFile=").append(tlsCaFile);
+        }
         return keyBuilder.toString().hashCode();
     }
 }
