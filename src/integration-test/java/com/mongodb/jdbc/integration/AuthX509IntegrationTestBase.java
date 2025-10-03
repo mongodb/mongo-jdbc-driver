@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import javax.net.ssl.*;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AuthX509IntegrationTestBase {
@@ -36,15 +37,24 @@ public abstract class AuthX509IntegrationTestBase {
     public void setUp() {
         mongoPort = System.getenv(LOCAL_PORT_ENV_VAR);
         assertNotNull(mongoPort, "Environment variable " + LOCAL_PORT_ENV_VAR + " must be set");
-
         passwordEnv = System.getenv(PASSWORD_ENV_VAR);
     }
 
     protected Connection connectWithX509(String pemPath, String passphrase) throws SQLException {
+        return connectWithX509(pemPath, passphrase, null, null);
+    }
+
+    protected Connection connectWithX509(
+            String pemPath, String passphrase, String tlsCaFile, String uriOption)
+            throws SQLException {
         String uri =
                 "jdbc:mongodb://localhost:"
                         + mongoPort
                         + "/?authSource=$external&authMechanism=MONGODB-X509&tls=true";
+
+        if (uriOption != null) {
+            uri = uri + "&" + uriOption;
+        }
 
         Properties properties = new Properties();
         properties.setProperty("database", "test");
@@ -54,6 +64,9 @@ public abstract class AuthX509IntegrationTestBase {
         }
         if (passphrase != null) {
             properties.setProperty("password", passphrase);
+        }
+        if (tlsCaFile != null) {
+            properties.setProperty("tlscafile", tlsCaFile);
         }
 
         return DriverManager.getConnection(uri, properties);

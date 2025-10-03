@@ -64,6 +64,7 @@ public class X509Authentication {
     public void configureX509Authentication(
             com.mongodb.MongoClientSettings.Builder settingsBuilder,
             String pemPath,
+            String tlsCaFile,
             char[] passphrase)
             throws Exception {
 
@@ -111,7 +112,7 @@ public class X509Authentication {
         }
 
         try {
-            SSLContext sslContext = createSSLContext(pemParser, privateKeyPassphrase);
+            SSLContext sslContext = createSSLContext(pemParser, privateKeyPassphrase, tlsCaFile);
 
             settingsBuilder.applyToSslSettings(
                     sslSettings -> {
@@ -167,7 +168,8 @@ public class X509Authentication {
         return pem;
     }
 
-    private SSLContext createSSLContext(PEMParser pemParser, char[] passphrase) throws Exception {
+    private SSLContext createSSLContext(PEMParser pemParser, char[] passphrase, String tlsCaFile)
+            throws Exception {
         PrivateKey privateKey = null;
         Certificate cert = null;
 
@@ -358,27 +360,67 @@ public class X509Authentication {
             throw new MongoException(missingComponents.toString());
         }
 
-        return createSSLContextFromKeyAndCert(privateKey, cert);
+        return createSSLContextFromKeyAndCert(privateKey, cert, tlsCaFile);
     }
 
-    private SSLContext createSSLContextFromKeyAndCert(PrivateKey privateKey, Certificate cert)
-            throws Exception {
+    private SSLContext createSSLContextFromKeyAndCert(
+            PrivateKey privateKey, Certificate cert, String tlsCaFile) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12", BC_PROVIDER);
-
         keyStore.load(null, null);
-        keyStore.setKeyEntry("mongodb-cert", privateKey, null, new Certificate[] {cert});
+        keyStore.setKeyEntry("mongodb-client-cert", privateKey, null, new Certificate[] {cert});
 
         KeyManagerFactory kmf =
                 KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, null); // No password needed for in-memory keystore
 
-        // Passphrase not needed for in memory keystore
-        kmf.init(keyStore, null);
+        TrustManagerFactory tmf =
+                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (tlsCaFile != null && !tlsCaFile.trim().isEmpty()) {
+            // No tlsCaFile specified, create an EMPTY trust store and load ONLY the custom CA.
+            KeyStore trustStore = KeyStore.getInstance("JKS");
+            trustStore.load(null, null);
+
+            if (loadCACertificates(tlsCaFile, trustStore) == 0) {
+                throw new MongoException("No X509 certificate found in CA file: " + tlsCaFile);
+            }
+
+            // Initialize tmf with our custom trustStore containing only the tlsCaFile certs
+            tmf.init(trustStore);
+        } else {
+            // tlsCaFile is NOT provided, initialize tmf with null to use the default truststore
+            tmf.init((KeyStore) null);
+        }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        // Initialize sslContext and use default trust managers
-        sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
-
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
         return sslContext;
+    }
+
+    protected int loadCACertificates(String tlsCaFile, KeyStore trustStore) throws Exception {
+        if (tlsCaFile == null || tlsCaFile.trim().isEmpty()) {
+            return 0;
+        }
+
+        int certCount = 0;
+        try (FileReader fr = new FileReader(tlsCaFile);
+                PEMParser pemParser = new PEMParser(fr)) {
+            JcaX509CertificateConverter converter =
+                    new JcaX509CertificateConverter().setProvider(BC_PROVIDER);
+            Object obj;
+            while ((obj = pemParser.readObject()) != null) {
+                // Add each certificate from PEM file to trust store with sequential aliases
+                if (obj instanceof X509CertificateHolder) {
+                    Certificate caCert = converter.getCertificate((X509CertificateHolder) obj);
+                    trustStore.setCertificateEntry("ca" + certCount, caCert);
+                    certCount++;
+                }
+            }
+        } catch (Exception e) {
+            throw new MongoException("Failed to load CA certificate from: " + tlsCaFile, e);
+        }
+
+        return certCount;
     }
 
     private PemAuthenticationInput parsePemAuthenticationInput(String input) {
