@@ -20,3 +20,5 @@ src/main/resources/**/libmongosqltranslate.*
 src/main/resources/**/mongosqltranslate.*
 .library_cache/
 
+# Ignore secrets
+secrets-export.sh

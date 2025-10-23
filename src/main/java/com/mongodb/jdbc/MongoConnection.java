@@ -47,6 +47,7 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
+import javax.security.auth.login.LoginContext;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.UuidRepresentation;
@@ -221,6 +222,34 @@ public class MongoConnection implements Connection {
                         System.setProperty("sun.security.jgss.native", gssNative);
                         logger.log(
                                 Level.INFO, "Set sun.security.jgss.native = " + gssNative.trim());
+                    }
+
+                    String serverAuthValue = connectionProperties.getGssApiServerAuth();
+                    if (serverAuthValue != null && !serverAuthValue.isEmpty()) {
+                        Map<String, Object> saslProperties = new HashMap<>();
+                        saslProperties.put(javax.security.sasl.Sasl.SERVER_AUTH, serverAuthValue);
+                        credential =
+                                credential.withMechanismProperty(
+                                        MongoCredential.JAVA_SASL_CLIENT_PROPERTIES_KEY,
+                                        saslProperties);
+                    }
+
+                    String loginContextName = connectionProperties.getGssApiLoginContextName();
+                    if (loginContextName != null && !loginContextName.trim().isEmpty()) {
+                        try {
+                            LoginContext loginContext = new LoginContext(loginContextName);
+                            loginContext.login();
+                            credential =
+                                    credential.withMechanismProperty(
+                                            MongoCredential.JAVA_SUBJECT_KEY,
+                                            loginContext.getSubject());
+                        } catch (Exception e) {
+                            throw new SQLException(
+                                    "Failed to authenticate using GSSAPI (loginContextName: "
+                                            + loginContextName
+                                            + ")",
+                                    e);
+                        }
                     }
 
                     settingsBuilder.credential(credential);

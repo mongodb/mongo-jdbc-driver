@@ -30,6 +30,8 @@ public class MongoConnectionProperties {
     private String x509PemPath;
     private String jaasConfigPath;
     private String gssNativeMode;
+    private final String gssApiLoginContextName;
+    private final String gssApiServerAuth;
 
     public MongoConnectionProperties(
             ConnectionString connectionString,
@@ -40,7 +42,9 @@ public class MongoConnectionProperties {
             boolean extJsonMode,
             String x509PemPath,
             String jaasConfigPath,
-            String gssNativeMode) {
+            String gssNativeMode,
+            String gssApiLoginContextName,
+            String gssApiServerAuth) {
         this.connectionString = connectionString;
         this.database = database;
         this.logLevel = logLevel;
@@ -50,6 +54,8 @@ public class MongoConnectionProperties {
         this.x509PemPath = (x509PemPath != null) ? x509PemPath.trim() : null;
         this.jaasConfigPath = (jaasConfigPath != null) ? jaasConfigPath.trim() : null;
         this.gssNativeMode = gssNativeMode != null ? gssNativeMode : null;
+        this.gssApiLoginContextName = gssApiLoginContextName;
+        this.gssApiServerAuth = gssApiServerAuth;
     }
 
     public ConnectionString getConnectionString() {
@@ -86,6 +92,14 @@ public class MongoConnectionProperties {
 
     public String getGssNativeMode() {
         return gssNativeMode;
+    }
+
+    public String getGssApiLoginContextName() {
+        return gssApiLoginContextName;
+    }
+
+    public String getGssApiServerAuth() {
+        return gssApiServerAuth;
     }
 
     /*

@@ -101,8 +101,11 @@ public class MongoDriver implements Driver {
         EXT_JSON_MODE("extjsonmode"),
         X509_PEM_PATH("x509pempath"),
         DISABLE_CLIENT_CACHE("disableclientcache"),
+        // Kerberos related properties
         JAAS_CONFIG_PATH("jaasconfigpath"),
-        GSS_NATIVE_MODE("gssnativemode");
+        GSS_NATIVE_MODE("gssnativemode"),
+        GSSAPI_LOGIN_CONTEXT_NAME("gssapilogincontextname"),
+        GSSAPI_SERVER_AUTH("gssapiserverauth");
 
         private final String propertyName;
 
@@ -491,7 +494,8 @@ public class MongoDriver implements Driver {
         String gssNativeModeVal = info.getProperty(GSS_NATIVE_MODE.getPropertyName());
         if (gssNativeModeVal != null) {
             gssNativeModeVal = gssNativeModeVal.trim().toLowerCase();
-            if (!"true".equalsIgnoreCase(gssNativeModeVal) && !"false".equalsIgnoreCase(gssNativeModeVal)) {
+            if (!"true".equalsIgnoreCase(gssNativeModeVal)
+                    && !"false".equalsIgnoreCase(gssNativeModeVal)) {
                 throw new SQLException(
                         "Invalid "
                                 + GSS_NATIVE_MODE.getPropertyName()
@@ -511,7 +515,9 @@ public class MongoDriver implements Driver {
                         extJsonMode,
                         info.getProperty(X509_PEM_PATH.getPropertyName()),
                         info.getProperty(JAAS_CONFIG_PATH.getPropertyName()),
-                        gssNativeModeVal);
+                        gssNativeModeVal,
+                        info.getProperty(GSSAPI_LOGIN_CONTEXT_NAME.getPropertyName()),
+                        info.getProperty(GSSAPI_SERVER_AUTH.getPropertyName()));
 
         String disableCacheVal =
                 info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
