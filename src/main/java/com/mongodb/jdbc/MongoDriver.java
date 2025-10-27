@@ -651,13 +651,9 @@ public class MongoDriver implements Driver {
         }
 
         try {
-            String actualURL = removePrefix(JDBC, url);
-            ConnectionString originalConnectionString;
-            try {
-                originalConnectionString = new ConnectionString(actualURL);
-            } catch (Exception e) {
-                throw new SQLException(e);
-            }
+            // Build a valid connection string which will pass the initial parsing. Some authentication mechanisms require
+            // a username and/or password.
+            ConnectionString originalConnectionString = buildConnectionString(url, info);
 
             ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
             String user = null;
