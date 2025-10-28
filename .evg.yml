@@ -15,48 +15,6 @@ variables:
       aws_secret: ${AWS_SECRET_ACCESS_KEY}
       aws_session_token: ${AWS_SESSION_TOKEN}
       bucket: evg-bucket-mongo-jdbc-driver
-  - &check_and_allow_for_eap_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" != "eap" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is not 'eap'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-           echo "BUILD_TYPE is 'eap'. Allowing task execution to continue."
-        fi
-  - &check_and_allow_for_standard_and_snapshot_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" == "eap" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is 'eap'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
-        fi
-  - &check_and_allow_for_eap_and_snapshot_build
-    command: shell.exec
-    type: test
-    params:
-      shell: bash
-      working_dir: mongo-jdbc-driver
-      script: |
-        ${PREPARE_SHELL}
-        if [ "${BUILD_TYPE}" == "standard" ]; then
-          echo "BUILD_TYPE (${BUILD_TYPE}) is 'standard'. Stopping task execution."
-          curl -d '{"status":"success", "should_continue": false}' -H "Content-Type: application/json" -X POST localhost:2285/task_status
-        else
-          echo "BUILD_TYPE is ${BUILD_TYPE}. Allowing task execution to continue."
-        fi
 
 pre:
   - func: "fetch source"
@@ -107,8 +65,7 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
-      - name: ssdlc-artifacts-snapshot-standard
-      - name: ssdlc-artifacts-snapshot-eap
+      - name: ssdlc-artifacts-snapshot
 
   - name: ubuntu2204-64-jdk-8
     display_name: Ubuntu 22.04 jdk-8
@@ -148,7 +105,7 @@ buildvariants:
       - name: "test-smoke"
       - name: "publish-maven"
       - name: "make-docs"
-      - name: "publish-s3"
+      - name: "publish-doc-guide-s3"
       - name: "ssdlc-artifacts-release"
       - name: "download-center-update"
       - name: "javadoc"
@@ -179,14 +136,14 @@ tasks:
 
   - name: "test-dc-integration"
     commands:
-      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
 
   - name: "test-x509-integration"
     commands:
-      - func: "check and allow for eap and snapshot build"
       - func: "run dc integration test"
-      - func: "run X509 integration test"
+      - func: "run X509 tlsCaFile integration test"
+      - func: "run X509 PEM Path integration test"
+      - func: "run X509 PEM Contents integration test"
 
   - name: "test-gssapi-integration"
     commands:
@@ -213,7 +170,6 @@ tasks:
       - name: sbom
         variant: code-quality-and-correctness
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish maven"
       - func: "trace artifacts"
 
@@ -224,8 +180,8 @@ tasks:
       - func: "build jdbc docs"
       - func: "upload jdbc docs"
 
-  # Publishes the EAP release artifacts to S3
-  - name: publish-s3
+  # Publishes the JDBC guide S3
+  - name: publish-doc-guide-s3
     allowed_requesters: ["ad_hoc", "github_tag", "patch"]
     depends_on:
       - name: "build"
@@ -233,30 +189,7 @@ tasks:
       - name: "test-smoke"
         variant: "release"
     commands:
-      - *check_and_allow_for_eap_build
       - *assume_role_cmd
-      - command: s3.get
-        params:
-          working_dir: mongo-jdbc-driver
-          <<: *evg_bucket_config
-          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-      - command: s3.get
-        params:
-          working_dir: mongo-jdbc-driver
-          <<: *evg_bucket_config
-          local_file: mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-          remote_file: ${S3_ARTIFACTS_DIR}/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-      - command: s3.put
-        params:
-          aws_key: ${release_aws_key}
-          aws_secret: ${release_aws_secret}
-          local_files_include_filter:
-            - mongodb-jdbc-eap-*.jar
-          remote_file: eap/mongo-jdbc-driver-eap/
-          bucket: translators-connectors-releases
-          permissions: public-read
-          content_type: application/java-archive
       - command: s3.get
         params:
           work_dir: mongo-jdbc-driver
@@ -268,7 +201,7 @@ tasks:
           aws_key: ${release_aws_key}
           aws_secret: ${release_aws_secret}
           local_file: docs/MongoDB_JDBC_Guide.pdf
-          remote_file: eap/mongo-jdbc-driver-eap/docs/MongoDB_JDBC_Guide.pdf
+          remote_file: mongo-jdbc-driver/docs/MongoDB_JDBC_Guide.pdf
           bucket: translators-connectors-releases
           permissions: public-read
           content_type: application/pdf
@@ -295,7 +228,6 @@ tasks:
       - name: "publish-maven"
         variant: "release"
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "update download center feed"
 
   - name: semgrep
@@ -320,13 +252,12 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
 
-  - name: ssdlc-artifacts-snapshot-standard
+  - name: ssdlc-artifacts-snapshot
     run_on: ubuntu2204-small
     allow_for_git_tag: false
     depends_on:
@@ -336,35 +267,12 @@ tasks:
         variant: code-quality-and-correctness
     exec_timeout_secs: 300 # 5m
     commands:
-      - func: "check and allow for standard and snapshot build"
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
       - func: "generate compliance report"
       - func: "publish compliance report"
-
-  - name: ssdlc-artifacts-snapshot-eap
-    run_on: ubuntu2204-small
-    allow_for_git_tag: false
-    depends_on:
-      - name: sbom
-        variant: code-quality-and-correctness
-      - name: semgrep
-        variant: code-quality-and-correctness
-    exec_timeout_secs: 300 # 5m
-    commands:
-      - func: "check and allow for eap build"
-      - func: "generate compliance report"
 
 functions:
-  "check and allow for standard and snapshot build":
-    - *check_and_allow_for_standard_and_snapshot_build
-
-  "check and allow for eap and snapshot build":
-    - *check_and_allow_for_eap_and_snapshot_build
-
-  "check and allow for eap build":
-    - *check_and_allow_for_eap_build
-
   "augment sbom":
     - command: ec2.assume_role
       display_name: Assume IAM role with permissions to pull Kondukto API token
@@ -597,12 +505,7 @@ functions:
       working_dir: mongo-jdbc-driver
       script: |
         ${PREPARE_SHELL}
-
-        if [[ "${BUILD_TYPE}" == "eap" ]]; then
-          # Sets EAP build flag. Useful for testing the eap build without needing to rely on Tag-triggered build
-          IS_EAP_PROP="-PisEapBuild=true"
-        fi
-        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP $IS_EAP_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
+        ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} $IS_RELEASE_PROP -x test -x integrationTest clean spotlessApply build shadowjar --rerun-tasks
 
   "check spotless":
     command: shell.exec
@@ -826,7 +729,7 @@ functions:
         ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
+        ./gradlew $IS_RELEASE_PROP integrationTest \
             -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
@@ -873,7 +776,7 @@ functions:
         echo "Integration test exit code: $EXITCODE"
         exit $EXITCODE
 
-  "run X509 integration test":
+  "run X509 PEM Path integration test":
     command: shell.exec
     type: test
     params:
@@ -909,8 +812,175 @@ functions:
             -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
 
         # Run the tests.
-        ./gradlew $IS_RELEASE_PROP -PisEapBuild=true integrationTest \
-            -x test --tests AuthX509IntegrationTest > gradle_output.log 2>&1 &
+        ./gradlew $IS_RELEASE_PROP integrationTest \
+            --tests 'AuthX509PEMPathIntegrationTest' \
+            -x test > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
+
+        echo "Gradle process started with PID $GRADLE_PID"
+
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
+        while true; do
+          if [ -f gradle_output.log ]; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log 2>/dev/null; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
+            if grep -q "BUILD FAILED" gradle_output.log 2>/dev/null; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
+          fi
+
+          if (( SECONDS > TIMEOUT )); then
+              echo "$TIMEOUT second timeout reached. Exiting with failure."
+              EXITCODE=1
+              break
+          fi
+
+          # Check if Gradle process is still running
+          if ! kill -0 $GRADLE_PID 2>/dev/null; then
+              echo "Gradle process has finished."
+              wait $GRADLE_PID
+              EXITCODE=$?
+              break
+          fi
+
+          sleep 5
+        done
+
+        cat gradle_output.log
+
+        kill $GRADLE_PID 2>/dev/null || true
+
+        pkill mongod
+
+        echo "X509 integration test exit code: $EXITCODE"
+        exit $EXITCODE
+
+  "run X509 PEM Contents integration test":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+
+        case ${_platform} in
+        ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
+          mdb_version_com="mongodb-linux-x86_64-ubuntu2204-7.0.14"
+          mdb_version_ent="mongodb-linux-x86_64-enterprise-ubuntu2204-7.0.14"
+          arch="x64"
+        ;;
+        *)
+          echo "ERROR: invalid value for \${_platform}: '$_platform'"
+          echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+          exit 1
+        ;;
+        esac
+        
+        X509_CERT_DIR=$PWD/resources/authentication_test/X509
+
+        # Download and run enterprise mongod with x509 authentication enabled
+        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch $X509_CERT_DIR --x509
+                        
+        # Configure Java SSL to trust self-signed certificates from custom truststore
+        export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$X509_CERT_DIR/truststore.jks \
+            -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$ADF_TEST_LOCAL_PWD"
+
+        # Run the tests.
+        ./gradlew $IS_RELEASE_PROP integrationTest \
+            --tests 'AuthX509PEMContentsIntegrationTest' \
+            -x test  > gradle_output.log 2>&1 &
+        GRADLE_PID=$!
+
+        echo "Gradle process started with PID $GRADLE_PID"
+
+        # On Amazon Linux 2 hosts, the gradlew integrationTest command was hanging indefinitely.
+        # This monitoring approach will detect build completion or failure even when the Gradle
+        # process doesn't terminate properly and allows the task to complete.
+        SECONDS=0
+        TIMEOUT=1800  # 30 minute timeout
+        while true; do
+          if [ -f gradle_output.log ]; then
+            if grep -q "BUILD SUCCESSFUL" gradle_output.log 2>/dev/null; then
+                echo "Build successful!"
+                EXITCODE=0
+                break
+            fi
+            if grep -q "BUILD FAILED" gradle_output.log 2>/dev/null; then
+                echo "Build failed!"
+                EXITCODE=1
+                break
+            fi
+          fi
+
+          if (( SECONDS > TIMEOUT )); then
+              echo "$TIMEOUT second timeout reached. Exiting with failure."
+              EXITCODE=1
+              break
+          fi
+
+          # Check if Gradle process is still running
+          if ! kill -0 $GRADLE_PID 2>/dev/null; then
+              echo "Gradle process has finished."
+              wait $GRADLE_PID
+              EXITCODE=$?
+              break
+          fi
+
+          sleep 5
+        done
+
+        cat gradle_output.log
+
+        kill $GRADLE_PID 2>/dev/null || true
+
+        pkill mongod
+
+        echo "X509 integration test exit code: $EXITCODE"
+        exit $EXITCODE
+
+  "run X509 tlsCaFile integration test":
+    command: shell.exec
+    type: test
+    params:
+      shell: bash
+      working_dir: mongo-jdbc-driver
+      script: |
+        ${PREPARE_SHELL}
+
+        case ${_platform} in
+        ubuntu2204-64-jdk-8 | ubuntu2204-64-jdk-11)
+          mdb_version_com="mongodb-linux-x86_64-ubuntu2204-7.0.14"
+          mdb_version_ent="mongodb-linux-x86_64-enterprise-ubuntu2204-7.0.14"
+          arch="x64"
+        ;;
+        *)
+          echo "ERROR: invalid value for \${_platform}: '$_platform'"
+          echo "Allowed values: 'ubuntu2204-64-jdk-8', 'ubuntu2204-64-jdk-11'"
+          exit 1
+        ;;
+        esac
+        
+        X509_CERT_DIR=$PWD/resources/authentication_test/X509
+
+        # Download and run enterprise mongod with x509 authentication enabled
+        ./resources/start_local_mdb.sh $mdb_version_com $mdb_version_ent $arch $X509_CERT_DIR --x509
+
+        # Run the tests.
+        unset JAVA_TOOL_OPTIONS
+        ./gradlew --stop
+        ./gradlew $IS_RELEASE_PROP integrationTest \
+            --tests 'AuthX509TlsCaFileIntegrationTest' \
+            -x test  > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
         echo "Gradle process started with PID $GRADLE_PID"
@@ -999,7 +1069,7 @@ functions:
       work_dir: mongo-jdbc-driver
       key_id: ${papertrail_id}
       secret_key: ${papertrail_key}
-      product: mongo-jdbc-driver-eap
+      product: mongo-jdbc-driver
       version: ${MDBJDBC_VER}
       filenames:
         - "build/libs/*.jar"
@@ -1048,16 +1118,13 @@ functions:
             echo "Tag triggered build: ${triggered_by_git_tag}"
   
             if [[ "${triggered_by_git_tag}" == *"-libv"* ]]; then
-              echo "Detected EAP tag format."
-              export BUILD_TYPE="eap"
               # tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>'
               export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $1}' | sed s/v// )
               export LIBMONGOSQLTRANSLATE_VER=$(echo ${triggered_by_git_tag} | awk -F'-libv' '{print $2}')
             else
-              echo "Setting standard build."
-              export BUILD_TYPE="standard"
-              export MDBJDBC_VER=$(echo ${triggered_by_git_tag} | sed s/v//)
-              export LIBMONGOSQLTRANSLATE_VER="none"
+              echo >&2 "Tag format invalid."
+              echo >&2 "Tag should be formatted as 'v<JDBC major>.<minor>.<patch>-libv<libmongosqltranslate major>.<minor>.<patch>"
+              exit 1
             fi
           else
             export BUILD_TYPE=snapshot
@@ -1229,13 +1296,8 @@ functions:
           mkdir -p mongo-jdbc-driver/build/libs
           
           # Determine which JAR file to download based on BUILD_TYPE
-          if [ "${BUILD_TYPE}" == "eap" ]; then
-            echo "Fetching EAP JAR file"
-            echo "JAR_FILENAME: mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
-          else
-            echo "Fetching standard JAR file"
-            echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
-          fi
+          echo "Fetching standard JAR file"
+          echo "JAR_FILENAME: mongodb-jdbc-${MDBJDBC_VER}-all.jar" > jdbc_jar_expansion.yml
     - command: expansions.update
       params:
         file: jdbc_jar_expansion.yml
@@ -1484,17 +1546,8 @@ functions:
           if [ -d "build/libs" ]; then
             # A sanity check to see if expected files are indeed here
             ls -lrt build/libs
-            if [[ "${BUILD_TYPE}" == "eap" ]]; then
-              # For EAP builds (tagged or untagged), add "eap" to the name
-              for f in ./build/libs/mongodb-jdbc-*.jar; do
-                if [[ "$f" == *"-all"* ]]; then
-                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}-all.jar
-                else
-                  mv "$f" build/libs/mongodb-jdbc-eap-${MDBJDBC_VER}.jar
-                fi
-              done
-            elif [[ "${triggered_by_git_tag}" == "" ]]; then
-              # For non-EAP, non-tagged builds, rename to standard format
+            if [[ "${triggered_by_git_tag}" == "" ]]; then
+              # For non-tagged builds rename to standard format
               for f in ./build/libs/mongodb-jdbc-*.jar; do
                 if [[ "$f" == *"-all"* ]]; then
                   mv "$f" build/libs/mongodb-jdbc-${MDBJDBC_VER}-all.jar

@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.jdbc.logging.MongoLogger;
 import java.io.File;
+import java.net.URL;
+import java.security.KeyStore;
 import java.util.logging.*;
 import org.junit.jupiter.api.Test;
 
@@ -43,19 +45,33 @@ public class X509AuthenticationTest {
             new X509Authentication(MONGO_LOGGER);
     private static final MongoClientSettings.Builder SETTINGS_BUILDER =
             MongoClientSettings.builder();
-    private static final String TEST_PEM_DIR = "X509AuthenticationTest";
+    public static final String TEST_PEM_DIR = "X509AuthenticationTest";
     char[] passphrase = "pencil".toCharArray(); //System.getenv("ADF_TEST_LOCAL_PWD").toCharArray();
 
     // Helper method to configure X.509 authentication
     // with a given PEM file and passphrase.
     // It asserts that the configuration is successful.
-    private void configureX509AuthSuccess(String pemFileName, char[] passphrase) throws Exception {
+    private void configureX509AuthSuccess(
+            String pemFileName, String tlsCaFileName, char[] passphrase) throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File pemFile =
                 new File(classLoader.getResource(TEST_PEM_DIR + "/" + pemFileName).getFile());
         assertFalse(pemFile.isDirectory(), pemFile.getPath() + " is not a file.");
+
+        File tlsCaFile = null;
+        if (tlsCaFileName != null) {
+            URL caResource = classLoader.getResource(TEST_PEM_DIR + "/" + tlsCaFileName);
+            assertNotNull(caResource, "CA certificate file not found: " + tlsCaFileName);
+
+            tlsCaFile = new File(caResource.getFile());
+            assertFalse(tlsCaFile.isDirectory(), tlsCaFile.getPath() + " is not a file.");
+        }
+
         x509Authentication.configureX509Authentication(
-                SETTINGS_BUILDER, pemFile.getPath(), passphrase);
+                SETTINGS_BUILDER,
+                pemFile.getPath(),
+                tlsCaFile != null ? tlsCaFile.getPath() : null,
+                passphrase);
     }
 
     // Helper method to configure X.509 authentication
@@ -70,7 +86,7 @@ public class X509AuthenticationTest {
         assertFalse(pemFile.isDirectory(), pemFile.getPath() + " is not a file.");
         try {
             x509Authentication.configureX509Authentication(
-                    SETTINGS_BUILDER, pemFile.getPath(), "invalid".toCharArray());
+                    SETTINGS_BUILDER, pemFile.getPath(), null, "invalid".toCharArray());
             fail("Expected failure but got success");
         } catch (Exception e) {
             assertTrue(
@@ -86,22 +102,22 @@ public class X509AuthenticationTest {
 
     @Test
     public void testX509AuthenticationWithPKCS1Unencrypted() throws Exception {
-        configureX509AuthSuccess("pkcs1_unencrypted.pem", null);
+        configureX509AuthSuccess("pkcs1_unencrypted.pem", null, null);
     }
 
     @Test
     public void testX509AuthenticationWithPKCS8Unencrypted() throws Exception {
-        configureX509AuthSuccess("pkcs8_unencrypted.pem", null);
+        configureX509AuthSuccess("pkcs8_unencrypted.pem", null, null);
     }
 
     @Test
     public void testX509AuthenticationWithPKCS1Encrypted() throws Exception {
-        configureX509AuthSuccess("pkcs1_encrypted.pem", passphrase);
+        configureX509AuthSuccess("pkcs1_encrypted.pem", null, passphrase);
     }
 
     @Test
     public void testX509AuthenticationWithPKCS8Encrypted() throws Exception {
-        configureX509AuthSuccess("pkcs8_encrypted.pem", passphrase);
+        configureX509AuthSuccess("pkcs8_encrypted.pem", null, passphrase);
     }
 
     @Test
@@ -155,7 +171,7 @@ public class X509AuthenticationTest {
 
     @Test
     public void testX509AuthenticationWithExtraPublicKeyIgnored() throws Exception {
-        configureX509AuthSuccess("pkcs8_unencrypted_with_public_key.pem", null);
+        configureX509AuthSuccess("pkcs8_unencrypted_with_public_key.pem", null, null);
     }
 
     @Test
@@ -168,17 +184,17 @@ public class X509AuthenticationTest {
 
     @Test
     public void testX509AuthenticationWithExtraCrlIgnored() throws Exception {
-        configureX509AuthSuccess("pkcs8_unencrypted_with_crl.pem", null);
+        configureX509AuthSuccess("pkcs8_unencrypted_with_crl.pem", null, null);
     }
 
     @Test
     public void testX509AuthenticationWithMultiplePrivateKeys() throws Exception {
-        configureX509AuthSuccess("multiple_private_keys.pem", null);
+        configureX509AuthSuccess("multiple_private_keys.pem", null, null);
     }
 
     @Test
     public void testX509AuthenticationWithMultipleX509Certificates() throws Exception {
-        configureX509AuthSuccess("multiple_x509_certificates.pem", null);
+        configureX509AuthSuccess("multiple_x509_certificates.pem", null, null);
     }
 
     @Test
@@ -188,7 +204,7 @@ public class X509AuthenticationTest {
         String expectedErrorMessage = "doesntExist.pem (No such file or directory)";
         try {
             x509Authentication.configureX509Authentication(
-                    SETTINGS_BUILDER, dir + "/doesntExist.pem", passphrase);
+                    SETTINGS_BUILDER, dir + "/doesntExist.pem", null, passphrase);
 
             fail("Expected failure but got success");
         } catch (Exception e) {
@@ -209,5 +225,104 @@ public class X509AuthenticationTest {
                 "no_pem_objects.pem",
                 null,
                 "Private key not found (encrypted or unencrypted) and X.509 certificate not found in the PEM file");
+    }
+
+    @Test
+    public void testFormatPemCertificateHeaderAddsNewlines() {
+        // Input has NO newlines — everything is on one line
+        String input = "-----BEGIN CERTIFICATE-----MIIC...ABC-----END CERTIFICATE-----";
+
+        // Expected: newlines inserted after BEGIN, before END, and at end
+        String expected = "-----BEGIN CERTIFICATE-----\nMIIC...ABC\n-----END CERTIFICATE-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemEncryptedPrivateKeyHeaderAddsNewlines() {
+        // Full private key block — but completely flat (no newlines)
+        String input =
+                "-----BEGIN ENCRYPTED PRIVATE KEY----- MIIEvPz -----END ENCRYPTED PRIVATE KEY-----";
+
+        String expected =
+                "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIEvPz\n-----END ENCRYPTED PRIVATE KEY-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemPrivateKeyHeaderAddsNewlines() {
+        // Full private key block — but completely flat (no newlines)
+        String input = "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----";
+
+        String expected = "-----BEGIN PRIVATE KEY-----\nMIIEvPz\n-----END PRIVATE KEY-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemPrivateKeyAndCertificateHeadersAddsNewlines() {
+        String input =
+                "-----BEGIN PRIVATE KEY-----MIIEvPz-----END PRIVATE KEY-----"
+                        + "-----BEGIN CERTIFICATE-----MIICQz-----END CERTIFICATE-----";
+
+        String expected =
+                "-----BEGIN PRIVATE KEY-----\nMIIEvPz\n-----END PRIVATE KEY-----\n"
+                        + "-----BEGIN CERTIFICATE-----\nMIICQz\n-----END CERTIFICATE-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testFormatPemEncryptedPkcs1AddsNewlines() {
+        String input =
+                "-----BEGIN RSA PRIVATE KEY----- Proc-Type: 4,ENCRYPTED DEK-Info: AES-256-CBC,ABCD1234 MIIEvPz -----END RSA PRIVATE KEY-----";
+        String expected =
+                "-----BEGIN RSA PRIVATE KEY-----\n"
+                        + "Proc-Type: 4,ENCRYPTED\n"
+                        + "DEK-Info: AES-256-CBC,ABCD1234\n"
+                        + "MIIEvPz\n"
+                        + "-----END RSA PRIVATE KEY-----\n";
+
+        String result = x509Authentication.formatPemString(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testX509AuthenticationWithCaFile() throws Exception {
+        configureX509AuthSuccess("pkcs8_unencrypted.pem", "no_private_key.pem", null);
+    }
+
+    @Test
+    public void testLoadCACertificatesWithMultipleCerts() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File multipleCaFile =
+                new File(
+                        classLoader
+                                .getResource(TEST_PEM_DIR + "/multiple_x509_certificates.pem")
+                                .getFile());
+
+        KeyStore trustStore = KeyStore.getInstance("JKS");
+        trustStore.load(null, null);
+
+        int certCount = x509Authentication.loadCACertificates(multipleCaFile.getPath(), trustStore);
+
+        assertEquals(5, certCount, "Expected 5 certificates to be loaded from multiple cert file");
+
+        // Verify all certificates were added with the correct aliases
+        for (int i = 0; i < certCount; i++) {
+            assertTrue(
+                    trustStore.containsAlias("ca" + i),
+                    "TrustStore should contain certificate with alias 'ca" + i + "'");
+        }
     }
 }

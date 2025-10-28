@@ -194,7 +194,8 @@ public abstract class MongoMock {
                     new MongoConnection(
                             new MongoConnectionProperties(
                                     uri, database, null, null, null, false, null, null, null, null,
-                                    null));
+                                    null, null));
+
         } catch (Exception e) {
             // The connection initialization should not fail, but if it does, we log the error to have more info.
             e.printStackTrace();

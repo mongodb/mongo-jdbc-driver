@@ -17,6 +17,7 @@
 package com.mongodb.jdbc;
 
 import static com.mongodb.jdbc.MongoDriver.MongoJDBCProperty.*;
+import static com.mongodb.jdbc.utils.X509AuthenticationTest.TEST_PEM_DIR;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.AuthenticationMechanism;
@@ -972,5 +973,62 @@ class MongoDriverTest {
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(url, p),
                 "Invalid gssnativemode value should throw SQLException");
+    }
+
+    @Test
+    void testTlsCaFileUriOptionSet() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dir = classLoader.getResource(TEST_PEM_DIR).getPath();
+
+        String caPath = dir + "/no_private_key.pem";
+        String url = basicURL + "/?authMechanism=MONGODB-X509&tlsCaFile=" + caPath;
+
+        Properties p = new Properties();
+        p.setProperty("database", "test");
+        p.setProperty("x509pempath", dir + "/pkcs8_unencrypted.pem");
+
+        MongoDriver d = new MongoDriver();
+        MongoConnection connection = d.getUnvalidatedConnection(url, p);
+
+        assertEquals(caPath, connection.tlsCaFile);
+    }
+
+    @Test
+    void testTlsCaFilePropertySet() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dir = classLoader.getResource(TEST_PEM_DIR).getPath();
+
+        String caPath = dir + "/no_private_key.pem";
+        String url = basicURL + "/?authMechanism=MONGODB-X509";
+
+        Properties p = new Properties();
+        p.setProperty("database", "test");
+        p.setProperty("x509pempath", dir + "/pkcs8_unencrypted.pem");
+        p.setProperty("tlscafile", caPath);
+
+        MongoDriver d = new MongoDriver();
+        MongoConnection connection = d.getUnvalidatedConnection(url, p);
+
+        assertEquals(caPath, connection.tlsCaFile);
+    }
+
+    @Test
+    void testTlsCaFileMismatchFails() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dir = classLoader.getResource(TEST_PEM_DIR).getPath();
+
+        String url = basicURL + "/?authMechanism=MONGODB-X509&tlsCaFile=/path/to/ca1.crt";
+
+        Properties p = new Properties();
+        p.setProperty("database", "test");
+        p.setProperty("x509pempath", dir + "/pkcs8_unencrypted.pem");
+        p.setProperty("tlscafile", "/path/to/ca2.crt");
+
+        MongoDriver d = new MongoDriver();
+
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(url, p),
+                "The connection should fail because of a tlscafile mismatch between the URI and the properties");
     }
 }

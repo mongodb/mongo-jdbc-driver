@@ -41,7 +41,7 @@ public class MongoDatabaseMetaDataTest {
                     new MongoConnection(
                             new MongoConnectionProperties(
                                     uri, database, null, null, null, false, null, null, null, null,
-                                    null)));
+                                    null, null)));
 
     // Report exception from MongoConnection
     public MongoDatabaseMetaDataTest() throws Exception {}

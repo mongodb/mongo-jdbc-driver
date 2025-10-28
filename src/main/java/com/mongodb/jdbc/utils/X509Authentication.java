@@ -18,13 +18,14 @@ package com.mongodb.jdbc.utils;
 
 import com.mongodb.MongoException;
 import com.mongodb.jdbc.logging.MongoLogger;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.util.logging.Level;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -37,6 +38,7 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.jcajce.JcePKCSPBEInputDecryptorProviderBuilder;
+import org.bson.BsonDocument;
 
 public class X509Authentication {
     private static final BouncyCastleProvider BC_PROVIDER = new BouncyCastleProvider();
@@ -52,25 +54,65 @@ public class X509Authentication {
      *
      * @param settingsBuilder The MongoDB client settings builder to apply the SSL configuration.
      *     Must not be null.
-     * @param pemPath The path to the PEM file containing the private key and certificate. Must not
-     *     be null.
+     * @param pemPath The path to the PEM file containing the private key and certificate. Can be
+     *     null.
      * @param passphrase The passphrase for the private key, if it is encrypted; null if
-     *     unencrypted.
+     *     unencrypted. Can also hold the full PEM contents.
      * @throws Exception If there is an error during configuration or PEM parsing.
      * @throws NullPointerException if settingsBuilder or pemPath are null.
      */
     public void configureX509Authentication(
             com.mongodb.MongoClientSettings.Builder settingsBuilder,
             String pemPath,
+            String tlsCaFile,
             char[] passphrase)
             throws Exception {
 
-        logger.log(Level.FINE, "Using client certificate for X509 authentication: " + pemPath);
-        if (passphrase != null && passphrase.length > 0) {
-            logger.log(Level.FINE, "Client certificate passphrase has been specified");
+        PEMParser pemParser = null;
+        char[] privateKeyPassphrase = null;
+
+        // If pemPath is specified, that takes precedence and the passphrase will be used if it is not null
+        // Otherwise, the passphrase will be used as PEM contents.  It can be in the form of raw PEM contents or
+        // as a JSON representation with keys `pem` and `passphrase`
+        if (pemPath != null && !pemPath.trim().isEmpty()) {
+            File file = new File(pemPath);
+            logger.log(Level.FINE, "Using client certificate for X509 authentication: " + pemPath);
+            try {
+                pemParser = new PEMParser(new FileReader(file));
+            } catch (IOException e) {
+                throw new MongoException("Failed to read PEM file: " + e.getMessage(), e);
+            }
+            privateKeyPassphrase = passphrase;
+        } else {
+            if (passphrase == null || passphrase.length == 0) {
+                throw new MongoException("No PEM path provided and passphrase is empty");
+            }
+            String passphraseAsPemContent = new String(passphrase);
+            PemAuthenticationInput pemAuthenticationInput =
+                    parsePemAuthenticationInput(passphraseAsPemContent);
+            if (pemAuthenticationInput != null) {
+                // JSON input with PEM and optional passphrase
+                logger.log(Level.FINE, "Using X.509 credentials from JSON in passphrase field");
+
+                pemParser =
+                        new PEMParser(
+                                new StringReader(formatPemString(pemAuthenticationInput.pem)));
+                privateKeyPassphrase =
+                        pemAuthenticationInput.passphrase != null
+                                ? pemAuthenticationInput.passphrase.toCharArray()
+                                : null;
+            } else {
+                // Raw PEM content (unencrypted)
+                logger.log(Level.FINE, "Using raw PEM content from passphrase field (unencrypted)");
+
+                pemParser =
+                        new PEMParser(new StringReader(formatPemString(passphraseAsPemContent)));
+                privateKeyPassphrase = null;
+            }
         }
+
         try {
-            SSLContext sslContext = createSSLContext(pemPath, passphrase);
+            SSLContext sslContext = createSSLContext(pemParser, privateKeyPassphrase, tlsCaFile);
 
             settingsBuilder.applyToSslSettings(
                     sslSettings -> {
@@ -78,23 +120,68 @@ public class X509Authentication {
                         sslSettings.context(sslContext);
                     });
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "\"SSL setup failed: " + e.getMessage());
+            logger.log(Level.SEVERE, "SSL setup failed: " + e.getMessage());
             throw e;
+        } finally {
+            if (pemParser != null) {
+                try {
+                    pemParser.close();
+                } catch (IOException e) {
+                    logger.log(Level.WARNING, "Error closing PEM parser: " + e.getMessage());
+                }
+            }
         }
     }
 
-    private SSLContext createSSLContext(String pemPath, char[] passphrase) throws Exception {
+    /**
+     * Formats a PEM string to handle escaped newlines and ensures correct header placement. Adds
+     * required newlines for compatibility with Bouncy Castle PEMParser.
+     *
+     * @param pem The PEM string to format; may be null.
+     * @return A cleaned, normalized PEM string with proper line breaks and headers, or null if the
+     *     input was null.
+     */
+    String formatPemString(String pem) {
+        if (pem == null) return null;
+
+        // Replace escaped newlines (common when passed as JSON strings)
+        pem = pem.replace("\\\\n", "\n").replace("\\n", "\n").replace("\\r", "\n");
+
+        // Ensure header tags are on separate lines
+        pem = pem.replace("-----BEGIN", "\n-----BEGIN");
+        pem = pem.replace("-----END", "\n-----END");
+        pem = pem.replace(" PRIVATE KEY-----", " PRIVATE KEY-----\n");
+        pem = pem.replace(" CERTIFICATE-----", " CERTIFICATE-----\n");
+
+        // These fields are encryption headers used when a PKCS#1 private key is encrypted
+        pem = pem.replace("Proc-Type:", "\nProc-Type:");
+        pem = pem.replaceAll("DEK-Info:\\s+[A-Z0-9\\-]+,[A-F0-9]+\\s*", "\n$0\n");
+
+        // Remove extra newlines and trim leading/trailing whitespace
+        pem = pem.replaceAll("[ \\t]*\n[ \\t]*", "\n").replaceAll("\n+", "\n").trim();
+
+        // Add a final newline (PEMParser expects it)
+        if (!pem.endsWith("\n")) {
+            pem += "\n";
+        }
+
+        return pem;
+    }
+
+    private SSLContext createSSLContext(PEMParser pemParser, char[] passphrase, String tlsCaFile)
+            throws Exception {
         PrivateKey privateKey = null;
         Certificate cert = null;
 
-        try (PEMParser pemParser = new PEMParser(new FileReader(pemPath))) {
+        try {
             Object pemObj = null;
 
             // Iterate through PEM objects found in the PEM file and process them based on type.
             // Stops after finding both an :
             //  - Encrypted/unencrypted private key
             //  - X.509 certificate
-            while (((pemObj = pemParser.readObject()) != null)
+            while (pemParser != null
+                    && ((pemObj = pemParser.readObject()) != null)
                     && (cert == null || privateKey == null)) {
                 logger.log(
                         Level.FINE,
@@ -273,26 +360,107 @@ public class X509Authentication {
             throw new MongoException(missingComponents.toString());
         }
 
-        return createSSLContextFromKeyAndCert(privateKey, cert);
+        return createSSLContextFromKeyAndCert(privateKey, cert, tlsCaFile);
     }
 
-    private SSLContext createSSLContextFromKeyAndCert(PrivateKey privateKey, Certificate cert)
-            throws Exception {
+    private SSLContext createSSLContextFromKeyAndCert(
+            PrivateKey privateKey, Certificate cert, String tlsCaFile) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12", BC_PROVIDER);
-
         keyStore.load(null, null);
-        keyStore.setKeyEntry("mongodb-cert", privateKey, null, new Certificate[] {cert});
+        keyStore.setKeyEntry("mongodb-client-cert", privateKey, null, new Certificate[] {cert});
 
         KeyManagerFactory kmf =
                 KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, null); // No password needed for in-memory keystore
 
-        // Passphrase not needed for in memory keystore
-        kmf.init(keyStore, null);
+        TrustManagerFactory tmf =
+                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (tlsCaFile != null && !tlsCaFile.trim().isEmpty()) {
+            // No tlsCaFile specified, create an EMPTY trust store and load ONLY the custom CA.
+            KeyStore trustStore = KeyStore.getInstance("JKS");
+            trustStore.load(null, null);
+
+            if (loadCACertificates(tlsCaFile, trustStore) == 0) {
+                throw new MongoException("No X509 certificate found in CA file: " + tlsCaFile);
+            }
+
+            // Initialize tmf with our custom trustStore containing only the tlsCaFile certs
+            tmf.init(trustStore);
+        } else {
+            // tlsCaFile is NOT provided, initialize tmf with null to use the default truststore
+            tmf.init((KeyStore) null);
+        }
 
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        // Initialize sslContext and use default trust managers
-        sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
-
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
         return sslContext;
+    }
+
+    protected int loadCACertificates(String tlsCaFile, KeyStore trustStore) throws Exception {
+        if (tlsCaFile == null || tlsCaFile.trim().isEmpty()) {
+            return 0;
+        }
+
+        int certCount = 0;
+        try (FileReader fr = new FileReader(tlsCaFile);
+                PEMParser pemParser = new PEMParser(fr)) {
+            JcaX509CertificateConverter converter =
+                    new JcaX509CertificateConverter().setProvider(BC_PROVIDER);
+            Object obj;
+            while ((obj = pemParser.readObject()) != null) {
+                // Add each certificate from PEM file to trust store with sequential aliases
+                if (obj instanceof X509CertificateHolder) {
+                    Certificate caCert = converter.getCertificate((X509CertificateHolder) obj);
+                    trustStore.setCertificateEntry("ca" + certCount, caCert);
+                    certCount++;
+                }
+            }
+        } catch (Exception e) {
+            throw new MongoException("Failed to load CA certificate from: " + tlsCaFile, e);
+        }
+
+        return certCount;
+    }
+
+    private PemAuthenticationInput parsePemAuthenticationInput(String input) {
+        try {
+            BsonDocument doc = BsonDocument.parse(input);
+            if (doc == null) {
+                logger.log(Level.FINE, "Failed to parse JSON: input was null or empty");
+                return null;
+            }
+            if (!doc.containsKey("pem")) {
+                logger.log(Level.FINE, "Missing required 'pem' field in JSON input");
+                return null;
+            }
+            String pem = doc.getString("pem").getValue();
+            String passphrase = null;
+            if (doc.containsKey("passphrase")) {
+                passphrase = doc.getString("passphrase").getValue();
+            }
+            return new PemAuthenticationInput(pem, passphrase);
+        } catch (Exception e) {
+            // Not valid JSON, malformed, or IO error
+            logger.log(
+                    Level.FINE,
+                    "Failed to parse JSON input for X.509 authentication: "
+                            + e.getClass().getSimpleName());
+            return null;
+        }
+    }
+
+    // Parsed input for X.509 authentication when provided as JSON in the password field.
+    private static class PemAuthenticationInput {
+        final String pem;
+        final String passphrase;
+
+        PemAuthenticationInput(String pem, String passphrase) {
+            if (pem == null || pem.trim().isEmpty()) {
+                throw new IllegalArgumentException("PEM content is required");
+            }
+            this.pem = pem.trim();
+            this.passphrase = passphrase;
+        }
     }
 }

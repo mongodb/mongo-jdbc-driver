@@ -7,9 +7,14 @@ application {
 }
 
 dependencies {
+    runtimeOnly files(project(':').tasks.shadowJar)
 
     implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     compile rootProject
+}
+
+tasks.named('shadowJar') {
+    dependsOn ':shadowJar'
 }
 
 test {

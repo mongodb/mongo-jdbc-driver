@@ -1,8 +1,8 @@
 plugins {
     id 'java-library'
-    id "com.diffplug.gradle.spotless" version "3.24.3"
+    id "com.diffplug.spotless" version "6.13.0"
     id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
     id "org.cyclonedx.bom" version "1.8.2"
     id 'com.github.jk1.dependency-license-report' version '1.17'
 }
@@ -10,17 +10,9 @@ plugins {
 import com.github.jk1.license.render.TextReportRenderer
 
 if (project.hasProperty('isRelease')) {
-    if (project.hasProperty('isEapBuild')) {
-        version = getLatestEapTag()
-    } else {
-        version = getAbbreviatedGitVersion()
-    }
+    version = getAbbreviatedGitVersion()
 } else {
-    if (project.hasProperty('isEapBuild')) {
-        version = getGitVersion() + "-libv-SNAPSHOT"
-    }  else {
-        version = getGitVersion()
-    }
+    version = getGitVersion() + "-SNAPSHOT"
 }
 
 def thirdpartyNoticeDir = "$buildDir/" + thirdpartyNoticeDir
@@ -131,8 +123,8 @@ allprojects {
         // Test
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-        testCompile  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-        testCompile  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+        testImplementation  group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
     }
 
     compileJava {
@@ -186,6 +178,34 @@ configurations {
     // Use the release version instead of gitVersion for the produced jar
     jar.archiveVersion = releaseVersion
     shadowJar.archiveVersion = releaseVersion
+}
+
+shadowJar {
+    archiveClassifier = 'all'
+    relocate 'com.google', 'shadow.com.google'
+    relocate 'com.nimbusds', 'shadow.com.nimbusds'
+    relocate 'net.jcip', 'shadow.net.jcip'
+    relocate 'net.minidev', 'shadow.net.minidev'
+    relocate 'ognl', 'shadow.ognl'
+    relocate('org', 'shadow.org') {
+        exclude 'org.ow2.asm:.*'
+        exclude 'net.minidev:.*'
+        exclude 'org.javassist:.*'
+    }
+
+    // Exclude Java 21 compiled classes and multi-release JAR versions
+    exclude 'META-INF/versions/**'
+    exclude '**/module-info.class'
+
+    // Exclude specific dependencies that contain Java 21 bytecode
+    dependencies {
+        exclude(dependency('org.ow2.asm:.*'))
+        exclude(dependency('net.minidev:.*'))
+        exclude(dependency('org.javassist:.*'))
+    }
+
+    // Configure ASM to skip problematic class files
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer)
 }
 
 task integrationTest(type: Test) {
@@ -265,11 +285,7 @@ def getReleaseVersion() {
     String baseVersion = getAbbreviatedGitVersion()
 
     boolean isSnapshot = !project.hasProperty('isRelease')
-    boolean isEap = project.hasProperty('isEapBuild')
     String suffix = ""
-    if (isEap) {
-        suffix += "-eap"
-    }
     if (isSnapshot) {
         suffix += "-SNAPSHOT"
     }
@@ -285,23 +301,26 @@ def getGitVersion() {
     out.toString().substring(1).trim()
 }
 
-def getLatestEapTag() {
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'tag', '--list', '*libv*', '--sort=-creatordate'
-        standardOutput = stdout
-    }
-    def tags = stdout.toString().trim().readLines()
-    return tags ? tags[0].toString().substring(1).trim() : null
-}
-
 def getAbbreviatedGitVersion() {
     def out = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'describe', '--abbrev=0'
         standardOutput = out
     }
-    out.toString().substring(1).trim()
+
+    // Remove the leading 'v'
+    out = out.toString().substring(1).trim()
+    println "Untrimmed git version : $out"
+
+    // Remove the libv portion
+    String[] parts = out.split("-libv")
+    if (parts.length > 1) {
+        out = parts[0]
+    }
+
+    println "Trimmed git version : $out"
+
+    return out
 }
 
 // Determines the version of libmongosqltranslate to use based on the following priority:
@@ -313,7 +332,7 @@ def getLibMongosqlTranslateVersion() {
         logger.lifecycle("Using manually specified libVersion: ${project.property('libmongosqltranslateVersion')}")
         return project.property('libmongosqltranslateVersion')
     }
-    if (project.hasProperty('isTagTriggered')) {
+    if (project.hasProperty('isRelease')) {
         if (System.getenv('LIBMONGOSQLTRANSLATE_VER')) {
             logger.lifecycle("Using version from environment: ${System.getenv('LIBMONGOSQLTRANSLATE_VER')}")
             return System.getenv('LIBMONGOSQLTRANSLATE_VER')

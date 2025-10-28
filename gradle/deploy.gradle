@@ -6,16 +6,13 @@ afterEvaluate {
             description = 'Publishes snapshots to Sonatype'
             println("Will publish snapshots to Sonatype")
             dependsOn project.tasks.named('publishToSonatype')
-        } else if (project.hasProperty('isEapBuild')) {
-            description = 'This is an EAP build, skipping publishing'
-            println("This is an EAP build, skipping publishing")
         } else {
             description = 'Publishes a release and uploads to Sonatype / Maven Central'
             println("Will publish a release and uploads to Sonatype / Maven Central")
             if (project.name == rootProject.name) {
                 dependsOn project.tasks.named('publishToSonatype')
                 project.tasks.named('publishToSonatype').configure {
-                    finalizedBy(project.tasks.named('closeAndReleaseRepository'))
+                    finalizedBy(project.tasks.named('closeAndReleaseSonatypeStagingRepository'))
                 }
             }
         }

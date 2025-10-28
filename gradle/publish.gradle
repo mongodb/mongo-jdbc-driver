@@ -11,14 +11,7 @@ publishing {
             artifact sourceJar {
                 classifier 'sources'
             }
-            artifact shadowJar
             artifact javadocJar
-            artifact("$buildDir/"+thirdpartyNoticeDir+"/"+thirdpartyNoticeName) {
-                classifier = 'license'
-            }
-            artifact("$rootDir/artifacts/ssdlc/mongodb-jdbc.sbom.json") {
-                classifier = 'sbom'
-            }
 
             pom {
                 name = 'JDBC Driver'
