@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc;
 
+import static com.mongodb.AuthenticationMechanism.GSSAPI;
 import static com.mongodb.AuthenticationMechanism.MONGODB_OIDC;
 import static com.mongodb.AuthenticationMechanism.MONGODB_X509;
 
@@ -46,6 +47,7 @@ import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.*;
+import javax.security.auth.login.LoginContext;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.UuidRepresentation;
@@ -186,24 +188,83 @@ public class MongoConnection implements Connection {
         if (credential != null) {
             AuthenticationMechanism authMechanism = credential.getAuthenticationMechanism();
 
-            if (authMechanism != null && authMechanism.equals(MONGODB_OIDC)) {
-                // Handle OIDC authentication
-                OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
-                credential =
-                        MongoCredential.createOidcCredential(
-                                        connectionProperties.getConnectionString().getUsername())
-                                .withMechanismProperty(
-                                        MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
-                settingsBuilder.credential(credential);
-            } else if (authMechanism != null && authMechanism.equals(MONGODB_X509)) {
-                X509Authentication x509Authentication = new X509Authentication(logger);
-                String pemPath = connectionProperties.getX509PemPath();
-                if (pemPath == null || pemPath.isEmpty()) {
-                    pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
-                }
+            if (authMechanism != null) {
+                if (authMechanism.equals(MONGODB_OIDC)) {
+                    // Handle OIDC authentication
+                    OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
+                    credential =
+                            MongoCredential.createOidcCredential(
+                                            connectionProperties
+                                                    .getConnectionString()
+                                                    .getUsername())
+                                    .withMechanismProperty(
+                                            MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                    settingsBuilder.credential(credential);
+                } else if (authMechanism.equals(GSSAPI)) {
+                    String jaasPath = connectionProperties.getJaasConfigPath();
+                    if (jaasPath != null && !jaasPath.isEmpty()) {
+                        System.setProperty("java.security.auth.login.config", jaasPath);
+                        logger.log(Level.INFO, "Using custom JAAS config: " + jaasPath);
+                    } else {
+                        String existingConfig =
+                                System.getProperty("java.security.auth.login.config");
+                        if (existingConfig != null) {
+                            logger.log(
+                                    Level.INFO,
+                                    "Using JAAS config from system property: " + existingConfig);
+                        } else {
+                            logger.log(
+                                    Level.INFO,
+                                    "No JAAS config specified. Relying on classpath or JVM defaults.");
+                        }
+                    }
 
-                x509Authentication.configureX509Authentication(
-                        settingsBuilder, pemPath, this.tlsCaFile, this.x509Passphrase);
+                    String gssNative = connectionProperties.getGssNativeMode();
+                    if (gssNative != null && !gssNative.isEmpty()) {
+                        System.setProperty("sun.security.jgss.native", gssNative);
+                        logger.log(
+                                Level.INFO, "Set sun.security.jgss.native = " + gssNative.trim());
+                    }
+
+                    String serverAuthValue = connectionProperties.getGssApiServerAuth();
+                    if (serverAuthValue != null && !serverAuthValue.isEmpty()) {
+                        Map<String, Object> saslProperties = new HashMap<>();
+                        saslProperties.put(javax.security.sasl.Sasl.SERVER_AUTH, serverAuthValue);
+                        credential =
+                                credential.withMechanismProperty(
+                                        MongoCredential.JAVA_SASL_CLIENT_PROPERTIES_KEY,
+                                        saslProperties);
+                    }
+
+                    String loginContextName = connectionProperties.getGssApiLoginContextName();
+                    if (loginContextName != null && !loginContextName.trim().isEmpty()) {
+                        try {
+                            LoginContext loginContext = new LoginContext(loginContextName);
+                            loginContext.login();
+                            credential =
+                                    credential.withMechanismProperty(
+                                            MongoCredential.JAVA_SUBJECT_KEY,
+                                            loginContext.getSubject());
+                        } catch (Exception e) {
+                            throw new SQLException(
+                                    "Failed to authenticate using GSSAPI (loginContextName: "
+                                            + loginContextName
+                                            + ")",
+                                    e);
+                        }
+                    }
+
+                    settingsBuilder.credential(credential);
+                } else if (authMechanism.equals(MONGODB_X509)) {
+                    X509Authentication x509Authentication = new X509Authentication(logger);
+                    String pemPath = connectionProperties.getX509PemPath();
+                    if (pemPath == null || pemPath.isEmpty()) {
+                        pemPath = System.getenv(MONGODB_JDBC_X509_CLIENT_CERT_PATH);
+                    }
+
+                    x509Authentication.configureX509Authentication(
+                            settingsBuilder, pemPath, this.tlsCaFile, this.x509Passphrase);
+                }
             }
         }
 

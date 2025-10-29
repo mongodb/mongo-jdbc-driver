@@ -80,6 +80,7 @@ buildvariants:
       - name: "test-adf-integration"
       - name: "test-dc-integration"
       - name: "test-x509-integration"
+      - name: "test-gssapi-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
@@ -143,6 +144,11 @@ tasks:
       - func: "run X509 tlsCaFile integration test"
       - func: "run X509 PEM Path integration test"
       - func: "run X509 PEM Contents integration test"
+
+  - name: "test-gssapi-integration"
+    commands:
+      - func: "prepare resources"
+      - func: "run gssapi integration test"
 
   - name: "test-smoke"
     depends_on:
@@ -1023,6 +1029,39 @@ functions:
 
         echo "X509 integration test exit code: $EXITCODE"
         exit $EXITCODE
+
+  "run gssapi integration test":
+    - command: ec2.assume_role
+      params:
+        role_arn: "${aws_test_secrets_role}"
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
+        working_dir: mongo-jdbc-driver
+        script: |
+          ${PREPARE_SHELL}
+          
+          export KRB5CCNAME=/tmp/krb5cc_drivers
+          DRIVERS_KEYTAB=${PROJECT_DIRECTORY}/resources/authentication_test/GSSAPI/drivers.keytab
+          
+          . $DRIVERS_TOOLS/.evergreen/secrets_handling/setup-secrets.sh drivers/enterprise_auth
+          source secrets-export.sh
+          
+          echo $KEYTAB_BASE64 | base64 -d > $DRIVERS_KEYTAB
+
+          cat ${PROJECT_DIRECTORY}/resources/authentication_test/GSSAPI/krb5.config \
+              | sudo tee -a /etc/krb5.conf
+
+          kinit -k -t $DRIVERS_KEYTAB -p "$PRINCIPAL"
+
+          PRINCIPAL_ESCAPED=$(echo "$PRINCIPAL" | sed 's/@/%40/g')
+          MONGODB_URI="jdbc:mongodb://$PRINCIPAL_ESCAPED@$SASL_HOST:$SASL_PORT/kerberos?authMechanism=GSSAPI"
+          
+          ./gradlew ${IS_RELEASE_PROP:-} integrationTest \
+            --tests 'AuthGSSAPIIntegrationTest' \
+            -x test
 
   "trace artifacts":
     command: papertrail.trace

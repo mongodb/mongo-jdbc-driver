@@ -903,6 +903,79 @@ class MongoDriverTest {
     }
 
     @Test
+    void testJaasConfigPathIsSetForGSSAPI() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        String jaasPathWithSpaces = "  /path/to/mongo/jaas.conf  ";
+        String jaasPathTrimmed = jaasPathWithSpaces.trim();
+
+        p.setProperty(JAAS_CONFIG_PATH.getPropertyName(), jaasPathWithSpaces);
+
+        MongoConnection conn =
+                (MongoConnection)
+                        d.getUnvalidatedConnection(userNoPWDURL + "?authMechanism=GSSAPI", p);
+        assertNotNull(conn);
+
+        // Verify system property was set
+        assertEquals(jaasPathTrimmed, System.getProperty("java.security.auth.login.config"));
+
+        System.clearProperty("java.security.auth.login.config");
+    }
+
+    @Test
+    void testGssNativeModeTrue_SetsSystemProperty() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String url = userNoPWDURL + "?authMechanism=GSSAPI";
+
+        p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "true");
+
+        MongoConnection conn = (MongoConnection) d.getUnvalidatedConnection(url, p);
+        assertNotNull(conn);
+
+        // Verify system property was set to true
+        assertEquals("true", System.getProperty("sun.security.jgss.native"));
+
+        System.clearProperty("sun.security.jgss.native");
+    }
+
+    @Test
+    void testGssNativeModeFalse_SetsSystemProperty() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String url = userNoPWDURL + "?authMechanism=GSSAPI";
+        p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "false");
+
+        MongoConnection conn = (MongoConnection) d.getUnvalidatedConnection(url, p);
+        assertNotNull(conn);
+
+        // Verify system property was set to false
+        assertEquals("false", System.getProperty("sun.security.jgss.native"));
+
+        System.clearProperty("sun.security.jgss.native");
+    }
+
+    @Test
+    void testGssNativeMode_InvalidValue_ThrowsSQLException() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String url = userNoPWDURL + "?authMechanism=GSSAPI";
+        p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "invalid");
+
+        assertThrows(
+                SQLException.class,
+                () -> d.getUnvalidatedConnection(url, p),
+                "Invalid gssnativemode value should throw SQLException");
+    }
+
+    @Test
     void testTlsCaFileUriOptionSet() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         String dir = classLoader.getResource(TEST_PEM_DIR).getPath();

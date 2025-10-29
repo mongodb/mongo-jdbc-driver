@@ -28,6 +28,10 @@ public class MongoConnectionProperties {
     private String clientInfo;
     private boolean extJsonMode;
     private String x509PemPath;
+    private String jaasConfigPath;
+    private String gssNativeMode;
+    private final String gssApiLoginContextName;
+    private final String gssApiServerAuth;
     private String tlsCaFile;
 
     public MongoConnectionProperties(
@@ -37,6 +41,10 @@ public class MongoConnectionProperties {
             File logDir,
             String clientInfo,
             boolean extJsonMode,
+            String jaasConfigPath,
+            String gssNativeMode,
+            String gssApiLoginContextName,
+            String gssApiServerAuth,
             String tlsCaFile,
             String x509PemPath) {
         this.connectionString = connectionString;
@@ -45,8 +53,12 @@ public class MongoConnectionProperties {
         this.logDir = logDir;
         this.clientInfo = clientInfo;
         this.extJsonMode = extJsonMode;
+        this.x509PemPath = (x509PemPath != null) ? x509PemPath.trim() : null;
+        this.jaasConfigPath = (jaasConfigPath != null) ? jaasConfigPath.trim() : null;
+        this.gssNativeMode = gssNativeMode != null ? gssNativeMode : null;
+        this.gssApiLoginContextName = gssApiLoginContextName;
+        this.gssApiServerAuth = gssApiServerAuth;
         this.tlsCaFile = tlsCaFile;
-        this.x509PemPath = x509PemPath;
     }
 
     public ConnectionString getConnectionString() {
@@ -79,6 +91,22 @@ public class MongoConnectionProperties {
 
     public String getX509PemPath() {
         return x509PemPath;
+    }
+
+    public String getJaasConfigPath() {
+        return jaasConfigPath;
+    }
+
+    public String getGssNativeMode() {
+        return gssNativeMode;
+    }
+
+    public String getGssApiLoginContextName() {
+        return gssApiLoginContextName;
+    }
+
+    public String getGssApiServerAuth() {
+        return gssApiServerAuth;
     }
 
     /*

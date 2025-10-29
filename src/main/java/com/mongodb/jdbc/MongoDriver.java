@@ -96,12 +96,17 @@ public class MongoDriver implements Driver {
     public enum MongoJDBCProperty {
         CLIENT_INFO("clientinfo"),
         DATABASE("database"),
-        DISABLE_CLIENT_CACHE("disableclientcache"),
         EXT_JSON_MODE("extjsonmode"),
+        DISABLE_CLIENT_CACHE("disableclientcache"),
         LOG_DIR("logdir"),
         LOG_LEVEL("loglevel"),
         TLS_CA_FILE("tlscafile"),
-        X509_PEM_PATH("x509pempath");
+        X509_PEM_PATH("x509pempath"),
+        // Kerberos related properties
+        JAAS_CONFIG_PATH("jaasconfigpath"),
+        GSS_NATIVE_MODE("gssnativemode"),
+        GSSAPI_LOGIN_CONTEXT_NAME("gssapilogincontextname"),
+        GSSAPI_SERVER_AUTH("gssapiserverauth");
 
         private final String propertyName;
 
@@ -483,6 +488,20 @@ public class MongoDriver implements Driver {
             }
         }
 
+        String gssNativeModeVal = info.getProperty(GSS_NATIVE_MODE.getPropertyName());
+        if (gssNativeModeVal != null) {
+            gssNativeModeVal = gssNativeModeVal.trim().toLowerCase();
+            if (!"true".equalsIgnoreCase(gssNativeModeVal)
+                    && !"false".equalsIgnoreCase(gssNativeModeVal)) {
+                throw new SQLException(
+                        "Invalid "
+                                + GSS_NATIVE_MODE.getPropertyName()
+                                + " property value: "
+                                + gssNativeModeVal
+                                + ". Valid values are: 'true', 'false'.");
+            }
+        }
+
         MongoConnectionProperties mongoConnectionProperties =
                 new MongoConnectionProperties(
                         cs,
@@ -491,6 +510,10 @@ public class MongoDriver implements Driver {
                         logDir,
                         clientInfo,
                         extJsonMode,
+                        info.getProperty(JAAS_CONFIG_PATH.getPropertyName()),
+                        gssNativeModeVal,
+                        info.getProperty(GSSAPI_LOGIN_CONTEXT_NAME.getPropertyName()),
+                        info.getProperty(GSSAPI_SERVER_AUTH.getPropertyName()),
                         tlsCaFile,
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
 
@@ -626,13 +649,9 @@ public class MongoDriver implements Driver {
         }
 
         try {
-            String actualURL = removePrefix(JDBC, url);
-            ConnectionString originalConnectionString;
-            try {
-                originalConnectionString = new ConnectionString(actualURL);
-            } catch (Exception e) {
-                throw new SQLException(e);
-            }
+            // Build a valid connection string which will pass the initial parsing. Some authentication mechanisms require
+            // a username and/or password.
+            ConnectionString originalConnectionString = buildConnectionString(url, info);
 
             ParseResult result = normalizeConnectionOptions(originalConnectionString, info);
             String user = null;
@@ -674,8 +693,10 @@ public class MongoDriver implements Driver {
             if (password == null && user != null) {
                 if (result.authMechanism == null
                         || (!result.authMechanism.equals(MONGODB_X509)
-                                && !result.authMechanism.equals(MONGODB_OIDC))) {
-                    // password is null, but user is not, we must prompt for the password.
+                                && !result.authMechanism.equals(MONGODB_OIDC)
+                                && !result.authMechanism.equals(GSSAPI))) {
+                    // Password is null, but user is provided.  If the authentication mechanism
+                    // does not support password-less login, then the password must be prompted for.
                     mandatoryConnectionProperties.add(new DriverPropertyInfo(PASSWORD, null));
                 }
             }
