@@ -191,14 +191,16 @@ public class MongoConnection implements Connection {
             if (authMechanism != null) {
                 if (authMechanism.equals(MONGODB_OIDC)) {
                     // Handle OIDC authentication
-                    OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
-                    credential =
-                            MongoCredential.createOidcCredential(
-                                            connectionProperties
-                                                    .getConnectionString()
-                                                    .getUsername())
-                                    .withMechanismProperty(
-                                            MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                    String environment = credential.getMechanismProperty(MongoCredential.ENVIRONMENT_KEY, null);
+                    String tokenResource = credential.getMechanismProperty(MongoCredential.TOKEN_RESOURCE_KEY, null);
+
+                    if (environment == null || tokenResource == null) {
+                        // No machine flow properties, specify human flow OIDC Callback
+                        OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
+                        credential = MongoCredential.createOidcCredential(
+                                        connectionProperties.getConnectionString().getUsername())
+                                .withMechanismProperty(MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                    }
                     settingsBuilder.credential(credential);
                 } else if (authMechanism.equals(GSSAPI)) {
                     String jaasPath = connectionProperties.getJaasConfigPath();

@@ -8,7 +8,11 @@ import java.util.GregorianCalendar;
 public class Main {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mongodb.jdbc.MongoDriver";
-   static final String URL = "jdbc:mongodb://mhuser:pencil@localhost:27017/admin";
+//   static final String URL = "jdbc:mongodb://mhuser:pencil@localhost:27017/admin";
+//   static final String URL = "jdbc:mongodb://user@localhost:27017/?authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:azure,TOKEN_RESOURCE:https%3A%2F%2Fmy-audience.com";
+    static String uri = System.getenv("MONGODB_URI_SINGLE");
+//   static final String URL = "jdbc:mongodb://localhost:27017/?authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:k8s";
+   static final String URL = "jdbc:" + uri;
    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
    // Data used for test, in the test.test and test2.test collections:
@@ -23,12 +27,14 @@ public class Main {
    //    }
    //
    public static void main(String[] args) {
+       System.out.println(URL);
 
-      try{
+
+       try{
          java.util.Properties p = new java.util.Properties();
          // These properties will be added to the URI.
          // Uncomment if you wish to specify user and password.
-         // p.setProperty("user", "user");
+//          p.setProperty("user", "user");
          // p.setProperty("password", "foo");
          p.setProperty("database", "test");
          System.out.println("Connecting to database test...");
