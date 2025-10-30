@@ -185,11 +185,9 @@ shadowJar {
     relocate 'com.google', 'shadow.com.google'
     relocate 'com.nimbusds', 'shadow.com.nimbusds'
     relocate 'net.jcip', 'shadow.net.jcip'
-    relocate 'net.minidev', 'shadow.net.minidev'
     relocate 'ognl', 'shadow.ognl'
     relocate('org', 'shadow.org') {
         exclude 'org.ow2.asm:.*'
-        exclude 'net.minidev:.*'
         exclude 'org.javassist:.*'
     }
 
