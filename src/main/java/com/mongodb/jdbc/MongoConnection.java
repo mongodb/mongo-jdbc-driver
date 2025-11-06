@@ -82,6 +82,7 @@ public class MongoConnection implements Connection {
 
     public static final String MONGODB_JDBC_X509_CLIENT_CERT_PATH =
             "MONGODB_JDBC_X509_CLIENT_CERT_PATH";
+    public static final String K8S_ENVIRONMENT = "k8s";
 
     public int getServerMajorVersion() {
         return serverMajorVersion;
@@ -191,14 +192,25 @@ public class MongoConnection implements Connection {
             if (authMechanism != null) {
                 if (authMechanism.equals(MONGODB_OIDC)) {
                     // Handle OIDC authentication
-                    OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
-                    credential =
-                            MongoCredential.createOidcCredential(
-                                            connectionProperties
-                                                    .getConnectionString()
-                                                    .getUsername())
-                                    .withMechanismProperty(
-                                            MongoCredential.OIDC_HUMAN_CALLBACK_KEY, oidcCallback);
+                    String environment =
+                            credential.getMechanismProperty(MongoCredential.ENVIRONMENT_KEY, null);
+                    String tokenResource =
+                            credential.getMechanismProperty(
+                                    MongoCredential.TOKEN_RESOURCE_KEY, null);
+
+                    boolean isK8s = K8S_ENVIRONMENT.equalsIgnoreCase(environment);
+                    if (!isK8s && (environment == null && tokenResource == null)) {
+                        // No machine flow properties, specify human flow OIDC Callback
+                        OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
+                        credential =
+                                MongoCredential.createOidcCredential(
+                                                connectionProperties
+                                                        .getConnectionString()
+                                                        .getUsername())
+                                        .withMechanismProperty(
+                                                MongoCredential.OIDC_HUMAN_CALLBACK_KEY,
+                                                oidcCallback);
+                    }
                     settingsBuilder.credential(credential);
                 } else if (authMechanism.equals(GSSAPI)) {
                     String jaasPath = connectionProperties.getJaasConfigPath();

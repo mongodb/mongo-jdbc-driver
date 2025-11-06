@@ -21,7 +21,10 @@ import static org.mockito.Mockito.*;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.internal.MongoClientImpl;
+import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -226,5 +229,84 @@ class MongoConnectionTest extends MongoMock {
     void testRollbackJ3() {
         Savepoint sp = mock(Savepoint.class);
         testNoop(() -> mongoConnection.rollback(sp));
+    }
+
+    // Helper method to create a connection with OIDC auth and test the credential properties
+    private void testOidcConnection(
+            String connectionString,
+            boolean shouldHaveHumanCallback,
+            String expectedEnvironment,
+            String expectedTokenResource)
+            throws Exception {
+
+        ConnectionString cs = new ConnectionString(connectionString);
+        when(mockConnectionProperties.getConnectionString()).thenReturn(cs);
+
+        MongoConnection conn = new MongoConnection(null, mockConnectionProperties);
+
+        // Use reflection to access the private mongoClientSettings field
+        Field settingsField = MongoConnection.class.getDeclaredField("mongoClientSettings");
+        settingsField.setAccessible(true);
+        MongoClientSettings settings = (MongoClientSettings) settingsField.get(conn);
+
+        MongoCredential credential = settings.getCredential();
+
+        if (expectedEnvironment != null) {
+            assertEquals(
+                    expectedEnvironment,
+                    credential.getMechanismProperty(MongoCredential.ENVIRONMENT_KEY, null),
+                    "ENVIRONMENT value should match");
+        }
+
+        if (expectedTokenResource != null) {
+            assertEquals(
+                    expectedTokenResource,
+                    credential.getMechanismProperty(MongoCredential.TOKEN_RESOURCE_KEY, null),
+                    "TOKEN_RESOURCE value should match");
+        }
+
+        Object callback =
+                credential.getMechanismProperty(MongoCredential.OIDC_HUMAN_CALLBACK_KEY, null);
+        if (shouldHaveHumanCallback) {
+            assertNotNull(callback, "Human flow callback should be set");
+            assertTrue(callback instanceof JdbcOidcCallback, "Callback should be JdbcOidcCallback");
+        } else {
+            assertNull(callback, "Human flow callback should NOT be set for machine flow");
+        }
+    }
+
+    @Test
+    void testOidcHumanFlowWhenMachinePropertiesNotPresent() throws Exception {
+        // No auth mechanism properties - should use human flow
+        testOidcConnection(localhost + "?authMechanism=MONGODB-OIDC", true, null, null);
+    }
+
+    @Test
+    void testOidcGcpMachineFlow() throws Exception {
+        testOidcConnection(
+                localhost
+                        + "?authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:gcp,TOKEN_RESOURCE:audience",
+                false,
+                "gcp",
+                "audience");
+    }
+
+    @Test
+    void testOidcAzureMachineFlow() throws Exception {
+        testOidcConnection(
+                localhost
+                        + "?authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:azure,TOKEN_RESOURCE:audience",
+                false,
+                "azure",
+                "audience");
+    }
+
+    @Test
+    void testOidcKubernetesMachineFlow() throws Exception {
+        testOidcConnection(
+                localhost + "?authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:k8s",
+                false,
+                "k8s",
+                null);
     }
 }
