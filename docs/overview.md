@@ -800,7 +800,7 @@ If [configured](https://www.mongodb.com/docs/manual/tutorial/configure-ssl/), th
 
 Below are configuration details for advanced use cases.
 
-#### **X.509 Authentication**
+#### X.509 Authentication
 
 The MongoDB JDBC driver supports X.509 client certificate authentication. The following properties control how the client certificate and CA trust are configured.
 
