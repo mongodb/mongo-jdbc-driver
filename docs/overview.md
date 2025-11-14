@@ -788,7 +788,7 @@ Required when using nested selects or derived tables.
 - Date Functions:
 MongoSQL supports various date functions, but only the TIMESTAMP data type is available.
 
-## Additional Features
+## Authentication
 
 ### Security Features
 
@@ -797,6 +797,44 @@ supported by MongoDB (x509, OAuth, LDAP, etc...). See [authentication mechanisms
 for a full list of supported authentication mechanisms.
 
 If [configured](https://www.mongodb.com/docs/manual/tutorial/configure-ssl/), the MongoDB Atlas SQL JDBC driver supports TLS/SSL connections.
+
+Below are configuration details for advanced use cases.
+
+#### X.509 Authentication
+
+The MongoDB JDBC driver supports X.509 client certificate authentication. The following properties control how the client certificate and CA trust are configured.
+
+| Property | Purpose |
+|--------|--------|
+| `x509pempath` | Path to a PEM file containing the client certificate and private key. Required for unencrypted or encrypted PKCS#1/PKCS#8 keys. |
+| `tlscafile` | Optional. Path to a PEM file containing one or more trusted X.509 certificates. When set, only certificates signed by these CAs are accepted. |
+| `password` | 1. When `x509pempath` is set:<br>   - Acts as the **passphrase** for an encrypted PEM file.<br><br>2. When `x509pempath` is **not** set:<br>   - Can contain **raw PEM content** (unencrypted certificate + private key), **or**<br>   - A JSON object: `{ "pem": "...", "passphrase": "..." }` (for encrypted PEM data) |
+
+> **Behavior Notes:**
+> - If `x509pempath` is set, it takes precedence over PEM content in the password field.
+> - If `tlscafile` is not set, the driver uses the JVM’s default truststore.
+> - The PEM content (whether provided via x509pempath or in the password field) must contain both the client certificate and its corresponding private key.
+
+#### GSSAPI (Kerberos) Authentication
+
+The MongoDB JDBC driver supports GSSAPI for Kerberos-based authentication. This mechanism requires external configuration of Kerberos and JAAS settings.
+
+| Property | Description |
+|---------|-------------|
+| `jaasconfigpath` | Path to a JAAS configuration file (e.g., `jaas.config`). If not set, the driver uses the JVM's default JAAS configuration. |
+| `gssapilogincontextname` | Specifies the login context name defined in the JAAS configuration. |
+| `gssapiserverauth` | When set to `true`, enables server authentication during the SASL negotiation. |
+| `gssnativemode` | Controls whether native GSSAPI libraries are used. Accepts `true` or `false`. |
+
+#### OIDC Authentication
+
+The MongoDB JDBC driver distinguishes between human-initiated and machine-automated OIDC flows based on authentication mechanism properties.
+
+- **Human Flow:** Default behavior. Requires user interaction, browser login.
+- **Machine Flow:** Used in automated environments (e.g., GCP Workload Identity, Azure Managed Identity, Kubernetes). 
+Enabled by setting the `ENVIRONMENT` and `TOKEN_RESOURCE` parameters.
+
+## Additional Features
 
 ### Logging and Diagnostics
 
