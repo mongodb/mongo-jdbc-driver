@@ -316,7 +316,7 @@ public class X509AuthenticationTest {
 
         int certCount = x509Authentication.loadCACertificates(multipleCaFile.getPath(), trustStore);
 
-        assertEquals(5, certCount, "Expected 5 certificates to be loaded from multiple cert file");
+        assertEquals(6, certCount, "Expected 6 certificates to be loaded from multiple cert file");
 
         // Verify all certificates were added with the correct aliases
         for (int i = 0; i < certCount; i++) {
