@@ -338,13 +338,14 @@ public class MongoDriver implements Driver {
             while (cause != null) {
                 if (cause instanceof com.mongodb.MongoSecurityException) {
                     throw new SQLException(
-                            "Authentication failed. Verify that the credentials are correct.",
+                            "Authentication failed. Verify that the credentials are correct. Root cause: "
+                                    + e.getMessage(),
                             AUTHENTICATION_ERROR_SQLSTATE,
                             e);
                 }
                 cause = cause.getCause();
             }
-            throw new SQLException("Connection failed.", e);
+            throw new SQLException("Connection failed. Root cause: " + e.getMessage(), e);
         }
     }
 
@@ -390,7 +391,7 @@ public class MongoDriver implements Driver {
                     connectionConfig.tlsCaFile,
                     connectionConfig.x509Passphrase);
         } catch (Exception e) {
-            throw new SQLException(e);
+            throw new SQLException("Failed to create connection. Root cause: " + e.getMessage(), e);
         }
     }
 
@@ -732,7 +733,7 @@ public class MongoDriver implements Driver {
             if ((e instanceof SQLException)) {
                 throw e;
             } else {
-                throw new SQLException(e);
+                throw new SQLException("Failed to build connection settings. Root cause: " + e.getMessage(), e);
             }
         }
     }
@@ -921,7 +922,7 @@ public class MongoDriver implements Driver {
         try {
             return URLEncoder.encode(item, "utf-8");
         } catch (Exception e) {
-            throw new SQLException(e);
+            throw new SQLException("Failed to URL encode. Root cause: " + e.getMessage(), e);
         }
     }
 

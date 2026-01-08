@@ -261,7 +261,8 @@ public class MongoConnection implements Connection {
                             throw new SQLException(
                                     "Failed to authenticate using GSSAPI (loginContextName: "
                                             + loginContextName
-                                            + ")",
+                                            + "). Root cause: "
+                                            + e.getMessage(),
                                     e);
                         }
                     }
