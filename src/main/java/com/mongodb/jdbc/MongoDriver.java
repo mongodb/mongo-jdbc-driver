@@ -733,7 +733,8 @@ public class MongoDriver implements Driver {
             if ((e instanceof SQLException)) {
                 throw e;
             } else {
-                throw new SQLException("Failed to build connection settings. Root cause: " + e.getMessage(), e);
+                throw new SQLException(
+                        "Failed to build connection settings. Root cause: " + e.getMessage(), e);
             }
         }
     }

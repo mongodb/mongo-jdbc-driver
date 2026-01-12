@@ -205,7 +205,8 @@ public class MongoResultSet implements ResultSet {
             }
             return result;
         } catch (Exception e) {
-            throw new SQLException("Failed to get next result from cursor. Root cause: " + e.getMessage(), e);
+            throw new SQLException(
+                    "Failed to get next result from cursor. Root cause: " + e.getMessage(), e);
         }
     }
 
@@ -241,7 +242,8 @@ public class MongoResultSet implements ResultSet {
                 columnIndex = rsMetaData.getColumnPositionFromLabel(columnLabel);
                 return getBsonValue(columnIndex + 1);
             } catch (Exception e) {
-                throw new SQLException("Failed to get BSON value. Root cause: " + e.getMessage(), e);
+                throw new SQLException(
+                        "Failed to get BSON value. Root cause: " + e.getMessage(), e);
             }
         } else {
             throw new SQLException(String.format("column label '%s' not found", columnLabel));
