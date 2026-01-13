@@ -1055,9 +1055,17 @@ class MongoDriverTest {
                 e.getMessage());
     }
 
+    static class MockMongoDriver extends MongoDriver {
+        @Override
+        protected MongoConnection getUnvalidatedConnection(String url, Properties info)
+                throws SQLException {
+            throw new SQLException(new com.mongodb.MongoSecurityException(null, "exception"));
+        }
+    }
+
     @Test
     void testConnectExceptionContainsRootCauseForAuthExceptions() throws Exception {
-        MongoDriver d = new MongoDriver();
+        MockMongoDriver d = new MockMongoDriver();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
 
@@ -1066,7 +1074,7 @@ class MongoDriverTest {
 
         Exception e = assertThrows(SQLException.class, () -> d.connect(url, p));
         assertEquals(
-                "Authentication failed. Verify that the credentials are correct. Root cause: com.mongodb.MongoSecurityException: Failed to login Subject",
+                "Authentication failed. Verify that the credentials are correct. Root cause: com.mongodb.MongoSecurityException: exception",
                 e.getMessage());
     }
 
