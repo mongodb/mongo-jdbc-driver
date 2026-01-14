@@ -969,10 +969,14 @@ class MongoDriverTest {
         String url = userNoPWDURL + "?authMechanism=GSSAPI";
         p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "invalid");
 
-        assertThrows(
-                SQLException.class,
-                () -> d.getUnvalidatedConnection(url, p),
-                "Invalid gssnativemode value should throw SQLException");
+        Exception e =
+                assertThrows(
+                        SQLException.class,
+                        () -> d.getUnvalidatedConnection(url, p),
+                        "Invalid gssnativemode value should throw SQLException");
+        assertEquals(
+                "Failed to create connection. Root cause: Invalid gssnativemode property value: invalid. Valid values are: 'true', 'false'.",
+                e.getMessage());
     }
 
     @Test
@@ -1030,5 +1034,56 @@ class MongoDriverTest {
                 SQLException.class,
                 () -> d.getUnvalidatedConnection(url, p),
                 "The connection should fail because of a tlscafile mismatch between the URI and the properties");
+    }
+
+    @Test
+    void testConnectExceptionContainsRootCauseForNonTimeoutAndNonAuthExceptions() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String url = userNoPWDURL + "?authMechanism=GSSAPI";
+        p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "invalid");
+
+        Exception e =
+                assertThrows(
+                        SQLException.class,
+                        () -> d.connect(url, p),
+                        "Invalid gssnativemode value should throw SQLException");
+        assertEquals(
+                "Connection failed. Root cause: Failed to create connection. Root cause: Invalid gssnativemode property value: invalid. Valid values are: 'true', 'false'.",
+                e.getMessage());
+    }
+
+    static class MockMongoDriver extends MongoDriver {
+        @Override
+        protected MongoConnection getUnvalidatedConnection(String url, Properties info)
+                throws SQLException {
+            throw new SQLException(new com.mongodb.MongoSecurityException(null, "exception"));
+        }
+    }
+
+    @Test
+    void testConnectExceptionContainsRootCauseForAuthExceptions() throws Exception {
+        MockMongoDriver d = new MockMongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+
+        String url = userNoPWDURL + "?authMechanism=GSSAPI";
+        p.setProperty(GSS_NATIVE_MODE.getPropertyName(), "true");
+
+        Exception e = assertThrows(SQLException.class, () -> d.connect(url, p));
+        assertEquals(
+                "Authentication failed. Verify that the credentials are correct. Root cause: com.mongodb.MongoSecurityException: exception",
+                e.getMessage());
+    }
+
+    @Test
+    void testGetConnectionSettingsExceptionContainsRootCause() throws Exception {
+        Exception e =
+                assertThrows(SQLException.class, () -> MongoDriver.getConnectionSettings("", null));
+        assertEquals(
+                "Failed to build connection settings. Root cause: The connection string is invalid. Connection strings must start with either 'mongodb://' or 'mongodb+srv://",
+                e.getMessage());
     }
 }
