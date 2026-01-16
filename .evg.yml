@@ -1441,12 +1441,11 @@ functions:
           # confirm
           semgrep --version
           set +e
-          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
+          semgrep --config p/java --verbose --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
           SCAN_RESULT=$?
           set -e
 
-          # Exit with a failure if the scan found an issue
-          exit $SCAN_RESULT
+          echo "$SCAN_RESULT" > scan_result
     - command: s3.put
       params:
         <<: *evg_bucket_config
@@ -1455,6 +1454,16 @@ functions:
         remote_file: artifacts/${version_id}/ssdlc/
         content_type: application/json
         permissions: public-read
+    - command: shell.exec
+      type: test
+      params:
+        shell: bash
+        working_dir: mongo-jdbc-driver
+        script: |
+          # Exit with a failure if the scan found an issue
+          SCAN_RESULT=$(cat scan_result | tr -d '\n')
+          echo "Scan result = $SCAN_RESULT"
+          exit $SCAN_RESULT
 
   "publish static code analysis":
     - *assume_role_cmd
