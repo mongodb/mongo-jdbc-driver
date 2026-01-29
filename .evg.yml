@@ -244,8 +244,14 @@ tasks:
     commands:
       - func: "generate sbom"
       - func: "upload sbom"
-      - func: "augment sbom"
       - func: "scan sbom for jdbc"
+      - func: "write aws credentials to file for silkbomb"
+      - func: "augment sbom"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          sbom_in_path: ${SBOM_LITE}
+          sbom_out_path: ${SSDLC_DIR}/${AUGMENTED_SBOM_FILENAME}
+
 
   - name: ssdlc-artifacts-release
     run_on: ubuntu2204-small
@@ -258,6 +264,10 @@ tasks:
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${ARTIFACTS_DIR}/${SBOM_FILENAME}
+          published_file_path: ${working_dir}/${SBOM_FILENAME}
       - func: "publish static code analysis"
         vars:
           get_from_bucket: "evg-bucket-mongo-jdbc-driver"
@@ -277,6 +287,10 @@ tasks:
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${ARTIFACTS_DIR}/${SBOM_FILENAME}
+          published_file_path: ${working_dir}/${SBOM_FILENAME}
       - func: "publish static code analysis"
         vars:
           get_from_bucket: "evg-bucket-mongo-jdbc-driver"
