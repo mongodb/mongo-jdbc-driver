@@ -237,6 +237,8 @@ tasks:
     exec_timeout_secs: 3600 # 1h
     commands:
       - func: "generate static code analysis"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
 
   - name: sbom
     commands:
@@ -257,6 +259,10 @@ tasks:
     commands:
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
+          published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
       - func: "publish compliance report"
 
@@ -272,6 +278,10 @@ tasks:
     commands:
       - func: "publish augmented SBOM"
       - func: "publish static code analysis"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
+          published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
       - func: "publish compliance report"
 
