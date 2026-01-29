@@ -246,7 +246,7 @@ tasks:
       - func: "upload sbom"
       - func: "scan sbom for jdbc"
       - func: "write aws credentials to file for silkbomb"
-      - func: "augment sbom"
+      - func: "augment SBOM"
         vars:
           put_to_bucket: "evg-bucket-mongo-jdbc-driver"
           sbom_in_path: ${SBOM_LITE}
