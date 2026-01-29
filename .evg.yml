@@ -1028,8 +1028,8 @@ functions:
     - command: git.get_project
       params:
         directory: mongo-jdbc-driver
-      revisions:
-        sql-engines-common-test-infra: ${sql-engines-common-test-infra_rev}
+        revisions:
+          sql-engines-common-test-infra: ${sql-engines-common-test-infra_rev}
 
   "upload unit test classes":
     - *assume_role_cmd
