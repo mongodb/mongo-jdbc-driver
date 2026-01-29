@@ -274,7 +274,16 @@ tasks:
           local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
           published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          published_sbom_path: ${working_dir}/${SBOM_FILENAME}
+          published_sarif_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
+          compliance_report_template_path: ${PROJECT_DIRECTORY}/resources/release/mongo_jdbc_compliance_report_template.md
       - func: "publish compliance report"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${COMPLIANCE_REPORT_NAME}
+          published_file_path: ${working_dir}/${COMPLIANCE_REPORT_NAME}
 
   - name: ssdlc-artifacts-snapshot
     run_on: ubuntu2204-small
@@ -297,7 +306,16 @@ tasks:
           local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
           published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          published_sbom_path: ${working_dir}/${SBOM_FILENAME}
+          published_sarif_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
+          compliance_report_template_path: ${PROJECT_DIRECTORY}/resources/release/mongo_jdbc_compliance_report_template.md
       - func: "publish compliance report"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${COMPLIANCE_REPORT_NAME}
+          published_file_path: ${working_dir}/${COMPLIANCE_REPORT_NAME}
 
 functions:
   "build jdbc docs":
