@@ -49,6 +49,8 @@ modules:
 include:
   - filename: evergreen/configs/mongodb_util.yml
     module: sql-engines-common-test-infra
+  - filename: evergreen/configs/ssdlc_util.yml
+    module: sql-engines-common-test-infra
 
 buildvariants:
   - name: static-analysis
@@ -233,14 +235,14 @@ tasks:
   - name: semgrep
     exec_timeout_secs: 3600 # 1h
     commands:
-      - func: "static code analysis"
+      - func: "generate static code analysis"
 
   - name: sbom
     commands:
       - func: "generate sbom"
       - func: "upload sbom"
       - func: "augment sbom"
-      - func: "scan sbom"
+      - func: "scan sbom for jdbc"
 
   - name: ssdlc-artifacts-release
     run_on: ubuntu2204-small
@@ -273,60 +275,6 @@ tasks:
       - func: "publish compliance report"
 
 functions:
-  "augment sbom":
-    - command: ec2.assume_role
-      display_name: Assume IAM role with permissions to pull Kondukto API token
-      params:
-        role_arn: ${kondukto_role_arn}
-    - command: shell.exec
-      display_name: Pull Kondukto API token from AWS Secrets Manager and write it to file
-      params:
-        silent: true
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
-        script: |
-          # use AWS CLI to get the Kondukto API token from AWS Secrets Manager
-          kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
-          if [ $? -ne 0 ]; then
-              exit 1
-          fi
-          # set the KONDUKTO_TOKEN environment variable
-          echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          
-          ls -lrt $SSDLC_DIR
-          
-          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
-          
-          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
-          
-          echo "-- Augmenting SBOM Lite --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
-          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
-          echo "-------------------------------"
-          
-          ls -lrt $SSDLC_DIR
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-        permissions: public-read
-
   "build jdbc docs":
     - command: subprocess.exec
       params:
@@ -344,81 +292,6 @@ functions:
         remote_file: ${S3_ARTIFACTS_DIR}/docs/MongoDB_JDBC_Guide.pdf
         permissions: public-read
         content_type: application/pdf
-
-  "push SBOM Lite to Silk":
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-
-          ls -lrt $SSDLC_DIR
-
-          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
-
-          echo "-- Uploading initial SBOM Lite to Silk --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file silkbomb.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-          upload --silk-asset-group ${SILK_ASSET_GROUP} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME
-          echo "-------------------------------"
-
-  "pull augmented SBOM from Silk":
-    - *assume_role_cmd
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          cat << EOF > silkbomb.env
-          SILK_CLIENT_ID=${SILK_CLIENT_ID}
-          SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET}
-          EOF
-
-          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
-
-          echo "-- Augmenting SBOM Lite --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
-          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
-          echo "-------------------------------"
-
-          ls -lrt $SSDLC_DIR
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-        permissions: public-read
-
-  "publish augmented SBOM":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        content_type: application/json
-        bucket: translators-connectors-releases
-        permissions: public-read
-        display_name: mongodb-jdbc-${MDBJDBC_VER}.sbom.json
 
   "generate sbom":
     - command: shell.exec
@@ -476,7 +349,7 @@ functions:
         content_type: application/json
         permissions: public-read
 
-  "scan sbom":
+  "scan sbom for jdbc":
     command: shell.exec
     type: test
     params:
@@ -1413,135 +1286,3 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         content_type: application/json
-
-  "static code analysis":
-    - *assume_role_cmd
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          echo "Running static code analysis with Semgrep..."
-
-          venv='venv'
-          # Setup or use the existing virtualenv for semgrep
-          if [[ -f "$venv/bin/activate" ]]; then
-            echo 'using existing virtualenv'
-            . "$venv"/bin/activate
-          else
-            echo 'Creating new virtualenv'
-            python3 -m virtualenv "$venv"
-            echo 'Activating new virtualenv'
-            . "$venv"/bin/activate
-          fi
-
-          python3 -m pip install semgrep
-
-          # confirm
-          semgrep --version
-          set +e
-          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
-          SCAN_RESULT=$?
-          set -e
-
-          # Exit with a failure if the scan found an issue
-          exit $SCAN_RESULT
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver.sast.*
-        remote_file: artifacts/${version_id}/ssdlc/
-        content_type: application/json
-        permissions: public-read
-
-  "publish static code analysis":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
-        content_type: application/json
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        content_type: application/json
-        bucket: translators-connectors-releases
-        permissions: public-read
-        display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-
-  "generate compliance report":
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          echo "Author = ${author}"
-          echo "Author email = ${author_email}"
-          echo "Version = ${MDBJDBC_VER}"
-          SBOM_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json"
-          SARIF_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif"
-          echo "Sbom url = $SBOM_URL"
-          echo "Sarif Url = $SARIF_URL"
-
-          echo "----- Generating ${COMPLIANCE_REPORT_NAME} -----"
-
-          # Copy template
-          cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
-
-          # Update the version
-          echo "Update the version"
-          echo "sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the SBOM link
-          echo "Update the SBOM link"
-          echo "sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g"${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the SARIF link
-          echo "Update the SARIF link"
-          echo "sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the author information
-          echo "Update the author name"
-          echo "sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}
-
-          echo "update the author email"
-          echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
-          echo "---------------------------"
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
-        content_type: text/markdown
-        permissions: public-read
-
-  "publish compliance report":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
-        content_type: text/markdown
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        content_type: text/markdown
-        bucket: translators-connectors-releases
-        permissions: public-read
