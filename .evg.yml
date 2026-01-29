@@ -19,6 +19,7 @@ variables:
 pre:
   - func: "fetch source"
   - func: "export variables"
+  - func: "create ssdlc expansions"
 
 post:
   - func: "upload unit test classes"
@@ -299,11 +300,14 @@ functions:
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env:
+          - SBOM_DIR
+          - SSDLC_DIR
         script: |
           ${PREPARE_SHELL}
           set -o errexit
 
-          mkdir -p $SBOM_TOOL_DIR
+          mkdir -p $SBOM_DIR
 
           echo "------------------------------------"
           echo "Generating SBOM"
@@ -314,6 +318,10 @@ functions:
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env:
+          - SBOM_DIR
+          - SBOM_WITHOUT_TEAM_NAME
+          - SBOM_LITE
         script: |
           ${PREPARE_SHELL}
           set -o errexit
@@ -321,13 +329,13 @@ functions:
           JQ_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
 
           echo "-- Downloading JQ $JQ_URL --"
-          curl -L -o $SBOM_TOOL_DIR/jq "$JQ_URL" \
+          curl -L -o $SBOM_DIR/jq "$JQ_URL" \
             --silent \
             --fail \
             --max-time 60 \
             --retry 5 \
             --retry-delay 0
-          chmod +x ./$SBOM_TOOL_DIR/jq
+          chmod +x ./$SBOM_DIR/jq
 
           echo "------------------------------------"
           echo "Adding team name to SBOM"
@@ -355,17 +363,20 @@ functions:
     params:
       shell: bash
       working_dir: mongo-jdbc-driver
+      include_expansions_in_env:
+        - SBOM_DIR
+        - SBOM_LITE
       script: |
         ${PREPARE_SHELL}
         set -o errexit
 
         # Install Grype
         echo "-- Downloading Grype --"
-        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_TOOL_DIR
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_DIR
         echo "------------------------------------"
 
         echo "-- Scanning dependency for vulnerabilities --"
-        ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
+        ./$SBOM_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
@@ -836,15 +847,14 @@ functions:
           DRIVERS_TOOLS="$PROJECT_DIRECTORY/evergreen/drivers-tools"
           MONGO_ORCHESTRATION_HOME="$DRIVERS_TOOLS/.evergreen/orchestration"
           MONGODB_BINARIES="$DRIVERS_TOOLS/mongodb/bin"
+          working_dir="mongo-jdbc-driver"
+          release_version="$MDBJDBC_VER"
           
           # set the state needed irrespective of _platform
-          SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-          SBOM_TOOL_DIR="sbom_generations"
+          PRODUCT_NAME="mongo-jdbc-driver"
+          SBOM_WITHOUT_TEAM_NAME="$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json"
           SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
           SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
           SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
           mkdir -p "$SSDLC_DIR"
           
@@ -854,20 +864,26 @@ functions:
           echo "Build type = $BUILD_TYPE"
           echo "Java home = $JAVA_HOME"
           echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
+
           echo "=== SSDLC Values ==="
+          echo "PRODUCT_NAME = $PRODUCT_NAME"
           echo "SBOM_WITHOUT_TEAM_NAME = $SBOM_WITHOUT_TEAM_NAME"
-          echo "SBOM_TOOL_DIR = $SBOM_TOOL_DIR"
           echo "SBOM Lite Name = $SBOM_LITE_NAME"
           echo "SBOM_LITE = $SBOM_LITE"
-          echo "Augmented SBOM Name = $AUGMENTED_SBOM_NAME"
-          echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
-          echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
           echo "SSDLC Directory = $SSDLC_DIR"
+          echo "SBOM_DIR = ${SBOM_DIR}"
+          echo "SBOM File Name = ${SBOM_FILENAME}"
+          echo "Augmented SBOM Name = ${AUGMENTED_SBOM_FILENAME}"
+          echo "Compliance Report Name = ${COMPLIANCE_REPORT_NAME}"
+          echo "Static Code Analysis Name = ${STATIC_CODE_ANALYSIS_NAME}"
+
           echo "=== Common Test Infra Values ==="
           echo "Common Test Infra Directory = $COMMON_TEST_INFRA_DIR"
           echo "Drivers Tools Directory = $DRIVERS_TOOLS"
           echo "Mongo Orchestration Home = $MONGO_ORCHESTRATION_HOME"
           echo "MongoDB Binaries = $MONGODB_BINARIES"
+          echo "working dir = $working_dir"
+          echo "release version = $release_version"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -877,13 +893,10 @@ functions:
           JAVA_HOME: "$JAVA_HOME"
           ARTIFACTS_DIR: "$ARTIFACTS_DIR"
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          PRODUCT_NAME: "$PRODUCT_NAME"
           SBOM_WITHOUT_TEAM_NAME: "$SBOM_WITHOUT_TEAM_NAME"
-          SBOM_TOOL_DIR: "$SBOM_TOOL_DIR"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           SBOM_LITE: "$SBOM_LITE"
-          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
-          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
-          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
           BUILD_TYPE: "$BUILD_TYPE"
           PROJECT_DIRECTORY: "$PROJECT_DIRECTORY"
@@ -892,6 +905,8 @@ functions:
           MONGO_ORCHESTRATION_HOME: "$MONGO_ORCHESTRATION_HOME"
           MONGODB_BINARIES: "$MONGODB_BINARIES"
           script_dir: "$COMMON_TEST_INFRA_DIR/evergreen/scripts"
+          working_dir: "$working_dir"
+          release_version: "$release_version"
           EOT
     - command: expansions.update
       params:
@@ -903,26 +918,8 @@ functions:
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
-
-          # export any environment variables that will be needed by subprocesses
-          export SBOM_LITE_NAME="$SBOM_LITE_NAME"
-          export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-          export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-          export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
-          export SSDLC_DIR="$SSDLC_DIR"
-
           # create expansions from values calculated above and in previous command
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
-          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
-          MDBJDBC_VER: "$MDBJDBC_VER"
-          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
-          JAVA_HOME: "$JAVA_HOME"
-          SBOM_LITE_NAME: "$SBOM_LITE_NAME"
-          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
-          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
-          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
-          SSDLC_DIR: "$SSDLC_DIR"
-          BUILD_TYPE: "$BUILD_TYPE"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -947,17 +944,6 @@ functions:
             if [[ "${triggered_by_git_tag}" != "" ]]; then
               export IS_RELEASE_PROP="-PisRelease"
             fi
-
-            # ssdlc relevant variables
-            export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
-            export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
-            export SBOM_LITE_NAME="$SBOM_LITE_NAME"
-            export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-            export SSDLC_DIR="$SSDLC_DIR"
-            export SBOM_LITE="$SBOM_LITE"
-            export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
-            export BUILD_TYPE="$BUILD_TYPE"
           
             export COMMON_TEST_INFRA_DIR="$COMMON_TEST_INFRA_DIR"
             export DRIVERS_TOOLS="$DRIVERS_TOOLS"
@@ -1255,7 +1241,7 @@ functions:
       params:
         <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc.sbom.json
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        remote_file: mongo-jdbc-driver/artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_FILENAME}
         content_type: application/json
     - command: shell.exec
       type: test
