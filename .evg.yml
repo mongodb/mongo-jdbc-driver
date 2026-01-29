@@ -65,6 +65,8 @@ buildvariants:
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: [ ubuntu2204-small ]
+    modules:
+      - sql-engines-common-test-infra
     tasks:
       - name: semgrep
       - name: sbom
