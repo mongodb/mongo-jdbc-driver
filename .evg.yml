@@ -19,6 +19,7 @@ variables:
 pre:
   - func: "fetch source"
   - func: "export variables"
+  - func: "create ssdlc expansions"
 
 post:
   - func: "upload unit test classes"
@@ -49,6 +50,8 @@ modules:
 include:
   - filename: evergreen/configs/mongodb_util.yml
     module: sql-engines-common-test-infra
+  - filename: evergreen/configs/ssdlc_util.yml
+    module: sql-engines-common-test-infra
 
 buildvariants:
   - name: static-analysis
@@ -62,6 +65,8 @@ buildvariants:
     expansions:
       _platform: ubuntu2204-64-jdk-8
     run_on: [ ubuntu2204-small ]
+    modules:
+      - sql-engines-common-test-infra
     tasks:
       - name: semgrep
       - name: sbom
@@ -233,14 +238,22 @@ tasks:
   - name: semgrep
     exec_timeout_secs: 3600 # 1h
     commands:
-      - func: "static code analysis"
+      - func: "generate static code analysis"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
 
   - name: sbom
     commands:
       - func: "generate sbom"
       - func: "upload sbom"
-      - func: "augment sbom"
-      - func: "scan sbom"
+      - func: "scan sbom for jdbc"
+      - func: "write aws credentials to file for silkbomb"
+      - func: "augment SBOM"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          sbom_in_path: ${SBOM_LITE}
+          sbom_out_path: ${SSDLC_DIR}/${AUGMENTED_SBOM_FILENAME}
+
 
   - name: ssdlc-artifacts-release
     run_on: ubuntu2204-small
@@ -253,9 +266,26 @@ tasks:
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${ARTIFACTS_DIR}/${SBOM_FILENAME}
+          published_file_path: ${working_dir}/${SBOM_FILENAME}
       - func: "publish static code analysis"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
+          published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          published_sbom_path: ${working_dir}/${SBOM_FILENAME}
+          published_sarif_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
+          compliance_report_template_path: ${PROJECT_DIRECTORY}/resources/release/mongo_jdbc_compliance_report_template.md
       - func: "publish compliance report"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${COMPLIANCE_REPORT_NAME}
+          published_file_path: ${working_dir}/${COMPLIANCE_REPORT_NAME}
 
   - name: ssdlc-artifacts-snapshot
     run_on: ubuntu2204-small
@@ -268,65 +298,28 @@ tasks:
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${ARTIFACTS_DIR}/${SBOM_FILENAME}
+          published_file_path: ${working_dir}/${SBOM_FILENAME}
       - func: "publish static code analysis"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${STATIC_CODE_ANALYSIS_NAME}
+          published_file_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
       - func: "generate compliance report"
+        vars:
+          put_to_bucket: "evg-bucket-mongo-jdbc-driver"
+          published_sbom_path: ${working_dir}/${SBOM_FILENAME}
+          published_sarif_path: ${working_dir}/${STATIC_CODE_ANALYSIS_NAME}
+          compliance_report_template_path: ${PROJECT_DIRECTORY}/resources/release/mongo_jdbc_compliance_report_template.md
       - func: "publish compliance report"
+        vars:
+          get_from_bucket: "evg-bucket-mongo-jdbc-driver"
+          local_file_path: ${SSDLC_DIR}/${COMPLIANCE_REPORT_NAME}
+          published_file_path: ${working_dir}/${COMPLIANCE_REPORT_NAME}
 
 functions:
-  "augment sbom":
-    - command: ec2.assume_role
-      display_name: Assume IAM role with permissions to pull Kondukto API token
-      params:
-        role_arn: ${kondukto_role_arn}
-    - command: shell.exec
-      display_name: Pull Kondukto API token from AWS Secrets Manager and write it to file
-      params:
-        silent: true
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
-        script: |
-          # use AWS CLI to get the Kondukto API token from AWS Secrets Manager
-          kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
-          if [ $? -ne 0 ]; then
-              exit 1
-          fi
-          # set the KONDUKTO_TOKEN environment variable
-          echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          
-          ls -lrt $SSDLC_DIR
-          
-          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
-          
-          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
-          
-          echo "-- Augmenting SBOM Lite --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
-          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
-          echo "-------------------------------"
-          
-          ls -lrt $SSDLC_DIR
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-        permissions: public-read
-
   "build jdbc docs":
     - command: subprocess.exec
       params:
@@ -345,92 +338,20 @@ functions:
         permissions: public-read
         content_type: application/pdf
 
-  "push SBOM Lite to Silk":
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-
-          ls -lrt $SSDLC_DIR
-
-          echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
-
-          echo "-- Uploading initial SBOM Lite to Silk --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file silkbomb.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-          upload --silk-asset-group ${SILK_ASSET_GROUP} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME
-          echo "-------------------------------"
-
-  "pull augmented SBOM from Silk":
-    - *assume_role_cmd
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          ${PREPARE_SHELL}
-          cat << EOF > silkbomb.env
-          SILK_CLIENT_ID=${SILK_CLIENT_ID}
-          SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET}
-          EOF
-
-          echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
-
-          echo "-- Augmenting SBOM Lite --"
-          docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
-          --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
-          augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
-          echo "-------------------------------"
-
-          ls -lrt $SSDLC_DIR
-    - command: ec2.assume_role
-      params:
-        role_arn: ${assume_role_arn}
-        duration_seconds: 3600
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/artifacts/ssdlc/${AUGMENTED_SBOM_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-        permissions: public-read
-
-  "publish augmented SBOM":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
-        content_type: application/json
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-        content_type: application/json
-        bucket: translators-connectors-releases
-        permissions: public-read
-        display_name: mongodb-jdbc-${MDBJDBC_VER}.sbom.json
-
   "generate sbom":
     - command: shell.exec
       type: test
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env:
+          - SBOM_DIR
+          - SSDLC_DIR
         script: |
           ${PREPARE_SHELL}
           set -o errexit
 
-          mkdir -p $SBOM_TOOL_DIR
+          mkdir -p $SBOM_DIR
 
           echo "------------------------------------"
           echo "Generating SBOM"
@@ -441,6 +362,10 @@ functions:
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env:
+          - SBOM_DIR
+          - SBOM_WITHOUT_TEAM_NAME
+          - SBOM_LITE
         script: |
           ${PREPARE_SHELL}
           set -o errexit
@@ -448,13 +373,13 @@ functions:
           JQ_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
 
           echo "-- Downloading JQ $JQ_URL --"
-          curl -L -o $SBOM_TOOL_DIR/jq "$JQ_URL" \
+          curl -L -o $SBOM_DIR/jq "$JQ_URL" \
             --silent \
             --fail \
             --max-time 60 \
             --retry 5 \
             --retry-delay 0
-          chmod +x ./$SBOM_TOOL_DIR/jq
+          chmod +x ./$SBOM_DIR/jq
 
           echo "------------------------------------"
           echo "Adding team name to SBOM"
@@ -476,23 +401,26 @@ functions:
         content_type: application/json
         permissions: public-read
 
-  "scan sbom":
+  "scan sbom for jdbc":
     command: shell.exec
     type: test
     params:
       shell: bash
       working_dir: mongo-jdbc-driver
+      include_expansions_in_env:
+        - SBOM_DIR
+        - SBOM_LITE
       script: |
         ${PREPARE_SHELL}
         set -o errexit
 
         # Install Grype
         echo "-- Downloading Grype --"
-        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_TOOL_DIR
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b $SBOM_DIR
         echo "------------------------------------"
 
         echo "-- Scanning dependency for vulnerabilities --"
-        ./$SBOM_TOOL_DIR/grype sbom:$SBOM_LITE --fail-on low
+        ./$SBOM_DIR/grype sbom:$SBOM_LITE --fail-on low
         echo "---------------------------------------------"
         echo "<<<< Done scanning SBOM"
 
@@ -963,15 +891,14 @@ functions:
           DRIVERS_TOOLS="$PROJECT_DIRECTORY/evergreen/drivers-tools"
           MONGO_ORCHESTRATION_HOME="$DRIVERS_TOOLS/.evergreen/orchestration"
           MONGODB_BINARIES="$DRIVERS_TOOLS/mongodb/bin"
+          working_dir="mongo-jdbc-driver"
+          release_version="$MDBJDBC_VER"
           
           # set the state needed irrespective of _platform
-          SBOM_WITHOUT_TEAM_NAME=$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json
-          SBOM_TOOL_DIR="sbom_generations"
+          PRODUCT_NAME="mongo-jdbc-driver"
+          SBOM_WITHOUT_TEAM_NAME="$ARTIFACTS_DIR/ssdlc/sbom_without_team_name.json"
           SBOM_LITE_NAME="mongo-jdbc-driver.cdx.json"
           SBOM_LITE="$ARTIFACTS_DIR/ssdlc/$SBOM_LITE_NAME"
-          AUGMENTED_SBOM_NAME="mongo-jdbc-driver.augmented.sbom.json"
-          COMPLIANCE_REPORT_NAME="mongodb-jdbc-compliance-report.md"
-          STATIC_CODE_ANALYSIS_NAME="mongo-jdbc-driver.sast.sarif"
           SSDLC_DIR="$ARTIFACTS_DIR/ssdlc"
           mkdir -p "$SSDLC_DIR"
           
@@ -981,20 +908,26 @@ functions:
           echo "Build type = $BUILD_TYPE"
           echo "Java home = $JAVA_HOME"
           echo "S3 artifacts dir = $S3_ARTIFACTS_DIR"
+
           echo "=== SSDLC Values ==="
+          echo "PRODUCT_NAME = $PRODUCT_NAME"
           echo "SBOM_WITHOUT_TEAM_NAME = $SBOM_WITHOUT_TEAM_NAME"
-          echo "SBOM_TOOL_DIR = $SBOM_TOOL_DIR"
           echo "SBOM Lite Name = $SBOM_LITE_NAME"
           echo "SBOM_LITE = $SBOM_LITE"
-          echo "Augmented SBOM Name = $AUGMENTED_SBOM_NAME"
-          echo "Compliance Report Name = $COMPLIANCE_REPORT_NAME"
-          echo "Static Code Analysis Name = $STATIC_CODE_ANALYSIS_NAME"
           echo "SSDLC Directory = $SSDLC_DIR"
+          echo "SBOM_DIR = ${SBOM_DIR}"
+          echo "SBOM File Name = ${SBOM_FILENAME}"
+          echo "Augmented SBOM Name = ${AUGMENTED_SBOM_FILENAME}"
+          echo "Compliance Report Name = ${COMPLIANCE_REPORT_NAME}"
+          echo "Static Code Analysis Name = ${STATIC_CODE_ANALYSIS_NAME}"
+
           echo "=== Common Test Infra Values ==="
           echo "Common Test Infra Directory = $COMMON_TEST_INFRA_DIR"
           echo "Drivers Tools Directory = $DRIVERS_TOOLS"
           echo "Mongo Orchestration Home = $MONGO_ORCHESTRATION_HOME"
           echo "MongoDB Binaries = $MONGODB_BINARIES"
+          echo "working dir = $working_dir"
+          echo "release version = $release_version"
           
           # Write calculated values to expansions file
           mkdir -p $ARTIFACTS_DIR
@@ -1004,13 +937,10 @@ functions:
           JAVA_HOME: "$JAVA_HOME"
           ARTIFACTS_DIR: "$ARTIFACTS_DIR"
           S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
+          PRODUCT_NAME: "$PRODUCT_NAME"
           SBOM_WITHOUT_TEAM_NAME: "$SBOM_WITHOUT_TEAM_NAME"
-          SBOM_TOOL_DIR: "$SBOM_TOOL_DIR"
           SBOM_LITE_NAME: "$SBOM_LITE_NAME"
           SBOM_LITE: "$SBOM_LITE"
-          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
-          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
-          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
           SSDLC_DIR: "$SSDLC_DIR"
           BUILD_TYPE: "$BUILD_TYPE"
           PROJECT_DIRECTORY: "$PROJECT_DIRECTORY"
@@ -1019,6 +949,8 @@ functions:
           MONGO_ORCHESTRATION_HOME: "$MONGO_ORCHESTRATION_HOME"
           MONGODB_BINARIES: "$MONGODB_BINARIES"
           script_dir: "$COMMON_TEST_INFRA_DIR/evergreen/scripts"
+          working_dir: "$working_dir"
+          release_version: "$release_version"
           EOT
     - command: expansions.update
       params:
@@ -1030,26 +962,8 @@ functions:
         silent: true
         working_dir: mongo-jdbc-driver
         script: |
-
-          # export any environment variables that will be needed by subprocesses
-          export SBOM_LITE_NAME="$SBOM_LITE_NAME"
-          export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-          export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-          export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
-          export SSDLC_DIR="$SSDLC_DIR"
-
           # create expansions from values calculated above and in previous command
           cat <<EOT > $ARTIFACTS_DIR/expansions.yml
-          S3_ARTIFACTS_DIR: "$S3_ARTIFACTS_DIR"
-          MDBJDBC_VER: "$MDBJDBC_VER"
-          LIBMONGOSQLTRANSLATE_VER: "$LIBMONGOSQLTRANSLATE_VER"
-          JAVA_HOME: "$JAVA_HOME"
-          SBOM_LITE_NAME: "$SBOM_LITE_NAME"
-          AUGMENTED_SBOM_NAME: "$AUGMENTED_SBOM_NAME"
-          STATIC_CODE_ANALYSIS_NAME: "$STATIC_CODE_ANALYSIS_NAME"
-          COMPLIANCE_REPORT_NAME: "$COMPLIANCE_REPORT_NAME"
-          SSDLC_DIR: "$SSDLC_DIR"
-          BUILD_TYPE: "$BUILD_TYPE"
           PREPARE_SHELL: |
             export ADF_TEST_LOCAL_USER=${adf_test_local_user}
             export ADF_TEST_LOCAL_PWD=${adf_test_local_pwd}
@@ -1074,17 +988,6 @@ functions:
             if [[ "${triggered_by_git_tag}" != "" ]]; then
               export IS_RELEASE_PROP="-PisRelease"
             fi
-
-            # ssdlc relevant variables
-            export SBOM_WITHOUT_TEAM_NAME=$SBOM_WITHOUT_TEAM_NAME
-            export SBOM_TOOL_DIR="$SBOM_TOOL_DIR"
-            export SBOM_LITE_NAME="$SBOM_LITE_NAME"
-            export AUGMENTED_SBOM_NAME="$AUGMENTED_SBOM_NAME"
-            export SSDLC_DIR="$SSDLC_DIR"
-            export SBOM_LITE="$SBOM_LITE"
-            export COMPLIANCE_REPORT_NAME="$COMPLIANCE_REPORT_NAME"
-            export STATIC_CODE_ANALYSIS_NAME="$STATIC_CODE_ANALYSIS_NAME"
-            export BUILD_TYPE="$BUILD_TYPE"
           
             export COMMON_TEST_INFRA_DIR="$COMMON_TEST_INFRA_DIR"
             export DRIVERS_TOOLS="$DRIVERS_TOOLS"
@@ -1127,8 +1030,8 @@ functions:
     - command: git.get_project
       params:
         directory: mongo-jdbc-driver
-      revisions:
-        sql-engines-common-test-infra: ${sql-engines-common-test-infra_rev}
+        revisions:
+          sql-engines-common-test-infra: ${sql-engines-common-test-infra_rev}
 
   "upload unit test classes":
     - *assume_role_cmd
@@ -1382,7 +1285,7 @@ functions:
       params:
         <<: *evg_bucket_config
         local_file: artifacts/ssdlc/mongodb-jdbc.sbom.json
-        remote_file: artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_NAME}
+        remote_file: mongo-jdbc-driver/artifacts/${version_id}/ssdlc/${AUGMENTED_SBOM_FILENAME}
         content_type: application/json
     - command: shell.exec
       type: test
@@ -1413,135 +1316,3 @@ functions:
         bucket: translators-connectors-releases
         permissions: public-read
         content_type: application/json
-
-  "static code analysis":
-    - *assume_role_cmd
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          echo "Running static code analysis with Semgrep..."
-
-          venv='venv'
-          # Setup or use the existing virtualenv for semgrep
-          if [[ -f "$venv/bin/activate" ]]; then
-            echo 'using existing virtualenv'
-            . "$venv"/bin/activate
-          else
-            echo 'Creating new virtualenv'
-            python3 -m virtualenv "$venv"
-            echo 'Activating new virtualenv'
-            . "$venv"/bin/activate
-          fi
-
-          python3 -m pip install semgrep
-
-          # confirm
-          semgrep --version
-          set +e
-          semgrep --config p/java --verbose --exclude "vendor" --error --severity=ERROR --sarif-output=${STATIC_CODE_ANALYSIS_NAME} > mongo-jdbc-driver.sast.cmd.verbose.out 2>&1
-          SCAN_RESULT=$?
-          set -e
-
-          # Exit with a failure if the scan found an issue
-          exit $SCAN_RESULT
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_files_include_filter:
-          - mongo-jdbc-driver.sast.*
-        remote_file: artifacts/${version_id}/ssdlc/
-        content_type: application/json
-        permissions: public-read
-
-  "publish static code analysis":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        remote_file: artifacts/${version_id}/ssdlc/${STATIC_CODE_ANALYSIS_NAME}
-        content_type: application/json
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-        content_type: application/json
-        bucket: translators-connectors-releases
-        permissions: public-read
-        display_name: mongodb-jdbc-${MDBJDBC_VER}.sast.sarif
-
-  "generate compliance report":
-    - command: shell.exec
-      type: test
-      params:
-        shell: bash
-        working_dir: mongo-jdbc-driver
-        script: |
-          echo "Author = ${author}"
-          echo "Author email = ${author_email}"
-          echo "Version = ${MDBJDBC_VER}"
-          SBOM_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sbom.json"
-          SARIF_URL="https://translators-connectors-releases.s3.amazonaws.com/mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}.sast.sarif"
-          echo "Sbom url = $SBOM_URL"
-          echo "Sarif Url = $SARIF_URL"
-
-          echo "----- Generating ${COMPLIANCE_REPORT_NAME} -----"
-
-          # Copy template
-          cp resources/release/mongo_jdbc_compliance_report_template.md ${COMPLIANCE_REPORT_NAME}
-
-          # Update the version
-          echo "Update the version"
-          echo "sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%VERSION%,${MDBJDBC_VER},g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the SBOM link
-          echo "Update the SBOM link"
-          echo "sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g"${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%SBOM_URL%,$SBOM_URL,g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the SARIF link
-          echo "Update the SARIF link"
-          echo "sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%SARIF_URL%,$SARIF_URL,g" ${COMPLIANCE_REPORT_NAME}
-
-          # Update the author information
-          echo "Update the author name"
-          echo "sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%AUTHOR%,${author},g" ${COMPLIANCE_REPORT_NAME}
-
-          echo "update the author email"
-          echo "sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}"
-          sed -i.bu "s,%AUTHOR_EMAIL%,${author_email},g" ${COMPLIANCE_REPORT_NAME}
-          echo "---------------------------"
-    - *assume_role_cmd
-    - command: s3.put
-      params:
-        <<: *evg_bucket_config
-        local_file: mongo-jdbc-driver/${COMPLIANCE_REPORT_NAME}
-        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
-        content_type: text/markdown
-        permissions: public-read
-
-  "publish compliance report":
-    - *assume_role_cmd
-    - command: s3.get
-      params:
-        <<: *evg_bucket_config
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        remote_file: artifacts/${version_id}/ssdlc/${COMPLIANCE_REPORT_NAME}
-        content_type: text/markdown
-    - command: s3.put
-      params:
-        aws_key: ${release_aws_key}
-        aws_secret: ${release_aws_secret}
-        local_file: artifacts/ssdlc/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        remote_file: mongo-jdbc-driver/mongodb-jdbc-${MDBJDBC_VER}-compliance-report.md
-        content_type: text/markdown
-        bucket: translators-connectors-releases
-        permissions: public-read
