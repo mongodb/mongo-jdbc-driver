@@ -63,6 +63,7 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.WARN)
 class MongoResultSetTest extends MongoMock {
     @Mock MongoCursor<BsonDocument> cursor;
+    @Mock MongoResultSetMetaData mockMetaData;
     MongoResultSet mockResultSet;
     static MongoResultSet mongoResultSet;
     static MongoResultSet mongoResultSetAllTypes;
@@ -70,6 +71,7 @@ class MongoResultSetTest extends MongoMock {
     static MongoResultSet mongoResultSetAllTypesExtJson;
     static MongoResultSet closedMongoResultSet;
     static MongoResultSet mongoResultSetExtended;
+    static MockMongoResultSet mongoResultSetWithMockMetaData;
 
     private static MongoResultSetMetaData resultSetMetaData;
     private static MongoStatement mongoStatement;
@@ -172,6 +174,14 @@ class MongoResultSetTest extends MongoMock {
                             schema,
                             null,
                             true,
+                            UuidRepresentation.STANDARD);
+            mongoResultSetWithMockMetaData =
+                    new MockMongoResultSet(
+                            mongoStatement,
+                            new BsonExplicitCursor(mongoResultDocs),
+                            schema,
+                            null,
+                            false,
                             UuidRepresentation.STANDARD);
             mongoResultSet.next();
             mongoResultSetAllTypes.next();
@@ -1300,5 +1310,55 @@ class MongoResultSetTest extends MongoMock {
         metaData = mockResultSet.getMetaData();
         assertEquals(1, metaData.getColumnCount());
         assertEquals(Types.INTEGER, metaData.getColumnType(1));
+    }
+
+    /**
+     * Class used for testing exceptions thrown by certain methods. The underlying ResultSetMetaData
+     * needs to be overwritten to test certain methods, such as findColumn and getBsonValue.
+     */
+    static class MockMongoResultSet extends MongoResultSet {
+        public MockMongoResultSet(
+                MongoStatement statement,
+                MongoCursor<BsonDocument> cursor,
+                MongoJsonSchema resultSetSchema,
+                List<List<String>> selectOrder,
+                boolean extJsonMode,
+                UuidRepresentation uuidRepresentation)
+                throws SQLException {
+            super(statement, cursor, resultSetSchema, selectOrder, extJsonMode, uuidRepresentation);
+        }
+
+        public void setMetaData(MongoResultSetMetaData metaData) {
+            this.rsMetaData = metaData;
+        }
+    }
+
+    @Test
+    void testGetBsonValueExceptionContainsRootCause() throws Exception {
+        when(mockMetaData.hasColumnWithLabel(DOUBLE_COL_LABEL)).thenReturn(true);
+        when(mockMetaData.getColumnPositionFromLabel(DOUBLE_COL_LABEL))
+                .thenThrow(new Exception("exception"));
+        mongoResultSetWithMockMetaData.setMetaData(mockMetaData);
+
+        SQLException e =
+                assertThrows(
+                        SQLException.class,
+                        // getBsonValue is private, so we call it indirectly via getDouble.
+                        () -> mongoResultSetWithMockMetaData.getDouble(DOUBLE_COL_LABEL));
+        assertEquals("Failed to get BSON value. Root cause: exception", e.getMessage());
+    }
+
+    @Test
+    void testFindColumnExceptionContainsRootCause() throws Exception {
+        when(mockMetaData.hasColumnWithLabel(DOUBLE_COL_LABEL)).thenReturn(true);
+        when(mockMetaData.getColumnPositionFromLabel(DOUBLE_COL_LABEL))
+                .thenThrow(new Exception("exception"));
+        mongoResultSetWithMockMetaData.setMetaData(mockMetaData);
+
+        SQLException e =
+                assertThrows(
+                        SQLException.class,
+                        () -> mongoResultSetWithMockMetaData.findColumn(DOUBLE_COL_LABEL));
+        assertEquals("Failed to find column. Root cause: exception", e.getMessage());
     }
 }
