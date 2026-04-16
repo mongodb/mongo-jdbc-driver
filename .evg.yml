@@ -189,6 +189,8 @@ tasks:
         variant: "release"
       - name: "test-smoke"
         variant: "release"
+      - name: "make-docs"
+        variant: "release"
     commands:
       - *assume_role_cmd
       - command: s3.get
