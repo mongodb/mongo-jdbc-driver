@@ -99,6 +99,23 @@ allprojects {
         mavenCentral()
     }
 
+    configurations.all { config ->
+        resolutionStrategy.componentSelection {
+            all { ComponentSelection selection ->
+                def candidate = selection.candidate
+                def isDynamic = config.allDependencies.any {
+                    it instanceof ExternalDependency &&
+                    it.group == candidate.group &&
+                    it.name == candidate.module &&
+                    it.version?.contains('+')
+                }
+                if (isDynamic && !(candidate.version ==~ /(?i)[0-9]+(\.[0-9]+)*([-.]?(final|ga|release))?/)) {
+                    selection.reject("Rejecting non-release version: ${candidate.version}")
+                }
+            }
+        }
+    }
+
     configurations {
         ajc
         aspects

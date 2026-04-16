@@ -65,6 +65,7 @@ buildvariants:
     tasks:
       - name: semgrep
       - name: sbom
+      - name: augment-sbom
       - name: ssdlc-artifacts-snapshot
 
   - name: ubuntu2204-64-jdk-8
@@ -188,6 +189,8 @@ tasks:
         variant: "release"
       - name: "test-smoke"
         variant: "release"
+      - name: "make-docs"
+        variant: "release"
     commands:
       - *assume_role_cmd
       - command: s3.get
@@ -239,8 +242,15 @@ tasks:
     commands:
       - func: "generate sbom"
       - func: "upload sbom"
-      - func: "augment sbom"
       - func: "scan sbom"
+
+  - name: augment-sbom
+    allowed_requesters: ["github_tag", "ad_hoc"]
+    depends_on:
+      - name: sbom
+        variant: code-quality-and-correctness
+    commands:
+      - func: "augment sbom"
 
   - name: ssdlc-artifacts-release
     run_on: ubuntu2204-small
@@ -261,7 +271,7 @@ tasks:
     run_on: ubuntu2204-small
     allow_for_git_tag: false
     depends_on:
-      - name: sbom
+      - name: augment-sbom
         variant: code-quality-and-correctness
       - name: semgrep
         variant: code-quality-and-correctness
@@ -274,6 +284,14 @@ tasks:
 
 functions:
   "augment sbom":
+    - *assume_role_cmd
+    - command: s3.get
+      display_name: Download SBOM Lite from S3
+      params:
+        <<: *evg_bucket_config
+        local_file: mongo-jdbc-driver/artifacts/ssdlc/${SBOM_LITE_NAME}
+        remote_file: artifacts/${version_id}/ssdlc/${SBOM_LITE_NAME}
+        content_type: application/json
     - command: ec2.assume_role
       display_name: Assume IAM role with permissions to pull Kondukto API token
       params:
