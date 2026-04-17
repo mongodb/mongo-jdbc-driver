@@ -245,7 +245,7 @@ tasks:
       - func: "scan sbom"
 
   - name: augment-sbom
-    patchable: false
+    allowed_requesters: ["git_tag_request", "ad_hoc"]
     depends_on:
       - name: sbom
         variant: code-quality-and-correctness
