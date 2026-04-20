@@ -245,7 +245,7 @@ tasks:
       - func: "scan sbom"
 
   - name: augment-sbom
-    allowed_requesters: ["git_tag_request", "ad_hoc"]
+    patchable: false
     depends_on:
       - name: sbom
         variant: code-quality-and-correctness
@@ -256,10 +256,12 @@ tasks:
     run_on: ubuntu2204-small
     git_tag_only: true
     depends_on:
-      - name: "publish-maven"
-        variant: "release"
+      - name: augment-sbom
+        variant: code-quality-and-correctness
       - name: semgrep
         variant: code-quality-and-correctness
+      - name: "publish-maven"
+        variant: "release"
     exec_timeout_secs: 300 # 5m
     commands:
       - func: "publish augmented SBOM"
