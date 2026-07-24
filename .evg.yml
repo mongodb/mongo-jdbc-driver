@@ -313,11 +313,16 @@ functions:
           fi
           # set the KONDUKTO_TOKEN environment variable
           echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
+    - command: ec2.assume_role
+      display_name: Assume IAM role with permissions to pull from DevProd Platforms ECR
+      params:
+        role_arn: ${devprod_platforms_ecr_readonly_role_arn}
     - command: shell.exec
       type: test
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
         script: |
           ${PREPARE_SHELL}
           
@@ -328,9 +333,10 @@ functions:
           echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
           
           echo "-- Augmenting SBOM Lite --"
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
           docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
           --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+          901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
           augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
           echo "-------------------------------"
           
@@ -366,11 +372,16 @@ functions:
         content_type: application/pdf
 
   "push SBOM Lite to Silk":
+    - command: ec2.assume_role
+      display_name: Assume IAM role with permissions to pull from DevProd Platforms ECR
+      params:
+        role_arn: ${devprod_platforms_ecr_readonly_role_arn}
     - command: shell.exec
       type: test
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
         script: |
           ${PREPARE_SHELL}
 
@@ -379,19 +390,25 @@ functions:
           echo "SBOM_LITE_NAME = $SBOM_LITE_NAME"
 
           echo "-- Uploading initial SBOM Lite to Silk --"
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
           docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
           --env-file silkbomb.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+          901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
           upload --silk-asset-group ${SILK_ASSET_GROUP} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME
           echo "-------------------------------"
 
   "pull augmented SBOM from Silk":
     - *assume_role_cmd
+    - command: ec2.assume_role
+      display_name: Assume IAM role with permissions to pull from DevProd Platforms ECR
+      params:
+        role_arn: ${devprod_platforms_ecr_readonly_role_arn}
     - command: shell.exec
       type: test
       params:
         shell: bash
         working_dir: mongo-jdbc-driver
+        include_expansions_in_env: [ AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN ]
         script: |
           ${PREPARE_SHELL}
           cat << EOF > silkbomb.env
@@ -402,9 +419,10 @@ functions:
           echo "AUGMENTED_SBOM_NAME = $AUGMENTED_SBOM_NAME"
 
           echo "-- Augmenting SBOM Lite --"
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
           docker run -i --platform="linux/amd64" --rm -v "$PWD":/pwd \
           --env-file ${workdir}/kondukto_credentials.env \
-          artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+          901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
           augment --repo mongodb/mongo-jdbc-driver --branch ${branch_name} --sbom-in /pwd/artifacts/ssdlc/$SBOM_LITE_NAME --sbom-out /pwd/artifacts/ssdlc/$AUGMENTED_SBOM_NAME
           echo "-------------------------------"
 
