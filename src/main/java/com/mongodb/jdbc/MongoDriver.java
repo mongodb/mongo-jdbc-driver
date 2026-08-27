@@ -25,6 +25,11 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
+import com.mongodb.jdbc.auth.AtlasClusterNameProvider;
+import com.mongodb.jdbc.auth.AtlasMarkerProvider;
+import com.mongodb.jdbc.auth.MarkerEnforcer;
+import com.mongodb.jdbc.auth.MarkerProvider;
+import com.mongodb.jdbc.auth.exception.ValidationException;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
 import java.lang.ref.WeakReference;
@@ -37,11 +42,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLTimeoutException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -324,6 +325,11 @@ public class MongoDriver implements Driver {
             MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
             if (conn != null) {
                 conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                if (!validateEntitlement(conn)) {
+                    throw new SQLException(
+                            "Connection setup failed due to invalid entitlement marker. Make sure to enable the SQL Interface feature in Atlas");
+                }
+
                 return conn;
             } else {
                 throw new SQLException("Connection setup failed but no errors where reported.");
@@ -347,6 +353,35 @@ public class MongoDriver implements Driver {
             }
             throw new SQLException("Connection failed. Root cause: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Validate that the current connection has the correct entitlements for running SQL inference
+     *
+     * @param conn The existing connection
+     * @return Whether entitlement is valid
+     * @throws ValidationException If validation fails in an unexpected way
+     */
+    boolean validateEntitlement(MongoConnection conn) throws ValidationException {
+        // Entitlement markers are only needed for enterprise atlas instances, so any other env is valid
+        if (conn.clusterType != MongoConnection.MongoClusterType.Enterprise) {
+            return true;
+        }
+
+        // Get the name of the cluster for this connection
+        Optional<String> cluster = new AtlasClusterNameProvider(conn.mongoClient).clusterName();
+
+        // If the name provider gives us an empty name, then this isn't an atlas cluster and thus
+        // should always validate.
+        return cluster.map(
+                        clusterName -> {
+                            MarkerProvider atlasMarkerProvider =
+                                    new AtlasMarkerProvider(conn.mongoClient);
+                            MarkerEnforcer enforcer = new MarkerEnforcer(atlasMarkerProvider);
+
+                            return enforcer.validate(clusterName);
+                        })
+                .orElse(true);
     }
 
     public static class MongoConnectionConfig {
