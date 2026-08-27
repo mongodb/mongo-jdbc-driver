@@ -87,7 +87,7 @@ public class AtlasClusterNameProvider {
             return Optional.empty();
         }
 
-        String cluster = hostParts[0].toLowerCase().trim();
+        String cluster = hostParts[0].trim();
         return cluster.isEmpty() ? Optional.empty() : Optional.of(cluster);
     }
 

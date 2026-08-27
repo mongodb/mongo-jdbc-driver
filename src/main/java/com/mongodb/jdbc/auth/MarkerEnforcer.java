@@ -82,11 +82,13 @@ public class MarkerEnforcer {
         }
 
         // Validate that the marker is for the specified cluster
+        //
+        // Note that we explicitly check with case-insensitivity.
         String cluster = claims.getSubject();
         if (cluster == null) {
             throw new MissingClaimException("sub");
         }
-        if (!cluster.equals(forCluster)) {
+        if (!cluster.equalsIgnoreCase(forCluster)) {
             log.warn("Entitlement marker was not minted for the current cluster");
             return false;
         }
