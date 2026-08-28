@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-present MongoDB, Inc.
+ * Copyright 2026-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth.exception;
+package com.mongodb.jdbc.sqlinterface.exception;
 
-/** A validation exception caused by a missing issuer claim */
-public class InvalidIssuerException extends ValidationException {
-    public InvalidIssuerException(String issuer) {
-        super(String.format("Invalid issuer for entitlement marker: %s", issuer));
+/** An exception for clusters which do not have a marker. */
+public class SQLInterfaceStatusUnavailableException extends SQLInterfaceStatusException {
+    public SQLInterfaceStatusUnavailableException() {
+        super(
+                "Unable to determine SQL Interface status for this cluster. Verify that the SQL interface is enabled for your cluster and retry.");
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth;
+package com.mongodb.jdbc.sqlinterface.status;
 
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
@@ -30,32 +30,9 @@ import org.bson.Document;
  * within an atlas context.
  */
 public class AtlasClusterNameProvider {
-    private String clusterName;
-
-    public AtlasClusterNameProvider(MongoClient conn) {
-        // Get the cluster name
-        Document hello =
-                conn.getDatabase("admin")
-                        .withReadPreference(ReadPreference.primary())
-                        .runCommand(new BsonDocument("hello", new BsonInt32(1)));
-
-        Optional<String> clusterName;
-        try {
-            String me = hello.getString("me");
-            clusterName = extractClusterName(me);
-        } catch (ClassCastException e) {
-            // Failed to get hostname, so probably in non-Atlas context
-            return;
-        }
-
-        // If the cluster is actually backed by atlas and the URI matched a format that
-        // provides a cluster name, then we save it.
-        clusterName.ifPresent(s -> this.clusterName = s);
-    }
-
     /**
      * Extracts the cluster's lowercase canonical name from a `hello.me` hostname, which on an Atlas
-     * dedicated cluster is `<cluster-name>-shard-<...>.<hash>.mongodb.net:<port>`. If the supplied
+     * dedicated cluster is `[cluster-name]-shard-[...].[hash].mongodb.net:[port]`. If the supplied
      * uri does not match that pattern exactly, we assume that the backing connection is not one of
      * Atlas.
      *
@@ -68,7 +45,7 @@ public class AtlasClusterNameProvider {
             return Optional.empty();
         }
 
-        String[] parts = uri.split(":");
+        String[] parts = uri.toLowerCase().split(":");
         if (parts.length < 1) {
             // Log that the response was malformed
             return Optional.empty();
@@ -76,7 +53,7 @@ public class AtlasClusterNameProvider {
 
         // Ensure that the domain is the atlas one
         String host = parts[0];
-        if (!host.endsWith("mongodb.net")) {
+        if (!host.endsWith(".mongodb.net")) {
             return Optional.empty();
         }
 
@@ -97,7 +74,23 @@ public class AtlasClusterNameProvider {
      *
      * @return The name of the cluster, if applicable
      */
-    public Optional<String> clusterName() {
-        return this.clusterName == null ? Optional.empty() : Optional.of(this.clusterName);
+    public static Optional<String> clusterName(MongoClient client) {
+        // Get the cluster name
+        Document hello =
+                client.getDatabase("admin")
+                        .withReadPreference(ReadPreference.primary())
+                        .runCommand(new BsonDocument("hello", new BsonInt32(1)));
+
+        // Attempt to extract the cluster's name
+        Optional<String> clusterName;
+        try {
+            String me = hello.getString("me");
+            clusterName = extractClusterName(me);
+        } catch (ClassCastException e) {
+            // Failed to get hostname, so probably in non-Atlas context
+            return Optional.empty();
+        }
+
+        return clusterName;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth;
+package com.mongodb.jdbc.sqlinterface.status;
 
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
@@ -22,23 +22,34 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusInvalidException;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusUnavailableException;
 import com.nimbusds.jwt.SignedJWT;
 import java.text.ParseException;
-import java.util.Optional;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** An implementation of a marker provider backed by an Atlas-compatible cluster */
-public class AtlasMarkerProvider implements MarkerProvider {
+public class AtlasMarkerProvider {
+    private static final Logger log = LoggerFactory.getLogger(AtlasMarkerProvider.class);
+
     private static final String ENTITLEMENT_DATABASE = "__mdb_internal_sqlinterface";
     private static final String ENTITLEMENT_COLLECTION = "__sql_status";
     private static final String ENTITLEMENT_FIELD_ID = "entitlement";
     private static final String ENTITLEMENT_FIELD_MARKER = "token";
 
-    private SignedJWT token = null;
-
-    public AtlasMarkerProvider(MongoClient conn) {
+    /**
+     * Get the entitlement marker from the connected MongoDB instance
+     *
+     * @param client The connection to an Atlas instance
+     * @return The entitlement marker
+     * @throws SQLInterfaceStatusException If the marker is missing or invalid
+     */
+    public static SignedJWT getMarker(MongoClient client) throws SQLInterfaceStatusException {
         // Try to find the entitlement token
-        MongoDatabase db = conn.getDatabase(ENTITLEMENT_DATABASE);
+        MongoDatabase db = client.getDatabase(ENTITLEMENT_DATABASE);
         MongoCollection<Document> collection =
                 db.getCollection(ENTITLEMENT_COLLECTION)
                         .withReadPreference(ReadPreference.primary());
@@ -52,27 +63,20 @@ public class AtlasMarkerProvider implements MarkerProvider {
                                         Projections.exclude("_id")))
                         .first();
         if (markerDoc == null) {
-            return;
+            log.warn("No entitlement marker found");
+            throw new SQLInterfaceStatusUnavailableException();
         }
 
         // Try to get the actual token
-        SignedJWT marker;
         try {
             String markerRaw = markerDoc.getString(ENTITLEMENT_FIELD_MARKER);
-            marker = SignedJWT.parse(markerRaw);
+            return SignedJWT.parse(markerRaw);
         } catch (ClassCastException e) {
-            // The token was not a string, so we treat it as an invalid token
-            return;
+            log.warn("Entitlement marker's token field is not a string", e);
+            throw new SQLInterfaceStatusInvalidException();
         } catch (ParseException e) {
-            // The token was malformed, so we treat it as an invalid token
-            return;
+            log.warn("Could not parse entitlement marker", e);
+            throw new SQLInterfaceStatusInvalidException();
         }
-
-        this.token = marker;
-    }
-
-    @Override
-    public Optional<SignedJWT> getMarker() {
-        return this.token != null ? Optional.of(this.token) : Optional.empty();
     }
 }

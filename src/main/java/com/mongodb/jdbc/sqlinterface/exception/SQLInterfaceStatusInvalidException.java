@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-present MongoDB, Inc.
+ * Copyright 2026-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth.exception;
+package com.mongodb.jdbc.sqlinterface.exception;
 
-/** A validation exception caused by a missing claim */
-public class MissingClaimException extends ValidationException {
-    public MissingClaimException(String claim) {
-        super(String.format("Missing required claim for entitlement marker: %s", claim));
+/** An exception caused by an intrinsic violation of the shape of a marker. */
+public class SQLInterfaceStatusInvalidException extends SQLInterfaceStatusException {
+    public SQLInterfaceStatusInvalidException() {
+        super(
+                "SQL Interface status for this cluster could not be validated. For more details, enable logging with warn level minimum.");
     }
 }

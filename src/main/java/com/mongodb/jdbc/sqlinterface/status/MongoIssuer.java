@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-present MongoDB, Inc.
+ * Copyright 2026-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth;
+package com.mongodb.jdbc.sqlinterface.status;
 
-import com.mongodb.jdbc.auth.exception.InvalidIssuerException;
+import java.text.ParseException;
 
 /** Valid issuers from mongo-minted SQL Interface entitlement markers. */
 public enum MongoIssuer {
@@ -31,15 +31,15 @@ public enum MongoIssuer {
      *
      * @param issuer The string representation of the issuer
      * @return The corresponding MongoIssuer
-     * @throws InvalidIssuerException on unknown issuers
+     * @throws ParseException on unknown issuers
      */
-    public static MongoIssuer fromString(String issuer) throws InvalidIssuerException {
+    public static MongoIssuer fromString(String issuer) throws ParseException {
         if (issuer.equals(EMERGENCY_ISSUER)) {
             return MongoIssuer.EMERGENCY;
         } else if (issuer.equals(SERVICE_ISSUER)) {
             return MongoIssuer.SERVICE;
         } else {
-            throw new InvalidIssuerException(issuer);
+            throw new ParseException(String.format("Invalid issuer: %s", issuer), 0);
         }
     }
 }

@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth;
+package com.mongodb.jdbc.sqlinterface.exception;
 
-import com.nimbusds.jwt.SignedJWT;
-import java.util.Optional;
-
-/** An interface for providing an entitlement marker */
-public interface MarkerProvider {
-    /**
-     * Get the entitlement marker
-     *
-     * @return The marker, if found
-     */
-    Optional<SignedJWT> getMarker();
+/** An exception caused by an error when reading the marker. */
+public class SQLInterfaceStatusException extends Exception {
+    public SQLInterfaceStatusException(String cause) {
+        super(
+                String.format(
+                        "Unable to read SQL Interface status for this cluster: %s Please contact MongoDB support at https://support.mongodb.com if you need help.",
+                        cause));
+    }
 }

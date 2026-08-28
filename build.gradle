@@ -295,7 +295,7 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: oauth2OIDCVersion
 
     // Ed25519 signature support in nimbus-jose-jwt, which is a sub-dependency of com.nimbusds.oauth2-oidc-sdk
-    implementation group: 'com.google.crypto.tink', name: 'tink', version: googleTinkVersion
+    testImplementation group: 'com.google.crypto.tink', name: 'tink', version: googleTinkVersion
 }
 
 def getReleaseVersion() {

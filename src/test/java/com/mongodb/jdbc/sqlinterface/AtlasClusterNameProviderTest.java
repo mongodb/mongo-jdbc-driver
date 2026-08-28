@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.mongodb.jdbc.auth;
+package com.mongodb.jdbc.sqlinterface;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.jdbc.sqlinterface.status.AtlasClusterNameProvider;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +63,7 @@ public class AtlasClusterNameProviderTest {
 
     @Test
     void mongoLikeHostEmpty() {
-        String uri = "cluster3-shard-00-mongos-g0.abc123.moongodb.org:27017";
+        String uri = "cluster3-shard-00-mongos-g0.abc123.fakemongodb.net:27017";
 
         assertEquals(AtlasClusterNameProvider.extractClusterName(uri), Optional.empty());
     }
