@@ -294,7 +294,8 @@ dependencies {
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: thymeLeafVersion
     implementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: oauth2OIDCVersion
 
-    // Ed25519 signature support in nimbus-jose-jwt, which is a sub-dependency of com.nimbusds.oauth2-oidc-sdk
+    // Ed25519 signature support in nimbus-jose-jwt
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: nimbusJoseJwtVersion
     testImplementation group: 'com.google.crypto.tink', name: 'tink', version: googleTinkVersion
 }
 
