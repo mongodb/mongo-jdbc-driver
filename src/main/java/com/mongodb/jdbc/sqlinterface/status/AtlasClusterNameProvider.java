@@ -19,8 +19,12 @@ package com.mongodb.jdbc.sqlinterface.status;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
+import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
+
 import java.util.Optional;
+import java.util.logging.Level;
+
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
@@ -57,7 +61,6 @@ public class AtlasClusterNameProvider {
         // Try to get just the name
         String[] hostParts = host.split("-shard-");
         if (hostParts.length < 2) {
-            // Log that the host was malformed
             return Optional.empty();
         }
 
@@ -87,7 +90,6 @@ public class AtlasClusterNameProvider {
                 String me = hello.getString("me");
                 clusterName = extractClusterName(me);
             } catch (ClassCastException e) {
-                // Failed to get hostname, so probably in non-Atlas context
                 return Optional.empty();
             }
 
