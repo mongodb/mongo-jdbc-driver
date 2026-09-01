@@ -31,11 +31,9 @@ import com.nimbusds.jose.jwk.OctetKeyPair;
 import com.nimbusds.jose.jwk.gen.OctetKeyPairGenerator;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
 import java.time.Instant;
 import java.util.Date;
 import java.util.logging.Logger;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,8 +45,7 @@ import org.junit.jupiter.api.Test;
 public class MarkerEnforcerTest {
     private final MongoLogger logger = new MongoLogger(Logger.getLogger("test-logger"), 0);
 
-    public MarkerEnforcerTest() {
-    }
+    public MarkerEnforcerTest() {}
 
     SignedJWT generateMarker(String cluster, String issuer) {
         return generateMarker(cluster, issuer, true);

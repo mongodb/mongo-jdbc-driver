@@ -19,12 +19,8 @@ package com.mongodb.jdbc.sqlinterface.status;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
-import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
-
 import java.util.Optional;
-import java.util.logging.Level;
-
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.Document;
