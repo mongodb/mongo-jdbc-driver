@@ -17,9 +17,9 @@
 package com.mongodb.jdbc.sqlinterface.exception;
 
 /** An exception for clusters which do not have a marker. */
-public class SQLInterfaceStatusUnavailableException extends SQLInterfaceStatusException {
+public class SQLInterfaceStatusUnavailableException extends Exception {
     public SQLInterfaceStatusUnavailableException() {
         super(
-                "Unable to determine SQL Interface status for this cluster. Verify that the SQL interface is enabled for your cluster and retry.");
+                "Unable to determine SQL Interface status for this cluster. Verify that the SQL interface is enabled for your cluster and retry. If the error persists, please contact MongoDB support at https://support.mongodb.com");
     }
 }

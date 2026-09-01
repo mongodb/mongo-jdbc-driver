@@ -16,8 +16,10 @@
 
 package com.mongodb.jdbc.sqlinterface.status;
 
+import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
 import java.util.Optional;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
@@ -45,14 +47,9 @@ public class AtlasClusterNameProvider {
             return Optional.empty();
         }
 
-        String[] parts = uri.toLowerCase().split(":");
-        if (parts.length < 1) {
-            // Log that the response was malformed
-            return Optional.empty();
-        }
+        String host = uri.toLowerCase().split(":")[0];
 
         // Ensure that the domain is the atlas one
-        String host = parts[0];
         if (!host.endsWith(".mongodb.net")) {
             return Optional.empty();
         }
@@ -73,24 +70,30 @@ public class AtlasClusterNameProvider {
      * MongoDB connection
      *
      * @return The name of the cluster, if applicable
+     * @throws SQLInterfaceStatusException if running a command against the mongo client fails
      */
-    public static Optional<String> clusterName(MongoClient client) {
-        // Get the cluster name
-        Document hello =
-                client.getDatabase("admin")
-                        .withReadPreference(ReadPreference.primary())
-                        .runCommand(new BsonDocument("hello", new BsonInt32(1)));
-
-        // Attempt to extract the cluster's name
-        Optional<String> clusterName;
+    public static Optional<String> getClusterName(MongoClient client)
+            throws SQLInterfaceStatusException {
         try {
-            String me = hello.getString("me");
-            clusterName = extractClusterName(me);
-        } catch (ClassCastException e) {
-            // Failed to get hostname, so probably in non-Atlas context
-            return Optional.empty();
-        }
+            // Get the cluster name
+            Document hello =
+                    client.getDatabase("admin")
+                            .withReadPreference(ReadPreference.primary())
+                            .runCommand(new BsonDocument("hello", new BsonInt32(1)));
 
-        return clusterName;
+            // Attempt to extract the cluster's name
+            Optional<String> clusterName;
+            try {
+                String me = hello.getString("me");
+                clusterName = extractClusterName(me);
+            } catch (ClassCastException e) {
+                // Failed to get hostname, so probably in non-Atlas context
+                return Optional.empty();
+            }
+
+            return clusterName;
+        } catch (MongoException e) {
+            throw new SQLInterfaceStatusException(e.toString());
+        }
     }
 }

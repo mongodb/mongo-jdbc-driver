@@ -36,7 +36,6 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
-import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
 import com.mongodb.jdbc.sqlinterface.status.AtlasClusterNameProvider;
 import com.mongodb.jdbc.sqlinterface.status.AtlasMarkerProvider;
 import com.mongodb.jdbc.sqlinterface.status.MarkerEnforcer;
@@ -726,10 +725,10 @@ public class MongoConnection implements Connection {
                     }
                     appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion;
 
-                    // Enterprise connections might need an entitlement marker, so we enforce that we have one if needed
+                    // Enterprise connections need an entitlement marker on Atlas, so we enforce that we have one if needed
                     try {
                         validateEntitlement(mongoClient);
-                    } catch (SQLInterfaceStatusException e) {
+                    } catch (Exception e) {
                         throw new SQLException(
                                 "Connection setup failed due to invalid entitlement marker. Make sure to enable the SQL Interface feature in Atlas",
                                 e);
@@ -760,28 +759,28 @@ public class MongoConnection implements Connection {
          * inference
          *
          * @param client The existing connection
-         * @throws SQLInterfaceStatusException If validation fails in an unexpected way
+         * @throws Exception If validation fails in an unexpected way
          */
-        void validateEntitlement(MongoClient client) throws SQLInterfaceStatusException {
+        void validateEntitlement(MongoClient client) throws Exception {
             // Quickly check that the URI would even possibly match an atlas cluster before making network requests
             if (!url.contains(".mongodb.net")) {
                 logger.log(
                         Level.INFO,
-                        "Enterprise MongoDB instance's URI is probably not an Atlas instance. Skipping entitlement check");
+                        "Enterprise MongoDB instance's URI is not an Atlas instance. Skipping entitlement check");
                 return;
             }
 
             // Get the name of the cluster for this connection. If there is no name, then we aren't in an atlas cluster
-            String cluster = AtlasClusterNameProvider.clusterName(client).orElse(null);
+            String cluster = AtlasClusterNameProvider.getClusterName(client).orElse(null);
             if (cluster == null) {
                 logger.log(
                         Level.INFO,
-                        "Enterprise MongoDB instance's cluster name is probably not an Atlas instance. Skipping entitlement check");
+                        "Enterprise MongoDB instance's cluster name is not an Atlas instance. Skipping entitlement check");
                 return;
             }
 
-            SignedJWT marker = AtlasMarkerProvider.getMarker(client);
-            MarkerEnforcer.validate(marker, cluster);
+            SignedJWT marker = AtlasMarkerProvider.getMarker(logger, client);
+            MarkerEnforcer.validate(logger, marker, cluster);
         }
     }
 

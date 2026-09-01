@@ -21,7 +21,7 @@ public class SQLInterfaceStatusException extends Exception {
     public SQLInterfaceStatusException(String cause) {
         super(
                 String.format(
-                        "Unable to read SQL Interface status for this cluster: %s Please contact MongoDB support at https://support.mongodb.com if you need help.",
+                        "Unable to read SQL Interface status for this cluster: %s. Please contact MongoDB support at https://support.mongodb.com if you need help.",
                         cause));
     }
 }

@@ -17,7 +17,7 @@
 package com.mongodb.jdbc.sqlinterface.exception;
 
 /** An exception caused by a marker that is otherwise valid, but is explicitly disabled. */
-public class SQLInterfaceStatusDisabledException extends SQLInterfaceStatusException {
+public class SQLInterfaceStatusDisabledException extends Exception {
     public SQLInterfaceStatusDisabledException() {
         super(
                 "SQL Interface is disabled for this cluster. Enable the SQL Interface for your cluster on Atlas and retry. Contact your admin if necessary.");

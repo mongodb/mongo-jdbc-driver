@@ -16,25 +16,23 @@
 
 package com.mongodb.jdbc.sqlinterface.status;
 
+import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusInvalidException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusUnavailableException;
 import com.nimbusds.jwt.SignedJWT;
-import java.text.ParseException;
+import java.util.logging.Level;
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** An implementation of a marker provider backed by an Atlas-compatible cluster */
 public class AtlasMarkerProvider {
-    private static final Logger log = LoggerFactory.getLogger(AtlasMarkerProvider.class);
-
     private static final String ENTITLEMENT_DATABASE = "__mdb_internal_sqlinterface";
     private static final String ENTITLEMENT_COLLECTION = "__sql_status";
     private static final String ENTITLEMENT_FIELD_ID = "entitlement";
@@ -45,38 +43,42 @@ public class AtlasMarkerProvider {
      *
      * @param client The connection to an Atlas instance
      * @return The entitlement marker
-     * @throws SQLInterfaceStatusException If the marker is missing or invalid
+     * @throws Exception If the the client errors, the marker is missing, or the marker is invalid
      */
-    public static SignedJWT getMarker(MongoClient client) throws SQLInterfaceStatusException {
-        // Try to find the entitlement token
-        MongoDatabase db = client.getDatabase(ENTITLEMENT_DATABASE);
-        MongoCollection<Document> collection =
-                db.getCollection(ENTITLEMENT_COLLECTION)
-                        .withReadPreference(ReadPreference.primary());
-
-        Document markerDoc =
-                collection
-                        .find(Filters.eq("_id", ENTITLEMENT_FIELD_ID))
-                        .projection(
-                                Projections.fields(
-                                        Projections.include(ENTITLEMENT_FIELD_MARKER),
-                                        Projections.exclude("_id")))
-                        .first();
-        if (markerDoc == null) {
-            log.warn("No entitlement marker found");
-            throw new SQLInterfaceStatusUnavailableException();
-        }
-
-        // Try to get the actual token
+    public static SignedJWT getMarker(MongoLogger logger, MongoClient client) throws Exception {
         try {
-            String markerRaw = markerDoc.getString(ENTITLEMENT_FIELD_MARKER);
-            return SignedJWT.parse(markerRaw);
-        } catch (ClassCastException e) {
-            log.warn("Entitlement marker's token field is not a string", e);
-            throw new SQLInterfaceStatusInvalidException();
-        } catch (ParseException e) {
-            log.warn("Could not parse entitlement marker", e);
-            throw new SQLInterfaceStatusInvalidException();
+            // Try to find the entitlement token
+            MongoDatabase db = client.getDatabase(ENTITLEMENT_DATABASE);
+            MongoCollection<Document> collection =
+                    db.getCollection(ENTITLEMENT_COLLECTION)
+                            .withReadPreference(ReadPreference.primary());
+
+            Document markerDoc =
+                    collection
+                            .find(Filters.eq("_id", ENTITLEMENT_FIELD_ID))
+                            .projection(
+                                    Projections.fields(
+                                            Projections.include(ENTITLEMENT_FIELD_MARKER),
+                                            Projections.exclude("_id")))
+                            .first();
+            if (markerDoc == null) {
+                logger.log(Level.WARNING, "No entitlement marker found");
+                throw new SQLInterfaceStatusUnavailableException();
+            }
+
+            // Try to get the actual token
+            try {
+                String markerRaw = markerDoc.getString(ENTITLEMENT_FIELD_MARKER);
+                return SignedJWT.parse(markerRaw);
+            } catch (ClassCastException e) {
+                logger.log(Level.WARNING, "Entitlement marker's token field is not a string", e);
+                throw new SQLInterfaceStatusInvalidException();
+            } catch (IllegalArgumentException e) {
+                logger.log(Level.WARNING, "Could not parse entitlement marker", e);
+                throw new SQLInterfaceStatusInvalidException();
+            }
+        } catch (MongoException e) {
+            throw new SQLInterfaceStatusException(e.toString());
         }
     }
 }

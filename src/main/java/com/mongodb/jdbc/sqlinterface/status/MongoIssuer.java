@@ -16,8 +16,6 @@
 
 package com.mongodb.jdbc.sqlinterface.status;
 
-import java.text.ParseException;
-
 /** Valid issuers from mongo-minted SQL Interface entitlement markers. */
 public enum MongoIssuer {
     EMERGENCY,
@@ -31,15 +29,15 @@ public enum MongoIssuer {
      *
      * @param issuer The string representation of the issuer
      * @return The corresponding MongoIssuer
-     * @throws ParseException on unknown issuers
+     * @throws IllegalArgumentException on unknown issuers
      */
-    public static MongoIssuer fromString(String issuer) throws ParseException {
+    public static MongoIssuer fromString(String issuer) throws IllegalArgumentException {
         if (issuer.equals(EMERGENCY_ISSUER)) {
             return MongoIssuer.EMERGENCY;
         } else if (issuer.equals(SERVICE_ISSUER)) {
             return MongoIssuer.SERVICE;
         } else {
-            throw new ParseException(String.format("Invalid issuer: %s", issuer), 0);
+            throw new IllegalArgumentException(String.format("Invalid issuer: %s", issuer));
         }
     }
 }
