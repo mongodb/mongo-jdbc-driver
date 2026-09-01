@@ -67,4 +67,18 @@ public class AtlasClusterNameProviderTest {
 
         assertEquals(AtlasClusterNameProvider.extractClusterName(uri), Optional.empty());
     }
+
+    @Test
+    void emptyIsEmpty() {
+        String uri = "";
+
+        assertEquals(AtlasClusterNameProvider.extractClusterName(uri), Optional.empty());
+    }
+
+    @Test
+    void whitespaceIsEmpty() {
+        String uri = " \t\n";
+
+        assertEquals(AtlasClusterNameProvider.extractClusterName(uri), Optional.empty());
+    }
 }
