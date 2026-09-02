@@ -18,10 +18,11 @@ package com.mongodb.jdbc.sqlinterface.exception;
 
 /** An exception caused by an error when reading the marker. */
 public class SQLInterfaceStatusException extends Exception {
-    public SQLInterfaceStatusException(String cause) {
+    public SQLInterfaceStatusException(String msg, Throwable cause) {
         super(
                 String.format(
                         "Unable to read SQL Interface status for this cluster: %s. Please contact MongoDB support at https://support.mongodb.com if you need help.",
-                        cause));
+                        msg),
+                cause);
     }
 }

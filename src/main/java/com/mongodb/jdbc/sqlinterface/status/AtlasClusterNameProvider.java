@@ -91,7 +91,7 @@ public class AtlasClusterNameProvider {
 
             return clusterName;
         } catch (MongoException e) {
-            throw new SQLInterfaceStatusException(e.toString());
+            throw new SQLInterfaceStatusException(e.getMessage(), e);
         }
     }
 }

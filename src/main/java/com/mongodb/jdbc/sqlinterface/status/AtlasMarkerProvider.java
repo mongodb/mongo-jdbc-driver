@@ -28,6 +28,7 @@ import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusInvalidException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusUnavailableException;
 import com.nimbusds.jwt.SignedJWT;
+import java.text.ParseException;
 import java.util.logging.Level;
 import org.bson.Document;
 
@@ -43,7 +44,7 @@ public class AtlasMarkerProvider {
      *
      * @param client The connection to an Atlas instance
      * @return The entitlement marker
-     * @throws Exception If the the client errors, the marker is missing, or the marker is invalid
+     * @throws Exception If the client errors, the marker is missing, or the marker is invalid
      */
     public static SignedJWT getMarker(MongoLogger logger, MongoClient client) throws Exception {
         try {
@@ -72,13 +73,13 @@ public class AtlasMarkerProvider {
                 return SignedJWT.parse(markerRaw);
             } catch (ClassCastException e) {
                 logger.log(Level.WARNING, "Entitlement marker's token field is not a string", e);
-                throw new SQLInterfaceStatusInvalidException();
-            } catch (IllegalArgumentException e) {
+                throw new SQLInterfaceStatusInvalidException(e);
+            } catch (ParseException e) {
                 logger.log(Level.WARNING, "Could not parse entitlement marker", e);
-                throw new SQLInterfaceStatusInvalidException();
+                throw new SQLInterfaceStatusInvalidException(e);
             }
         } catch (MongoException e) {
-            throw new SQLInterfaceStatusException(e.toString());
+            throw new SQLInterfaceStatusException(e.getMessage(), e);
         }
     }
 }

@@ -18,8 +18,9 @@ package com.mongodb.jdbc.sqlinterface.exception;
 
 /** An exception caused by an intrinsic violation of the shape of a marker. */
 public class SQLInterfaceStatusInvalidException extends Exception {
-    public SQLInterfaceStatusInvalidException() {
+    public SQLInterfaceStatusInvalidException(Throwable cause) {
         super(
-                "SQL Interface status for this cluster could not be validated. For more details, enable logging with warn level minimum. Contact MongoDB support at https://support.mongodb.com if you need help.");
+                "SQL Interface status for this cluster could not be validated. For more details, enable logging with warn level minimum. Contact MongoDB support at https://support.mongodb.com if you need help.",
+                cause);
     }
 }

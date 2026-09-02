@@ -45,11 +45,13 @@ public class MarkerEnforcer {
             throws Exception {
         if (marker == null) {
             logger.log(Level.WARNING, "Entitlement marker was null");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("marker cannot be null"));
         }
         if (marker.getState() != JWSObject.State.SIGNED) {
             logger.log(Level.WARNING, "Entitlement marker was unsigned");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("marker must be signed"));
         }
 
         JWTClaimsSet claims = MarkerEnforcer.getClaims(logger, marker);
@@ -64,14 +66,16 @@ public class MarkerEnforcer {
                 logger.log(
                         Level.WARNING,
                         "Emergency entitlement marker is missing its expiration date");
-                throw new SQLInterfaceStatusInvalidException();
+                throw new SQLInterfaceStatusInvalidException(
+                        new IllegalArgumentException("expiration date cannot be null"));
             }
 
             if (now.isAfter(expiry.toInstant())) {
                 logger.log(
                         Level.WARNING,
                         String.format("Emergency entitlement marker has expired as of %s", expiry));
-                throw new SQLInterfaceStatusInvalidException();
+                throw new SQLInterfaceStatusInvalidException(
+                        new IllegalArgumentException("marker cannot be expired"));
             }
         }
 
@@ -81,7 +85,8 @@ public class MarkerEnforcer {
         String cluster = claims.getSubject();
         if (cluster == null) {
             logger.log(Level.WARNING, "Entitlement marker is missing the subject cluster");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("cluster name cannot be null"));
         }
         if (!cluster.equalsIgnoreCase(forCluster)) {
             logger.log(
@@ -89,7 +94,8 @@ public class MarkerEnforcer {
                     String.format(
                             "Entitlement marker was minted for '%s' which is not the current cluster '%s'",
                             cluster, forCluster));
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("cluster name must match"));
         }
 
         // Validate that the claims are correct for a valid token.
@@ -114,7 +120,7 @@ public class MarkerEnforcer {
         } catch (ParseException e) {
             logger.log(
                     Level.WARNING, "Entitlement marker is malformed: marker contained no claims");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(e);
         }
     }
 
@@ -133,12 +139,13 @@ public class MarkerEnforcer {
             isEnabled = claims.getBooleanClaim("enabled");
         } catch (ParseException e) {
             logger.log(Level.WARNING, "Entitlement marker's enabled claim is not a boolean");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(e);
         }
 
         if (isEnabled == null) {
             logger.log(Level.WARNING, "Entitlement marker is missing required enabled claim");
-            throw new SQLInterfaceStatusInvalidException();
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("enabled cannot be null"));
         }
 
         return isEnabled;
@@ -155,14 +162,16 @@ public class MarkerEnforcer {
             throws SQLInterfaceStatusInvalidException {
         String issuer = claims.getIssuer();
         if (issuer == null) {
-            throw new SQLInterfaceStatusInvalidException();
+            logger.log(Level.WARNING, "Entitlement marker is missing required issuer claim");
+            throw new SQLInterfaceStatusInvalidException(
+                    new IllegalArgumentException("issuer cannot be null"));
         }
 
         try {
             return MongoIssuer.fromString(claims.getIssuer());
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, "Could not parse issuer", e);
-            throw new SQLInterfaceStatusInvalidException();
+            logger.log(Level.WARNING, "Issuer did not match valid options", e);
+            throw new SQLInterfaceStatusInvalidException(e);
         }
     }
 }

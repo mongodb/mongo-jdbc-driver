@@ -729,9 +729,7 @@ public class MongoConnection implements Connection {
                     try {
                         validateEntitlement(mongoClient);
                     } catch (Exception e) {
-                        throw new SQLException(
-                                "Connection setup failed due to invalid entitlement marker. Make sure to enable the SQL Interface feature in Atlas",
-                                e);
+                        throw new SQLException(e.getMessage(), e);
                     }
 
                     break;
