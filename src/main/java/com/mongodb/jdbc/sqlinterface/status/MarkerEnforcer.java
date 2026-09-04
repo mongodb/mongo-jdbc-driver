@@ -39,10 +39,11 @@ public class MarkerEnforcer {
      *
      * @param marker The marker to validate
      * @param forCluster The cluster being accessed that needs entitlement validation
-     * @throws Exception If the token is not correctly shaped
+     * @throws SQLInterfaceStatusDisabledException if the marker is disabled
+     * @throws SQLInterfaceStatusInvalidException if the marker is malformed
      */
     public static void validate(MongoLogger logger, SignedJWT marker, String forCluster)
-            throws Exception {
+            throws SQLInterfaceStatusDisabledException, SQLInterfaceStatusInvalidException {
         if (marker == null) {
             logger.log(Level.WARNING, "Entitlement marker was null");
             throw new SQLInterfaceStatusInvalidException(

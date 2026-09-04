@@ -44,9 +44,13 @@ public class AtlasMarkerProvider {
      *
      * @param client The connection to an Atlas instance
      * @return The entitlement marker
-     * @throws Exception If the client errors, the marker is missing, or the marker is invalid
+     * @throws SQLInterfaceStatusException if the client errors when requesting the marker
+     * @throws SQLInterfaceStatusInvalidException if the marker is malformed
+     * @throws SQLInterfaceStatusUnavailableException if there is no marker found
      */
-    public static SignedJWT getMarker(MongoLogger logger, MongoClient client) throws Exception {
+    public static SignedJWT getMarker(MongoLogger logger, MongoClient client)
+            throws SQLInterfaceStatusException, SQLInterfaceStatusInvalidException,
+                    SQLInterfaceStatusUnavailableException {
         try {
             // Try to find the entitlement token
             MongoDatabase db = client.getDatabase(ENTITLEMENT_DATABASE);
