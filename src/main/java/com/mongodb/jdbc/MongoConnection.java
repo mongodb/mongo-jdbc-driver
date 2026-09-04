@@ -36,7 +36,15 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusDisabledException;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusInvalidException;
+import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusUnavailableException;
+import com.mongodb.jdbc.sqlinterface.status.AtlasClusterNameProvider;
+import com.mongodb.jdbc.sqlinterface.status.AtlasMarkerProvider;
+import com.mongodb.jdbc.sqlinterface.status.MarkerEnforcer;
 import com.mongodb.jdbc.utils.X509Authentication;
+import com.nimbusds.jwt.SignedJWT;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -720,6 +728,14 @@ public class MongoConnection implements Connection {
                                         + mongosqlTranslateVersion);
                     }
                     appName = appName + "|libmongosqltranslate+" + mongosqlTranslateVersion;
+
+                    // Enterprise connections need an entitlement marker on Atlas, so we enforce that we have one if needed
+                    try {
+                        validateEntitlement(mongoClient);
+                    } catch (Exception e) {
+                        throw new SQLException(e.getMessage(), e);
+                    }
+
                     break;
                 case UnknownTarget:
                     // Target could not be determined.
@@ -738,6 +754,42 @@ public class MongoConnection implements Connection {
                 throw new SQLException("Connection error");
             }
             return null;
+        }
+
+        /**
+         * Validate that the current connection has the correct entitlements for running SQL
+         * inference
+         *
+         * @param client The existing connection
+         * @throws SQLInterfaceStatusInvalidException if validation fails in processing the marker
+         * @throws SQLInterfaceStatusException if the validation fails in an unexpected way
+         * @throws SQLInterfaceStatusUnavailableException if the validation fails to fetch the
+         *     marker
+         * @throws SQLInterfaceStatusDisabledException if the marker is disabled
+         */
+        void validateEntitlement(MongoClient client)
+                throws SQLInterfaceStatusInvalidException, SQLInterfaceStatusException,
+                        SQLInterfaceStatusUnavailableException,
+                        SQLInterfaceStatusDisabledException {
+            // Quickly check that the URI would even possibly match an atlas cluster before making network requests
+            if (!url.contains(".mongodb.net")) {
+                logger.log(
+                        Level.INFO,
+                        "Enterprise MongoDB instance's URI is not an Atlas instance. Skipping entitlement check");
+                return;
+            }
+
+            // Get the name of the cluster for this connection. If there is no name, then we aren't in an atlas cluster
+            String cluster = AtlasClusterNameProvider.getClusterName(client).orElse(null);
+            if (cluster == null) {
+                logger.log(
+                        Level.INFO,
+                        "Enterprise MongoDB instance's cluster name is not an Atlas instance. Skipping entitlement check");
+                return;
+            }
+
+            SignedJWT marker = AtlasMarkerProvider.getMarker(logger, client);
+            MarkerEnforcer.validate(logger, marker, cluster);
         }
     }
 
