@@ -18,11 +18,28 @@ package com.mongodb.jdbc.sqlinterface.status;
 
 /** Valid issuers from mongo-minted SQL Interface entitlement markers. */
 public enum MongoIssuer {
-    EMERGENCY,
-    SERVICE;
+    EMERGENCY {
+        @Override
+        public String toIssuer() {
+            return EMERGENCY_ISSUER;
+        }
+    },
+    SERVICE {
+        @Override
+        public String toIssuer() {
+            return SERVICE_ISSUER;
+        }
+    };
 
-    public static final String EMERGENCY_ISSUER = "mongosql-emergency";
-    public static final String SERVICE_ISSUER = "mongosql-service";
+    private static final String EMERGENCY_ISSUER = "mongosql-emergency";
+    private static final String SERVICE_ISSUER = "mongosql-service";
+
+    /**
+     * Returns the issuer value corresponding for this issuer
+     *
+     * @return the issuer string value
+     */
+    public abstract String toIssuer();
 
     /**
      * Attempts to create a MongoIssuer from its string representation

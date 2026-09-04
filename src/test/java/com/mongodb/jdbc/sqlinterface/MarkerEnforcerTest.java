@@ -109,7 +109,7 @@ public class MarkerEnforcerTest {
     @Test
     void validServiceMarkerAccepted() throws Exception {
         String cluster = "example";
-        SignedJWT marker = signMarker(generateMarker(cluster, MongoIssuer.SERVICE_ISSUER));
+        SignedJWT marker = signMarker(generateMarker(cluster, MongoIssuer.SERVICE.toIssuer()));
 
         MarkerEnforcer.validate(logger, marker, cluster);
     }
@@ -120,7 +120,8 @@ public class MarkerEnforcerTest {
         Date future = Date.from(Instant.now().plusSeconds(60 * 60));
 
         SignedJWT marker =
-                signMarker(generateExpiringMarker(cluster, MongoIssuer.EMERGENCY_ISSUER, future));
+                signMarker(
+                        generateExpiringMarker(cluster, MongoIssuer.EMERGENCY.toIssuer(), future));
 
         MarkerEnforcer.validate(logger, marker, cluster);
     }
@@ -131,7 +132,7 @@ public class MarkerEnforcerTest {
         Date future = Date.from(Instant.now().plusSeconds(60 * 60));
 
         SignedJWT marker =
-                signMarker(generateExpiringMarker(cluster, MongoIssuer.SERVICE_ISSUER, future));
+                signMarker(generateExpiringMarker(cluster, MongoIssuer.SERVICE.toIssuer(), future));
 
         MarkerEnforcer.validate(logger, marker, cluster);
     }
@@ -142,7 +143,7 @@ public class MarkerEnforcerTest {
         Date past = Date.from(Instant.now().minusSeconds(60 * 60));
 
         SignedJWT marker =
-                signMarker(generateExpiringMarker(cluster, MongoIssuer.SERVICE_ISSUER, past));
+                signMarker(generateExpiringMarker(cluster, MongoIssuer.SERVICE.toIssuer(), past));
 
         MarkerEnforcer.validate(logger, marker, cluster);
     }
@@ -152,7 +153,7 @@ public class MarkerEnforcerTest {
         String cluster = "example";
         String otherCluster = "foo";
 
-        SignedJWT marker = signMarker(generateMarker(cluster, MongoIssuer.SERVICE_ISSUER));
+        SignedJWT marker = signMarker(generateMarker(cluster, MongoIssuer.SERVICE.toIssuer()));
 
         assertThrows(
                 SQLInterfaceStatusInvalidException.class,
@@ -163,7 +164,7 @@ public class MarkerEnforcerTest {
     void missingEnabledThrows() {
         String cluster = "example";
         SignedJWT marker =
-                signMarker(generateMalformedMarker(cluster, MongoIssuer.SERVICE_ISSUER, null));
+                signMarker(generateMalformedMarker(cluster, MongoIssuer.SERVICE.toIssuer(), null));
 
         assertThrows(
                 SQLInterfaceStatusInvalidException.class,
@@ -184,7 +185,7 @@ public class MarkerEnforcerTest {
     void missingClusterThrows() {
         String cluster = "example";
         SignedJWT marker =
-                signMarker(generateMalformedMarker(null, MongoIssuer.SERVICE_ISSUER, true));
+                signMarker(generateMalformedMarker(null, MongoIssuer.SERVICE.toIssuer(), true));
 
         assertThrows(
                 SQLInterfaceStatusInvalidException.class,
@@ -194,7 +195,8 @@ public class MarkerEnforcerTest {
     @Test
     void disabledMarkerThrows() {
         String cluster = "example";
-        SignedJWT marker = signMarker(generateMarker(cluster, MongoIssuer.SERVICE_ISSUER, false));
+        SignedJWT marker =
+                signMarker(generateMarker(cluster, MongoIssuer.SERVICE.toIssuer(), false));
 
         assertThrows(
                 SQLInterfaceStatusDisabledException.class,
@@ -207,7 +209,7 @@ public class MarkerEnforcerTest {
         Date past = Date.from(Instant.now().minusSeconds(60 * 60));
 
         SignedJWT marker =
-                signMarker(generateExpiringMarker(cluster, MongoIssuer.EMERGENCY_ISSUER, past));
+                signMarker(generateExpiringMarker(cluster, MongoIssuer.EMERGENCY.toIssuer(), past));
 
         assertThrows(
                 SQLInterfaceStatusInvalidException.class,
@@ -224,7 +226,7 @@ public class MarkerEnforcerTest {
 
     @Test
     void unsignedTokenThrows() {
-        SignedJWT unsigned = generateMarker("foo", MongoIssuer.SERVICE_ISSUER);
+        SignedJWT unsigned = generateMarker("foo", MongoIssuer.SERVICE.toIssuer());
         assertThrows(
                 SQLInterfaceStatusInvalidException.class,
                 () -> MarkerEnforcer.validate(logger, unsigned, "_"),
