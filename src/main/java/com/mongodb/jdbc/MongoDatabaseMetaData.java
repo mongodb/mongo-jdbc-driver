@@ -230,9 +230,11 @@ public class MongoDatabaseMetaData implements DatabaseMetaData {
             com.mongodb.jdbc.MongoFunctions.getInstance();
 
     public static final Pattern DISALLOWED_COLLECTION_NAMES =
-            Pattern.compile("(system\\.(namespace|indexes|profiles|js|views))|__sql_schemas|_sql_status");
+            Pattern.compile(
+                    "(system\\.(namespace|indexes|profiles|js|views))|__sql_schemas|_sql_status");
 
-    public static final Pattern DISALLOWED_DB_NAMES = Pattern.compile("admin|config|local|system|_mdb_internal_sqlinterface");
+    public static final Pattern DISALLOWED_DB_NAMES =
+            Pattern.compile("admin|config|local|system|_mdb_internal_sqlinterface");
 
     private final MongoConnection conn;
     private String serverVersion;
