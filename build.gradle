@@ -293,6 +293,10 @@ dependencies {
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: thymeLeafVersion
     implementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: oauth2OIDCVersion
+
+    // Ed25519 signature support in nimbus-jose-jwt
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: nimbusJoseJwtVersion
+    testImplementation group: 'com.google.crypto.tink', name: 'tink', version: googleTinkVersion
 }
 
 def getReleaseVersion() {
