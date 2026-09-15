@@ -43,6 +43,7 @@ public class AuthGSSAPIIntegrationTest {
         props.setProperty("gssapiserverauth", "true");
 
         try (Connection conn = DriverManager.getConnection(mongoUri, props)) {
+            System.out.println("Mongo URI: " + mongoUri);
             DatabaseMetaData dbmd = conn.getMetaData();
             ResultSet catalogs = dbmd.getCatalogs();
             while (catalogs.next()) {
