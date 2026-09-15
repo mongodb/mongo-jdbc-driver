@@ -39,8 +39,19 @@ public class AuthGSSAPIIntegrationTest {
         Properties props = new Properties();
         props.setProperty("database", "test");
         props.setProperty("jaasconfigpath", "./resources/authentication_test/GSSAPI/jaas.config");
+        // Try to add additional properties and set the loglevel too
+        // Add debug logs
+        System.setProperty("java.security.auth.login.config","./resources/authentication_test/GSSAPI/jaas.config");
+        props.setProperty("loglevel", "FINER");
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
+        System.setProperty("sun.security.krb5.debug", "true");
+        System.setProperty("javax.net.debug", "all");
+
+        // ---
         props.setProperty("gssapilogincontextname", "mongodb.gssapi");
         props.setProperty("gssapiserverauth", "true");
+
+        System.setErr(System.out);
 
         try (Connection conn = DriverManager.getConnection(mongoUri, props)) {
             System.out.println("Mongo URI: " + mongoUri);

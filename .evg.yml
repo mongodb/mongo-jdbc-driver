@@ -82,7 +82,7 @@ buildvariants:
       - name: "test-dc-integration"
       - name: "test-x509-integration"
       # SQL-3463: Re-enable this when we know why it is failing
-      #  - name: "test-gssapi-integration"
+      - name: "test-gssapi-integration"
 
   - name: amazon2-arm64-jdk-11
     display_name: Amazon Linux 2 ARM64 jdk-11
