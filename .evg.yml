@@ -895,7 +895,7 @@ functions:
           
           . $DRIVERS_TOOLS/.evergreen/secrets_handling/setup-secrets.sh drivers/enterprise_auth
           source secrets-export.sh
-          . 
+          
           echo $KEYTAB_BASE64 | base64 -d > $DRIVERS_KEYTAB
 
           cat ${PROJECT_DIRECTORY}/resources/authentication_test/GSSAPI/krb5.config \
