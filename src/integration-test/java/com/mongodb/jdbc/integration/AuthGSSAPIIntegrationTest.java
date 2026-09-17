@@ -47,10 +47,11 @@ public class AuthGSSAPIIntegrationTest {
 
         // Logging Properties to help future debugging
         props.setProperty("loglevel", "FINER");
-        System.setProperty("sun.security.krb5.debug", "true");
+        // Set to true if you see Kerberos specific logs
+        System.setProperty("sun.security.krb5.debug", "false");
         System.setProperty("javax.net.debug", "all");
 
-        // JDBC Driver logging does default to Console ouput, but it defaults logs to System.err instead of System.out.
+        // JDBC Driver logging does default to Console output, but it defaults logs to System.err instead of System.out.
         // Set System.err logging to go to System.out so we can see relevant debug logs for integration test debugging.
         System.setErr(System.out);
 

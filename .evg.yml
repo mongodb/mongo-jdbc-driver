@@ -81,7 +81,6 @@ buildvariants:
       - name: "test-adf-integration"
       - name: "test-dc-integration"
       - name: "test-x509-integration"
-      # SQL-3463: Re-enable this when we know why it is failing
       - name: "test-gssapi-integration"
 
   - name: amazon2-arm64-jdk-11
@@ -896,7 +895,7 @@ functions:
           
           . $DRIVERS_TOOLS/.evergreen/secrets_handling/setup-secrets.sh drivers/enterprise_auth
           source secrets-export.sh
-          
+          . 
           echo $KEYTAB_BASE64 | base64 -d > $DRIVERS_KEYTAB
 
           cat ${PROJECT_DIRECTORY}/resources/authentication_test/GSSAPI/krb5.config \
