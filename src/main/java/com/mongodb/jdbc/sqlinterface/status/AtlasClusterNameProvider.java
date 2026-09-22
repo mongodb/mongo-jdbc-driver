@@ -34,9 +34,10 @@ import org.bson.Document;
 public class AtlasClusterNameProvider {
     /**
      * Extracts the cluster's lowercase canonical name from a `hello.me` hostname, which on an Atlas
-     * dedicated cluster is `[cluster-name]-shard-[...].[hash].mongodb.net:[port]`. If the supplied
-     * uri does not match that pattern exactly, we assume that the backing connection is not one of
-     * Atlas.
+     * dedicated cluster is `[cluster-name]-shard-[...].[hash].mongodb.net:[port]` (commercial Atlas)
+     * or `[cluster-name]-shard-[...].[hash].mongodbgov.net:[port]` (Atlas for Government). If the
+     * supplied uri does not match that pattern exactly, we assume that the backing connection is not
+     * one of Atlas.
      *
      * @param uri A URI in the shape of the output of a `hello.me` message
      * @return The corresponding cluster name, or `Optional.empty`
@@ -49,8 +50,8 @@ public class AtlasClusterNameProvider {
 
         String host = uri.toLowerCase().split(":")[0];
 
-        // Ensure that the domain is the atlas one
-        if (!host.endsWith(".mongodb.net")) {
+        // Ensure that the domain is an atlas one (commercial or Atlas for Government)
+        if (!host.endsWith(".mongodb.net") && !host.endsWith(".mongodbgov.net")) {
             return Optional.empty();
         }
 

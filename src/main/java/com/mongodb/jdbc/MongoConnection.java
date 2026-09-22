@@ -771,8 +771,9 @@ public class MongoConnection implements Connection {
                 throws SQLInterfaceStatusInvalidException, SQLInterfaceStatusException,
                         SQLInterfaceStatusUnavailableException,
                         SQLInterfaceStatusDisabledException {
-            // Quickly check that the URI would even possibly match an atlas cluster before making network requests
-            if (!url.contains(".mongodb.net")) {
+            // Quickly check that the URI would even possibly match an atlas cluster before making network requests.
+            // Atlas clusters live on `.mongodb.net` in commercial Atlas and on `.mongodbgov.net` in Atlas for Government.
+            if (!url.contains(".mongodb.net") && !url.contains(".mongodbgov.net")) {
                 logger.log(
                         Level.INFO,
                         "Enterprise MongoDB instance's URI is not an Atlas instance. Skipping entitlement check");

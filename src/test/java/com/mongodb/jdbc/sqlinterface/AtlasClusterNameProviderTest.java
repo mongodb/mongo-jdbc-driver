@@ -48,6 +48,14 @@ public class AtlasClusterNameProviderTest {
     }
 
     @Test
+    void clusterNameFromGovHostExtracts() {
+        // Atlas for Government clusters live on the `.mongodbgov.net` domain and must be gated too.
+        String uri = "cluster0-shard-00-00.abc123.mongodbgov.net:27017";
+
+        assertEquals(AtlasClusterNameProvider.extractClusterName(uri), Optional.of("cluster0"));
+    }
+
+    @Test
     void clusterNameFromNonAtlasHostEmpty() {
         String uri = "localhost:27017";
 
