@@ -35,7 +35,7 @@ public class DCIntegrationTest {
      * Connect to a remote cluster to use for the tests.
      *
      * <p>Note that this defaults to using the host specified in the `SRV_TEST_HOST` environment
-     * variable and to test against the `test` database.
+     * variable.
      *
      * @return the connection to the enterprise cluster to use for the tests.
      * @throws SQLException If the connection failed.
@@ -43,28 +43,30 @@ public class DCIntegrationTest {
     private Connection remoteTestInstanceConnect() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
+        String user = System.getenv("SRV_TEST_USER");
+        assertNotNull(user, "SRV_TEST_USER variable not set in environment");
+        String pwd = System.getenv("SRV_TEST_PWD");
+        assertNotNull(pwd, "SRV_TEST_PWD variable not set in environment");
 
-        return remoteTestInstanceConnect(mongoHost);
+        return remoteTestInstanceConnect(mongoHost, user, pwd);
     }
 
     /**
      * Connect to a remote cluster at the specified host to use for the tests.
      *
      * @param host The host to use for the connection URI
+     * @param user The username to use for the connection URI
+     * @param pwd The password to use for the connection URI
      * @return the connection to the enterprise cluster to use for the tests.
      * @throws SQLException If the connection failed.
      */
-    private Connection remoteTestInstanceConnect(String host) throws SQLException {
+    private Connection remoteTestInstanceConnect(String host, String user, String pwd)
+            throws SQLException {
         String mongoURI =
                 "mongodb+srv://"
                         + host
                         + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
         String fullURI = "jdbc:" + mongoURI;
-
-        String user = System.getenv("SRV_TEST_USER");
-        assertNotNull(user, "SRV_TEST_USER variable not set in environment");
-        String pwd = System.getenv("SRV_TEST_PWD");
-        assertNotNull(pwd, "SRV_TEST_PWD variable not set in environment");
         String authSource = System.getenv("SRV_TEST_AUTH_DB");
         assertNotNull(authSource, "SRV_TEST_AUTH_DB variable not set in environment");
 
@@ -175,8 +177,13 @@ public class DCIntegrationTest {
     public void testConnectionToAtlasInfiniteServerSucceed() throws SQLException {
         String infiniteHost = System.getenv("SRV_TEST_INFINITE_HOST");
         assertNotNull(infiniteHost, "SRV_TEST_INFINITE_HOST variable not set in environment");
+        String infiniteUser = System.getenv("SRV_TEST_INFINITE_USER");
+        assertNotNull(infiniteHost, "SRV_TEST_INFINITE_USER variable not set in environment");
+        String infinitePwd = System.getenv("SRV_TEST_INFINITE_PWD");
+        assertNotNull(infiniteHost, "SRV_TEST_INFINITE_PWD variable not set in environment");
 
-        try (Connection conn = remoteTestInstanceConnect(infiniteHost); ) {
+        try (Connection conn =
+                remoteTestInstanceConnect(infiniteHost, infiniteUser, infinitePwd); ) {
             // Let's use the connection to make sure everything is working fine.
             conn.getMetaData().getDriverVersion();
         }

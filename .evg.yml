@@ -1099,6 +1099,8 @@ functions:
             export ADF_TEST_AUTH_DB=${adf_test_auth_db}
             export SRV_TEST_HOST=${srv_test_host}
             export SRV_TEST_INFINITE_HOST=${srv_test_infinite_host}
+            export SRV_TEST_INFINITE_USER=${srv_test_user}
+            export SRV_TEST_INFINITE_PWD=${srv_test_pwd}
             export SRV_TEST_USER=${srv_test_user_dc}
             export SRV_TEST_PWD=${srv_test_pwd_dc}
             export SRV_TEST_AUTH_DB=${srv_test_auth_db}
