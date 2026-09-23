@@ -34,8 +34,8 @@ public class DCIntegrationTest {
     /**
      * Connect to a remote cluster to use for the tests.
      *
-     * Note that this defaults to using the host specified in the `SRV_TEST_HOST`
-     * environment variable and to test against the `test` database.
+     * <p>Note that this defaults to using the host specified in the `SRV_TEST_HOST` environment
+     * variable and to test against the `test` database.
      *
      * @return the connection to the enterprise cluster to use for the tests.
      * @throws SQLException If the connection failed.
@@ -176,7 +176,7 @@ public class DCIntegrationTest {
         String infiniteHost = System.getenv("SRV_TEST_INFINITE_HOST");
         assertNotNull(infiniteHost, "SRV_TEST_INFINITE_HOST variable not set in environment");
 
-        try (Connection conn = remoteTestInstanceConnect(infiniteHost);) {
+        try (Connection conn = remoteTestInstanceConnect(infiniteHost); ) {
             // Let's use the connection to make sure everything is working fine.
             conn.getMetaData().getDriverVersion();
         }
