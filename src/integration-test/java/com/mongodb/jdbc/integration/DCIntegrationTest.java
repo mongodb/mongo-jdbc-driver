@@ -34,15 +34,30 @@ public class DCIntegrationTest {
     /**
      * Connect to a remote cluster to use for the tests.
      *
+     * Note that this defaults to using the host specified in the `SRV_TEST_HOST`
+     * environment variable and to test against the `test` database.
+     *
      * @return the connection to the enterprise cluster to use for the tests.
      * @throws SQLException If the connection failed.
      */
     private Connection remoteTestInstanceConnect() throws SQLException {
         String mongoHost = System.getenv("SRV_TEST_HOST");
         assertNotNull(mongoHost, "SRV_TEST_HOST variable not set in environment");
+
+        return remoteTestInstanceConnect(mongoHost);
+    }
+
+    /**
+     * Connect to a remote cluster at the specified host to use for the tests.
+     *
+     * @param host The host to use for the connection URI
+     * @return the connection to the enterprise cluster to use for the tests.
+     * @throws SQLException If the connection failed.
+     */
+    private Connection remoteTestInstanceConnect(String host) throws SQLException {
         String mongoURI =
                 "mongodb+srv://"
-                        + mongoHost
+                        + host
                         + "/?readPreference=secondaryPreferred&connectTimeoutMS=300000";
         String fullURI = "jdbc:" + mongoURI;
 
@@ -150,6 +165,18 @@ public class DCIntegrationTest {
     public void testConnectionToEnterpriseServerSucceeds() throws SQLException {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
         try (Connection conn = DriverManager.getConnection(info.left(), info.right()); ) {
+            // Let's use the connection to make sure everything is working fine.
+            conn.getMetaData().getDriverVersion();
+        }
+    }
+
+    /** Tests that the driver connects to an Atlas Infinite edition of the server. */
+    @Test
+    public void testConnectionToAtlasInfiniteServerSucceed() throws SQLException {
+        String infiniteHost = System.getenv("SRV_TEST_INFINITE_HOST");
+        assertNotNull(infiniteHost, "SRV_TEST_INFINITE_HOST variable not set in environment");
+
+        try (Connection conn = remoteTestInstanceConnect(infiniteHost);) {
             // Let's use the connection to make sure everything is working fine.
             conn.getMetaData().getDriverVersion();
         }
