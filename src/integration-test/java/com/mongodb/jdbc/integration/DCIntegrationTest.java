@@ -195,7 +195,7 @@ public class DCIntegrationTest {
 
     /** Tests that the driver connects to an Atlas Infinite edition of the server. */
     @Test
-    public void testConnectionToAtlasInfiniteServerSucceed() throws SQLException {
+    public void testSimpleQueryToAtlasInfiniteServerSucceed() throws SQLException {
         String infiniteHost = System.getenv("SRV_TEST_INFINITE_HOST");
         assertNotNull(infiniteHost, "SRV_TEST_INFINITE_HOST variable not set in environment");
         String infiniteUser = System.getenv("SRV_TEST_INFINITE_USER");
