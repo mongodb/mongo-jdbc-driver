@@ -22,3 +22,10 @@ src/main/resources/**/mongosqltranslate.*
 
 # Ignore secrets
 secrets-export.sh
+
+# Ignore editor files
+.idea/
+.vscode/
+
+# Ignore built binaries
+bin/
