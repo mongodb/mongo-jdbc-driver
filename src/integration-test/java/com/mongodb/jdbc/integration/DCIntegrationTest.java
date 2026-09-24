@@ -48,7 +48,7 @@ public class DCIntegrationTest {
         String pwd = System.getenv("SRV_TEST_PWD");
         assertNotNull(pwd, "SRV_TEST_PWD variable not set in environment");
 
-        return remoteTestInstanceConnect(mongoHost, user, pwd);
+        return remoteTestInstanceConnect(mongoHost, user, pwd, "test");
     }
 
     /**
@@ -57,10 +57,11 @@ public class DCIntegrationTest {
      * @param host The host to use for the connection URI
      * @param user The username to use for the connection URI
      * @param pwd The password to use for the connection URI
+     * @param db The database to use for the connection URI
      * @return the connection to the enterprise cluster to use for the tests.
      * @throws SQLException If the connection failed.
      */
-    private Connection remoteTestInstanceConnect(String host, String user, String pwd)
+    private Connection remoteTestInstanceConnect(String host, String user, String pwd, String db)
             throws SQLException {
         String mongoURI =
                 "mongodb+srv://"
@@ -74,7 +75,7 @@ public class DCIntegrationTest {
         p.setProperty("user", user);
         p.setProperty("password", pwd);
         p.setProperty("authSource", authSource);
-        p.setProperty("database", "test");
+        p.setProperty("database", db);
 
         return DriverManager.getConnection(fullURI, p);
     }
@@ -126,8 +127,28 @@ public class DCIntegrationTest {
     private void executeQueryAndValidateResults(
             String query, String[] expectedTableNames, String[] expectedColumnLabels)
             throws SQLException {
-        try (Connection conn = remoteTestInstanceConnect();
-                Statement stmt = conn.createStatement(); ) {
+        try (Connection conn = remoteTestInstanceConnect()) {
+            executeQueryAndValidateResults(conn, query, expectedTableNames, expectedColumnLabels);
+        }
+    }
+
+    /**
+     * Execute the given SQL query and checks the table and column names from the metadata, also
+     * verifies that the cursor return is working Ok.
+     *
+     * @param conn The connection to the JDBC driver.
+     * @param query The SQL query to execute.
+     * @param expectedTableNames The expected table names in the metadata.
+     * @param expectedColumnLabels The expected column names in the metadata.
+     * @throws SQLException if an error occurs.
+     */
+    private void executeQueryAndValidateResults(
+            Connection conn,
+            String query,
+            String[] expectedTableNames,
+            String[] expectedColumnLabels)
+            throws SQLException {
+        try (Statement stmt = conn.createStatement(); ) {
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -174,7 +195,7 @@ public class DCIntegrationTest {
 
     /** Tests that the driver connects to an Atlas Infinite edition of the server. */
     @Test
-    public void testConnectionToAtlasInfiniteServerSucceed() throws SQLException {
+    public void testSimpleQueryToAtlasInfiniteServerSucceed() throws SQLException {
         String infiniteHost = System.getenv("SRV_TEST_INFINITE_HOST");
         assertNotNull(infiniteHost, "SRV_TEST_INFINITE_HOST variable not set in environment");
         String infiniteUser = System.getenv("SRV_TEST_INFINITE_USER");
@@ -183,9 +204,13 @@ public class DCIntegrationTest {
         assertNotNull(infiniteHost, "SRV_TEST_INFINITE_PWD variable not set in environment");
 
         try (Connection conn =
-                remoteTestInstanceConnect(infiniteHost, infiniteUser, infinitePwd); ) {
-            // Let's use the connection to make sure everything is working fine.
-            conn.getMetaData().getDriverVersion();
+                remoteTestInstanceConnect(
+                        infiniteHost, infiniteUser, infinitePwd, "sample_airbnb"); ) {
+            String query = "SELECT name, summary FROM listingsAndReviews LIMIT 5";
+            String[] expectedTableNames = {"listingsAndReviews"};
+            String[] expectedColumnNames = {"name", "summary"};
+
+            executeQueryAndValidateResults(conn, query, expectedTableNames, expectedColumnNames);
         }
     }
 
