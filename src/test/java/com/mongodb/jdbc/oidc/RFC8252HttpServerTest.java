@@ -18,15 +18,38 @@ package com.mongodb.jdbc.oidc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RFC8252HttpServerTest {
+    private static final String PRODUCT_DOCS_HREF =
+            "href=\"https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect\"";
+    private static final String ERROR_URI_HREF =
+            "href=\"https://www.mongodb.com/docs/atlas/security-oidc\"";
+    private static final String PRODUCT_DOCS_TEXT = "Atlas SQL ODBC Driver Documentation";
+
     private RFC8252HttpServer server;
+
+    /** Reads the response body, using the error stream for 4xx/5xx responses. */
+    private static String readBody(HttpURLConnection connection) throws IOException {
+        InputStream stream =
+                connection.getResponseCode() >= 400
+                        ? connection.getErrorStream()
+                        : connection.getInputStream();
+        try (BufferedReader reader =
+                new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        }
+    }
 
     @BeforeEach
     void setUp() throws IOException {
@@ -53,6 +76,12 @@ class RFC8252HttpServerTest {
         assertEquals(200, connection.getResponseCode());
         assertNull(connection.getHeaderField("Location"));
 
+        String body = readBody(connection);
+        assertTrue(body.contains("Login Successful"));
+        assertTrue(body.contains(PRODUCT_DOCS_TEXT));
+        assertTrue(body.contains(PRODUCT_DOCS_HREF));
+        assertFalse(body.contains("Authentication Failed"));
+
         OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getCode());
         assertEquals("foo", oidcResponse.getState());
@@ -71,6 +100,12 @@ class RFC8252HttpServerTest {
 
         assertEquals(400, connection.getResponseCode());
 
+        String body = readBody(connection);
+        assertTrue(body.contains("Authentication Failed"));
+        assertTrue(body.contains(ERROR_URI_HREF));
+        assertTrue(body.contains(PRODUCT_DOCS_TEXT));
+        assertTrue(body.contains(PRODUCT_DOCS_HREF));
+
         OidcResponse oidcResponse = server.getOidcResponse();
         assertEquals("1234", oidcResponse.getError());
         assertEquals("foo", oidcResponse.getErrorDescription());
@@ -88,6 +123,11 @@ class RFC8252HttpServerTest {
         connection.connect();
 
         assertEquals(404, connection.getResponseCode());
+
+        String body = readBody(connection);
+        assertTrue(body.contains("Page Not Found"));
+        assertTrue(body.contains(PRODUCT_DOCS_TEXT));
+        assertTrue(body.contains(PRODUCT_DOCS_HREF));
 
         OidcResponse oidcResponse = server.getOidcResponse();
         assertNull(oidcResponse.getCode());
