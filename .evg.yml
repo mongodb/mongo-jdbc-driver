@@ -131,7 +131,7 @@ tasks:
     commands:
       - func: "prepare resources"
       - func: "update orchestrator mongod port"
-      - func: "bootstrap mongo-orchestration"
+      - func: "start mongodb"
       - func: "generate sql-engines github token"
       - func: "run adf integration test"
 
@@ -159,7 +159,7 @@ tasks:
       - func: "fetch jdbc shadow jar"
       - func: "prepare resources"
       - func: "update orchestrator mongod port"
-      - func: "bootstrap mongo-orchestration"
+      - func: "start mongodb"
       - func: "generate sql-engines github token"
       - func: "run smoke test"
 
@@ -1056,6 +1056,7 @@ functions:
           DRIVERS_TOOLS: "$DRIVERS_TOOLS"
           MONGO_ORCHESTRATION_HOME: "$MONGO_ORCHESTRATION_HOME"
           MONGODB_BINARIES: "$MONGODB_BINARIES"
+          USE_MONGODB_RUNNER: "true"
           script_dir: "$COMMON_TEST_INFRA_DIR/evergreen/scripts"
           EOT
     - command: expansions.update
