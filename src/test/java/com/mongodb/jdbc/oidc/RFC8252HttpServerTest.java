@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 class RFC8252HttpServerTest {
     private static final String PRODUCT_DOCS_HREF =
-            "href=\"https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect\"";
+            "href=\"https://www.mongodb.com/docs/sql-interface/install-driver/";
     private static final String ERROR_URI_HREF =
             "href=\"https://www.mongodb.com/docs/atlas/security-oidc\"";
     private static final String PRODUCT_DOCS_TEXT = "Atlas SQL ODBC Driver Documentation";

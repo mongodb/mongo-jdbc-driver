@@ -54,7 +54,7 @@ public class RFC8252HttpServer {
     private static final String LOGIN_ERROR_URI =
             "https://www.mongodb.com/docs/atlas/security-oidc";
     private static final String PRODUCT_DOCS_LINK =
-            "https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect";
+            "https://www.mongodb.com/docs/sql-interface/install-driver/";
     private static final String PRODUCT_DOCS_NAME = "Atlas SQL ODBC Driver";
 
     // OIDC response parameters
