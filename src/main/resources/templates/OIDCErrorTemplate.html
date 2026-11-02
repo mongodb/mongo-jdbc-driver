@@ -269,7 +269,7 @@
                     font-size: 13px;
                     line-height: 20px;
                 }</style>
-            <p class="leafygreen-ui-10bthx5"> [[${product_docs_name}]] could not authenticate to the MongoDB server.</p>
+            <p class="leafygreen-ui-10bthx5"> {{product_docs_name}} could not authenticate to the MongoDB server.</p>
             <p class="leafygreen-ui-1yli3c0">Error Code:
                 <style data-emotion="leafygreen-ui ztaonb">.leafygreen-ui-ztaonb {
                     font-size: 13px;
@@ -300,8 +300,8 @@
                     box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #0498EC;
                     border: 1px solid #016BF8;
                 }</style>
-                <code class="leafygreen-ui-ztaonb">[[${error}]]</code></p>
-            <p class="leafygreen-ui-10bthx5">[[${error_description}]]
+                <code class="leafygreen-ui-ztaonb">{{error}}</code></p>
+            <p class="leafygreen-ui-10bthx5">{{error_description}}
             <p>
                 <style data-emotion="leafygreen-ui 1cn1hqb">.leafygreen-ui-1cn1hqb {
                     font-size: 13px;
@@ -326,7 +326,7 @@
                 .leafygreen-ui-1cn1hqb:focus {
                     outline: none;
                 }</style>
-                <a class="lg-ui-0001 leafygreen-ui-1cn1hqb" th:href="${error_uri}" target="_self">
+                <a class="lg-ui-0001 leafygreen-ui-1cn1hqb" href="{{error_uri}}" target="_self">
                     <style data-emotion="leafygreen-ui 1ewnca3">.leafygreen-ui-1ewnca3 {
                         position: relative;
                     }
@@ -350,9 +350,9 @@
                     }</style>
                     <span class="leafygreen-ui-1ewnca3">Additional information may be available here.</span></a></p>
             </p></p>
-            <p><a class="lg-ui-0001 leafygreen-ui-1cn1hqb" th:href="${product_docs_link}" target="_self">
+            <p><a class="lg-ui-0001 leafygreen-ui-1cn1hqb" href="{{product_docs_link}}" target="_self">
                 <span
-                    class="leafygreen-ui-1ewnca3"> [[${product_docs_name}]] Documentation</span>
+                    class="leafygreen-ui-1ewnca3"> {{product_docs_name}} Documentation</span>
                 <style data-emotion="leafygreen-ui 6uczm0">.leafygreen-ui-6uczm0 {
                     -webkit-flex-shrink: 0;
                     -ms-flex-negative: 0;

@@ -201,11 +201,10 @@ shadowJar {
     archiveClassifier = 'all'
     relocate 'com.google', 'shadow.com.google'
     relocate 'com.nimbusds', 'shadow.com.nimbusds'
+    relocate 'com.samskivert', 'shadow.com.samskivert'
     relocate 'net.jcip', 'shadow.net.jcip'
-    relocate 'ognl', 'shadow.ognl'
     relocate('org', 'shadow.org') {
         exclude 'org.ow2.asm:.*'
-        exclude 'org.javassist:.*'
     }
 
     // Exclude Java 21 compiled classes and multi-release JAR versions
@@ -215,7 +214,6 @@ shadowJar {
     // Exclude specific dependencies that contain Java 21 bytecode
     dependencies {
         exclude(dependency('org.ow2.asm:.*'))
-        exclude(dependency('org.javassist:.*'))
     }
 
     // Configure ASM to skip problematic class files
@@ -291,7 +289,7 @@ dependencies {
     api "org.mongodb:mongodb-driver-sync:$mongodbDriverVersion"
     integrationTestImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
     integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    implementation group: 'org.thymeleaf', name: 'thymeleaf', version: thymeLeafVersion
+    implementation group: 'com.samskivert', name: 'jmustache', version: jmustacheVersion
     implementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: oauth2OIDCVersion
 
     // Ed25519 signature support in nimbus-jose-jwt

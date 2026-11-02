@@ -16,11 +16,17 @@
 
 package com.mongodb.jdbc.oidc;
 
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Template;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -34,9 +40,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 /**
  * The RFC8252HttpServer class implements an OIDC (OpenID Connect) server based on RFC 8252. It
@@ -51,7 +54,7 @@ public class RFC8252HttpServer {
     private static final String LOGIN_ERROR_URI =
             "https://www.mongodb.com/docs/atlas/security-oidc";
     private static final String PRODUCT_DOCS_LINK =
-            "https://www.mongodb.com/docs/atlas/data-federation/query/sql/drivers/odbc/connect";
+            "https://www.mongodb.com/docs/sql-interface/install-driver/";
     private static final String PRODUCT_DOCS_NAME = "Atlas SQL ODBC Driver";
 
     // OIDC response parameters
@@ -71,12 +74,21 @@ public class RFC8252HttpServer {
     private static final String CALLBACK_ENDPOINT = "/callback";
     private static final String REDIRECT_ENDPOINT = "/redirect";
 
+    // templates, loaded from src/main/resources/templates/<name>.html
+    private static final String ACCEPTED_TEMPLATE = "OIDCAcceptedTemplate";
+    private static final String ERROR_TEMPLATE = "OIDCErrorTemplate";
+    private static final String NOT_FOUND_TEMPLATE = "OIDCNotFoundTemplate";
+
     private HttpServer server;
-    private final TemplateEngine templateEngine;
+    private final Template acceptedTemplate;
+    private final Template errorTemplate;
+    private final Template notFoundTemplate;
     private final BlockingQueue<OidcResponse> oidcResponseQueue;
 
     public RFC8252HttpServer() {
-        templateEngine = createTemplateEngine();
+        acceptedTemplate = compileTemplate(ACCEPTED_TEMPLATE);
+        errorTemplate = compileTemplate(ERROR_TEMPLATE);
+        notFoundTemplate = compileTemplate(NOT_FOUND_TEMPLATE);
         oidcResponseQueue = new LinkedBlockingQueue<>();
     }
 
@@ -134,17 +146,25 @@ public class RFC8252HttpServer {
     }
 
     /**
-     * Creates and configures the template engine.
+     * Loads and compiles the named Mustache template from the classpath. The compiler HTML-escapes
+     * all {{variable}} substitutions and throws if a template references a missing variable.
      *
-     * @return the configured template engine
+     * @param name the template name, without the "/templates/" prefix or ".html" suffix
+     * @return the compiled template
+     * @throws IllegalStateException if the template resource does not exist
+     * @throws UncheckedIOException if an I/O error occurs while reading the template
      */
-    private TemplateEngine createTemplateEngine() {
-        TemplateEngine templateEngine = new TemplateEngine();
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/templates/");
-        templateResolver.setSuffix(".html");
-        templateEngine.setTemplateResolver(templateResolver);
-        return templateEngine;
+    private static Template compileTemplate(String name) {
+        String path = "/templates/" + name + ".html";
+        InputStream in = RFC8252HttpServer.class.getResourceAsStream(path);
+        if (in == null) {
+            throw new IllegalStateException("Template not found: " + path);
+        }
+        try (Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            return Mustache.compiler().compile(reader);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read template: " + path, e);
+        }
     }
 
     /** HTTP handler for handling the callback and redirect endpoints. */
@@ -172,15 +192,15 @@ public class RFC8252HttpServer {
                 if (!putOidcResponse(exchange, oidcResponse)) {
                     return;
                 }
-                Context context = new Context();
-                context.setVariable(ERROR_URI_KEY, LOGIN_ERROR_URI);
-                context.setVariable(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
-                context.setVariable(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
-                context.setVariable(ERROR_KEY, queryParams.get(ERROR_KEY));
-                context.setVariable(
+                Map<String, String> context = new HashMap<>();
+                context.put(ERROR_URI_KEY, LOGIN_ERROR_URI);
+                context.put(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
+                context.put(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
+                context.put(ERROR_KEY, queryParams.get(ERROR_KEY));
+                context.put(
                         ERROR_DESCRIPTION_KEY,
                         queryParams.getOrDefault(ERROR_DESCRIPTION_KEY, "Unknown error"));
-                String errorHtml = templateEngine.process("OIDCErrorTemplate", context);
+                String errorHtml = errorTemplate.execute(context);
                 sendResponse(exchange, errorHtml, HttpURLConnection.HTTP_BAD_REQUEST);
 
             } else {
@@ -196,10 +216,10 @@ public class RFC8252HttpServer {
                 if (!putOidcResponse(exchange, oidcResponse)) {
                     return;
                 }
-                Context context = new Context();
-                context.setVariable(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
-                context.setVariable(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
-                String notFoundHtml = templateEngine.process("OIDCNotFoundTemplate", context);
+                Map<String, String> context = new HashMap<>();
+                context.put(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
+                context.put(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
+                String notFoundHtml = notFoundTemplate.execute(context);
                 sendResponse(exchange, notFoundHtml, HttpURLConnection.HTTP_NOT_FOUND);
             }
         }
@@ -209,10 +229,10 @@ public class RFC8252HttpServer {
     private class AcceptedHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            Context context = new Context();
-            context.setVariable(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
-            context.setVariable(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
-            String acceptedHtml = templateEngine.process("OIDCAcceptedTemplate", context);
+            Map<String, String> context = new HashMap<>();
+            context.put(PRODUCT_DOCS_LINK_KEY, PRODUCT_DOCS_LINK);
+            context.put(PRODUCT_DOCS_NAME_KEY, PRODUCT_DOCS_NAME);
+            String acceptedHtml = acceptedTemplate.execute(context);
             sendResponse(exchange, acceptedHtml, HttpURLConnection.HTTP_OK);
         }
     }
