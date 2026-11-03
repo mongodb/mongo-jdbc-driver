@@ -57,6 +57,7 @@ public class OidcAuthFlow {
     private MongoLogger mongoLogger;
     private static final String OFFLINE_ACCESS = "offline_access";
     private static final String OPENID = "openid";
+    private static final String HTTPS_URL_SCHEME = "https";
 
     public OidcAuthFlow() {}
 
@@ -128,6 +129,9 @@ public class OidcAuthFlow {
             // extract authorization and token endpoint URIs.
             OIDCProviderMetadata providerMetadata =
                     OIDCProviderMetadata.resolve(new Issuer(issuerURI));
+            if (!validateProviderMetadata(providerMetadata)) {
+                return null;
+            }
             URI authorizationEndpoint = providerMetadata.getAuthorizationEndpointURI();
             URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
             Scope requestedScopes = buildScopes(clientID, idpServerInfo, providerMetadata);
@@ -329,11 +333,41 @@ public class OidcAuthFlow {
             log(Level.SEVERE, "Client ID is null or empty");
             return false;
         }
-        if (!issuerURI.startsWith("https")) {
+        if (!issuerURI.startsWith(HTTPS_URL_SCHEME)) {
             log(Level.SEVERE, "Issuer URI must be HTTPS");
             return false;
         }
         return true;
+    }
+
+    /**
+     * Validates the authorization and token endpoints from the OIDC discovery document.
+     *
+     * <p>Both endpoints must use the https scheme. Rejecting non-https (or missing) endpoints
+     * prevents a malicious discovery document from steering the driver to a file:/wss:/http: URL
+     * before the authorization request is opened.
+     *
+     * @param providerMetadata the provider metadata resolved from the issuer
+     * @return true if both endpoints use the https scheme, false otherwise
+     */
+    boolean validateProviderMetadata(OIDCProviderMetadata providerMetadata) {
+        URI authorizationEndpoint = providerMetadata.getAuthorizationEndpointURI();
+        if (!isHttpsEndpoint(authorizationEndpoint)) {
+            log(
+                    Level.SEVERE,
+                    "OIDC authorization endpoint must use https: " + authorizationEndpoint);
+            return false;
+        }
+        URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
+        if (!isHttpsEndpoint(tokenEndpoint)) {
+            log(Level.SEVERE, "OIDC token endpoint must use https: " + tokenEndpoint);
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isHttpsEndpoint(URI endpoint) {
+        return endpoint != null && HTTPS_URL_SCHEME.equals(endpoint.getScheme());
     }
 
     private OidcCallbackResult getOidcCallbackResultFromTokenResponse(
