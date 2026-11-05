@@ -227,19 +227,24 @@ public class ClientCacheIntegrationTest {
 
     /**
      * A connection that fails validation (here, because the server is the community edition) must
-     * not leave its client's server connections open.
+     * not leave its client's server connections open, with or without the cache.
      */
     @Test
     public void testFailedConnectionValidationReleasesServerConnections() throws Exception {
-        String tag = uniqueTag("failedconnect");
         String uri = localUri("LOCAL_MDB_PORT_COM");
-        Properties p = connectionProperties(tag, true);
+        for (boolean disableClientCache : new boolean[] {false, true}) {
+            String tag = uniqueTag("failedconnect");
+            Properties p = connectionProperties(tag, disableClientCache);
 
-        for (int i = 0; i < CYCLES; i++) {
-            assertThrows(SQLException.class, () -> DriverManager.getConnection(uri, p));
+            for (int i = 0; i < CYCLES; i++) {
+                assertThrows(SQLException.class, () -> DriverManager.getConnection(uri, p));
+            }
+
+            assertEquals(
+                    0,
+                    settledServerConnections("LOCAL_MDB_PORT_COM", tag),
+                    "disableclientcache=" + disableClientCache);
         }
-
-        assertEquals(0, settledServerConnections("LOCAL_MDB_PORT_COM", tag));
     }
 
     /**
