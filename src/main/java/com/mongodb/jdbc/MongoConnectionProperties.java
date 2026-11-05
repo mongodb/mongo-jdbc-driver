@@ -112,8 +112,10 @@ public class MongoConnectionProperties {
     /*
      * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
      * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.
+     * The full string is the key, not its hash code: two different connection strings (e.g. different credentials) can
+     * have the same hash code and must not share a client.
      */
-    public Integer generateKey() {
+    public String generateKey() {
         StringBuilder keyBuilder = new StringBuilder();
         keyBuilder.append(connectionString.toString());
         if (clientInfo != null) {
@@ -122,6 +124,6 @@ public class MongoConnectionProperties {
         if (tlsCaFile != null) {
             keyBuilder.append(":tlsCaFile=").append(tlsCaFile);
         }
-        return keyBuilder.toString().hashCode();
+        return keyBuilder.toString();
     }
 }

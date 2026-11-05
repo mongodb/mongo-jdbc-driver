@@ -64,6 +64,10 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
+    // What close() does with mongoClient. It closes a client this connection created itself, unless
+    // the driver's client cache replaced it to keep its own count of the connections using each
+    // client. Null for a client passed in by the caller, which owns it.
+    private Runnable releaseMongoClient;
     protected String currentDB;
     protected String url;
     protected String user;
@@ -138,6 +142,7 @@ public class MongoConnection implements Connection {
                                     .driverName(MongoDriver.NAME)
                                     .driverVersion(MongoDriver.getVersion())
                                     .build());
+            this.releaseMongoClient = this.mongoClient::close;
         } else {
             this.mongoClient = mongoClient;
         }
@@ -304,6 +309,15 @@ public class MongoConnection implements Connection {
         return mongoClient;
     }
 
+    /**
+     * Replaces what close() does with this connection's MongoClient. The driver's client cache uses
+     * it to take over a client, so that close() leaves the client open for other connections and
+     * only updates the cache's count of connections using it.
+     */
+    void setMongoClientRelease(Runnable release) {
+        releaseMongoClient = release;
+    }
+
     @DisableAutoLogging
     public MongoLogger getLogger() {
         return logger;
@@ -460,6 +474,7 @@ public class MongoConnection implements Connection {
             return;
         }
 
+        Runnable release;
         // Decrement fileHandlerCount and delete entry
         // if no more connections are using it.
         synchronized (this) {
@@ -473,9 +488,16 @@ public class MongoConnection implements Connection {
                     handlerCount.remove(logDirPath);
                 }
             }
+            // Release the client at most once, even if close() is called concurrently: releasing
+            // a cached client twice could get it closed while another connection still uses it.
+            release = releaseMongoClient;
+            releaseMongoClient = null;
         }
 
         isClosed = true;
+        if (release != null) {
+            release.run();
+        }
     }
 
     @Override

@@ -27,7 +27,6 @@ import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
-import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -40,12 +39,11 @@ import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,9 +148,38 @@ public class MongoDriver implements Driver {
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
     public static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
 
-    private static ConcurrentHashMap<Integer, WeakReference<MongoClient>> mongoClientCache =
-            new ConcurrentHashMap<>();
-    private static final ReadWriteLock mongoClientCacheLock = new ReentrantReadWriteLock();
+    /**
+     * The most MongoClients the client cache keeps. Past this, it closes the least recently used
+     * clients that no open connection is using.
+     */
+    public static final int MAX_CACHED_CLIENTS = 32;
+
+    // MongoClients shared by connections with the same MongoConnectionProperties key. A cached client
+    // outlives the connections that use it, so later connections can reuse it. The cache holds it
+    // strongly: a client that is dropped without being closed keeps its monitors and pool, and their
+    // server connections, alive.
+    //
+    // A client is closed only when it is evicted or when closeAllClients() runs at JVM shutdown.
+    // Eviction never closes a client that open connections are using, so while more than
+    // maxCachedClients clients are in use the cache goes over the limit.
+    //
+    // The map is in access order: get() moves an entry to the most recently used end, and iteration
+    // starts at the least recently used one. Since get() modifies the map, every access must hold
+    // mongoClientCacheLock.
+    private static final LinkedHashMap<String, CachedClient> mongoClientCache =
+            new LinkedHashMap<>(16, 0.75f, true);
+    private static final Object mongoClientCacheLock = new Object();
+    private static int maxCachedClients = MAX_CACHED_CLIENTS;
+
+    private static class CachedClient {
+        final MongoClient client;
+        // The open connections using client. Guarded by mongoClientCacheLock.
+        int openConnections;
+
+        CachedClient(MongoClient client) {
+            this.client = client;
+        }
+    }
 
     public static String getVersion() {
         return VERSION != null ? VERSION : MAJOR_VERSION + "." + MINOR_VERSION;
@@ -198,20 +225,20 @@ public class MongoDriver implements Driver {
     }
 
     static int getClientCacheSizeForTest() {
-        mongoClientCacheLock.readLock().lock();
-        try {
+        synchronized (mongoClientCacheLock) {
             return mongoClientCache.size();
-        } finally {
-            mongoClientCacheLock.readLock().unlock();
         }
     }
 
     static void clearClientCacheForTest() {
-        mongoClientCacheLock.readLock().lock();
-        try {
+        synchronized (mongoClientCacheLock) {
             mongoClientCache.clear();
-        } finally {
-            mongoClientCacheLock.readLock().unlock();
+        }
+    }
+
+    static void setMaxCachedClientsForTest(int max) {
+        synchronized (mongoClientCacheLock) {
+            maxCachedClients = max;
         }
     }
 
@@ -323,7 +350,13 @@ public class MongoDriver implements Driver {
         try {
             MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
             if (conn != null) {
-                conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                try {
+                    conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                } catch (Exception e) {
+                    // Don't leak the connection, or a MongoClient it owns, when validation fails.
+                    conn.close();
+                    throw e;
+                }
                 return conn;
             } else {
                 throw new SQLException("Connection setup failed but no errors where reported.");
@@ -527,50 +560,80 @@ public class MongoDriver implements Driver {
             return new MongoConnection(mongoConnectionProperties, x509Passphrase);
         }
 
-        Integer key = mongoConnectionProperties.generateKey();
-
-        mongoClientCacheLock.readLock().lock();
-        try {
-            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
-            MongoClient client = (clientRef != null) ? clientRef.get() : null;
-
-            if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
+        String key = mongoConnectionProperties.generateKey();
+        MongoConnection connection = null;
+        CachedClient cached;
+        List<MongoClient> evicted;
+        synchronized (mongoClientCacheLock) {
+            cached = mongoClientCache.get(key);
+            if (cached == null) {
+                // Create the client while holding the lock, so that concurrent connections with the
+                // same settings don't each create one.
+                connection = new MongoConnection(mongoConnectionProperties, x509Passphrase);
+                cached = new CachedClient(connection.getMongoClient());
+                mongoClientCache.put(key, cached);
             }
-        } finally {
-            mongoClientCacheLock.readLock().unlock();
+            // Count the connection before evicting, so that its own client is never evicted.
+            cached.openConnections++;
+            evicted = removeIdleClientsOverLimit();
+        }
+        for (MongoClient client : evicted) {
+            client.close();
         }
 
-        // Acquire write lock to create and cache a new MongoClient if it wasn't found
-        mongoClientCacheLock.writeLock().lock();
-        try {
-            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
-            MongoClient client = (clientRef != null) ? clientRef.get() : null;
-            // Check for client again to handle race conditions
-            if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
+        if (connection == null) {
+            try {
+                connection =
+                        new MongoConnection(
+                                cached.client, mongoConnectionProperties, x509Passphrase);
+            } catch (Exception e) {
+                releaseCachedClient(key, cached);
+                throw e;
             }
-            MongoConnection newConnection =
-                    new MongoConnection(mongoConnectionProperties, x509Passphrase);
-            mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
-            return newConnection;
-        } finally {
-            mongoClientCacheLock.writeLock().unlock();
+        }
+        // The cache owns the client, so closing the connection only tells the cache that one fewer
+        // connection is using it.
+        CachedClient connectionClient = cached;
+        connection.setMongoClientRelease(() -> releaseCachedClient(key, connectionClient));
+        return connection;
+    }
+
+    private static void releaseCachedClient(String key, CachedClient cached) {
+        List<MongoClient> evicted;
+        synchronized (mongoClientCacheLock) {
+            cached.openConnections--;
+            // Closing a connection counts as using its client, so a client that a long-lived
+            // connection held until now isn't the first one evicted.
+            mongoClientCache.get(key);
+            evicted = removeIdleClientsOverLimit();
+        }
+        for (MongoClient client : evicted) {
+            client.close();
         }
     }
 
+    // Removes the least recently used clients that no open connection is using until the cache is
+    // back within maxCachedClients, and returns them so the caller can close them after releasing
+    // mongoClientCacheLock. The caller must hold mongoClientCacheLock.
+    private static List<MongoClient> removeIdleClientsOverLimit() {
+        List<MongoClient> removed = new ArrayList<>();
+        Iterator<CachedClient> leastRecentlyUsedFirst = mongoClientCache.values().iterator();
+        while (mongoClientCache.size() > maxCachedClients && leastRecentlyUsedFirst.hasNext()) {
+            CachedClient cached = leastRecentlyUsedFirst.next();
+            if (cached.openConnections == 0) {
+                leastRecentlyUsedFirst.remove();
+                removed.add(cached.client);
+            }
+        }
+        return removed;
+    }
+
     public static void closeAllClients() {
-        mongoClientCacheLock.writeLock().lock();
-        try {
-            for (WeakReference<MongoClient> clientRef : mongoClientCache.values()) {
-                MongoClient client = clientRef.get();
-                if (client != null) {
-                    client.close();
-                }
+        synchronized (mongoClientCacheLock) {
+            for (CachedClient cached : mongoClientCache.values()) {
+                cached.client.close();
             }
             mongoClientCache.clear();
-        } finally {
-            mongoClientCacheLock.writeLock().unlock();
         }
     }
 
