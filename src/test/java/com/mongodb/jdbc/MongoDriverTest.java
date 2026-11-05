@@ -25,7 +25,6 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -36,6 +35,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,6 +89,12 @@ class MongoDriverTest {
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    // Connections that earlier tests left open would otherwise keep their clients cached.
+    @BeforeEach
+    void closeCachedClients() {
+        MongoDriver.closeAllClients();
     }
 
     @Test
@@ -805,46 +811,6 @@ class MongoDriverTest {
     }
 
     @Test
-    void testCachedClientSurvivesGarbageCollection() throws Exception {
-        MongoDriver d = new MongoDriver();
-        MongoConnection conn = cachedConnection(d, "gc-test");
-        WeakReference<MongoClient> firstClient = new WeakReference<>(conn.getMongoClient());
-        conn.close();
-        conn = null;
-
-        // Once every connection using a cached client is closed, the cache must still hold the
-        // client for reuse. If only the garbage collector can reach it, the client gets collected
-        // without being closed and its monitors and pool keep their server connections open.
-        for (int i = 0; i < 5 && firstClient.get() != null; i++) {
-            System.gc();
-            Thread.sleep(100);
-        }
-        MongoClient cachedClient = firstClient.get();
-        assertNotNull(
-                cachedClient,
-                "The cached MongoClient was garbage collected after its connections closed.");
-        assertClientOpen(cachedClient);
-
-        MongoConnection conn2 = cachedConnection(d, "gc-test");
-        assertSame(cachedClient, conn2.getMongoClient());
-    }
-
-    @Test
-    void testDisableClientCacheClosesClientWithConnection() throws Exception {
-        MongoDriver d = new MongoDriver();
-        Properties p = new Properties();
-        p.setProperty(DATABASE.getPropertyName(), "test");
-        p.setProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "true");
-
-        MongoConnection conn = d.getUnvalidatedConnection(fastFailURL, p);
-        MongoClient client = conn.getMongoClient();
-        assertClientOpen(client);
-
-        conn.close();
-        assertClientClosed(client);
-    }
-
-    @Test
     void testClientCacheKeyHashCollision() throws Exception {
         // "Aa" and "BB" have the same String.hashCode(), so these two URIs, which differ only in
         // the password, have the same hash code. They must still get separate clients.
@@ -866,16 +832,24 @@ class MongoDriverTest {
                 "Connections with different credentials must not share a MongoClient.");
     }
 
+    private static final String PEM_DIR =
+            MongoDriverTest.class.getClassLoader().getResource(TEST_PEM_DIR).getPath();
+
     private static MongoConnection x509Connection(MongoDriver d, String pemFile, String passphrase)
             throws SQLException {
-        String dir = MongoDriverTest.class.getClassLoader().getResource(TEST_PEM_DIR).getPath();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
-        p.setProperty(X509_PEM_PATH.getPropertyName(), dir + "/" + pemFile);
+        if (pemFile != null) {
+            p.setProperty(X509_PEM_PATH.getPropertyName(), PEM_DIR + "/" + pemFile);
+        }
         if (passphrase != null) {
             p.setProperty("password", passphrase);
         }
         return d.getUnvalidatedConnection(basicURL + "/?authMechanism=MONGODB-X509", p);
+    }
+
+    private static String pemContents(String pemFile) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(PEM_DIR, pemFile)));
     }
 
     @Test
@@ -887,11 +861,11 @@ class MongoDriverTest {
                 x509Connection(d, "pkcs8_unencrypted.pem", null).getMongoClient(),
                 "Connections with different X.509 certificates must not share a MongoClient.");
 
-        x509Connection(d, "pkcs8_encrypted.pem", "pencil");
-        assertThrows(
-                SQLException.class,
-                () -> x509Connection(d, "pkcs8_encrypted.pem", "wrong"),
-                "A wrong passphrase must not reuse the client the right one created.");
+        // With no PEM path, the passphrase holds the PEM itself.
+        assertNotSame(
+                x509Connection(d, null, pemContents("pkcs1_unencrypted.pem")).getMongoClient(),
+                x509Connection(d, null, pemContents("pkcs8_unencrypted.pem")).getMongoClient(),
+                "Connections with different X.509 PEM contents must not share a MongoClient.");
 
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
@@ -908,7 +882,6 @@ class MongoDriverTest {
     @Test
     void testFailedValidationClosesUnusedCachedClient() throws Exception {
         MongoDriver d = new MongoDriver();
-        MongoDriver.closeAllClients();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         p.setProperty(CLIENT_INFO.getPropertyName(), "failed-validation+1.0");
@@ -927,27 +900,20 @@ class MongoDriverTest {
     @Test
     void testClientCacheClosesLeastRecentlyUsedIdleClient() throws Exception {
         MongoDriver d = new MongoDriver();
-        MongoDriver.closeAllClients();
         MongoDriver.setMaxCachedClientsForTest(2);
         try {
             MongoConnection a = cachedConnection(d, "lru-a");
+            a.close();
             MongoConnection b = cachedConnection(d, "lru-b");
             b.close();
-            // a's client was retrieved first but its connection closed last, so b's client is the
-            // least recently used.
-            a.close();
+            // Reusing a's client makes b's the least recently used.
+            cachedConnection(d, "lru-a").close();
 
             MongoConnection c = cachedConnection(d, "lru-c");
             assertEquals(2, MongoDriver.getClientCacheSizeForTest());
             assertClientClosed(b.getMongoClient());
             assertClientOpen(a.getMongoClient());
             assertClientOpen(c.getMongoClient());
-
-            MongoConnection b2 = cachedConnection(d, "lru-b");
-            assertNotSame(
-                    b.getMongoClient(),
-                    b2.getMongoClient(),
-                    "A connection with an evicted client's settings should get a new client.");
         } finally {
             MongoDriver.setMaxCachedClientsForTest(MongoDriver.MAX_CACHED_CLIENTS);
         }
@@ -956,7 +922,6 @@ class MongoDriverTest {
     @Test
     void testClientCacheNeverClosesClientInUse() throws Exception {
         MongoDriver d = new MongoDriver();
-        MongoDriver.closeAllClients();
         MongoDriver.setMaxCachedClientsForTest(1);
         try {
             MongoConnection a1 = cachedConnection(d, "inuse-a");

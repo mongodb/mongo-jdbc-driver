@@ -64,9 +64,8 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
-    // Run once by close(): closes a client this connection created, or, once the driver's client
-    // cache takes the client over, updates its count of connections using it. Null for a client
-    // passed in by the caller, which owns it.
+    // Run once by close(). Closes the client, or releases it back to the driver's cache. Null when
+    // the caller passed the client in and owns it.
     private Runnable releaseMongoClient;
     protected String currentDB;
     protected String url;
@@ -309,7 +308,6 @@ public class MongoConnection implements Connection {
         return mongoClient;
     }
 
-    // Synchronized like the read in close(), so a close() on another thread sees the new value.
     synchronized void setMongoClientRelease(Runnable release) {
         releaseMongoClient = release;
     }
@@ -484,8 +482,7 @@ public class MongoConnection implements Connection {
                     handlerCount.remove(logDirPath);
                 }
             }
-            // Release the client at most once, even if close() is called concurrently: releasing
-            // a cached client twice could get it closed while another connection still uses it.
+            // Only release once. A cached client released twice could be closed while still in use.
             release = releaseMongoClient;
             releaseMongoClient = null;
         }

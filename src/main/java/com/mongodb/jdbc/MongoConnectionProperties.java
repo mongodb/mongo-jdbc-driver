@@ -18,6 +18,8 @@ package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class MongoConnectionProperties {
@@ -112,26 +114,17 @@ public class MongoConnectionProperties {
     /*
      * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
      * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key,
-     * but everything that decides which identity the client authenticates as must be, or one user's connection could reuse
-     * another's client. The full string is the key, not its hash code: two different connection strings (e.g. different
-     * credentials) can have the same hash code and must not share a client.
+     * but anything that changes who the client authenticates as must be, or one user could get another's client.
      */
-    public String generateKey() {
-        StringBuilder keyBuilder = new StringBuilder();
-        keyBuilder.append(connectionString.toString());
-        appendKeyPart(keyBuilder, "clientInfo", clientInfo);
-        appendKeyPart(keyBuilder, "tlsCaFile", tlsCaFile);
-        appendKeyPart(keyBuilder, "x509PemPath", x509PemPath);
-        appendKeyPart(keyBuilder, "jaasConfigPath", jaasConfigPath);
-        appendKeyPart(keyBuilder, "gssNativeMode", gssNativeMode);
-        appendKeyPart(keyBuilder, "gssApiLoginContextName", gssApiLoginContextName);
-        appendKeyPart(keyBuilder, "gssApiServerAuth", gssApiServerAuth);
-        return keyBuilder.toString();
-    }
-
-    private static void appendKeyPart(StringBuilder keyBuilder, String name, String value) {
-        if (value != null) {
-            keyBuilder.append(':').append(name).append('=').append(value);
-        }
+    public List<String> generateKey() {
+        return Arrays.asList(
+                connectionString.toString(),
+                clientInfo,
+                tlsCaFile,
+                x509PemPath,
+                jaasConfigPath,
+                gssNativeMode,
+                gssApiLoginContextName,
+                gssApiServerAuth);
     }
 }

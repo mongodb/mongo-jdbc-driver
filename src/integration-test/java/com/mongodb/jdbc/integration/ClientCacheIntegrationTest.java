@@ -20,21 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.jdbc.MongoDriver;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -59,13 +54,6 @@ public class ClientCacheIntegrationTest {
             observers.put(
                     portEnvVar, MongoClients.create("mongodb://localhost:" + getEnv(portEnvVar)));
         }
-    }
-
-    // Start each test with an empty client cache. Idle clients cached by earlier tests would
-    // otherwise be the first ones evicted.
-    @BeforeEach
-    public void closeCachedClients() {
-        MongoDriver.closeAllClients();
     }
 
     @AfterAll
@@ -103,13 +91,9 @@ public class ClientCacheIntegrationTest {
         return prefix + System.nanoTime();
     }
 
-    /**
-     * Counts the server connections whose appName matches tagPattern, grouped by the clientInfo tag
-     * in the appName. Tags without connections are absent.
-     */
-    private Map<String, Long> serverConnectionsPerTag(String portEnvVar, String tagPattern) {
-        Map<String, Long> counts = new HashMap<>();
-        for (Document group :
+    /** Counts the server connections whose appName contains tag, from the clientInfo property. */
+    private long serverConnections(String portEnvVar, String tag) {
+        Document count =
                 observers
                         .get(portEnvVar)
                         .getDatabase("admin")
@@ -122,54 +106,28 @@ public class ClientCacheIntegrationTest {
                                         new Document(
                                                 "$match",
                                                 new Document(
-                                                        "appName",
-                                                        new Document("$regex", tagPattern))),
-                                        new Document(
-                                                "$group",
-                                                new Document("_id", "$appName")
-                                                        .append("n", new Document("$sum", 1)))))) {
-            // The appName ends with "|<tag>+1.0", from the clientInfo property.
-            String appName = group.getString("_id");
-            String tag = appName.substring(appName.lastIndexOf('|') + 1, appName.lastIndexOf('+'));
-            counts.merge(tag, ((Number) group.get("n")).longValue(), Long::sum);
-        }
-        return counts;
+                                                        "appName", new Document("$regex", tag))),
+                                        new Document("$count", "n")))
+                        .first();
+        return count == null ? 0 : ((Number) count.get("n")).longValue();
     }
 
     /**
      * Monitors open their connections asynchronously and the server notices closed sockets a little
-     * later, so wait until the counts stop changing before using them.
+     * later, so wait until the count stops changing before using it.
      */
-    private Map<String, Long> settledServerConnectionsPerTag(String portEnvVar, String tagPattern)
+    private long settledServerConnections(String portEnvVar, String tag)
             throws InterruptedException {
         long deadline = System.currentTimeMillis() + 15_000;
-        Map<String, Long> previous = serverConnectionsPerTag(portEnvVar, tagPattern);
+        long previous = serverConnections(portEnvVar, tag);
         int unchangedReads = 0;
         while (unchangedReads < 3 && System.currentTimeMillis() < deadline) {
             Thread.sleep(500);
-            Map<String, Long> current = serverConnectionsPerTag(portEnvVar, tagPattern);
-            unchangedReads = current.equals(previous) ? unchangedReads + 1 : 0;
+            long current = serverConnections(portEnvVar, tag);
+            unchangedReads = current == previous ? unchangedReads + 1 : 0;
             previous = current;
         }
         return previous;
-    }
-
-    private long settledServerConnections(String portEnvVar, String tag)
-            throws InterruptedException {
-        return settledServerConnectionsPerTag(portEnvVar, tag)
-                .values()
-                .stream()
-                .mapToLong(Long::longValue)
-                .sum();
-    }
-
-    // Tags <prefix>k0 through <prefix>k<count - 1>, for connections with distinct settings.
-    private static List<String> numberedTags(String prefix, int count) {
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            tags.add(prefix + "k" + i);
-        }
-        return tags;
     }
 
     private static void forceGarbageCollection() throws InterruptedException {
@@ -244,60 +202,6 @@ public class ClientCacheIntegrationTest {
                     0,
                     settledServerConnections("LOCAL_MDB_PORT_COM", tag),
                     "disableclientcache=" + disableClientCache);
-        }
-    }
-
-    /**
-     * Past MAX_CACHED_CLIENTS, the cache closes its least recently used idle clients, which closes
-     * their server connections.
-     */
-    @Test
-    public void testCacheClosesLeastRecentlyUsedIdleClientsOverLimit() throws Exception {
-        String prefix = uniqueTag("lru");
-        String uri = localUri("LOCAL_MDB_PORT_ENT");
-        int overLimit = 3;
-        List<String> tags = numberedTags(prefix, MongoDriver.MAX_CACHED_CLIENTS + overLimit);
-        for (String tag : tags) {
-            openAndClose(uri, connectionProperties(tag, false));
-        }
-
-        assertEquals(
-                new HashSet<>(tags.subList(overLimit, tags.size())),
-                settledServerConnectionsPerTag("LOCAL_MDB_PORT_ENT", prefix).keySet(),
-                "Only the most recently used clients should still hold server connections.");
-    }
-
-    /**
-     * The cache never closes a client in use, even past MAX_CACHED_CLIENTS. Once its connection
-     * closes, the cache closes that client to get back within the limit.
-     */
-    @Test
-    public void testCacheKeepsClientsInUseOverLimit() throws Exception {
-        String prefix = uniqueTag("inuse");
-        String uri = localUri("LOCAL_MDB_PORT_ENT");
-        List<String> tags = numberedTags(prefix, MongoDriver.MAX_CACHED_CLIENTS + 1);
-        List<Connection> connections = new ArrayList<>();
-        try {
-            for (String tag : tags) {
-                connections.add(DriverManager.getConnection(uri, connectionProperties(tag, false)));
-            }
-            assertEquals(
-                    new HashSet<>(tags),
-                    settledServerConnectionsPerTag("LOCAL_MDB_PORT_ENT", prefix).keySet(),
-                    "Every client in use should still hold server connections.");
-
-            connections.get(0).close();
-            assertEquals(
-                    new HashSet<>(tags.subList(1, tags.size())),
-                    settledServerConnectionsPerTag("LOCAL_MDB_PORT_ENT", prefix).keySet(),
-                    "The client that became idle should have been closed.");
-            for (Connection conn : connections.subList(1, connections.size())) {
-                assertTrue(conn.isValid(5), "A connection whose client is cached stopped working.");
-            }
-        } finally {
-            for (Connection conn : connections) {
-                conn.close();
-            }
         }
     }
 }

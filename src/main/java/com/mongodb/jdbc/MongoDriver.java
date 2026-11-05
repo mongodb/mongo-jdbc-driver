@@ -148,18 +148,12 @@ public class MongoDriver implements Driver {
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
     public static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
 
-    /**
-     * The most MongoClients the client cache keeps. Past this, it closes the least recently used
-     * clients that no open connection is using.
-     */
-    public static final int MAX_CACHED_CLIENTS = 32;
+    static final int MAX_CACHED_CLIENTS = 32;
 
-    // MongoClients shared by connections with the same key, held strongly: a client dropped without
-    // close() keeps its monitors and pool, and their server connections, alive. Clients in use are
-    // never evicted, so the cache can go over the limit; the client whose last connection closes
-    // while it is over is then the one closed. The map is in access order (least recently used
-    // first) and get() reorders it, so every access must hold mongoClientCacheLock.
-    private static final LinkedHashMap<String, CachedClient> mongoClientCache =
+    // Held strongly, since a client that's dropped without close() keeps its server connections
+    // open. Past maxCachedClients, the least recently used idle clients are closed; clients in use
+    // never are. get() reorders the map, so every access must hold mongoClientCacheLock.
+    private static final LinkedHashMap<List<Object>, CachedClient> mongoClientCache =
             new LinkedHashMap<>(16, 0.75f, true);
     private static final Object mongoClientCacheLock = new Object();
     private static int maxCachedClients = MAX_CACHED_CLIENTS;
@@ -340,8 +334,7 @@ public class MongoDriver implements Driver {
                 try {
                     conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
                 } catch (Exception e) {
-                    // Don't leak the connection, or its client's server connections when nothing
-                    // else uses the client (e.g. a mistyped password gets its own cache key).
+                    // A wrong password gets its own client, so close it if nothing else uses it.
                     conn.close();
                     closeCachedClientIfIdle(conn.getMongoClient());
                     throw e;
@@ -549,26 +542,23 @@ public class MongoDriver implements Driver {
             return new MongoConnection(mongoConnectionProperties, x509Passphrase);
         }
 
-        // The X.509 passphrase isn't in the connection properties, but a wrong passphrase must not
-        // reuse the client that the right one created.
-        String key =
-                mongoConnectionProperties.generateKey()
-                        + (x509Passphrase == null
-                                ? ""
-                                : ":x509Passphrase=" + String.valueOf(x509Passphrase));
+        // With no PEM path, the X.509 passphrase holds the PEM itself, so it's part of the identity.
+        List<Object> key =
+                Arrays.asList(
+                        mongoConnectionProperties.generateKey(),
+                        x509Passphrase == null ? null : String.valueOf(x509Passphrase));
         MongoConnection connection = null;
         CachedClient cached;
         List<MongoClient> evicted;
         synchronized (mongoClientCacheLock) {
             cached = mongoClientCache.get(key);
             if (cached == null) {
-                // Create the client while holding the lock, so that concurrent connections with the
-                // same settings don't each create one.
+                // Created under the lock so concurrent connects with this key share one client.
                 connection = new MongoConnection(mongoConnectionProperties, x509Passphrase);
                 cached = new CachedClient(connection.getMongoClient());
                 mongoClientCache.put(key, cached);
             }
-            // Count the connection before evicting, so that its own client is never evicted.
+            // Count it before evicting so this connection's own client can't be evicted.
             cached.openConnections++;
             evicted = removeIdleClientsOverLimit();
         }
@@ -582,22 +572,19 @@ public class MongoDriver implements Driver {
                         new MongoConnection(
                                 cached.client, mongoConnectionProperties, x509Passphrase);
             } catch (Exception e) {
-                releaseCachedClient(key, cached);
+                releaseCachedClient(cached);
                 throw e;
             }
         }
         CachedClient connectionClient = cached;
-        connection.setMongoClientRelease(() -> releaseCachedClient(key, connectionClient));
+        connection.setMongoClientRelease(() -> releaseCachedClient(connectionClient));
         return connection;
     }
 
-    private static void releaseCachedClient(String key, CachedClient cached) {
+    private static void releaseCachedClient(CachedClient cached) {
         List<MongoClient> evicted;
         synchronized (mongoClientCacheLock) {
             cached.openConnections--;
-            // Closing a connection counts as using its client, so a client that a long-lived
-            // connection held until now isn't the first one evicted.
-            mongoClientCache.get(key);
             evicted = removeIdleClientsOverLimit();
         }
         for (MongoClient client : evicted) {
