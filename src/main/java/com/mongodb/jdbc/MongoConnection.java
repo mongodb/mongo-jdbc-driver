@@ -64,6 +64,9 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
+    // Run once by close(). Closes the client, or releases it back to the driver's cache. Null when
+    // the caller passed the client in and owns it.
+    private Runnable releaseMongoClient;
     protected String currentDB;
     protected String url;
     protected String user;
@@ -138,6 +141,7 @@ public class MongoConnection implements Connection {
                                     .driverName(MongoDriver.NAME)
                                     .driverVersion(MongoDriver.getVersion())
                                     .build());
+            this.releaseMongoClient = this.mongoClient::close;
         } else {
             this.mongoClient = mongoClient;
         }
@@ -304,6 +308,10 @@ public class MongoConnection implements Connection {
         return mongoClient;
     }
 
+    synchronized void setMongoClientRelease(Runnable release) {
+        releaseMongoClient = release;
+    }
+
     @DisableAutoLogging
     public MongoLogger getLogger() {
         return logger;
@@ -460,6 +468,7 @@ public class MongoConnection implements Connection {
             return;
         }
 
+        Runnable release;
         // Decrement fileHandlerCount and delete entry
         // if no more connections are using it.
         synchronized (this) {
@@ -473,9 +482,15 @@ public class MongoConnection implements Connection {
                     handlerCount.remove(logDirPath);
                 }
             }
+            // Only release once. A cached client released twice could be closed while still in use.
+            release = releaseMongoClient;
+            releaseMongoClient = null;
         }
 
         isClosed = true;
+        if (release != null) {
+            release.run();
+        }
     }
 
     @Override

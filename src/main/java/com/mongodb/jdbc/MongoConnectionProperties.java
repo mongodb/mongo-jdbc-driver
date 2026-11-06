@@ -18,6 +18,8 @@ package com.mongodb.jdbc;
 
 import com.mongodb.ConnectionString;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class MongoConnectionProperties {
@@ -111,17 +113,18 @@ public class MongoConnectionProperties {
 
     /*
      * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
-     * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.
+     * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key,
+     * but anything that changes who the client authenticates as must be, or one user could get another's client.
      */
-    public Integer generateKey() {
-        StringBuilder keyBuilder = new StringBuilder();
-        keyBuilder.append(connectionString.toString());
-        if (clientInfo != null) {
-            keyBuilder.append(":clientInfo=").append(clientInfo);
-        }
-        if (tlsCaFile != null) {
-            keyBuilder.append(":tlsCaFile=").append(tlsCaFile);
-        }
-        return keyBuilder.toString().hashCode();
+    public List<String> generateKey() {
+        return Arrays.asList(
+                connectionString.toString(),
+                clientInfo,
+                tlsCaFile,
+                x509PemPath,
+                jaasConfigPath,
+                gssNativeMode,
+                gssApiLoginContextName,
+                gssApiServerAuth);
     }
 }

@@ -21,11 +21,10 @@ import static com.mongodb.jdbc.utils.X509AuthenticationTest.TEST_PEM_DIR;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.AuthenticationMechanism;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -33,11 +32,10 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Level;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,6 +89,12 @@ class MongoDriverTest {
     @BeforeAll
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    // Connections that earlier tests left open would otherwise keep their clients cached.
+    @BeforeEach
+    void closeCachedClients() {
+        MongoDriver.closeAllClients();
     }
 
     @Test
@@ -774,46 +778,178 @@ class MongoDriverTest {
                 "x509Passphrase should match the provided value.");
     }
 
-    private int getClientCacheSize() throws NoSuchFieldException, IllegalAccessException {
-        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
-        cacheField.setAccessible(true);
-        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
-                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
+    // No server runs during unit tests; a short server selection timeout lets assertClientOpen
+    // fail fast with a timeout instead of waiting 30 seconds.
+    static final String fastFailURL = "jdbc:mongodb://localhost/?serverSelectionTimeoutMS=100";
 
-        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
-        lockField.setAccessible(true);
-        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
+    // A closed MongoClient rejects operations immediately with an IllegalStateException.
+    private static void assertClientClosed(MongoClient client) {
+        assertThrows(
+                IllegalStateException.class,
+                () -> client.listDatabaseNames().first(),
+                "MongoClient should be closed.");
+    }
 
-        lock.readLock().lock();
+    // An open MongoClient attempts the operation, which fails server selection when no server is
+    // running (or succeeds if one is).
+    private static void assertClientOpen(MongoClient client) {
         try {
-            return cache.size();
-        } finally {
-            lock.readLock().unlock();
+            client.listDatabaseNames().first();
+        } catch (IllegalStateException e) {
+            fail("MongoClient should still be open, but it is closed.", e);
+        } catch (MongoException e) {
+            // Expected when no server is running.
         }
     }
 
-    private void clearClientCache() throws NoSuchFieldException, IllegalAccessException {
-        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
-        cacheField.setAccessible(true);
-        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
-                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
-
-        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
-        lockField.setAccessible(true);
-        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
-
-        lock.writeLock().lock();
-        try {
-            cache.clear();
-        } finally {
-            lock.writeLock().unlock();
-        }
+    // A cached connection whose client is keyed on tag.
+    private static MongoConnection cachedConnection(MongoDriver d, String tag) throws SQLException {
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(CLIENT_INFO.getPropertyName(), tag + "+1.0");
+        return d.getUnvalidatedConnection(fastFailURL, p);
     }
 
-    void testDisableClientCacheAux(String value)
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
+    @Test
+    void testClientCacheKeyHashCollision() throws Exception {
+        // "Aa" and "BB" have the same String.hashCode(), so these two URIs, which differ only in
+        // the password, have the same hash code. They must still get separate clients.
+        String url1 = "jdbc:mongodb://user:Aa@localhost";
+        String url2 = "jdbc:mongodb://user:BB@localhost";
         MongoDriver d = new MongoDriver();
-        clearClientCache();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        assertEquals(
+                MongoDriver.getConnectionSettings(url1, p).connectionString.toString().hashCode(),
+                MongoDriver.getConnectionSettings(url2, p).connectionString.toString().hashCode());
+
+        MongoConnection conn1 = d.getUnvalidatedConnection(url1, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(url2, p);
+
+        assertNotSame(
+                conn1.getMongoClient(),
+                conn2.getMongoClient(),
+                "Connections with different credentials must not share a MongoClient.");
+    }
+
+    private static final String PEM_DIR =
+            MongoDriverTest.class.getClassLoader().getResource(TEST_PEM_DIR).getPath();
+
+    private static MongoConnection x509Connection(MongoDriver d, String pemFile, String passphrase)
+            throws SQLException {
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        if (pemFile != null) {
+            p.setProperty(X509_PEM_PATH.getPropertyName(), PEM_DIR + "/" + pemFile);
+        }
+        if (passphrase != null) {
+            p.setProperty("password", passphrase);
+        }
+        return d.getUnvalidatedConnection(basicURL + "/?authMechanism=MONGODB-X509", p);
+    }
+
+    private static String pemContents(String pemFile) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(PEM_DIR, pemFile)));
+    }
+
+    @Test
+    void testClientCacheKeySeparatesClientIdentities() throws Exception {
+        // These settings pick the identity a client authenticates as, but aren't in the URI.
+        MongoDriver d = new MongoDriver();
+        assertNotSame(
+                x509Connection(d, "pkcs1_unencrypted.pem", null).getMongoClient(),
+                x509Connection(d, "pkcs8_unencrypted.pem", null).getMongoClient(),
+                "Connections with different X.509 certificates must not share a MongoClient.");
+
+        // With no PEM path, the passphrase holds the PEM itself.
+        assertNotSame(
+                x509Connection(d, null, pemContents("pkcs1_unencrypted.pem")).getMongoClient(),
+                x509Connection(d, null, pemContents("pkcs8_unencrypted.pem")).getMongoClient(),
+                "Connections with different X.509 PEM contents must not share a MongoClient.");
+
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        String gssapiURL = userNoPWDURL + "?authMechanism=GSSAPI";
+        p.setProperty(GSSAPI_SERVER_AUTH.getPropertyName(), "true");
+        MongoConnection serverAuth = d.getUnvalidatedConnection(gssapiURL, p);
+        p.setProperty(GSSAPI_SERVER_AUTH.getPropertyName(), "false");
+        assertNotSame(
+                serverAuth.getMongoClient(),
+                d.getUnvalidatedConnection(gssapiURL, p).getMongoClient(),
+                "Connections with different GSSAPI settings must not share a MongoClient.");
+    }
+
+    @Test
+    void testFailedValidationClosesUnusedCachedClient() throws Exception {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        p.setProperty(CLIENT_INFO.getPropertyName(), "failed-validation+1.0");
+
+        // No server is running, so validation fails.
+        assertThrows(SQLException.class, () -> d.connect(fastFailURL, p));
+        assertEquals(0, MongoDriver.getClientCacheSizeForTest());
+
+        // A client that another connection still uses stays cached.
+        MongoConnection open = d.getUnvalidatedConnection(fastFailURL, p);
+        assertThrows(SQLException.class, () -> d.connect(fastFailURL, p));
+        assertEquals(1, MongoDriver.getClientCacheSizeForTest());
+        assertClientOpen(open.getMongoClient());
+    }
+
+    @Test
+    void testClientCacheClosesLeastRecentlyUsedIdleClient() throws Exception {
+        MongoDriver d = new MongoDriver();
+        MongoDriver.setMaxCachedClientsForTest(2);
+        try {
+            MongoConnection a = cachedConnection(d, "lru-a");
+            a.close();
+            MongoConnection b = cachedConnection(d, "lru-b");
+            b.close();
+            // Reusing a's client makes b's the least recently used.
+            cachedConnection(d, "lru-a").close();
+
+            MongoConnection c = cachedConnection(d, "lru-c");
+            assertEquals(2, MongoDriver.getClientCacheSizeForTest());
+            assertClientClosed(b.getMongoClient());
+            assertClientOpen(a.getMongoClient());
+            assertClientOpen(c.getMongoClient());
+        } finally {
+            MongoDriver.setMaxCachedClientsForTest(MongoDriver.MAX_CACHED_CLIENTS);
+        }
+    }
+
+    @Test
+    void testClientCacheNeverClosesClientInUse() throws Exception {
+        MongoDriver d = new MongoDriver();
+        MongoDriver.setMaxCachedClientsForTest(1);
+        try {
+            MongoConnection a1 = cachedConnection(d, "inuse-a");
+            MongoConnection a2 = cachedConnection(d, "inuse-a");
+            MongoConnection b = cachedConnection(d, "inuse-b");
+            // Every client is in use, so the cache goes over its limit rather than close one.
+            assertEquals(2, MongoDriver.getClientCacheSizeForTest());
+            assertClientOpen(a1.getMongoClient());
+            assertClientOpen(b.getMongoClient());
+
+            // a's client is still used by a2.
+            a1.close();
+            assertEquals(2, MongoDriver.getClientCacheSizeForTest());
+            assertClientOpen(a2.getMongoClient());
+
+            // Once a's client is idle, the cache closes it to get back within its limit.
+            a2.close();
+            assertEquals(1, MongoDriver.getClientCacheSizeForTest());
+            assertClientClosed(a2.getMongoClient());
+            assertClientOpen(b.getMongoClient());
+        } finally {
+            MongoDriver.setMaxCachedClientsForTest(MongoDriver.MAX_CACHED_CLIENTS);
+        }
+    }
+
+    void testDisableClientCacheAux(String value) throws SQLException {
+        MongoDriver d = new MongoDriver();
+        MongoDriver.closeAllClients();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
@@ -824,16 +960,15 @@ class MongoDriverTest {
 
         assertEquals(
                 0,
-                getClientCacheSize(),
+                MongoDriver.getClientCacheSizeForTest(),
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         // Verify that the connections do not share the same MongoClient instance
         assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
     }
 
-    void testNoDisableClientCacheAux(String value)
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
+    void testNoDisableClientCacheAux(String value) throws SQLException {
         MongoDriver d = new MongoDriver();
-        clearClientCache();
+        MongoDriver.closeAllClients();
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
@@ -844,15 +979,14 @@ class MongoDriverTest {
 
         // Verify that the connections do not share the same MongoClient instance
         assertEquals(
-                getClientCacheSize(),
+                MongoDriver.getClientCacheSizeForTest(),
                 1,
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
     }
 
     @Test
-    void testDisableClientCache()
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
+    void testDisableClientCache() throws SQLException {
         testDisableClientCacheAux("true");
         testDisableClientCacheAux("TRUE");
         testDisableClientCacheAux("TrUe");

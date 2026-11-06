@@ -729,7 +729,7 @@ functions:
 
         # Run the tests.
         ./gradlew $IS_RELEASE_PROP integrationTest \
-            -x test --tests DCIntegrationTest > gradle_output.log 2>&1 &
+            -x test --tests DCIntegrationTest --tests ClientCacheIntegrationTest > gradle_output.log 2>&1 &
         GRADLE_PID=$!
 
         ./evergreen/monitor_gradle_tasks.sh "$GRADLE_PID"
