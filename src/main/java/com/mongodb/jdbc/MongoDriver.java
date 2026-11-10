@@ -42,6 +42,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -148,15 +149,41 @@ public class MongoDriver implements Driver {
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
     public static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
 
-    static final int MAX_CACHED_CLIENTS = 32;
+    static final int MAX_CACHED_CLIENTS = 100;
 
     // Held strongly, since a client that's dropped without close() keeps its server connections
     // open. Past maxCachedClients, the least recently used idle clients are closed; clients in use
     // never are. get() reorders the map, so every access must hold mongoClientCacheLock.
-    private static final LinkedHashMap<List<Object>, CachedClient> mongoClientCache =
+    private static final LinkedHashMap<MongoClientCacheKey, CachedClient> mongoClientCache =
             new LinkedHashMap<>(16, 0.75f, true);
     private static final Object mongoClientCacheLock = new Object();
     private static int maxCachedClients = MAX_CACHED_CLIENTS;
+
+    private static final class MongoClientCacheKey {
+        private final List<String> settings;
+        // With no PEM path, the X.509 passphrase holds the PEM itself, so it's part of the identity.
+        private final String x509Passphrase;
+
+        MongoClientCacheKey(MongoConnectionProperties properties, char[] x509Passphrase) {
+            this.settings = properties.generateKey();
+            this.x509Passphrase = x509Passphrase == null ? null : String.valueOf(x509Passphrase);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof MongoClientCacheKey)) {
+                return false;
+            }
+            MongoClientCacheKey other = (MongoClientCacheKey) o;
+            return settings.equals(other.settings)
+                    && Objects.equals(x509Passphrase, other.x509Passphrase);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(settings, x509Passphrase);
+        }
+    }
 
     private static class CachedClient {
         final MongoClient client;
@@ -542,11 +569,8 @@ public class MongoDriver implements Driver {
             return new MongoConnection(mongoConnectionProperties, x509Passphrase);
         }
 
-        // With no PEM path, the X.509 passphrase holds the PEM itself, so it's part of the identity.
-        List<Object> key =
-                Arrays.asList(
-                        mongoConnectionProperties.generateKey(),
-                        x509Passphrase == null ? null : String.valueOf(x509Passphrase));
+        MongoClientCacheKey key =
+                new MongoClientCacheKey(mongoConnectionProperties, x509Passphrase);
         MongoConnection connection = null;
         CachedClient cached;
         List<MongoClient> evicted;

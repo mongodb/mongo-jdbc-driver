@@ -867,6 +867,14 @@ class MongoDriverTest {
                 x509Connection(d, null, pemContents("pkcs8_unencrypted.pem")).getMongoClient(),
                 "Connections with different X.509 PEM contents must not share a MongoClient.");
 
+        // The same identity still shares one client.
+        assertSame(
+                x509Connection(d, "pkcs1_unencrypted.pem", null).getMongoClient(),
+                x509Connection(d, "pkcs1_unencrypted.pem", null).getMongoClient());
+        assertSame(
+                x509Connection(d, null, pemContents("pkcs1_unencrypted.pem")).getMongoClient(),
+                x509Connection(d, null, pemContents("pkcs1_unencrypted.pem")).getMongoClient());
+
         Properties p = new Properties();
         p.setProperty(DATABASE.getPropertyName(), "test");
         String gssapiURL = userNoPWDURL + "?authMechanism=GSSAPI";

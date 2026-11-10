@@ -482,7 +482,9 @@ public class MongoConnection implements Connection {
                     handlerCount.remove(logDirPath);
                 }
             }
-            // Only release once. A cached client released twice could be closed while still in use.
+            // Take the release and clear it under the lock, so only one close() runs it even if two
+            // threads close at once. Releasing a cached client twice would undercount its
+            // connections, and the cache could close it while another connection still uses it.
             release = releaseMongoClient;
             releaseMongoClient = null;
         }
