@@ -42,6 +42,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
@@ -154,7 +155,7 @@ public class MongoDriver implements Driver {
     // Held strongly, since a client that's dropped without close() keeps its server connections
     // open. Past maxCachedClients, the least recently used idle clients are closed; clients in use
     // never are. get() reorders the map, so every access must hold mongoClientCacheLock.
-    private static final LinkedHashMap<MongoClientCacheKey, CachedClient> mongoClientCache =
+    private static final Map<MongoClientCacheKey, CachedClient> mongoClientCache =
             new LinkedHashMap<>(16, 0.75f, true);
     private static final Object mongoClientCacheLock = new Object();
     private static int maxCachedClients = MAX_CACHED_CLIENTS;
