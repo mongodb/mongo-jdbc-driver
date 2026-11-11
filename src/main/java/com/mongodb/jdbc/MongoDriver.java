@@ -323,7 +323,14 @@ public class MongoDriver implements Driver {
         try {
             MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
             if (conn != null) {
-                conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                try {
+                    conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                } catch (Exception e) {
+                    // The caller never gets this connection, so close it here, along with its
+                    // client if it has its own.
+                    conn.close();
+                    throw e;
+                }
                 return conn;
             } else {
                 throw new SQLException("Connection setup failed but no errors where reported.");
@@ -552,6 +559,8 @@ public class MongoDriver implements Driver {
             }
             MongoConnection newConnection =
                     new MongoConnection(mongoConnectionProperties, x509Passphrase);
+            // Later connections share this client, so closing this one mustn't close it.
+            newConnection.releaseMongoClientOwnership();
             mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
             return newConnection;
         } finally {

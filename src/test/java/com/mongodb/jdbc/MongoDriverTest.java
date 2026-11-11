@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.AuthenticationMechanism;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.internal.MongoClientImpl;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -828,6 +829,13 @@ class MongoDriverTest {
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         // Verify that the connections do not share the same MongoClient instance
         assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
+
+        // Each connection owns its client, so closing it closes only that client.
+        conn1.close();
+        assertTrue(isClosed(conn1.getMongoClient()));
+        assertFalse(isClosed(conn2.getMongoClient()));
+        conn2.close();
+        assertTrue(isClosed(conn2.getMongoClient()));
     }
 
     void testNoDisableClientCacheAux(String value)
@@ -848,6 +856,15 @@ class MongoDriverTest {
                 1,
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
+
+        // conn1 created the cached client, but conn2 still uses it, so closing conn1 must not
+        // close it.
+        conn1.close();
+        assertFalse(isClosed(conn2.getMongoClient()));
+    }
+
+    private static boolean isClosed(MongoClient client) {
+        return ((MongoClientImpl) client).getCluster().isClosed();
     }
 
     @Test
