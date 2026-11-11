@@ -64,8 +64,7 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
-    // True when this connection created mongoClient and is the only one using it, so close() has
-    // to close it. The driver clears this when it shares the client through its cache.
+    // True when this connection created mongoClient and nothing else uses it, so close() closes it.
     private boolean ownsMongoClient;
     protected String currentDB;
     protected String url;
@@ -308,8 +307,7 @@ public class MongoConnection implements Connection {
         return mongoClient;
     }
 
-    // Called by the driver when it caches this connection's client for other connections to use.
-    synchronized void releaseMongoClientOwnership() {
+    void releaseMongoClientOwnership() {
         ownsMongoClient = false;
     }
 
@@ -469,7 +467,10 @@ public class MongoConnection implements Connection {
             return;
         }
 
-        boolean closeClient;
+        if (ownsMongoClient) {
+            mongoClient.close();
+        }
+
         // Decrement fileHandlerCount and delete entry
         // if no more connections are using it.
         synchronized (this) {
@@ -483,15 +484,9 @@ public class MongoConnection implements Connection {
                     handlerCount.remove(logDirPath);
                 }
             }
-            // Cleared here so the client is closed once, even if two threads close at once.
-            closeClient = ownsMongoClient;
-            ownsMongoClient = false;
         }
 
         isClosed = true;
-        if (closeClient) {
-            mongoClient.close();
-        }
     }
 
     @Override

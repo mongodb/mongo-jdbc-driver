@@ -326,8 +326,7 @@ public class MongoDriver implements Driver {
                 try {
                     conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
                 } catch (Exception e) {
-                    // The caller never gets this connection, so close it here, along with its
-                    // client if it has its own.
+                    // The caller never gets this connection, so close it.
                     conn.close();
                     throw e;
                 }

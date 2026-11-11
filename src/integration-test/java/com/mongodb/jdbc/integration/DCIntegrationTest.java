@@ -19,12 +19,16 @@ package com.mongodb.jdbc.integration;
 import static com.mongodb.jdbc.MongoDriver.AUTHENTICATION_ERROR_SQLSTATE;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDatabaseMetaData;
 import com.mongodb.jdbc.Pair;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Properties;
+import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -344,5 +348,66 @@ public class DCIntegrationTest {
                 "SQLSTATE should indicate an authentication failure ("
                         + AUTHENTICATION_ERROR_SQLSTATE
                         + ")");
+    }
+
+    /** Counts the server connections whose appName contains tag, from the clientInfo property. */
+    private long serverConnections(String portEnvVar, String tag) {
+        try (MongoClient observer =
+                MongoClients.create("mongodb://localhost:" + System.getenv(portEnvVar))) {
+            Document count =
+                    observer.getDatabase("admin")
+                            .aggregate(
+                                    Arrays.asList(
+                                            new Document(
+                                                    "$currentOp",
+                                                    new Document("allUsers", true)
+                                                            .append("idleConnections", true)),
+                                            new Document(
+                                                    "$match",
+                                                    new Document(
+                                                            "appName",
+                                                            new Document("$regex", tag))),
+                                            new Document("$count", "n")))
+                            .first();
+            return count == null ? 0 : ((Number) count.get("n")).longValue();
+        }
+    }
+
+    /** The server notices closed sockets a little later, so wait up to 15s for them to go away. */
+    private long serverConnectionsAfterClose(String portEnvVar, String tag)
+            throws InterruptedException {
+        long deadline = System.currentTimeMillis() + 15_000;
+        long count = serverConnections(portEnvVar, tag);
+        while (count > 0 && System.currentTimeMillis() < deadline) {
+            Thread.sleep(250);
+            count = serverConnections(portEnvVar, tag);
+        }
+        return count;
+    }
+
+    /** Tests that with disableclientcache, closing a connection closes its client. */
+    @Test
+    public void testDisableClientCacheClosesClientWithConnection() throws Exception {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        info.right().setProperty("clientInfo", "nocacheclose+1.0");
+        info.right().setProperty("disableclientcache", "true");
+
+        Connection conn = DriverManager.getConnection(info.left(), info.right());
+        long open = serverConnections("LOCAL_MDB_PORT_ENT", "nocacheclose");
+        assertTrue(open > 0, "Expected server connections while connected, found " + open);
+        conn.close();
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_ENT", "nocacheclose"));
+    }
+
+    /** Tests that with disableclientcache, a connection that fails validation closes its client. */
+    @Test
+    public void testDisableClientCacheClosesClientOnFailedConnect() throws Exception {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
+        info.right().setProperty("clientInfo", "nocachefail+1.0");
+        info.right().setProperty("disableclientcache", "true");
+
+        assertThrows(
+                SQLException.class, () -> DriverManager.getConnection(info.left(), info.right()));
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_COM", "nocachefail"));
     }
 }

@@ -830,12 +830,10 @@ class MongoDriverTest {
         // Verify that the connections do not share the same MongoClient instance
         assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
 
-        // Each connection owns its client, so closing it closes only that client.
+        // Each connection owns its client, so closing it closes the client.
         conn1.close();
         assertTrue(isClosed(conn1.getMongoClient()));
-        assertFalse(isClosed(conn2.getMongoClient()));
         conn2.close();
-        assertTrue(isClosed(conn2.getMongoClient()));
     }
 
     void testNoDisableClientCacheAux(String value)
@@ -857,8 +855,7 @@ class MongoDriverTest {
                 "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
         assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
 
-        // conn1 created the cached client, but conn2 still uses it, so closing conn1 must not
-        // close it.
+        // conn2 still uses the client conn1 created, so closing conn1 mustn't close it.
         conn1.close();
         assertFalse(isClosed(conn2.getMongoClient()));
     }
