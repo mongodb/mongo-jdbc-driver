@@ -530,7 +530,7 @@ public class MongoDriver implements Driver {
                 || disableCacheVal.equals("yes")
                 || disableCacheVal.equals("1")) {
             // If the user has set the disable cache property, we will not use the cache.
-            return new MongoConnection(mongoConnectionProperties, x509Passphrase);
+            return new MongoConnection(null, mongoConnectionProperties, x509Passphrase, true);
         }
 
         Integer key = mongoConnectionProperties.generateKey();
@@ -558,8 +558,6 @@ public class MongoDriver implements Driver {
             }
             MongoConnection newConnection =
                     new MongoConnection(mongoConnectionProperties, x509Passphrase);
-            // Later connections share this client, so closing this one mustn't close it.
-            newConnection.releaseMongoClientOwnership();
             mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
             return newConnection;
         } finally {

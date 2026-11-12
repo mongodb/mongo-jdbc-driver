@@ -830,7 +830,6 @@ class MongoDriverTest {
         // Verify that the connections do not share the same MongoClient instance
         assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
 
-        // Each connection owns its client, so closing it closes the client.
         conn1.close();
         assertTrue(isClosed(conn1.getMongoClient()));
         conn2.close();

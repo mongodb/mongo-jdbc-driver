@@ -64,8 +64,8 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
-    // True when this connection created mongoClient and nothing else uses it, so close() closes it.
-    private boolean ownsMongoClient;
+    // True when nothing else uses mongoClient (disableclientcache), so close() closes it.
+    private final boolean ownsMongoClient;
     protected String currentDB;
     protected String url;
     protected String user;
@@ -118,6 +118,16 @@ public class MongoConnection implements Connection {
             MongoConnectionProperties connectionProperties,
             char[] x509Passphrase)
             throws Exception {
+        this(mongoClient, connectionProperties, x509Passphrase, false);
+    }
+
+    MongoConnection(
+            MongoClient mongoClient,
+            MongoConnectionProperties connectionProperties,
+            char[] x509Passphrase,
+            boolean ownsMongoClient)
+            throws Exception {
+        this.ownsMongoClient = ownsMongoClient;
         this.connectionId = connectionCounter.incrementAndGet();
         initConnectionLogger(
                 connectionId,
@@ -140,7 +150,6 @@ public class MongoConnection implements Connection {
                                     .driverName(MongoDriver.NAME)
                                     .driverVersion(MongoDriver.getVersion())
                                     .build());
-            this.ownsMongoClient = true;
         } else {
             this.mongoClient = mongoClient;
         }
@@ -307,10 +316,6 @@ public class MongoConnection implements Connection {
         return mongoClient;
     }
 
-    void releaseMongoClientOwnership() {
-        ownsMongoClient = false;
-    }
-
     @DisableAutoLogging
     public MongoLogger getLogger() {
         return logger;
@@ -467,26 +472,27 @@ public class MongoConnection implements Connection {
             return;
         }
 
-        if (ownsMongoClient) {
-            mongoClient.close();
-        }
-
-        // Decrement fileHandlerCount and delete entry
-        // if no more connections are using it.
-        synchronized (this) {
-            if ((null != handlerCount) && handlerCount.containsKey(logDirPath)) {
-                handlerCount.put(logDirPath, handlerCount.get(logDirPath) - 1);
-                if (handlerCount.get(logDirPath) == 0) {
-                    // Remove the FileHandler and remove this entry too
-                    if (null != fileHandlers) {
-                        fileHandlers.remove(logDirPath);
+        try {
+            // Decrement fileHandlerCount and delete entry
+            // if no more connections are using it.
+            synchronized (this) {
+                if ((null != handlerCount) && handlerCount.containsKey(logDirPath)) {
+                    handlerCount.put(logDirPath, handlerCount.get(logDirPath) - 1);
+                    if (handlerCount.get(logDirPath) == 0) {
+                        // Remove the FileHandler and remove this entry too
+                        if (null != fileHandlers) {
+                            fileHandlers.remove(logDirPath);
+                        }
+                        handlerCount.remove(logDirPath);
                     }
-                    handlerCount.remove(logDirPath);
                 }
             }
+        } finally {
+            isClosed = true;
+            if (ownsMongoClient) {
+                mongoClient.close();
+            }
         }
-
-        isClosed = true;
     }
 
     @Override
