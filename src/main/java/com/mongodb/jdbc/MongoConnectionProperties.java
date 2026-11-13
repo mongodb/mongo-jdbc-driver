@@ -109,10 +109,8 @@ public class MongoConnectionProperties {
         return gssApiServerAuth;
     }
 
-    /*
-     * Generate a unique key for the connection properties. This key is used to identify the connection properties in the
-     * connection cache. Properties that do not differentiate a specific client such as the log level are not included in the key.
-     */
+    /** @deprecated Unused. The driver doesn't cache clients. */
+    @Deprecated
     public Integer generateKey() {
         StringBuilder keyBuilder = new StringBuilder();
         keyBuilder.append(connectionString.toString());

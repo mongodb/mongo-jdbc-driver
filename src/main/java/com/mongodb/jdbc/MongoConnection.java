@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 import com.mongodb.AuthenticationMechanism;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
-import com.mongodb.MongoCredential.OidcCallback;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -36,6 +35,7 @@ import com.mongodb.jdbc.logging.MongoSimpleFormatter;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import com.mongodb.jdbc.mongosql.MongoSQLTranslate;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusDisabledException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusException;
 import com.mongodb.jdbc.sqlinterface.exception.SQLInterfaceStatusInvalidException;
@@ -64,8 +64,10 @@ import org.bson.UuidRepresentation;
 public class MongoConnection implements Connection {
     private MongoClientSettings mongoClientSettings;
     protected MongoClient mongoClient;
-    // True when nothing else uses mongoClient (disableclientcache), so close() closes it.
+    // True when this connection created mongoClient, so close() closes it.
     private final boolean ownsMongoClient;
+    // Set when the connection uses the OIDC human flow.
+    private JdbcOidcCallback oidcCallback;
     protected String currentDB;
     protected String url;
     protected String user;
@@ -118,16 +120,7 @@ public class MongoConnection implements Connection {
             MongoConnectionProperties connectionProperties,
             char[] x509Passphrase)
             throws Exception {
-        this(mongoClient, connectionProperties, x509Passphrase, false);
-    }
-
-    MongoConnection(
-            MongoClient mongoClient,
-            MongoConnectionProperties connectionProperties,
-            char[] x509Passphrase,
-            boolean ownsMongoClient)
-            throws Exception {
-        this.ownsMongoClient = ownsMongoClient;
+        this.ownsMongoClient = mongoClient == null;
         this.connectionId = connectionCounter.incrementAndGet();
         initConnectionLogger(
                 connectionId,
@@ -221,7 +214,10 @@ public class MongoConnection implements Connection {
                     boolean isK8s = K8S_ENVIRONMENT.equalsIgnoreCase(environment);
                     if (!isK8s && (environment == null && tokenResource == null)) {
                         // No machine flow properties, specify human flow OIDC Callback
-                        OidcCallback oidcCallback = new JdbcOidcCallback(this.logger);
+                        oidcCallback =
+                                new JdbcOidcCallback(
+                                        new OidcAuthFlow(this.logger),
+                                        connectionProperties.getConnectionString().getHosts());
                         credential =
                                 MongoCredential.createOidcCredential(
                                                 connectionProperties
@@ -314,6 +310,12 @@ public class MongoConnection implements Connection {
 
     protected MongoClient getMongoClient() {
         return mongoClient;
+    }
+
+    void forgetOidcLogin() {
+        if (oidcCallback != null) {
+            oidcCallback.forgetLogin();
+        }
     }
 
     @DisableAutoLogging

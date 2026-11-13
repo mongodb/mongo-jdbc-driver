@@ -21,7 +21,6 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
-import javax.security.auth.RefreshFailedException;
 
 public class TestOidcCallbackWithBadRefreshToken {
 
@@ -32,17 +31,12 @@ public class TestOidcCallbackWithBadRefreshToken {
         OidcCallbackContext context =
                 new JdbcOidcCallbackContext(null, 1, badRefreshToken, TestOidcUtils.IDP_INFO, null);
 
-        try {
-            OidcCallbackResult result = oidcCallback.onRequest(context);
-            System.out.println("This should not print, bad refresh token expected to fail.");
-            System.out.println(result);
-        } catch (Exception e) {
-            if (e.getCause() instanceof RefreshFailedException) {
-                System.err.println(
-                        "Expected RefreshFailedException occurred: " + e.getCause().getMessage());
-            } else {
-                System.err.println("Unexpected error: " + e.getMessage());
-            }
+        // A refresh token that fails falls back to logging in through the browser.
+        OidcCallbackResult result = oidcCallback.onRequest(context);
+        if (result != null) {
+            System.out.println("Logged in through the browser after the bad refresh token failed.");
+        } else {
+            System.err.println("Expected a browser login after the bad refresh token failed.");
         }
     }
 }

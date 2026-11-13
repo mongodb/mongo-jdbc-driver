@@ -27,6 +27,7 @@ import com.mongodb.jdbc.Pair;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import java.sql.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
@@ -354,21 +355,12 @@ public class DCIntegrationTest {
     private long serverConnections(String portEnvVar, String tag) {
         try (MongoClient observer =
                 MongoClients.create("mongodb://localhost:" + System.getenv(portEnvVar))) {
-            Document count =
-                    observer.getDatabase("admin")
-                            .aggregate(
-                                    Arrays.asList(
-                                            new Document(
-                                                    "$currentOp",
-                                                    new Document("allUsers", true)
-                                                            .append("idleConnections", true)),
-                                            new Document(
-                                                    "$match",
-                                                    new Document(
-                                                            "appName",
-                                                            new Document("$regex", tag))),
-                                            new Document("$count", "n")))
-                            .first();
+            List<Document> pipeline =
+                    Arrays.asList(
+                            Document.parse("{$currentOp: {allUsers: true, idleConnections: true}}"),
+                            Document.parse("{$match: {appName: {$regex: '" + tag + "'}}}"),
+                            Document.parse("{$count: 'n'}"));
+            Document count = observer.getDatabase("admin").aggregate(pipeline).first();
             return count == null ? 0 : ((Number) count.get("n")).longValue();
         }
     }
@@ -385,29 +377,27 @@ public class DCIntegrationTest {
         return count;
     }
 
-    /** Tests that with disableclientcache, closing a connection closes its client. */
+    /** Tests that closing a connection closes its client. */
     @Test
-    public void testDisableClientCacheClosesClientWithConnection() throws Exception {
+    public void testClosingConnectionClosesClient() throws Exception {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
-        info.right().setProperty("clientInfo", "nocacheclose+1.0");
-        info.right().setProperty("disableclientcache", "true");
+        info.right().setProperty("clientInfo", "closeclient+1.0");
 
         Connection conn = DriverManager.getConnection(info.left(), info.right());
-        long open = serverConnections("LOCAL_MDB_PORT_ENT", "nocacheclose");
+        long open = serverConnections("LOCAL_MDB_PORT_ENT", "closeclient");
         assertTrue(open > 0, "Expected server connections while connected, found " + open);
         conn.close();
-        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_ENT", "nocacheclose"));
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_ENT", "closeclient"));
     }
 
-    /** Tests that with disableclientcache, a connection that fails validation closes its client. */
+    /** Tests that a connection that fails validation closes its client. */
     @Test
-    public void testDisableClientCacheClosesClientOnFailedConnect() throws Exception {
+    public void testFailedConnectClosesClient() throws Exception {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
-        info.right().setProperty("clientInfo", "nocachefail+1.0");
-        info.right().setProperty("disableclientcache", "true");
+        info.right().setProperty("clientInfo", "failedconnect+1.0");
 
         assertThrows(
                 SQLException.class, () -> DriverManager.getConnection(info.left(), info.right()));
-        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_COM", "nocachefail"));
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_COM", "failedconnect"));
     }
 }
