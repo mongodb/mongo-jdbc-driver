@@ -16,6 +16,7 @@
 
 package com.mongodb.jdbc.utils;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mongodb.MongoException;
 import com.mongodb.jdbc.MongoDriver;
 import java.io.File;
@@ -138,7 +139,8 @@ public class NativeLoader {
             try (InputStream is = resource.openStream()) {
                 Files.copy(is, libFile.toPath());
             } catch (FileAlreadyExistsException e) {
-                // Do nothing, the library is already there which means that the JVM already loaded it.
+                // The file was not created by this JVM, so don't load it.
+                throw e;
             } catch (IOException e) {
                 libFile.delete();
                 // Unexpected error.
@@ -176,19 +178,16 @@ public class NativeLoader {
     }
 
     /**
-     * Creates a temporary directory under the file system path of a temporary directory for use by
-     * the java runtime. The path will look like {java.io.tmpdir}/{prefix}{nanoTime}
+     * Creates a new temporary directory under the file system path of a temporary directory for use
+     * by the java runtime. The path will look like {java.io.tmpdir}/{prefix}{nanoTime}{suffix}.
      *
      * @return The path to the created directory.
      * @throws IOException If an error occurs.
      */
-    private static File createTempDirectory() throws IOException {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        File generatedDir = new File(tempDir, NATIVE_FOLDER_PATH_PREFIX + System.nanoTime());
-
-        if (!generatedDir.mkdir() && !Files.exists(generatedDir.toPath())) {
-            throw new IOException("Failed to create temp directory " + generatedDir.getName());
-        }
-        return generatedDir;
+    @VisibleForTesting
+    protected static File createTempDirectory() throws IOException {
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+        return Files.createTempDirectory(tempDir, NATIVE_FOLDER_PATH_PREFIX + System.nanoTime())
+                .toFile();
     }
 }

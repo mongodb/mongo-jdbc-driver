@@ -27,7 +27,6 @@ import com.mongodb.MongoConfigurationException;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
 import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -154,7 +153,6 @@ public class MongoDriver implements Driver {
     private static Exception mongoSqlTranslateLibraryLoadingError = null;
     private static String mongoSqlTranslateLibraryPath = null;
     private static final String MONGOSQL_TRANSLATE_NAME = "mongosqltranslate";
-    public static final String MONGOSQL_TRANSLATE_PATH = "MONGOSQL_TRANSLATE_PATH";
 
     protected static final CodecRegistry REGISTRY =
             fromProviders(
@@ -232,23 +230,6 @@ public class MongoDriver implements Driver {
      * mongoSqlTranslateLibraryLoaded to indicate success or failure.
      */
     private static void loadMongoSqlTranslateLibrary() throws IOException {
-        // The `MONGOSQL_TRANSLATE_PATH` environment variable allows specifying an alternative library path.
-        // This provides a backdoor mechanism to override the default library path of being colocated with the
-        // driver library and load the MongoSQL Translate library from a different location.
-        // Intended primarily for development and testing purposes.
-        String envPath = System.getenv(MONGOSQL_TRANSLATE_PATH);
-        if (envPath != null && !envPath.isEmpty()) {
-            String absolutePath = Paths.get(envPath).toAbsolutePath().normalize().toString();
-            try {
-                System.load(absolutePath);
-                mongoSqlTranslateLibraryPath = absolutePath;
-                mongoSqlTranslateLibraryLoaded = true;
-                return;
-            } catch (Error e) {
-                // Store the error and then try loading the library from inside the jar next.
-                mongoSqlTranslateLibraryLoadingError = new Exception(e);
-            }
-        }
         mongoSqlTranslateLibraryPath = NativeLoader.loadLibraryFromJar(MONGOSQL_TRANSLATE_NAME);
         mongoSqlTranslateLibraryLoaded = true;
     }
