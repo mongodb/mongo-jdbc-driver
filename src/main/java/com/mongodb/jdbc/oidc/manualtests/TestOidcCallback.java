@@ -21,11 +21,12 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
 
 public class TestOidcCallback {
 
     public static void main(String[] args) {
-        OidcCallback oidcCallback = new JdbcOidcCallback();
+        OidcCallback oidcCallback = new JdbcOidcCallback(new OidcAuthFlow(), TestOidcUtils.HOSTS);
 
         OidcCallbackContext initialContext =
                 new JdbcOidcCallbackContext(null, 1, null, TestOidcUtils.IDP_INFO, null);

@@ -22,10 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.AuthenticationMechanism;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.internal.MongoClientImpl;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -33,9 +32,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Level;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -679,61 +676,6 @@ class MongoDriverTest {
     }
 
     @Test
-    void testClientCaching() throws Exception {
-        MongoDriver d = new MongoDriver();
-        Properties p = new Properties();
-        p.setProperty(DATABASE.getPropertyName(), "test");
-
-        // Create three connections with the same properties
-        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-        MongoConnection conn3 = d.getUnvalidatedConnection(basicURL, p);
-
-        // Verify that the connections share the same MongoClient instance
-        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
-        assertSame(conn1.getMongoClient(), conn3.getMongoClient());
-    }
-
-    @Test
-    void testClientCachingWithDifferentKeyedProperties() throws Exception {
-        MongoDriver d = new MongoDriver();
-
-        Properties p1 = new Properties();
-        p1.setProperty(DATABASE.getPropertyName(), "test");
-        p1.setProperty(CLIENT_INFO.getPropertyName(), "app1+1.0");
-        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
-
-        Properties p2 = new Properties();
-        p2.setProperty(DATABASE.getPropertyName(), "test");
-        p2.setProperty(CLIENT_INFO.getPropertyName(), "app2+1.0");
-        // Create connection with different client info
-        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
-
-        assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
-    }
-
-    @Test
-    void testClientCachingWithDifferentUnkeyedProperties() throws Exception {
-        // Testing with different JSON modes, a property that is not part of the unique key used
-        // for caching.
-        MongoDriver d = new MongoDriver();
-
-        // Create connections with different extended JSON mode
-        Properties p1 = new Properties();
-        p1.setProperty(DATABASE.getPropertyName(), "test");
-        p1.setProperty(EXT_JSON_MODE.getPropertyName(), "RELAXED");
-
-        Properties p2 = new Properties();
-        p2.setProperty(DATABASE.getPropertyName(), "test");
-        p2.setProperty(EXT_JSON_MODE.getPropertyName(), "EXTENDED");
-
-        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p1);
-        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p2);
-
-        assertSame(conn1.getMongoClient(), conn2.getMongoClient());
-    }
-
-    @Test
     void testMongoDBX509AuthMechanismWithoutPassphrase() throws SQLException {
         MongoDriver d = new MongoDriver();
         Properties p = new Properties();
@@ -774,94 +716,22 @@ class MongoDriverTest {
                 "x509Passphrase should match the provided value.");
     }
 
-    private int getClientCacheSize() throws NoSuchFieldException, IllegalAccessException {
-        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
-        cacheField.setAccessible(true);
-        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
-                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
-
-        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
-        lockField.setAccessible(true);
-        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
-
-        lock.readLock().lock();
-        try {
-            return cache.size();
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    private void clearClientCache() throws NoSuchFieldException, IllegalAccessException {
-        Field cacheField = MongoDriver.class.getDeclaredField("mongoClientCache");
-        cacheField.setAccessible(true);
-        ConcurrentHashMap<Integer, WeakReference<MongoClient>> cache =
-                (ConcurrentHashMap<Integer, WeakReference<MongoClient>>) cacheField.get(null);
-
-        Field lockField = MongoDriver.class.getDeclaredField("mongoClientCacheLock");
-        lockField.setAccessible(true);
-        ReadWriteLock lock = (ReadWriteLock) lockField.get(null);
-
-        lock.writeLock().lock();
-        try {
-            cache.clear();
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    void testDisableClientCacheAux(String value)
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
-        MongoDriver d = new MongoDriver();
-        clearClientCache();
-        Properties p = new Properties();
-        p.setProperty(DATABASE.getPropertyName(), "test");
-        p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
-
-        // Create two connections with the same properties
-        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-
-        assertEquals(
-                0,
-                getClientCacheSize(),
-                "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        // Verify that the connections do not share the same MongoClient instance
-        assertNotSame(conn1.getMongoClient(), conn2.getMongoClient());
-    }
-
-    void testNoDisableClientCacheAux(String value)
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
-        MongoDriver d = new MongoDriver();
-        clearClientCache();
-        Properties p = new Properties();
-        p.setProperty(DATABASE.getPropertyName(), "test");
-        p.setProperty(MongoDriver.MongoJDBCProperty.DISABLE_CLIENT_CACHE.getPropertyName(), value);
-
-        // Create two connections with the same properties
-        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
-        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
-
-        // Verify that the connections do not share the same MongoClient instance
-        assertEquals(
-                getClientCacheSize(),
-                1,
-                "Client cache should be empty when DISABLE_CLIENT_CACHE is set to true.");
-        assertEquals(conn1.getMongoClient(), conn2.getMongoClient());
+    private static boolean isClosed(MongoClient client) {
+        return ((MongoClientImpl) client).getCluster().isClosed();
     }
 
     @Test
-    void testDisableClientCache()
-            throws SQLException, NoSuchFieldException, IllegalAccessException {
-        testDisableClientCacheAux("true");
-        testDisableClientCacheAux("TRUE");
-        testDisableClientCacheAux("TrUe");
-        testDisableClientCacheAux("1");
-        testDisableClientCacheAux("YeS");
+    void testEachConnectionClosesItsOwnClient() throws SQLException {
+        MongoDriver d = new MongoDriver();
+        Properties p = new Properties();
+        p.setProperty(DATABASE.getPropertyName(), "test");
+        MongoConnection conn1 = d.getUnvalidatedConnection(basicURL, p);
+        MongoConnection conn2 = d.getUnvalidatedConnection(basicURL, p);
 
-        testNoDisableClientCacheAux("false");
-        testNoDisableClientCacheAux("FALSE");
-        testNoDisableClientCacheAux("0");
+        conn1.close();
+        assertTrue(isClosed(conn1.getMongoClient()));
+        assertFalse(isClosed(conn2.getMongoClient()));
+        conn2.close();
     }
 
     @Test

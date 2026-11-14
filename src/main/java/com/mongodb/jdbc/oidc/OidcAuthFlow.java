@@ -30,6 +30,7 @@ import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
@@ -44,6 +45,7 @@ import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +60,30 @@ public class OidcAuthFlow {
     private static final String OFFLINE_ACCESS = "offline_access";
     private static final String OPENID = "openid";
     private static final String HTTPS_URL_SCHEME = "https";
+    // Calls to the IdP otherwise have no timeout. A hung IdP would block the login, and every other
+    // login waiting on the same lock in JdbcOidcCallback.
+    private static final int HTTP_TIMEOUT_MS = 30_000;
+
+    /** The tokens from a login, with when the access token expires. */
+    static final class TokenResult {
+        final String accessToken;
+        final String refreshToken;
+        final Instant expiresAt;
+
+        TokenResult(String accessToken, String refreshToken, Instant expiresAt) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+            this.expiresAt = expiresAt;
+        }
+
+        // Built on each use, so a reused login reports the time it has left, not its original
+        // lifetime. OidcCallbackResult rejects a negative lifetime.
+        OidcCallbackResult toCallbackResult() {
+            Duration left = Duration.between(Instant.now(), expiresAt);
+            return new OidcCallbackResult(
+                    accessToken, left.isNegative() ? Duration.ZERO : left, refreshToken);
+        }
+    }
 
     public OidcAuthFlow() {}
 
@@ -114,6 +140,11 @@ public class OidcAuthFlow {
 
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext)
             throws OidcTimeoutException {
+        TokenResult tokens = authCodeFlow(callbackContext);
+        return tokens == null ? null : tokens.toCallbackResult();
+    }
+
+    TokenResult authCodeFlow(OidcCallbackContext callbackContext) throws OidcTimeoutException {
         IdpInfo idpServerInfo = callbackContext.getIdpInfo();
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();
@@ -128,7 +159,8 @@ public class OidcAuthFlow {
             // Resolve OIDC provider metadata using the issuer URI and
             // extract authorization and token endpoint URIs.
             OIDCProviderMetadata providerMetadata =
-                    OIDCProviderMetadata.resolve(new Issuer(issuerURI));
+                    OIDCProviderMetadata.resolve(
+                            new Issuer(issuerURI), HTTP_TIMEOUT_MS, HTTP_TIMEOUT_MS);
             if (!validateProviderMetadata(providerMetadata)) {
                 return null;
             }
@@ -182,14 +214,14 @@ public class OidcAuthFlow {
                     new TokenRequest(tokenEndpoint, new ClientID(clientID), codeGrant);
 
             // Sends the token exchange request and parse the response to obtain tokens.
-            HTTPResponse httpResponse = tokenRequest.toHTTPRequest().send();
+            HTTPResponse httpResponse = send(tokenRequest);
             TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
             if (!tokenResponse.indicatesSuccess()) {
                 log(Level.SEVERE, "Token request failed with response: " + httpResponse.getBody());
                 return null;
             }
 
-            return getOidcCallbackResultFromTokenResponse((OIDCTokenResponse) tokenResponse);
+            return toTokenResult((OIDCTokenResponse) tokenResponse, null);
         } catch (Exception e) {
             log(Level.SEVERE, "Error during OIDC authentication " + e.getMessage());
             if (e instanceof OidcTimeoutException) {
@@ -259,7 +291,12 @@ public class OidcAuthFlow {
 
     public OidcCallbackResult doRefresh(OidcCallbackContext callbackContext)
             throws RefreshFailedException {
-        IdpInfo idpServerInfo = callbackContext.getIdpInfo();
+        TokenResult tokens =
+                refresh(callbackContext.getIdpInfo(), callbackContext.getRefreshToken());
+        return tokens == null ? null : tokens.toCallbackResult();
+    }
+
+    TokenResult refresh(IdpInfo idpServerInfo, String refreshToken) throws RefreshFailedException {
         String clientID = idpServerInfo.getClientId();
         String issuerURI = idpServerInfo.getIssuer();
 
@@ -270,12 +307,12 @@ public class OidcAuthFlow {
         try {
             // Use OpenID Connect Discovery to fetch the provider metadata
             OIDCProviderMetadata providerMetadata =
-                    OIDCProviderMetadata.resolve(new Issuer(issuerURI));
+                    OIDCProviderMetadata.resolve(
+                            new Issuer(issuerURI), HTTP_TIMEOUT_MS, HTTP_TIMEOUT_MS);
             URI tokenEndpoint = providerMetadata.getTokenEndpointURI();
 
             // This function will never be called without a refresh token (to be checked in the driver function),
             // but we throw an exception to be explicit about the fact that we expect a refresh token.
-            String refreshToken = callbackContext.getRefreshToken();
             if (refreshToken == null) {
                 throw new IllegalArgumentException("Refresh token is required");
             }
@@ -284,7 +321,7 @@ public class OidcAuthFlow {
                     new RefreshTokenGrant(new RefreshToken(refreshToken));
             TokenRequest tokenRequest =
                     new TokenRequest(tokenEndpoint, new ClientID(clientID), refreshTokenGrant);
-            HTTPResponse httpResponse = tokenRequest.toHTTPRequest().send();
+            HTTPResponse httpResponse = send(tokenRequest);
 
             try {
                 TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
@@ -305,7 +342,7 @@ public class OidcAuthFlow {
                                     + ", description="
                                     + errorDescription);
                 }
-                return getOidcCallbackResultFromTokenResponse((OIDCTokenResponse) tokenResponse);
+                return toTokenResult((OIDCTokenResponse) tokenResponse, refreshToken);
             } catch (ParseException e) {
                 throw new RefreshFailedException(
                         "Failed to parse server response: "
@@ -370,14 +407,24 @@ public class OidcAuthFlow {
         return endpoint != null && HTTPS_URL_SCHEME.equals(endpoint.getScheme());
     }
 
-    private OidcCallbackResult getOidcCallbackResultFromTokenResponse(
-            OIDCTokenResponse tokenResponse) {
+    private static HTTPResponse send(TokenRequest tokenRequest) throws IOException {
+        HTTPRequest httpRequest = tokenRequest.toHTTPRequest();
+        httpRequest.setConnectTimeout(HTTP_TIMEOUT_MS);
+        httpRequest.setReadTimeout(HTTP_TIMEOUT_MS);
+        return httpRequest.send();
+    }
+
+    // An IdP that doesn't rotate refresh tokens may leave one out of a refresh response, and the
+    // one that was sent keeps working, so keep using it.
+    static TokenResult toTokenResult(OIDCTokenResponse tokenResponse, String sentRefreshToken) {
         Tokens tokens = tokenResponse.getOIDCTokens();
         String accessToken = tokens.getAccessToken().getValue();
         String refreshToken =
-                tokens.getRefreshToken() != null ? tokens.getRefreshToken().getValue() : null;
+                tokens.getRefreshToken() != null
+                        ? tokens.getRefreshToken().getValue()
+                        : sentRefreshToken;
         Duration expiresIn = Duration.ofSeconds(tokens.getAccessToken().getLifetime());
 
-        return new OidcCallbackResult(accessToken, expiresIn, refreshToken);
+        return new TokenResult(accessToken, refreshToken, Instant.now().plus(expiresIn));
     }
 }

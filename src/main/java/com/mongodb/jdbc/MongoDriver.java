@@ -24,10 +24,8 @@ import com.mongodb.AuthenticationMechanism;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoConfigurationException;
-import com.mongodb.client.MongoClient;
 import com.mongodb.jdbc.utils.NativeLoader;
 import java.io.*;
-import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -41,10 +39,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,6 +91,7 @@ public class MongoDriver implements Driver {
         CLIENT_INFO("clientinfo"),
         DATABASE("database"),
         EXT_JSON_MODE("extjsonmode"),
+        // Ignored, since clients aren't cached. Kept so it isn't passed to the connection string.
         DISABLE_CLIENT_CACHE("disableclientcache"),
         LOG_DIR("logdir"),
         LOG_LEVEL("loglevel"),
@@ -148,10 +144,6 @@ public class MongoDriver implements Driver {
     public static final String LOG_TO_CONSOLE = "console";
     protected static final String CONNECTION_ERROR_SQLSTATE = "08000";
     public static final String AUTHENTICATION_ERROR_SQLSTATE = "28000";
-
-    private static ConcurrentHashMap<Integer, WeakReference<MongoClient>> mongoClientCache =
-            new ConcurrentHashMap<>();
-    private static final ReadWriteLock mongoClientCacheLock = new ReentrantReadWriteLock();
 
     public static String getVersion() {
         return VERSION != null ? VERSION : MAJOR_VERSION + "." + MINOR_VERSION;
@@ -220,7 +212,6 @@ public class MongoDriver implements Driver {
 
         String name = unit.getClass().getPackage().getImplementationTitle();
         NAME = (name != null) ? name : "mongodb-jdbc";
-        Runtime.getRuntime().addShutdownHook(new Thread(MongoDriver::closeAllClients));
 
         try {
             loadMongoSqlTranslateLibrary();
@@ -286,7 +277,17 @@ public class MongoDriver implements Driver {
         try {
             MongoConnection conn = getUnvalidatedConnection(url, lowerCaseprops);
             if (conn != null) {
-                conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                try {
+                    conn.testConnection(conn.getDefaultConnectionValidationTimeoutSeconds());
+                } catch (Exception e) {
+                    // The caller never gets this connection, so close it. If the server rejected
+                    // its OIDC login, forget it so the next connection logs in again.
+                    if (isRejectedLogin(e)) {
+                        conn.forgetOidcLogin();
+                    }
+                    conn.close();
+                    throw e;
+                }
                 return conn;
             } else {
                 throw new SQLException("Connection setup failed but no errors where reported.");
@@ -310,6 +311,18 @@ public class MongoDriver implements Driver {
             }
             throw new SQLException("Connection failed. Root cause: " + e.getMessage(), e);
         }
+    }
+
+    // True when the server rejected the credentials (AuthenticationFailed), not when the network
+    // failed during authentication, which the Java driver also reports as MongoSecurityException.
+    private static boolean isRejectedLogin(Throwable e) {
+        for (Throwable cause = e; cause != null; cause = cause.getCause()) {
+            if (cause instanceof com.mongodb.MongoCommandException
+                    && ((com.mongodb.MongoCommandException) cause).getErrorCode() == 18) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static class MongoConnectionConfig {
@@ -481,61 +494,12 @@ public class MongoDriver implements Driver {
                         tlsCaFile,
                         info.getProperty(X509_PEM_PATH.getPropertyName()));
 
-        String disableCacheVal =
-                info.getProperty(DISABLE_CLIENT_CACHE.getPropertyName(), "false").toLowerCase();
-        if (disableCacheVal.equals("true")
-                || disableCacheVal.equals("yes")
-                || disableCacheVal.equals("1")) {
-            // If the user has set the disable cache property, we will not use the cache.
-            return new MongoConnection(mongoConnectionProperties, x509Passphrase);
-        }
-
-        Integer key = mongoConnectionProperties.generateKey();
-
-        mongoClientCacheLock.readLock().lock();
-        try {
-            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
-            MongoClient client = (clientRef != null) ? clientRef.get() : null;
-
-            if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
-            }
-        } finally {
-            mongoClientCacheLock.readLock().unlock();
-        }
-
-        // Acquire write lock to create and cache a new MongoClient if it wasn't found
-        mongoClientCacheLock.writeLock().lock();
-        try {
-            WeakReference<MongoClient> clientRef = mongoClientCache.get(key);
-            MongoClient client = (clientRef != null) ? clientRef.get() : null;
-            // Check for client again to handle race conditions
-            if (client != null) {
-                return new MongoConnection(client, mongoConnectionProperties, x509Passphrase);
-            }
-            MongoConnection newConnection =
-                    new MongoConnection(mongoConnectionProperties, x509Passphrase);
-            mongoClientCache.put(key, new WeakReference<>(newConnection.getMongoClient()));
-            return newConnection;
-        } finally {
-            mongoClientCacheLock.writeLock().unlock();
-        }
+        return new MongoConnection(mongoConnectionProperties, x509Passphrase);
     }
 
-    public static void closeAllClients() {
-        mongoClientCacheLock.writeLock().lock();
-        try {
-            for (WeakReference<MongoClient> clientRef : mongoClientCache.values()) {
-                MongoClient client = clientRef.get();
-                if (client != null) {
-                    client.close();
-                }
-            }
-            mongoClientCache.clear();
-        } finally {
-            mongoClientCacheLock.writeLock().unlock();
-        }
-    }
+    /** @deprecated Does nothing, since each connection closes its own client. */
+    @Deprecated
+    public static void closeAllClients() {}
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {

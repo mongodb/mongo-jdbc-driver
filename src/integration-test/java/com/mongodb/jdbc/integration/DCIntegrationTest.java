@@ -19,12 +19,17 @@ package com.mongodb.jdbc.integration;
 import static com.mongodb.jdbc.MongoDriver.AUTHENTICATION_ERROR_SQLSTATE;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.jdbc.MongoConnection;
 import com.mongodb.jdbc.MongoDatabaseMetaData;
 import com.mongodb.jdbc.Pair;
 import com.mongodb.jdbc.mongosql.MongoSQLException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -344,5 +349,55 @@ public class DCIntegrationTest {
                 "SQLSTATE should indicate an authentication failure ("
                         + AUTHENTICATION_ERROR_SQLSTATE
                         + ")");
+    }
+
+    /** Counts the server connections whose appName contains tag, from the clientInfo property. */
+    private long serverConnections(String portEnvVar, String tag) {
+        try (MongoClient observer =
+                MongoClients.create("mongodb://localhost:" + System.getenv(portEnvVar))) {
+            List<Document> pipeline =
+                    Arrays.asList(
+                            Document.parse("{$currentOp: {allUsers: true, idleConnections: true}}"),
+                            Document.parse("{$match: {appName: {$regex: '" + tag + "'}}}"),
+                            Document.parse("{$count: 'n'}"));
+            Document count = observer.getDatabase("admin").aggregate(pipeline).first();
+            return count == null ? 0 : ((Number) count.get("n")).longValue();
+        }
+    }
+
+    /** The server notices closed sockets a little later, so wait up to 15s for them to go away. */
+    private long serverConnectionsAfterClose(String portEnvVar, String tag)
+            throws InterruptedException {
+        long deadline = System.currentTimeMillis() + 15_000;
+        long count = serverConnections(portEnvVar, tag);
+        while (count > 0 && System.currentTimeMillis() < deadline) {
+            Thread.sleep(250);
+            count = serverConnections(portEnvVar, tag);
+        }
+        return count;
+    }
+
+    /** Tests that closing a connection closes its client. */
+    @Test
+    public void testClosingConnectionClosesClient() throws Exception {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
+        info.right().setProperty("clientInfo", "closeclient+1.0");
+
+        Connection conn = DriverManager.getConnection(info.left(), info.right());
+        long open = serverConnections("LOCAL_MDB_PORT_ENT", "closeclient");
+        assertTrue(open > 0, "Expected server connections while connected, found " + open);
+        conn.close();
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_ENT", "closeclient"));
+    }
+
+    /** Tests that a connection that fails validation closes its client. */
+    @Test
+    public void testFailedConnectClosesClient() throws Exception {
+        Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
+        info.right().setProperty("clientInfo", "failedconnect+1.0");
+
+        assertThrows(
+                SQLException.class, () -> DriverManager.getConnection(info.left(), info.right()));
+        assertEquals(0, serverConnectionsAfterClose("LOCAL_MDB_PORT_COM", "failedconnect"));
     }
 }
