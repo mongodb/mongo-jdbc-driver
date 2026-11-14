@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -35,12 +36,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import javax.security.auth.RefreshFailedException;
 
 public class JdbcOidcCallback implements OidcCallback {
     // The Java driver keeps OIDC tokens per MongoClient, and each connection has its own client, so
     // keep the latest login for each identity here. Otherwise every new connection would log in
-    // through the browser again.
+    // through the browser again. Entries are never removed: browser logins only happen on a
+    // desktop, so there are few, and keeping them spares users the browser while the refresh token
+    // still works.
     private static final Map<Identity, Entry> logins = new ConcurrentHashMap<>();
     // The browser login listens on a fixed port, so only one can run at a time.
     private static final ReentrantLock browserLock = new ReentrantLock();
@@ -57,7 +61,8 @@ public class JdbcOidcCallback implements OidcCallback {
     }
 
     // Who a login belongs to: it's only reused for the same cluster, IdP, client, user and scopes.
-    // Hosts and scopes are sets, so the same ones in a different order are the same identity.
+    // Hosts and scopes are sets, so the same ones in a different order are the same identity, and
+    // host names ignore case.
     private static final class Identity {
         final Set<String> hosts;
         final String issuer;
@@ -68,7 +73,8 @@ public class JdbcOidcCallback implements OidcCallback {
         final Set<String> scopes;
 
         Identity(List<String> hosts, IdpInfo idpInfo, String userName) {
-            this.hosts = new HashSet<>(hosts);
+            this.hosts =
+                    hosts.stream().map(h -> h.toLowerCase(Locale.ROOT)).collect(Collectors.toSet());
             this.issuer = idpInfo.getIssuer();
             this.clientId = idpInfo.getClientId();
             this.userName = userName;
@@ -78,6 +84,7 @@ public class JdbcOidcCallback implements OidcCallback {
                             : new HashSet<>(idpInfo.getRequestScopes());
         }
 
+        // Every field must be compared here and hashed in hashCode, or different identities match.
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof Identity)) {

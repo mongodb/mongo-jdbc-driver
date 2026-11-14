@@ -18,6 +18,7 @@ package com.mongodb.jdbc.oidc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -26,12 +27,15 @@ import static org.mockito.Mockito.when;
 
 import com.mongodb.MongoCredential.IdpInfo;
 import com.mongodb.MongoCredential.OidcCallbackContext;
+import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.OidcAuthFlow.TokenResult;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import javax.security.auth.RefreshFailedException;
 import org.junit.jupiter.api.Test;
@@ -147,28 +151,45 @@ class JdbcOidcCallbackTest {
     }
 
     @Test
-    void testLoginsAreNotSharedAcrossUsersClustersOrScopes() throws Exception {
+    void testLoginsAreNotSharedAcrossIdentities() throws Exception {
         when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofHours(1)));
+        IdpInfo otherIssuer = new JdbcIdpInfo("https://other.example.com", "client", null);
+        IdpInfo otherClient = new JdbcIdpInfo("https://idp.example.com", "other", null);
 
         newClient().onRequest(request("alice", null));
         newClient().onRequest(request("bob", null));
         new JdbcOidcCallback(authFlow, cluster()).onRequest(request("alice", null));
         newClient().onRequest(request("alice", null, withScopes("openid", "email")));
+        newClient().onRequest(request("alice", null, otherIssuer));
+        newClient().onRequest(request("alice", null, otherClient));
 
-        verify(authFlow, times(4)).authCodeFlow(any());
+        verify(authFlow, times(6)).authCodeFlow(any());
     }
 
     @Test
-    void testHostAndScopeOrderDoesNotMatter() throws Exception {
+    void testHostOrderAndCaseAndScopeOrderDoNotMatter() throws Exception {
         when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofHours(1)));
         String a = UUID.randomUUID() + ":27017";
         String b = UUID.randomUUID() + ":27017";
 
         new JdbcOidcCallback(authFlow, Arrays.asList(a, b))
                 .onRequest(request("user", null, withScopes("openid", "email")));
-        new JdbcOidcCallback(authFlow, Arrays.asList(b, a))
+        new JdbcOidcCallback(authFlow, Arrays.asList(b.toUpperCase(Locale.ROOT), a))
                 .onRequest(request("user", null, withScopes("email", "openid")));
 
         verify(authFlow, times(1)).authCodeFlow(any());
+    }
+
+    @Test
+    void testReusedLoginReportsRemainingLifetime() throws Exception {
+        when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofMinutes(30)));
+        newClient().onRequest(request("user", null));
+
+        // OidcCallbackResult has no getter for its lifetime.
+        Field expiresIn = OidcCallbackResult.class.getDeclaredField("expiresIn");
+        expiresIn.setAccessible(true);
+        Duration left = (Duration) expiresIn.get(newClient().onRequest(request("user", null)));
+        assertTrue(left.compareTo(Duration.ofMinutes(29)) > 0);
+        assertTrue(left.compareTo(Duration.ofMinutes(30)) <= 0);
     }
 }
