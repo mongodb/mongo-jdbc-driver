@@ -22,15 +22,18 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.MongoInterruptedException;
 import com.mongodb.MongoTimeoutException;
-import com.mongodb.jdbc.logging.MongoLogger;
 import com.mongodb.jdbc.oidc.OidcAuthFlow.TokenResult;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.security.auth.RefreshFailedException;
 
@@ -38,28 +41,68 @@ public class JdbcOidcCallback implements OidcCallback {
     // The Java driver keeps OIDC tokens per MongoClient, and each connection has its own client, so
     // keep the latest login for each identity here. Otherwise every new connection would log in
     // through the browser again.
-    private static final Map<List<Object>, TokenResult> logins = new ConcurrentHashMap<>();
-    private static final Map<List<Object>, ReentrantLock> locks = new ConcurrentHashMap<>();
+    private static final Map<Identity, Entry> logins = new ConcurrentHashMap<>();
     // The browser login listens on a fixed port, so only one can run at a time.
     private static final ReentrantLock browserLock = new ReentrantLock();
     // A cached access token is reused only if it stays valid at least this long.
     private static final Duration MIN_REMAINING = Duration.ofMinutes(5);
 
+    // One identity's latest login, and the lock that lets one connection log in or refresh at a
+    // time.
+    private static final class Entry {
+        final ReentrantLock lock = new ReentrantLock();
+        // Empty until the first login, and after a login is rejected or fails to refresh. Atomic
+        // because forgetLogin() clears it without the lock.
+        final AtomicReference<TokenResult> login = new AtomicReference<>();
+    }
+
+    // Who a login belongs to: it's only reused for the same cluster, IdP, client, user and scopes.
+    // Hosts and scopes are sets, so the same ones in a different order are the same identity.
+    private static final class Identity {
+        final Set<String> hosts;
+        final String issuer;
+        final String clientId;
+        // Null when the connection string has no user.
+        final String userName;
+        // A token may lack scopes the server now requests, so a scope change means a new login.
+        final Set<String> scopes;
+
+        Identity(List<String> hosts, IdpInfo idpInfo, String userName) {
+            this.hosts = new HashSet<>(hosts);
+            this.issuer = idpInfo.getIssuer();
+            this.clientId = idpInfo.getClientId();
+            this.userName = userName;
+            this.scopes =
+                    idpInfo.getRequestScopes() == null
+                            ? Collections.emptySet()
+                            : new HashSet<>(idpInfo.getRequestScopes());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Identity)) {
+                return false;
+            }
+            Identity other = (Identity) o;
+            return hosts.equals(other.hosts)
+                    && Objects.equals(issuer, other.issuer)
+                    && Objects.equals(clientId, other.clientId)
+                    && Objects.equals(userName, other.userName)
+                    && scopes.equals(other.scopes);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(hosts, issuer, clientId, userName, scopes);
+        }
+    }
+
     private final OidcAuthFlow oidcAuthFlow;
-    // Part of the identity, so a token is only sent to the cluster it was issued for. When it's
-    // null, the cluster is unknown and logins aren't shared.
+    // Part of the identity, so a token is only sent to the cluster it was issued for.
     private final List<String> hosts;
-    // The identity and login this callback last handed to its client.
-    private volatile List<Object> identity;
+    // The identity's entry and the login this callback last handed to its client.
+    private volatile Entry entry;
     private volatile TokenResult served;
-
-    public JdbcOidcCallback() {
-        this(new OidcAuthFlow(), null);
-    }
-
-    public JdbcOidcCallback(MongoLogger parentLogger) {
-        this(new OidcAuthFlow(parentLogger), null);
-    }
 
     public JdbcOidcCallback(OidcAuthFlow oidcAuthFlow, List<String> hosts) {
         this.oidcAuthFlow = oidcAuthFlow;
@@ -68,63 +111,58 @@ public class JdbcOidcCallback implements OidcCallback {
 
     public OidcCallbackResult onRequest(OidcCallbackContext callbackContext) {
         IdpInfo idpInfo = callbackContext.getIdpInfo();
-        List<Object> identity =
-                Arrays.asList(
-                        hosts,
-                        idpInfo.getIssuer(),
-                        idpInfo.getClientId(),
-                        callbackContext.getUserName());
+        Identity identity = new Identity(hosts, idpInfo, callbackContext.getUserName());
         Instant deadline =
                 callbackContext.getTimeout() == null
                         ? null
                         : Instant.now().plus(callbackContext.getTimeout());
-        ReentrantLock lock = locks.computeIfAbsent(identity, k -> new ReentrantLock());
-        acquire(lock, deadline);
+        Entry entry = logins.computeIfAbsent(identity, k -> new Entry());
+        acquire(entry.lock, deadline);
         try {
-            this.identity = identity;
+            this.entry = entry;
             boolean noRefreshToken = callbackContext.getRefreshToken() == null;
             if (noRefreshToken && served != null) {
                 // This client already has a login, so the driver is starting over because the
                 // server rejected it, or it expired with no refresh token. Don't hand it out again.
-                logins.remove(identity, served);
+                entry.login.compareAndSet(served, null);
             }
 
-            TokenResult cached = hosts == null ? null : logins.get(identity);
+            TokenResult cached = entry.login.get();
             if (noRefreshToken
                     && cached != null
                     && cached.expiresAt.isAfter(Instant.now().plus(MIN_REMAINING))) {
                 served = cached;
-                return cached.result;
+                return cached.toCallbackResult();
             }
 
             // Use our refresh token over the driver's when we have one: it's the newest, and some
             // IdPs invalidate a refresh token once it has been used.
             String refreshToken =
-                    cached != null && cached.result.getRefreshToken() != null
-                            ? cached.result.getRefreshToken()
+                    cached != null && cached.refreshToken != null
+                            ? cached.refreshToken
                             : callbackContext.getRefreshToken();
             if (refreshToken != null && !refreshToken.isEmpty()) {
                 try {
                     // null means the refresh failed without the IdP rejecting the token
                     // (OidcAuthFlow logs why), so keep the login instead of sending the user to
                     // the browser.
-                    return remember(identity, oidcAuthFlow.refresh(idpInfo, refreshToken));
+                    return remember(entry, oidcAuthFlow.refresh(idpInfo, refreshToken));
                 } catch (RefreshFailedException e) {
                     // Expired or revoked, so log in again below.
-                    logins.remove(identity, cached);
+                    entry.login.compareAndSet(cached, null);
                 }
             }
 
             acquire(browserLock, deadline);
             try {
-                return remember(identity, oidcAuthFlow.authCodeFlow(callbackContext));
+                return remember(entry, oidcAuthFlow.authCodeFlow(callbackContext));
             } catch (OidcTimeoutException e) {
                 throw new RuntimeException(e);
             } finally {
                 browserLock.unlock();
             }
         } finally {
-            lock.unlock();
+            entry.lock.unlock();
         }
     }
 
@@ -133,22 +171,20 @@ public class JdbcOidcCallback implements OidcCallback {
      * connection logs in again instead of reusing it.
      */
     public void forgetLogin() {
-        List<Object> identity = this.identity;
+        Entry entry = this.entry;
         TokenResult served = this.served;
-        if (identity != null && served != null) {
-            logins.remove(identity, served);
+        if (entry != null && served != null) {
+            entry.login.compareAndSet(served, null);
         }
     }
 
-    private OidcCallbackResult remember(List<Object> identity, TokenResult login) {
+    private OidcCallbackResult remember(Entry entry, TokenResult login) {
         if (login == null) {
             return null;
         }
-        if (hosts != null) {
-            logins.put(identity, login);
-        }
+        entry.login.set(login);
         served = login;
-        return login.result;
+        return login.toCallbackResult();
     }
 
     // Waits for whoever holds the lock, but no longer than the driver allows this login.

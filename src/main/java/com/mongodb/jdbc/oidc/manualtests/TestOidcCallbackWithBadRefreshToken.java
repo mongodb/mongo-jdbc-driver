@@ -21,11 +21,12 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
 
 public class TestOidcCallbackWithBadRefreshToken {
 
     public static void main(String[] args) {
-        OidcCallback oidcCallback = new JdbcOidcCallback();
+        OidcCallback oidcCallback = new JdbcOidcCallback(new OidcAuthFlow(), TestOidcUtils.HOSTS);
 
         String badRefreshToken = "bad-refresh-token";
         OidcCallbackContext context =

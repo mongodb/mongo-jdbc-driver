@@ -112,9 +112,7 @@ public class OidcAuthFlowTest {
         OIDCTokenResponse withoutRefreshToken =
                 new OIDCTokenResponse(
                         new OIDCTokens(new BearerAccessToken("access", 3600, null), null));
-        assertEquals(
-                "sent",
-                OidcAuthFlow.toTokenResult(withoutRefreshToken, "sent").result.getRefreshToken());
+        assertEquals("sent", OidcAuthFlow.toTokenResult(withoutRefreshToken, "sent").refreshToken);
     }
 
     @Test
@@ -124,7 +122,6 @@ public class OidcAuthFlowTest {
                         new OIDCTokens(
                                 new BearerAccessToken("access", 3600, null),
                                 new RefreshToken("rotated")));
-        assertEquals(
-                "rotated", OidcAuthFlow.toTokenResult(rotated, "sent").result.getRefreshToken());
+        assertEquals("rotated", OidcAuthFlow.toTokenResult(rotated, "sent").refreshToken);
     }
 }

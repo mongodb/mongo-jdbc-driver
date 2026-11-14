@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 
 import com.mongodb.MongoCredential.IdpInfo;
 import com.mongodb.MongoCredential.OidcCallbackContext;
-import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.OidcAuthFlow.TokenResult;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -51,13 +51,19 @@ class JdbcOidcCallbackTest {
     }
 
     private OidcCallbackContext request(String user, String refreshToken) {
+        return request(user, refreshToken, idp);
+    }
+
+    private OidcCallbackContext request(String user, String refreshToken, IdpInfo idp) {
         return new JdbcOidcCallbackContext(Duration.ofMinutes(5), 1, refreshToken, idp, user);
     }
 
+    private static IdpInfo withScopes(String... scopes) {
+        return new JdbcIdpInfo("https://idp.example.com", "client", Arrays.asList(scopes));
+    }
+
     private static TokenResult login(String accessToken, String refreshToken, Duration validFor) {
-        return new TokenResult(
-                new OidcCallbackResult(accessToken, validFor, refreshToken),
-                Instant.now().plus(validFor));
+        return new TokenResult(accessToken, refreshToken, Instant.now().plus(validFor));
     }
 
     @Test
@@ -141,16 +147,28 @@ class JdbcOidcCallbackTest {
     }
 
     @Test
-    void testLoginsAreNotSharedAcrossUsersOrClusters() throws Exception {
+    void testLoginsAreNotSharedAcrossUsersClustersOrScopes() throws Exception {
         when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofHours(1)));
 
         newClient().onRequest(request("alice", null));
         newClient().onRequest(request("bob", null));
         new JdbcOidcCallback(authFlow, cluster()).onRequest(request("alice", null));
-        // Without hosts the cluster is unknown, so nothing is shared.
-        new JdbcOidcCallback(authFlow, null).onRequest(request("alice", null));
-        new JdbcOidcCallback(authFlow, null).onRequest(request("alice", null));
+        newClient().onRequest(request("alice", null, withScopes("openid", "email")));
 
-        verify(authFlow, times(5)).authCodeFlow(any());
+        verify(authFlow, times(4)).authCodeFlow(any());
+    }
+
+    @Test
+    void testHostAndScopeOrderDoesNotMatter() throws Exception {
+        when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofHours(1)));
+        String a = UUID.randomUUID() + ":27017";
+        String b = UUID.randomUUID() + ":27017";
+
+        new JdbcOidcCallback(authFlow, Arrays.asList(a, b))
+                .onRequest(request("user", null, withScopes("openid", "email")));
+        new JdbcOidcCallback(authFlow, Arrays.asList(b, a))
+                .onRequest(request("user", null, withScopes("email", "openid")));
+
+        verify(authFlow, times(1)).authCodeFlow(any());
     }
 }

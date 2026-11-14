@@ -21,13 +21,14 @@ import com.mongodb.MongoCredential.OidcCallbackContext;
 import com.mongodb.MongoCredential.OidcCallbackResult;
 import com.mongodb.jdbc.oidc.JdbcOidcCallback;
 import com.mongodb.jdbc.oidc.JdbcOidcCallbackContext;
+import com.mongodb.jdbc.oidc.OidcAuthFlow;
 import com.mongodb.jdbc.oidc.OidcTimeoutException;
 import java.time.Duration;
 
 public class TestOidcCallbackWithShortTimeout {
 
     public static void main(String[] args) {
-        OidcCallback oidcCallback = new JdbcOidcCallback();
+        OidcCallback oidcCallback = new JdbcOidcCallback(new OidcAuthFlow(), TestOidcUtils.HOSTS);
 
         Duration shortTimeout = Duration.ofSeconds(2); // intentionally short to trigger timeout
         OidcCallbackContext context =

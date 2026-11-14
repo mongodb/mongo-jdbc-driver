@@ -64,14 +64,24 @@ public class OidcAuthFlow {
     // login waiting on the same lock in JdbcOidcCallback.
     private static final int HTTP_TIMEOUT_MS = 30_000;
 
-    /** A callback result, with when its access token expires. */
+    /** The tokens from a login, with when the access token expires. */
     static final class TokenResult {
-        final OidcCallbackResult result;
+        final String accessToken;
+        final String refreshToken;
         final Instant expiresAt;
 
-        TokenResult(OidcCallbackResult result, Instant expiresAt) {
-            this.result = result;
+        TokenResult(String accessToken, String refreshToken, Instant expiresAt) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
             this.expiresAt = expiresAt;
+        }
+
+        // Built on each use, so a reused login reports the time it has left, not its original
+        // lifetime. OidcCallbackResult rejects a negative lifetime.
+        OidcCallbackResult toCallbackResult() {
+            Duration left = Duration.between(Instant.now(), expiresAt);
+            return new OidcCallbackResult(
+                    accessToken, left.isNegative() ? Duration.ZERO : left, refreshToken);
         }
     }
 
@@ -131,7 +141,7 @@ public class OidcAuthFlow {
     public OidcCallbackResult doAuthCodeFlow(OidcCallbackContext callbackContext)
             throws OidcTimeoutException {
         TokenResult tokens = authCodeFlow(callbackContext);
-        return tokens == null ? null : tokens.result;
+        return tokens == null ? null : tokens.toCallbackResult();
     }
 
     TokenResult authCodeFlow(OidcCallbackContext callbackContext) throws OidcTimeoutException {
@@ -283,7 +293,7 @@ public class OidcAuthFlow {
             throws RefreshFailedException {
         TokenResult tokens =
                 refresh(callbackContext.getIdpInfo(), callbackContext.getRefreshToken());
-        return tokens == null ? null : tokens.result;
+        return tokens == null ? null : tokens.toCallbackResult();
     }
 
     TokenResult refresh(IdpInfo idpServerInfo, String refreshToken) throws RefreshFailedException {
@@ -415,8 +425,6 @@ public class OidcAuthFlow {
                         : sentRefreshToken;
         Duration expiresIn = Duration.ofSeconds(tokens.getAccessToken().getLifetime());
 
-        return new TokenResult(
-                new OidcCallbackResult(accessToken, expiresIn, refreshToken),
-                Instant.now().plus(expiresIn));
+        return new TokenResult(accessToken, refreshToken, Instant.now().plus(expiresIn));
     }
 }
