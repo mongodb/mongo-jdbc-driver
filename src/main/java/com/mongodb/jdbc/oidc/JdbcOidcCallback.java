@@ -45,7 +45,7 @@ public class JdbcOidcCallback implements OidcCallback {
     // through the browser again. Entries are never removed: browser logins only happen on a
     // desktop, so there are few, and keeping them spares users the browser while the refresh token
     // still works.
-    private static final Map<Identity, Entry> logins = new ConcurrentHashMap<>();
+    private static final Map<Identity, IdentityLogin> logins = new ConcurrentHashMap<>();
     // The browser login listens on a fixed port, so only one can run at a time.
     private static final ReentrantLock browserLock = new ReentrantLock();
     // A cached access token is reused only if it stays valid at least this long.
@@ -53,7 +53,7 @@ public class JdbcOidcCallback implements OidcCallback {
 
     // One identity's latest login, and the lock that lets one connection log in or refresh at a
     // time.
-    private static final class Entry {
+    private static final class IdentityLogin {
         final ReentrantLock lock = new ReentrantLock();
         // Empty until the first login, and after a login is rejected or fails to refresh. Atomic
         // because forgetLogin() clears it without the lock.
@@ -107,8 +107,12 @@ public class JdbcOidcCallback implements OidcCallback {
     private final OidcAuthFlow oidcAuthFlow;
     // Part of the identity, so a token is only sent to the cluster it was issued for.
     private final List<String> hosts;
-    // The identity's entry and the login this callback last handed to its client.
-    private volatile Entry entry;
+    // The identity's shared login, set on the first request.
+    private volatile IdentityLogin entry;
+    // The login this callback last returned to its client, or null if it hasn't returned one yet.
+    // Each connection has its own client and callback, so this is the login that client is using.
+    // If the driver asks again without a refresh token, the server rejected this login or it ran
+    // out, so it must not be shared again. forgetLogin() drops it for the same reason.
     private volatile TokenResult served;
 
     public JdbcOidcCallback(OidcAuthFlow oidcAuthFlow, List<String> hosts) {
@@ -123,13 +127,13 @@ public class JdbcOidcCallback implements OidcCallback {
                 callbackContext.getTimeout() == null
                         ? null
                         : Instant.now().plus(callbackContext.getTimeout());
-        Entry entry = logins.computeIfAbsent(identity, k -> new Entry());
+        IdentityLogin entry = logins.computeIfAbsent(identity, k -> new IdentityLogin());
         acquire(entry.lock, deadline);
         try {
             this.entry = entry;
             boolean noRefreshToken = callbackContext.getRefreshToken() == null;
             if (noRefreshToken && served != null) {
-                // This client already has a login, so the driver is starting over because the
+                // We already gave this client a login, so the driver is starting over because the
                 // server rejected it, or it expired with no refresh token. Don't hand it out again.
                 entry.login.compareAndSet(served, null);
             }
@@ -178,14 +182,14 @@ public class JdbcOidcCallback implements OidcCallback {
      * connection logs in again instead of reusing it.
      */
     public void forgetLogin() {
-        Entry entry = this.entry;
+        IdentityLogin entry = this.entry;
         TokenResult served = this.served;
         if (entry != null && served != null) {
             entry.login.compareAndSet(served, null);
         }
     }
 
-    private OidcCallbackResult remember(Entry entry, TokenResult login) {
+    private OidcCallbackResult remember(IdentityLogin entry, TokenResult login) {
         if (login == null) {
             return null;
         }

@@ -32,6 +32,7 @@ import java.util.Properties;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.Timeout;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DCIntegrationTest {
@@ -355,6 +356,10 @@ public class DCIntegrationTest {
     private long serverConnections(String portEnvVar, String tag) {
         try (MongoClient observer =
                 MongoClients.create("mongodb://localhost:" + System.getenv(portEnvVar))) {
+            // $currentOp lists every connection to the server, idle ones included since that's
+            // what an open client's pool holds. $match keeps the ones the test's client opened, as
+            // the driver adds clientInfo to the appName. $count gives one {n: <count>} document,
+            // or none when nothing matched.
             List<Document> pipeline =
                     Arrays.asList(
                             Document.parse("{$currentOp: {allUsers: true, idleConnections: true}}"),
@@ -379,6 +384,7 @@ public class DCIntegrationTest {
 
     /** Tests that closing a connection closes its client. */
     @Test
+    @Timeout(20)
     public void testClosingConnectionClosesClient() throws Exception {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_ENT");
         info.right().setProperty("clientInfo", "closeclient+1.0");
@@ -392,6 +398,7 @@ public class DCIntegrationTest {
 
     /** Tests that a connection that fails validation closes its client. */
     @Test
+    @Timeout(20)
     public void testFailedConnectClosesClient() throws Exception {
         Pair<String, Properties> info = createLocalMongodConnInfo("LOCAL_MDB_PORT_COM");
         info.right().setProperty("clientInfo", "failedconnect+1.0");
