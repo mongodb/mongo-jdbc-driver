@@ -185,11 +185,23 @@ class JdbcOidcCallbackTest {
         when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofMinutes(30)));
         newClient().onRequest(request("user", null));
 
-        // OidcCallbackResult has no getter for its lifetime.
-        Field expiresIn = OidcCallbackResult.class.getDeclaredField("expiresIn");
-        expiresIn.setAccessible(true);
-        Duration left = (Duration) expiresIn.get(newClient().onRequest(request("user", null)));
+        Duration left = lifetime(newClient().onRequest(request("user", null)));
         assertTrue(left.compareTo(Duration.ofMinutes(29)) > 0);
         assertTrue(left.compareTo(Duration.ofMinutes(30)) <= 0);
+    }
+
+    @Test
+    void testExpiredLoginDoesNotReportZeroLifetime() throws Exception {
+        // A zero lifetime would tell the driver the token never expires.
+        when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ZERO));
+
+        assertEquals(Duration.ofMillis(1), lifetime(newClient().onRequest(request("user", null))));
+    }
+
+    // OidcCallbackResult has no getter for its lifetime.
+    private static Duration lifetime(OidcCallbackResult result) throws Exception {
+        Field expiresIn = OidcCallbackResult.class.getDeclaredField("expiresIn");
+        expiresIn.setAccessible(true);
+        return (Duration) expiresIn.get(result);
     }
 }

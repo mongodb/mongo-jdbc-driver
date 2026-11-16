@@ -285,7 +285,16 @@ public class MongoDriver implements Driver {
                     if (isRejectedLogin(e)) {
                         conn.forgetOidcLogin();
                     }
-                    conn.close();
+                    try {
+                        conn.close();
+                    } catch (Exception closeError) {
+                        // Best effort, so the caller still gets the error that failed validation.
+                        conn.getLogger()
+                                .log(
+                                        Level.WARNING,
+                                        "Failed to close a connection that failed validation",
+                                        closeError);
+                    }
                     throw e;
                 }
                 return conn;

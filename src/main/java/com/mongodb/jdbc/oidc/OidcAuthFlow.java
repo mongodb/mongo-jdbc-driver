@@ -77,11 +77,14 @@ public class OidcAuthFlow {
         }
 
         // Built on each use, so a reused login reports the time it has left, not its original
-        // lifetime. OidcCallbackResult rejects a negative lifetime.
+        // lifetime. OidcCallbackResult rejects a negative lifetime and reads zero as a token that
+        // never expires, so an expired token reports 1ms.
         OidcCallbackResult toCallbackResult() {
             Duration left = Duration.between(Instant.now(), expiresAt);
             return new OidcCallbackResult(
-                    accessToken, left.isNegative() ? Duration.ZERO : left, refreshToken);
+                    accessToken,
+                    left.isNegative() || left.isZero() ? Duration.ofMillis(1) : left,
+                    refreshToken);
         }
     }
 
