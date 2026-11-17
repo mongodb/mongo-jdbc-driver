@@ -42,9 +42,10 @@ import javax.security.auth.RefreshFailedException;
 public class JdbcOidcCallback implements OidcCallback {
     // The Java driver keeps OIDC tokens per MongoClient, and each connection has its own client, so
     // keep the latest login for each identity here. Otherwise every new connection would log in
-    // through the browser again. Entries are never removed: browser logins only happen on a
-    // desktop, so there are few, and keeping them spares users the browser while the refresh token
-    // still works.
+    // through the browser again. A request that ends without a login removes its entry, so failed
+    // logins, like a script sending made-up users, don't pile up. Entries with a login stay:
+    // browser logins only happen on a desktop, so there are few, and keeping them spares users the
+    // browser while the refresh token still works.
     private static final Map<Identity, IdentityLogin> logins = new ConcurrentHashMap<>();
     // The browser login listens on a fixed port, so only one can run at a time.
     private static final ReentrantLock browserLock = new ReentrantLock();
@@ -127,8 +128,7 @@ public class JdbcOidcCallback implements OidcCallback {
                 callbackContext.getTimeout() == null
                         ? null
                         : Instant.now().plus(callbackContext.getTimeout());
-        IdentityLogin entry = logins.computeIfAbsent(identity, k -> new IdentityLogin());
-        acquire(entry.lock, deadline);
+        IdentityLogin entry = lockEntry(identity, deadline);
         try {
             this.entry = entry;
             boolean noRefreshToken = callbackContext.getRefreshToken() == null;
@@ -173,8 +173,32 @@ public class JdbcOidcCallback implements OidcCallback {
                 browserLock.unlock();
             }
         } finally {
+            // Removed while still locked, so a connection waiting on this entry sees it's gone and
+            // retries with a new one.
+            if (entry.login.get() == null) {
+                logins.remove(identity, entry);
+            }
             entry.lock.unlock();
         }
+    }
+
+    // Locks the identity's entry, waiting no longer than the deadline. The entry can be removed
+    // while we wait for its lock, and a login saved there would never be shared, so retry with the
+    // entry that replaced it.
+    private static IdentityLogin lockEntry(Identity identity, Instant deadline) {
+        while (true) {
+            IdentityLogin entry = logins.computeIfAbsent(identity, k -> new IdentityLogin());
+            acquire(entry.lock, deadline);
+            if (logins.get(identity) == entry) {
+                return entry;
+            }
+            entry.lock.unlock();
+        }
+    }
+
+    // Whether an entry is kept for this identity. For tests.
+    static boolean hasEntry(List<String> hosts, IdpInfo idpInfo, String userName) {
+        return logins.containsKey(new Identity(hosts, idpInfo, userName));
     }
 
     /**

@@ -17,6 +17,7 @@
 package com.mongodb.jdbc.oidc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,8 +38,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.FutureTask;
 import javax.security.auth.RefreshFailedException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 class JdbcOidcCallbackTest {
     private final OidcAuthFlow authFlow = mock(OidcAuthFlow.class);
@@ -186,8 +190,8 @@ class JdbcOidcCallbackTest {
         newClient().onRequest(request("user", null));
 
         Duration left = lifetime(newClient().onRequest(request("user", null)));
-        assertTrue(left.compareTo(Duration.ofMinutes(29)) > 0);
-        assertTrue(left.compareTo(Duration.ofMinutes(30)) <= 0);
+        assertTrue(left.compareTo(Duration.ofMinutes(29)) > 0, "left: " + left);
+        assertTrue(left.compareTo(Duration.ofMinutes(30)) <= 0, "left: " + left);
     }
 
     @Test
@@ -196,6 +200,61 @@ class JdbcOidcCallbackTest {
         when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ZERO));
 
         assertEquals(Duration.ofMillis(1), lifetime(newClient().onRequest(request("user", null))));
+    }
+
+    @Test
+    void testFailedLoginLeavesNoEntry() throws Exception {
+        when(authFlow.authCodeFlow(any())).thenReturn(null, login("a1", "r1", Duration.ofHours(1)));
+
+        assertNull(newClient().onRequest(request("user", null)));
+        assertFalse(JdbcOidcCallback.hasEntry(hosts, idp, "user"));
+
+        newClient().onRequest(request("user", null));
+        assertTrue(JdbcOidcCallback.hasEntry(hosts, idp, "user"));
+    }
+
+    @Test
+    @Timeout(10)
+    void testWaiterOnRemovedEntryStillSharesNextLogin() throws Exception {
+        CountDownLatch firstLoginStarted = new CountDownLatch(1);
+        CountDownLatch failFirstLogin = new CountDownLatch(1);
+        when(authFlow.authCodeFlow(any()))
+                .thenAnswer(
+                        invocation -> {
+                            firstLoginStarted.countDown();
+                            failFirstLogin.await();
+                            return null;
+                        })
+                .thenReturn(login("a2", "r2", Duration.ofHours(1)));
+
+        FutureTask<OidcCallbackResult> first =
+                new FutureTask<>(() -> newClient().onRequest(request("user", null)));
+        startDaemon(first);
+        firstLoginStarted.await();
+
+        // The second connection waits on the first one's entry, which the failed login removes.
+        FutureTask<OidcCallbackResult> second =
+                new FutureTask<>(() -> newClient().onRequest(request("user", null)));
+        Thread secondThread = startDaemon(second);
+        // Stop if it died, so second.get() reports why.
+        while (secondThread.isAlive() && secondThread.getState() != Thread.State.TIMED_WAITING) {
+            Thread.sleep(10);
+        }
+        failFirstLogin.countDown();
+
+        assertNull(first.get());
+        assertEquals("a2", second.get().getAccessToken());
+        // The second login went into the current entry, so a new connection reuses it.
+        assertEquals("a2", newClient().onRequest(request("user", null)).getAccessToken());
+        verify(authFlow, times(2)).authCodeFlow(any());
+    }
+
+    // Daemon, so a thread a failed test leaves blocked can't keep the JVM alive.
+    private static Thread startDaemon(Runnable task) {
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        return thread;
     }
 
     // OidcCallbackResult has no getter for its lifetime.
