@@ -203,6 +203,14 @@ class JdbcOidcCallbackTest {
     }
 
     @Test
+    void testExpiredLoginDoesNotReportNegativeLifetime() throws Exception {
+        // OidcCallbackResult rejects a negative lifetime.
+        when(authFlow.authCodeFlow(any())).thenReturn(login("a1", "r1", Duration.ofMinutes(-1)));
+
+        assertEquals(Duration.ofMillis(1), lifetime(newClient().onRequest(request("user", null))));
+    }
+
+    @Test
     void testFailedLoginLeavesNoEntry() throws Exception {
         when(authFlow.authCodeFlow(any())).thenReturn(null, login("a1", "r1", Duration.ofHours(1)));
 
