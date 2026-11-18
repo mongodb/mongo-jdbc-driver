@@ -16,12 +16,17 @@
 
 package com.mongodb.jdbc.oidc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import java.net.URI;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
@@ -100,5 +105,23 @@ public class OidcAuthFlowTest {
         OIDCProviderMetadata metadata = metadata(HTTPS_AUTH_ENDPOINT, HTTPS_TOKEN_ENDPOINT);
 
         assertTrue(authFlow.validateProviderMetadata(metadata));
+    }
+
+    @Test
+    void testRefreshResponseWithoutRefreshTokenKeepsTheOneSent() {
+        OIDCTokenResponse withoutRefreshToken =
+                new OIDCTokenResponse(
+                        new OIDCTokens(new BearerAccessToken("access", 3600, null), null));
+        assertEquals("sent", OidcAuthFlow.toTokenResult(withoutRefreshToken, "sent").refreshToken);
+    }
+
+    @Test
+    void testRefreshResponseWithNewRefreshTokenUsesIt() {
+        OIDCTokenResponse rotated =
+                new OIDCTokenResponse(
+                        new OIDCTokens(
+                                new BearerAccessToken("access", 3600, null),
+                                new RefreshToken("rotated")));
+        assertEquals("rotated", OidcAuthFlow.toTokenResult(rotated, "sent").refreshToken);
     }
 }

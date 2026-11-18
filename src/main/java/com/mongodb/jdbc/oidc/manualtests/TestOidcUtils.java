@@ -29,6 +29,8 @@ public class TestOidcUtils {
     public static String OIDC_ISSUER = "https://mongodb-dev.okta.com/oauth2/ausqrxbcr53xakaRR357";
     public static String OIDC_CLIENT_ID = "0oarvap2r7PmNIBsS357";
     public static final List<String> OPENID_SCOPE = Collections.singletonList("openid");
+    // The cluster the callback's logins are for. These tests only talk to the IdP.
+    public static final List<String> HOSTS = Collections.singletonList("localhost:27017");
 
     public static final IdpInfo IDP_INFO =
             new JdbcIdpInfo(OIDC_ISSUER, OIDC_CLIENT_ID, OPENID_SCOPE);
