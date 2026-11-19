@@ -392,7 +392,7 @@ public class X509Authentication {
             tmf.init((KeyStore) null);
         }
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getDefault();
         sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
         return sslContext;
     }
